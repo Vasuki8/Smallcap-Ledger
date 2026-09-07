@@ -133,7 +133,7 @@ def publish():
     repo=repository();r=release(repo)
     if r is None:
         gh('release','create',TAG,'--repo',repo,'--target',os.environ.get('GITHUB_SHA','main'),'--title','Smallcap Ledger historical archive','--notes','Cumulative SQLite records and original source files. Download latest.json to identify the current checkpoint. Every checkpoint retains all collected historical observations.','--prerelease')
-        r=release(repo)
+        r=json.loads(gh('api',f'repos/{repo}/releases/tags/{TAG}').stdout)
     if r.get('immutable'):raise ValueError('The tracker-history release is immutable; a writable archive location is required')
     with tempfile.TemporaryDirectory() as tmp:
         asset='state-'+os.environ.get('GITHUB_RUN_ID',db.now().replace(':','').replace('+',''))+'-'+os.environ.get('GITHUB_RUN_ATTEMPT','1')+'.zip'
