@@ -1,40 +1,40 @@
 {
-  "built_at": "2026-09-07T21:11:36+00:00",
+  "built_at": "2026-09-07T21:57:01+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
-    "nav_points": 279596,
-    "benchmark_points": 5316,
-    "portfolios": 18,
-    "documents": 102,
-    "archive_bytes": 192441149,
+    "nav_points": 279738,
+    "benchmark_points": 5317,
+    "portfolios": 62,
+    "documents": 398,
+    "archive_bytes": 646029890,
     "aum_funds": 18,
     "fee_funds": 28
   },
   "recent_jobs": [
     {
-      "kind": "metrics",
-      "started_at": "2026-09-06T19:07:47+00:00",
-      "finished_at": "2026-09-06T19:09:58+00:00",
-      "status": "ok"
-    },
-    {
-      "kind": "metrics",
-      "started_at": "2026-09-06T13:02:14+00:00",
-      "finished_at": "2026-09-06T13:04:39+00:00",
-      "status": "ok"
-    },
-    {
-      "kind": "metrics",
-      "started_at": "2026-09-06T13:00:53+00:00",
-      "finished_at": "2026-09-06T13:01:20+00:00",
-      "status": "ok"
-    },
-    {
       "kind": "documents",
-      "started_at": "2026-09-06T07:19:27+00:00",
-      "finished_at": "2026-09-06T07:27:54+00:00",
+      "started_at": "2026-09-07T21:44:29+00:00",
+      "finished_at": "2026-09-07T21:56:53+00:00",
       "status": "partial"
+    },
+    {
+      "kind": "benchmark",
+      "started_at": "2026-09-07T21:44:29+00:00",
+      "finished_at": "2026-09-07T21:44:29+00:00",
+      "status": "ok"
+    },
+    {
+      "kind": "metrics",
+      "started_at": "2026-09-07T21:44:29+00:00",
+      "finished_at": "2026-09-07T21:45:20+00:00",
+      "status": "ok"
+    },
+    {
+      "kind": "nav",
+      "started_at": "2026-09-07T21:43:41+00:00",
+      "finished_at": "2026-09-07T21:44:29+00:00",
+      "status": "ok"
     }
   ],
   "schedule": {
