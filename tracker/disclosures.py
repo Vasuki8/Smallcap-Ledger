@@ -20,6 +20,8 @@ def official_publication_url(url,amc_match):
     roots={urlparse(u).hostname.lower().removeprefix('www.') for amc,u,_ in json.loads((db.ROOT/'tracker'/'sources.json').read_text()) if amc.lower()==amc_match.lower()}
     # Custom source pages are explicit owner-provided AMC sources.
     roots.update((urlparse(r['url']).hostname or '').lower().removeprefix('www.') for r in db.rows('SELECT url FROM source_pages WHERE lower(amc_match)=lower(?)',(amc_match,)))
+    hosts=json.loads((db.ROOT/'tracker'/'document_hosts.json').read_text())
+    roots.update(hosts.get(amc_match,[]))
     return any(root and (host==root or host.endswith('.'+root)) for root in roots)
 
 
@@ -32,6 +34,13 @@ def same_fund_title(value,family):
 
 
 def report_date(text):
+    # Disclosure spreadsheets use period-ended labels and Excel date cells.
+    from .report_parser import DATE,dated,normalize
+    for m in re.finditer(r'(?:period ended|statement as on)\s*:?\s*('+DATE+r'|\d{4}-\d{2}-\d{2})',normalize(text),re.I):
+        value=m.group(1)
+        if re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):
+            if value<=date.today().isoformat():return value
+        elif dated(value):return dated(value)
     patterns=[r"(?:as\s*(?:on|of)|portfolio\s*(?:for)?)\s*[:\-]?\s*(\d{1,2}[ /-](?:[A-Za-z]+|\d{1,2})[ /-]\d{2,4})",
               r"(?:as\s*(?:on|of))\s*[:\-]?\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s*,?\s*(\d{4})"]
     for pattern in patterns:
@@ -124,18 +133,18 @@ def spreadsheet(content,family,url,h):
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
-        if not day: continue
+        if not day or day>date.today().isoformat(): continue
         header=None;header_index=0
         for i,row in enumerate(rows[:35]):
             cells=[str(v or '').lower() for v in row]
-            if any('isin' in v for v in cells) and any('nav' in v or ('net' in v and 'asset' in v) for v in cells):
+            if any('isin' in v for v in cells) and any('nav' in v or 'aum' in v or ('net' in v and 'asset' in v) for v in cells):
                 header=cells;header_index=i;break
         if header is None: continue
         if not any(same_fund_title(v,family) for row in rows[:header_index] for v in row if v):continue
         def col(pred): return next((i for i,v in enumerate(header) if pred(v)),None)
         ic=col(lambda x:'isin' in x)
         nc=col(lambda x:'name' in x or 'instrument' in x or 'issuer' in x)
-        wc=col(lambda x:('nav' in x or ('net' in x and 'asset' in x)) and ('%' in x or 'percent' in x))
+        wc=col(lambda x:('nav' in x or 'aum' in x or ('net' in x and 'asset' in x)) and ('%' in x or 'percent' in x))
         sc=col(lambda x:'industry' in x or 'sector' in x)
         if nc is None or wc is None: continue
         positions=[];asset_type='Unclassified'
@@ -167,37 +176,20 @@ def factsheet_pdf(content,family,url,h):
     """Extract only explicitly labelled, dated facts; never estimate or OCR a number."""
     from pypdf import PdfReader
     reader=PdfReader(io.BytesIO(content))
-    if reader.is_encrypted or len(reader.pages)>250:return 0
+    if reader.is_encrypted or len(reader.pages)>400:return 0
+    from .report_parser import page_facts,owns_page,equity_positions
     count=0
     for page in reader.pages:
         text=page.extract_text() or ''
-        lines=text.splitlines()
-        # A fund's own heading and scheme description must occur together.
-        # Holdings in a FoF, contents pages, and comparative performance tables
-        # can all mention the exact fund name without describing that fund.
-        if not any(same_fund_title(line,family) and re.search(r'An open[\s-]*ended[\s\S]{0,100}?equity[\s\S]{0,100}?small[\s-]*cap',' '.join(lines[i:i+6]),re.I)
-                   for i,line in enumerate(lines)):continue
-        details=re.search(r'Details as on[^\n]+',text,re.I)
-        day=report_date(details.group() if details else text)
-        if not day or day>date.today().isoformat():continue
-        for pattern in [r'(?:Month\s*End|Closing\s*AUM)\s*[:\-\s]*(?:INR|Rs\.?|₹)?\s*([0-9][0-9,.]*)\s*(?:Cr|Crore)',
-                        r'\bAUM\b[\s\S]{0,70}?(?:INR|Rs\.?|₹)\s*([0-9][0-9,.]*)\s*(?:Cr|Crore)']:
-            match=re.search(pattern,text,re.I)
-            if match:
-                db.metric(family,'All','aum',day,number(match.group(1)),'INR crore',url,h);count+=1;break
-        for heading,key in [('Base Expense Ratio','base_expense_ratio'),('Total Expense Ratio','ter')]:
-            match=re.search(heading+r'[^\n]*\n([\s\S]{0,200})',text,re.I)
-            if match:
-                for plan,pattern in [('Regular',r'Regular(?:/Other than Direct)?\s*[:\-]?\s*(\d+(?:\.\d+)?)'),('Direct',r'(?:^|\n)Direct\s*[:\-]?\s*(\d+(?:\.\d+)?)')]:
-                    value=re.search(pattern,match.group(1),re.I)
-                    if value and 0<=float(value.group(1))<=5:
-                        db.metric(family,plan,key,day,value.group(1),'% p.a.',url,h);count+=1
-        for pattern,key in [(r'(?:AMFI Tier 1 Benchmark|Primary Benchmark|Benchmark)\s*\n([^\n]+)','benchmark'),
-                            (r'Date of Allotment\s*\n([^\n]+)','fund_launch'),
-                            (r'Fund Manager\(s\)\s*\n([^\n]+)','managers')]:
-            match=re.search(pattern,text,re.I)
-            if match:
-                db.metric(family,'All',key,day,match.group(1).strip(),'Reported',url,h);count+=1
+        if not owns_page(text,family):continue
+        facts=page_facts(text,family)
+        for fact in facts:
+            db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
+        count+=len(facts)
+        positions=equity_positions(text,family)
+        if positions and facts:
+            portfolio(family,facts[0]['as_of'],positions,False,url,h);count+=len(positions)
+            continue
         m=re.search(r'Portfolio as on[^\n]+\n([\s\S]+?)(?:\nSIP\b|\nPerformance\b|\nProduct Label|$)',text,re.I)
         if m:
             positions=[];sector=None
@@ -223,10 +215,19 @@ def ingest_source(source):
     families=db.rows("SELECT DISTINCT family FROM schemes WHERE instr(lower(amc),lower(?))>0",(source["amc_match"],))
     if not families: return "No matching small-cap fund yet"
     can_crawl(url)
-    content,h,_=fetch(url,max_bytes=8*1024*1024)
+    direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
+    content,h,_=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
+    if direct:
+        from .amc_reports import extract
+        n=0
+        for f in families:
+            did=save_document(f['family'],source['label'],url,classify(source['label'],url),'AMC',origin='AMC')
+            doc_version(did,h);n+=extract(content,f['family'],url,h)
+        gaps=0 if n or classify(source['label'],url)=='scheme document' else 1
+        return f'{n} extracted facts/holdings; 1 document archived; {gaps} download/parser gaps'
     soup=BeautifulSoup(content,"html.parser")
     links=candidate_links(soup,url)
-    nlinks=0;narchive=0;errors=0;attempted=0
+    nlinks=0;narchive=0;errors=0;attempted=0;parsed=0;unrecognized=0
     last_attempt={r['url']:r['last'] for r in db.rows('SELECT url,MAX(fetched_at) last FROM fetches GROUP BY url')}
     for f in families:
         family=f["family"]
@@ -242,7 +243,10 @@ def ingest_source(source):
             combined=unquote(title+' '+target)
             if re.search(r'small[\s_\-]*cap',combined,re.I) and re.search(r'\b(?:ETF|index[\s_\-]*fund)\b',combined,re.I):continue
             specific=bool(re.search(r"small[\s_\-]*cap",combined,re.I)) and not re.search(r"mid[\s_\-]*small",combined,re.I)
-            commentary=bool(re.search(r"newsletter|market[\s_\-]*(?:outlook|update|view)|equity[\s_\-]*outlook|cio[\s_\-]*(?:letter|view)",combined,re.I))
+            # A scheme-specific page can label a UUID download simply "Latest
+            # Monthly Portfolio". Keep it as a candidate; parser verifies ownership.
+            if re.search(r'small[\s_\-]*cap',url,re.I) and re.search(r'latest.*(?:portfolio|factsheet)',title,re.I):specific=True
+            commentary=bool(re.search(r"newsletter|letter.*unitholder|unitholder.*letter|market[\s_\-]*(?:outlook|update|view)|equity[\s_\-]*outlook|cio[\s_\-]*(?:letter|view)",combined,re.I))
             download=bool(re.search(r"\.(?:pdf|xlsx?|xml)(?:\?|$)",target,re.I))
             omnibus=download and bool(re.search(r'factsheet|fact.sheet|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
             directory=not download and bool(re.search(r'factsheet|fact.sheet|portfolio|disclosure|scheme.summary|newsletter|market.outlook|market.update',combined,re.I))
@@ -269,15 +273,20 @@ def ingest_source(source):
                 body,ch,typ=fetch(target)
                 doc_version(did,ch);narchive+=1
                 ext=urlparse(target).path.lower()
-                if ext.endswith('.xml'): summary_xml(body,family,target,ch)
-                elif ext.endswith(('.xls','.xlsx')): spreadsheet(body,family,target,ch)
-                elif ext.endswith('.pdf') and classify(title,target) in ('factsheet','portfolio'):factsheet_pdf(body,family,target,ch)
+                if ext.endswith(('.xml','.xls','.xlsx','.pdf')):
+                    from .amc_reports import extract
+                    count=extract(body,family,target,ch);parsed+=count
+                    if not count:
+                        unrecognized+=1
+                        if classify(title,target) in ('factsheet','portfolio'):errors+=1
             except Exception:
                 errors+=1
-    return f"{nlinks} relevant links; {narchive} documents archived; {errors} download/parser gaps" if nlinks else "Page archived; no automatically readable fund documents found"
+    return f"{nlinks} relevant links; {narchive} documents archived; {parsed} facts/holdings; {unrecognized} documents without extracted tables; {errors} download/parser gaps" if nlinks else "Page archived; no automatically readable fund documents found"
 
 
 def seed_sources():
     entries=json.loads((db.ROOT/'tracker'/'sources.json').read_text())
+    from .amc_reports import monthly_sources
+    entries.extend(monthly_sources())
     with db.connect() as c:
         c.executemany("INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)",entries)

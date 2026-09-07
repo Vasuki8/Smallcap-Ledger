@@ -16,6 +16,8 @@ PAGES=[
     ('Kotak','Kotak Small Cap Fund','https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g'),
     ('Aditya Birla','Aditya Birla Sun Life Small Cap Fund','https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Small-Cap-Fund.html'),
     ('Tata','Tata Small Cap Fund','https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth'),
+    ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
+    ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
 ]
 
 
@@ -38,6 +40,8 @@ def parse_page(content,family,url,h):
         'DSP Small Cap Fund':r'Total AUM\s*₹\s*([\d,.]+)\s*crores\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',
         'Kotak Small Cap Fund':r'\bAUM:\s*₹\s*([\d,.]+)\s*Cr\.\s*(As on \d{1,2}-[A-Za-z]+-\d{4})',
         'Tata Small Cap Fund':r'Overview Fund Size \(\s*AUM\s*\)\s*₹\s*([\d,.]+)\s*Cr\s*(as on \d{1,2} [A-Za-z]+ \d{4})',
+        'Bajaj Finserv Small Cap Fund':r'Total AUM\s*₹\s*([\d,.]+)\s*crores\s*(As on \d{1,2}-\d{1,2}-\d{4})',
+        'Quantum Small Cap Fund':r'Asset Size \(in Crore\)\s*₹\s*([\d,.]+)\s*(as on \d{1,2}/\d{1,2}/\d{4})',
     }
     value=None;day=None
     if family in patterns:

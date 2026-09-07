@@ -52,6 +52,9 @@ class Updater:
                     except Exception as e:errors.append(str(e)[:250])
                 detail='; '.join(results)
             else:
+                from .amc_reports import reprocess_archived
+                self.progress(kind,'Updating parsers for previously archived official reports')
+                _,parse_gaps=reprocess_archived();errors.extend(parse_gaps)
                 sources=db.rows("SELECT * FROM source_pages WHERE enabled=1 ORDER BY COALESCE(last_checked,''),id")
                 with ThreadPoolExecutor(max_workers=2) as pool:
                     futures={pool.submit(disclosures.ingest_source,x):x for x in sources}

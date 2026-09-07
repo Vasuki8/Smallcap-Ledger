@@ -10,6 +10,8 @@ _temp=tempfile.TemporaryDirectory()
 os.environ['SMALLCAP_DATA_DIR']=_temp.name
 os.environ['SMALLCAP_NO_SCHEDULER']='1'
 from tracker import db,analytics,providers,disclosures
+# Other test modules may have imported db first. Always isolate this suite's writes.
+db.DATA=Path(_temp.name)
 from tracker.app import app
 from fastapi.testclient import TestClient
 

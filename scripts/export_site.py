@@ -33,6 +33,8 @@ def export(output:Path,repository=''):
             w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(rows)
     db.init()
     index=funds();write('funds.json',index)
+    from tracker.coverage import report as coverage_report
+    write('coverage.json',coverage_report())
     done=set();snapshot_ids=set();hashes=set()
     for s in index['funds']:
         code=s['code'];detail=fund(code);family_id=hashlib.sha256(s['family'].encode()).hexdigest()[:20];detail['family_id']=family_id
