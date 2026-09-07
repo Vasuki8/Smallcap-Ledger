@@ -52,6 +52,7 @@ def public_url(url):
     except socket.gaierror:
         trusted={'mfapi.in','amfiindia.com','niftyindices.com'}
         trusted.update(urlparse(x[1]).hostname.removeprefix('www.') for x in json.loads((db.ROOT/'tracker'/'sources.json').read_text()))
+        trusted.update(h for hosts in json.loads((db.ROOT/'tracker'/'document_hosts.json').read_text()).values() for h in hosts)
         proxy=any(os.environ.get(k) for k in ('HTTPS_PROXY','https_proxy','ALL_PROXY','all_proxy','HTTP_PROXY','http_proxy'))
         if proxy and any(p.hostname==d or p.hostname.endswith('.'+d) for d in trusted):
             _proxy_public_hosts.add(p.hostname)
@@ -274,6 +275,7 @@ def classify(title,url):
     if re.search(r"portfolio|holdings",s): return "portfolio"
     if re.search(r"factsheet|fact.sheet|fund.facts",s): return "factsheet"
     if re.search(r"newsletter|market.*(?:view|outlook|update)|equity.outlook|investment.view|cio.*(?:view|letter)|product.?note|presentation",s): return "market view"
+    if re.search(r'letter.*unitholder|unitholder.*letter',s):return 'unitholder letter'
     if re.search(r"(?:^|[ /_-])(?:sid|kim|ssd)(?:[ /_.-]|$)|scheme.summary|scheme information document|key information memorandum",s): return "scheme document"
     return "disclosure"
 
