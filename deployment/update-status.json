@@ -1,0 +1,48 @@
+{
+  "built_at": "2026-09-07T06:01:10+00:00",
+  "counts": {
+    "plans": 143,
+    "funds": 36,
+    "nav_points": 279596,
+    "benchmark_points": 5316,
+    "portfolios": 12,
+    "documents": 90,
+    "archive_bytes": 144653844,
+    "aum_funds": 9,
+    "fee_funds": 25
+  },
+  "recent_jobs": [
+    {
+      "kind": "metrics",
+      "started_at": "2026-09-06T19:07:47+00:00",
+      "finished_at": "2026-09-06T19:09:58+00:00",
+      "status": "ok"
+    },
+    {
+      "kind": "metrics",
+      "started_at": "2026-09-06T13:02:14+00:00",
+      "finished_at": "2026-09-06T13:04:39+00:00",
+      "status": "ok"
+    },
+    {
+      "kind": "metrics",
+      "started_at": "2026-09-06T13:00:53+00:00",
+      "finished_at": "2026-09-06T13:01:20+00:00",
+      "status": "ok"
+    },
+    {
+      "kind": "documents",
+      "started_at": "2026-09-06T07:19:27+00:00",
+      "finished_at": "2026-09-06T07:27:54+00:00",
+      "status": "partial"
+    }
+  ],
+  "schedule": {
+    "provider": "GitHub Pages",
+    "repository": "Vasuki8/Smallcap-Ledger",
+    "timezone": "Asia/Kolkata",
+    "schedule": "00:00 IST daily",
+    "cron": "30 18 * * *",
+    "scheduled_time_is_not_guaranteed": true
+  }
+}
