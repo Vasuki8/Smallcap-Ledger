@@ -1,0 +1,92 @@
+name: Update and publish small-cap tracker
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['deployment/**']
+  schedule:
+    # UTC 18:30 = 00:00 the following day in Asia/Kolkata (IST).
+    - cron: '30 18 * * *'
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: Fetch new public data before publishing
+        type: boolean
+        default: true
+      import_archive_asset:
+        description: Optional manually uploaded cumulative ZIP asset in tracker-history
+        type: string
+        required: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: smallcap-daily-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Restore cumulative history
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Import owner-supplied additions
+        if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
+        env:
+          IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
+        run: uv run --frozen python scripts/import_archive.py
+      - name: Collect daily data
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
+        timeout-minutes: 40
+        continue-on-error: true
+        run: uv run --frozen python scripts/daily_update.py
+      - name: Recover any interrupted collection status
+        run: uv run --frozen python -c "from tracker import db; db.init(recover=True)"
+      - name: Check archive and financial calculations
+        run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Generate GitHub Pages site
+        run: uv run --frozen python scripts/export_site.py
+      - name: Validate generated data and downloads
+        run: uv run --frozen python scripts/validate_site.py site
+      - name: Save cumulative historical archive
+        run: uv run --frozen python scripts/github_state.py publish
+      - name: Record collection status
+        run: uv run --frozen python scripts/record_build.py
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish website
+        id: deployment
+        uses: actions/deploy-pages@v4

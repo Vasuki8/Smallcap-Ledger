@@ -1,0 +1,3060 @@
+{
+  "running": {},
+  "settings": {
+    "nav_interval_minutes": 60,
+    "disclosure_interval_hours": 12,
+    "auto_update": true
+  },
+  "counts": {
+    "plans": 143,
+    "funds": 36,
+    "nav_points": 279596,
+    "benchmark_points": 5316,
+    "portfolios": 12,
+    "documents": 90,
+    "archive_bytes": 144653844,
+    "aum_funds": 9,
+    "fee_funds": 25,
+    "portfolio_funds": 2
+  },
+  "jobs": [
+    {
+      "id": 16,
+      "kind": "metrics",
+      "started_at": "2026-09-06T19:07:47+00:00",
+      "finished_at": "2026-09-06T19:09:58+00:00",
+      "status": "ok",
+      "detail": "7 official fund reports with dated AUM; some reporting pages unavailable for: Iti Small Cap Fund, Mahindra Manulife Small Cap Fund"
+    },
+    {
+      "id": 15,
+      "kind": "metrics",
+      "started_at": "2026-09-06T13:02:14+00:00",
+      "finished_at": "2026-09-06T13:04:39+00:00",
+      "status": "ok",
+      "detail": "25 funds with AMC-reported expense figures; 16160 dated plan/fee values checked"
+    },
+    {
+      "id": 14,
+      "kind": "metrics",
+      "started_at": "2026-09-06T13:00:53+00:00",
+      "finished_at": "2026-09-06T13:01:20+00:00",
+      "status": "ok",
+      "detail": "23 funds with AMC-reported expense figures; 3000 dated plan/fee values checked"
+    },
+    {
+      "id": 12,
+      "kind": "documents",
+      "started_at": "2026-09-06T07:19:27+00:00",
+      "finished_at": "2026-09-06T07:27:54+00:00",
+      "status": "partial",
+      "detail": "47 source pages checked; 14 unavailable sources\nHDFC: Client error '404 Not Found' for url 'https://www.hdfcfund.com/market-update'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\nBandhan: Client error '403 Forbidden' for url 'https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403\nBandhan: Client error '403 Forbidden' for url 'https://bandhanmutual.com/downloads/disclosures'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403\nBandhan: Client error '403 Forbidden' for url 'https://bandhanmutual.com/downloads/factsheet/all-schemes'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403\nNippon: 510 relevant links; 18 documents archived; 1 download/parser gaps\nAbakkus: Robots policy could not be checked\nBaroda: Robots policy could not be checked\nCanara: 2 relevant links; 0 documents archived; 2 download/parser gaps\nGroww: The read operation timed out\nLIC: Robots policy could not be checked\nPGIM: [Errno -3] Temporary failure in name resolution\nTata: Source is larger than the 25 MB archive limit; use its original link\nThe Wealth: [Errno -3] Temporary failure in name resolution\nUnion: Robots policy could not be checked"
+    },
+    {
+      "id": 11,
+      "kind": "nav",
+      "started_at": "2026-09-06T07:17:59+00:00",
+      "finished_at": "2026-09-06T07:23:38+00:00",
+      "status": "ok",
+      "detail": "143 AMFI scheme codes across 36 small-cap funds; latest NAV 2026-09-04; 143/143 histories updated"
+    },
+    {
+      "id": 9,
+      "kind": "documents",
+      "started_at": "2026-09-05T23:36:31+00:00",
+      "finished_at": "2026-09-06T07:17:58+00:00",
+      "status": "interrupted",
+      "detail": "Application stopped before this update finished; the next run resumes retained history."
+    },
+    {
+      "id": 8,
+      "kind": "benchmark",
+      "started_at": "2026-09-05T23:34:25+00:00",
+      "finished_at": "2026-09-05T23:36:55+00:00",
+      "status": "ok",
+      "detail": "5316 benchmark observations updated"
+    },
+    {
+      "id": 7,
+      "kind": "nav",
+      "started_at": "2026-09-05T23:34:25+00:00",
+      "finished_at": "2026-09-06T07:17:58+00:00",
+      "status": "interrupted",
+      "detail": "Application stopped before this update finished; the next run resumes retained history."
+    },
+    {
+      "id": 6,
+      "kind": "benchmark",
+      "started_at": "2026-09-05T23:24:59+00:00",
+      "finished_at": "2026-09-05T23:24:59+00:00",
+      "status": "error",
+      "detail": "[Errno -3] Temporary failure in name resolution"
+    },
+    {
+      "id": 5,
+      "kind": "nav",
+      "started_at": "2026-09-05T23:24:59+00:00",
+      "finished_at": "2026-09-05T23:24:59+00:00",
+      "status": "error",
+      "detail": "[Errno -3] Temporary failure in name resolution"
+    },
+    {
+      "id": 4,
+      "kind": "documents",
+      "started_at": "2026-09-05T23:22:00+00:00",
+      "finished_at": "2026-09-05T23:22:01+00:00",
+      "status": "ok",
+      "detail": "45 source pages checked; 0 unavailable sources"
+    },
+    {
+      "id": 2,
+      "kind": "benchmark",
+      "started_at": "2026-09-05T23:17:58+00:00",
+      "finished_at": "2026-09-05T23:17:58+00:00",
+      "status": "error",
+      "detail": "Using SOCKS proxy, but the 'socksio' package is not installed. Make sure to install httpx using `pip install httpx[socks]`."
+    },
+    {
+      "id": 1,
+      "kind": "nav",
+      "started_at": "2026-09-05T23:17:58+00:00",
+      "finished_at": "2026-09-05T23:17:58+00:00",
+      "status": "error",
+      "detail": "Using SOCKS proxy, but the 'socksio' package is not installed. Make sure to install httpx using `pip install httpx[socks]`."
+    }
+  ],
+  "sources": [
+    {
+      "id": 16,
+      "amc_match": "Abakkus",
+      "url": "https://www.abakkusmutualfund.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:23:02+00:00",
+      "status": "Gap",
+      "detail": "Robots policy could not be checked"
+    },
+    {
+      "id": 17,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:23:48+00:00",
+      "status": "Checked",
+      "detail": "2 relevant links; 2 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 76,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 77,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/disclosures",
+      "label": "Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 78,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-error-disclosures",
+      "label": "Tracking Error Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 79,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-difference-disclosures",
+      "label": "Tracking Difference Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 80,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio",
+      "label": "Portfolio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 83,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/market-update",
+      "label": "Market Updates",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 84,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/blog/how-many-mutual-funds-for-diversified-portfolio",
+      "label": "Sep 04, 2026 5 min Read Now ➜",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 85,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/blog/how-to-build-a-goal-based-mutual-fund-portfolio",
+      "label": "Sep 01, 2026 5 min Read Now ➜",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 86,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/abslamc-knowledge-centre/articles/is-your-portfolio-missing-the-shine-of-gold-and-silver",
+      "label": "Read the Article",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 146,
+      "amc_match": "Aditya Birla",
+      "url": "https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Small-Cap-Fund.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:08:46+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 10,
+      "amc_match": "Axis",
+      "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+      "label": "Fund page",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:08:03+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 11,
+      "amc_match": "Axis",
+      "url": "https://www.axismf.com/downloads",
+      "label": "Downloads",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:22:20+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 18,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:23:14+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 69,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund",
+      "label": "Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 70,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/downloads?statutory-disclosure=",
+      "label": "Statutory Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 71,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/downloads?factsheet",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 72,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/web-stories/things-know-you-pick-small-cap-fund",
+      "label": "Things to Know Before You Pick a Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 73,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/web-stories/building-balanced-portfolio-dynamic-market",
+      "label": "Building a Balanced Portfolio in a Dynamic Market",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 74,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/downloads?factsheet=",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 75,
+      "amc_match": "Bajaj",
+      "url": "https://www.bajajamc.com/sid-disclosure",
+      "label": "SID Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 12,
+      "amc_match": "Bandhan",
+      "url": "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular",
+      "label": "Fund page",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:22:33+00:00",
+      "status": "Gap",
+      "detail": "Client error '403 Forbidden' for url 'https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+    },
+    {
+      "id": 13,
+      "amc_match": "Bandhan",
+      "url": "https://bandhanmutual.com/downloads/disclosures",
+      "label": "Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:22:38+00:00",
+      "status": "Gap",
+      "detail": "Client error '403 Forbidden' for url 'https://bandhanmutual.com/downloads/disclosures'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+    },
+    {
+      "id": 14,
+      "amc_match": "Bandhan",
+      "url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:22:44+00:00",
+      "status": "Gap",
+      "detail": "Client error '403 Forbidden' for url 'https://bandhanmutual.com/downloads/factsheet/all-schemes'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+    },
+    {
+      "id": 19,
+      "amc_match": "Bank of India",
+      "url": "https://www.boimf.in/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:23:28+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 81,
+      "amc_match": "Bank of India",
+      "url": "https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund",
+      "label": "Bank of India Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 82,
+      "amc_match": "Bank of India",
+      "url": "https://www.boimf.in/siddisclosures/scheme-differentiation",
+      "label": "SID Related Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 20,
+      "amc_match": "Baroda",
+      "url": "https://www.barodabnpparibasmf.in/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:23:38+00:00",
+      "status": "Gap",
+      "detail": "Robots policy could not be checked"
+    },
+    {
+      "id": 21,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:23:58+00:00",
+      "status": "Partial",
+      "detail": "2 relevant links; 0 documents archived; 2 download/parser gaps"
+    },
+    {
+      "id": 87,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/our-schemes/fund-details?amfiCode=146130",
+      "label": "Canara Robeco Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 88,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/forms-downloads/disclosure-related-to-offer-documents/",
+      "label": "Disclosure Related To Offer Documents",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 89,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-aaum-aum/disclosure-of-aaum/?searchyear=2024-25",
+      "label": "Statutory Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 90,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/daily-market-updates/",
+      "label": "Daily Market Update",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 91,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/news-insights/market-outlook/",
+      "label": "Market Outlook",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 92,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/forms-downloads/key-disclosures/",
+      "label": "Key Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 93,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-risk-adjusted-return-information-ratio-ir/",
+      "label": "Disclosure of Risk adjusted Return - Information Ratio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 94,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-investments-made-by-schemes-of-canara-robeco-mutual-fund/",
+      "label": "Disclosure of Investments made by Schemes of Canara Robeco Mutual Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 95,
+      "amc_match": "Canara",
+      "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-aaum-aum/",
+      "label": "Disclosure of AAUM",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 22,
+      "amc_match": "DSP",
+      "url": "https://www.dspim.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:24:13+00:00",
+      "status": "Checked",
+      "detail": "1 relevant links; 1 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 96,
+      "amc_match": "DSP",
+      "url": "https://www.dspim.com/factsheets",
+      "label": "Digital Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 97,
+      "amc_match": "DSP",
+      "url": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/small-cap-fund/dspmc-direct-growth",
+      "label": "Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:08:16+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 102,
+      "amc_match": "DSP",
+      "url": "https://www.dspim.com/mandatory-disclosures",
+      "label": "Mandatory Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 103,
+      "amc_match": "DSP",
+      "url": "https://www.dspim.com/mandatory-disclosures/online-dispute-resolution",
+      "label": "Online Dispute Resolution (ODR)",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 104,
+      "amc_match": "DSP",
+      "url": "https://www.dspim.com/mandatory-disclosures/sebi-registration-details",
+      "label": "SEBI Registration Details",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 23,
+      "amc_match": "Edelweiss",
+      "url": "https://www.edelweissmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:24:09+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 98,
+      "amc_match": "Edelweiss",
+      "url": "https://www.edelweissmf.com/statutory/financials-portfolios",
+      "label": "Statutory",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 99,
+      "amc_match": "Edelweiss",
+      "url": "https://www.edelweissmf.com/statutory/other-disclosures",
+      "label": "Other Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 100,
+      "amc_match": "Edelweiss",
+      "url": "https://www.edelweissmf.com/downloads/factsheets",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 101,
+      "amc_match": "Edelweiss",
+      "url": "https://www.edelweissmf.com/downloads/scheme-summary-document",
+      "label": "Scheme Summary Document",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 24,
+      "amc_match": "Franklin",
+      "url": "https://www.franklintempletonindia.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:24:23+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 25,
+      "amc_match": "Groww",
+      "url": "https://www.growwmf.in/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:24:48+00:00",
+      "status": "Gap",
+      "detail": "The read operation timed out"
+    },
+    {
+      "id": 1,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct",
+      "label": "Fund data and downloads",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:20:30+00:00",
+      "status": "Checked",
+      "detail": "7 relevant links; 7 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 2,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/statutory-disclosure/portfolio",
+      "label": "Portfolio disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:20:09+00:00",
+      "status": "Checked",
+      "detail": "3 relevant links; 3 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 3,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/market-update",
+      "label": "Market updates",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:20:16+00:00",
+      "status": "Gap",
+      "detail": "Client error '404 Not Found' for url 'https://www.hdfcfund.com/market-update'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+    },
+    {
+      "id": 46,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct?utm_source=website&utm_medium=performance_ticker&utm_campaign=smallcap",
+      "label": "HDFC Small Cap Fund 10Y : 18.11%",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:27:47+00:00",
+      "status": "Checked",
+      "detail": "7 relevant links; 7 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 47,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/regular",
+      "label": "regular",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:27:54+00:00",
+      "status": "Checked",
+      "detail": "7 relevant links; 7 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 48,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/mutual-funds/factsheets",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 49,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/learn/macros-markets-more/market-review",
+      "label": "Market Update",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 50,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/distributor-corner/forms-disclosure/forms",
+      "label": "Forms & Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 51,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/statutory-disclosure/total-expense-ratio-of-mutual-fund-schemes/reports",
+      "label": "Total Expense Ratio (TER)",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 52,
+      "amc_match": "HDFC",
+      "url": "https://www.hdfcfund.com/statutory-disclosure",
+      "label": "Statutory Disclosures (MF/ AIF/ PMS)",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 26,
+      "amc_match": "HSBC",
+      "url": "https://www.assetmanagement.hsbc.co.in/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:24:41+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 105,
+      "amc_match": "HSBC",
+      "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management",
+      "label": "Get started",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 27,
+      "amc_match": "Helios",
+      "url": "https://www.heliosmf.in/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:24:56+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 106,
+      "amc_match": "Helios",
+      "url": "https://www.heliosmf.in/portfolio-construction",
+      "label": "Portfolio Construction",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 107,
+      "amc_match": "Helios",
+      "url": "https://www.heliosmf.in/helios-small-cap-fund",
+      "label": "KNOW MORE",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 108,
+      "amc_match": "Helios",
+      "url": "https://www.heliosmf.in/portfolio-disclosure/",
+      "label": "Click Here",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 109,
+      "amc_match": "Helios",
+      "url": "https://www.heliosmf.in/portfolio-disclosure",
+      "label": "Portfolio Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 28,
+      "amc_match": "ICICI",
+      "url": "https://www.icicipruamc.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:03+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 29,
+      "amc_match": "ITI",
+      "url": "https://www.itiamc.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:10+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 149,
+      "amc_match": "ITI",
+      "url": "https://www.itiamc.com/digitalfactsheet/September2026/innerpages/Small-Cap.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:09:28+00:00",
+      "status": "Limited",
+      "detail": "No unambiguous dated AUM could be extracted"
+    },
+    {
+      "id": 151,
+      "amc_match": "ITI",
+      "url": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Small-Cap.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:09:43+00:00",
+      "status": "Limited",
+      "detail": "No unambiguous dated AUM could be extracted"
+    },
+    {
+      "id": 153,
+      "amc_match": "ITI",
+      "url": "https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Small-Cap.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:09:58+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 30,
+      "amc_match": "Invesco",
+      "url": "https://invescomutualfund.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:23+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 110,
+      "amc_match": "Invesco",
+      "url": "https://invescomutualfund.com/statutory-disclosures",
+      "label": "Statutory Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 111,
+      "amc_match": "Invesco",
+      "url": "https://invescomutualfund.com/literature-forms/factsheets",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 112,
+      "amc_match": "Invesco",
+      "url": "https://invescomutualfund.com/statutory-disclosures/voting-policy",
+      "label": "Voting Policy",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 31,
+      "amc_match": "JM Financial",
+      "url": "https://www.jmfinancialmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:23+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 32,
+      "amc_match": "Kotak",
+      "url": "https://www.kotakmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:39+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 113,
+      "amc_match": "Kotak",
+      "url": "https://www.kotakmf.com/factsheet/July_2026/",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 114,
+      "amc_match": "Kotak",
+      "url": "https://www.kotakmf.com/investor/user/statement/postlogin-statements#account-statement",
+      "label": "Account Statement Get your detailed portfolio of your investments",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 115,
+      "amc_match": "Kotak",
+      "url": "https://www.kotakmf.com/Information/corporate-disclosure",
+      "label": "Corporate",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 116,
+      "amc_match": "Kotak",
+      "url": "https://www.kotakmf.com/Information/statutory-disclosure",
+      "label": "Statutory Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 117,
+      "amc_match": "Kotak",
+      "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g",
+      "label": "Kotak Small Cap Fund |",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:08:31+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 33,
+      "amc_match": "LIC",
+      "url": "https://www.licmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:32+00:00",
+      "status": "Gap",
+      "detail": "Robots policy could not be checked"
+    },
+    {
+      "id": 34,
+      "amc_match": "Mahindra",
+      "url": "https://www.mahindramanulife.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:46+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 148,
+      "amc_match": "Mahindra",
+      "url": "https://www.mahindramanulife.com/digital-factsheet/september-2026/Equity-funds/Small-Cap-Fund.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:09:14+00:00",
+      "status": "Limited",
+      "detail": "No unambiguous dated AUM could be extracted"
+    },
+    {
+      "id": 150,
+      "amc_match": "Mahindra",
+      "url": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:09:36+00:00",
+      "status": "Limited",
+      "detail": "No unambiguous dated AUM could be extracted"
+    },
+    {
+      "id": 152,
+      "amc_match": "Mahindra",
+      "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Small-Cap-Fund.html",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:09:51+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 35,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:53+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 118,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/investor-hub/remuneration-disclosure",
+      "label": "Remuneration Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 119,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/factsheet",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 120,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/portfolio",
+      "label": "Portfolio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 121,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/addendum",
+      "label": "Addendum",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 122,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/financials",
+      "label": "Financials",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 123,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/transaction-details",
+      "label": "Transaction Details",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 124,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/total-expense-ratio",
+      "label": "Total Expense ratio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 125,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/other-disclosure",
+      "label": "Other Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 126,
+      "amc_match": "Mirae",
+      "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/issuer-wise-disclosure",
+      "label": "Issuer Wise Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 36,
+      "amc_match": "Motilal",
+      "url": "https://www.motilaloswalmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:58+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 127,
+      "amc_match": "Motilal",
+      "url": "https://www.motilaloswalmf.com/motilal-oswal-edge/articles/monthly-market-outlook-september-2026-by-prateek-agrawal",
+      "label": "Read Now",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 128,
+      "amc_match": "Motilal",
+      "url": "https://www.motilaloswalmf.com/motilal-oswal-edge/articles/monthly-market-outlook-august-2026-by-prateek-agrawal",
+      "label": "Read Now",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 7,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx",
+      "label": "Fund page and downloads",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:21:30+00:00",
+      "status": "Checked",
+      "detail": "6 relevant links; 6 documents archived; 0 download/parser gaps"
+    },
+    {
+      "id": 8,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures",
+      "label": "Portfolio disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:22:57+00:00",
+      "status": "Partial",
+      "detail": "510 relevant links; 18 documents archived; 1 download/parser gaps"
+    },
+    {
+      "id": 9,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document",
+      "label": "Scheme summary documents",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:21:36+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 56,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/_layouts/15/Authenticate.aspx?Source=%2Finvestor%2Dservice%2Fdownloads%2Ffactsheet%2Dportfolio%2Dand%2Dother%2Ddisclosures",
+      "label": "Sign In",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 57,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook",
+      "label": "Market Outlook",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 58,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/downloads/disclosure-requirement-for-amc-pursuant-to-sebi-circular-dated-aug-25-2022",
+      "label": "Disclosure requirement for AMC pursuant to SEBI Circular dated Aug 25 2022",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 59,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/downloads/distributor-disclosures",
+      "label": "Distributor Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 60,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/customer-service/investor-charter-and-disclosure-of-complaints",
+      "label": "Investor charter and Disclosure of complaints",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 61,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/disclosures/dividend-summary",
+      "label": "Dividend Summary",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 62,
+      "amc_match": "Nippon",
+      "url": "https://mf.nipponindiaim.com/investor-service/disclosures/valuation-policies",
+      "label": "Valuation Policies",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 37,
+      "amc_match": "PGIM",
+      "url": "https://www.pgimindiamf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:25:59+00:00",
+      "status": "Gap",
+      "detail": "[Errno -3] Temporary failure in name resolution"
+    },
+    {
+      "id": 38,
+      "amc_match": "Quantum",
+      "url": "https://www.quantumamc.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:14+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 132,
+      "amc_match": "Quantum",
+      "url": "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund",
+      "label": "Quantum Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 133,
+      "amc_match": "Quantum",
+      "url": "https://www.quantumamc.com/Download-document#headingFive",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 134,
+      "amc_match": "Quantum",
+      "url": "https://www.quantumamc.com/Download-document#funds-sec",
+      "label": "Portfolio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 135,
+      "amc_match": "Quantum",
+      "url": "https://www.quantumamc.com/factsheets/combined/-1/0/0",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 136,
+      "amc_match": "Quantum",
+      "url": "https://www.quantumamc.com/portfolio/combined/-1/1/0/0",
+      "label": "Portfolio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 4,
+      "amc_match": "SBI",
+      "url": "https://www.sbimf.com/sbimf-scheme-details/sbi-small-cap-fund-329",
+      "label": "Fund page",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:20:31+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 5,
+      "amc_match": "SBI",
+      "url": "https://www.sbimf.com/portfolios",
+      "label": "Portfolios",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:20:37+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 6,
+      "amc_match": "SBI",
+      "url": "https://www.sbimf.com/factsheets",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:20:38+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 53,
+      "amc_match": "SBI",
+      "url": "https://www.sbimf.com/sbimf-portfolio-advisory",
+      "label": "Portfolio Advisory",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 54,
+      "amc_match": "SBI",
+      "url": "https://www.sbimf.com/sbimf-franklin-templeton-disclosures",
+      "label": "Franklin Templeton Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 55,
+      "amc_match": "SBI",
+      "url": "https://www.sbimf.com/disclosure",
+      "label": "Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 39,
+      "amc_match": "Samco",
+      "url": "https://www.samcomf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:14+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 129,
+      "amc_match": "Samco",
+      "url": "https://www.samcomf.com/StatutoryDisclosure#scheme-financials",
+      "label": "Scheme Financials",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 130,
+      "amc_match": "Samco",
+      "url": "https://www.samcomf.com/downloads/#Factsheet",
+      "label": "Factsheets",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 131,
+      "amc_match": "Samco",
+      "url": "https://www.samcomf.com/StatutoryDisclosure",
+      "label": "Statutory Disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 40,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:30+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 137,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/fund/small-cap-fund",
+      "label": "Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 138,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/fund/sundaram-small-cap-fund",
+      "label": "Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 139,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/fundwise-factsheet",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 140,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/digital-factsheet/SUNMFF-ML",
+      "label": "Sundaram Multi-Factor Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 141,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/digital-factsheet/MIDCAP-MC",
+      "label": "Sundaram Mid Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 142,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/digital-factsheet/MULTIP-LM",
+      "label": "Sundaram Large and Mid Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 143,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/digital-factsheet/SUNBCF-BC",
+      "label": "Sundaram Large Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 144,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/digital-factsheet/SMILE-SC",
+      "label": "Sundaram Small Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 145,
+      "amc_match": "Sundaram",
+      "url": "https://www.sundarammutual.com/digital-factsheet/SPMUCF-MG",
+      "label": "Sundaram Multi Cap Fund",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 41,
+      "amc_match": "Tata",
+      "url": "https://www.tatamutualfund.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:32+00:00",
+      "status": "Gap",
+      "detail": "Source is larger than the 25 MB archive limit; use its original link"
+    },
+    {
+      "id": 147,
+      "amc_match": "Tata",
+      "url": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth",
+      "label": "Fund figures and publications",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T19:08:59+00:00",
+      "status": "Checked",
+      "detail": "Dated AUM extracted; original page archived"
+    },
+    {
+      "id": 42,
+      "amc_match": "The Wealth",
+      "url": "https://www.thewealthcompany.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:43+00:00",
+      "status": "Gap",
+      "detail": "[Errno -3] Temporary failure in name resolution"
+    },
+    {
+      "id": 43,
+      "amc_match": "Trust",
+      "url": "https://www.trustmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:46+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 44,
+      "amc_match": "UTI",
+      "url": "https://www.utimf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:27:02+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 45,
+      "amc_match": "Union",
+      "url": "https://www.unionmf.com/",
+      "label": "Fund house",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:26:55+00:00",
+      "status": "Gap",
+      "detail": "Robots policy could not be checked"
+    },
+    {
+      "id": 15,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/",
+      "label": "Fund house and disclosures",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": "2026-09-06T07:22:58+00:00",
+      "status": "Limited",
+      "detail": "Page archived; no automatically readable fund documents found"
+    },
+    {
+      "id": 63,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/downloads/factsheet",
+      "label": "Factsheet",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 64,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio.aspx",
+      "label": "Notice of Monthly & Fortnightly Portfolio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 65,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/ETF/Tracking.aspx",
+      "label": "Tracking Disclosure",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 66,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio",
+      "label": "Notice of Monthly & Fortnightly Portfolio",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 67,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/Statement-of-Scheme-Portfolios.aspx",
+      "label": "Disclosure of Monthly/Fortnightly Statement of Scheme Portfolios",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    },
+    {
+      "id": 68,
+      "amc_match": "quant Mutual",
+      "url": "https://quantmutual.com/statutory-disclosures",
+      "label": "Statutory Disclosures |",
+      "kind": "disclosure",
+      "enabled": 1,
+      "last_checked": null,
+      "status": "Pending",
+      "detail": null
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "Nifty Smallcap 250 TRI",
+      "first": "2005-04-01",
+      "last": "2026-09-04",
+      "points": 5316
+    }
+  ],
+  "data_location": "/workspace/sites/india-smallcap-tracker/data",
+  "server_time": "2026-09-06T19:22:17+00:00",
+  "families": [
+    {
+      "family": "Abakkus Small Cap Fund",
+      "nav_series": 2,
+      "aum": null,
+      "direct_fee": {
+        "id": 141,
+        "family": "Abakkus Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.27",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 136,
+        "family": "Abakkus Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.59",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2026-03-20",
+        "last": "2026-09-04",
+        "points": 230
+      },
+      "aum_dates": 0,
+      "fee_dates": 67,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "Aditya Birla Sun Life Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 16252,
+        "family": "Aditya Birla Sun Life Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-07-31",
+        "value": "5865.3",
+        "unit": "INR crore",
+        "source": "https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Small-Cap-Fund.html",
+        "hash": "d13d0496b6a120b8c0c924cc368a8b3c01272bcb9d12f3656915e0002437de5c",
+        "observed_at": "2026-09-06T19:06:14+00:00"
+      },
+      "direct_fee": {
+        "id": 201,
+        "family": "Aditya Birla Sun Life Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.07",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 196,
+        "family": "Aditya Birla Sun Life Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.99",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2007-05-31",
+        "last": "2026-09-04",
+        "points": 16201
+      },
+      "aum_dates": 1,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 4
+    },
+    {
+      "family": "Axis Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 16246,
+        "family": "Axis Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-08-31",
+        "value": "31448.32",
+        "unit": "INR crore",
+        "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+        "hash": "0a8c183c6a480b851ab17374ed933fc6be09c9eeb1c8931f7515e697b8d7f34d",
+        "observed_at": "2026-09-06T19:06:13+00:00"
+      },
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2013-12-05",
+        "last": "2026-09-04",
+        "points": 12580
+      },
+      "aum_dates": 1,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 7
+    },
+    {
+      "family": "Bajaj Finserv Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 241,
+        "family": "Bajaj Finserv Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "0.96",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 236,
+        "family": "Bajaj Finserv Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "2.35",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2025-07-22",
+        "last": "2026-09-04",
+        "points": 1108
+      },
+      "aum_dates": 0,
+      "fee_dates": 66,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Bandhan Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 271,
+        "family": "Bandhan Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-03",
+        "value": "0.58",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 266,
+        "family": "Bandhan Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-03",
+        "value": "1.72",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2020-02-26",
+        "last": "2026-09-04",
+        "points": 6472
+      },
+      "aum_dates": 0,
+      "fee_dates": 65,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "Bank Of India Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 311,
+        "family": "Bank Of India Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "0.71",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 306,
+        "family": "Bank Of India Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "2.19",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2018-12-27",
+        "last": "2026-09-04",
+        "points": 7584
+      },
+      "aum_dates": 0,
+      "fee_dates": 66,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Baroda Bnp Paribas Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 351,
+        "family": "Baroda Bnp Paribas Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "1.21",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 346,
+        "family": "Baroda Bnp Paribas Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "2.45",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2023-11-01",
+        "last": "2026-09-04",
+        "points": 2804
+      },
+      "aum_dates": 0,
+      "fee_dates": 66,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "Canara Robeco Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2019-02-19",
+        "last": "2026-09-04",
+        "points": 7432
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "DSP Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 16248,
+        "family": "DSP Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-08-31",
+        "value": "21658.64",
+        "unit": "INR crore",
+        "source": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/small-cap-fund/dspmc-direct-growth",
+        "hash": "a2ee49ce84aa952b52e08f0de7206f23b86aed1c709614a7168f1f372162621b",
+        "observed_at": "2026-09-06T19:06:14+00:00"
+      },
+      "direct_fee": {
+        "id": 391,
+        "family": "DSP Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "0.81",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 386,
+        "family": "DSP Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "1.7",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2007-06-20",
+        "last": "2026-09-04",
+        "points": 14900
+      },
+      "aum_dates": 1,
+      "fee_dates": 48,
+      "portfolio_snapshots": 0,
+      "publication_versions": 3
+    },
+    {
+      "family": "Edelweiss Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 451,
+        "family": "Edelweiss Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "0.66",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 446,
+        "family": "Edelweiss Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.97",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2019-02-14",
+        "last": "2026-09-04",
+        "points": 7452
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Franklin India Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 491,
+        "family": "Franklin India Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "1.07",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "regular_fee": {
+        "id": 486,
+        "family": "Franklin India Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "1.85",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2006-04-03",
+        "last": "2026-09-04",
+        "points": 16792
+      },
+      "aum_dates": 0,
+      "fee_dates": 66,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Groww Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2026-02-02",
+        "last": "2026-09-04",
+        "points": 592
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "HDFC Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 42,
+        "family": "HDFC Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-08-31",
+        "value": "41890.86",
+        "unit": "INR crore",
+        "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/regular",
+        "hash": "052966e5a9b43a7c9c7ac0cb353bf648fec4e0341d3f53b56d07fd976055ffc2",
+        "observed_at": "2026-09-06T07:27:09+00:00"
+      },
+      "direct_fee": {
+        "id": 5121,
+        "family": "HDFC Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-08-31",
+        "value": "0.75",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=08-2026&strCat=18&strType=1&page=3&pageSize=1000",
+        "hash": "b78f2393417b296d4e268ec795a288a6c0fc17c0803b26c8b0348eef0800bbc6",
+        "observed_at": "2026-09-06T13:02:57+00:00"
+      },
+      "regular_fee": {
+        "id": 5116,
+        "family": "HDFC Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-08-31",
+        "value": "1.54",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=08-2026&strCat=18&strType=1&page=3&pageSize=1000",
+        "hash": "b78f2393417b296d4e268ec795a288a6c0fc17c0803b26c8b0348eef0800bbc6",
+        "observed_at": "2026-09-06T13:02:57+00:00"
+      },
+      "nav_history": {
+        "first": "2014-06-30",
+        "last": "2026-09-04",
+        "points": 11992
+      },
+      "aum_dates": 2,
+      "fee_dates": 62,
+      "portfolio_snapshots": 5,
+      "publication_versions": 14
+    },
+    {
+      "family": "HSBC Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2022-11-28",
+        "last": "2026-09-04",
+        "points": 3720
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Helios Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2025-11-28",
+        "last": "2026-09-04",
+        "points": 764
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "ICICI Prudential Small Cap Fund",
+      "nav_series": 5,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2007-10-19",
+        "last": "2026-09-04",
+        "points": 18863
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Invesco India Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2018-11-02",
+        "last": "2026-09-04",
+        "points": 7724
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Iti Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 16254,
+        "family": "Iti Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-07-31",
+        "value": "3454.0",
+        "unit": "INR crore",
+        "source": "https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Small-Cap.html",
+        "hash": "f90390a9489f56c8fe9f53c9caf9abbc84673b0806d29c242016d8fdba72b1a8",
+        "observed_at": "2026-09-06T19:06:14+00:00"
+      },
+      "direct_fee": {
+        "id": 551,
+        "family": "Iti Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "0.86",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 546,
+        "family": "Iti Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.22",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:02+00:00"
+      },
+      "nav_history": {
+        "first": "2020-02-19",
+        "last": "2026-09-04",
+        "points": 6452
+      },
+      "aum_dates": 1,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 4
+    },
+    {
+      "family": "Jm Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2024-06-24",
+        "last": "2026-09-04",
+        "points": 2180
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 2
+    },
+    {
+      "family": "Kotak Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 16251,
+        "family": "Kotak Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-08-31",
+        "value": "19678.0",
+        "unit": "INR crore",
+        "source": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g",
+        "hash": "a86cab52bdf2abc6bb7ac262869d97ee27560fd9ea214e231656013cce39b092",
+        "observed_at": "2026-09-06T19:06:14+00:00"
+      },
+      "direct_fee": {
+        "id": 571,
+        "family": "Kotak Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-02",
+        "value": "0.6359",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 566,
+        "family": "Kotak Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-02",
+        "value": "1.7259",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2006-04-03",
+        "last": "2026-09-04",
+        "points": 16790
+      },
+      "aum_dates": 1,
+      "fee_dates": 64,
+      "portfolio_snapshots": 0,
+      "publication_versions": 3
+    },
+    {
+      "family": "LIC Mf Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 631,
+        "family": "LIC Mf Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.32",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 626,
+        "family": "LIC Mf Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.65",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2023-07-31",
+        "last": "2026-09-04",
+        "points": 3052
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "Mahindra Manulife Small Cap Fund",
+      "nav_series": 4,
+      "aum": {
+        "id": 16256,
+        "family": "Mahindra Manulife Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-07-31",
+        "value": "5086.57",
+        "unit": "INR crore",
+        "source": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Small-Cap-Fund.html",
+        "hash": "320aaadcb379d56c1f6a3693b83455b2d20dd1126cddcd9164e2da91aa9d0ba6",
+        "observed_at": "2026-09-06T19:09:51+00:00"
+      },
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2022-12-14",
+        "last": "2026-09-04",
+        "points": 3672
+      },
+      "aum_dates": 2,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 5
+    },
+    {
+      "family": "Mirae Asset Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2025-02-03",
+        "last": "2026-09-04",
+        "points": 1568
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Motilal Oswal Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 671,
+        "family": "Motilal Oswal Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "0.85",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 666,
+        "family": "Motilal Oswal Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "1.92",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2023-12-29",
+        "last": "2026-09-04",
+        "points": 2648
+      },
+      "aum_dates": 0,
+      "fee_dates": 66,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Nippon India Small Cap Fund",
+      "nav_series": 6,
+      "aum": {
+        "id": 61,
+        "family": "Nippon India Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-07-31",
+        "value": "78956.77",
+        "unit": "INR crore",
+        "source": "https://mf.nipponindiaim.com/InvestorServices/FundwiseFactsheet/NipponIndia-Small-Cap-Fund-MF-Factsheet-2026.pdf",
+        "hash": "98f8d2a58409b8802e7b11ec2dcdb3bc9f7f321aeb2877ec52e45fb2f1e929de",
+        "observed_at": "2026-09-06T07:48:22+00:00"
+      },
+      "direct_fee": {
+        "id": 6671,
+        "family": "Nippon India Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-08-31",
+        "value": "0.69",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=08-2026&strCat=18&strType=1&page=5&pageSize=1000",
+        "hash": "1ddb7ba4b24364a98793acaa14becd93065dca0b7f42f072261faf0862f8ab32",
+        "observed_at": "2026-09-06T13:03:13+00:00"
+      },
+      "regular_fee": {
+        "id": 6666,
+        "family": "Nippon India Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-08-31",
+        "value": "1.41",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=08-2026&strCat=18&strType=1&page=5&pageSize=1000",
+        "hash": "1ddb7ba4b24364a98793acaa14becd93065dca0b7f42f072261faf0862f8ab32",
+        "observed_at": "2026-09-06T13:03:13+00:00"
+      },
+      "nav_history": {
+        "first": "2010-09-21",
+        "last": "2026-09-04",
+        "points": 21880
+      },
+      "aum_dates": 4,
+      "fee_dates": 65,
+      "portfolio_snapshots": 7,
+      "publication_versions": 27
+    },
+    {
+      "family": "Pgim India Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 731,
+        "family": "Pgim India Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "0.93",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 726,
+        "family": "Pgim India Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.37",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2021-08-02",
+        "last": "2026-09-04",
+        "points": 5024
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "Quant Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 791,
+        "family": "Quant Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "0.93",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 786,
+        "family": "Quant Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.75",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2006-04-03",
+        "last": "2026-09-04",
+        "points": 16792
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Quantum Small Cap Fund",
+      "nav_series": 2,
+      "aum": null,
+      "direct_fee": {
+        "id": 831,
+        "family": "Quantum Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "0.83",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 826,
+        "family": "Quantum Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "2.31",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2023-11-03",
+        "last": "2026-09-04",
+        "points": 1392
+      },
+      "aum_dates": 0,
+      "fee_dates": 66,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "SBI Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 901,
+        "family": "SBI Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-03",
+        "value": "0.79",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 896,
+        "family": "SBI Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-03",
+        "value": "1.58",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2013-11-18",
+        "last": "2026-09-04",
+        "points": 12636
+      },
+      "aum_dates": 0,
+      "fee_dates": 65,
+      "portfolio_snapshots": 0,
+      "publication_versions": 3
+    },
+    {
+      "family": "Samco Small Cap Fund",
+      "nav_series": 2,
+      "aum": null,
+      "direct_fee": {
+        "id": 871,
+        "family": "Samco Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "1.97",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 866,
+        "family": "Samco Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-04",
+        "value": "3.41",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2025-12-09",
+        "last": "2026-09-04",
+        "points": 368
+      },
+      "aum_dates": 0,
+      "fee_dates": 48,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Sundaram Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 921,
+        "family": "Sundaram Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-02",
+        "value": "0.98",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 916,
+        "family": "Sundaram Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-02",
+        "value": "2.01",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2006-04-03",
+        "last": "2026-09-04",
+        "points": 16790
+      },
+      "aum_dates": 0,
+      "fee_dates": 64,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Tata Small Cap Fund",
+      "nav_series": 6,
+      "aum": {
+        "id": 16253,
+        "family": "Tata Small Cap Fund",
+        "plan": "All",
+        "metric": "aum",
+        "as_of": "2026-09-03",
+        "value": "13187.58",
+        "unit": "INR crore",
+        "source": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth",
+        "hash": "57c00767eacffcd2f2efaf315664502c1ab515a3b519ee0331e767705f17372f",
+        "observed_at": "2026-09-06T19:06:14+00:00"
+      },
+      "direct_fee": {
+        "id": 951,
+        "family": "Tata Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-03",
+        "value": "0.51",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 946,
+        "family": "Tata Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-03",
+        "value": "1.69",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2018-11-13",
+        "last": "2026-09-04",
+        "points": 11242
+      },
+      "aum_dates": 1,
+      "fee_dates": 65,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "The Wealth Company Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 1011,
+        "family": "The Wealth Company Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.05",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 1006,
+        "family": "The Wealth Company Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "3.98",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2026-03-30",
+        "last": "2026-09-04",
+        "points": 440
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    },
+    {
+      "family": "Trustmf Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 1071,
+        "family": "Trustmf Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.54",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "regular_fee": {
+        "id": 1066,
+        "family": "Trustmf Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.9",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000",
+        "hash": "2882b15979fbd89e7ead9b2442daf6216ea4a3468170345b2d3c9181a35acb22",
+        "observed_at": "2026-09-06T13:01:03+00:00"
+      },
+      "nav_history": {
+        "first": "2024-11-05",
+        "last": "2026-09-04",
+        "points": 1816
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "UTI Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": null,
+      "regular_fee": null,
+      "nav_history": {
+        "first": "2020-12-23",
+        "last": "2026-09-04",
+        "points": 5620
+      },
+      "aum_dates": 0,
+      "fee_dates": 0,
+      "portfolio_snapshots": 0,
+      "publication_versions": 1
+    },
+    {
+      "family": "Union Small Cap Fund",
+      "nav_series": 4,
+      "aum": null,
+      "direct_fee": {
+        "id": 3131,
+        "family": "Union Small Cap Fund",
+        "plan": "Direct",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "1.1",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=2&pageSize=1000",
+        "hash": "e5c6445128b62242ce8522e75555d59deed9dd0d4aacad27ca963c5242f4efb4",
+        "observed_at": "2026-09-06T13:02:30+00:00"
+      },
+      "regular_fee": {
+        "id": 3126,
+        "family": "Union Small Cap Fund",
+        "plan": "Regular",
+        "metric": "ter",
+        "as_of": "2026-09-06",
+        "value": "2.17",
+        "unit": "% p.a. · reported by AMC via AMFI",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=2&pageSize=1000",
+        "hash": "e5c6445128b62242ce8522e75555d59deed9dd0d4aacad27ca963c5242f4efb4",
+        "observed_at": "2026-09-06T13:02:30+00:00"
+      },
+      "nav_history": {
+        "first": "2014-06-17",
+        "last": "2026-09-04",
+        "points": 12024
+      },
+      "aum_dates": 0,
+      "fee_dates": 68,
+      "portfolio_snapshots": 0,
+      "publication_versions": 0
+    }
+  ],
+  "limitations": [
+    "AUM, expenses, full portfolios and archived communications are incomplete across the universe.",
+    "Current AMFI small-cap category; the historical closed/merged universe is not reconstructed.",
+    "Older NAV comes from MFapi; it is not all independently verified against AMFI.",
+    "Nifty Smallcap 250 TRI is a category comparator where the stated benchmark is unavailable or unverified.",
+    "BSE TRI and historical benchmark changes are not included.",
+    "IDCW total returns require complete distribution data; bonus options require unit adjustments.",
+    "Automated portfolios are partial; security departures do not prove sales.",
+    "Archived versions start when accessible documents are collected; unavailable older versions remain gaps.",
+    "A daily schedule requests midnight IST execution; GitHub may delay or skip runs.",
+    "GitHub deployment, Windows desktop launch and browser visual testing have not been performed."
+  ]
+}
