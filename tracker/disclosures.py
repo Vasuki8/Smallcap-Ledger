@@ -7,6 +7,7 @@ from datetime import date,datetime
 from urllib.parse import urlparse,unquote
 from bs4 import BeautifulSoup
 from . import db
+from .publications import exclusion_reason
 from .providers import fetch,can_crawl,iso,number,candidate_links,classify,save_document,doc_version
 
 
@@ -15,7 +16,8 @@ def clean(v):
 
 
 def official_publication_url(url,amc_match):
-    """Only the fund house's registered source domains and their subdomains."""
+    """Registered AMC domains, excluding known sections for another AMC's schemes."""
+    if exclusion_reason(amc_match,url):return False
     host=(urlparse(url).hostname or '').lower()
     roots={urlparse(u).hostname.lower().removeprefix('www.') for amc,u,_ in json.loads((db.ROOT/'tracker'/'sources.json').read_text()) if amc.lower()==amc_match.lower()}
     # Custom source pages are explicit owner-provided AMC sources.
@@ -212,6 +214,8 @@ def factsheet_pdf(content,family,url,h):
 
 def ingest_source(source):
     url=source["url"]
+    reason=exclusion_reason(source['amc_match'],url,source['label'])
+    if reason:return 'Excluded: '+reason
     families=db.rows("SELECT DISTINCT family FROM schemes WHERE instr(lower(amc),lower(?))>0",(source["amc_match"],))
     if not families: return "No matching small-cap fund yet"
     can_crawl(url)
@@ -241,6 +245,7 @@ def ingest_source(source):
         for target,title in sorted(links.items(),key=lambda item:last_attempt.get(item[0],'')):
             if target==url or not target.startswith(("http://","https://")): continue
             if not official_publication_url(target,source['amc_match']):continue
+            if exclusion_reason(source['amc_match'],target,title):continue
             combined=unquote(title+' '+target)
             if re.search(r'small[\s_\-]*cap',combined,re.I) and re.search(r'\b(?:ETF|index[\s_\-]*fund)\b',combined,re.I):continue
             specific=bool(re.search(r"small[\s_\-]*cap",combined,re.I)) and not re.search(r"mid[\s_\-]*small",combined,re.I)
@@ -291,3 +296,8 @@ def seed_sources():
     entries.extend(monthly_sources())
     with db.connect() as c:
         c.executemany("INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)",entries)
+        # Retain the old source and archive for audit, but stop following a
+        # discovered section that belongs to another AMC's schemes.
+        for row in c.execute('SELECT id,amc_match,url,label FROM source_pages WHERE enabled=1').fetchall():
+            reason=exclusion_reason(row['amc_match'],row['url'],row['label'])
+            if reason:c.execute("UPDATE source_pages SET enabled=0,status='Excluded',detail=? WHERE id=?",(reason,row['id']))

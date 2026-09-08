@@ -250,13 +250,20 @@ def fetch_benchmark(progress=lambda _:None):
 
 def document_title(title,url):
     title=re.sub('[\u200b-\u200d\ufeff]','',title).strip()
-    if title.lower() in ('download','click here','read more','view','pdf','excel','download pdf','download excel'):
+    generic_report=title.lower() in ('factsheet','factsheets','official factsheet','monthly factsheet',
+        'small cap monthly factsheet','portfolio','portfolios','official portfolio','latest monthly portfolio','official report archive')
+    if title.lower() in ('download','click here','read more','view','pdf','excel','download pdf','download excel') or (generic_report and re.search(r'\.(?:pdf|xlsx?|xml)$',urlparse(url).path,re.I)):
         title=unquote(urlparse(url).path.rsplit('/',1)[-1])
         title=re.sub(r'\.(pdf|xlsx?|xml)$','',title,flags=re.I).replace('_',' ').replace('-',' ')
+        if title: title=title[0].upper()+title[1:]
+        title=re.sub(r'\bsbi\b','SBI',title,flags=re.I)
     return title
 
 
 def save_document(family,title,url,kind="disclosure",scope="Fund",published=None,origin="AMC"):
+    from .publications import exclusion_reason
+    reason=exclusion_reason(family,url,title)
+    if reason:raise ValueError(reason)
     title=document_title(title,url)
     with db.connect() as c:
         c.execute('''INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)

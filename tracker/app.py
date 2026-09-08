@@ -180,7 +180,13 @@ def holdings(snapshot_id:int):
 def documents(code:int):
     s=scheme(code)
     docs=db.rows("SELECT * FROM documents WHERE family=? AND kind!='news' AND (origin='AMC' OR origin LIKE 'User import%') ORDER BY COALESCE(published_at,first_seen) DESC,id DESC",(s['family'],))
-    for d in docs:d['versions']=db.rows("SELECT v.*,a.media_type,a.bytes FROM document_versions v JOIN archives a ON a.hash=v.hash WHERE document_id=? ORDER BY v.id DESC",(d['id'],))
+    from .publications import exclusion_reason
+    # Apply current ownership rules to previously archived associations as well.
+    # No historical document, version, or source file is deleted.
+    docs=[d for d in docs if not exclusion_reason(s['amc'],d['url'],d['title'])]
+    for d in docs:
+        d['title']=providers.document_title(d['title'],d['url'])
+        d['versions']=db.rows("SELECT v.*,a.media_type,a.bytes FROM document_versions v JOIN archives a ON a.hash=v.hash WHERE document_id=? ORDER BY v.id DESC",(d['id'],))
     return docs
 
 
