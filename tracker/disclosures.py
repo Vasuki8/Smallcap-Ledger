@@ -217,6 +217,7 @@ def ingest_source(source):
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,_=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
+    direct=direct or content.startswith(b'%PDF')
     if direct:
         from .amc_reports import extract
         n=0
