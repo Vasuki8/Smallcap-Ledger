@@ -288,6 +288,18 @@ def candidate_links(soup,base):
         url=urljoin(base,href)
         title=a.get_text(" ",strip=True) or a.get("title","") or urlparse(url).path.rsplit("/",1)[-1]
         found[url]=title
+    # Motilal's public HTML also exposes download fields as definition lists.
+    if ((urlparse(base).hostname or '').removeprefix('www.')=='motilaloswalmf.com'
+            and urlparse(base).path.rstrip('/')=='/mutual-funds/motilal-oswal-small-cap-fund'):
+        fields={'portfoliourl':'Latest monthly portfolio','latestfactsheetpdf':'Latest factsheet',
+                'brochurepdf':'Fund brochure','presentationpdf':'Fund presentation',
+                'siddocumentpdf':'Scheme information document'}
+        for tag in soup.select('strong'):
+            label=tag.get_text(strip=True);key=label.rstrip(':').lower()
+            if key not in fields:continue
+            value=tag.parent.get_text(' ',strip=True).removeprefix(label).lstrip(': ')
+            if value.startswith('/content/dam/motilal-mf/') and re.search(r'\.(?:pdf|xlsx?)(?:\?|$)',value,re.I):
+                found[urljoin(base,value)]=fields[key]
     # Many AMC pages publish their download data as embedded JSON.
     def walk(node,inherited=''):
         if isinstance(node,dict):

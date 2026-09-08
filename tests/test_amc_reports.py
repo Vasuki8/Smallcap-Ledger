@@ -79,9 +79,49 @@ class ReportParserTests(unittest.TestCase):
         from datetime import date
         from tracker.amc_reports import monthly_sources
         sources=list(monthly_sources(date(2026,1,5)))
-        self.assertEqual(len(sources),6)
-        self.assertIn('/2025/november/',sources[-2][1])
+        canara=[url for amc,url,_ in sources if amc=='Canara']
+        sbi=[url for amc,url,_ in sources if amc=='SBI']
+        self.assertEqual(len(canara),3)
+        self.assertIn('/2025/november/',canara[-1])
+        self.assertIn('november-2025.pdf',sbi[-1])
         self.assertEqual(page_facts(self.report('Test Small Cap Fund','Month End: Rs. 100 Cr'),'Test Small Cap Fund'),[])
+
+    def test_motilal_explicit_aum_date_and_average(self):
+        f='Motilal Oswal Small Cap Fund'
+        text=self.report(f,'Latest AUM (31-July-2026) (in Rs Crs.) 7,604.53\nMonthly AAUM (31 -July-2026) (in Rs Crs.) 7,421.54\nData as on 4 September, 2026')
+        facts=page_facts(text,f)
+        self.assertEqual([(x['metric'],x['value'],x['as_of']) for x in facts],[('aum',7604.53,'2026-07-31'),('average_aum',7421.54,'2026-07-31')])
+
+    def test_mirae_crore_units_and_reject_multi_fund_snapshot(self):
+        f='Mirae Asset Small Cap Fund'
+        text=self.report(f,'Monthly Factsheet as on 31 July, 2026\nNet AUM (Cr.) 5,220.93\nBase Expense Ratio\nRegular Plan 1.60%\nDirect Plan 0.34%')
+        facts=page_facts(text,f)
+        self.assertEqual(facts[0]['value'],5220.93)
+        self.assertEqual(facts[-1]['metric'],'base_expense_ratio')
+        self.assertEqual(page_facts('Mirae Asset Equity Snapshot\n'+text,f),[])
+
+    def test_sbi_inr_not_usd_and_ter_not_ber(self):
+        f='SBI Small Cap Fund'
+        text=self.report(f,'FUND DETAILS AS ON 31/07/2026\nFund Size ` in Cr. $ in Mn.\nMonth end AUM 39,942.33 4,188.12\nMonthly Avg. AUM 40,368.60 4,232.81\nExpense Ratio\nPlan Regular Direct\nTER 1.57 0.74\nBER 1.29 0.57\nBenchmark BSE 250 Small Cap\nIndex TRI')
+        values={(x['metric'],x['plan']):x['value'] for x in page_facts(text,f)}
+        self.assertEqual(values[('aum','All')],39942.33)
+        self.assertEqual(values[('ter','Direct')],.74)
+        self.assertEqual(values[('base_expense_ratio','Direct')],.57)
+        self.assertEqual(values[('benchmark','All')],'BSE 250 Small Cap Index TRI')
+
+    def test_sbi_wrapped_equities_exclude_cash_and_sector_rows(self):
+        f='SBI Small Cap Fund'
+        text=self.report(f,'Company/ Issuer Rating Net% To AUM\nEQUITY SHARES\nCHEMICALS\nAlpha Fertilizers And Petrochemicals\nCorporation Ltd 2.04\nPOWER\nBeta Ltd 2.17\nTOTAL 4.21\nTREASURY BILLS\nCASH 95.79')
+        positions=equity_positions(text,f)
+        self.assertEqual([x['name'] for x in positions],['Alpha Fertilizers And Petrochemicals Corporation Ltd','Beta Ltd'])
+        self.assertAlmostEqual(sum(x['weight'] for x in positions),4.21)
+
+    def test_official_motilal_download_fields_with_or_without_colon(self):
+        from bs4 import BeautifulSoup
+        from tracker.providers import candidate_links
+        soup=BeautifulSoup('<ul><li><strong>brochurepdf</strong>/content/dam/motilal-mf/report.pdf</li><li><strong>portfolioUrl:</strong> /content/dam/motilal-mf/portfolio.xlsx</li><li><strong>latestFactsheetPdf</strong>https://third-party.example/factsheet.pdf</li></ul>','html.parser')
+        links=candidate_links(soup,'https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-small-cap-fund')
+        self.assertEqual(set(links),{'https://www.motilaloswalmf.com/content/dam/motilal-mf/report.pdf','https://www.motilaloswalmf.com/content/dam/motilal-mf/portfolio.xlsx'})
 
 
 if __name__=='__main__':unittest.main()

@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v1'
+PARSER_VERSION='amc-reports-2026-09-v2'
 
 
 def monthly_sources(today=None):
@@ -17,6 +17,8 @@ def monthly_sources(today=None):
         # July reports. A missing/newly changed path remains an explicit source gap.
         yield ('Canara',f'https://digitalassets.canararobeco.com/digital-factsheet/{year}/{name}/Scheme/Factsheet.pdf','Monthly factsheet')
         yield ('Invesco',f'https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-{name}-{year}.pdf','Monthly factsheet')
+        yield ('Mirae',f'https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---{name}-{year}.pdf','Monthly active factsheet')
+        yield ('SBI',f'https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-{name}-{year}.pdf','Small cap monthly factsheet')
 
 
 def init():

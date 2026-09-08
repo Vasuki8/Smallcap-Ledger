@@ -22,6 +22,7 @@ def normalize(text):
 
 def dated(value):
     value=re.sub(r'(?<=\d)(st|nd|rd|th)\b','',value,flags=re.I)
+    value=re.sub(r'\s+([,./-])',r'\1',value)
     value=re.sub(r'\s+',' ',value.strip()).replace('Sept','Sep')
     for fmt in ('%d.%m.%Y','%d.%m.%y','%d/%m/%Y','%d-%m-%Y','%d-%b-%Y','%d-%b-%y','%d-%B-%Y',
                 '%d %B %Y','%d %b %Y','%d %B, %Y','%d %b, %Y',
@@ -35,6 +36,7 @@ def dated(value):
 
 def owns_page(text,family):
     """An exact scheme heading must be followed closely by its scheme description."""
+    if family=='Mirae Asset Small Cap Fund' and re.search(r'Equity Snapshot',text,re.I):return False
     compact=lambda s:re.sub('[^a-z0-9]','',s.lower())
     lines=normalize(text).splitlines()
     for i,line in enumerate(lines):
@@ -53,7 +55,13 @@ def page_facts(text,family):
     flat=re.sub(r'\s+',' ',text)
     # AUM's own explicit date has priority over a nearby NAV business-day date.
     report=None
+    if family=='Motilal Oswal Small Cap Fund':
+        m=re.search(r'\bLatest AUM\s*\(\s*('+DATE+r')\s*\)',flat,re.I)
+        if m:
+            report=dated(m.group(1))
+            if not report:return []
     for label in (r'(?:month end )?(?:aum|assets under management\s*\(aum\))',r'Details',r'Data',r'Portfolio',r'Report',r'Factsheet',r'NAV'):
+        if report:break
         m=re.search(r'\b'+label+r'\s*(?:#|\((?!as )[^)]*\))?\s*\(?(?:as (?:on|of|at))\s*[:(]?\s*('+DATE+r')',flat,re.I)
         if m:
             report=dated(m.group(1))
@@ -75,6 +83,7 @@ def page_facts(text,family):
         r'\bMonth end Assets Under Management\s*\(AUM\)\s*#?\s*'+currency+NUMBER+r'\s*'+unit,
         r'\bAUM\s*\(?as\s+(?:on|of)\s*('+DATE+r')\s*\)?\s*[:#-]?\s*'+currency+NUMBER+r'\s*'+unit,
         r'\bAUM\s+as\s+(?:on|of)\s*'+DATE+r'\s*\(in\s*(?:₹|Rs\.?)?\s*Crores?\)\s*Month End AUM\s*'+NUMBER,
+        r'\bNet AUM\s*\(Cr\.\)\s*'+NUMBER,
     ]
     for index,pattern in enumerate(patterns):
         m=re.search(pattern,flat,re.I)
@@ -84,6 +93,19 @@ def page_facts(text,family):
             break
     avg=re.search(r'\bMonthly (?:Average|AVG) (?:AUM|Assets Under Management\s*\(AAUM\))\s*[:#-]?\s*'+currency+NUMBER+r'\s*'+unit,flat,re.I)
     if avg:add('average_aum',float(avg.group(1).replace(',','')))
+    if family=='Motilal Oswal Small Cap Fund':
+        for label,key in [('Latest AUM','aum'),('Monthly AAUM','average_aum')]:
+            m=re.search(r'\b'+label+r'\s*\(\s*('+DATE+r')\s*\)\s*\(in Rs Crs\.\)\s*'+NUMBER,flat,re.I)
+            if m and dated(m.group(1))==report:add(key,float(m.group(2).replace(',','')))
+    if family=='SBI Small Cap Fund' and re.search(r'Fund Size\s*`\s*in Cr\.\s*\$\s*in Mn\.',flat,re.I):
+        # The first column is INR crore; the second column is USD millions.
+        for label,key in [('Month end AUM','aum'),(r'Monthly Avg\. AUM','average_aum')]:
+            m=re.search(label+r'\s*'+NUMBER+r'\s+'+NUMBER,flat,re.I)
+            if m:add(key,float(m.group(1).replace(',','')))
+        m=re.search(r'Expense Ratio Plan Regular Direct TER\s+'+NUMBER+r'\s+'+NUMBER+r'\s+BER\s+'+NUMBER+r'\s+'+NUMBER,flat,re.I)
+        if m:
+            for (key,plan),v in zip([('ter','Regular'),('ter','Direct'),('base_expense_ratio','Regular'),('base_expense_ratio','Direct')],m.groups()):
+                if 0<=float(v)<=5:add(key,float(v),plan,unit='% p.a.')
     if family=='Quant Small Cap Fund':
         for label,key in [('AUM','aum'),('AAUM','average_aum')]:
             m=re.search(r'\b'+label+r'\s*\('+DATE+r'\)\s*:\s*Rs\.\s*'+NUMBER+r'\s*Cr',flat,re.I)
@@ -127,6 +149,9 @@ def page_facts(text,family):
             v=m.group(1).strip()
             if key=='benchmark' and re.search(r'Nifty|BSE|CRISIL',v,re.I):add(key,v,unit='Reported')
             elif key=='fund_launch' and dated(v):add(key,dated(v),unit='Reported')
+    if family=='SBI Small Cap Fund' and re.search(r'Benchmark BSE 250 Small Cap\s+Index TRI',text):
+        for fact in out:
+            if fact['metric']=='benchmark':fact['value']='BSE 250 Small Cap Index TRI'
     return out
 
 
@@ -135,20 +160,28 @@ def equity_positions(text,family):
     if not owns_page(text,family):return []
     text=normalize(text)
     # Explicitly supported layouts. Never treat arbitrary performance rows as holdings.
-    if family not in ('Canara Robeco Small Cap Fund','DSP Small Cap Fund','Invesco India Small Cap Fund','Quantum Small Cap Fund'):return []
+    if family not in ('Canara Robeco Small Cap Fund','DSP Small Cap Fund','Invesco India Small Cap Fund','Quantum Small Cap Fund','Mirae Asset Small Cap Fund','SBI Small Cap Fund'):return []
     start=re.search(r'Name of (?:the )?Instrument',text,re.I)
     if family=='Invesco India Small Cap Fund':start=re.search(r'Company % of Net\s+Assets',text,re.I)
+    if family=='Mirae Asset Small Cap Fund':start=re.search(r'Portfolio Top 10 Holdings',text,re.I)
+    if family=='SBI Small Cap Fund' and re.search(r'Net% To\s+AUM',text):start=re.search(r'EQUITY SHARES',text)
     if not start:return []
-    section=re.split(r'TOP 10 INDUSTRIES|RISKOMETER|SIP Performance|Lumpsum Performance',text[start.end():],flags=re.I)[0]
+    section=re.split(r'TOP 10 INDUSTRIES|RISKOMETER|SIP Performance|Lumpsum Performance|Allocation - Top 10 Sectors|TREASURY BILLS',text[start.end():],flags=re.I)[0]
     positions=[];pending='';sector=None
     for line in section.splitlines():
         line=line.strip().lstrip('\uf03d\uf0fc• ').strip()
-        ending=r'%?' if family=='Invesco India Small Cap Fund' else '%'
+        ending=r'%?' if family in ('Invesco India Small Cap Fund','SBI Small Cap Fund') else '%'
         m=re.fullmatch(r'(.+?)\s+(?:[LMS]\s+)?(-?\d+(?:\.\d+)?)'+ending,line)
         if not m:
+            if family=='SBI Small Cap Fund':
+                if line.isupper():sector=line;pending=''
+                elif re.search('Company/|AUM|Issuer Rating',line):pending=''
+                else:pending=line
+                continue
             pending=line if re.search(r'Company|Services|Industries|Limited|Bank|Corporation',line,re.I) else ''
             continue
         name=m.group(1);weight=float(m.group(2))
+        if family=='SBI Small Cap Fund' and pending:name=pending+' '+name
         if name in ('Ltd','Ltd.','Limited') and pending:name=pending+' '+name
         pending=''
         if not re.search(r'\b(?:Ltd\.?|Limited)\b',name,re.I):
