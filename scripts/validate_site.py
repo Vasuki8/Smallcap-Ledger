@@ -5,6 +5,9 @@ from pathlib import Path
 import sys
 from urllib.parse import urlparse
 
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from tracker.publications import exclusion_reason
+
 
 def validate(root):
     root=Path(root).resolve()
@@ -29,6 +32,8 @@ def validate(root):
             assert all(d['kind']!='news' and (d['origin']=='AMC' or d['origin'].startswith('User import')) for d in docs),'Third-party news entered the export'
             for d in docs:
                 assert urlparse(d['url']).scheme in ('http','https'),'Invalid source URL'
+                assert d['family']==f['family'],'Publication attached to another fund'
+                assert not exclusion_reason(f['amc'],d['url'],d['title']),f'Unrelated AMC publication: {d["url"]}'
     for source,target in read('data/downloads.json').items():
         p=(root/target).resolve()
         assert source.startswith('/api/') and p.is_relative_to(root) and p.is_file(),f'Broken download: {source}'

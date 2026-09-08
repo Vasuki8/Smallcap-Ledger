@@ -62,7 +62,8 @@ class Updater:
                         s=futures[f];self.progress(kind,f"Fund disclosures {i}/{len(sources)} · {s['amc_match']}")
                         try:
                             msg=f.result();status="Checked"
-                            if 'no automatically readable' in msg or 'No matching' in msg:status='Limited'
+                            if msg.startswith('Excluded:'):status='Excluded'
+                            elif 'no automatically readable' in msg or 'No matching' in msg:status='Limited'
                             elif not msg.endswith('; 0 download/parser gaps'):status='Partial';errors.append(s['amc_match']+': '+msg)
                         except Exception as e: status="Gap";msg=str(e)[:350];errors.append(s['amc_match']+": "+msg)
                         with db.connect() as c: c.execute("UPDATE source_pages SET last_checked=?,status=?,detail=? WHERE id=?",(db.now(),status,msg,s['id']))

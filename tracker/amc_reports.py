@@ -33,6 +33,8 @@ def init():
 def extract(content,family,url,h):
     """Cache only successful parsing, including an explicit unrecognized-layout result."""
     from . import disclosures
+    from .publications import exclusion_reason
+    if exclusion_reason(family,url):return 0
     init()
     old=db.one('SELECT * FROM document_extractions WHERE family=? AND hash=? AND parser_version=?',
                (family,h,PARSER_VERSION))
@@ -65,12 +67,14 @@ def extract(content,family,url,h):
 def reprocess_archived():
     """Upgrade extracted facts in place. Never replace the cumulative database."""
     from .providers import classify
+    from .publications import exclusion_reason
     init();checked=0;gaps=[]
     rows=db.rows('''SELECT DISTINCT d.family,d.url,v.hash,a.path FROM documents d
       JOIN document_versions v ON v.document_id=d.id JOIN archives a ON a.hash=v.hash
       LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
       WHERE d.origin='AMC' AND e.hash IS NULL ORDER BY d.last_seen DESC''',(PARSER_VERSION,))
     for row in rows:
+        if exclusion_reason(row['family'],row['url']):continue
         if classify('',row['url']) not in ('factsheet','portfolio','scheme document'):continue
         try:
             extract((db.DATA/row['path']).read_bytes(),row['family'],row['url'],row['hash']);checked+=1
