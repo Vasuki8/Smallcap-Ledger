@@ -70,10 +70,11 @@ def option_label(s):
 
 
 def metrics_for(s):
+    from .reviewed_reports import annotate
     records=db.rows("SELECT * FROM metrics WHERE family=? AND plan IN ('All',?) ORDER BY as_of DESC,id DESC",(s['family'],s['plan']))
     latest={}
     for x in records:
-        if x['metric'] not in latest:latest[x['metric']]=x
+        if x['metric'] not in latest:latest[x['metric']]=annotate(x)
     return latest
 
 

@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v3'
+PARSER_VERSION='amc-reports-2026-09-v4'
 
 
 def monthly_sources(today=None):
@@ -19,6 +19,7 @@ def monthly_sources(today=None):
         yield ('Invesco',f'https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-{name}-{year}.pdf','Monthly factsheet')
         yield ('Mirae',f'https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---{name}-{year}.pdf','Monthly active factsheet')
         yield ('SBI',f'https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-{name}-{year}.pdf','Small cap monthly factsheet')
+        yield ('JM Financial',f'https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20{calendar.month_name[month]}%20{year}.pdf','Monthly factsheet')
 
 
 def init():

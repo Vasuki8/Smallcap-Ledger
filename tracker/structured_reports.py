@@ -16,6 +16,8 @@ URLS={
 
 
 def extract(content,family,url,h):
+    if family=='Baroda Bnp Paribas Small Cap Fund' and urlparse(url).hostname in ('www.barodabnpparibasmf.in','barodabnpparibasmf.in') and re.fullmatch(r'/efactsheet/[A-Za-z]{3}\d{4}/Innerpages/Small-cap.html',urlparse(url).path):
+        return baroda(content,family,url,h)
     expected=URLS.get(family)
     if not expected or urlparse(url)._replace(query='',fragment='')!=urlparse(expected):return None
     saved=0
@@ -63,6 +65,17 @@ def extract(content,family,url,h):
             positions=franklin_positions(table)
             if positions:portfolio(family,day,positions,True,url,h);saved+=len(positions)
     return saved
+
+
+def baroda(content,family,url,h):
+    soup=BeautifulSoup(content,'html.parser')
+    if not soup.title or re.sub(r'[^a-z]','',soup.title.get_text().lower())!='bbnppsmallcapfund':return 0
+    text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True));count=0
+    for label,key in [('Monthly AAUM','average_aum'),('AUM','aum')]:
+        m=re.search(r'\b'+label+r'## As on\s+('+DATE+r')\s*:\s*₹\s*([\d,.]+)\s*Crores',text,re.I)
+        if m and dated(m.group(1)) and 0<number(m.group(2))<10_000_000:
+            db.metric(family,'All',key,dated(m.group(1)),number(m.group(2)),'INR crore',url,h);count+=1
+    return count
 
 
 def franklin_positions(table):

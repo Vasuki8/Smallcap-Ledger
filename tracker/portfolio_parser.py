@@ -50,9 +50,10 @@ def parse_sheet(rows,formats,family):
             break
         isin=str(row[ic] or '').strip();valid_isin=bool(re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',isin))
         named_equity=not isin and asset=='Equity' and re.search(r'\b(?:Ltd\.?|Limited)\s*[*^@#]?$',name,re.I) and qc is not None and not empty(row[qc])
-        if not valid_isin and not named_equity:
+        named_repo=family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)
+        if not valid_isin and not named_equity and not named_repo:
             if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
-            leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri-party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
+            leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
                 elif re.search(r'treasury|government|debt',label,re.I):asset='Debt'
@@ -65,7 +66,7 @@ def parse_sheet(rows,formats,family):
         try:w=weight(ri,row);v=numeric(row[vc])
         except ValueError:unknown.append(label);continue
         if not -100<=w<=100:unknown.append(label);continue
-        kind=asset if valid_isin or named_equity else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
+        kind=asset if valid_isin or named_equity or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
         positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':str(row[sc] or '') if sc is not None and valid_isin else None,'weight':w,'asset_type':kind});values.append(v)
     aum=None
     if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)

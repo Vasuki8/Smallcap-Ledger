@@ -94,8 +94,8 @@ def update(progress=lambda _:None):
         try:
             for family,url,title in discover(amc):
                 try:count+=store_report(amc,family,url,title)
-                except Exception as e:fail.append(str(e).splitlines()[0][:180])
-        except Exception as e:fail.append(str(e).splitlines()[0][:180])
+                except Exception as e:fail.append((str(e) or type(e).__name__).splitlines()[0][:180])
+        except Exception as e:fail.append((str(e) or type(e).__name__).splitlines()[0][:180])
         detail=f'{count} dated facts/holdings'+('; '+ '; '.join(fail) if fail else '')
         # A separate audit survives even when the numeric fund API has no PDF.
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))

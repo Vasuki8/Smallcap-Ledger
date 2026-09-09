@@ -126,5 +126,38 @@ class CoverageExpansionTests(unittest.TestCase):
         self.assertEqual(links,{'https://www.wealthcompanyamc.in/uploads/report.xlsx':row['name']})
         self.assertEqual(providers.classify('Abakkus Fund Spectrum','/uploads/report.pdf'),'factsheet')
 
+    def test_reviewed_observation_has_no_fabricated_pdf_hash(self):
+        from tracker import reviewed_reports
+        r=reviewed_reports.reports()[0]
+        with db.connect() as c:c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(1,?,?,?,?,?,?)',(r['family'],r['family'],r['amc'],'Direct','Growth','test'))
+        reviewed_reports.apply();reviewed_reports.apply()
+        fact=db.one("SELECT * FROM metrics WHERE metric='aum'")
+        self.assertEqual(fact['as_of'],r['as_of']);self.assertEqual(fact['hash'],'')
+        self.assertIn('Reviewed official report',reviewed_reports.annotate(fact)['source_note'])
+        self.assertEqual(db.one('SELECT COUNT(*) n FROM document_versions')['n'],0)
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM metrics WHERE metric='aum'")['n'],1)
+
+    def test_baroda_monthly_average_cannot_become_month_end(self):
+        f='Baroda Bnp Paribas Small Cap Fund';u='https://www.barodabnpparibasmf.in/efactsheet/Jul2026/Innerpages/Small-cap.html'
+        html='<title>BBNPP Small Cap Fund</title><p>Monthly AAUM## As on July 31, 2026 : ₹ 1,278.20 Crores</p>'
+        self.assertEqual(extract(html,f,u,'h'),1)
+        self.assertEqual(db.one('SELECT metric FROM metrics')['metric'],'average_aum')
+        self.assertEqual(extract(html.replace('Small Cap','Mid Cap'),f,u,'bad'),0)
+
+    def test_axis_dated_unqualified_expense_is_not_ter(self):
+        from tracker.amc_metrics import parse_page
+        f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
+        html='<h1>Axis Small Cap Fund</h1><p>AUM (In Cr.) ₹ 31,448.32 As On Aug 31, 2026</p><p>Expense Ratio 0.71% As On Sep 05, 2026</p>'
+        parse_page(html,f,u,'h')
+        self.assertEqual(db.one("SELECT metric,plan,as_of FROM metrics WHERE metric!='aum'"),{'metric':'expense_ratio','plan':'Direct','as_of':'2026-09-05'})
+
+    def test_named_repo_is_limited_to_its_verified_scheme_layout(self):
+        rows,fmt=self.sheet();rows[0]=['Motilal Oswal Small Cap Fund']
+        rows[5]=['CBLO','TRP_030826','','',600,.06]
+        rows.insert(5,['','Money Market Instruments','','','','']);fmt.insert(5,['General']*6)
+        self.assertTrue(parse_sheet(rows,fmt,'Motilal Oswal Small Cap Fund')['complete'])
+        rows[0]=['Test Small Cap Fund']
+        self.assertFalse(parse_sheet(rows,fmt,'Test Small Cap Fund')['complete'])
+
 
 if __name__=='__main__':unittest.main()

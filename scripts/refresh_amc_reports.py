@@ -15,6 +15,8 @@ from tracker import db,providers,disclosures,amc_reports
 
 def run():
     db.init();disclosures.seed_sources()
+    from tracker import reviewed_reports
+    print(f'{reviewed_reports.apply()} reviewed official figures retained with source notes',flush=True)
     key='amc_upgrade_'+amc_reports.PARSER_VERSION
     if db.setting(key,False):
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return

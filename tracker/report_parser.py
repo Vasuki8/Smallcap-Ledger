@@ -173,7 +173,8 @@ def page_facts(text,family):
     if family=='SBI Small Cap Fund' and re.search(r'Benchmark BSE 250 Small Cap\s+Index TRI',text):
         for fact in out:
             if fact['metric']=='benchmark':fact['value']='BSE 250 Small Cap Index TRI'
-    return out
+    # Overlapping verified labels may identify the same fact.
+    return list({tuple(sorted(f.items())): f for f in out}.values())
 
 
 def equity_positions(text,family):
