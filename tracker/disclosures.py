@@ -262,7 +262,7 @@ def ingest_source(source):
             if re.search(r'small[\s_\-]*cap',url,re.I) and re.search(r'latest.*(?:portfolio|factsheet)',title,re.I):specific=True
             commentary=bool(re.search(r"newsletter|letter.*unitholder|unitholder.*letter|market[\s_\-]*(?:outlook|update|view)|equity[\s_\-]*outlook|cio[\s_\-]*(?:letter|view)",combined,re.I))
             download=bool(re.search(r"\.(?:pdf|xlsx?|xml)(?:\?|$)",target,re.I))
-            omnibus=download and bool(re.search(r'factsheet|fact.sheet|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
+            omnibus=download and bool(re.search(r'factsheet|fact.sheet|fund.spectrum|fund.watch|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
             directory=not download and bool(re.search(r'factsheet|fact.sheet|portfolio|disclosure|scheme.summary|newsletter|market.outlook|market.update',combined,re.I))
             if directory and urlparse(target).hostname==urlparse(url).hostname:
                 with db.connect() as c:
@@ -308,4 +308,6 @@ def seed_sources():
         # discovered section that belongs to another AMC's schemes.
         for row in c.execute('SELECT id,amc_match,url,label FROM source_pages WHERE enabled=1').fetchall():
             reason=exclusion_reason(row['amc_match'],row['url'],row['label'])
+            if (urlparse(row['url']).hostname or '').removeprefix('www.') in ('abakkusmutualfund.com','pgimindiamf.com','thewealthcompany.com'):
+                reason='Superseded AMC domain; current official report pages are registered separately'
             if reason:c.execute("UPDATE source_pages SET enabled=0,status='Excluded',detail=? WHERE id=?",(reason,row['id']))

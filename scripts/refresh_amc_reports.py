@@ -38,6 +38,8 @@ def run():
         except Exception as e:
             print(f"::warning::{row['family']}: {str(e).splitlines()[0][:250]}",flush=True);return False
     with ThreadPoolExecutor(max_workers=2) as pool:ok=list(pool.map(collect,rows))
+    from tracker import amc_discovery
+    print(amc_discovery.update(lambda msg:print(msg,flush=True)),flush=True)
     checked,gaps=amc_reports.reprocess_archived()
     print(f'{sum(ok)}/{len(rows)} official report sources processed; {checked} existing documents rechecked; {len(gaps)} extraction errors')
     # A failed transfer/extraction is retried on the next build. Old facts remain.

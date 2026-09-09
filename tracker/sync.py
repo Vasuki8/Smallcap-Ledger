@@ -46,8 +46,9 @@ class Updater:
             elif kind=="benchmark":
                 detail=providers.fetch_benchmark(lambda msg:self.progress(kind,msg))
             elif kind=="metrics":
+                from . import amc_discovery
                 results=[]
-                for operation in (amfi_metrics.fees,amc_metrics.update):
+                for operation in (amfi_metrics.fees,amc_metrics.update,amc_discovery.update):
                     try:results.append(operation(lambda msg:self.progress(kind,msg)))
                     except Exception as e:errors.append(str(e)[:250])
                 detail='; '.join(results)
