@@ -142,6 +142,11 @@ def page_facts(text,family):
             key='ter_excluding_transaction_cost' if re.search(r'Total Expense ratio inclusive of transaction cost',flat,re.I) else 'ter'
             if 0<=float(m.group(2))<=5:add(key,float(m.group(2)),m.group(1).title(),unit='% p.a.')
     # Never call an ambiguous "expense ratio" TER, especially after BER changes.
+    if family=='UTI Small Cap Fund':
+        m=re.search(r'Month-end Total Expense Ratio\s*\(%\)\*?[\s\S]{0,1000}?Regular\s*:\s*(\d+(?:\.\d+)?)\s+Direct\s*:\s*(\d+(?:\.\d+)?)',flat,re.I)
+        if m:
+            for plan,v in zip(('Regular','Direct'),m.groups()):
+                if 0<=float(v)<=5:add('ter',float(v),plan,unit='% p.a.')
     for heading,key in [(r'Base Expense Ratio(?:\s*\(BER\))?','base_expense_ratio'),(r'Total Expense Ratio(?:\s*\(TER\))?','ter')]:
         for block in re.finditer(heading+r'\s*[:*^-]?\s*([^\n]*(?:\n[^\n]*){0,5})',text,re.I):
             s=block.group(1)
@@ -208,3 +213,33 @@ def equity_positions(text,family):
     # Duplicate rows indicate ambiguous extraction, rather than a second holding.
     if len({x['name'] for x in positions})!=len(positions) or sum(x['weight'] for x in positions)>100.5:return []
     return positions
+
+
+def layout_aum(text,family,day):
+    """Values directly beneath BOI's labels in a visually aligned PDF column.
+
+    Caller must first identify the exact scheme page and its reporting date.
+    PDF text order otherwise places both values before both labels.
+    """
+    if not day or day>date.today().isoformat():return []
+    if family=='UTI Small Cap Fund':
+        out=[]
+        for label,key in [('Fund Size Monthly Average','average_aum'),('Closing AUM','aum')]:
+            m=re.search(label+r'\s*:\s*(?:`|₹)\s*Crore\s*'+NUMBER,text,re.I)
+            if m:
+                v=float(m.group(1).replace(',',''))
+                if 0<v<10_000_000:out.append(dict(metric=key,value=v,plan='All',as_of=day,unit='INR crore'))
+        return out
+    if family!='Bank Of India Small Cap Fund':return []
+    out=[];lines=text.splitlines()
+    for i,line in enumerate(lines):
+        for label,key in [('AVERAGE AUM','average_aum'),('LATEST AUM','aum')]:
+            x=line.find(label)
+            if x<0:continue
+            for following in lines[i+1:i+4]:
+                m=re.match(r'\s*(?:`|₹|Rs\.?)\s*'+NUMBER+r'\s*Cr(?:ore)?s?\.?',following[x:x+70],re.I)
+                if m:
+                    v=float(m.group(1).replace(',',''))
+                    if 0<v<10_000_000:out.append(dict(metric=key,value=v,plan='All',as_of=day,unit='INR crore'))
+                    break
+    return out

@@ -32,6 +32,17 @@ class CoverageExpansionTests(unittest.TestCase):
         facts=page_facts(s,f)
         self.assertEqual({x['metric']:x['value'] for x in facts},{'aum':1770.44,'average_aum':1823.4})
 
+    def test_aligned_pdf_columns_and_uti_expenses(self):
+        from tracker.report_parser import layout_aum
+        s='  AVERAGE AUM                         Other column\n  ` 2,706.77 Crs.\n  LATEST AUM\n  ` 2,819.49 Crs.'
+        facts=layout_aum(s,'Bank Of India Small Cap Fund','2026-07-31')
+        self.assertEqual([x['value'] for x in facts],[2706.77,2819.49])
+        s='Fund Size Monthly Average : `          Crore5,271.45\nClosing AUM : `       Crore5,263.02'
+        self.assertEqual([x['value'] for x in layout_aum(s,'UTI Small Cap Fund','2026-07-31')],[5271.45,5263.02])
+        self.assertEqual(layout_aum(s,'UTI Small Cap Fund','2099-07-31'),[])
+        s='UTI SMALL CAP FUND\nAn open ended equity scheme predominantly investing in Small cap stocks.\nPortfolio as on 31st July, 2026\nMonth-end Total Expense Ratio (%)*\nMinimum Investment Amount\nRegular : 2.00\nDirect : 0.86'
+        self.assertEqual([(x['plan'],x['value']) for x in page_facts(s,'UTI Small Cap Fund')],[('Regular',2),('Direct',.86)])
+
     def test_sundaram_dates_are_not_interchangeable(self):
         f='Sundaram Small Cap Fund';u=URLS[f]
         row={'FUNDGROUP_ID':'SC','GROUP_NAME':f,'MONTHENDAUM':'3,922','AUM':'3,926','AUMASONDATE':'31-Jul-2026','REG_TOT_TER_DISP':'2.01 %','DP_TOT_TER_DISP':'0.97 %','TER_DATE_DISP':'07-Sep-2026','DIR_NAV_DT':'08-Sep-2026'}

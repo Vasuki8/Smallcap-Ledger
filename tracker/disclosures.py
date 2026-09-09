@@ -193,6 +193,9 @@ def factsheet_pdf(content,family,url,h):
         text=page.extract_text() or ''
         if not owns_page(text,family):continue
         facts=page_facts(text,family)
+        if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
+            from .report_parser import layout_aum
+            facts.extend(layout_aum(page.extract_text(extraction_mode='layout'),family,report_date(text)))
         for fact in facts:
             db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
         count+=len(facts)
@@ -200,23 +203,8 @@ def factsheet_pdf(content,family,url,h):
         if positions and facts:
             portfolio(family,facts[0]['as_of'],positions,False,url,h);count+=len(positions)
             continue
-        m=re.search(r'Portfolio as on[^\n]+\n([\s\S]+?)(?:\nSIP\b|\nPerformance\b|\nProduct Label|$)',text,re.I)
-        if m:
-            positions=[];sector=None
-            for line in m.group(1).splitlines():
-                line=line.strip()
-                if not line or re.search(r'Company\s*/?\s*Issuer|Top 10 Holdings|Grand Total|^Total\b',line,re.I):continue
-                match=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)',line)
-                if match:
-                    name=match.group(1).rstrip('*').strip();weight=number(match.group(2))
-                    if not -100<=weight<=100:continue
-                    kind='Cash' if re.search(r'cash|receivable',name,re.I) else 'Aggregate' if re.search(r'less than|other equit',name,re.I) else 'Equity'
-                    positions.append({'name':name,'weight':weight,'sector':sector if kind=='Equity' else None,'asset_type':kind})
-                elif len(line)<70 and not re.search(r'\d|\*',line):sector=line
-            if positions:
-                portfolio_day=report_date(m.group()[:200])
-                if portfolio_day and portfolio_day<=date.today().isoformat():
-                    portfolio(family,portfolio_day,positions,False,url,h);count+=len(positions)
+        # Holdings require a supported table layout. A generic trailing-number
+        # parser can mix sector totals and performance rows into the portfolio.
     return count
 
 
