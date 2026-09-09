@@ -78,6 +78,17 @@ def metrics_for(s):
     return latest
 
 
+def available_expenses(s):
+    """Expose named plan fees without assigning an unidentified NAV series to one."""
+    from .reviewed_reports import annotate
+    if s['plan']!='Unspecified':return []
+    seen=set();out=[]
+    for r in db.rows("SELECT * FROM metrics WHERE family=? AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio') ORDER BY as_of DESC,id DESC",(s['family'],)):
+        key=(r['plan'],r['metric'])
+        if key not in seen:out.append(annotate(r));seen.add(key)
+    return out
+
+
 def dated_return(code,latest,years):
     d=analytics.shift_years(date.fromisoformat(latest['date']),years)
     p=db.one("SELECT date,value FROM nav WHERE code=? AND date<=? ORDER BY date DESC LIMIT 1",(code,d.isoformat()))
@@ -98,6 +109,7 @@ def funds():
         s['coverage']=coverage
         s['returns']={str(y):dated_return(s['code'],latest[0],y) if latest and s['option']=='Growth' else None for y in (1,3,5)}
         s['metrics']=metrics_for(s)
+        s['available_expenses']=available_expenses(s)
         s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
         s['portfolio']=db.one("SELECT id,as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
         s['stale_days']=(date.today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
@@ -107,6 +119,7 @@ def funds():
 @app.get('/api/funds/{code}')
 def fund(code:int):
     s=scheme(code);s['metrics']=metrics_for(s)
+    s['available_expenses']=available_expenses(s)
     s['option_label']=option_label(s)
     s['nav_coverage']=db.one("SELECT MIN(date) first,MAX(date) last,COUNT(*) points FROM nav WHERE code=?",(code,))
     s['plans']=db.rows("SELECT code,name,plan,option,isin,reinvestment_isin,metadata_json FROM schemes WHERE family=? ORDER BY plan,option",(s['family'],))

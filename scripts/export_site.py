@@ -75,7 +75,7 @@ def export(output:Path,repository=''):
     report=status();report['running']={};report['data_location']='Daily GitHub archive';report['jobs']=[j for j in report['jobs'] if j['kind']!='news']
     report['hosting']={'provider':'GitHub Pages','repository':repository,'timezone':'Asia/Kolkata','schedule':'00:00 IST daily','cron':'30 18 * * *','scheduled_time_is_not_guaranteed':True}
     report['counts']['aum_funds']=len({s['family'] for s in index['funds'] if s['metrics'].get('aum')})
-    report['counts']['fee_funds']=len({s['family'] for s in index['funds'] if any(s['metrics'].get(k) for k in ('ter','ter_observed','base_expense_ratio','expense_ratio'))})
+    report['counts']['fee_funds']=len({s['family'] for s in index['funds'] if s.get('available_expenses') or any(s['metrics'].get(k) for k in ('ter','ter_observed','base_expense_ratio','expense_ratio'))})
     write('status.json',report)
     config={'mode':'github','repository':repository,'timezone':'Asia/Kolkata','schedule':'00:00 IST daily'}
     (output/'runtime-config.js').write_text('window.SMALLCAP_CONFIG='+json.dumps(config)+';\n')

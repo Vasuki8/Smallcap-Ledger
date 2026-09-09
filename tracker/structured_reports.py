@@ -78,6 +78,59 @@ def baroda(content,family,url,h):
     return count
 
 
+def uti_zip(content,family,url,h):
+    """Read the named workbook in UTI's public monthly ZIP without extracting paths."""
+    import io,zipfile,openpyxl
+    from pathlib import PurePosixPath
+    with zipfile.ZipFile(io.BytesIO(content)) as z:
+        entries=z.infolist()
+        if len(entries)>100 or sum(i.file_size for i in entries)>100*1024*1024:raise ValueError('Oversized portfolio ZIP')
+        for i in entries:
+            p=PurePosixPath(i.filename)
+            if p.is_absolute() or '..' in p.parts or '\\' in i.filename or i.flag_bits&1:raise ValueError('Unsupported portfolio ZIP entry')
+        matched=[i for i in entries if re.fullmatch(r'Sebi Exposure as on .+_final\.xlsx',PurePosixPath(i.filename).name,re.I)]
+        if len(matched)!=1:return 0
+        with z.open(matched[0]) as f:w=openpyxl.load_workbook(io.BytesIO(f.read()),data_only=True,read_only=True)
+        count=0
+        for sheet in w:
+            rows=list(sheet.values);r=uti_rows(rows)
+            if r is None:continue
+            db.metric(family,'All','aum',r['day'],r['aum'],'INR crore',url,h);count+=1
+            # This exposure report abbreviates small weights and short-term
+            # deposit holdings. It cannot establish a complete position list.
+            if r['positions']:portfolio(family,r['day'],r['positions'],False,url,h);count+=len(r['positions'])
+        w.close();return count
+
+
+def uti_rows(rows):
+    from .disclosures import report_date
+    begin=next((i for i,r in enumerate(rows) if str(r[0] or '').strip().lower()=='scheme: uti small cap fund'),None)
+    if begin is None:return None
+    block=[];total=None
+    for row in rows[begin+1:]:
+        label=str(row[0] or '').strip()
+        if label.lower()=='total : uti small cap fund':
+            total=number(row[3]);break
+        if re.match(r'SCHEME(?:\s*:| CODE)',label,re.I):return None
+        block.append(row)
+    if not total or not 0<total/100<10_000_000:return None
+    prefix=' '.join(str(v) for row in block[:4] for v in row if v)
+    if not re.search(r'Market value in Lacs',prefix,re.I):return None
+    day=report_date(prefix)
+    if not day:return None
+    header=next((r for r in block[:6] if len(r)>7 and str(r[7]).strip()=='ISIN'),None)
+    if header is None or '% TO NAV' not in str(header[4]).upper():return None
+    positions=[]
+    for row in block:
+        if len(row)<=7 or not re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',str(row[7] or '')):continue
+        try:weight=number(row[4])
+        except ValueError:continue
+        if not 0<=weight<=100:return None
+        positions.append({'isin':row[7],'name':re.sub(r'^EQ\s*-\s*','',str(row[0])),'sector':str(row[1] or ''),'weight':weight,'asset_type':'Equity' if str(row[0]).startswith('EQ -') else 'Unclassified'})
+    if sum(p['weight'] for p in positions)>100.5:return None
+    return {'day':day,'aum':round(total/100,6),'positions':positions}
+
+
 def franklin_positions(table):
     """Validate all equity, debt and cash rows against the published asset total."""
     positions=[];values=[];total=None;sector=None;asset='Equity'

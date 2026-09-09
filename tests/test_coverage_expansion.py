@@ -159,5 +159,19 @@ class CoverageExpansionTests(unittest.TestCase):
         rows[0]=['Test Small Cap Fund']
         self.assertFalse(parse_sheet(rows,fmt,'Test Small Cap Fund')['complete'])
 
+    def test_uti_omnibus_scheme_boundary_and_small_weight_gap(self):
+        from tracker.structured_reports import uti_rows
+        rows=[['SCHEME: UTI Small Cap Fund'],['PROVISIONAL PORTFOLIO AS OF 31/08/2026 (Market value in Lacs)'],['NAME OF THE INSTRUMENT','INDUSTRY','QUANTITY','MARKET-VALUE','% TO NAV',None,None,'ISIN'],['EQ - Alpha Ltd','Banks',10,950,95,None,None,'INE123456789'],['EQ - Tiny Ltd','Banks',1,.001,'*',None,None,'INE123456788'],['TOTAL : UTI Small Cap Fund',None,None,1000]]
+        r=uti_rows(rows);self.assertEqual(r['aum'],10);self.assertEqual(r['day'],'2026-08-31');self.assertEqual(len(r['positions']),1)
+        rows[-1]=['SCHEME: UTI Mid Cap Fund']
+        self.assertIsNone(uti_rows(rows))
+
+    def test_unknown_nav_plan_does_not_inherit_direct_fee(self):
+        from tracker.app import metrics_for,available_expenses
+        db.metric('HSBC Small Cap Fund','Direct','base_expense_ratio','2026-07-31',.65,'% p.a.','official')
+        s={'family':'HSBC Small Cap Fund','plan':'Unspecified'}
+        self.assertNotIn('base_expense_ratio',metrics_for(s))
+        self.assertEqual(available_expenses(s)[0]['plan'],'Direct')
+
 
 if __name__=='__main__':unittest.main()

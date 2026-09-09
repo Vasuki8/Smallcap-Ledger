@@ -43,6 +43,9 @@ def discover(amc):
             rows=json.loads(raw).get('rows',[])
             active=[r for r in rows if 'active' in r.get('name','').lower() and 'passive' not in r['name'].lower() and 'hindi' not in r['name'].lower()]
             if active:yield 'UTI Small Cap Fund',active[0]['url'],active[0]['name']
+            raw,_,_=read(f'https://www.utimf.com/api/get-consolidate-portfolio-disclosure?year={year}&month={name}')
+            for row in json.loads(raw).get('rows',[])[:1]:
+                if row.get('type','').lower()=='zip':yield 'UTI Small Cap Fund',row['url'],row['name']
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
         body={'systemQueryFileName':'productsweb.xml','tagName':'GetOneProductWeb','searchField':'p.slug','searchValue':'trustmf-small-cap-fund','sortField':'','sortDirection':''}
