@@ -1,79 +1,397 @@
 [
-  ["HDFC", "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct", "Fund data and downloads"],
-  ["HDFC", "https://www.hdfcfund.com/statutory-disclosure/portfolio", "Portfolio disclosures"],
-  ["HDFC", "https://www.hdfcfund.com/market-update", "Market updates"],
-  ["SBI", "https://www.sbimf.com/sbimf-scheme-details/sbi-small-cap-fund-329", "Fund page"],
-  ["SBI", "https://www.sbimf.com/portfolios", "Portfolios"],
-  ["SBI", "https://www.sbimf.com/factsheets", "Factsheets"],
-  ["Nippon", "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx", "Fund page and downloads"],
-  ["Nippon", "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures", "Portfolio disclosures"],
-  ["Nippon", "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document", "Scheme summary documents"],
-  ["Axis", "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct", "Fund page"],
-  ["Axis", "https://www.axismf.com/downloads", "Downloads"],
-  ["Bandhan", "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular", "Fund page"],
-  ["Bandhan", "https://bandhanmutual.com/downloads/disclosures", "Disclosures"],
-  ["Bandhan", "https://bandhanmutual.com/downloads/factsheet/all-schemes", "Factsheets"],
-  ["quant Mutual", "https://quantmutual.com/", "Fund house and disclosures"],
-  ["Abakkus", "https://www.abakkusmutualfund.com/", "Fund house"],
-  ["Aditya Birla", "https://mutualfund.adityabirlacapital.com/", "Fund house"],
-  ["Bajaj", "https://www.bajajamc.com/", "Fund house"],
-  ["Bank of India", "https://www.boimf.in/", "Fund house"],
-  ["Baroda", "https://www.barodabnpparibasmf.in/", "Fund house"],
-  ["Canara", "https://www.canararobeco.com/", "Fund house"],
-  ["DSP", "https://www.dspim.com/", "Fund house"],
-  ["Edelweiss", "https://www.edelweissmf.com/", "Fund house"],
-  ["Franklin", "https://www.franklintempletonindia.com/", "Fund house"],
-  ["Groww", "https://www.growwmf.in/", "Fund house"],
-  ["HSBC", "https://www.assetmanagement.hsbc.co.in/", "Fund house"],
-  ["Helios", "https://www.heliosmf.in/", "Fund house"],
-  ["ICICI", "https://www.icicipruamc.com/", "Fund house"],
-  ["ITI", "https://www.itiamc.com/", "Fund house"],
-  ["Invesco", "https://invescomutualfund.com/", "Fund house"],
-  ["JM Financial", "https://www.jmfinancialmf.com/", "Fund house"],
-  ["Kotak", "https://www.kotakmf.com/", "Fund house"],
-  ["LIC", "https://www.licmf.com/", "Fund house"],
-  ["Mahindra", "https://www.mahindramanulife.com/", "Fund house"],
-  ["Mirae", "https://www.miraeassetmf.co.in/", "Fund house"],
-  ["Motilal", "https://www.motilaloswalmf.com/", "Fund house"],
-  ["PGIM", "https://www.pgimindiamf.com/", "Fund house"],
-  ["Quantum", "https://www.quantumamc.com/", "Fund house"],
-  ["Samco", "https://www.samcomf.com/", "Fund house"],
-  ["Sundaram", "https://www.sundarammutual.com/", "Fund house"],
-  ["Tata", "https://www.tatamutualfund.com/", "Fund house"],
-  ["The Wealth", "https://www.thewealthcompany.com/", "Fund house"],
-  ["Trust", "https://www.trustmf.com/", "Fund house"],
-  ["UTI", "https://www.utimf.com/", "Fund house"],
-  ["Union", "https://www.unionmf.com/", "Fund house"],
-  ["HDFC", "https://www.hdfcfund.com/mutual-funds/factsheets", "Official factsheets, scheme data and disclosures"],
-  ["HDFC", "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/regular", "Official factsheets, scheme data and disclosures"],
-  ["HDFC", "https://files.hdfcfund.com/s3fs-public/scheme_summary/2026-08/HDFCSMALLF_1786689291.xml", "Official factsheets, scheme data and disclosures"],
-  ["quant Mutual", "https://quantmutual.com/downloads/factsheet", "Official factsheets, scheme data and disclosures"],
-  ["Bajaj", "https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund", "Official factsheets, scheme data and disclosures"],
-  ["Bajaj", "https://www.bajajamc.com/downloads?factsheet", "Official factsheets, scheme data and disclosures"],
-  ["Nippon", "https://mf.nipponindiaim.com/investor-services/downloads/factsheets", "Official factsheets, scheme data and disclosures"],
-  ["Bank of India", "https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund", "Official factsheets, scheme data and disclosures"],
-  ["Canara", "https://www.canararobeco.com/our-schemes/fund-details?amfiCode=146130", "Official factsheets, scheme data and disclosures"],
-  ["Aditya Birla", "https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets", "Official factsheets, scheme data and disclosures"],
-  ["DSP", "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/small-cap-fund/dspmc-direct-growth", "Official factsheets, scheme data and disclosures"],
-  ["DSP", "https://www.dspim.com/factsheets", "Official factsheets, scheme data and disclosures"],
-  ["Edelweiss", "https://www.edelweissmf.com/downloads/factsheets", "Official factsheets, scheme data and disclosures"],
-  ["Aditya Birla", "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds", "Official factsheets, scheme data and disclosures"],
-  ["Helios", "https://www.heliosmf.in/helios-small-cap-fund", "Official factsheets, scheme data and disclosures"],
-  ["Kotak", "https://www.kotakmf.com/factsheet/July_2026/", "Official factsheets, scheme data and disclosures"],
-  ["Invesco", "https://invescomutualfund.com/literature-forms/factsheets", "Official factsheets, scheme data and disclosures"],
-  ["Kotak", "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g", "Official factsheets, scheme data and disclosures"],
-  ["Mirae", "https://www.miraeassetmf.co.in/downloads/factsheet", "Official factsheets, scheme data and disclosures"],
-  ["Quantum", "https://www.quantumamc.com/factsheets/combined/-1/0/0", "Official factsheets, scheme data and disclosures"],
-  ["Samco", "https://www.samcomf.com/downloads/#Factsheet", "Official factsheets, scheme data and disclosures"],
-  ["Quantum", "https://www.quantumamc.com/Download-document#headingFive", "Official factsheets, scheme data and disclosures"],
-  ["Quantum", "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund", "Official factsheets, scheme data and disclosures"],
-  ["Sundaram", "https://www.sundarammutual.com/fund/small-cap-fund", "Official factsheets, scheme data and disclosures"],
-  ["Sundaram", "https://www.sundarammutual.com/fundwise-factsheet", "Official factsheets, scheme data and disclosures"],
-  ["Sundaram", "https://www.sundarammutual.com/digital-factsheet/SMILE-SC", "Official factsheets, scheme data and disclosures"],
-  ["HSBC", "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund", "Official factsheets, scheme data and disclosures"],
-  ["Helios", "https://www.heliosmf.in/portfolio-disclosure", "Official factsheets, scheme data and disclosures"],
-  ["Helios", "https://www.heliosmf.in/downloads", "Official factsheets, scheme data and disclosures"],
-  ["Motilal", "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-small-cap-fund", "Small cap fund reports and monthly portfolio"],
-  ["Motilal", "https://www.motilaloswalmf.com/downloads/factsheets", "Monthly factsheets"],
-  ["Sundaram", "https://www.sundarammutual.com/Report/OSSMILE", "Small cap fund insights"]
+  [
+    "HDFC",
+    "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct",
+    "Fund data and downloads"
+  ],
+  [
+    "HDFC",
+    "https://www.hdfcfund.com/statutory-disclosure/portfolio",
+    "Portfolio disclosures"
+  ],
+  [
+    "HDFC",
+    "https://www.hdfcfund.com/market-update",
+    "Market updates"
+  ],
+  [
+    "SBI",
+    "https://www.sbimf.com/sbimf-scheme-details/sbi-small-cap-fund-329",
+    "Fund page"
+  ],
+  [
+    "SBI",
+    "https://www.sbimf.com/portfolios",
+    "Portfolios"
+  ],
+  [
+    "SBI",
+    "https://www.sbimf.com/factsheets",
+    "Factsheets"
+  ],
+  [
+    "Nippon",
+    "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx",
+    "Fund page and downloads"
+  ],
+  [
+    "Nippon",
+    "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures",
+    "Portfolio disclosures"
+  ],
+  [
+    "Nippon",
+    "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document",
+    "Scheme summary documents"
+  ],
+  [
+    "Axis",
+    "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+    "Fund page"
+  ],
+  [
+    "Axis",
+    "https://www.axismf.com/downloads",
+    "Downloads"
+  ],
+  [
+    "Bandhan",
+    "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular",
+    "Fund page"
+  ],
+  [
+    "Bandhan",
+    "https://bandhanmutual.com/downloads/disclosures",
+    "Disclosures"
+  ],
+  [
+    "Bandhan",
+    "https://bandhanmutual.com/downloads/factsheet/all-schemes",
+    "Factsheets"
+  ],
+  [
+    "quant Mutual",
+    "https://quantmutual.com/",
+    "Fund house and disclosures"
+  ],
+  [
+    "Aditya Birla",
+    "https://mutualfund.adityabirlacapital.com/",
+    "Fund house"
+  ],
+  [
+    "Bajaj",
+    "https://www.bajajamc.com/",
+    "Fund house"
+  ],
+  [
+    "Bank of India",
+    "https://www.boimf.in/",
+    "Fund house"
+  ],
+  [
+    "Baroda",
+    "https://www.barodabnpparibasmf.in/",
+    "Fund house"
+  ],
+  [
+    "Canara",
+    "https://www.canararobeco.com/",
+    "Fund house"
+  ],
+  [
+    "DSP",
+    "https://www.dspim.com/",
+    "Fund house"
+  ],
+  [
+    "Edelweiss",
+    "https://www.edelweissmf.com/",
+    "Fund house"
+  ],
+  [
+    "Franklin",
+    "https://www.franklintempletonindia.com/",
+    "Fund house"
+  ],
+  [
+    "Groww",
+    "https://www.growwmf.in/",
+    "Fund house"
+  ],
+  [
+    "HSBC",
+    "https://www.assetmanagement.hsbc.co.in/",
+    "Fund house"
+  ],
+  [
+    "Helios",
+    "https://www.heliosmf.in/",
+    "Fund house"
+  ],
+  [
+    "ICICI",
+    "https://www.icicipruamc.com/",
+    "Fund house"
+  ],
+  [
+    "ITI",
+    "https://www.itiamc.com/",
+    "Fund house"
+  ],
+  [
+    "Invesco",
+    "https://invescomutualfund.com/",
+    "Fund house"
+  ],
+  [
+    "JM Financial",
+    "https://www.jmfinancialmf.com/",
+    "Fund house"
+  ],
+  [
+    "Kotak",
+    "https://www.kotakmf.com/",
+    "Fund house"
+  ],
+  [
+    "LIC",
+    "https://www.licmf.com/",
+    "Fund house"
+  ],
+  [
+    "Mahindra",
+    "https://www.mahindramanulife.com/",
+    "Fund house"
+  ],
+  [
+    "Mirae",
+    "https://www.miraeassetmf.co.in/",
+    "Fund house"
+  ],
+  [
+    "Motilal",
+    "https://www.motilaloswalmf.com/",
+    "Fund house"
+  ],
+  [
+    "Quantum",
+    "https://www.quantumamc.com/",
+    "Fund house"
+  ],
+  [
+    "Samco",
+    "https://www.samcomf.com/",
+    "Fund house"
+  ],
+  [
+    "Sundaram",
+    "https://www.sundarammutual.com/",
+    "Fund house"
+  ],
+  [
+    "Tata",
+    "https://www.tatamutualfund.com/",
+    "Fund house"
+  ],
+  [
+    "Trust",
+    "https://www.trustmf.com/",
+    "Fund house"
+  ],
+  [
+    "UTI",
+    "https://www.utimf.com/",
+    "Fund house"
+  ],
+  [
+    "Union",
+    "https://www.unionmf.com/",
+    "Fund house"
+  ],
+  [
+    "HDFC",
+    "https://www.hdfcfund.com/mutual-funds/factsheets",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "HDFC",
+    "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/regular",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "HDFC",
+    "https://files.hdfcfund.com/s3fs-public/scheme_summary/2026-08/HDFCSMALLF_1786689291.xml",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "quant Mutual",
+    "https://quantmutual.com/downloads/factsheet",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Bajaj",
+    "https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Bajaj",
+    "https://www.bajajamc.com/downloads?factsheet",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Nippon",
+    "https://mf.nipponindiaim.com/investor-services/downloads/factsheets",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Bank of India",
+    "https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Canara",
+    "https://www.canararobeco.com/our-schemes/fund-details?amfiCode=146130",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Aditya Birla",
+    "https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "DSP",
+    "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/small-cap-fund/dspmc-direct-growth",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "DSP",
+    "https://www.dspim.com/factsheets",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Edelweiss",
+    "https://www.edelweissmf.com/downloads/factsheets",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Aditya Birla",
+    "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Helios",
+    "https://www.heliosmf.in/helios-small-cap-fund",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Kotak",
+    "https://www.kotakmf.com/factsheet/July_2026/",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Invesco",
+    "https://invescomutualfund.com/literature-forms/factsheets",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Kotak",
+    "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Mirae",
+    "https://www.miraeassetmf.co.in/downloads/factsheet",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Quantum",
+    "https://www.quantumamc.com/factsheets/combined/-1/0/0",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Samco",
+    "https://www.samcomf.com/downloads/#Factsheet",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Quantum",
+    "https://www.quantumamc.com/Download-document#headingFive",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Quantum",
+    "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Sundaram",
+    "https://www.sundarammutual.com/fund/small-cap-fund",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Sundaram",
+    "https://www.sundarammutual.com/fundwise-factsheet",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Sundaram",
+    "https://www.sundarammutual.com/digital-factsheet/SMILE-SC",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "HSBC",
+    "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Helios",
+    "https://www.heliosmf.in/portfolio-disclosure",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Helios",
+    "https://www.heliosmf.in/downloads",
+    "Official factsheets, scheme data and disclosures"
+  ],
+  [
+    "Motilal",
+    "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-small-cap-fund",
+    "Small cap fund reports and monthly portfolio"
+  ],
+  [
+    "Motilal",
+    "https://www.motilaloswalmf.com/downloads/factsheets",
+    "Monthly factsheets"
+  ],
+  [
+    "Sundaram",
+    "https://www.sundarammutual.com/Report/OSSMILE",
+    "Small cap fund insights"
+  ],
+  [
+    "Abakkus",
+    "https://www.abakkusmf.com/statutory-disclosures.html",
+    "Official reports and portfolios"
+  ],
+  [
+    "PGIM",
+    "https://www.pgimindia.com/mutual-funds/forms-and-product-updates/Fund-Factsheet",
+    "Factsheets"
+  ],
+  [
+    "PGIM",
+    "https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund",
+    "Small cap fund"
+  ],
+  [
+    "The Wealth",
+    "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/monthly/",
+    "Monthly portfolios"
+  ],
+  [
+    "The Wealth",
+    "https://www.wealthcompanyamc.in/",
+    "Fund house"
+  ]
 ]

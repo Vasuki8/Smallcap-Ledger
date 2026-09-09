@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v2'
+PARSER_VERSION='amc-reports-2026-09-v3'
 
 
 def monthly_sources(today=None):
@@ -49,7 +49,9 @@ def extract(content,family,url,h):
             disclosures.spreadsheet(content,family,url,h)
         elif path.endswith('.xml'):
             disclosures.summary_xml(content,family,url,h)
-        else:return 0
+        else:
+            from .structured_reports import extract as structured
+            if structured(content,family,url,h) is None:return 0
         metrics=db.one('SELECT COUNT(*) n FROM metrics WHERE family=? AND hash=?',(family,h))['n']
         holdings=db.one('SELECT COUNT(*) n FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id WHERE p.family=? AND p.hash=?',(family,h))['n']
         count=metrics+holdings

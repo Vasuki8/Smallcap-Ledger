@@ -39,6 +39,11 @@ def owns_page(text,family):
     if family=='Mirae Asset Small Cap Fund' and re.search(r'Equity Snapshot',text,re.I):return False
     compact=lambda s:re.sub('[^a-z0-9]','',s.lower())
     lines=normalize(text).splitlines()
+    if family=='Abakkus Small Cap Fund':
+        # Abakkus puts the mandate on the preceding page; this is an exact,
+        # dedicated scheme-details heading with a verified labelled layout.
+        heading=any(compact(line)==compact(family+' Details') for line in lines)
+        if heading and all(label in text for label in ('Month End AUM','Plans & Options','Base Expense Ratio','Source: Internal. Data as on')):return True
     for i,line in enumerate(lines):
         # Up to three lines accommodate titles split over lines (Union, SBI).
         for span in (1,2,3):
@@ -91,8 +96,19 @@ def page_facts(text,family):
             value=float(m.group(2 if index==2 else 1).replace(',',''))
             if 0<value<10_000_000:add('aum',value)
             break
-    avg=re.search(r'\bMonthly (?:Average|AVG) (?:AUM|Assets Under Management\s*\(AAUM\))\s*[:#-]?\s*'+currency+NUMBER+r'\s*'+unit,flat,re.I)
+    avg=re.search(r'\bMonthly (?:(?:Average|AVG) (?:AUM|Assets Under Management\s*\(AAUM\))|AAUM)\s*[:#-]?\s*'+currency+NUMBER+r'\s*'+unit,flat,re.I)
     if avg:add('average_aum',float(avg.group(1).replace(',','')))
+    if family=='Abakkus Small Cap Fund':
+        m=re.search(currency+NUMBER+r'\s*'+unit+r'\s+Month End AUM',flat,re.I)
+        if m:add('aum',float(m.group(1).replace(',','')))
+        m=re.search(r'Regular:\s*(\d+(?:\.\d+)?)%\s+Direct:\s*(\d+(?:\.\d+)?)%\s+Base Expense Ratio',flat,re.I)
+        if m:
+            for plan,v in zip(('Regular','Direct'),m.groups()):
+                if 0<=float(v)<=5:add('base_expense_ratio',float(v),plan,unit='% p.a.')
+    if family=='Bank Of India Small Cap Fund':
+        for label,key in [('LATEST AUM','aum'),('AVERAGE AUM','average_aum')]:
+            m=re.search(label+r'\s*'+currency+NUMBER+r'\s*'+unit,flat,re.I)
+            if m:add(key,float(m.group(1).replace(',','')))
     if family=='Motilal Oswal Small Cap Fund':
         for label,key in [('Latest AUM','aum'),('Monthly AAUM','average_aum')]:
             m=re.search(r'\b'+label+r'\s*\(\s*('+DATE+r')\s*\)\s*\(in Rs Crs\.\)\s*'+NUMBER,flat,re.I)

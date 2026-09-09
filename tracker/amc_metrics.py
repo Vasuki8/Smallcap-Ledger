@@ -18,10 +18,16 @@ PAGES=[
     ('Tata','Tata Small Cap Fund','https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth'),
     ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
+    ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
+    ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
+    ('Sundaram','Sundaram Small Cap Fund','https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json'),
 ]
 
 
 def parse_page(content,family,url,h):
+    from .structured_reports import extract
+    special=extract(content,family,url,h)
+    if special is not None:return special
     expected=next((u for _,f,u in PAGES if f==family),None)
     if expected:
         actual,known=urlparse(url),urlparse(expected)

@@ -38,7 +38,8 @@ def same_fund_title(value,family):
 def report_date(text):
     # Disclosure spreadsheets use period-ended labels and Excel date cells.
     from .report_parser import DATE,dated,normalize
-    for m in re.finditer(r'(?:period ended|statement as on)\s*:?\s*('+DATE+r'|\d{4}-\d{2}-\d{2})',normalize(text),re.I):
+    normalized=re.sub(r'([A-Za-z])(?=\d{4}\b)',r'\1 ',normalize(text))
+    for m in re.finditer(r'(?:period ended|month ended|statement as on)\s*:?\s*('+DATE+r'|\d{4}-\d{2}-\d{2})',normalized,re.I):
         value=m.group(1)
         if re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):
             if value<=date.today().isoformat():return value
@@ -61,7 +62,7 @@ def portfolio(family,day,positions,complete,source,h):
     if sum(x["weight"] for x in positions)>110: raise ValueError("Portfolio weight total suggests duplicated rows or wrong units")
     with db.connect() as c:
         c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
-        sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=?",(family,day,h)).fetchone()[0]
+        sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
         if not c.execute("SELECT 1 FROM holdings WHERE snapshot_id=? LIMIT 1",(sid,)).fetchone():
             c.executemany("INSERT INTO holdings(snapshot_id,isin,name,sector,weight,asset_type) VALUES(?,?,?,?,?,?)",
                           [(sid,x.get("isin"),x["name"],x.get("sector"),x["weight"],x.get("asset_type","Equity")) for x in positions])
@@ -132,6 +133,13 @@ def spreadsheet(content,family,url,h):
                  [[book.format_map[book.xf_list[s.cell_xf_index(i,j)].format_key].format_str for j in range(s.ncols)] for i in range(s.nrows)]) for s in book.sheets()]
     count=0
     for sheet,rows,formats in sheets:
+        from .portfolio_parser import parse_sheet
+        full=parse_sheet(rows,formats,family)
+        if full:
+            if full['aum'] is not None:db.metric(family,'All','aum',full['day'],full['aum'],'INR crore',url,h)
+            if full['complete']:
+                portfolio(family,full['day'],full['positions'],True,url,h)
+                count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
