@@ -280,7 +280,7 @@ def doc_version(doc_id, content_hash):
 def classify(title,url):
     s=(title+" "+url).lower()
     if re.search(r"portfolio|holdings",s): return "portfolio"
-    if re.search(r"factsheet|fact.sheet|fund.facts",s): return "factsheet"
+    if re.search(r"factsheet|fact.sheet|fund.facts|fund.spectrum|fund.watch",s): return "factsheet"
     if re.search(r"newsletter|market.*(?:view|outlook|update)|equity.outlook|investment.view|cio.*(?:view|letter)|product.?note|presentation",s): return "market view"
     if re.search(r'letter.*unitholder|unitholder.*letter',s):return 'unitholder letter'
     if re.search(r"(?:^|[ /_-])(?:sid|kim|ssd)(?:[ /_.-]|$)|scheme.summary|scheme information document|key information memorandum",s): return "scheme document"
@@ -323,4 +323,23 @@ def candidate_links(soup,base):
     for script in soup.select('script[type="application/json"],script[id="__NEXT_DATA__"]'):
         try: walk(json.loads(script.string or script.get_text()))
         except (ValueError,TypeError): pass
+    host=(urlparse(base).hostname or '').removeprefix('www.')
+    # These public document directories embed JSON in JavaScript transport
+    # wrappers. Decode data only; never execute a site's scripts.
+    if host=='abakkusmf.com':
+        for script in soup.select('script'):
+            text=script.string or script.get_text();m=re.search(r'const verticals\s*=\s*',text)
+            if m:
+                try:walk(json.JSONDecoder().raw_decode(text[m.end():])[0])
+                except ValueError:pass
+    if host=='wealthcompanyamc.in':
+        for script in soup.select('script'):
+            text=script.string or script.get_text()
+            for m in re.finditer(r'self\.__next_f\.push\(',text):
+                try:frame=json.JSONDecoder().raw_decode(text[m.end():])[0]
+                except ValueError:continue
+                if not isinstance(frame,list) or len(frame)!=2 or not isinstance(frame[1],str):continue
+                for start in re.finditer(r'\{"uploadDate":',frame[1]):
+                    try:walk(json.JSONDecoder().raw_decode(frame[1][start.start():])[0])
+                    except ValueError:pass
     return found

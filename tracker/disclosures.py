@@ -38,7 +38,8 @@ def same_fund_title(value,family):
 def report_date(text):
     # Disclosure spreadsheets use period-ended labels and Excel date cells.
     from .report_parser import DATE,dated,normalize
-    for m in re.finditer(r'(?:period ended|statement as on)\s*:?\s*('+DATE+r'|\d{4}-\d{2}-\d{2})',normalize(text),re.I):
+    normalized=re.sub(r'([A-Za-z])(?=\d{4}\b)',r'\1 ',normalize(text))
+    for m in re.finditer(r'(?:period ended|month ended|statement as on)\s*:?\s*('+DATE+r'|\d{4}-\d{2}-\d{2})',normalized,re.I):
         value=m.group(1)
         if re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):
             if value<=date.today().isoformat():return value
@@ -61,7 +62,7 @@ def portfolio(family,day,positions,complete,source,h):
     if sum(x["weight"] for x in positions)>110: raise ValueError("Portfolio weight total suggests duplicated rows or wrong units")
     with db.connect() as c:
         c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
-        sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=?",(family,day,h)).fetchone()[0]
+        sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
         if not c.execute("SELECT 1 FROM holdings WHERE snapshot_id=? LIMIT 1",(sid,)).fetchone():
             c.executemany("INSERT INTO holdings(snapshot_id,isin,name,sector,weight,asset_type) VALUES(?,?,?,?,?,?)",
                           [(sid,x.get("isin"),x["name"],x.get("sector"),x["weight"],x.get("asset_type","Equity")) for x in positions])
@@ -132,6 +133,13 @@ def spreadsheet(content,family,url,h):
                  [[book.format_map[book.xf_list[s.cell_xf_index(i,j)].format_key].format_str for j in range(s.ncols)] for i in range(s.nrows)]) for s in book.sheets()]
     count=0
     for sheet,rows,formats in sheets:
+        from .portfolio_parser import parse_sheet
+        full=parse_sheet(rows,formats,family)
+        if full:
+            if full['aum'] is not None:db.metric(family,'All','aum',full['day'],full['aum'],'INR crore',url,h)
+            if full['complete']:
+                portfolio(family,full['day'],full['positions'],True,url,h)
+                count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
@@ -185,6 +193,9 @@ def factsheet_pdf(content,family,url,h):
         text=page.extract_text() or ''
         if not owns_page(text,family):continue
         facts=page_facts(text,family)
+        if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
+            from .report_parser import layout_aum
+            facts.extend(layout_aum(page.extract_text(extraction_mode='layout'),family,report_date(text)))
         for fact in facts:
             db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
         count+=len(facts)
@@ -192,23 +203,8 @@ def factsheet_pdf(content,family,url,h):
         if positions and facts:
             portfolio(family,facts[0]['as_of'],positions,False,url,h);count+=len(positions)
             continue
-        m=re.search(r'Portfolio as on[^\n]+\n([\s\S]+?)(?:\nSIP\b|\nPerformance\b|\nProduct Label|$)',text,re.I)
-        if m:
-            positions=[];sector=None
-            for line in m.group(1).splitlines():
-                line=line.strip()
-                if not line or re.search(r'Company\s*/?\s*Issuer|Top 10 Holdings|Grand Total|^Total\b',line,re.I):continue
-                match=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)',line)
-                if match:
-                    name=match.group(1).rstrip('*').strip();weight=number(match.group(2))
-                    if not -100<=weight<=100:continue
-                    kind='Cash' if re.search(r'cash|receivable',name,re.I) else 'Aggregate' if re.search(r'less than|other equit',name,re.I) else 'Equity'
-                    positions.append({'name':name,'weight':weight,'sector':sector if kind=='Equity' else None,'asset_type':kind})
-                elif len(line)<70 and not re.search(r'\d|\*',line):sector=line
-            if positions:
-                portfolio_day=report_date(m.group()[:200])
-                if portfolio_day and portfolio_day<=date.today().isoformat():
-                    portfolio(family,portfolio_day,positions,False,url,h);count+=len(positions)
+        # Holdings require a supported table layout. A generic trailing-number
+        # parser can mix sector totals and performance rows into the portfolio.
     return count
 
 
@@ -254,7 +250,7 @@ def ingest_source(source):
             if re.search(r'small[\s_\-]*cap',url,re.I) and re.search(r'latest.*(?:portfolio|factsheet)',title,re.I):specific=True
             commentary=bool(re.search(r"newsletter|letter.*unitholder|unitholder.*letter|market[\s_\-]*(?:outlook|update|view)|equity[\s_\-]*outlook|cio[\s_\-]*(?:letter|view)",combined,re.I))
             download=bool(re.search(r"\.(?:pdf|xlsx?|xml)(?:\?|$)",target,re.I))
-            omnibus=download and bool(re.search(r'factsheet|fact.sheet|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
+            omnibus=download and bool(re.search(r'factsheet|fact.sheet|fund.spectrum|fund.watch|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
             directory=not download and bool(re.search(r'factsheet|fact.sheet|portfolio|disclosure|scheme.summary|newsletter|market.outlook|market.update',combined,re.I))
             if directory and urlparse(target).hostname==urlparse(url).hostname:
                 with db.connect() as c:
@@ -300,4 +296,6 @@ def seed_sources():
         # discovered section that belongs to another AMC's schemes.
         for row in c.execute('SELECT id,amc_match,url,label FROM source_pages WHERE enabled=1').fetchall():
             reason=exclusion_reason(row['amc_match'],row['url'],row['label'])
+            if (urlparse(row['url']).hostname or '').removeprefix('www.') in ('abakkusmutualfund.com','pgimindiamf.com','thewealthcompany.com'):
+                reason='Superseded AMC domain; current official report pages are registered separately'
             if reason:c.execute("UPDATE source_pages SET enabled=0,status='Excluded',detail=? WHERE id=?",(reason,row['id']))

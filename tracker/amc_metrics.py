@@ -18,10 +18,16 @@ PAGES=[
     ('Tata','Tata Small Cap Fund','https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth'),
     ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
+    ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
+    ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
+    ('Sundaram','Sundaram Small Cap Fund','https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json'),
 ]
 
 
 def parse_page(content,family,url,h):
+    from .structured_reports import extract
+    special=extract(content,family,url,h)
+    if special is not None:return special
     expected=next((u for _,f,u in PAGES if f==family),None)
     if expected:
         actual,known=urlparse(url),urlparse(expected)
@@ -68,6 +74,18 @@ def parse_page(content,family,url,h):
                 day=report.replace(day=calendar.monthrange(report.year,report.month)[1]).isoformat();value=number(m.group(1))
     if value is None or day is None or day>date.today().isoformat() or not 0<value<10_000_000:return 0
     db.metric(family,'All','aum',day,value,'INR crore',url,h)
+    if family=='Axis Small Cap Fund':
+        from .report_parser import DATE,dated
+        m=re.search(r'Expense Ratio\s*([\d.]+)%\s*As On\s*('+DATE+r')',text,re.I)
+        if m and dated(m.group(2)) and 0<=float(m.group(1))<=5:
+            # The page does not state TER versus BER. Preserve its own label.
+            db.metric(family,'Direct','expense_ratio',dated(m.group(2)),float(m.group(1)),'% p.a.',url,h)
+    if family=='Mahindra Manulife Small Cap Fund':
+        from .report_parser import DATE,dated
+        m=re.search(r'Base Expense Ratio\s*\d?\s*as on\s*('+DATE+r')\s*:\s*Regular Plan:\s*([\d.]+)%\s*Direct Plan:\s*([\d.]+)%',text,re.I)
+        if m and dated(m.group(1)):
+            for plan,v in zip(('Regular','Direct'),m.groups()[1:]):
+                if 0<=float(v)<=5:db.metric(family,plan,'base_expense_ratio',dated(m.group(1)),float(v),'% p.a.',url,h)
     if family=='DSP Small Cap Fund':
         m=re.search(r'Base Expense Ratio\s*([\d.]+)%\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',text,re.I)
         if m:db.metric(family,'Direct','base_expense_ratio',report_date(m.group(2)),number(m.group(1)),'% p.a.',url,h)
@@ -83,6 +101,7 @@ def update(progress=lambda _:None):
     for offset in range(3):
         today=date.today();year,month=divmod(today.year*12+today.month-1-offset,12);month+=1;name=calendar.month_name[month]
         pages.extend([
+            ('Baroda','Baroda Bnp Paribas Small Cap Fund',f'https://www.barodabnpparibasmf.in/efactsheet/{name[:3]}{year}/Innerpages/Small-cap.html'),
             ('Mahindra','Mahindra Manulife Small Cap Fund',f'https://www.mahindramanulife.com/digital-factsheet/{name.lower()}-{year}/Equity-funds/Small-Cap-Fund.html'),
             ('ITI','Iti Small Cap Fund',f'https://www.itiamc.com/digitalfactsheet/{name}{year}/innerpages/Small-Cap.html'),
         ])

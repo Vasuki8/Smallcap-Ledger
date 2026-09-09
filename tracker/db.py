@@ -74,7 +74,7 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS portfolios(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, as_of TEXT NOT NULL,
           complete INTEGER NOT NULL DEFAULT 0, source TEXT NOT NULL, hash TEXT NOT NULL,
-          observed_at TEXT NOT NULL, UNIQUE(family,as_of,hash));
+          observed_at TEXT NOT NULL, UNIQUE(family,as_of,hash,complete));
         CREATE INDEX IF NOT EXISTS idx_portfolios_family_date ON portfolios(family,as_of);
         CREATE TABLE IF NOT EXISTS holdings(
           id INTEGER PRIMARY KEY, snapshot_id INTEGER NOT NULL REFERENCES portfolios(id),
@@ -114,6 +114,25 @@ def init(recover=False):
         c.execute("DELETE FROM settings WHERE key='news_interval_hours'")
         if recover:
             c.execute("UPDATE jobs SET status='interrupted',finished_at=?,detail='Application stopped before this update finished; the next run resumes retained history.' WHERE status='running'", (now(),))
+    migrate_portfolio_completeness()
+
+
+def migrate_portfolio_completeness():
+    """Allow a full extraction beside the retained partial view of the same file."""
+    with connect() as c:
+        sql=c.execute("SELECT sql FROM sqlite_master WHERE name='portfolios'").fetchone()[0]
+        if 'UNIQUE(family,as_of,hash)' not in sql.replace(' ',''):return
+        c.execute('PRAGMA foreign_keys=OFF')
+        c.execute('BEGIN IMMEDIATE')
+        c.execute('''CREATE TABLE portfolios_expanded(
+          id INTEGER PRIMARY KEY,family TEXT NOT NULL,as_of TEXT NOT NULL,
+          complete INTEGER NOT NULL DEFAULT 0,source TEXT NOT NULL,hash TEXT NOT NULL,
+          observed_at TEXT NOT NULL,UNIQUE(family,as_of,hash,complete))''')
+        c.execute('INSERT INTO portfolios_expanded SELECT * FROM portfolios')
+        c.execute('DROP TABLE portfolios')
+        c.execute('ALTER TABLE portfolios_expanded RENAME TO portfolios')
+        c.execute('CREATE INDEX idx_portfolios_family_date ON portfolios(family,as_of)')
+        if c.execute('PRAGMA foreign_key_check').fetchone():raise ValueError('Portfolio migration failed reference validation')
 
 
 def rows(sql, params=()):

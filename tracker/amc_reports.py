@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v2'
+PARSER_VERSION='amc-reports-2026-09-v5'
 
 
 def monthly_sources(today=None):
@@ -19,6 +19,7 @@ def monthly_sources(today=None):
         yield ('Invesco',f'https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-{name}-{year}.pdf','Monthly factsheet')
         yield ('Mirae',f'https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---{name}-{year}.pdf','Monthly active factsheet')
         yield ('SBI',f'https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-{name}-{year}.pdf','Small cap monthly factsheet')
+        yield ('JM Financial',f'https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20{calendar.month_name[month]}%20{year}.pdf','Monthly factsheet')
 
 
 def init():
@@ -45,11 +46,21 @@ def extract(content,family,url,h):
             from .providers import classify
             # SID/KIM can state regulatory maximum expenses, not actual current fees.
             if classify('',url)!='scheme document':disclosures.factsheet_pdf(content,family,url,h)
+        elif content.startswith(b'PK') and path.endswith('.zip') and family=='UTI Small Cap Fund':
+            from .structured_reports import uti_zip
+            uti_zip(content,family,url,h)
         elif content.startswith((b'PK',b'\xd0\xcf')) and path.endswith(('.xls','.xlsx')):
             disclosures.spreadsheet(content,family,url,h)
         elif path.endswith('.xml'):
             disclosures.summary_xml(content,family,url,h)
-        else:return 0
+        else:
+            from .structured_reports import extract as structured
+            if structured(content,family,url,h) is None:
+                from . import amc_metrics
+                known=any(f==family and u==url for _,f,u in amc_metrics.PAGES)
+                digital=family in ('Mahindra Manulife Small Cap Fund','Iti Small Cap Fund') and 'factsheet/' in url.lower()
+                if not known and not digital:return 0
+                amc_metrics.parse_page(content,family,url,h)
         metrics=db.one('SELECT COUNT(*) n FROM metrics WHERE family=? AND hash=?',(family,h))['n']
         holdings=db.one('SELECT COUNT(*) n FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id WHERE p.family=? AND p.hash=?',(family,h))['n']
         count=metrics+holdings
