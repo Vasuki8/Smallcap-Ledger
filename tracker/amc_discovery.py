@@ -62,6 +62,13 @@ def discover(amc):
                 if not disclosures.official_publication_url(url,amc):continue
                 seen.add(url)
                 yield family,url,title or 'Bandhan official report'
+    elif amc=='ITI':
+        family='Iti Small Cap Fund'
+        today=date.today()
+        for offset in (1,2):
+            year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
+            name=calendar.month_name[month]
+            yield family,f'https://www.itiamc.com/digitalfactsheet/{name}{year}/innerpages/Small-Cap.html','Monthly digital factsheet'
     elif amc=='Mahindra':
         family='Mahindra Manulife Small Cap Fund'
         today=date.today()
@@ -161,5 +168,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','Mahindra','Samco','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','ITI','Mahindra','Samco','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)

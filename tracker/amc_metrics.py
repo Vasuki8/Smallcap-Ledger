@@ -64,6 +64,57 @@ def mahindra_portfolio(soup,day,url,h):
     return len(positions)
 
 
+def iti_portfolio(soup,day,url,h):
+    """Parse a fully reconciled ITI Small Cap digital-factsheet portfolio."""
+    from .disclosures import portfolio
+    table=None
+    for candidate in soup.select('table'):
+        txt=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
+        if re.search(r'Name\s+of\s+the\s+Instrument',txt,re.I) and re.search(r'%\s+to\s+NAV',txt,re.I):
+            table=candidate;break
+    if table is None:return 0
+    positions=[];sector=None;equity_total=None;derivative_total=0.0;fund_total=None;cash=None
+    fund_mode=False
+    for tr in table.select('tr'):
+        cells=tr.find_all(['th','td'],recursive=False)
+        if len(cells)<2:continue
+        texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+        label=next((x for x in texts if x), '')
+        if not label or re.search(r'Name\s+of\s+the\s+Instrument',label,re.I):continue
+        base=None;deriv=None
+        if len(texts)>1 and re.fullmatch(r'-?[\d,.]+(?:\.\d+)?\s*%?',texts[1] or ''):base=number(texts[1])
+        if len(texts)>2 and re.fullmatch(r'-?[\d,.]+(?:\.\d+)?\s*%?',texts[2] or ''):deriv=number(texts[2])
+        key=re.sub(r'[^a-z]','',label.lower())
+        if key=='equityequityrelatedtotal':
+            equity_total=base;derivative_total=deriv or 0.0;fund_mode=False;continue
+        if key=='mutualfundunits':
+            fund_total=base;fund_mode=True;sector=None;continue
+        if key=='shorttermdebtnetcurrentassets':
+            cash=base;fund_mode=False;continue
+        issuer=bool(re.search(r'(?:\b(?:bank|corporation)\b|\b(?:limited|ltd\.?)\s*$)',label,re.I))
+        if fund_mode and label.lower().startswith('iti ') and 'fund' in label.lower():
+            if base is None:return 0
+            positions.append({'name':label,'isin':None,'sector':None,'weight':base,'asset_type':'Fund units'})
+            continue
+        if not issuer:
+            sector=label;fund_mode=False;continue
+        if base is not None:
+            positions.append({'name':label,'isin':None,'sector':sector,'weight':base,'asset_type':'Equity'})
+        if deriv is not None:
+            positions.append({'name':label+' (Derivative)','isin':None,'sector':sector,'weight':deriv,'asset_type':'Derivative'})
+    if equity_total is None or fund_total is None or cash is None or not positions:return 0
+    equity=sum(x['weight'] for x in positions if x['asset_type']=='Equity')
+    derivatives=sum(x['weight'] for x in positions if x['asset_type']=='Derivative')
+    funds=sum(x['weight'] for x in positions if x['asset_type']=='Fund units')
+    if abs(equity-equity_total)>max(.08,.011*sum(x['asset_type']=='Equity' for x in positions)):return 0
+    if abs(derivatives-derivative_total)>.03:return 0
+    if abs(funds-fund_total)>.03:return 0
+    if abs((equity_total+derivative_total+fund_total+cash)-100)>.03:return 0
+    positions.append({'name':'Short Term Debt & Net Current Assets','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    portfolio('Iti Small Cap Fund',day,positions,True,url,h)
+    return len(positions)
+
+
 def parse_page(content,family,url,h):
     from .structured_reports import extract
     special=extract(content,family,url,h)
@@ -130,6 +181,8 @@ def parse_page(content,family,url,h):
         b=re.search(r'\bBenchmark\s*:?\s*(BSE\s*250\s*Small\s*Cap\s*TRI)\b',text,re.I)
         if b:db.metric(family,'All','benchmark',day,'BSE 250 Small Cap TRI','Reported',url,h)
         saved+=mahindra_portfolio(soup,day,url,h)
+    if family=='Iti Small Cap Fund':
+        saved+=iti_portfolio(soup,day,url,h)
     if family=='DSP Small Cap Fund':
         m=re.search(r'Base Expense Ratio\s*([\d.]+)%\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',text,re.I)
         if m:db.metric(family,'Direct','base_expense_ratio',report_date(m.group(2)),number(m.group(1)),'% p.a.',url,h)

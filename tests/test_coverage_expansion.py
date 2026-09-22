@@ -144,6 +144,28 @@ class CoverageExpansionTests(unittest.TestCase):
         self.assertEqual(db.one('SELECT metric FROM metrics')['metric'],'average_aum')
         self.assertEqual(extract(html.replace('Small Cap','Mid Cap'),f,u,'bad'),0)
 
+    def test_iti_html_portfolio_reconciles_derivatives_funds_and_cash(self):
+        from tracker.amc_metrics import parse_page
+        f='Iti Small Cap Fund';u='https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Small-Cap.html'
+        html='''<html><h1>ITI Small Cap Fund</h1><p>Portfolio Details AUM (in Rs. Cr): 3,454.00</p>
+        <p>NAV as on July 31, 2026</p><table>
+        <tr><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
+        <tr><td>Equity &amp; Equity Related Total</td><td>95.65</td><td>2.11</td></tr>
+        <tr><td>Consumer Durables</td><td>95.65</td><td>1.14</td></tr>
+        <tr><td>Example Holdings Limited</td><td>95.65</td><td></td></tr>
+        <tr><td>Example Derivative Limited</td><td></td><td>1.14</td></tr>
+        <tr><td>Example Futures Limited</td><td></td><td>0.97</td></tr>
+        <tr><td>Mutual Fund Units</td><td>0.27</td><td></td></tr>
+        <tr><td>ITI Dynamic Bond Fund -Direct Plan -Growth Option</td><td>0.16</td><td></td></tr>
+        <tr><td>ITI Banking &amp; PSU Debt Fund -Direct Plan -Growth Option</td><td>0.11</td><td></td></tr>
+        <tr><td>Short Term Debt &amp; Net Current Assets</td><td>1.97</td><td></td></tr></table></html>'''
+        self.assertEqual(parse_page(html,f,u,'iti'),6)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})
+        rows=db.rows('SELECT name,asset_type,weight FROM holdings ORDER BY id')
+        self.assertEqual([x['asset_type'] for x in rows],['Equity','Derivative','Derivative','Fund units','Fund units','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),100)
+
     def test_mahindra_full_html_portfolio_reconciles(self):
         from tracker.amc_metrics import parse_page
         f='Mahindra Manulife Small Cap Fund'
