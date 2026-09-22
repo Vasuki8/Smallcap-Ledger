@@ -198,7 +198,7 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         <tr><td></td><td>TREPS</td><td></td><td>2.88%</td></tr>
         <tr><td></td><td>Net Current Assets</td><td></td><td>0.09%</td></tr>
         <tr><td></td><td>Grand Total ( Net Asset)</td><td></td><td>100.00%</td></tr></table></html>'''
-        self.assertEqual(parse_page(html,f,u,'canara'),4)
+        self.assertEqual(parse_page(html,f,u,'canara'),5)
         snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
         self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
         rows=db.rows('SELECT name,sector,weight,asset_type FROM holdings ORDER BY id')
