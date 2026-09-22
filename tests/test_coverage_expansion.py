@@ -309,6 +309,38 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(available_expenses(s)[0]['plan'],'Direct')
 
 
+    def test_bajaj_factsheet_reconciles_complete_portfolio(self):
+        from tracker.report_parser import bajaj_complete_portfolio
+        text='''Bajaj Finserv Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+PORTFOLIO (as on 31 August, 2026)
+NAV as on 31 August, 2026
+TOTAL EXPENSE RATIO (TER)
+Regular Plan 2.10%
+Direct Plan 0.44%
+12.77%
+87.23%
+Alpha Industries Limited 50.00%
+Beta Bank Limited 37.23%
+Equities 87.23%
+Reverse Repo / TREPS 10.50%
+Cash & Cash Equivalent 2.27%
+Grand Total 100.00%
+Stock % of NAV Stock % of NAV
+Industrial Products 50.00%
+Banks 37.23%
+Scheme Category: Small Cap Fund'''
+        parsed=bajaj_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual([x['name'] for x in parsed['positions']],[
+            'Alpha Industries Limited','Beta Bank Limited','Reverse Repo / TREPS','Cash & Cash Equivalent'])
+        self.assertEqual([x['asset_type'] for x in parsed['positions']],[
+            'Equity','Equity','Money market','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertIsNone(bajaj_complete_portfolio(text.replace('Small Cap Fund','Large Cap Fund',1)))
+        self.assertIsNone(bajaj_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
+
     def test_kotak_monthly_factsheet_reconciles_complete_portfolio(self):
         from tracker.amc_metrics import parse_page
         f='Kotak Small Cap Fund';u='https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html'
