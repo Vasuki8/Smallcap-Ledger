@@ -77,6 +77,37 @@ def discover(amc):
             raw,_,_=read(page)
             soup=BeautifulSoup(raw,'html.parser')
             for url,title in providers.candidate_links(soup,page).items():add(url,title)
+        # The investor-facing site is a React app. Inspect a bounded number of
+        # same-domain static JS bundles strictly as text for public document/API
+        # routes; never execute the scripts or follow arbitrary discovered URLs.
+        app='https://bandhanmutual.com/downloads/factsheets'
+        bundle_hints=[]
+        try:
+            raw,_,_=read(app);soup=BeautifulSoup(raw,'html.parser')
+            scripts=[]
+            for tag in soup.select('script[src]'):
+                src=urljoin(app,tag.get('src',''))
+                if (src.startswith('https://bandhanmutual.com/') or src.startswith('https://www.bandhanmutual.com/')) and re.search(r'\.js(?:\?|$)',src,re.I):
+                    scripts.append(src)
+            scripts=sorted(dict.fromkeys(scripts),key=lambda u:(0 if re.search(r'(?:main|app)',u,re.I) else 1,u))[:12]
+            for src in scripts:
+                try:
+                    providers.can_crawl(src)
+                    body,_,_=providers.fetch(src,archive=False,max_bytes=6*1024*1024)
+                    text=body.decode('utf-8',errors='replace')
+                    for m in re.finditer(r'facts?heets?',text,re.I):
+                        snippet=text[max(0,m.start()-220):m.end()+320]
+                        for value in re.findall(r'https?://[^"'+"'"+r'\\\s]{8,300}|/[A-Za-z0-9_./?=&%-]{4,240}',snippet):
+                            if re.search(r'fact|sheet|download|api|asset',value,re.I):
+                                bundle_hints.append(value[:300])
+                    for value in re.findall(r'https?://[^"'+"'"+r'\\\s]+\.(?:pdf|xlsx?|xml)(?:\?[^"'+"'"+r'\\\s]*)?',text,re.I):
+                        add(value,'Bandhan investor-site document')
+                except Exception as e:
+                    bundle_hints.append('bundle-error:'+type(e).__name__)
+            if bundle_hints:
+                print('Bandhan app route hints: '+json.dumps(list(dict.fromkeys(bundle_hints))[:24]),flush=True)
+        except Exception as e:
+            print('Bandhan investor-site inspection: '+(str(e) or type(e).__name__).splitlines()[0][:220],flush=True)
         # Bandhan's WordPress templates currently keep document fields outside
         # the rendered post body. Query only the public REST search/media
         # endpoints, inspect returned data as JSON, and keep official document
