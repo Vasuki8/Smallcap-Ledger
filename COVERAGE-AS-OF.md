@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-22T20:01:09+00:00
+Prepared: 2026-09-22T20:23:55+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **22 / 36 any**, **16 complete**, **15 current**, **12 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **19 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **23 / 36 any**, **16 complete**, **16 current**, **12 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **19 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -12,7 +12,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | --- | --- | --- | --- | --- | ---: |
 | Abakkus Small Cap Fund | ₹ 3,126.02 · 2026-09-18 | 1.25% TER · 2026-09-21 | 68 positions · 2026-07-31 · complete · older | NIFTY SmallCap 250 TRI · 2026-09-22 | 28 |
 | Aditya Birla Sun Life Small Cap Fund | ₹ 6,222.10 · 2026-09-18 | 1.08% TER · 2026-09-16 | Gap | BSE 250 Small Cap Index TRI · 2026-07-31 | 4 |
-| Axis Small Cap Fund | ₹ 30,918.19 · 2026-09-18 | 0.71% Expense ratio · type not specified · 2026-09-19 | Gap | Nifty Smallcap 250 TRI · 2026-09-22 | 4 |
+| Axis Small Cap Fund | ₹ 30,918.19 · 2026-09-18 | 0.71% Expense ratio · type not specified · 2026-09-19 | 10 positions · 2026-09-16 · partial · current | Nifty Smallcap 250 TRI · 2026-09-22 | 4 |
 | Bajaj Finserv Small Cap Fund | ₹ 2,690.22 · 2026-09-18 | 0.96% TER · 2026-09-21 | Gap | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
 | Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-18 | 0.61% TER · 2026-09-20 | Gap | Gap | 0 |
 | Bank Of India Small Cap Fund | ₹ 3,532.06 · 2026-09-18 | 0.74% TER · 2026-09-21 | Gap | Gap | 6 |
