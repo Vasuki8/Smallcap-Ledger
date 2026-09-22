@@ -71,6 +71,25 @@ class ReportParserTests(unittest.TestCase):
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-small-cap.xlsx',links)
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
 
+    def test_quant_statutory_discovery_prefers_monthly_portfolio_files(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div>MONTHLY PORTFOLIO - FUND - WISE
+          <div>Aug 2026 <a data-file="/Admin/Portfolio/quant_Small_Cap_Fund_Aug_2026.xlsx">Download</a></div>
+        </div>
+        <div>MONTHLY PORTFOLIO
+          <a href="/Admin/Portfolio/Monthly_Portfolio_All_Schemes_August_2026.xlsx">2026</a>
+        </div>
+        <div>Other disclosure <a href="/Admin/Notice/notice.pdf">Notice</a></div>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'hash','text/html')):
+            rows=list(discover('quant Mutual'))
+        self.assertEqual(len(rows),2)
+        urls=[x[1] for x in rows]
+        self.assertIn('https://quantmutual.com/Admin/Portfolio/quant_Small_Cap_Fund_Aug_2026.xlsx',urls)
+        self.assertIn('https://quantmutual.com/Admin/Portfolio/Monthly_Portfolio_All_Schemes_August_2026.xlsx',urls)
+        self.assertTrue(all(x[0]=='Quant Small Cap Fund' for x in rows))
+
     def test_catalog_amc_resolver_handles_long_names_without_quantum_collision(self):
         from tracker.disclosures import resolve_registered_amc
         sources=[
