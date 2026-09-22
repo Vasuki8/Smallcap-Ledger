@@ -55,6 +55,22 @@ class ReportParserTests(unittest.TestCase):
         facts=page_facts(self.report(f,'AUM as on 31-Aug-2026\nAAUM for Month of Aug-2026\n196.45 Crs\n184.94 Crs'),f)
         self.assertEqual([(x['metric'],x['value']) for x in facts],[('aum',196.45),('average_aum',184.94)])
 
+    def test_bandhan_month_end_and_average_aum(self):
+        f='Bandhan Small Cap Fund'
+        text=self.report(f,'Details as on August 31, 2026\nMonthly Avg AUM: ₹ 33,251.44 Crores\nMonth end AUM: ₹ 34,176.00 Crores\nNAV as on August 31, 2026')
+        values={(x['metric'],x['plan']):(x['value'],x['as_of']) for x in page_facts(text,f)}
+        self.assertEqual(values[('aum','All')],(34176.00,'2026-08-31'))
+        self.assertEqual(values[('average_aum','All')],(33251.44,'2026-08-31'))
+
+    def test_candidate_links_reads_embedded_documents(self):
+        from bs4 import BeautifulSoup
+        from tracker.providers import candidate_links
+        soup=BeautifulSoup('<iframe src="/wp-content/uploads/bandhan-factsheet.pdf#page=1"></iframe><div data-file="/wp-content/uploads/bandhan-small-cap.xlsx"></div><iframe src="https://viewer.example/view?url=https%3A%2F%2Fcmsnew.bandhanmutual.com%2Fwp-content%2Fuploads%2Fportfolio.pdf"></iframe>','html.parser')
+        links=candidate_links(soup,'https://cmsnew.bandhanmutual.com/monthly-factsheets-2026/')
+        self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-factsheet.pdf#page=1',links)
+        self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-small-cap.xlsx',links)
+        self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
+
     def test_quantum_fee_footnote_is_preserved(self):
         f='Quantum Small Cap Fund'
         text=self.report(f,'Scheme Portfolio as on July 31, 2026\nAUM ₹ (In Crores)\nAbsolute AUM: 254.14\nDirect Plan – Total TER 0.70%\nTotal Expense ratio inclusive of transaction cost please click the link')

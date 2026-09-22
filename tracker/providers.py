@@ -9,7 +9,7 @@ import re
 import socket
 import threading
 from datetime import date, datetime, timedelta, timezone
-from urllib.parse import urlparse, urljoin, urlencode, unquote
+from urllib.parse import urlparse, urljoin, urlencode, unquote, parse_qs
 from urllib.robotparser import RobotFileParser
 import httpx
 from bs4 import BeautifulSoup
@@ -295,6 +295,28 @@ def candidate_links(soup,base):
         url=urljoin(base,href)
         title=a.get_text(" ",strip=True) or a.get("title","") or urlparse(url).path.rsplit("/",1)[-1]
         found[url]=title
+    # Some AMC CMS pages expose publications through PDF viewers, embeds, or
+    # custom data-* attributes rather than ordinary anchors. Read URL-like
+    # attributes as data only; ownership/domain checks still happen downstream.
+    for tag in soup.find_all(True):
+        label=tag.get_text(" ",strip=True)[:300] or tag.get("title","") or tag.name
+        for _,raw in tag.attrs.items():
+            values=raw if isinstance(raw,list) else [raw]
+            for value in values:
+                if not isinstance(value,str) or len(value)>3000:continue
+                value=value.replace("\\/","/")
+                candidates=[value]
+                try:
+                    query=parse_qs(urlparse(value).query)
+                    candidates.extend(v for key in ("url","file","src") for v in query.get(key,[]))
+                except ValueError:
+                    pass
+                for candidate in candidates:
+                    candidate=unquote(candidate).strip()
+                    if not re.search(r"\.(?:pdf|xlsx?|xml)(?:[?#]|$)",candidate,re.I):continue
+                    if candidate.startswith("//"):candidate=urlparse(base).scheme+":"+candidate
+                    if candidate.startswith(("https://","http://","/")):
+                        found[urljoin(base,candidate)]=label
     # Motilal's public HTML also exposes download fields as definition lists.
     if ((urlparse(base).hostname or '').removeprefix('www.')=='motilaloswalmf.com'
             and urlparse(base).path.rstrip('/')=='/mutual-funds/motilal-oswal-small-cap-fund'):

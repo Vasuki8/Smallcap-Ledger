@@ -46,6 +46,28 @@ def discover(amc):
             raw,_,_=read(f'https://www.utimf.com/api/get-consolidate-portfolio-disclosure?year={year}&month={name}')
             for row in json.loads(raw).get('rows',[])[:1]:
                 if row.get('type','').lower()=='zip':yield 'UTI Small Cap Fund',row['url'],row['name']
+    elif amc=='Bandhan':
+        family='Bandhan Small Cap Fund'
+        pages=[
+            'https://cmsnew.bandhanmutual.com/monthly-factsheets-2026/',
+            'https://cmsnew.bandhanmutual.com/bandhan-small-cap-fund/',
+            'https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/',
+        ]
+        seen=set();found=0
+        for page in pages:
+            raw,_,_=read(page)
+            soup=BeautifulSoup(raw,'html.parser')
+            for url,title in providers.candidate_links(soup,page).items():
+                if url in seen:continue
+                combined=(url+' '+title).lower()
+                if not re.search(r'\.(?:pdf|xlsx?|xml)(?:[?#]|$)',url,re.I):continue
+                if page.endswith('monthly-factsheets-2026/') and not re.search(r'fact|sheet|2026|active',combined,re.I):continue
+                if 'monthly-and-half-yearly-bandhan-small-cap-fund' in page and not re.search(r'portfolio|small|cap|monthly|half',combined,re.I):continue
+                if not disclosures.official_publication_url(url,amc):continue
+                seen.add(url);found+=1
+                yield family,url,title or ('Bandhan factsheet' if 'factsheet' in page else 'Bandhan Small Cap Fund report')
+        if not found:
+            raise ValueError('No official Bandhan PDF/XLSX/XML candidate was exposed by the registered CMS pages')
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
         body={'systemQueryFileName':'productsweb.xml','tagName':'GetOneProductWeb','searchField':'p.slug','searchValue':'trustmf-small-cap-fund','sortField':'','sortDirection':''}
@@ -104,5 +126,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
