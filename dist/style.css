@@ -1287,3 +1287,53 @@ body{background:var(--canvas)}
   .minimal-heading p{max-width:28rem}
   .summary-strip>div{padding:13px}
 }
+
+
+/* === Compact mobile fund cards === */
+@media(max-width:600px){
+  .minimal-fund-table tr{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-content:start;
+    row-gap:14px;
+    column-gap:18px;
+    padding:16px 14px;
+    min-height:0;
+  }
+  .minimal-fund-table td{
+    min-height:0;
+    margin:0;
+    padding:0;
+  }
+  .minimal-fund-table td:first-child{
+    grid-column:1/-1;
+    margin-bottom:2px;
+  }
+  .minimal-fund-table td:last-child{
+    grid-column:auto;
+  }
+  .minimal-fund-table td[data-label="Expense"],
+  .minimal-fund-table td[data-label="1Y"]{
+    display:block;
+  }
+  .minimal-fund-table td[data-label="3Y CAGR"]{
+    grid-column:1/-1;
+  }
+  .minimal-fund-table .fund-name{
+    align-items:flex-start;
+  }
+  .minimal-fund-table .fund-detail{
+    margin-top:3px;
+  }
+}
+
+@media(max-width:420px){
+  .minimal-fund-table tr{
+    row-gap:12px;
+    column-gap:14px;
+    padding:14px 12px;
+  }
+  .minimal-fund-table td[data-label="3Y CAGR"]{
+    grid-column:1;
+  }
+}
