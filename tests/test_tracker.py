@@ -164,6 +164,28 @@ class TrackerTests(unittest.TestCase):
             self.assertEqual(mock.call_count,2)
             self.assertIn('page=2',mock.call_args.args[0])
 
+    def test_fetch_rejects_empty_archived_response(self):
+        class Response:
+            is_redirect=False
+            headers={'content-type':'application/pdf'}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def raise_for_status(self):return None
+            def iter_bytes(self):return iter(())
+        class Client:
+            def __init__(self,*args,**kwargs):pass
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def stream(self,*args,**kwargs):return Response()
+        before=db.one('SELECT COUNT(*) n FROM archives')['n']
+        with patch('tracker.providers.public_url',return_value='https://example.com/empty.pdf'), \
+             patch('tracker.providers.httpx.Client',Client):
+            with self.assertRaisesRegex(ValueError,'empty response'):
+                providers.fetch('https://example.com/empty.pdf')
+        self.assertEqual(db.one('SELECT COUNT(*) n FROM archives')['n'],before)
+        failure=db.one("SELECT status,detail FROM fetches WHERE url='https://example.com/empty.pdf' ORDER BY id DESC LIMIT 1")
+        self.assertEqual(failure['status'],'error');self.assertIn('empty response',failure['detail'])
+
     def test_only_amc_publication_domains_are_accepted(self):
         self.assertTrue(disclosures.official_publication_url('https://files.hdfcfund.com/factsheet.pdf','HDFC'))
         self.assertFalse(disclosures.official_publication_url('https://news.example.com/hdfc-market-outlook','HDFC'))

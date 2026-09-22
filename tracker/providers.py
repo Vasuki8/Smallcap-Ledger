@@ -81,6 +81,8 @@ def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024):
                         content.extend(chunk)
                         if len(content)>max_bytes: raise ValueError("Source is larger than the 25 MB archive limit; use its original link")
                     content=bytes(content)
+                    if archive and not content:
+                        raise ValueError("Source returned an empty response; existing archive was retained")
                     typ=r.headers.get("content-type", "application/octet-stream")
                     h=db.archive(content,typ) if archive else None
                     if archive:
