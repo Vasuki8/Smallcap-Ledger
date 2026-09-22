@@ -159,7 +159,7 @@ class CoverageExpansionTests(unittest.TestCase):
         <tr><td>ITI Dynamic Bond Fund -Direct Plan -Growth Option</td><td>0.16</td><td></td></tr>
         <tr><td>ITI Banking &amp; PSU Debt Fund -Direct Plan -Growth Option</td><td>0.11</td><td></td></tr>
         <tr><td>Short Term Debt &amp; Net Current Assets</td><td>1.97</td><td></td></tr></table></html>'''
-        self.assertEqual(parse_page(html,f,u,'iti'),6)
+        self.assertEqual(parse_page(html,f,u,'iti'),7)
         snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
         self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})
         rows=db.rows('SELECT name,asset_type,weight FROM holdings ORDER BY id')
