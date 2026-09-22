@@ -214,7 +214,7 @@ def parse_page(content,family,url,h):
     elif family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
         d=re.search(r'\(as on ([A-Za-z]+ \d{1,2}, \d{4})\)',text,re.I)
         a=re.search(r'Month end Assets Under Management \(AUM\)[^₹]*₹\s*([\d,.]+)\s*Crores',text,re.I)
-        if d and a:day=report_date(d.group(1));value=number(a.group(1))
+        if d and a:day=iso(d.group(1));value=number(a.group(1))
     elif family=='Iti Small Cap Fund' and '/digitalfactsheet/' in url:
         m=re.search(r'Portfolio Details AUM \(in Rs\. Cr\):\s*([\d,.]+)',text,re.I)
         # The dated monthly report identifies the reporting month in its URL;
