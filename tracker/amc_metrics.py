@@ -190,7 +190,19 @@ def axis_top_holdings(soup,page_text,url,h):
             cells=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in tr.find_all(['th','td'],recursive=False)]
             if len(cells)<2:continue
             name=next((x for x in cells[:-1] if x),'');raw=cells[-1]
-            if not name or re.search(r'^Stocks
+            if not name or re.fullmatch(r'Stocks',name,re.I) or not re.fullmatch(r'[\d.]+\s*%?',raw):continue
+            weight=number(raw)
+            if not 0<weight<20:return 0
+            positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+        if not 5<=len(positions)<=20:continue
+        if len({x['name'] for x in positions})!=len(positions):continue
+        if abs(sum(x['weight'] for x in positions)-stated)>.08:continue
+        portfolio('Axis Small Cap Fund',day,positions,False,url,h)
+        return len(positions)
+    return 0
+
+
+def kotak_portfolio(soup,day,url,h):
     """Parse Kotak's full monthly Small Cap factsheet portfolio by reconciliation."""
     from .disclosures import portfolio
     def parse_table(table):
