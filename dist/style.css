@@ -1224,3 +1224,66 @@ body{background:var(--canvas)}
   .advanced-controls button,.advanced-controls label:last-child{grid-column:1}
   .portfolio-meta{gap:8px}
 }
+
+
+/* === Minimal navigation polish === */
+.fund-row-link{cursor:pointer}
+.fund-row-link:focus-visible{
+  outline:2px solid rgba(47,91,234,.45);
+  outline-offset:-2px;
+}
+.fund-row-link:hover .fund-title{color:#2448b8}
+.chart-grid{stroke:#edf0f4}
+.chart-label{fill:#7e8795;font-size:11px}
+.chart svg{min-height:190px}
+.chart-tip{
+  border-color:#e1e5eb;
+  box-shadow:0 8px 22px rgba(16,24,40,.08);
+}
+.tabs{scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.topbar{backdrop-filter:none}
+.panel:hover,.metric-card:hover{border-color:var(--line)}
+.status-hero,.metric-card,.panel,.coverage-item,.retention-grid>div{transition:none}
+
+@media(max-width:800px){
+  .breadcrumb{max-width:calc(100vw - 58px)}
+  .minimal-tabs{
+    gap:18px;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+  }
+  .minimal-tabs a{flex:0 0 auto}
+  .chart svg{min-height:150px}
+  .minimal-fund-table tr{
+    padding:13px 12px;
+    border-radius:0;
+  }
+  .minimal-fund-table td{
+    padding:0;
+  }
+}
+
+@media(max-width:600px){
+  .minimal-fund-table td[data-label="Expense"],
+  .minimal-fund-table td[data-label="1Y"]{display:none}
+  .minimal-fund-table tr{
+    grid-template-columns:1fr 1fr;
+    gap:12px 10px;
+  }
+  .minimal-fund-table td:first-child{grid-column:1/-1}
+  .minimal-fund-table td[data-label="NAV"],
+  .minimal-fund-table td[data-label="AUM"],
+  .minimal-fund-table td[data-label="3Y CAGR"]{display:block}
+  .minimal-fund-table td[data-label]::before{
+    margin-bottom:3px;
+    font-size:.66rem;
+  }
+  .fund-detail{font-size:.7rem}
+}
+
+@media(max-width:420px){
+  .minimal-controls select{font-size:.78rem}
+  .minimal-heading p{max-width:28rem}
+  .summary-strip>div{padding:13px}
+}
