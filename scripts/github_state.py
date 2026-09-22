@@ -251,7 +251,7 @@ def restore(seed):
     print(f"Restored split checkpoint {manifest['database']['asset']} with {len(packs)} source packs")
 
 
-def publish():
+def publish_split():
     repo=repository();r=release(repo)
     if r is None:
         gh('release','create',TAG,'--repo',repo,'--target',os.environ.get('GITHUB_SHA','main'),
@@ -299,13 +299,46 @@ def publish():
                 keep.add(old['database']['asset']);keep.update(p['asset'] for p in old.get('source_packs',[]))
         for asset in r['assets']:
             name=asset['name']
-            managed=(re.fullmatch(r'state-[A-Za-z0-9_.-]+\.zip',name) or
-                     re.fullmatch(r'database-[A-Za-z0-9_.-]+\.zip',name) or
+            managed=(re.fullmatch(r'database-[A-Za-z0-9_.-]+\.zip',name) or
                      re.fullmatch(r'sources-[A-Za-z0-9_.-]+\.zip',name))
             if managed and name not in keep:
                 gh('release','delete-asset',TAG,name,'--repo',repo,'--yes')
     print(f"Saved split checkpoint {database_asset} with {len(pack_records)} reusable source packs")
 
+
+
+def publish_legacy():
+    """Original cumulative ZIP publisher retained for staged migration."""
+    repo=repository();r=release(repo)
+    if r is None:
+        gh('release','create',TAG,'--repo',repo,'--target',os.environ.get('GITHUB_SHA','main'),
+           '--title','Smallcap Ledger historical archive',
+           '--notes','Cumulative SQLite records and original source files. Download latest.json to identify the current checkpoint.','--prerelease')
+        r=json.loads(gh('api',f'repos/{repo}/releases/tags/{TAG}').stdout)
+    if r.get('immutable'):raise ValueError('The tracker-history release is immutable; a writable archive location is required')
+    with tempfile.TemporaryDirectory() as tmp:
+        asset='state-'+os.environ.get('GITHUB_RUN_ID',db.now().replace(':','').replace('+',''))+'-'+os.environ.get('GITHUB_RUN_ATTEMPT','1')+'.zip'
+        target=Path(tmp)/asset;manifest=pack(target)
+        previous=None
+        if any(a['name']=='latest.json' for a in r['assets']):
+            old=download_asset(repo,'latest.json',tmp);old_manifest=json.loads(old.read_text());old.unlink()
+            if int(old_manifest.get('format',1))<2:previous=old_manifest.get('asset')
+        gh('release','upload',TAG,str(target),'--repo',repo)
+        manifest['previous_asset']=previous
+        pointer=Path(tmp)/'latest.json';pointer.write_text(json.dumps(manifest,indent=2)+'\n')
+        gh('release','upload',TAG,str(pointer),'--repo',repo,'--clobber')
+        keep={asset,previous}
+        for a in r['assets']:
+            if re.fullmatch(r'state-[A-Za-z0-9_.-]+\.zip',a['name']) and a['name'] not in keep:
+                gh('release','delete-asset',TAG,a['name'],'--repo',repo,'--yes')
+    print('Saved cumulative archive '+asset)
+
+
+def publish():
+    # Format 2 is deliberately opt-in for the migration run. Until enabled,
+    # production keeps using the proven cumulative checkpoint format.
+    if os.environ.get('SMALLCAP_ARCHIVE_FORMAT')=='2':publish_split()
+    else:publish_legacy()
 
 def seed(target,part_mb=20):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
