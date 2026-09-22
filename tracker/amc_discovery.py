@@ -3,7 +3,7 @@ import calendar
 import json
 import re
 from datetime import date,datetime
-from urllib.parse import urljoin,quote,unquote
+from urllib.parse import urljoin,quote,unquote,urlparse
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 from . import db,providers,disclosures,amc_reports
