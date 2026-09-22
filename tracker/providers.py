@@ -66,29 +66,40 @@ def public_url(url):
 
 def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024):
     original=url
+    # Public GETs occasionally fail on slow AMC hosts. Retry only transient
+    # transport failures once; never retry HTTP status errors, validation
+    # failures, oversize responses, or POST requests.
+    attempts=2 if body is None else 1
     try:
-        with httpx.Client(timeout=httpx.Timeout(30,connect=15),headers={"User-Agent":USER_AGENT,"Accept":"*/*"}, follow_redirects=False) as client:
-            for _ in range(6):
-                public_url(url)
-                with client.stream("POST" if body is not None else "GET",url,json=body,
-                                   headers={"Referer":NIFTY_PAGE} if "niftyindices.com" in url else {}) as r:
-                    if r.is_redirect:
-                        url=urljoin(url,r.headers.get("location",""))
-                        continue
-                    r.raise_for_status()
-                    content=bytearray()
-                    for chunk in r.iter_bytes():
-                        content.extend(chunk)
-                        if len(content)>max_bytes: raise ValueError("Source is larger than the 25 MB archive limit; use its original link")
-                    content=bytes(content)
-                    if archive and not content:
-                        raise ValueError("Source returned an empty response; existing archive was retained")
-                    typ=r.headers.get("content-type", "application/octet-stream")
-                    h=db.archive(content,typ) if archive else None
-                    if archive:
-                        with db.connect() as c: c.execute("INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",(original,db.now(),"ok",h))
-                    return content,h,typ
-            raise ValueError("Too many redirects")
+        for attempt in range(attempts):
+            current=original
+            timeout=30 if attempt==0 else 60
+            try:
+                with httpx.Client(timeout=httpx.Timeout(timeout,connect=15),headers={"User-Agent":USER_AGENT,"Accept":"*/*"}, follow_redirects=False) as client:
+                    for _ in range(6):
+                        public_url(current)
+                        with client.stream("POST" if body is not None else "GET",current,json=body,
+                                           headers={"Referer":NIFTY_PAGE} if "niftyindices.com" in current else {}) as r:
+                            if r.is_redirect:
+                                current=urljoin(current,r.headers.get("location",""))
+                                continue
+                            r.raise_for_status()
+                            content=bytearray()
+                            for chunk in r.iter_bytes():
+                                content.extend(chunk)
+                                if len(content)>max_bytes: raise ValueError("Source is larger than the 25 MB archive limit; use its original link")
+                            content=bytes(content)
+                            if archive and not content:
+                                raise ValueError("Source returned an empty response; existing archive was retained")
+                            typ=r.headers.get("content-type", "application/octet-stream")
+                            h=db.archive(content,typ) if archive else None
+                            if archive:
+                                with db.connect() as c: c.execute("INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",(original,db.now(),"ok",h))
+                            return content,h,typ
+                    raise ValueError("Too many redirects")
+            except httpx.TransportError:
+                if attempt+1>=attempts:raise
+                continue
     except Exception as e:
         if archive:
             with db.connect() as c: c.execute("INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)",(original,db.now(),"error",str(e)[:400]))
