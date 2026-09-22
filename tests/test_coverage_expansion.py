@@ -149,16 +149,16 @@ class CoverageExpansionTests(unittest.TestCase):
         f='Iti Small Cap Fund';u='https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Small-Cap.html'
         html='''<html><h1>ITI Small Cap Fund</h1><p>Portfolio Details AUM (in Rs. Cr): 3,454.00</p>
         <p>NAV as on July 31, 2026</p><table>
-        <tr><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
-        <tr><td>Equity &amp; Equity Related Total</td><td>95.65</td><td>2.11</td></tr>
-        <tr><td>Consumer Durables</td><td>95.65</td><td>1.14</td></tr>
-        <tr><td>Example Holdings Limited</td><td>95.65</td><td></td></tr>
-        <tr><td>Example Derivative Limited</td><td></td><td>1.14</td></tr>
-        <tr><td>Example Futures Limited</td><td></td><td>0.97</td></tr>
-        <tr><td>Mutual Fund Units</td><td>0.27</td><td></td></tr>
-        <tr><td>ITI Dynamic Bond Fund -Direct Plan -Growth Option</td><td>0.16</td><td></td></tr>
-        <tr><td>ITI Banking &amp; PSU Debt Fund -Direct Plan -Growth Option</td><td>0.11</td><td></td></tr>
-        <tr><td>Short Term Debt &amp; Net Current Assets</td><td>1.97</td><td></td></tr></table></html>'''
+        <tr><th></th><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
+        <tr><td></td><td>Equity &amp; Equity Related Total</td><td>95.65</td><td>2.11</td></tr>
+        <tr><td></td><td>Consumer Durables</td><td>95.65</td><td>1.14</td></tr>
+        <tr><td></td><td>Example Holdings Limited</td><td>95.65</td><td></td></tr>
+        <tr><td></td><td>Example Derivative Limited</td><td></td><td>1.14</td></tr>
+        <tr><td></td><td>Example Futures Limited</td><td></td><td>0.97</td></tr>
+        <tr><td></td><td>Mutual Fund Units</td><td>0.27</td><td></td></tr>
+        <tr><td></td><td>ITI Dynamic Bond Fund -Direct Plan -Growth Option</td><td>0.16</td><td></td></tr>
+        <tr><td></td><td>ITI Banking &amp; PSU Debt Fund -Direct Plan -Growth Option</td><td>0.11</td><td></td></tr>
+        <tr><td></td><td>Short Term Debt &amp; Net Current Assets</td><td>1.97</td><td></td></tr></table></html>'''
         self.assertEqual(parse_page(html,f,u,'iti'),7)
         snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
         self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})

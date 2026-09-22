@@ -67,23 +67,30 @@ def mahindra_portfolio(soup,day,url,h):
 def iti_portfolio(soup,day,url,h):
     """Parse a fully reconciled ITI Small Cap digital-factsheet portfolio."""
     from .disclosures import portfolio
-    table=None
+    table=None;label_col=None;base_col=None;deriv_col=None
     for candidate in soup.select('table'):
-        txt=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
-        if re.search(r'Name\s+of\s+the\s+Instrument',txt,re.I) and re.search(r'%\s+to\s+NAV',txt,re.I):
-            table=candidate;break
+        for tr in candidate.select('tr'):
+            cells=tr.find_all(['th','td'],recursive=False)
+            texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+            lc=next((i for i,x in enumerate(texts) if re.search(r'Name\s+of\s+the\s+Instrument',x,re.I)),None)
+            bc=next((i for i,x in enumerate(texts) if re.fullmatch(r'%\s*to\s*NAV',x,re.I)),None)
+            dc=next((i for i,x in enumerate(texts) if re.search(r'%\s*to\s*NAV.*Derivatives',x,re.I)),None)
+            if None not in (lc,bc,dc):
+                table=candidate;label_col=lc;base_col=bc;deriv_col=dc;break
+        if table is not None:break
     if table is None:return 0
     positions=[];sector=None;equity_total=None;derivative_total=0.0;fund_total=None;cash=None
     fund_mode=False
+    def cell(texts,index):return texts[index] if index is not None and index<len(texts) else ''
+    def numeric_cell(texts,index):
+        raw=cell(texts,index)
+        return number(raw) if re.fullmatch(r'-?[\d,.]+(?:\.\d+)?\s*%?',raw or '') else None
     for tr in table.select('tr'):
         cells=tr.find_all(['th','td'],recursive=False)
-        if len(cells)<2:continue
         texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
-        label=next((x for x in texts if x), '')
+        label=cell(texts,label_col)
         if not label or re.search(r'Name\s+of\s+the\s+Instrument',label,re.I):continue
-        base=None;deriv=None
-        if len(texts)>1 and re.fullmatch(r'-?[\d,.]+(?:\.\d+)?\s*%?',texts[1] or ''):base=number(texts[1])
-        if len(texts)>2 and re.fullmatch(r'-?[\d,.]+(?:\.\d+)?\s*%?',texts[2] or ''):deriv=number(texts[2])
+        base=numeric_cell(texts,base_col);deriv=numeric_cell(texts,deriv_col)
         key=re.sub(r'[^a-z]','',label.lower())
         if key=='equityequityrelatedtotal':
             equity_total=base;derivative_total=deriv or 0.0;fund_mode=False;continue
