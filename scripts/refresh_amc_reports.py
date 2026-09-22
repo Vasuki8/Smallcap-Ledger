@@ -6,43 +6,17 @@ document collector discovers subsequent reports from their registered AMC pages.
 from pathlib import Path
 import json
 import sys
-import httpx
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from tracker import db,providers,disclosures,amc_reports
-
-
-def probe_bandhan_amfi():
-    base='https://www.amfiindia.com/gateway/pollingsebi'
-    headers={
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
-        'Accept':'application/json, text/plain, */*',
-        'Referer':'https://www.amfiindia.com/otherdata/fund-performance',
-    }
-    try:
-        with httpx.Client(base_url=base,headers=headers,timeout=60,follow_redirects=True) as c:
-            f=c.post('/api/amfi/fundperformancefilters',json={});f.raise_for_status();filters=f.json().get('data',f.json())
-            funds=filters.get('mutualFundList',[]) if isinstance(filters,dict) else []
-            bandhan=next((x for x in funds if 'bandhan' in str(x.get('name','')).lower()),None)
-            sc=c.post('/api/amfi/getsubcategory',json={'category':1});sc.raise_for_status();subs=sc.json().get('data',sc.json())
-            small=next((x for x in subs if 'small' in str(x.get('name','')).lower() and 'cap' in str(x.get('name','')).lower()),None)
-            print('AMFI Bandhan probe IDs: '+json.dumps({'bandhan':bandhan,'small_cap':small},ensure_ascii=False),flush=True)
-            if not bandhan or not small:return
-            for day in ('21-Sep-2026','18-Sep-2026','31-Aug-2026'):
-                body={'maturityType':1,'category':1,'subCategory':small.get('id'),'mfid':bandhan.get('id'),'reportDate':day}
-                p=c.post('/api/amfi/fundperformance',json=body);p.raise_for_status();payload=p.json();rows=payload.get('data',payload)
-                if not isinstance(rows,list):rows=[rows]
-                matches=[x for x in rows if isinstance(x,dict) and 'bandhan small cap fund' in str(x.get('schemeName','')).lower()]
-                print('AMFI Bandhan probe '+day+': '+json.dumps(matches[:2],ensure_ascii=False)[:8000],flush=True)
-                if matches:break
-    except Exception as e:
-        print('::warning::AMFI Bandhan performance probe: '+(str(e) or type(e).__name__).splitlines()[0][:350],flush=True)
+from tracker import db,providers,disclosures,amc_reports,amfi_metrics
 
 
 def run():
-    db.init();disclosures.seed_sources();probe_bandhan_amfi()
+    db.init();disclosures.seed_sources()
+    try:print(amfi_metrics.daily_aum(lambda msg:print(msg,flush=True)),flush=True)
+    except Exception as e:print('::warning::AMFI daily AUM: '+(str(e) or type(e).__name__).splitlines()[0][:350],flush=True)
     from tracker import reviewed_reports
     print(f'{reviewed_reports.apply()} reviewed official figures retained with source notes',flush=True)
     key='amc_upgrade_'+amc_reports.PARSER_VERSION

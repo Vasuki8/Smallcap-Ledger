@@ -2,13 +2,19 @@
 from __future__ import annotations
 import json
 import re
-from datetime import date
+from datetime import date,timedelta
+import httpx
 from urllib.parse import urlencode
 from . import db
 from .providers import fetch,number,iso
 
 BASE='https://www.amfiindia.com'
 TER_PAGE=BASE+'/ter-of-mf-schemes'
+PERFORMANCE_PAGE=BASE+'/otherdata/fund-performance'
+POLLING_BASE=BASE+'/gateway/pollingsebi'
+PERFORMANCE_FILTERS='/api/amfi/fundperformancefilters'
+PERFORMANCE_SUBCATEGORY='/api/amfi/getsubcategory'
+PERFORMANCE_DATA='/api/amfi/fundperformance'
 
 
 def normalized(value):return re.sub('[^a-z0-9]','',str(value).split('(')[0].lower())
@@ -33,6 +39,90 @@ def save_fees(records,source,content_hash):
                 count+=1;matched.add(family)
     with db.connect() as c:c.executemany('INSERT OR IGNORE INTO metrics(family,plan,metric,as_of,value,unit,source,hash,observed_at) VALUES(?,?,?,?,?,?,?,?,?)',values)
     return count,matched,unmatched
+
+
+
+def save_daily_aum(records,source,content_hash):
+    """Store dated scheme-level daily AUM from AMFI without replacing older observations."""
+    families={normalized(r['family']):r['family'] for r in db.rows('SELECT DISTINCT family FROM schemes')}
+    values=[];matched=set();unmatched=set();observed=db.now()
+    for r in records:
+        scheme=str(r.get('schemeName','')).strip()
+        family=families.get(normalized(scheme))
+        if not family:
+            if scheme:unmatched.add(scheme)
+            continue
+        raw=r.get('dailyAUM')
+        if raw is None or str(raw).strip() in ('','-','NA','N/A'):continue
+        try:
+            value=number(raw);day=iso(r.get('navDate',''))
+        except ValueError:
+            continue
+        if value<=0 or day>date.today().isoformat():continue
+        values.append((family,'All','aum',day,str(value),'₹ crore · daily scheme AUM · AMC-reported via AMFI',source,content_hash,observed))
+        matched.add(family)
+    with db.connect() as c:
+        c.executemany('INSERT OR IGNORE INTO metrics(family,plan,metric,as_of,value,unit,source,hash,observed_at) VALUES(?,?,?,?,?,?,?,?,?)',values)
+    return len(values),matched,unmatched
+
+
+def _performance_json(client,path,payload):
+    r=client.post(path,json=payload)
+    r.raise_for_status()
+    if len(r.content)>8*1024*1024:raise ValueError('AMFI fund-performance response is unexpectedly large')
+    data=r.json()
+    return r,data.get('data',data) if isinstance(data,dict) else data
+
+
+def daily_aum(progress=lambda _:None,lookback_days=12):
+    """Fetch the latest available official AMFI daily scheme AUM for small-cap funds."""
+    headers={
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
+        'Accept':'application/json, text/plain, */*',
+        'Referer':PERFORMANCE_PAGE,
+    }
+    families={normalized(r['family']):r['family'] for r in db.rows('SELECT DISTINCT family FROM schemes')}
+    if not families:raise ValueError('No small-cap schemes are available for AMFI AUM matching')
+    with httpx.Client(base_url=POLLING_BASE,headers=headers,timeout=60,follow_redirects=True) as client:
+        progress('AMFI daily AUM · resolving official filters')
+        _,filters=_performance_json(client,PERFORMANCE_FILTERS,{})
+        if not isinstance(filters,dict):raise ValueError('AMFI fund-performance filters changed format')
+        maturity=next((x for x in filters.get('maturityTypeList',[]) if 'open' in str(x.get('name','')).lower()),None)
+        equity=next((x for x in filters.get('investmentTypeList',[]) if str(x.get('name','')).strip().lower()=='equity'),None)
+        if not maturity or not equity:raise ValueError('AMFI fund-performance filters no longer identify open-ended equity')
+        _,subs=_performance_json(client,PERFORMANCE_SUBCATEGORY,{'category':equity.get('id')})
+        if not isinstance(subs,list):raise ValueError('AMFI small-cap subcategory response changed format')
+        small=next((x for x in subs if 'small' in str(x.get('name','')).lower() and 'cap' in str(x.get('name','')).lower()),None)
+        if not small:raise ValueError('AMFI fund-performance filters no longer identify Small Cap')
+        for offset in range(lookback_days):
+            day=date.today()-timedelta(days=offset)
+            if day.weekday()>=5:continue
+            label=day.strftime('%d-%b-%Y')
+            progress('AMFI daily AUM · '+label)
+            request={'maturityType':maturity.get('id'),'category':equity.get('id'),'subCategory':small.get('id'),'mfid':0,'reportDate':label}
+            response,rows=_performance_json(client,PERFORMANCE_DATA,request)
+            if not isinstance(rows,list):continue
+            plausible=set()
+            for row in rows:
+                if not isinstance(row,dict):continue
+                family=families.get(normalized(row.get('schemeName','')))
+                if not family:continue
+                try:value=number(row.get('dailyAUM'))
+                except (TypeError,ValueError):continue
+                if value>0:plausible.add(family)
+            # A category-wide response should cover most of the known small-cap
+            # universe. A sparse/wrong response is ignored rather than published.
+            minimum=max(20,len(families)//2)
+            if len(plausible)<minimum:continue
+            h=db.archive(response.content,response.headers.get('content-type','application/json'))
+            evidence=POLLING_BASE+PERFORMANCE_DATA+'?'+urlencode({'maturityType':request['maturityType'],'category':request['category'],'subCategory':request['subCategory'],'mfid':0,'reportDate':label})
+            with db.connect() as c:
+                c.execute("INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",(evidence,db.now(),'ok',h))
+            count,matched,unmatched=save_daily_aum(rows,PERFORMANCE_PAGE,h)
+            if len(matched)<minimum:raise ValueError('AMFI daily AUM rows did not match the retained small-cap universe')
+            as_of=max(iso(r.get('navDate','')) for r in rows if isinstance(r,dict) and normalized(r.get('schemeName','')) in families and r.get('dailyAUM') not in (None,''))
+            return f'{len(matched)} funds with official AMFI daily scheme AUM as of {as_of}; {count} dated values checked'+(' · unmatched names: '+', '.join(sorted(unmatched)) if unmatched else '')
+    raise ValueError('AMFI fund-performance API returned no plausible recent small-cap daily AUM response')
 
 
 def fees(progress=lambda _:None,months=3):

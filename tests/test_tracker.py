@@ -130,6 +130,21 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(amc_metrics.parse_page(content,'Axis Small Cap Fund',url.replace('axis-small-cap','axis-large-cap'),h),0)
         self.assertEqual(amc_metrics.parse_page(content.replace(b'Axis Small Cap Fund',b'Axis Large Cap Fund'),'Axis Small Cap Fund',url,h),0)
 
+    def test_amfi_daily_aum_preserves_scheme_identity_date_and_source(self):
+        from tracker.amfi_metrics import save_daily_aum,PERFORMANCE_PAGE
+        h=db.archive(b'official AMFI daily AUM fixture','application/json')
+        rows=[
+            {'schemeName':'Test Small Cap Fund','navDate':'18-Sep-2026','dailyAUM':35153.113},
+            {'schemeName':'Other Small Cap Fund','navDate':'18-Sep-2026','dailyAUM':99999},
+        ]
+        count,matched,unmatched=save_daily_aum(rows,PERFORMANCE_PAGE,h)
+        self.assertEqual(count,1);self.assertEqual(matched,{'Test Small Cap Fund'})
+        self.assertIn('Other Small Cap Fund',unmatched)
+        r=db.one("SELECT * FROM metrics WHERE family='Test Small Cap Fund' AND metric='aum' AND as_of='2026-09-18' AND hash=?",(h,))
+        self.assertIsNotNone(r);self.assertAlmostEqual(float(r['value']),35153.113)
+        self.assertEqual(r['plan'],'All');self.assertEqual(r['source'],PERFORMANCE_PAGE)
+        self.assertIn('daily scheme AUM',r['unit']);self.assertIn('₹ crore',r['unit'])
+
     def test_amfi_fee_components_are_not_conflated(self):
         from tracker.amfi_metrics import save_fees
         source='https://www.amfiindia.com/api/fixture';h=db.archive(b'fee fixture')
