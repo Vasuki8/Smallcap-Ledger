@@ -92,6 +92,66 @@ uv run --frozen python scripts/export_site.py
 uv run --frozen python scripts/validate_site.py site
 ```
 
-Checks ran in Linux. Actual GitHub deployment, Windows desktop launch and browser visual testing have not been performed. GitHub-specific actions require your repository/account; the source is ready for that setup.
+Automated checks run in Linux on GitHub Actions. GitHub Pages deployment has been exercised successfully in the live repository. Windows desktop launch and full browser visual regression testing are still separate checks.
+
+
+## Handoff for the next prompt — 2026-09-22
+
+Treat the repository, `deployment/update-status.json`, the `tracker-history` release, and the latest GitHub Actions runs as the source of truth before making further changes.
+
+### Incident resolved: daily data was collected but not published
+
+The tracker appeared stale because scheduled GitHub Actions runs were completing the data-collection stage but failing during `scripts/export_site.py`. The public site had grown past the previous 900 MiB safety threshold because archived AMC publication files were being copied into GitHub Pages. The last successfully published NAV had therefore remained stuck at **2026-09-07** even while later scheduled collectors were running.
+
+The publication architecture was repaired without deleting historical evidence:
+
+- The cumulative `tracker-history` release still preserves the complete SQLite archive and all retained source files/versions.
+- GitHub Pages now uses a fixed **250 MiB AMC publication-file budget**, prioritizing newer non-source-page publications.
+- Publication metadata and original AMC links remain visible even when a saved binary is not included in the static Pages artifact.
+- The generated public site has a **400 MiB guard** so archive growth cannot silently push Pages back toward the previous failure state.
+- `dist/app.js` explains when older saved versions are available only from the full historical archive.
+- `scripts/export_site.py` records `latest_nav_date`, publication-file counts and publication bytes in the status audit.
+- The temporary collect-on-push behavior used for recovery was removed. Normal collection is again limited to the daily schedule or an explicitly refreshed manual workflow run.
+
+### Verified recovery state
+
+The one-time catch-up workflow completed collection, tests, site generation, validation, cumulative archive persistence, status recording, artifact upload and GitHub Pages deployment successfully.
+
+Latest verified audit in `deployment/update-status.json`:
+
+| Item | Verified state |
+| --- | --- |
+| Latest NAV date | **2026-09-21** |
+| NAV observations | **280,984** |
+| Benchmark observations | **5,326** |
+| Portfolio snapshots | **154** |
+| Archived document versions | **852** |
+| AUM coverage | **35 / 36 funds** |
+| Expense coverage | **36 / 36 funds** |
+| Full retained archive size | **1,187,009,404 bytes** |
+| Publication-file budget | **262,144,000 bytes (250 MiB)** |
+| Publication files bundled into Pages | **177** |
+| Publication bytes bundled into Pages | **262,143,558 bytes** |
+
+The repaired catch-up Pages artifact was approximately **338 MB** and passed `scripts/validate_site.py`. The successful recovery deployment was GitHub Actions run **35680822286**.
+
+### Current automatic-update behavior
+
+The normal workflow remains `.github/workflows/daily.yml`:
+
+- schedule: `30 18 * * *`
+- intended time: **00:00 IST / Asia/Kolkata daily**
+- scheduled runs execute `scripts/daily_update.py`
+- manual `workflow_dispatch` with `refresh=true` also performs collection
+- ordinary pushes rebuild/deploy and run the AMC report-upgrade step, but do **not** run the full daily collector
+- every successful publication restores the previous cumulative archive first, validates the generated site, saves a new cumulative checkpoint, records `deployment/update-status.json`, and then deploys Pages
+
+### Recommended next work
+
+Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
+
+The highest-value remaining data task is the **1 fund still missing sourced AUM**, followed by checking freshness/quality of portfolio coverage and continuing to improve official AMC-source extraction. Preserve the existing rules: never estimate missing values, retain reporting dates and source evidence, preserve conflicts/revisions, and keep the full historical archive separate from the bounded public Pages payload.
+
+For operational reliability, consider adding a regression/health check that fails or prominently warns when `latest_nav_date` is materially behind the latest available AMFI small-cap NAV date. This would detect a future collection or publication failure before the website remains stale for many days.
 
 Other categories can be added by extending AMFI classification, category selection in the API/UI, and benchmark/source mappings. This edition enables only small-cap equity.
