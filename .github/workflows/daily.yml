@@ -76,6 +76,16 @@ jobs:
         run: uv run --frozen python scripts/validate_site.py site
       - name: Save cumulative historical archive
         run: uv run --frozen python scripts/github_state.py publish
+      - name: Remove oldest legacy rollback checkpoint
+        if: github.event_name == 'push'
+        run: |
+          assets="$(gh release view tracker-history --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')"
+          echo "$assets" | grep -Fxq 'state-35791406887-1.zip' || { echo "Newer legacy rollback checkpoint is missing; refusing cleanup."; exit 1; }
+          if echo "$assets" | grep -Fxq 'state-35789736805-1.zip'; then
+            gh release delete-asset tracker-history state-35789736805-1.zip --repo "$GITHUB_REPOSITORY" --yes
+          else
+            echo "Oldest legacy checkpoint already absent."
+          fi
       - name: Record collection status
         run: uv run --frozen python scripts/record_build.py
       - name: Configure Pages
