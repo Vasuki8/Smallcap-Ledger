@@ -31,7 +31,38 @@ def store_report(amc,family,url,title='Official report'):
 
 def discover(amc):
     """Yield (family, URL, label); parsers independently verify scheme ownership."""
-    if amc=='Bank of India':
+    if amc=='Baroda':
+        family='Baroda Bnp Paribas Small Cap Fund'
+        page='https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        candidates={}
+        for a in soup.select('a[href]'):
+            url=urljoin(page,a.get('href',''))
+            container=a.find_parent(['li','tr','div']) or a.parent
+            context=(container.get_text(' ',strip=True) if container else a.get_text(' ',strip=True))[:1200]
+            candidates[url]=context or a.get_text(' ',strip=True) or url.rsplit('/',1)[-1]
+        for url,title in providers.candidate_links(soup,page).items():candidates.setdefault(url,title)
+        rows=[]
+        for url,title in candidates.items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            if not re.search(r'monthly\s+portfolio\s*-?\s*all\s+funds',combined,re.I):continue
+            if not re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):continue
+            day=None
+            m=re.search(r'(\d{1,2})[-_/](\d{1,2})[-_/](20\d{2})',combined)
+            if m:
+                try:day=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
+                except ValueError:pass
+            if day is None:
+                m=re.search(r'(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s+(20\d{2})',combined,re.I)
+                if m:
+                    try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
+                    except ValueError:pass
+            if day and day<=date.today():rows.append((day,url,title))
+        if not rows:raise ValueError('No official Baroda BNP Paribas all-funds monthly portfolio workbook was exposed')
+        day,url,title=max(rows,key=lambda r:r[0])
+        yield family,url,title or f'Monthly Portfolio - all funds as on {day.isoformat()}'
+    elif amc=='Bank of India':
         body={'pagno':0,'category':None,'fromDate':None,'toDate':None,'LibraryName':'InvestorCorner','folderName':'FACTSHEETS','CategoryValue':'no'}
         raw,_,_=read('https://www.boimf.in/AjaxService.asmx/GetDocuments',body)
         rows=json.loads(json.loads(raw)['d'])['Documents']
@@ -179,5 +210,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
