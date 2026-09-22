@@ -49,6 +49,14 @@ def export(output:Path,repository=''):
         if family_id not in done:
             done.add(family_id);docs=documents(code)
             assert not any(d['kind']=='news' for d in docs)
+            # The cumulative GitHub release retains every archived version. GitHub
+            # Pages only needs the newest saved copy for each publication; copying
+            # every historical version eventually makes the static site too large
+            # to deploy and leaves all newly collected NAV/metrics unpublished.
+            for d in docs:
+                versions=d.get('versions') or []
+                d['saved_version_count']=len(versions)
+                d['versions']=versions[:1]
             write(Path('communications')/f'{family_id}.json',docs)
             hashes.update(v['hash'] for d in docs for v in d['versions'])
             csv_file(Path('downloads')/f'metrics-{family_id}.csv',detail['metric_history'],['metric','plan','as_of','value','unit','source','observed_at'])
