@@ -35,7 +35,8 @@ def portfolio_cell(row):
     x=row.get('portfolio')
     if not x:return 'Gap'
     quality='complete' if x.get('complete') else 'partial'
-    return f"{x.get('positions',0)} positions · {esc(x.get('as_of'))} · {quality}"
+    freshness='current' if row.get('portfolio_fresh') else 'older'
+    return f"{x.get('positions',0)} positions · {esc(x.get('as_of'))} · {quality} · {freshness}"
 
 def benchmark_cell(row):
     x=row.get('benchmark')
@@ -47,7 +48,7 @@ lines=[
     '# Included data coverage','',
     f"Prepared: {coverage['built_at']}",'',
     f"**{counts['funds']} funds, {c['plans']} NAV series, {c['nav_points']:,} NAV observations. Latest included NAV: {c.get('latest_nav_date','Gap')}.**",'',
-    f"AUM: **{counts['aum']} / {counts['funds']} funds**. Direct fee figure: **{counts.get('fee',0)} / {counts['funds']} funds**. Latest parsed portfolio: **{counts['portfolio']} / {counts['funds']} funds**. Reported benchmark identity: **{counts['benchmark_identity']} / {counts['funds']} funds**.",'',
+    f"AUM: **{counts['aum']} / {counts['funds']} funds**. Direct fee figure: **{counts.get('fee',0)} / {counts['funds']} funds**. Portfolio: **{counts['portfolio']} / {counts['funds']} any**, **{counts.get('portfolio_complete',0)} complete**, **{counts.get('portfolio_fresh',0)} current**, **{counts.get('portfolio_fresh_complete',0)} current + complete** (expected month-end {coverage.get('portfolio_expected_as_of','Gap')}). Reported benchmark identity: **{counts['benchmark_identity']} / {counts['funds']} funds**.",'',
     'Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.','',
     '| Fund | AUM · ₹ Cr / date | Direct fee / date | Latest parsed portfolio | Reported benchmark / date | AMC publications |',
     '| --- | --- | --- | --- | --- | ---: |',

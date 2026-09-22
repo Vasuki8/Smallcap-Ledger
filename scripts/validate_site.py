@@ -1,6 +1,7 @@
 """Validate a generated static site without launching a browser."""
 from __future__ import annotations
 import json
+from datetime import date
 from pathlib import Path
 import sys
 from urllib.parse import urlparse
@@ -39,7 +40,11 @@ def validate(root):
         assert source.startswith('/api/') and p.is_relative_to(root) and p.is_file(),f'Broken download: {source}'
     assert compared>0,'No growth series can be compared against the index'
     assert status['counts']['aum_funds']>0 and status['counts']['fee_funds']>0,'The requested metrics are missing'
-    result={'funds':len(seen),'plans':len(funds),'growth_series':growth,'growth_series_with_comparison':compared,'aum_funds':status['counts']['aum_funds'],'expense_funds':status['counts']['fee_funds'],'checks':'passed'}
+    latest_nav=status['counts'].get('latest_nav_date')
+    assert latest_nav,'Latest NAV date is missing from the publication audit'
+    nav_age=(date.today()-date.fromisoformat(latest_nav)).days
+    assert 0<=nav_age<=7,f'Latest published NAV is stale: {latest_nav} ({nav_age} days old)'
+    result={'funds':len(seen),'plans':len(funds),'growth_series':growth,'growth_series_with_comparison':compared,'aum_funds':status['counts']['aum_funds'],'expense_funds':status['counts']['fee_funds'],'latest_nav_date':latest_nav,'nav_age_days':nav_age,'checks':'passed'}
     print(json.dumps(result,indent=2));return result
 
 

@@ -1,11 +1,12 @@
 """Versioned extraction results and rolling official monthly report locations."""
 from __future__ import annotations
 import calendar
+import re
 from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v16'
+PARSER_VERSION='amc-reports-2026-09-v17'
 # v7 changes only spreadsheet portfolio interpretation; do not reparse hundreds
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
@@ -23,6 +24,7 @@ def monthly_sources(today=None):
         yield ('Mirae',f'https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---{name}-{year}.pdf','Monthly active factsheet')
         yield ('SBI',f'https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-{name}-{year}.pdf','Small cap monthly factsheet')
         yield ('JM Financial',f'https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20{calendar.month_name[month]}%20{year}.pdf','Monthly factsheet')
+        yield ('Kotak',f'https://www.kotakmf.com/factsheet/{calendar.month_name[month]}_{year}/kotak/SMALL-CAP.html','Small cap monthly factsheet')
 
 
 def init():
@@ -62,7 +64,8 @@ def extract(content,family,url,h):
                 from . import amc_metrics
                 known=any(f==family and u==url for _,f,u in amc_metrics.PAGES)
                 digital=family in ('Mahindra Manulife Small Cap Fund','Iti Small Cap Fund','Canara Robeco Small Cap Fund') and 'factsheet/' in url.lower()
-                if not known and not digital:return 0
+                kotak_monthly=family=='Kotak Small Cap Fund' and bool(re.fullmatch(r'/factsheet/[A-Za-z]+_\d{4}/kotak/SMALL-CAP\.html',urlparse(url).path,re.I))
+                if not known and not digital and not kotak_monthly:return 0
                 amc_metrics.parse_page(content,family,url,h)
         metrics=db.one('SELECT COUNT(*) n FROM metrics WHERE family=? AND hash=?',(family,h))['n']
         holdings=db.one('SELECT COUNT(*) n FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id WHERE p.family=? AND p.hash=?',(family,h))['n']

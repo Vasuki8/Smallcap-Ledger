@@ -309,4 +309,38 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(available_expenses(s)[0]['plan'],'Direct')
 
 
+    def test_kotak_monthly_factsheet_reconciles_complete_portfolio(self):
+        from tracker.amc_metrics import parse_page
+        f='Kotak Small Cap Fund';u='https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html'
+        html='''<html><title>Kotak Small Cap Fund Factsheet - August 2026</title><h2>KOTAK SMALL CAP FUND</h2>
+        <table><tr><th>Issuer/Instrument</th><th></th><th>% to Net Assets</th></tr>
+        <tr><td>Equity &amp; Equity related</td><td></td><td></td></tr>
+        <tr><td>Healthcare Services</td><td></td><td>60.00</td></tr>
+        <tr><td>Alpha Health Limited</td><td></td><td>40.00</td></tr>
+        <tr><td>Beta Diagnostics Ltd.</td><td></td><td>20.00</td></tr>
+        <tr><td>Finance</td><td></td><td>39.05</td></tr>
+        <tr><td>Gamma Finance Limited</td><td></td><td>39.05</td></tr>
+        <tr><td>Equity &amp; Equity related - Total</td><td></td><td>99.05</td></tr>
+        <tr><td>Triparty Repo</td><td></td><td>1.05</td></tr>
+        <tr><td>Net Current Assets/(Liabilities)</td><td></td><td>-0.10</td></tr>
+        <tr><td>Grand Total</td><td></td><td>100.00</td></tr></table>
+        <p>Net Asset Value (NAV) (as on August 31, 2026)</p><p>AUM Rs 19,678.75 crs</p>
+        <p>Benchmark NIFTY Smallcap 250 TRI</p><p>Data as on 31st August, 2026 unless otherwise specified.</p></html>'''
+        self.assertEqual(parse_page(html,f,u,'kotak'),5)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
+        rows=db.rows('SELECT name,sector,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual([x['asset_type'] for x in rows],['Equity','Equity','Equity','Money market','Cash and net current assets'])
+        self.assertEqual(rows[0]['sector'],'Healthcare Services')
+        self.assertEqual(rows[2]['sector'],'Finance')
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),100,places=2)
+        self.assertEqual(float(db.one("SELECT value FROM metrics WHERE metric='aum'")['value']),19678.75)
+
+    def test_portfolio_freshness_target_has_new_month_grace(self):
+        from datetime import date
+        from tracker.coverage import expected_portfolio_as_of
+        self.assertEqual(expected_portfolio_as_of(date(2026,9,22)),'2026-08-31')
+        self.assertEqual(expected_portfolio_as_of(date(2026,9,5)),'2026-07-31')
+
+
 if __name__=='__main__':unittest.main()

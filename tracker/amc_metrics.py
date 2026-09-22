@@ -174,14 +174,67 @@ def canara_portfolio(soup,day,url,h):
     return len(positions)
 
 
+
+def kotak_portfolio(soup,day,url,h):
+    """Parse Kotak's full monthly Small Cap factsheet portfolio by reconciliation."""
+    from .disclosures import portfolio
+    table=None
+    for candidate in soup.select('table'):
+        text=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
+        if re.search(r'Issuer\s*/\s*Instrument',text,re.I) and re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',text,re.I) and re.search(r'Grand\s+Total',text,re.I):
+            table=candidate;break
+    if table is None:return 0
+    equity_rows=[];equity_total=None;repo=None;cash=None;grand=None
+    for tr in table.select('tr'):
+        cells=tr.find_all(['th','td'],recursive=False)
+        texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+        if not texts:continue
+        label=next((x for x in texts if x), '')
+        raw=next((x for x in reversed(texts[1:]) if re.fullmatch(r'-?[\d,]+(?:\.\d+)?\s*%?',x)),None)
+        if not label or raw is None:continue
+        value=number(raw);key=re.sub(r'[^a-z]','',label.lower())
+        if key=='equityequityrelatedtotal':equity_total=value;continue
+        if key=='tripartyrepo':repo=value;continue
+        if key in ('netcurrentassetsliabilities','netcurrentassetsliability'):cash=value;continue
+        if key=='grandtotal':grand=value;continue
+        if equity_total is None:equity_rows.append((label,value))
+    if None in (equity_total,repo,cash,grand) or abs(grand-100)>.03 or not equity_rows:return 0
+    positions=[];i=0;sector_totals=0.0
+    while i<len(equity_rows):
+        sector,sector_total=equity_rows[i];i+=1
+        if not 0<=sector_total<=100:return 0
+        group=[];subtotal=0.0
+        while i<len(equity_rows):
+            name,weight=equity_rows[i]
+            if not 0<=weight<=100:return 0
+            group.append((name,weight));subtotal+=weight;i+=1
+            tolerance=max(.03,.006*len(group))
+            if abs(subtotal-sector_total)<=tolerance:break
+            if subtotal>sector_total+tolerance:return 0
+        tolerance=max(.03,.006*len(group))
+        if not group or abs(subtotal-sector_total)>tolerance:return 0
+        sector_totals+=sector_total
+        positions.extend({'name':name,'isin':None,'sector':sector,'weight':weight,'asset_type':'Equity'} for name,weight in group)
+    if abs(sector_totals-equity_total)>max(.08,.006*len(positions)):return 0
+    if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.006*len(positions)):return 0
+    if abs((equity_total+repo+cash)-grand)>.03:return 0
+    if len({x['name'] for x in positions})!=len(positions):return 0
+    positions.append({'name':'Triparty Repo','isin':None,'sector':None,'weight':repo,'asset_type':'Money market'})
+    positions.append({'name':'Net Current Assets/(Liabilities)','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    portfolio('Kotak Small Cap Fund',day,positions,True,url,h)
+    return len(positions)
+
+
 def parse_page(content,family,url,h):
     from .structured_reports import extract
     special=extract(content,family,url,h)
     if special is not None:return special
     expected=next((u for _,f,u in PAGES if f==family),None)
+    actual=urlparse(url)
+    kotak_monthly=family=='Kotak Small Cap Fund' and (actual.hostname or '').lower().removeprefix('www.')=='kotakmf.com' and bool(re.fullmatch(r'/factsheet/[A-Za-z]+_\d{4}/kotak/SMALL-CAP\.html',actual.path,re.I))
     if expected:
-        actual,known=urlparse(url),urlparse(expected)
-        if actual.hostname.removeprefix('www.')!=known.hostname.removeprefix('www.') or actual.path.rstrip('/')!=known.path.rstrip('/'):return 0
+        known=urlparse(expected)
+        if (actual.hostname or '').removeprefix('www.')!=(known.hostname or '').removeprefix('www.') or (actual.path.rstrip('/')!=known.path.rstrip('/') and not kotak_monthly):return 0
     soup=BeautifulSoup(content,'html.parser')
     exact=any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('h1,h2,h3'))
     # Tata renders its fund title in a div; its document title identifies the plan.
@@ -191,8 +244,20 @@ def parse_page(content,family,url,h):
         exact=exact or any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
     if family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
         exact=exact or any('CANARA ROBECO SMALL CAP FUND'==tag.get_text(' ',strip=True).upper() for tag in soup.select('h1,h2,h3,h4'))
+    if kotak_monthly:
+        exact=exact or any(re.fullmatch(r'KOTAK\s+SMALL\s+CAP\s+FUND',re.sub(r'\s+',' ',tag.get_text(' ',strip=True)),re.I) for tag in soup.select('td,th,div,p'))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
+    if kotak_monthly:
+        day=report_date(text)
+        if not day or day>date.today().isoformat():return 0
+        saved=kotak_portfolio(soup,day,url,h)
+        if not saved:return 0
+        a=re.search(r'\bAUM\s+Rs\s*([\d,.]+)\s*crs\b',text,re.I)
+        if a and 0<number(a.group(1))<10_000_000:db.metric(family,'All','aum',day,number(a.group(1)),'INR crore',url,h)
+        b=re.search(r'Benchmark[^A-Za-z0-9]+(NIFTY\s+Smallcap\s+250\s+TRI)',text,re.I)
+        if b:db.metric(family,'All','benchmark',day,'NIFTY Smallcap 250 TRI','Reported',url,h)
+        return saved
     patterns={
         'Axis Small Cap Fund':r'AUM \(In Cr\.\)\s*₹\s*([\d,.]+)\s*(As On [A-Za-z]+ \d{1,2}, \d{4})',
         'DSP Small Cap Fund':r'Total AUM\s*₹\s*([\d,.]+)\s*crores\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',
@@ -270,6 +335,7 @@ def update(progress=lambda _:None):
             ('Baroda','Baroda Bnp Paribas Small Cap Fund',f'https://www.barodabnpparibasmf.in/efactsheet/{name[:3]}{year}/Innerpages/Small-cap.html'),
             ('Mahindra','Mahindra Manulife Small Cap Fund',f'https://www.mahindramanulife.com/digital-factsheet/{name.lower()}-{year}/Equity-funds/Small-Cap-Fund.html'),
             ('ITI','Iti Small Cap Fund',f'https://www.itiamc.com/digitalfactsheet/{name}{year}/innerpages/Small-Cap.html'),
+            ('Kotak','Kotak Small Cap Fund',f'https://www.kotakmf.com/factsheet/{name}_{year}/kotak/SMALL-CAP.html'),
         ])
     for amc,family,url in pages:
         if not db.one('SELECT code FROM schemes WHERE family=?',(family,)):continue
@@ -278,7 +344,7 @@ def update(progress=lambda _:None):
         try:
             can_crawl(url);body,h,_=fetch(url);count=parse_page(body,family,url,h);saved+=count
             did=save_document(family,'Monthly digital factsheet' if 'factsheet/' in url.lower() else 'Official fund page',url,'factsheet' if 'factsheet/' in url.lower() else 'source page','Fund',origin='AMC');doc_version(did,h)
-            status='Checked' if count else 'Limited';detail='Dated AUM extracted; original page archived' if count else 'No unambiguous dated AUM could be extracted'
+            status='Checked' if count else 'Limited';detail='Dated fund facts/holdings extracted; original page archived' if count else 'No unambiguous dated fund facts/holdings could be extracted'
             if not count:gaps.append(family)
         except Exception as e:status='Gap';detail=str(e)[:350];gaps.append(family)
         with db.connect() as c:c.execute('UPDATE source_pages SET last_checked=?,status=?,detail=? WHERE amc_match=? AND url=?',(db.now(),status,detail,amc,url))
