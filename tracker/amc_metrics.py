@@ -24,6 +24,46 @@ PAGES=[
 ]
 
 
+def mahindra_portfolio(soup,day,url,h):
+    """Parse only a fully reconciled Mahindra Small Cap digital-factsheet table."""
+    from .disclosures import portfolio
+    table=None
+    for candidate in soup.select('table'):
+        text=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
+        if re.search(r'Company\s*/\s*Issuer',text,re.I) and re.search(r'Grand\s+Total',text,re.I):
+            table=candidate;break
+    if table is None:return 0
+    positions=[];sector=None;equity_total=None;cash=None;grand=None
+    for tr in table.select('tr'):
+        cells=tr.find_all(['th','td'],recursive=False)
+        if len(cells)<2:continue
+        texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+        for j in range(1,len(cells)):
+            raw=texts[j]
+            if not re.fullmatch(r'-?[\d,]+(?:\.\d+)?\s*%?',raw):continue
+            k=j-1
+            while k>=0 and not texts[k]:k-=1
+            if k<0:continue
+            label=texts[k];value=number(raw)
+            key=re.sub(r'[^a-z]','',label.lower())
+            if key=='equityandequityrelatedtotal':equity_total=value;continue
+            if key in ('cashotherreceivables','cashandotherreceivables'):cash=value;continue
+            if key=='grandtotal':grand=value;continue
+            if re.search(r'company\s*/\s*issuer|%\s*of\s*net\s*assets',label,re.I):continue
+            bold=bool(cells[k].find(['b','strong']))
+            issuer=bool(re.search(r'(?:\b(?:bank|corporation)\b|\b(?:limited|ltd\.?|industries)\s*$)',label,re.I))
+            if bold or not issuer:
+                sector=label;continue
+            if not 0<=value<=100:return 0
+            positions.append({'name':label,'isin':None,'sector':sector,'weight':value,'asset_type':'Equity'})
+    if equity_total is None or cash is None or grand is None or abs(grand-100)>.02:return 0
+    if abs((equity_total+cash)-grand)>.03 or not positions:return 0
+    if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.011*len(positions)):return 0
+    positions.append({'name':'Cash & Other Receivables','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    portfolio('Mahindra Manulife Small Cap Fund',day,positions,True,url,h)
+    return len(positions)
+
+
 def parse_page(content,family,url,h):
     from .structured_reports import extract
     special=extract(content,family,url,h)
@@ -80,19 +120,23 @@ def parse_page(content,family,url,h):
         if m and dated(m.group(2)) and 0<=float(m.group(1))<=5:
             # The page does not state TER versus BER. Preserve its own label.
             db.metric(family,'Direct','expense_ratio',dated(m.group(2)),float(m.group(1)),'% p.a.',url,h)
+    saved=1
     if family=='Mahindra Manulife Small Cap Fund':
         from .report_parser import DATE,dated
         m=re.search(r'Base Expense Ratio\s*\d?\s*as on\s*('+DATE+r')\s*:\s*Regular Plan:\s*([\d.]+)%\s*Direct Plan:\s*([\d.]+)%',text,re.I)
         if m and dated(m.group(1)):
             for plan,v in zip(('Regular','Direct'),m.groups()[1:]):
                 if 0<=float(v)<=5:db.metric(family,plan,'base_expense_ratio',dated(m.group(1)),float(v),'% p.a.',url,h)
+        b=re.search(r'\bBenchmark\s*:?\s*(BSE\s*250\s*Small\s*Cap\s*TRI)\b',text,re.I)
+        if b:db.metric(family,'All','benchmark',day,'BSE 250 Small Cap TRI','Reported',url,h)
+        saved+=mahindra_portfolio(soup,day,url,h)
     if family=='DSP Small Cap Fund':
         m=re.search(r'Base Expense Ratio\s*([\d.]+)%\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',text,re.I)
         if m:db.metric(family,'Direct','base_expense_ratio',report_date(m.group(2)),number(m.group(1)),'% p.a.',url,h)
     # Only unambiguous fund-level benchmark text in the summary region.
     if family=='DSP Small Cap Fund' and re.search(r'Benchmark:\s*BSE 250 Small Cap TRI',text,re.I):db.metric(family,'All','benchmark',date.today().isoformat(),'BSE 250 Small Cap TRI','Observed on official fund page',url,h)
     if family=='Axis Small Cap Fund' and re.search(r'Benchmark Returns.{0,35}NIFTY Smallcap 250 TRI',text,re.I):db.metric(family,'All','benchmark',date.today().isoformat(),'Nifty Smallcap 250 TRI','Observed on official fund page',url,h)
-    return 1
+    return saved
 
 
 def update(progress=lambda _:None):

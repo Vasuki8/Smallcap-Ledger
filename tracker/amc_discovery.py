@@ -62,6 +62,13 @@ def discover(amc):
                 if not disclosures.official_publication_url(url,amc):continue
                 seen.add(url)
                 yield family,url,title or 'Bandhan official report'
+    elif amc=='Mahindra':
+        family='Mahindra Manulife Small Cap Fund'
+        today=date.today()
+        for offset in (1,2):
+            year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
+            name=calendar.month_name[month].lower()
+            yield family,f'https://www.mahindramanulife.com/digital-factsheet/{name}-{year}/Equity-funds/Small-Cap-Fund.html','Monthly digital factsheet'
     elif amc=='Samco':
         family='Samco Small Cap Fund'
         page='https://www.samcomf.com/StatutoryDisclosure'
@@ -154,5 +161,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','Samco','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','Mahindra','Samco','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)

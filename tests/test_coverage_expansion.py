@@ -144,6 +144,32 @@ class CoverageExpansionTests(unittest.TestCase):
         self.assertEqual(db.one('SELECT metric FROM metrics')['metric'],'average_aum')
         self.assertEqual(extract(html.replace('Small Cap','Mid Cap'),f,u,'bad'),0)
 
+    def test_mahindra_full_html_portfolio_reconciles(self):
+        from tracker.amc_metrics import parse_page
+        f='Mahindra Manulife Small Cap Fund'
+        u='https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html'
+        html='''<html><h1>Mahindra Manulife Small Cap Fund</h1>
+        <p>Monthly AUM as on August 31, 2026 (Rs. in Cr.): 5,100.00</p>
+        <p>Base Expense Ratio as on August 31, 2026: Regular Plan: 1.50% Direct Plan: 0.47%</p>
+        <p>Benchmark: BSE 250 Small Cap TRI</p>
+        <table><tr><th></th><th>Company / Issuer</th><th>% of Net Assets</th></tr>
+        <tr><td></td><td><b>Financial Services</b></td><td>60.00%</td></tr>
+        <tr><td></td><td>State Bank of India</td><td>30.00%</td></tr>
+        <tr><td></td><td>Example Finance Limited</td><td>30.00%</td></tr>
+        <tr><td></td><td><b>Healthcare</b></td><td>35.00%</td></tr>
+        <tr><td></td><td>Example Pharma Limited</td><td>35.00%</td></tr>
+        <tr><td></td><td><b>Equity and Equity Related Total</b></td><td>95.00%</td></tr>
+        <tr><td></td><td><b>Cash &amp; Other Receivables</b></td><td>5.00%</td></tr>
+        <tr><td></td><td><b>Grand Total</b></td><td>100.00%</td></tr></table></html>'''
+        self.assertEqual(parse_page(html,f,u,'mh'),5)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
+        hold=db.rows('SELECT name,sector,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual([x['name'] for x in hold],['State Bank of India','Example Finance Limited','Example Pharma Limited','Cash & Other Receivables'])
+        self.assertEqual(hold[0]['sector'],'Financial Services')
+        self.assertEqual(hold[-1]['asset_type'],'Cash and net current assets')
+        self.assertEqual(db.one("SELECT value FROM metrics WHERE metric='benchmark'")['value'],'BSE 250 Small Cap TRI')
+
     def test_axis_dated_unqualified_expense_is_not_ter(self):
         from tracker.amc_metrics import parse_page
         f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
