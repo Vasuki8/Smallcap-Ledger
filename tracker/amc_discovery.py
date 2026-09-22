@@ -24,7 +24,11 @@ def months(today=None,count=3):
 def store_report(amc,family,url,title='Official report'):
     url=quote(url,safe=':/?&=%#+')
     if not disclosures.official_publication_url(url,amc):raise ValueError('Unregistered AMC report host')
-    body,h,_=read(url)
+    body,h,typ=read(url)
+    if amc=='Samco':
+        print('Samco portfolio response: '+str(typ)+' · '+str(len(body))+' bytes · '+repr(body[:24]),flush=True)
+        if not body.startswith((b'PK',b'\\xd0\\xcf',b'%PDF')):
+            print('Samco portfolio response preview: '+body[:400].decode('utf-8',errors='replace').replace('\\n',' ')[:400],flush=True)
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
     return amc_reports.extract(body,family,url,h)
