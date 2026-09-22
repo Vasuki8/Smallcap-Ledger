@@ -71,6 +71,23 @@ class ReportParserTests(unittest.TestCase):
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-small-cap.xlsx',links)
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
 
+    def test_catalog_amc_resolver_handles_long_names_without_quantum_collision(self):
+        from tracker.disclosures import resolve_registered_amc
+        sources=[
+            ['Bajaj','https://www.bajajamc.com/','Fund house'],
+            ['Canara','https://www.canararobeco.com/','Fund house'],
+            ['HSBC','https://www.assetmanagement.hsbc.co.in/','Fund house'],
+            ['quant Mutual','https://quantmutual.com/','Fund house'],
+            ['Quantum','https://www.quantumamc.com/','Fund house'],
+        ]
+        self.assertEqual(resolve_registered_amc('Bajaj Finserv Mutual Fund',sources),'Bajaj')
+        self.assertEqual(resolve_registered_amc('Canara Robeco Mutual Fund',sources),'Canara')
+        self.assertEqual(resolve_registered_amc('HSBC Mutual Fund',sources),'HSBC')
+        self.assertEqual(resolve_registered_amc('quant Mutual Fund',sources),'quant Mutual')
+        self.assertEqual(resolve_registered_amc('Quantum Mutual Fund',sources),'Quantum')
+        ambiguous=[['Alpha','https://a.example/',''],['Beta','https://b.example/','']]
+        self.assertIsNone(resolve_registered_amc('Alpha Beta Mutual Fund',ambiguous))
+
     def test_lic_complete_portfolio_reconciles_wrapped_sector_and_cash(self):
         from tracker.report_parser import lic_complete_portfolio
         holdings='\n'.join(f'Example Company {i} Ltd. 4.7015%' for i in range(1,21))

@@ -27,6 +27,23 @@ def official_publication_url(url,amc_match):
     return any(root and (host==root or host.endswith('.'+root)) for root in roots)
 
 
+def resolve_registered_amc(value,source_rows):
+    """Resolve a reviewed catalog AMC name to one unique registered source key."""
+    generic={'mutual','fund','asset','management','amc','private','pvt','limited','ltd','company'}
+    def tokens(text):
+        return frozenset(x for x in re.findall(r'[a-z0-9]+',str(text).lower()) if x not in generic)
+    target=tokens(value)
+    if not target:return None
+    keys=list(dict.fromkeys(row[0] for row in source_rows))
+    exact=[key for key in keys if tokens(key)==target]
+    if len(exact)==1:return exact[0]
+    subsets=[]
+    for key in keys:
+        current=tokens(key)
+        if current and (current<target or target<current):subsets.append(key)
+    return subsets[0] if len(subsets)==1 else None
+
+
 def same_fund_title(value,family):
     # A scheme title, possibly followed by its parenthesized scheme description.
     # A holding mentioning the fund, an index fund, or a generic small-cap phrase

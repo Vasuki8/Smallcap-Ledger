@@ -21,12 +21,13 @@ def run():
     if db.setting(key,False):
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
+    source_rows=json.loads((ROOT/'tracker/sources.json').read_text())
     def collect(row):
         try:
             url=row['url'];family=row['family']
             # Catalog is committed, reviewed configuration; it must still belong
             # to a registered AMC domain before any public request is made.
-            amc=next((a for a,u,_ in json.loads((ROOT/'tracker/sources.json').read_text()) if a.lower()==row['amc'].lower()),None)
+            amc=disclosures.resolve_registered_amc(row['amc'],source_rows)
             if amc is None:raise ValueError('Catalog AMC does not match registered source configuration: '+row['amc'])
             if not disclosures.official_publication_url(url,amc):raise ValueError('Unregistered AMC document host')
             with db.connect() as c:c.execute('INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)',(amc,url,'Official report archive'))
