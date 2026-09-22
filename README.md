@@ -180,6 +180,18 @@ A second UI-only refinement was merged in PR #6 (commit `d98bb4351edc60002576653
 - Fund communications now supports title/type search in addition to document-type filters.
 - Mobile fund pages retain sticky section tabs and the bottom navigation introduced in PR #5.
 
+
+### Fund-directory UI refresh — 2026-09-22
+
+A third UI-only refinement was merged in PR #7 (commit `2322e5c3b7fe2b568f4e4e6fcd392160edb44e36`). It keeps the existing Direct Growth default and does not alter data, collectors, calculations, or source evidence.
+
+- Added one-tap presets for **Direct Growth**, **Regular Growth**, **All Growth**, **IDCW**, and **All series**.
+- Search, plan, option, and sort controls are clearer and easier to reset.
+- Result counts now show both unique funds and NAV series.
+- Desktop discovery controls and table headers stay visible while scrolling.
+- Mobile directory cards are simplified and include a direct **Open fund** action.
+- Empty search/filter states now include a reset path instead of leaving the user stuck.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
