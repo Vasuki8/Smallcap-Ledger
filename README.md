@@ -214,6 +214,20 @@ A fifth UI-only refinement was merged in PR #9 (commit `b6db9dfd029129414675ee42
 - Visible keyboard focus, touch target sizing, mobile spacing, small-screen statistics, wrapping, and focused table/document states were tightened across the site.
 - Reduced-motion preferences remain respected.
 
+
+### Minimal UI direction — 2026-09-22
+
+A sixth UI-only refinement was merged in PR #10 (commit `cbfe4da216acd155f87afc2058aed7d92c3170aa`). This pass intentionally removes UI rather than adding more.
+
+- Dashboard summary cards and duplicate fund-view controls were removed.
+- Fund discovery now uses one **Fund view** selector plus search and sort.
+- The directory table is reduced to the essential comparison fields: NAV, AUM, expense, 1Y, and 3Y CAGR.
+- Fund pages use a simpler header and a compact summary strip instead of multiple metric cards and shortcut panels.
+- Data and Updates are condensed into focused summaries with optional details.
+- The visual system is flatter and quieter: fewer badges, softer borders, less shadow, more whitespace, and simpler navigation.
+
+The standing UI direction is now: **minimal, attractive, and easy to navigate**. Prefer removing or consolidating interface elements before adding new controls.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
