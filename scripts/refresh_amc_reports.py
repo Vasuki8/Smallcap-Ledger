@@ -8,6 +8,7 @@ import os
 import json
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urlparse
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -21,15 +22,25 @@ def run():
     key='amc_upgrade_'+amc_reports.PARSER_VERSION
     if db.setting(key,False):
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
-    # Thin split restores omit historical source binaries during normal runs.
-    # A parser-version upgrade is the exceptional case that needs the retained
-    # originals again, so materialize them before reprocessing.
-    if os.environ.get('SMALLCAP_DATABASE_ONLY_RESTORE')=='1' and os.environ.get('GITHUB_REPOSITORY'):
-        from scripts.github_state import materialize_all_source_packs
-        restored=materialize_all_source_packs()
-        print(f'Materialized {restored} archived source files for parser upgrade',flush=True)
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     source_rows=json.loads((ROOT/'tracker/sources.json').read_text())
+    # Thin split restores omit historical source binaries during normal runs.
+    # Parser upgrades materialize only originals that can actually be read by
+    # the catalog pass or this parser version's historical reprocessing pass.
+    if os.environ.get('SMALLCAP_DATABASE_ONLY_RESTORE')=='1' and os.environ.get('GITHUB_REPOSITORY'):
+        amc_reports.init();needed=set()
+        for row in rows:
+            existing=db.one("SELECT hash FROM fetches WHERE url=? AND status='ok' AND hash IS NOT NULL ORDER BY id DESC LIMIT 1",(row['url'],))
+            if existing:needed.add(existing['hash'])
+        pending=db.rows('''SELECT DISTINCT d.url,v.hash FROM documents d
+          JOIN document_versions v ON v.document_id=d.id
+          LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
+          WHERE d.origin='AMC' AND e.hash IS NULL''',(amc_reports.PARSER_VERSION,))
+        extensions=tuple(x.lower() for x in amc_reports.REPROCESS_EXISTING_EXTENSIONS)
+        needed.update(row['hash'] for row in pending if urlparse(row['url']).path.lower().endswith(extensions))
+        from scripts.github_state import materialize_hashes
+        restored=materialize_hashes(needed)
+        print(f'Materialized {restored} archived source files needed for parser upgrade',flush=True)
     def collect(row):
         try:
             url=row['url'];family=row['family']
