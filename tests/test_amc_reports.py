@@ -132,7 +132,7 @@ class ReportParserTests(unittest.TestCase):
         self.assertEqual([x['name'] for x in positions],['Alpha Fertilizers And Petrochemicals Corporation Ltd','Beta Ltd'])
         self.assertAlmostEqual(sum(x['weight'] for x in positions),4.21)
 
-    def test_samco_wrapped_portfolio_heading_and_merged_name_column(self):
+    def test_samco_wrapped_portfolio_reconciles_named_derivatives_and_treps(self):
         from tracker.portfolio_parser import parse_sheet
         f='Samco Small Cap Fund'
         rows=[
@@ -142,17 +142,29 @@ class ReportParserTests(unittest.TestCase):
             [None]*8,
             ['Name of the Instrument',None,'ISIN','Industry','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net Assets','YTM'],
             ['Equity & Equity related',None,None,None,None,None,None,None],
-            ['(a) Listed / awaiting listing on Stock Exchanges',None,None,None,None,None,None,None],
-            ['AENP01','Ather Energy Limited','INE0LEZ01016','Automobiles',45160,775.71,0.0395,None],
+            ['AENP01','Ather Energy Limited','INE0LEZ01016','Automobiles',100,50,0.50,None],
+            [None,'Derivatives',None,None,None,None,None,None],
+            [None,'Index / Stock Futures',None,None,None,None,None,None],
+            ['ABFSSEP26','Aditya Birla Capital Limited September 2026 Future',None,'Finance',100,20,0.20,None],
+            [None,'Reverse Repo / TREPS',None,None,None,None,None,None],
+            ['TRP_010926','Clearing Corporation of India Ltd',None,None,None,40,0.40,None],
+            [None,'Net Receivables / (Payables)',None,None,None,-10,-0.10,None],
+            [None,'GRAND TOTAL',None,None,None,100,1.00,None],
         ]
-        formats=[['']*8 for _ in rows];formats[-1][6]='0.00%'
+        formats=[['']*8 for _ in rows]
+        for i in (6,9,11,12,13):formats[i][6]='0.00%'
         parsed=parse_sheet(rows,formats,f)
         self.assertIsNotNone(parsed)
         self.assertEqual(parsed['day'],'2026-08-31')
-        self.assertFalse(parsed['complete'])
-        self.assertEqual(parsed['positions'][0]['name'],'Ather Energy Limited')
-        self.assertEqual(parsed['positions'][0]['isin'],'INE0LEZ01016')
-        self.assertAlmostEqual(parsed['positions'][0]['weight'],3.95)
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['aum'],1.0)
+        self.assertEqual([x['name'] for x in parsed['positions']],[
+            'Ather Energy Limited','Aditya Birla Capital Limited September 2026 Future',
+            'Clearing Corporation of India Ltd','Net Receivables / (Payables)'])
+        self.assertEqual([x['asset_type'] for x in parsed['positions']],[
+            'Equity','Derivative','Money market','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100)
+
 
     def test_samco_discovery_prefers_latest_smallcap_excel(self):
         from tracker import amc_discovery,db

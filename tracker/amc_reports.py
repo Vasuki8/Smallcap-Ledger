@@ -5,7 +5,10 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v6'
+PARSER_VERSION='amc-reports-2026-09-v7'
+# v7 changes only spreadsheet portfolio interpretation; do not reparse hundreds
+# of historical PDFs during the one-time upgrade.
+REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
 
 
 def monthly_sources(today=None):
@@ -87,6 +90,7 @@ def reprocess_archived():
     for row in rows:
         if exclusion_reason(row['family'],row['url']):continue
         if classify('',row['url']) not in ('factsheet','portfolio','scheme document'):continue
+        if REPROCESS_EXISTING_EXTENSIONS and not urlparse(row['url']).path.lower().endswith(REPROCESS_EXISTING_EXTENSIONS):continue
         try:
             extract((db.DATA/row['path']).read_bytes(),row['family'],row['url'],row['hash']);checked+=1
         except Exception as e:gaps.append(row['family']+': '+str(e)[:120])

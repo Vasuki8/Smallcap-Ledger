@@ -62,9 +62,41 @@ def parse_sheet(rows,formats,family):
             except ValueError:pass
             break
         isin=str(row[ic] or '').strip();valid_isin=bool(re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',isin))
-        named_equity=not isin and asset=='Equity' and re.search(r'\b(?:Ltd\.?|Limited)\s*[*^@#]?$',name,re.I) and qc is not None and not empty(row[qc])
-        named_repo=family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)
-        if not valid_isin and not named_equity and not named_repo:
+        code=str(row[0] or '').strip()
+        named_equity=not isin and asset=='Equity' and re.search(r'\b(?:Ltd\.?|Limited)\s*[*^@#]?            if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
+            leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
+            if not leaf:
+                if re.search(r'\bequity\b',label,re.I):asset='Equity'
+                elif re.search(r'treasury|government|debt',label,re.I):asset='Debt'
+                elif re.search(r'money market|repo|treps',label,re.I):asset='Money market'
+                elif re.search(r'fund unit|exchange traded|mutual fund',label,re.I):asset='Fund units'
+                elif re.search(r'derivative',label,re.I):asset='Derivative'
+                if not empty(row[wc]) or not empty(row[vc]):unknown.append(label)
+                continue
+            if empty(row[wc]) and empty(row[vc]):continue
+        try:w=weight(ri,row);v=numeric(row[vc])
+        except ValueError:unknown.append(label);continue
+        if not -100<=w<=100:unknown.append(label);continue
+        kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
+        sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
+        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,'asset_type':kind});values.append(v)
+    aum=None
+    if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)
+    complete=bool(aum and positions and not unknown)
+    if grand:
+        complete=complete and abs(sum(values)-grand[0])<=max(.05,.011*len(values))
+        complete=complete and abs(sum(x['weight'] for x in positions)-grand[1])<=max(.05,.0051*len(positions))
+    complete=complete and len({(p['isin'],p['name'],p['asset_type']) for p in positions})==len(positions)
+    return {'day':day,'aum':aum,'complete':bool(complete),'positions':positions,'unknown_rows':unknown}
+,name,re.I) and qc is not None and not empty(row[qc])
+        named_derivative=(family=='Samco Small Cap Fund' and not isin and asset=='Derivative'
+                          and bool(name) and qc is not None and not empty(row[qc])
+                          and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code)))
+        named_repo=(family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)) or (
+                    family=='Samco Small Cap Fund' and not isin and asset=='Money market'
+                    and bool(re.fullmatch(r'TRP_\d{6}',code))
+                    and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I)))
+        if not valid_isin and not named_equity and not named_derivative and not named_repo:
             if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
             leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
             if not leaf:
