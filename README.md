@@ -270,6 +270,26 @@ Operational reliability also improved: `scripts/validate_site.py` now requires `
 The next portfolio-source candidates should be handled conservatively one source family at a time. Bandhan exposes official detailed-scheme-portfolio pages, and quant Mutual Fund exposes an official monthly/fortnightly portfolio archive, but neither should be marked covered until the original downloadable evidence is archived and its scheme table is reconciled by the parser.
 
 
+
+### Axis partial portfolio recovery — 2026-09-22
+
+Axis Small Cap Fund now has a dated **partial** portfolio from the official fund page. The adapter uses Axis's explicit **Top 10 Stocks (%)** total and its update date, requires the parsed holding percentages to reconcile to that published total, and deliberately stores the snapshot with `complete=false`.
+
+Production-verified after GitHub Actions run **35779546044**:
+
+- portfolio coverage: **23 / 36 funds**
+- complete portfolio: **16 / 36**
+- current portfolio: **16 / 36**
+- current + complete: **12 / 36**
+- partial latest portfolio: **7 / 36**
+- Axis portfolio: **10 positions**, as of **2026-09-16**, partial
+- Axis source: `https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct`
+- latest NAV remains **2026-09-21**
+- build, tests, site validation, archive save and Pages deployment all passed
+
+Two intermediate Axis development runs failed the test gate because a code insertion left a duplicate/damaged parser tail. Those runs did **not** publish an archive or website. Commit `128db83f96f3da8e3b235f9598cf10629c549c91` removed the duplicate tail; the module now has one definition each for the AMC helpers, `parse_page`, and `update`.
+
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
