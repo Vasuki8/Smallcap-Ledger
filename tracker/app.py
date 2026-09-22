@@ -206,8 +206,12 @@ def documents(code:int):
 
 @app.get('/api/status')
 def status():
+    counts=db.one("SELECT (SELECT COUNT(*) FROM schemes) plans,(SELECT COUNT(DISTINCT family) FROM schemes) funds,(SELECT COUNT(*) FROM nav) nav_points,(SELECT COUNT(*) FROM benchmark) benchmark_points,(SELECT COUNT(*) FROM portfolios) portfolios,(SELECT COUNT(*) FROM document_versions) documents,(SELECT COALESCE(SUM(bytes),0) FROM archives) archive_bytes")
+    database_path=db.DATA/"ledger.sqlite3"
+    counts["database_bytes"]=database_path.stat().st_size if database_path.is_file() else 0
+    counts["total_storage_bytes"]=counts["database_bytes"]+counts["archive_bytes"]
     return {"running":updater.status(),"settings":{x['key']:json.loads(x['value']) for x in db.rows("SELECT * FROM settings WHERE key NOT LIKE 'nifty_year_%' AND key NOT LIKE 'amfi_fee_month_%'")},
-            "counts":db.one("SELECT (SELECT COUNT(*) FROM schemes) plans,(SELECT COUNT(DISTINCT family) FROM schemes) funds,(SELECT COUNT(*) FROM nav) nav_points,(SELECT COUNT(*) FROM benchmark) benchmark_points,(SELECT COUNT(*) FROM portfolios) portfolios,(SELECT COUNT(*) FROM document_versions) documents,(SELECT SUM(bytes) FROM archives) archive_bytes"),
+            "counts":counts,
             "jobs":db.rows("SELECT * FROM jobs ORDER BY id DESC LIMIT 30"),"sources":db.rows("SELECT * FROM source_pages ORDER BY amc_match,id"),
             "benchmarks":db.rows("SELECT name,MIN(date) first,MAX(date) last,COUNT(*) points FROM benchmark GROUP BY name"),
             "data_location":str(db.DATA),"server_time":db.now()}
