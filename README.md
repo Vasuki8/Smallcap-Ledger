@@ -239,6 +239,37 @@ A seventh UI-only refinement was merged in PR #11 (commit `52b71273301b2d4104607
 - **Fees** surfaces current AUM, expense and exit load; the full dated audit table is collapsed.
 - **Documents** now uses search plus one document-type selector instead of multiple filter chips and badges.
 
+
+### Portfolio freshness and Kotak recovery — 2026-09-22
+
+Portfolio coverage is now measured by both **completeness** and **freshness** instead of a single any-portfolio count. The current expected reporting month-end is calculated with a 10-day new-month grace; on 2026-09-22 the expected date is **2026-08-31**.
+
+Production-verified coverage after GitHub Actions run **35777005426**:
+
+| Portfolio measure | Coverage |
+| --- | ---: |
+| Any parsed portfolio | **22 / 36 funds** |
+| Complete portfolio | **16 / 36 funds** |
+| Current portfolio | **15 / 36 funds** |
+| Current + complete | **12 / 36 funds** |
+| Partial latest portfolio | **6 / 36 funds** |
+
+Kotak Small Cap Fund was recovered from its official August 2026 digital factsheet. The first parser attempt passed synthetic tests but produced zero production records because Kotak serves responsive/duplicate table structures. Commit `16b302e663a674aaf72011359bd1fe805297dbfd` now tries every qualifying table and accepts only one that fully reconciles sector subtotals, equity total, Triparty Repo, net current assets and grand total.
+
+Verified Kotak production record:
+
+- as of **2026-08-31**
+- **81 positions**
+- marked **complete**
+- source: `https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html`
+- benchmark identity captured as **NIFTY Smallcap 250 TRI**
+- original source remains archived with the cumulative history
+
+Operational reliability also improved: `scripts/validate_site.py` now requires `latest_nav_date` and fails publication when the latest NAV is more than **7 calendar days old**. Run 35777005426 passed with latest NAV **2026-09-21**, age **1 day**, and all automated tests/site validation green.
+
+The next portfolio-source candidates should be handled conservatively one source family at a time. Bandhan exposes official detailed-scheme-portfolio pages, and quant Mutual Fund exposes an official monthly/fortnightly portfolio archive, but neither should be marked covered until the original downloadable evidence is archived and its scheme table is reconciled by the parser.
+
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
