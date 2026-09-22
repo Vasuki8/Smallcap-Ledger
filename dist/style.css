@@ -351,3 +351,133 @@ td{padding:15px 16px;border-color:#eef1f5}
   html{scroll-behavior:auto}
   .nav a,.fund-table tbody tr{transition:none}
 }
+
+
+/* === Fund detail refresh === */
+.fund-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,360px);
+  gap:24px;
+  align-items:end;
+  margin-bottom:12px;
+}
+.fund-back{
+  display:inline-flex;
+  margin-bottom:10px;
+  font-size:.8rem;
+  font-weight:650;
+  color:#667085;
+}
+.fund-back:hover{color:#2853d7;text-decoration:none}
+.fund-hero-main h1{margin-bottom:6px}
+.fund-hero-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.fund-plan-control{display:flex;justify-content:flex-end}
+.fund-plan-control label{width:100%;max-width:360px}
+.fund-tabs{margin-top:8px}
+.fund-metrics{grid-template-columns:repeat(5,minmax(0,1fr))}
+.overview-grid{
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(280px,.9fr);
+  gap:18px;
+  align-items:start;
+}
+.glance-panel{position:sticky;top:132px}
+.facts.compact .fact{grid-template-columns:120px minmax(0,1fr);padding:11px 0}
+.quick-links{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  padding-top:14px;
+  margin-top:8px;
+  border-top:1px solid #eef1f5;
+}
+.quick-links a{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:9px 10px;
+  border:1px solid #e5e9f0;
+  border-radius:10px;
+  background:#fbfcfe;
+  font-size:.82rem;
+  font-weight:650;
+}
+.quick-links a:hover{background:#f5f8ff;text-decoration:none}
+.nav-history-panel{margin-top:18px}
+.objective-panel summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  font-weight:700;
+  list-style:none;
+}
+.objective-panel summary::-webkit-details-marker{display:none}
+.objective-panel summary::after{
+  content:"+";
+  font-size:1.1rem;
+  color:#667085;
+}
+.objective-panel[open] summary::after{content:"–"}
+.coverage-panel{margin-top:18px}
+.performance-workbench .chart-controls{
+  padding:10px 0;
+  border-top:1px solid #eef1f5;
+  border-bottom:1px solid #eef1f5;
+}
+.portfolio-panel #holdings-view>.mini-stats{margin-top:0}
+.fees-chart-grid{align-items:stretch}
+.document-toolbar{
+  display:grid;
+  grid-template-columns:minmax(240px,1fr) auto auto;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+.document-toolbar input{width:100%}
+.document-toolbar .chip-list{justify-content:flex-end}
+.communications-panel .doc-card{padding:17px 0}
+.communications-panel .doc-title{font-size:.9rem}
+
+@media(max-width:1200px){
+  .fund-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .overview-grid{grid-template-columns:1fr}
+  .glance-panel{position:static}
+  .document-toolbar{grid-template-columns:1fr}
+  .document-toolbar .chip-list{justify-content:flex-start}
+}
+
+@media(max-width:800px){
+  .fund-hero{
+    grid-template-columns:1fr;
+    gap:14px;
+    align-items:start;
+  }
+  .fund-plan-control{justify-content:flex-start}
+  .fund-plan-control label,.plan-picker{max-width:none;width:100%}
+  .fund-hero-meta{gap:5px}
+  .fund-tabs{
+    margin-top:0;
+    margin-left:-14px;
+    margin-right:-14px;
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .fund-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fund-metrics .metric-card:first-child{grid-column:1/-1}
+  .overview-grid{gap:14px}
+  .facts.compact .fact{grid-template-columns:105px minmax(0,1fr)}
+  .quick-links{grid-template-columns:1fr}
+  .document-toolbar{gap:10px}
+  .document-toolbar .chip-list{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}
+  .document-toolbar .chip-list button{flex:0 0 auto}
+}
+
+@media(max-width:480px){
+  .fund-metrics{grid-template-columns:1fr 1fr}
+  .fund-metrics .metric-card{min-height:104px}
+  .fund-metrics .metric-card:first-child{grid-column:1/-1}
+  .fund-heading{align-items:flex-start}
+  .fund-heading h1{font-size:1.4rem}
+  .fund-hero-meta .badge{font-size:.68rem}
+}
