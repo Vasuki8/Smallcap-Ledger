@@ -57,6 +57,42 @@ for row in coverage['funds']:
     lines.append('| '+' | '.join([
         esc(row['family']),aum_cell(row),fee_cell(row),portfolio_cell(row),benchmark_cell(row),str(row.get('official_publications',0))
     ])+' |')
+gap_labels={
+    'facts_only_no_portfolio':'Facts parsed; no holdings',
+    'unsupported_document_layout':'Unsupported document layout',
+    'source_unavailable':'Source unavailable',
+    'source_not_exposing_portfolio':'Source checked; no portfolio exposed',
+    'no_portfolio_document':'No portfolio/factsheet document identified',
+    'no_official_document':'No official document collected',
+    'document_not_archived':'Document known but not archived',
+    'document_not_parsed':'Archived document not parsed',
+    'extraction_error':'Parser error',
+    'no_holdings_extracted':'No holdings extracted',
+}
+gaps=[row for row in coverage['funds'] if row.get('portfolio_gap')]
+if gaps:
+    lines.extend(['','## Portfolio gap diagnosis','',
+        '| Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |',
+        '| --- | --- | --- | --- | --- |'])
+    for row in gaps:
+        audit=row['portfolio_gap'];doc=audit.get('document') or {};ext=audit.get('extraction') or {};source=audit.get('source_page') or {}
+        doc_text='Gap'
+        if doc:
+            doc_text=f"{esc(doc.get('kind'))}: {esc(doc.get('title'))}"
+            if doc.get('observed_at'):doc_text+=f" · archived {esc(doc.get('observed_at'))[:10]}"
+        parser='Gap'
+        if ext:
+            parser=f"{esc(ext.get('status'))} · {ext.get('records',0)} records"
+            if ext.get('detail'):parser+=f" · {esc(ext.get('detail'))[:120]}"
+        source_text='Gap'
+        if source:
+            source_text=f"{esc(source.get('status'))}"
+            if source.get('last_checked'):source_text+=f" · {esc(source.get('last_checked'))[:10]}"
+            if source.get('detail'):source_text+=f" · {esc(source.get('detail'))[:100]}"
+        lines.append('| '+' | '.join([
+            esc(row['family']),gap_labels.get(audit.get('reason'),esc(audit.get('reason'))),doc_text,parser,source_text
+        ])+' |')
+
 lines.extend(['','## Notes',''])
 for note in coverage.get('notes',[]):lines.append('- '+esc(note))
 lines.extend([
