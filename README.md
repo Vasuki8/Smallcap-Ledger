@@ -290,6 +290,17 @@ Production-verified after GitHub Actions run **35779546044**:
 Two intermediate Axis development runs failed the test gate because a code insertion left a duplicate/damaged parser tail. Those runs did **not** publish an archive or website. Commit `128db83f96f3da8e3b235f9598cf10629c549c91` removed the duplicate tail; the module now has one definition each for the AMC helpers, `parse_page`, and `update`.
 
 
+
+### Minimal navigation and mobile polish — 2026-09-22
+
+A later UI-only refinement was merged in PR #14 (commit `f1d590ad8904bb40d1d7773caee081738e602b87`). It continues the minimal/mobile-first direction without changing data or collection behavior.
+
+- Whole fund rows/cards are now directly openable by click and keyboard.
+- Small-screen fund cards hide secondary fields and keep NAV, AUM, and 3Y CAGR visible.
+- Fund tabs scroll cleanly on narrow screens without visible scrollbar clutter.
+- Charts use quieter gridlines/tooltips and less hover decoration.
+- Remaining mobile spacing and navigation density were tightened.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
