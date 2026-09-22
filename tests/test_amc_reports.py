@@ -71,6 +71,32 @@ class ReportParserTests(unittest.TestCase):
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-small-cap.xlsx',links)
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
 
+    def test_lic_complete_portfolio_reconciles_wrapped_sector_and_cash(self):
+        from tracker.report_parser import lic_complete_portfolio
+        holdings='\n'.join(f'Example Company {i} Ltd. 4.7015%' for i in range(1,21))
+        text='''LIC MF SMALL CAP FUND
+Scheme Type: Small Cap Fund - An open-ended equity scheme predominantly investing in small cap stocks.
+Inception/Allotment Date: June 21, 2017
+First Tier Benchmark: Nifty Smallcap 250 - TRI
+PORTFOLIO as on 31/03/2026
+Company % of NAV
+Equity Holdings
+Agricultural, Commercial & Construction
+Vehicles
+94.03%
+'''+holdings+'''
+Equity Holdings Total 94.03%
+Cash & Other Receivables Total 5.97%
+Top 10 holdings Grand Total 100.00%'''
+        parsed=lic_complete_portfolio(text)
+        self.assertEqual(parsed['day'],'2026-03-31')
+        self.assertEqual(len(parsed['positions']),21)
+        self.assertEqual(parsed['positions'][0]['sector'],'Agricultural, Commercial & Construction Vehicles')
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100)
+        wrong=text.replace('Small Cap Fund','Mid Cap Fund').replace('Smallcap 250','Midcap 150').replace('June 21, 2017','January 25, 2017')
+        self.assertIsNone(lic_complete_portfolio(wrong))
+
     def test_quantum_fee_footnote_is_preserved(self):
         f='Quantum Small Cap Fund'
         text=self.report(f,'Scheme Portfolio as on July 31, 2026\nAUM ₹ (In Crores)\nAbsolute AUM: 254.14\nDirect Plan – Total TER 0.70%\nTotal Expense ratio inclusive of transaction cost please click the link')

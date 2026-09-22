@@ -217,6 +217,60 @@ def equity_positions(text,family):
 
 
 
+def lic_complete_portfolio(text):
+    """Fully reconcile LIC MF Small Cap's portfolio page from the monthly factsheet."""
+    normalized=normalize(text)
+    scheme_ok=bool(re.search(
+        r'Scheme\s+Type\s*:\s*Small\s+Cap\s+Fund\s*-\s*An\s+open[\s-]*ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',
+        normalized,re.I))
+    benchmark_ok=bool(re.search(r'First\s+Tier\s+Benchmark\s*:\s*Nifty\s+Smallcap\s+250\s*-?\s*TRI',normalized,re.I))
+    inception_ok=bool(re.search(r'Inception/Allotment\s+Date\s*:\s*June\s+21,?\s+2017',normalized,re.I))
+    if not (scheme_ok and benchmark_ok and inception_ok):return None
+    m=re.search(r'PORTFOLIO\s+as\s+on\s+(\d{1,2}/\d{1,2}/\d{4})',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+    lines=[normalize(x).strip() for x in text.splitlines()]
+    start=next((i for i,x in enumerate(lines)
+                if re.fullmatch(r'Company\s+%\s+of\s+NAV',x,re.I)
+                and any(re.fullmatch(r'Equity\s+Holdings',y,re.I) for y in lines[i+1:i+4])),None)
+    if start is None:return None
+    positions=[];sector=None;equity_total=None;cash=None;grand=None;pending=[]
+    ignore=re.compile(r'^(?:Company\s+%\s+of\s+NAV|Equity\s+Holdings|Top\s+10\s+holdings)$',re.I)
+    for line in lines[start+1:]:
+        if not line:continue
+        if ignore.fullmatch(line):
+            pending=[];continue
+        if re.search(r'Please\s+refer\s+Notice-cum-Addendum|SCHEME\s+PERFORMANCE',line,re.I):break
+        numeric_only=re.fullmatch(r'(-?\d+(?:\.\d+)?)\s*%',line)
+        row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line)
+        if numeric_only:
+            if not pending:continue
+            label=' '.join(pending).strip();value=float(numeric_only.group(1));pending=[]
+        elif row:
+            label=' '.join(pending+[row.group(1).strip()]).strip();value=float(row.group(2));pending=[]
+        else:
+            pending.append(line)
+            if len(pending)>4:pending=pending[-4:]
+            continue
+        label=re.sub(r'^Top\s+10\s+holdings\s*','',label,flags=re.I).strip()
+        key=re.sub(r'[^a-z]','',label.lower())
+        if key=='equityholdingstotal':equity_total=value;sector=None;continue
+        if key in ('cashotherreceivablestotal','cashandotherreceivablestotal'):cash=value;sector=None;continue
+        if key=='grandtotal':grand=value;break
+        if re.search(r'\b(?:Ltd\.?|Limited)\b',label,re.I):
+            if not 0<=value<=20:return None
+            positions.append({'name':label,'isin':None,'sector':sector,'weight':value,'asset_type':'Equity'})
+        else:
+            sector=label
+    if None in (equity_total,cash,grand) or abs(grand-100)>.02:return None
+    if len(positions)<20:return None
+    if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.011*len(positions)):return None
+    if abs((equity_total+cash)-grand)>.03:return None
+    positions.append({'name':'Cash & Other Receivables','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    if len({(x['name'],x['asset_type']) for x in positions})!=len(positions):return None
+    return {'day':day,'positions':positions}
+
+
 def pgim_complete_portfolio(text):
     """Fully reconcile PGIM India Small Cap's monthly factsheet portfolio page."""
     normalized=normalize(text)
