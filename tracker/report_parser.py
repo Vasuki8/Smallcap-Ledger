@@ -177,6 +177,59 @@ def page_facts(text,family):
     return list({tuple(sorted(f.items())): f for f in out}.values())
 
 
+
+def bajaj_complete_portfolio(text):
+    """Fully reconcile Bajaj Finserv Small Cap's published monthly portfolio.
+
+    The PDF layout prints the complete stock list immediately before explicit
+    equity, repo, cash and grand-total rows. Walk backwards from those totals so
+    unrelated AUM, TER and sector-allocation percentages cannot become holdings.
+    """
+    normalized=normalize(text)
+    if not re.search(r'(?:^|\n)\s*Bajaj\s+Finserv\s+Small\s+Cap\s+Fund\s*(?:\n|$)',normalized,re.I):return None
+    if not re.search(r'An\s+open\s+ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',normalized,re.I):return None
+    if not re.search(r'Scheme\s+Category\s*:\s*Small\s+Cap\s+Fund',normalized,re.I):return None
+    heading=re.search(r'PORTFOLIO\s*\(\s*as\s+on\s*('+DATE+r')\s*\)',normalized,re.I)
+    day=dated(heading.group(1)) if heading else None
+    if not day:return None
+
+    lines=[normalize(x).strip() for x in text.splitlines()]
+    total_index=None;equity_total=None;repo=None;cash=None;grand=None
+    for i,line in enumerate(lines):
+        m=re.fullmatch(r'Equities\s+(-?\d+(?:\.\d+)?)\s*%',line,re.I)
+        if not m:continue
+        window='\n'.join(lines[i:min(len(lines),i+7)])
+        rm=re.search(r'(?:^|\n)Reverse\s+Repo\s*/\s*TREPS\s+(-?\d+(?:\.\d+)?)\s*%',window,re.I)
+        cm=re.search(r'(?:^|\n)Cash\s*(?:&|and)\s*Cash\s+Equivalent(?:s)?\s+(-?\d+(?:\.\d+)?)\s*%',window,re.I)
+        gm=re.search(r'(?:^|\n)Grand\s+Total\s+(-?\d+(?:\.\d+)?)\s*%',window,re.I)
+        if rm and cm and gm:
+            total_index=i;equity_total=float(m.group(1));repo=float(rm.group(1));cash=float(cm.group(1));grand=float(gm.group(1))
+            break
+    if total_index is None or abs(grand-100)>.03:return None
+    if not all(-100<=x<=100 for x in (equity_total,repo,cash)):return None
+    if abs((equity_total+repo+cash)-grand)>.03:return None
+
+    positions=[]
+    for line in reversed(lines[:total_index]):
+        m=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line)
+        if not m:
+            if positions:break
+            continue
+        label=m.group(1).strip();weight=float(m.group(2))
+        if not 0<=weight<=100:return None
+        company=re.match(r'(.+?\b(?:Ltd\.?|Limited))(?=\s|$)',label,re.I)
+        name=(company.group(1) if company else label).strip()
+        if not name:return None
+        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+    positions.reverse()
+    if not positions:return None
+    tolerance=max(.08,.011*len(positions))
+    if abs(sum(x['weight'] for x in positions)-equity_total)>tolerance:return None
+    if len({x['name'].lower() for x in positions})!=len(positions):return None
+    positions.append({'name':'Reverse Repo / TREPS','isin':None,'sector':None,'weight':repo,'asset_type':'Money market'})
+    positions.append({'name':'Cash & Cash Equivalent','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    return {'day':day,'positions':positions}
+
 def equity_positions(text,family):
     """Partial equity-only tables; exclude sector totals and all aggregate positions."""
     if not owns_page(text,family):return []
