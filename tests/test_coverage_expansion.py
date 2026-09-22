@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from types import SimpleNamespace
 from bs4 import BeautifulSoup
 from tracker import db,disclosures,providers
 from tracker.report_parser import page_facts
