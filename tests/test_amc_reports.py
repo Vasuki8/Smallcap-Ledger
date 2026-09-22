@@ -133,7 +133,8 @@ class ReportParserTests(unittest.TestCase):
         self.assertAlmostEqual(sum(x['weight'] for x in positions),4.21)
 
     def test_samco_discovery_prefers_latest_smallcap_excel(self):
-        from tracker import amc_discovery
+        from tracker import amc_discovery,db
+        db.init()
         html='''<table>
         <tr><td>IN_MF_MONTHLY_PORTFOLIO_July_2026_Samco_ Small_Cap_ Fund</td><td><a href="https://media1.samco.in/july-small-cap.xlsx">Excel</a></td></tr>
         <tr><td>IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_ Small_Cap_ Fund</td><td><a href="https://media1.samco.in/aug-small-cap.pdf">PDF</a><a href="https://media1.samco.in/aug-small-cap.xlsx">Excel</a></td></tr>

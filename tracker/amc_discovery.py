@@ -95,6 +95,7 @@ def discover(amc):
         newest_rows=[r for r in rows if (r[0],r[1])==newest]
         # Prefer the structured Excel copy. If absent, keep one official fallback.
         chosen=max(newest_rows,key=lambda r:r[2])
+        print('Samco selected monthly portfolio: '+chosen[3],flush=True)
         yield family,chosen[3],chosen[4] or 'Samco Small Cap monthly portfolio'
 
     elif amc=='TRUST':
