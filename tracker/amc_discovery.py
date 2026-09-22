@@ -2,6 +2,7 @@
 import calendar
 import json
 import re
+import httpx
 from datetime import date,datetime
 from urllib.parse import urljoin,quote
 from concurrent.futures import ThreadPoolExecutor
@@ -106,7 +107,47 @@ def discover(amc):
                 except Exception as e:
                     detail=(str(e) or type(e).__name__).splitlines()[0][:180]
                     print('Bandhan bundle inspection failed '+src+': '+detail,flush=True)
-                    bundle_hints.append('bundle-error:'+type(e).__name__)
+                    # One-time-safe fallback for oversized public static bundles:
+                    # read at most 32 MiB in 1 MiB HTTP Range chunks. The bundle is
+                    # never archived, scripts are never executed, and an ignored
+                    # Range request stops immediately.
+                    if 'larger than the 25 MB archive limit' in detail and re.search(r'/static/js/(?:main|app)[^/]*\.js(?:\?|$)',src,re.I):
+                        try:
+                            providers.public_url(src);providers.can_crawl(src)
+                            chunk_size=1024*1024;max_scan=32*1024*1024
+                            with httpx.Client(timeout=httpx.Timeout(30,connect=15),headers={'User-Agent':providers.USER_AGENT,'Accept':'*/*'},follow_redirects=False) as client:
+                                probe=client.get(src,headers={'Range':'bytes=0-0'})
+                                if probe.status_code!=206:
+                                    raise ValueError('Static bundle server did not honor HTTP Range')
+                                m=re.match(r'bytes\s+\d+-\d+/(\d+)',probe.headers.get('content-range',''),re.I)
+                                if not m:raise ValueError('Static bundle omitted Content-Range total')
+                                total=int(m.group(1))
+                                if total>max_scan:raise ValueError('Static bundle exceeds 32 MiB bounded scan')
+                                previous=''
+                                for start in range(0,total,chunk_size):
+                                    end=min(total-1,start+chunk_size-1)
+                                    rr=client.get(src,headers={'Range':f'bytes={start}-{end}'})
+                                    if rr.status_code!=206 or len(rr.content)>chunk_size+1024:
+                                        raise ValueError('Static bundle range response was not bounded')
+                                    text=previous+rr.content.decode('utf-8',errors='replace')
+                                    previous=text[-700:]
+                                    for value in re.findall(r'https?://[^"'+"'"+r'\\\s]+\.(?:pdf|xlsx?|xml)(?:\?[^"'+"'"+r'\\\s]*)?',text,re.I):
+                                        add(value,'Bandhan investor-site document')
+                                    for absolute in re.findall(r'https?://[^"'+"'"+r'\\\s]{8,300}',text):
+                                        if re.search(r'bandhan|api|asset',absolute,re.I) and re.search(r'fact|sheet|download|document|api',absolute,re.I):
+                                            bundle_hints.append(absolute[:300])
+                                    for mm in re.finditer(r'facts?heets?|assets\.bandhanmutual\.com',text,re.I):
+                                        snippet=text[max(0,mm.start()-350):mm.end()+500]
+                                        for value in re.findall(r'["\']([^"\']{3,320})["\']',snippet):
+                                            if re.search(r'fact|sheet|download|api|asset',value,re.I):
+                                                bundle_hints.append(value[:300])
+                            print('Bandhan bounded bundle scan completed: '+str(total)+' bytes',flush=True)
+                        except Exception as range_error:
+                            range_detail=(str(range_error) or type(range_error).__name__).splitlines()[0][:220]
+                            print('Bandhan bounded bundle scan stopped: '+range_detail,flush=True)
+                            bundle_hints.append('range-error:'+type(range_error).__name__)
+                    else:
+                        bundle_hints.append('bundle-error:'+type(e).__name__)
             if bundle_hints:
                 print('Bandhan app route hints: '+json.dumps(list(dict.fromkeys(bundle_hints))[:24]),flush=True)
         except Exception as e:
