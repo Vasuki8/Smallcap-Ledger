@@ -1366,3 +1366,11 @@ body{background:var(--canvas)}
     vertical-align:middle;
   }
 }
+
+
+/* === Six-column fund summary === */
+@media(min-width:1001px){
+  .summary-panel .summary-strip:not(.four):not(.three):not(.performance-summary){
+    grid-template-columns:repeat(6,minmax(0,1fr));
+  }
+}
