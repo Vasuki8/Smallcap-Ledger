@@ -200,6 +200,12 @@ def factsheet_pdf(content,family,url,h):
         for fact in facts:
             db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
         count+=len(facts)
+        if family=='Pgim India Small Cap Fund':
+            from .report_parser import pgim_complete_portfolio
+            full=pgim_complete_portfolio(text)
+            if full:
+                portfolio(family,full['day'],full['positions'],True,url,h);count+=len(full['positions'])
+                continue
         positions=equity_positions(text,family)
         if positions and facts:
             portfolio(family,facts[0]['as_of'],positions,False,url,h);count+=len(positions)

@@ -216,6 +216,51 @@ def equity_positions(text,family):
     return positions
 
 
+
+def pgim_complete_portfolio(text):
+    """Fully reconcile PGIM India Small Cap's monthly factsheet portfolio page."""
+    normalized=normalize(text)
+    compact=lambda s:re.sub(r'[^a-z0-9]','',s.lower())
+    title_ok=('pgimindiasmallcapfund' in compact(normalized) or
+              'smallcapfundpgimindia' in compact(normalized))
+    mandate_ok=bool(re.search(r'Small\s+Cap\s+Fund\s*-\s*An\s+open[\s-]*ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',normalized,re.I))
+    if not title_ok or not mandate_ok:return None
+    m=re.search(r'Details\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+    lines=[normalize(x).strip() for x in text.splitlines()]
+    start=next((i for i,x in enumerate(lines) if re.search(r'Issuer\s+%\s+to\s+Net',x,re.I)),None)
+    if start is None:return None
+    positions=[];sector=None;equity_total=None;debt_total=None;cash=None;grand=None
+    for line in lines[start+1:]:
+        if re.search(r'^SMALL CAP FUND$',line,re.I):break
+        row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*(?:SOVEREIGN)?',line,re.I)
+        if not row:continue
+        label=row.group(1).strip();value=float(row.group(2))
+        key=re.sub(r'[^a-z]','',label.lower())
+        if key=='equityholdingstotal':equity_total=value;sector=None;continue
+        if key=='governmentbondandtreasurybill':debt_total=value;sector='Government Bond And Treasury Bill';continue
+        if key=='treasurybill':sector='Treasury Bill';continue
+        if key=='cashcurrentassets':cash=value;sector=None;continue
+        if key=='total':grand=value;break
+        if re.search(r'portfolio classification|large cap|mid cap|small cap|cash and tbill|debt|invts|etf|reits',label,re.I):continue
+        if re.search(r'^\d+\s+Days\s+Tbill\b',label,re.I):
+            positions.append({'name':label,'isin':None,'sector':'Treasury Bill','weight':value,'asset_type':'Debt'});continue
+        if re.search(r'\b(?:Ltd\.?|Limited)\b',label,re.I):
+            positions.append({'name':label,'isin':None,'sector':sector,'weight':value,'asset_type':'Equity'})
+        else:
+            sector=label
+    equity_positions=[x for x in positions if x['asset_type']=='Equity']
+    debt_positions=[x for x in positions if x['asset_type']=='Debt']
+    if None in (equity_total,debt_total,cash,grand) or abs(grand-100)>.02:return None
+    if len(equity_positions)<20:return None
+    if abs(sum(x['weight'] for x in equity_positions)-equity_total)>max(.08,.011*len(equity_positions)):return None
+    if abs(sum(x['weight'] for x in debt_positions)-debt_total)>.02:return None
+    if abs((equity_total+debt_total+cash)-grand)>.03:return None
+    positions.append({'name':'Cash & Current Assets','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    if len({(x['name'],x['asset_type']) for x in positions})!=len(positions):return None
+    return {'day':day,'positions':positions}
+
 def layout_aum(text,family,day):
     """Values directly beneath BOI's labels in a visually aligned PDF column.
 

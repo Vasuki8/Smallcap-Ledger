@@ -54,6 +54,29 @@ class CoverageExpansionTests(unittest.TestCase):
         row['GROUP_NAME']='Sundaram Mid Cap Fund'
         self.assertEqual(extract(json.dumps([row]),f,u,'bad'),0)
 
+    def test_pgim_complete_portfolio_reconciles_equity_debt_and_cash(self):
+        from tracker.report_parser import pgim_complete_portfolio
+        issuers='\n'.join([f'Example Holdings {i} Limited {97.26/20:.3f}' for i in range(1,21)])
+        text=f'''Details as on July 31, 2026
+Issuer % to Net Assets Rating
+Aerospace & Defense 97.26
+{issuers}
+Equity Holdings Total 97.26
+Government Bond And Treasury Bill 0.15
+Treasury Bill 0.15
+364 Days Tbill Red - 2026 0.15 SOVEREIGN
+Cash & Current Assets 2.59
+Total 100.00
+SMALL CAP FUND
+PGIM INDIA
+Small Cap Fund - An open-ended equity scheme predominantly investing in small cap stocks'''
+        r=pgim_complete_portfolio(text)
+        self.assertIsNotNone(r)
+        self.assertEqual(r['day'],'2026-07-31')
+        self.assertEqual(r['positions'][-2]['asset_type'],'Debt')
+        self.assertEqual(r['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertAlmostEqual(sum(x['weight'] for x in r['positions']),100,places=2)
+
     def test_pgim_exact_heading_date_and_ambiguous_fee(self):
         f='Pgim India Small Cap Fund';u=URLS[f]
         html='<h1>PGIM India Small Cap Fund</h1><p>AUM as on 31 Aug 2026 ₹1,793.27 Cr</p><p>Expense Ratio (08 Sep 2026) 0.93%</p>'
