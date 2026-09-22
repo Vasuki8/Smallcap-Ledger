@@ -48,26 +48,67 @@ def discover(amc):
                 if row.get('type','').lower()=='zip':yield 'UTI Small Cap Fund',row['url'],row['name']
     elif amc=='Bandhan':
         family='Bandhan Small Cap Fund'
+        root='https://cmsnew.bandhanmutual.com'
         pages=[
-            'https://cmsnew.bandhanmutual.com/monthly-factsheets-2026/',
-            'https://cmsnew.bandhanmutual.com/bandhan-small-cap-fund/',
-            'https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/',
+            root+'/monthly-factsheets-2026/',
+            root+'/bandhan-small-cap-fund/',
+            root+'/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/',
         ]
-        seen=set();found=0
+        seen=set();candidates={}
+        def add(url,title):
+            if not isinstance(url,str):return
+            url=url.replace('\\/','/').strip()
+            if url.startswith('//'):url='https:'+url
+            if url.startswith('/'):url=urljoin(root,url)
+            if not re.search(r'\.(?:pdf|xlsx?|xml)(?:[?#]|$)',url,re.I):return
+            if disclosures.official_publication_url(url,amc):
+                candidates[url]=str(title or url.rsplit('/',1)[-1])[:300]
+        def walk(node,label='Bandhan official report'):
+            if isinstance(node,dict):
+                own=next((node.get(k) for k in ('title','name','caption','description') if isinstance(node.get(k),str)),label)
+                for v in node.values():walk(v,own)
+            elif isinstance(node,list):
+                for v in node:walk(v,label)
+            elif isinstance(node,str):
+                add(node,label)
+                if '<' in node and '>' in node:
+                    for u,t in providers.candidate_links(BeautifulSoup(node,'html.parser'),root).items():add(u,t)
         for page in pages:
             raw,_,_=read(page)
             soup=BeautifulSoup(raw,'html.parser')
-            for url,title in providers.candidate_links(soup,page).items():
-                if url in seen:continue
-                combined=(url+' '+title).lower()
-                if not re.search(r'\.(?:pdf|xlsx?|xml)(?:[?#]|$)',url,re.I):continue
-                if page.endswith('monthly-factsheets-2026/') and not re.search(r'fact|sheet|2026|active',combined,re.I):continue
-                if 'monthly-and-half-yearly-bandhan-small-cap-fund' in page and not re.search(r'portfolio|small|cap|monthly|half',combined,re.I):continue
-                if not disclosures.official_publication_url(url,amc):continue
-                seen.add(url);found+=1
-                yield family,url,title or ('Bandhan factsheet' if 'factsheet' in page else 'Bandhan Small Cap Fund report')
-        if not found:
-            raise ValueError('No official Bandhan PDF/XLSX/XML candidate was exposed by the registered CMS pages')
+            for url,title in providers.candidate_links(soup,page).items():add(url,title)
+        # Bandhan's WordPress templates currently keep document fields outside
+        # the rendered post body. Query only the public REST search/media
+        # endpoints, inspect returned data as JSON, and keep official document
+        # URLs only. No script from the CMS is executed.
+        api_queries=[
+            root+'/wp-json/wp/v2/search?search=Monthly%20Factsheets%202026&per_page=20',
+            root+'/wp-json/wp/v2/media?search=factsheet&per_page=50',
+            root+'/wp-json/wp/v2/media?search=small%20cap&per_page=50',
+        ]
+        api_errors=[]
+        for api in api_queries:
+            try:
+                raw,_,_=read(api)
+                data=json.loads(raw)
+                walk(data)
+                for row in data if isinstance(data,list) else []:
+                    links=row.get('_links',{}) if isinstance(row,dict) else {}
+                    for item in links.get('self',[]):
+                        href=item.get('href') if isinstance(item,dict) else None
+                        if not href:continue
+                        try:
+                            detail,_,_=read(href);walk(json.loads(detail))
+                        except Exception as e:api_errors.append((str(e) or type(e).__name__).splitlines()[0][:100])
+            except Exception as e:
+                api_errors.append((str(e) or type(e).__name__).splitlines()[0][:100])
+        for url,title in candidates.items():
+            if url in seen:continue
+            seen.add(url)
+            yield family,url,title
+        if not seen:
+            detail='; '.join(dict.fromkeys(api_errors))[:350]
+            raise ValueError('Bandhan CMS exposed no official document URL through HTML or public WordPress media metadata'+('; '+detail if detail else ''))
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
         body={'systemQueryFileName':'productsweb.xml','tagName':'GetOneProductWeb','searchField':'p.slug','searchValue':'trustmf-small-cap-fund','sortField':'','sortDirection':''}
