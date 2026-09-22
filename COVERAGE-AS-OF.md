@@ -1,69 +1,59 @@
 # Included data coverage
 
-Prepared: 2026-09-06T19:22:17+00:00
+Prepared: 2026-09-22T04:11:56+00:00
 
-**36 funds, 143 NAV series, 279,596 NAV observations. Latest included NAV: 2026-09-04.**
+**36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
-AUM: **9 / 36 funds**. Expense figures: **25 / 36 funds**. Parsed portfolios: **2 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **15 / 36 funds**. Reported benchmark identity: **17 / 36 funds**.
 
-The archive includes 5,316 actual TRI observations. Third-party news has been removed; Fund communications contains AMC publications and official source pages.
+Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
-## Per-fund figures
+| Fund | AUM · ₹ Cr / date | Direct fee / date | Latest parsed portfolio | Reported benchmark / date | AMC publications |
+| --- | --- | --- | --- | --- | ---: |
+| Abakkus Small Cap Fund | ₹ 3,126.02 · 2026-09-18 | 1.25% TER · 2026-09-21 | 68 positions · 2026-07-31 · complete | NIFTY SmallCap 250 TRI · 2026-09-22 | 28 |
+| Aditya Birla Sun Life Small Cap Fund | ₹ 6,222.10 · 2026-09-18 | 1.08% TER · 2026-09-16 | Gap | BSE 250 Small Cap Index TRI · 2026-07-31 | 4 |
+| Axis Small Cap Fund | ₹ 30,918.19 · 2026-09-18 | 0.71% Expense ratio · type not specified · 2026-09-19 | Gap | Nifty Smallcap 250 TRI · 2026-09-22 | 4 |
+| Bajaj Finserv Small Cap Fund | ₹ 2,690.22 · 2026-09-18 | 0.96% TER · 2026-09-21 | Gap | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
+| Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-18 | 0.61% TER · 2026-09-20 | Gap | Gap | 0 |
+| Bank Of India Small Cap Fund | ₹ 3,532.06 · 2026-09-18 | 0.74% TER · 2026-09-21 | Gap | Gap | 6 |
+| Baroda Bnp Paribas Small Cap Fund | ₹ 1,307.77 · 2026-09-18 | 1.21% TER · 2026-09-21 | Gap | Gap | 5 |
+| Canara Robeco Small Cap Fund | ₹ 14,475.59 · 2026-09-18 | 0.45% BER · 2026-08-31 | 89 positions · 2026-08-31 · partial | Nifty Smallcap 250 Index TRI · 2026-08-31 | 4 |
+| DSP Small Cap Fund | ₹ 21,647.81 · 2026-09-18 | 0.81% TER · 2026-09-21 | 80 positions · 2026-06-30 · partial | BSE 250 Small Cap TRI · 2026-09-22 | 14 |
+| Edelweiss Small Cap Fund | ₹ 7,183.25 · 2026-09-18 | 0.65% TER · 2026-09-21 | Gap | (Nifty Smallcap 250 TRI) · 2026-07-31 | 1 |
+| Franklin India Small Cap Fund | ₹ 14,637.85 · 2026-09-18 | 1.07% TER · 2026-09-21 | 91 positions · 2026-07-31 · complete | Gap | 2 |
+| Groww Small Cap Fund | ₹ 919.39 · 2026-09-18 | 1.12% TER · 2026-04-30 | Gap | Gap | 3 |
+| HDFC Small Cap Fund | ₹ 41,957.06 · 2026-09-18 | 0.77% TER · 2026-09-16 | 87 positions · 2026-08-31 · complete | BSE 250 SmallCap Index (Total Returns Index) · 2026-09-22 | 13 |
+| HSBC Small Cap Fund | ₹ 19,106.78 · 2026-09-18 | 0.56% BER · 2026-08-31 | Gap | Nifty Smallcap 250 TRI · 2026-08-31 | 2 |
+| Helios Small Cap Fund | ₹ 1,871.56 · 2026-09-18 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete | NIFTY Small Cap 250 · 2026-08-31 | 165 |
+| ICICI Prudential Small Cap Fund | ₹ 9,798.74 · 2026-09-18 | 0.7% BER · 2026-08-31 | Gap | Gap | 1 |
+| Invesco India Small Cap Fund | ₹ 16,222.79 · 2026-09-18 | 0.4% BER · 2026-08-31 | 69 positions · 2026-08-31 · partial | Gap | 2 |
+| Iti Small Cap Fund | ₹ 3,711.30 · 2026-09-18 | 0.86% TER · 2026-09-21 | Gap | Nifty Smallcap 250 TRI · 2026-08-31 | 9 |
+| Jm Small Cap Fund | ₹ 934.47 · 2026-09-18 | 0.59% BER · 2026-08-31 | Gap | Gap | 4 |
+| Kotak Small Cap Fund | ₹ 19,531.68 · 2026-09-18 | 0.6459% TER · 2026-09-19 | Gap | Gap | 6 |
+| LIC Mf Small Cap Fund | ₹ 850.51 · 2026-09-18 | 1.31% TER · 2026-09-21 | Gap | Gap | 26 |
+| Mahindra Manulife Small Cap Fund | ₹ 5,480.75 · 2026-09-18 | 0.47% BER · 2026-08-31 | Gap | Gap | 10 |
+| Mirae Asset Small Cap Fund | ₹ 5,906.34 · 2026-09-18 | 0.34% BER · 2026-07-31 | 10 positions · 2026-07-31 · partial | Nifty Smallcap 250 (TRI) · 2026-07-31 | 4 |
+| Motilal Oswal Small Cap Fund | ₹ 8,351.26 · 2026-09-18 | 0.85% TER · 2026-09-20 | 63 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
+| Nippon India Small Cap Fund | ₹ 82,618.95 · 2026-09-18 | 0.68% TER · 2026-09-21 | 257 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 622 |
+| Pgim India Small Cap Fund | ₹ 1,784.34 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | Gap | 4 |
+| Quant Small Cap Fund | ₹ 35,458.32 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | NIFTY SMALLCAP 250 TRI · 2026-08-31 | 14 |
+| Quantum Small Cap Fund | ₹ 265.21 · 2026-09-18 | 0.83% TER · 2026-09-20 | 60 positions · 2026-08-31 · complete | BSE 250 SmallCap TRI · 2025-08-31 | 75 |
+| SBI Small Cap Fund | ₹ 42,245.73 · 2026-09-18 | 0.79% TER · 2026-09-20 | 68 positions · 2026-07-31 · partial | BSE 250 Small Cap Index TRI · 2026-07-31 | 2 |
+| Samco Small Cap Fund | ₹ 253.76 · 2026-09-18 | 1.97% TER · 2026-09-21 | Gap | Gap | 617 |
+| Sundaram Small Cap Fund | ₹ 4,200.00 · 2026-09-18 | 0.97% TER · 2026-09-17 | 73 positions · 2026-08-31 · partial | Gap | 6 |
+| Tata Small Cap Fund | ₹ 13,338.24 · 2026-09-20 | 0.51% TER · 2026-09-20 | Gap | Gap | 0 |
+| The Wealth Company Small Cap Fund | ₹ 139.10 · 2026-09-18 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete | Gap | 18 |
+| Trustmf Small Cap Fund | ₹ 3,815.76 · 2026-09-18 | 1.54% TER · 2026-09-21 | Gap | Gap | 1 |
+| UTI Small Cap Fund | ₹ 5,387.25 · 2026-09-18 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial | Gap | 7 |
+| Union Small Cap Fund | ₹ 2,761.49 · 2026-09-18 | 1.08% TER · 2026-09-21 | Gap | Gap | 1 |
 
-Values retain their reporting dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER and BER are distinct. A gap means no verified numeric record has been collected, not a zero expense or fund size.
+## Notes
 
-| Fund | NAV series | AUM · ₹ Cr / date | Direct expense / date | Regular expense / date | Portfolio snapshots |
-| --- | ---: | --- | --- | --- | ---: |
-| Abakkus Small Cap Fund | 2 | Gap | 1.27% TER · 2026-09-06 | 2.59% TER · 2026-09-06 | 0 |
-| Aditya Birla Sun Life Small Cap Fund | 4 | ₹ 5,865.30 · 2026-07-31 | 1.07% TER · 2026-09-06 | 1.99% TER · 2026-09-06 | 0 |
-| Axis Small Cap Fund | 4 | ₹ 31,448.32 · 2026-08-31 | Gap | Gap | 0 |
-| Bajaj Finserv Small Cap Fund | 4 | Gap | 0.96% TER · 2026-09-04 | 2.35% TER · 2026-09-04 | 0 |
-| Bandhan Small Cap Fund | 4 | Gap | 0.58% TER · 2026-09-03 | 1.72% TER · 2026-09-03 | 0 |
-| Bank Of India Small Cap Fund | 4 | Gap | 0.71% TER · 2026-09-04 | 2.19% TER · 2026-09-04 | 0 |
-| Baroda Bnp Paribas Small Cap Fund | 4 | Gap | 1.21% TER · 2026-09-04 | 2.45% TER · 2026-09-04 | 0 |
-| Canara Robeco Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| DSP Small Cap Fund | 4 | ₹ 21,658.64 · 2026-08-31 | 0.81% TER · 2026-09-04 | 1.7% TER · 2026-09-04 | 0 |
-| Edelweiss Small Cap Fund | 4 | Gap | 0.66% TER · 2026-09-06 | 1.97% TER · 2026-09-06 | 0 |
-| Franklin India Small Cap Fund | 4 | Gap | 1.07% TER · 2026-09-04 | 1.85% TER · 2026-09-04 | 0 |
-| Groww Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| HDFC Small Cap Fund | 4 | ₹ 41,890.86 · 2026-08-31 | 0.75% TER · 2026-08-31 | 1.54% TER · 2026-08-31 | 5 |
-| HSBC Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| Helios Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| ICICI Prudential Small Cap Fund | 5 | Gap | Gap | Gap | 0 |
-| Invesco India Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| Iti Small Cap Fund | 4 | ₹ 3,454.00 · 2026-07-31 | 0.86% TER · 2026-09-06 | 2.22% TER · 2026-09-06 | 0 |
-| Jm Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| Kotak Small Cap Fund | 4 | ₹ 19,678.00 · 2026-08-31 | 0.6359% TER · 2026-09-02 | 1.7259% TER · 2026-09-02 | 0 |
-| LIC Mf Small Cap Fund | 4 | Gap | 1.32% TER · 2026-09-06 | 2.65% TER · 2026-09-06 | 0 |
-| Mahindra Manulife Small Cap Fund | 4 | ₹ 5,086.57 · 2026-07-31 | Gap | Gap | 0 |
-| Mirae Asset Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| Motilal Oswal Small Cap Fund | 4 | Gap | 0.85% TER · 2026-09-04 | 1.92% TER · 2026-09-04 | 0 |
-| Nippon India Small Cap Fund | 6 | ₹ 78,956.77 · 2026-07-31 | 0.69% TER · 2026-08-31 | 1.41% TER · 2026-08-31 | 7 |
-| Pgim India Small Cap Fund | 4 | Gap | 0.93% TER · 2026-09-06 | 2.37% TER · 2026-09-06 | 0 |
-| Quant Small Cap Fund | 4 | Gap | 0.93% TER · 2026-09-06 | 1.75% TER · 2026-09-06 | 0 |
-| Quantum Small Cap Fund | 2 | Gap | 0.83% TER · 2026-09-04 | 2.31% TER · 2026-09-04 | 0 |
-| SBI Small Cap Fund | 4 | Gap | 0.79% TER · 2026-09-03 | 1.58% TER · 2026-09-03 | 0 |
-| Samco Small Cap Fund | 2 | Gap | 1.97% TER · 2026-09-04 | 3.41% TER · 2026-09-04 | 0 |
-| Sundaram Small Cap Fund | 4 | Gap | 0.98% TER · 2026-09-02 | 2.01% TER · 2026-09-02 | 0 |
-| Tata Small Cap Fund | 6 | ₹ 13,187.58 · 2026-09-03 | 0.51% TER · 2026-09-03 | 1.69% TER · 2026-09-03 | 0 |
-| The Wealth Company Small Cap Fund | 4 | Gap | 2.05% TER · 2026-09-06 | 3.98% TER · 2026-09-06 | 0 |
-| Trustmf Small Cap Fund | 4 | Gap | 1.54% TER · 2026-09-06 | 2.9% TER · 2026-09-06 | 0 |
-| UTI Small Cap Fund | 4 | Gap | Gap | Gap | 0 |
-| Union Small Cap Fund | 4 | Gap | 1.1% TER · 2026-09-06 | 2.17% TER · 2026-09-06 | 0 |
-
-## Sources and limits
-
-Source URLs and per-fund dates are included in COVERAGE-AS-OF.json and on every fund page. Portfolio counts include partial views and different versions of one reporting date. Source-page archival is not proof that all numeric fields were parsed.
-
-- AUM, expenses, full portfolios and archived communications are incomplete across the universe.
-- Current AMFI small-cap category; the historical closed/merged universe is not reconstructed.
-- Older NAV comes from MFapi; it is not all independently verified against AMFI.
-- Nifty Smallcap 250 TRI is a category comparator where the stated benchmark is unavailable or unverified.
-- BSE TRI and historical benchmark changes are not included.
-- IDCW total returns require complete distribution data; bonus options require unit adjustments.
-- Automated portfolios are partial; security departures do not prove sales.
-- Archived versions start when accessible documents are collected; unavailable older versions remain gaps.
-- A daily schedule requests midnight IST execution; GitHub may delay or skip runs.
-- GitHub deployment, Windows desktop launch and browser visual testing have not been performed.
-
-Read GITHUB-SETUP.md to enable the online site and daily workflow. No GitHub deployment is active merely because this package was created.
+- Coverage means at least one dated record, not necessarily the latest reporting month.
+- The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.
+- Base expense ratio and total expense ratio are distinct.
+- A benchmark name does not establish availability of its historical TRI series.
+- Portfolio records may be partial; see each snapshot and source.
+- AUM now includes the official AMFI fund-performance feed when it provides a plausible category-wide daily response; the original dated response is retained as source evidence.
+- Fund communications remains restricted to AMC-origin publications. The public Pages site carries a bounded set of saved binaries; the cumulative tracker-history release retains full saved history.
+- Source URLs and structured per-fund records are available in COVERAGE-AS-OF.json and on the live fund pages.
