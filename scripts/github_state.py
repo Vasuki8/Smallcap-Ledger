@@ -97,6 +97,7 @@ def pack_source_pack(target,plan):
     if target.stat().st_size>MAX_ZIP:raise ValueError('Source pack approaches the GitHub release asset size limit')
     return {'asset':target.name,'bucket':plan['bucket'],'part':plan['part'],
             'raw_bytes':plan['raw_bytes'],'members':len(plan['members']),
+            'hashes':[row['hash'] for row in plan['members']],
             'bytes':target.stat().st_size}
 
 
@@ -264,16 +265,20 @@ def publish():
         if 'latest.json' in assets:
             old=download_asset(repo,'latest.json',tmp);previous=json.loads(old.read_text());old.unlink()
         rows=db.rows('SELECT hash,path,bytes,first_seen FROM archives ORDER BY first_seen,hash')
-        plans=source_pack_plan(rows);previous_packs={p['asset']:p for p in (previous or {}).get('source_packs',[])}
-        pack_records=[]
+        previous_packs=list((previous or {}).get('source_packs',[])) if int((previous or {}).get('format',1))>=2 else []
+        covered={h for p in previous_packs for h in p.get('hashes',[])}
+        current_hashes={row['hash'] for row in rows}
+        if covered-current_hashes:
+            raise ValueError('Current database no longer references source files retained by the previous checkpoint')
+        new_rows=[row for row in rows if row['hash'] not in covered]
+        plans=source_pack_plan(new_rows)
+        # Existing format-2 source packs are immutable and reused verbatim.
+        # Only hashes not covered by the previous checkpoint create new assets.
+        pack_records=previous_packs.copy()
         for plan in plans:
             name=plan['asset']
             if name in assets:
-                old=previous_packs.get(name,{})
-                pack_records.append({'asset':name,'bucket':plan['bucket'],'part':plan['part'],
-                                     'raw_bytes':plan['raw_bytes'],'members':len(plan['members']),
-                                     'bytes':int(old.get('bytes') or assets[name]['size'])})
-                continue
+                raise ValueError('New source-pack name unexpectedly collides with an existing release asset')
             target=tmp/name;record=pack_source_pack(target,plan)
             gh('release','upload',TAG,str(target),'--repo',repo);pack_records.append(record)
         run=os.environ.get('GITHUB_RUN_ID',db.now().replace(':','').replace('+',''))
