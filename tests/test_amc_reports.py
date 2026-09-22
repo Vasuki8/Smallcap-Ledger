@@ -132,6 +132,17 @@ class ReportParserTests(unittest.TestCase):
         self.assertEqual([x['name'] for x in positions],['Alpha Fertilizers And Petrochemicals Corporation Ltd','Beta Ltd'])
         self.assertAlmostEqual(sum(x['weight'] for x in positions),4.21)
 
+    def test_samco_discovery_prefers_latest_smallcap_excel(self):
+        from tracker import amc_discovery
+        html='''<table>
+        <tr><td>IN_MF_MONTHLY_PORTFOLIO_July_2026_Samco_ Small_Cap_ Fund</td><td><a href="https://media1.samco.in/july-small-cap.xlsx">Excel</a></td></tr>
+        <tr><td>IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_ Small_Cap_ Fund</td><td><a href="https://media1.samco.in/aug-small-cap.pdf">PDF</a><a href="https://media1.samco.in/aug-small-cap.xlsx">Excel</a></td></tr>
+        <tr><td>IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_Flexicap_Fund</td><td><a href="https://media1.samco.in/aug-flexi.xlsx">Excel</a></td></tr>
+        </table>'''.encode()
+        with patch('tracker.amc_discovery.read',return_value=(html,'fixture','text/html')):
+            rows=list(amc_discovery.discover('Samco'))
+        self.assertEqual(rows,[('Samco Small Cap Fund','https://media1.samco.in/aug-small-cap.xlsx','IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_ Small_Cap_ Fund Excel')])
+
     def test_official_motilal_download_fields_with_or_without_colon(self):
         from bs4 import BeautifulSoup
         from tracker.providers import candidate_links

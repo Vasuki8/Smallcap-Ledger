@@ -63,6 +63,39 @@ def discover(amc):
                 if not disclosures.official_publication_url(url,amc):continue
                 seen.add(url)
                 yield family,url,title or 'Bandhan official report'
+    elif amc=='Samco':
+        family='Samco Small Cap Fund'
+        page='https://www.samcomf.com/StatutoryDisclosure'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        candidates={}
+        # Preserve nearby table/list context because Samco labels the action links
+        # simply XML / Excel / PDF while the row heading carries the scheme name.
+        for a in soup.select('a[href]'):
+            url=urljoin(page,a.get('href',''))
+            container=a.find_parent(['tr','li']) or a.parent
+            context=(container.get_text(' ',strip=True) if container else a.get_text(' ',strip=True))[:1200]
+            candidates[url]=context or a.get_text(' ',strip=True) or url.rsplit('/',1)[-1]
+        for url,title in providers.candidate_links(soup,page).items():
+            candidates.setdefault(url,title)
+        rows=[]
+        for url,title in candidates.items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            if not re.search(r'samco[\s_%-]*small[\s_%-]*cap[\s_%-]*fund|small[\s_%-]*cap[\s_%-]*fund',combined,re.I):continue
+            if not re.search(r'monthly[\s_%-]*portfolio|portfolio',combined,re.I):continue
+            ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I)
+            if not ext:continue
+            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
+            year=max(years,default=0)
+            month=max((i for i in range(1,13) if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+            kind=ext.group(1).lower();priority=3 if kind in ('xls','xlsx') else 2 if kind=='xml' else 1
+            rows.append((year,month,priority,url,title))
+        if not rows:raise ValueError('No official Samco Small Cap monthly portfolio file was exposed by the statutory disclosure page')
+        newest=max((y,m) for y,m,_,_,_ in rows)
+        newest_rows=[r for r in rows if (r[0],r[1])==newest]
+        # Prefer the structured Excel copy. If absent, keep one official fallback.
+        chosen=max(newest_rows,key=lambda r:r[2])
+        yield family,chosen[3],chosen[4] or 'Samco Small Cap monthly portfolio'
 
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
@@ -122,5 +155,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','UTI','Bandhan','Samco','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
