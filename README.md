@@ -203,6 +203,17 @@ A fourth UI-only refinement was merged in PR #8 (commit `5efcb6f932cad58c8f44752
 - Source checks are summarized as **healthy** versus **needs attention** states, with better detail visibility on mobile.
 - The source-status table is responsive and easier to scan without horizontal scrolling.
 
+
+### Accessibility and consistency polish — 2026-09-22
+
+A fifth UI-only refinement was merged in PR #9 (commit `b6db9dfd029129414675ee4282fa862cfa04d694`). It does not change mutual-fund data, calculations, collectors, source rules, schedules, or historical storage.
+
+- Added a keyboard **Skip to main content** link.
+- Main navigation, fund tabs, directory presets, document filters, and performance range controls now expose their active state to assistive technology.
+- Route loading now uses accessibility status semantics and main content reports busy state while views change.
+- Visible keyboard focus, touch target sizing, mobile spacing, small-screen statistics, wrapping, and focused table/document states were tightened across the site.
+- Reduced-motion preferences remain respected.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
