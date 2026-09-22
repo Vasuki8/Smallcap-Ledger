@@ -50,7 +50,7 @@ Sources requiring sign-in, a challenge or unsupported dynamic rendering remain g
 
 `data/ledger.sqlite3` stores schemes, current series, earlier NAV/index observations, dated metrics, holdings, documents and update logs. `data/archive/` retains source bytes by SHA-256. Identical bytes are deduplicated; revised values and document versions remain in history.
 
-Each GitHub run restores the previous cumulative archive from the `tracker-history` release. It uses the bundled seed only when that release does not exist. A failed download or checksum never silently resets history. After collection and site validation, it uploads a new ZIP before updating `latest.json`. The previous checkpoint is also retained. Obsolete whole-checkpoint copies may be removed, while **each checkpoint still contains all retained historical records and original files**. Expiring Actions caches and artifacts are not the primary archive.
+GitHub history now uses **split checkpoint format 2**. `latest.json` points to a compact SQLite database checkpoint plus immutable reusable source-file packs. Normal runs restore the database first and materialize source files on demand. New source hashes create new packs; older packs are reused instead of rebuilding the full archive. Restore remains backward-compatible with the original cumulative ZIP format, and legacy migration checkpoints are currently retained for rollback. A failed download or checksum never silently resets history.
 
 To keep GitHub Pages deployable as the archive grows, the public static site uses a fixed **250 MiB publication-file budget**, prioritizing the newest non-source-page AMC files. Publication metadata and original source links remain visible even when a saved copy is not bundled into Pages. The complete saved version history remains preserved in the cumulative `tracker-history` release and is not deleted from the underlying archive.
 
@@ -300,6 +300,18 @@ A later UI-only refinement was merged in PR #14 (commit `f1d590ad8904bb40d1d7773
 - Fund tabs scroll cleanly on narrow screens without visible scrollbar clutter.
 - Charts use quieter gridlines/tooltips and less hover decoration.
 - Remaining mobile spacing and navigation density were tightened.
+
+
+### Split archive storage migration — 2026-09-22
+
+The historical archive has been migrated to **format 2** without deleting source evidence.
+
+- Active database checkpoints are about **12.36 MB compressed**, versus the previous ~**1.09 GB** cumulative checkpoint upload.
+- Historical source evidence is stored in immutable reusable `sources-*.zip` packs.
+- Daily workflows use database-only restore first and materialize source files on demand.
+- Run **#95** verified the thin restore path; database restore completed in about 3 seconds and the new checkpoint upload consisted of a ~12 MB database plus a ~157 KB source pack.
+- Parser materialization was subsequently narrowed to only catalog and pending spreadsheet source hashes.
+- Legacy cumulative `state-*.zip` files remain in the release as rollback copies. Removing them would be destructive and requires an explicit cleanup decision.
 
 ### Recommended next work
 
