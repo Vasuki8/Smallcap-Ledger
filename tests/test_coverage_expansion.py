@@ -236,6 +236,31 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         parse_page(html,f,u,'h')
         self.assertEqual(db.one("SELECT metric,plan,as_of FROM metrics WHERE metric!='aum'"),{'metric':'expense_ratio','plan':'Direct','as_of':'2026-09-05'})
 
+    def test_baroda_treps_row_reconciles_complete_portfolio(self):
+        rows=[
+            [None,'Baroda BNP Paribas Small Cap Fund',None,None,None,None,None],
+            [None,'Monthly Portfolio Statement as on August 31, 2026',None,None,None,None,None],
+            [None,'Name of the Instrument','ISIN','Industry','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net Assets'],
+            ['EQ01','Alpha Limited','INE123456789','Banks',100,9659,0.9659],
+            [None,'Sub Total',None,None,None,9659,0.9659],
+            [None,'Total',None,None,None,9659,0.9659],
+            [None,'Reverse Repo / TREPS',None,None,None,None,None],
+            ['TRP_010926','Clearing Corporation of India Ltd',None,' ',None,209,0.0209],
+            [None,'Sub Total',None,None,None,209,0.0209],
+            [None,'Total',None,None,None,209,0.0209],
+            [None,'Net Receivables / (Payables)',None,None,None,132,0.0132],
+            [None,'GRAND TOTAL',None,None,None,10000,1.0],
+        ]
+        fmt=[['General']*7 for _ in rows]
+        for i in (3,4,5,7,8,9,10,11):fmt[i][6]='0.00%'
+        parsed=parse_sheet(rows,fmt,'Baroda Bnp Paribas Small Cap Fund')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['aum'],100)
+        self.assertEqual([x['asset_type'] for x in parsed['positions']],[
+            'Equity','Money market','Cash and net current assets'])
+        self.assertEqual(parsed['positions'][1]['name'],'Clearing Corporation of India Ltd')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100)
+
     def test_named_repo_is_limited_to_its_verified_scheme_layout(self):
         rows,fmt=self.sheet();rows[0]=['Motilal Oswal Small Cap Fund']
         rows[5]=['CBLO','TRP_030826','','',600,.06]

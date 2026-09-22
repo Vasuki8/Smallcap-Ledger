@@ -68,7 +68,7 @@ def parse_sheet(rows,formats,family):
                           and bool(name) and qc is not None and not empty(row[qc])
                           and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code)))
         named_repo=(family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)) or (
-                    family=='Samco Small Cap Fund' and not isin and asset=='Money market'
+                    family in ('Samco Small Cap Fund','Baroda Bnp Paribas Small Cap Fund') and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
                     and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I)))
         if not valid_isin and not named_equity and not named_derivative and not named_repo:
