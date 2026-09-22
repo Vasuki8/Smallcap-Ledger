@@ -54,6 +54,19 @@ class SplitArchiveTests(unittest.TestCase):
             with sqlite3.connect(destination/'ledger.sqlite3') as c:
                 self.assertEqual(c.execute('SELECT COUNT(*) FROM nav').fetchone()[0],1)
 
+    def test_existing_source_pack_can_be_verified_for_retry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            payload=b'retry-safe-source-pack'
+            h=hashlib.sha256(payload).hexdigest()
+            source=root/'source.bin';source.write_bytes(payload)
+            archive=root/'pack.zip'
+            row={'hash':h,'path':f'archive/{h[:2]}/{h}','bytes':len(payload),'first_seen':'2026-09-01T00:00:00+00:00'}
+            plan=github_state.source_pack_plan([row])[0]
+            with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+                z.write(source,'data/'+row['path'])
+            self.assertTrue(github_state.verify_source_pack_zip(archive,plan))
+
     def test_checkpoint_summary_supports_legacy_and_split(self):
         legacy={'format':1,'asset':'state.zip','sha256':'abc','bytes':123,'created_at':'now'}
         split={'format':2,'created_at':'now','database':{'asset':'database.zip'},'source_packs':[{'asset':'sources.zip'}]}
