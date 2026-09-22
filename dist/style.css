@@ -1354,3 +1354,15 @@ body{background:var(--canvas)}
   .minimal-fund-table td:first-child{white-space:normal}
   .minimal-fund-table tbody tr:hover{background:#fafbfe}
 }
+
+
+/* === Fix fund table header alignment === */
+@media(min-width:801px){
+  .directory-table thead th{
+    position:static;
+    top:auto;
+    z-index:auto;
+    box-shadow:none;
+    vertical-align:middle;
+  }
+}
