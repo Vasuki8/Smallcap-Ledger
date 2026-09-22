@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v7'
+PARSER_VERSION='amc-reports-2026-09-v8'
 # v7 changes only spreadsheet portfolio interpretation; do not reparse hundreds
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')

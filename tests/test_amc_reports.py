@@ -140,7 +140,7 @@ class ReportParserTests(unittest.TestCase):
             [None]*8,
             ['MONTHLY PORTFOLIO STATEMENT OF SAMCO SMALL CAP FUND AS ON August 31, 2026',None,None,None,None,None,None,None],
             [None]*8,
-            ['Name of the Instrument',None,'ISIN','Industry','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net Assets','YTM'],
+            ['Name of the Instrument',None,'ISIN','Industry','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net\n Assets','YTM'],
             ['Equity & Equity related',None,None,None,None,None,None,None],
             ['AENP01','Ather Energy Limited','INE0LEZ01016','Automobiles',100,50,0.50,None],
             [None,'Derivatives',None,None,None,None,None,None],

@@ -30,7 +30,7 @@ def parse_sheet(rows,formats,family):
     header=None;hi=None
     for i,row in enumerate(rows[:35]):
         cells=[str(v or '').lower() for v in row]
-        if any('isin' in v for v in cells) and any('%' in v and re.search(r'nav|aum|net.*asset',v) for v in cells):header=cells;hi=i;break
+        if any('isin' in v for v in cells) and any('%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)) for v in cells):header=cells;hi=i;break
     if header is None:return None
     if not owns_sheet(rows,hi,family):return None
     prefix=' '.join(str(v) for row in rows[:hi] for v in row if v is not None)
@@ -39,7 +39,7 @@ def parse_sheet(rows,formats,family):
     def col(predicate):return next((i for i,v in enumerate(header) if predicate(v)),None)
     ic=col(lambda v:'isin' in v);nc=col(lambda v:'name' in v or 'instrument' in v or 'issuer' in v)
     if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
-    wc=col(lambda v:'%' in v and re.search(r'nav|aum|net.*asset',v))
+    wc=col(lambda v:'%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)))
     vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'value',v))
     sc=col(lambda v:'industry' in v or 'rating' in v or 'sector' in v);qc=col(lambda v:'quantity' in v)
     if None in (nc,wc,vc):return None
