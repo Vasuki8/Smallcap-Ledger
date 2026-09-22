@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T14:51:23+00:00",
+  "built_at": "2026-09-22T15:33:13+00:00",
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
@@ -287,8 +287,13 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
-      "portfolio": null,
-      "official_publications": 5
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls",
+        "complete": 0,
+        "positions": 61
+      },
+      "official_publications": 6
     },
     {
       "family": "Canara Robeco Small Cap Fund",
@@ -1525,7 +1530,7 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 19,
+    "portfolio": 20,
     "benchmark_identity": 18
   },
   "notes": [
