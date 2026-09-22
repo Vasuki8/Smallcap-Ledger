@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-22T15:33:13+00:00
+Prepared: 2026-09-22T15:47:26+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
@@ -16,7 +16,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Bajaj Finserv Small Cap Fund | ₹ 2,690.22 · 2026-09-18 | 0.96% TER · 2026-09-21 | Gap | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
 | Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-18 | 0.61% TER · 2026-09-20 | Gap | Gap | 0 |
 | Bank Of India Small Cap Fund | ₹ 3,532.06 · 2026-09-18 | 0.74% TER · 2026-09-21 | Gap | Gap | 6 |
-| Baroda Bnp Paribas Small Cap Fund | ₹ 1,307.77 · 2026-09-18 | 1.21% TER · 2026-09-21 | 61 positions · 2026-08-31 · partial | Gap | 6 |
+| Baroda Bnp Paribas Small Cap Fund | ₹ 1,307.77 · 2026-09-18 | 1.21% TER · 2026-09-21 | 63 positions · 2026-08-31 · complete | Gap | 6 |
 | Canara Robeco Small Cap Fund | ₹ 14,475.59 · 2026-09-18 | 0.45% BER · 2026-08-31 | 89 positions · 2026-08-31 · partial | Nifty Smallcap 250 Index TRI · 2026-08-31 | 4 |
 | DSP Small Cap Fund | ₹ 21,647.81 · 2026-09-18 | 0.81% TER · 2026-09-21 | 80 positions · 2026-06-30 · partial | BSE 250 Small Cap TRI · 2026-09-22 | 14 |
 | Edelweiss Small Cap Fund | ₹ 7,183.25 · 2026-09-18 | 0.65% TER · 2026-09-21 | Gap | (Nifty Smallcap 250 TRI) · 2026-07-31 | 1 |
