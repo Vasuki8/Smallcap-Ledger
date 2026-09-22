@@ -236,8 +236,9 @@ def _restore_database_only(database_zip,destination,database_meta=None):
 def _extract_source_hashes(archive,hashes,destination):
     destination=Path(destination).resolve();wanted=set(hashes)
     if not wanted:return 0
+    placeholders=','.join('?' for _ in wanted)
     rows={r['hash']:r for r in db.rows(
-        'SELECT hash,path,bytes FROM archives WHERE hash IN (%s)'%','.join('?'*len(wanted)),
+        'SELECT hash,path,bytes FROM archives WHERE hash IN (%s)'%placeholders,
         tuple(sorted(wanted)))}
     if set(rows)!=wanted:raise ValueError('Requested source hash is not present in the database')
     written=0
@@ -273,11 +274,12 @@ def materialize_hashes(hashes):
     """Restore only source binaries needed by the current operation."""
     requested=set(hashes)
     if not requested:return 0
+    archive_rows={r['hash']:r for r in db.rows('SELECT hash,path,bytes FROM archives')}
+    unknown=requested-set(archive_rows)
+    if unknown:raise ValueError('Unknown source hash '+sorted(unknown)[0])
     missing=set()
     for h in requested:
-        row=db.one('SELECT path,bytes FROM archives WHERE hash=?',(h,))
-        if not row:raise ValueError('Unknown source hash '+h)
-        p=(db.DATA/row['path']).resolve()
+        row=archive_rows[h];p=(db.DATA/row['path']).resolve()
         if not p.is_relative_to(db.DATA.resolve()):raise ValueError('Unsafe archived source path')
         if not p.is_file() or p.stat().st_size!=row['bytes'] or digest(p)!=h:missing.add(h)
     if not missing:return 0
