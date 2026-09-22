@@ -228,6 +228,17 @@ A sixth UI-only refinement was merged in PR #10 (commit `cbfe4da216acd155f87afc2
 
 The standing UI direction is now: **minimal, attractive, and easy to navigate**. Prefer removing or consolidating interface elements before adding new controls.
 
+
+### Minimal research tabs — 2026-09-22
+
+A seventh UI-only refinement was merged in PR #11 (commit `52b71273301b2d41046075192ec54228e570b7de`). It continues the standing rule to keep the interface minimal while preserving research depth.
+
+- **Performance** now centers on one chart; custom dates and benchmark selection live under Advanced options.
+- Return tables and the SIP backtest are collapsed until requested.
+- **Portfolio** keeps holdings visible first; sector allocation and snapshot changes are optional details.
+- **Fees** surfaces current AUM, expense and exit load; the full dated audit table is collapsed.
+- **Documents** now uses search plus one document-type selector instead of multiple filter chips and badges.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
