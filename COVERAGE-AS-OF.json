@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T05:58:56+00:00",
+  "built_at": "2026-09-22T06:10:53+00:00",
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
@@ -753,7 +753,12 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=3&pageSize=1000"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Small-Cap.html",
+        "complete": 1,
+        "positions": 87
+      },
       "official_publications": 9
     },
     {
@@ -1515,7 +1520,7 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 17,
+    "portfolio": 18,
     "benchmark_identity": 18
   },
   "notes": [

@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-22T05:58:56+00:00
+Prepared: 2026-09-22T06:10:53+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **17 / 36 funds**. Reported benchmark identity: **18 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **18 / 36 funds**. Reported benchmark identity: **18 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -27,7 +27,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Helios Small Cap Fund | ₹ 1,871.56 · 2026-09-18 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete | NIFTY Small Cap 250 · 2026-08-31 | 165 |
 | ICICI Prudential Small Cap Fund | ₹ 9,798.74 · 2026-09-18 | 0.7% BER · 2026-08-31 | Gap | Gap | 1 |
 | Invesco India Small Cap Fund | ₹ 16,222.79 · 2026-09-18 | 0.4% BER · 2026-08-31 | 69 positions · 2026-08-31 · partial | Gap | 2 |
-| Iti Small Cap Fund | ₹ 3,711.30 · 2026-09-18 | 0.86% TER · 2026-09-21 | Gap | Nifty Smallcap 250 TRI · 2026-08-31 | 9 |
+| Iti Small Cap Fund | ₹ 3,711.30 · 2026-09-18 | 0.86% TER · 2026-09-21 | 87 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 9 |
 | Jm Small Cap Fund | ₹ 934.47 · 2026-09-18 | 0.59% BER · 2026-08-31 | Gap | Gap | 4 |
 | Kotak Small Cap Fund | ₹ 19,531.68 · 2026-09-18 | 0.6459% TER · 2026-09-19 | Gap | Gap | 6 |
 | LIC Mf Small Cap Fund | ₹ 850.51 · 2026-09-18 | 1.31% TER · 2026-09-21 | Gap | Gap | 26 |
