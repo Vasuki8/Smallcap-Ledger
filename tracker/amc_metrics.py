@@ -122,6 +122,58 @@ def iti_portfolio(soup,day,url,h):
     return len(positions)
 
 
+def canara_portfolio(soup,day,url,h):
+    """Parse only a fully reconciled Canara Robeco Small Cap digital portfolio."""
+    from .disclosures import portfolio
+    table=None;label_col=None;mcap_col=None;weight_col=None
+    for candidate in soup.select('table'):
+        for tr in candidate.select('tr'):
+            cells=tr.find_all(['th','td'],recursive=False)
+            texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+            lc=next((i for i,x in enumerate(texts) if re.search(r'Name\s+of\s+the\s+Instruments?/?Issuer',x,re.I)),None)
+            mc=next((i for i,x in enumerate(texts) if re.fullmatch(r'Market\s*Cap',x,re.I)),None)
+            wc=next((i for i,x in enumerate(texts) if re.fullmatch(r'%\s*to\s*NAV',x,re.I)),None)
+            if None not in (lc,mc,wc):
+                table=candidate;label_col=lc;mcap_col=mc;weight_col=wc;break
+        if table is not None:break
+    if table is None:return 0
+    positions=[];sector=None;equity_total=None;money_total=None;cash=None;grand=None
+    def cell(texts,index):return texts[index] if index is not None and index<len(texts) else ''
+    def pct(texts,index):
+        raw=cell(texts,index)
+        return number(raw) if re.fullmatch(r'-?[\d,.]+(?:\.\d+)?\s*%?',raw or '') else None
+    for tr in table.select('tr'):
+        cells=tr.find_all(['th','td'],recursive=False)
+        texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+        label=cell(texts,label_col)
+        if not label or re.search(r'Name\s+of\s+the\s+Instruments?/?Issuer',label,re.I):continue
+        weight=pct(texts,weight_col);mcap=cell(texts,mcap_col).upper()
+        key=re.sub(r'[^a-z]','',label.lower())
+        if key in ('equities','equityequityrelated'):equity_total=weight;sector=None;continue
+        if key=='moneymarketinstruments':money_total=weight;sector=None;continue
+        if key=='netcurrentassets':cash=weight;sector=None;continue
+        if key in ('grandtotalnetasset','grandtotalnetassets','grandtotal'):grand=weight;continue
+        if mcap in ('L','M','S'):
+            if weight is None:return 0
+            positions.append({'name':label,'isin':None,'sector':sector,'weight':weight,'asset_type':'Equity'})
+            continue
+        if key=='treps':
+            if weight is None:return 0
+            positions.append({'name':'TREPS','isin':None,'sector':None,'weight':weight,'asset_type':'Money market'})
+            continue
+        # Rows without a market-cap flag are section/industry totals.
+        if weight is not None:sector=label
+    if None in (equity_total,money_total,cash,grand) or abs(grand-100)>.03:return 0
+    equity=sum(x['weight'] for x in positions if x['asset_type']=='Equity')
+    money=sum(x['weight'] for x in positions if x['asset_type']=='Money market')
+    if abs(equity-equity_total)>max(.08,.011*sum(x['asset_type']=='Equity' for x in positions)):return 0
+    if abs(money-money_total)>.03:return 0
+    if abs((equity_total+money_total+cash)-grand)>.03:return 0
+    positions.append({'name':'Net Current Assets','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+    portfolio('Canara Robeco Small Cap Fund',day,positions,True,url,h)
+    return len(positions)
+
+
 def parse_page(content,family,url,h):
     from .structured_reports import extract
     special=extract(content,family,url,h)
@@ -137,6 +189,8 @@ def parse_page(content,family,url,h):
         exact=soup.title.get_text().startswith('Tata Small Cap Fund Direct Growth')
     if family=='Mahindra Manulife Small Cap Fund' and '/digital-factsheet/' in url:
         exact=exact or any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
+    if family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
+        exact=exact or any('CANARA ROBECO SMALL CAP FUND'==tag.get_text(' ',strip=True).upper() for tag in soup.select('h1,h2,h3,h4'))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
     patterns={
@@ -157,6 +211,10 @@ def parse_page(content,family,url,h):
     elif family=='Mahindra Manulife Small Cap Fund':
         m=re.search(r'Monthly AUM (as on [A-Za-z]+ \d{1,2}, \d{4}) \(Rs\. in Cr\.\):\s*([\d,.]+)',text,re.I)
         if m:day=report_date(m.group(1));value=number(m.group(2))
+    elif family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
+        d=re.search(r'\(as on ([A-Za-z]+ \d{1,2}, \d{4})\)',text,re.I)
+        a=re.search(r'Month end Assets Under Management \(AUM\)[^₹]*₹\s*([\d,.]+)\s*Crores',text,re.I)
+        if d and a:day=report_date(d.group(1));value=number(a.group(1))
     elif family=='Iti Small Cap Fund' and '/digitalfactsheet/' in url:
         m=re.search(r'Portfolio Details AUM \(in Rs\. Cr\):\s*([\d,.]+)',text,re.I)
         # The dated monthly report identifies the reporting month in its URL;
@@ -190,6 +248,10 @@ def parse_page(content,family,url,h):
         saved+=mahindra_portfolio(soup,day,url,h)
     if family=='Iti Small Cap Fund':
         saved+=iti_portfolio(soup,day,url,h)
+    if family=='Canara Robeco Small Cap Fund':
+        b=re.search(r'BENCHMARK\s+(Nifty\s+Smallcap\s+250\s+Index\s+TRI)',text,re.I)
+        if b:db.metric(family,'All','benchmark',day,'Nifty Smallcap 250 Index TRI','Reported',url,h)
+        saved+=canara_portfolio(soup,day,url,h)
     if family=='DSP Small Cap Fund':
         m=re.search(r'Base Expense Ratio\s*([\d.]+)%\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',text,re.I)
         if m:db.metric(family,'Direct','base_expense_ratio',report_date(m.group(2)),number(m.group(1)),'% p.a.',url,h)

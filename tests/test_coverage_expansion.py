@@ -181,6 +181,31 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(db.one('SELECT metric FROM metrics')['metric'],'average_aum')
         self.assertEqual(extract(html.replace('Small Cap','Mid Cap'),f,u,'bad'),0)
 
+    def test_canara_html_portfolio_reconciles_treps_and_cash(self):
+        from tracker.amc_metrics import parse_page
+        f='Canara Robeco Small Cap Fund'
+        u='https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/SMALL-CAP.html'
+        html='''<html><h2>CANARA ROBECO SMALL CAP FUND</h2><p>(as on August 31, 2026)</p>
+        <p>Month end Assets Under Management (AUM) ₹ 14,475.59 Crores</p>
+        <p>BENCHMARK Nifty Smallcap 250 Index TRI</p><table>
+        <tr><th></th><th>Name of the Instruments/Issuer</th><th>Market Cap</th><th>% to NAV</th></tr>
+        <tr><td></td><td>Equities</td><td></td><td>97.03%</td></tr>
+        <tr><td></td><td>Banks</td><td></td><td>60.00%</td></tr>
+        <tr><td></td><td>RBL Bank Ltd</td><td>S</td><td>60.00%</td></tr>
+        <tr><td></td><td>Consumer Durables</td><td></td><td>37.03%</td></tr>
+        <tr><td></td><td>Example Consumer Ltd</td><td>M</td><td>37.03%</td></tr>
+        <tr><td></td><td>Money Market Instruments</td><td></td><td>2.88%</td></tr>
+        <tr><td></td><td>TREPS</td><td></td><td>2.88%</td></tr>
+        <tr><td></td><td>Net Current Assets</td><td></td><td>0.09%</td></tr>
+        <tr><td></td><td>Grand Total ( Net Asset)</td><td></td><td>100.00%</td></tr></table></html>'''
+        self.assertEqual(parse_page(html,f,u,'canara'),4)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
+        rows=db.rows('SELECT name,sector,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual([x['asset_type'] for x in rows],['Equity','Equity','Money market','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),100)
+        self.assertEqual(db.one("SELECT value FROM metrics WHERE metric='benchmark'")['value'],'Nifty Smallcap 250 Index TRI')
+
     def test_iti_html_portfolio_reconciles_derivatives_funds_and_cash(self):
         from tracker.amc_metrics import parse_page
         f='Iti Small Cap Fund';u='https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Small-Cap.html'

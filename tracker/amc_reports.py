@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v14'
+PARSER_VERSION='amc-reports-2026-09-v15'
 # v7 changes only spreadsheet portfolio interpretation; do not reparse hundreds
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
@@ -61,7 +61,7 @@ def extract(content,family,url,h):
             if structured(content,family,url,h) is None:
                 from . import amc_metrics
                 known=any(f==family and u==url for _,f,u in amc_metrics.PAGES)
-                digital=family in ('Mahindra Manulife Small Cap Fund','Iti Small Cap Fund') and 'factsheet/' in url.lower()
+                digital=family in ('Mahindra Manulife Small Cap Fund','Iti Small Cap Fund','Canara Robeco Small Cap Fund') and 'factsheet/' in url.lower()
                 if not known and not digital:return 0
                 amc_metrics.parse_page(content,family,url,h)
         metrics=db.one('SELECT COUNT(*) n FROM metrics WHERE family=? AND hash=?',(family,h))['n']
