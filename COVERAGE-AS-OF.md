@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-22T06:16:53+00:00
+Prepared: 2026-09-22T14:09:48+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
@@ -35,12 +35,12 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Mirae Asset Small Cap Fund | ₹ 5,906.34 · 2026-09-18 | 0.34% BER · 2026-07-31 | 10 positions · 2026-07-31 · partial | Nifty Smallcap 250 (TRI) · 2026-07-31 | 4 |
 | Motilal Oswal Small Cap Fund | ₹ 8,351.26 · 2026-09-18 | 0.85% TER · 2026-09-20 | 63 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
 | Nippon India Small Cap Fund | ₹ 82,618.95 · 2026-09-18 | 0.68% TER · 2026-09-21 | 257 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 622 |
-| Pgim India Small Cap Fund | ₹ 1,784.34 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | Gap | 4 |
+| Pgim India Small Cap Fund | ₹ 1,784.34 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | Gap | 6 |
 | Quant Small Cap Fund | ₹ 35,458.32 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | NIFTY SMALLCAP 250 TRI · 2026-08-31 | 14 |
 | Quantum Small Cap Fund | ₹ 265.21 · 2026-09-18 | 0.83% TER · 2026-09-20 | 60 positions · 2026-08-31 · complete | BSE 250 SmallCap TRI · 2025-08-31 | 75 |
 | SBI Small Cap Fund | ₹ 42,245.73 · 2026-09-18 | 0.79% TER · 2026-09-20 | 68 positions · 2026-07-31 · partial | BSE 250 Small Cap Index TRI · 2026-07-31 | 2 |
 | Samco Small Cap Fund | ₹ 253.76 · 2026-09-18 | 1.97% TER · 2026-09-21 | 78 positions · 2026-08-31 · complete | Gap | 617 |
-| Sundaram Small Cap Fund | ₹ 4,200.00 · 2026-09-18 | 0.97% TER · 2026-09-17 | 73 positions · 2026-08-31 · partial | Gap | 6 |
+| Sundaram Small Cap Fund | ₹ 4,200.00 · 2026-09-18 | 0.97% TER · 2026-09-21 | 73 positions · 2026-08-31 · partial | Gap | 6 |
 | Tata Small Cap Fund | ₹ 13,338.24 · 2026-09-20 | 0.51% TER · 2026-09-20 | Gap | Gap | 0 |
 | The Wealth Company Small Cap Fund | ₹ 139.10 · 2026-09-18 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete | Gap | 18 |
 | Trustmf Small Cap Fund | ₹ 3,815.76 · 2026-09-18 | 1.54% TER · 2026-09-21 | Gap | Gap | 1 |

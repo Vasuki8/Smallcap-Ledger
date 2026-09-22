@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T06:16:53+00:00",
+  "built_at": "2026-09-22T14:09:48+00:00",
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
@@ -1089,7 +1089,7 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=4&pageSize=1000"
       },
       "portfolio": null,
-      "official_publications": 4
+      "official_publications": 6
     },
     {
       "family": "Quant Small Cap Fund",
@@ -1287,11 +1287,11 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-17",
+        "as_of": "2026-09-21",
         "value": "0.97",
-        "unit": "% p.a. · reported by AMC via AMFI",
+        "unit": "% p.a.",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
+        "source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json"
       },
       "ter_observed": null,
       "base_expense_ratio": {
@@ -1305,11 +1305,11 @@
       "benchmark": null,
       "fee": {
         "metric": "ter",
-        "as_of": "2026-09-17",
+        "as_of": "2026-09-21",
         "value": "0.97",
-        "unit": "% p.a. · reported by AMC via AMFI",
+        "unit": "% p.a.",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
+        "source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json"
       },
       "portfolio": {
         "as_of": "2026-08-31",
