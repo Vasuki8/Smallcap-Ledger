@@ -16,6 +16,9 @@ os.environ['SMALLCAP_NO_SCHEDULER']='1'
 from tracker import db
 from tracker.app import funds,fund,holdings,documents,status
 
+PUBLIC_PUBLICATION_BUDGET=250*1024*1024
+SITE_SIZE_LIMIT=400*1024*1024
+
 
 def export(output:Path,repository=''):
     output=output.resolve()
@@ -35,7 +38,7 @@ def export(output:Path,repository=''):
     index=funds();write('funds.json',index)
     from tracker.coverage import report as coverage_report
     write('coverage.json',coverage_report())
-    done=set();snapshot_ids=set();hashes=set()
+    done=set();snapshot_ids=set();hashes=set();communication_payloads=[];publication_candidates=[]
     for s in index['funds']:
         code=s['code'];detail=fund(code);family_id=hashlib.sha256(s['family'].encode()).hexdigest()[:20];detail['family_id']=family_id
         detail['distributions']=db.rows('SELECT * FROM distributions WHERE code=? ORDER BY ex_date',(code,))
@@ -49,17 +52,35 @@ def export(output:Path,repository=''):
         if family_id not in done:
             done.add(family_id);docs=documents(code)
             assert not any(d['kind']=='news' for d in docs)
-            # The cumulative GitHub release retains every archived version. GitHub
-            # Pages only needs the newest saved copy for each publication; copying
-            # every historical version eventually makes the static site too large
-            # to deploy and leaves all newly collected NAV/metrics unpublished.
+            # The cumulative tracker-history release retains every archived version.
+            # GitHub Pages publishes only a bounded subset of the newest saved copies
+            # so growing document history can never block fresh NAV/metric deployment.
             for d in docs:
                 versions=d.get('versions') or []
                 d['saved_version_count']=len(versions)
-                d['versions']=versions[:1]
-            write(Path('communications')/f'{family_id}.json',docs)
-            hashes.update(v['hash'] for d in docs for v in d['versions'])
+                d['versions']=[]
+                if versions:
+                    latest=versions[0]
+                    publication_candidates.append({
+                        'date':latest.get('observed_at') or d.get('published_at') or d.get('first_seen') or '',
+                        'priority':1 if d.get('kind')!='source page' else 0,
+                        'hash':latest['hash'],'bytes':int(latest.get('bytes') or 0),
+                        'doc':d,'version':latest})
+            communication_payloads.append((family_id,docs))
             csv_file(Path('downloads')/f'metrics-{family_id}.csv',detail['metric_history'],['metric','plan','as_of','value','unit','source','observed_at'])
+    published_publication_bytes=0
+    for item in sorted(publication_candidates,key=lambda x:(x['priority'],x['date']),reverse=True):
+        h=item['hash']
+        if h in hashes:
+            item['doc']['versions']=[item['version']]
+            continue
+        size=max(0,item['bytes'])
+        if published_publication_bytes+size>PUBLIC_PUBLICATION_BUDGET:
+            continue
+        hashes.add(h);published_publication_bytes+=size
+        item['doc']['versions']=[item['version']]
+    for family_id,docs in communication_payloads:
+        write(Path('communications')/f'{family_id}.json',docs)
     for sid in snapshot_ids:
         p=holdings(sid);write(Path('portfolios')/f'{sid}.json',p)
         csv_file(Path('downloads')/f'portfolio-{sid}.csv',p['holdings'],['isin','name','sector','weight','asset_type'])
@@ -84,13 +105,17 @@ def export(output:Path,repository=''):
     report['hosting']={'provider':'GitHub Pages','repository':repository,'timezone':'Asia/Kolkata','schedule':'00:00 IST daily','cron':'30 18 * * *','scheduled_time_is_not_guaranteed':True}
     report['counts']['aum_funds']=len({s['family'] for s in index['funds'] if s['metrics'].get('aum')})
     report['counts']['fee_funds']=len({s['family'] for s in index['funds'] if s.get('available_expenses') or any(s['metrics'].get(k) for k in ('ter','ter_observed','base_expense_ratio','expense_ratio'))})
+    report['counts']['latest_nav_date']=db.one('SELECT MAX(date) last FROM nav')['last']
+    report['hosting']['publication_file_budget_bytes']=PUBLIC_PUBLICATION_BUDGET
+    report['hosting']['publication_files_included']=len(hashes)
+    report['hosting']['publication_bytes_included']=published_publication_bytes
     write('status.json',report)
     config={'mode':'github','repository':repository,'timezone':'Asia/Kolkata','schedule':'00:00 IST daily'}
     (output/'runtime-config.js').write_text('window.SMALLCAP_CONFIG='+json.dumps(config)+';\n')
     (output/'.nojekyll').write_text('')
     total=sum(p.stat().st_size for p in output.rglob('*') if p.is_file())
-    if total>900*1024*1024:raise RuntimeError('Site approaches the GitHub Pages size limit; existing online version should be retained.')
-    print(json.dumps({'site':str(output),'bytes':total,'funds':len(done),'series':len(index['funds']),'aum_funds':report['counts']['aum_funds'],'fee_funds':report['counts']['fee_funds'],'official_publication_files':len(hashes)},indent=2))
+    if total>SITE_SIZE_LIMIT:raise RuntimeError('Site exceeded the configured static publication budget; existing online version should be retained.')
+    print(json.dumps({'site':str(output),'bytes':total,'funds':len(done),'series':len(index['funds']),'aum_funds':report['counts']['aum_funds'],'fee_funds':report['counts']['fee_funds'],'latest_nav_date':report['counts']['latest_nav_date'],'official_publication_files':len(hashes),'official_publication_bytes':published_publication_bytes},indent=2))
     return report
 
 
