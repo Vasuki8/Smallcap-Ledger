@@ -120,12 +120,18 @@ def verify_source_pack_zip(archive,plan):
             if h.hexdigest()!=row['hash']:raise ValueError('Source pack member checksum failed: '+row['hash'])
     return True
 
-def verify_data(folder):
+def verify_database(folder):
     folder=Path(folder)
     with sqlite3.connect(f'file:{(folder/"ledger.sqlite3").as_posix()}?mode=ro',uri=True) as c:
         if c.execute('PRAGMA quick_check').fetchone()[0]!='ok':raise ValueError('Archive database is damaged')
         if not c.execute('SELECT COUNT(*) FROM schemes').fetchone()[0]:raise ValueError('Archive contains no schemes')
         if not c.execute('SELECT COUNT(*) FROM nav').fetchone()[0]:raise ValueError('Archive contains no NAV history')
+        c.execute('SELECT COUNT(*) FROM archives').fetchone()
+
+
+def verify_data(folder):
+    folder=Path(folder);verify_database(folder)
+    with sqlite3.connect(f'file:{(folder/"ledger.sqlite3").as_posix()}?mode=ro',uri=True) as c:
         for h,path,size in c.execute('SELECT hash,path,bytes FROM archives'):
             p=(folder/path).resolve()
             if not p.is_relative_to(folder.resolve()) or not p.is_file():raise ValueError('Missing archive file '+h)
@@ -208,6 +214,99 @@ def _restore_split_assets(database_zip,source_zips,destination,database_meta=Non
         shutil.move(str(stage),str(destination))
 
 
+def _restore_database_only(database_zip,destination,database_meta=None):
+    destination=Path(destination).resolve()
+    if destination.exists() and any(destination.iterdir()):raise ValueError('Restore requires an empty data directory')
+    destination.parent.mkdir(parents=True,exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=destination.parent) as tmp:
+        tmp=Path(tmp);stage=tmp/'data';stage.mkdir()
+        if database_meta:
+            if database_zip.stat().st_size!=database_meta['bytes'] or digest(database_zip)!=database_meta['sha256']:
+                raise ValueError('Database checkpoint checksum failed')
+        with zipfile.ZipFile(database_zip) as z:
+            infos=z.infolist()
+            if len(infos)!=1 or infos[0].filename!='data/ledger.sqlite3':
+                raise ValueError('Database checkpoint has unexpected contents')
+            _validate_zip_member(infos[0],'data/ledger.sqlite3');z.extractall(tmp)
+        verify_database(stage)
+        if destination.exists():destination.rmdir()
+        shutil.move(str(stage),str(destination))
+
+
+def _extract_source_hashes(archive,hashes,destination):
+    destination=Path(destination).resolve();wanted=set(hashes)
+    if not wanted:return 0
+    placeholders=','.join('?' for _ in wanted)
+    rows={r['hash']:r for r in db.rows(
+        'SELECT hash,path,bytes FROM archives WHERE hash IN (%s)'%placeholders,
+        tuple(sorted(wanted)))}
+    if set(rows)!=wanted:raise ValueError('Requested source hash is not present in the database')
+    written=0
+    with zipfile.ZipFile(archive) as z:
+        for h,row in rows.items():
+            member='data/'+row['path']
+            try:info=z.getinfo(member)
+            except KeyError:raise ValueError('Source pack is missing '+h)
+            _validate_zip_member(info,'data/archive/')
+            if info.file_size!=row['bytes']:raise ValueError('Source pack member size mismatch')
+            target=(destination/row['path']).resolve()
+            if not target.is_relative_to(destination):raise ValueError('Unsafe source destination')
+            target.parent.mkdir(parents=True,exist_ok=True)
+            if target.is_file() and target.stat().st_size==row['bytes'] and digest(target)==h:continue
+            temp=target.with_suffix('.tmp')
+            digestor=hashlib.sha256()
+            with z.open(info) as source,temp.open('wb') as out:
+                for block in iter(lambda:source.read(1024*1024),b''):
+                    digestor.update(block);out.write(block)
+            if digestor.hexdigest()!=h:
+                temp.unlink(missing_ok=True);raise ValueError('Source pack member checksum failed: '+h)
+            temp.replace(target);written+=1
+    return written
+
+
+def _current_release_manifest(repo,folder):
+    pointer=download_asset(repo,'latest.json',folder)
+    manifest=json.loads(pointer.read_text());pointer.unlink()
+    return manifest
+
+
+def materialize_hashes(hashes):
+    """Restore only source binaries needed by the current operation."""
+    requested=set(hashes)
+    if not requested:return 0
+    archive_rows={r['hash']:r for r in db.rows('SELECT hash,path,bytes FROM archives')}
+    unknown=requested-set(archive_rows)
+    if unknown:raise ValueError('Unknown source hash '+sorted(unknown)[0])
+    missing=set()
+    for h in requested:
+        row=archive_rows[h];p=(db.DATA/row['path']).resolve()
+        if not p.is_relative_to(db.DATA.resolve()):raise ValueError('Unsafe archived source path')
+        if not p.is_file() or p.stat().st_size!=row['bytes'] or digest(p)!=h:missing.add(h)
+    if not missing:return 0
+    repo=repository()
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp=Path(tmp);manifest=_current_release_manifest(repo,tmp)
+        if int(manifest.get('format',1))<2:
+            raise ValueError('Selective source restore requires split checkpoint format')
+        by_asset={}
+        for pack in manifest.get('source_packs',[]):
+            overlap=missing.intersection(pack.get('hashes',[]))
+            if overlap:by_asset[pack['asset']]=(pack,overlap)
+        covered=set().union(*(v[1] for v in by_asset.values())) if by_asset else set()
+        if covered!=missing:raise ValueError('Split checkpoint does not cover every requested source hash')
+        written=0
+        for asset,(meta,subset) in by_asset.items():
+            archive=download_asset(repo,asset,tmp)
+            if meta.get('bytes') is not None and archive.stat().st_size!=meta['bytes']:
+                raise ValueError('Source pack size check failed: '+asset)
+            written+=_extract_source_hashes(archive,subset,db.DATA);archive.unlink()
+    return written
+
+
+def materialize_all_source_packs():
+    return materialize_hashes([r['hash'] for r in db.rows('SELECT hash FROM archives')])
+
+
 def _checkpoint_summary(manifest):
     if int(manifest.get('format',1))>=2:
         return {'format':2,'created_at':manifest.get('created_at'),
@@ -265,6 +364,10 @@ def restore(seed):
                 raise ValueError('Release archive checksum failed; history was not reset')
             unpack(state,db.DATA);print('Restored '+manifest['asset']);return
         database=download_asset(repo,manifest['database']['asset'],tmp)
+        if os.environ.get('SMALLCAP_DATABASE_ONLY_RESTORE')=='1':
+            _restore_database_only(database,db.DATA,manifest['database'])
+            print(f"Restored database checkpoint {manifest['database']['asset']}; source packs will be materialized on demand")
+            return
         packs=[download_asset(repo,p['asset'],tmp) for p in manifest.get('source_packs',[])]
         _restore_split_assets(database,packs,db.DATA,manifest['database'],manifest.get('source_packs',[]))
     print(f"Restored split checkpoint {manifest['database']['asset']} with {len(packs)} source packs")

@@ -93,6 +93,15 @@ def export(output:Path,repository=''):
     write('benchmarks.json',benchmark)
     # Only AMC publications are exposed as files. Raw NAV responses remain in the
     # full private/local archive; archived web pages are served as inert text.
+    missing_publications=[]
+    for h in hashes:
+        a=db.one('SELECT path,bytes FROM archives WHERE hash=?',(h,))
+        original=(db.DATA/a['path']).resolve()
+        if not original.is_file() or original.stat().st_size!=a['bytes']:
+            missing_publications.append(h)
+    if missing_publications:
+        from scripts.github_state import materialize_hashes
+        materialize_hashes(missing_publications)
     for h in sorted(hashes):
         a=db.one('SELECT * FROM archives WHERE hash=?',(h,));original=db.DATA/a['path'];typ=a['media_type'] or ''
         if not original.is_file():raise RuntimeError('Missing original publication '+h)

@@ -54,6 +54,53 @@ class SplitArchiveTests(unittest.TestCase):
             with sqlite3.connect(destination/'ledger.sqlite3') as c:
                 self.assertEqual(c.execute('SELECT COUNT(*) FROM nav').fetchone()[0],1)
 
+    def test_database_only_restore_skips_source_packs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            db_path=root/'ledger.sqlite3'
+            with sqlite3.connect(db_path) as c:
+                c.execute('CREATE TABLE schemes(code INTEGER PRIMARY KEY)')
+                c.execute('CREATE TABLE nav(code INTEGER,date TEXT,value REAL)')
+                c.execute('CREATE TABLE archives(hash TEXT,path TEXT,bytes INTEGER)')
+                c.execute('INSERT INTO schemes VALUES(1)')
+                c.execute("INSERT INTO nav VALUES(1,'2026-09-01',10.0)")
+            database_zip=root/'database.zip'
+            with zipfile.ZipFile(database_zip,'w',zipfile.ZIP_DEFLATED) as z:
+                z.write(db_path,'data/ledger.sqlite3')
+            destination=root/'restored'
+            github_state._restore_database_only(
+                database_zip,destination,
+                {'bytes':database_zip.stat().st_size,'sha256':github_state.digest(database_zip)},
+            )
+            self.assertTrue((destination/'ledger.sqlite3').is_file())
+            self.assertFalse((destination/'archive').exists())
+
+    def test_selective_source_extract_writes_only_requested_hash(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);data=root/'data';data.mkdir()
+            one=b'first-source';two=b'second-source'
+            h1=hashlib.sha256(one).hexdigest();h2=hashlib.sha256(two).hexdigest()
+            with sqlite3.connect(data/'ledger.sqlite3') as c:
+                c.execute('CREATE TABLE archives(hash TEXT,path TEXT,bytes INTEGER)')
+                c.executemany('INSERT INTO archives VALUES(?,?,?)',[
+                    (h1,f'archive/{h1[:2]}/{h1}',len(one)),
+                    (h2,f'archive/{h2[:2]}/{h2}',len(two)),
+                ])
+            pack=root/'pack.zip'
+            p1=root/'one';p1.write_bytes(one)
+            p2=root/'two';p2.write_bytes(two)
+            with zipfile.ZipFile(pack,'w',zipfile.ZIP_DEFLATED) as z:
+                z.write(p1,f'data/archive/{h1[:2]}/{h1}')
+                z.write(p2,f'data/archive/{h2[:2]}/{h2}')
+            previous=github_state.db.DATA
+            github_state.db.DATA=data
+            try:
+                self.assertEqual(github_state._extract_source_hashes(pack,[h2],data),1)
+            finally:
+                github_state.db.DATA=previous
+            self.assertFalse((data/f'archive/{h1[:2]}/{h1}').exists())
+            self.assertEqual((data/f'archive/{h2[:2]}/{h2}').read_bytes(),two)
+
     def test_existing_source_pack_can_be_verified_for_retry(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
