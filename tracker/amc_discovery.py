@@ -90,6 +90,7 @@ def discover(amc):
                 if (src.startswith('https://bandhanmutual.com/') or src.startswith('https://www.bandhanmutual.com/')) and re.search(r'\.js(?:\?|$)',src,re.I):
                     scripts.append(src)
             scripts=sorted(dict.fromkeys(scripts),key=lambda u:(0 if re.search(r'(?:main|app)',u,re.I) else 1,u))[:12]
+            if scripts:print('Bandhan app bundles: '+json.dumps(scripts),flush=True)
             for src in scripts:
                 try:
                     providers.can_crawl(src)
@@ -103,6 +104,8 @@ def discover(amc):
                     for value in re.findall(r'https?://[^"'+"'"+r'\\\s]+\.(?:pdf|xlsx?|xml)(?:\?[^"'+"'"+r'\\\s]*)?',text,re.I):
                         add(value,'Bandhan investor-site document')
                 except Exception as e:
+                    detail=(str(e) or type(e).__name__).splitlines()[0][:180]
+                    print('Bandhan bundle inspection failed '+src+': '+detail,flush=True)
                     bundle_hints.append('bundle-error:'+type(e).__name__)
             if bundle_hints:
                 print('Bandhan app route hints: '+json.dumps(list(dict.fromkeys(bundle_hints))[:24]),flush=True)
