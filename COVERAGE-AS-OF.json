@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T05:20:55+00:00",
+  "built_at": "2026-09-22T05:50:32+00:00",
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
@@ -884,7 +884,13 @@
         "source": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-08-31",
+        "value": "BSE 250 Small Cap TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html"
+      },
       "fee": {
         "metric": "base_expense_ratio",
         "as_of": "2026-08-31",
@@ -893,7 +899,12 @@
         "plan": "Direct",
         "source": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html",
+        "complete": 1,
+        "positions": 82
+      },
       "official_publications": 10
     },
     {
@@ -1504,8 +1515,8 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 16,
-    "benchmark_identity": 17
+    "portfolio": 17,
+    "benchmark_identity": 18
   },
   "notes": [
     "Coverage means at least one dated record, not necessarily the latest reporting month.",
