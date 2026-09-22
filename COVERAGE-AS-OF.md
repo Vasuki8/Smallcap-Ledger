@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-22T04:39:02+00:00
+Prepared: 2026-09-22T04:55:25+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **15 / 36 funds**. Reported benchmark identity: **17 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **16 / 36 funds**. Reported benchmark identity: **17 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -22,7 +22,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Edelweiss Small Cap Fund | ₹ 7,183.25 · 2026-09-18 | 0.65% TER · 2026-09-21 | Gap | (Nifty Smallcap 250 TRI) · 2026-07-31 | 1 |
 | Franklin India Small Cap Fund | ₹ 14,637.85 · 2026-09-18 | 1.07% TER · 2026-09-21 | 91 positions · 2026-07-31 · complete | Gap | 2 |
 | Groww Small Cap Fund | ₹ 919.39 · 2026-09-18 | 1.12% TER · 2026-04-30 | Gap | Gap | 3 |
-| HDFC Small Cap Fund | ₹ 41,957.06 · 2026-09-18 | 0.77% TER · 2026-09-16 | 87 positions · 2026-08-31 · complete | BSE 250 SmallCap Index (Total Returns Index) · 2026-09-22 | 13 |
+| HDFC Small Cap Fund | ₹ 41,957.06 · 2026-09-18 | 0.77% TER · 2026-09-16 | 87 positions · 2026-08-31 · complete | BSE 250 SmallCap (Total Returns Index) · 2026-09-22 | 13 |
 | HSBC Small Cap Fund | ₹ 19,106.78 · 2026-09-18 | 0.56% BER · 2026-08-31 | Gap | Nifty Smallcap 250 TRI · 2026-08-31 | 2 |
 | Helios Small Cap Fund | ₹ 1,871.56 · 2026-09-18 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete | NIFTY Small Cap 250 · 2026-08-31 | 165 |
 | ICICI Prudential Small Cap Fund | ₹ 9,798.74 · 2026-09-18 | 0.7% BER · 2026-08-31 | Gap | Gap | 1 |
@@ -39,7 +39,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Quant Small Cap Fund | ₹ 35,458.32 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | NIFTY SMALLCAP 250 TRI · 2026-08-31 | 14 |
 | Quantum Small Cap Fund | ₹ 265.21 · 2026-09-18 | 0.83% TER · 2026-09-20 | 60 positions · 2026-08-31 · complete | BSE 250 SmallCap TRI · 2025-08-31 | 75 |
 | SBI Small Cap Fund | ₹ 42,245.73 · 2026-09-18 | 0.79% TER · 2026-09-20 | 68 positions · 2026-07-31 · partial | BSE 250 Small Cap Index TRI · 2026-07-31 | 2 |
-| Samco Small Cap Fund | ₹ 253.76 · 2026-09-18 | 1.97% TER · 2026-09-21 | Gap | Gap | 617 |
+| Samco Small Cap Fund | ₹ 253.76 · 2026-09-18 | 1.97% TER · 2026-09-21 | 61 positions · 2026-08-31 · partial | Gap | 617 |
 | Sundaram Small Cap Fund | ₹ 4,200.00 · 2026-09-18 | 0.97% TER · 2026-09-17 | 73 positions · 2026-08-31 · partial | Gap | 6 |
 | Tata Small Cap Fund | ₹ 13,338.24 · 2026-09-20 | 0.51% TER · 2026-09-20 | Gap | Gap | 0 |
 | The Wealth Company Small Cap Fund | ₹ 139.10 · 2026-09-18 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete | Gap | 18 |

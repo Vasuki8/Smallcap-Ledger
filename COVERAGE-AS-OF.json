@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T04:39:02+00:00",
+  "built_at": "2026-09-22T04:55:25+00:00",
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
@@ -535,10 +535,10 @@
       "expense_ratio": null,
       "benchmark": {
         "as_of": "2026-09-22",
-        "value": "BSE 250 SmallCap Index (Total Returns Index)",
-        "unit": "Observed",
+        "value": "BSE 250 SmallCap (Total Returns Index)",
+        "unit": "Observed · scheme summary",
         "plan": "All",
-        "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/regular"
+        "source": "https://files.hdfcfund.com/s3fs-public/scheme_summary/2026-08/HDFCSMALLF_1786689291.xml"
       },
       "fee": {
         "metric": "ter",
@@ -1252,7 +1252,12 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=4&pageSize=1000"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_Small_Cap_Fund_1788943664.xlsx",
+        "complete": 0,
+        "positions": 61
+      },
       "official_publications": 617
     },
     {
@@ -1499,7 +1504,7 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 15,
+    "portfolio": 16,
     "benchmark_identity": 17
   },
   "notes": [
