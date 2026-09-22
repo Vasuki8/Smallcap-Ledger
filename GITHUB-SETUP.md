@@ -30,9 +30,9 @@ GitHub interprets cron in UTC. A run at 18:30 UTC starts at midnight on the foll
 
 This is a requested start time, not guaranteed exact execution or publication at midnight. GitHub can queue, delay or occasionally skip a scheduled run, and collection/publishing takes time. AUM and portfolios change when the AMC publishes a report; weekends may have no new NAV. Figure dates, website build time and collection results are shown separately.
 
-The daily workflow restores the cumulative archive, checks NAV/history/fees/AUM/TRI/AMC publications, preserves new records, builds the website, saves another cumulative checkpoint and publishes Pages. It uses a 40-minute collection budget. Completed records survive an interruption; unchecked publication pages are prioritized next time.
+The daily workflow restores the latest **SQLite database checkpoint first**, checks NAV/history/fees/AUM/TRI/AMC publications, materializes only source files actually needed by the current operation, builds the website, saves a new database checkpoint plus any newly discovered source-file packs, and publishes Pages. Historical source packs are reused instead of rebuilding a multi-gigabyte cumulative ZIP. It uses a 40-minute collection budget. Completed records survive an interruption; unchecked publication pages are prioritized next time.
 
-You do not need to visit the site to trigger it. **Update data** on the website reloads the latest published snapshot. For an extra collection, select **Actions → Run workflow** with the refresh box checked.
+You do not need to visit the site to trigger it. For an extra collection, select **Actions → Run workflow** with the refresh box checked.
 
 To change the time, edit the workflow cron and the visible timezone/schedule labels in `scripts/export_site.py` and `dist/app.js`. Account for seasonal UTC changes if using a daylight-saving timezone. The current default is midnight in India, not Canada.
 
@@ -40,16 +40,22 @@ GitHub can disable scheduled workflows in public repositories after 60 days with
 
 ## Where history is kept
 
-Open **Releases → Smallcap Ledger historical archive** (`tracker-history`). Download `latest.json` to identify the current `state-…zip`. That ZIP contains the cumulative database and original source files. The preceding checkpoint is retained too.
+Open **Releases → Smallcap Ledger historical archive** (`tracker-history`). The current `latest.json` uses archive **format 2** and identifies:
 
-Each checkpoint contains all collected historical observations. Old whole-checkpoint duplicates may be removed to control storage; original historical records inside the cumulative archive are not pruned by normal collection. Do not delete the release/tag: it is the active history store. `bootstrap/` is only the initial seed and is not updated daily in git.
+- one compact `database-…zip` containing `data/ledger.sqlite3`;
+- reusable immutable `sources-…zip` packs containing retained original source files;
+- the previous checkpoint metadata for rollback.
 
-A failed download/checksum stops the build instead of resetting history. A failed deployment leaves the previous website online. If updating `latest.json` fails after a ZIP upload, the ZIPs remain intact. Restore a valid checkpoint locally and verify it before repairing the pointer. Do not overwrite the release with the old seed merely to clear an error.
+Normal daily runs restore the database first and download source packs only when their files are needed. Existing source packs are append-only and reused; newly archived hashes create new packs. This prevents every run from downloading and uploading the entire historical source archive.
+
+Legacy `state-…zip` cumulative checkpoints are currently retained as rollback copies from the migration. Do not delete the `tracker-history` release/tag: it is the active history store. `bootstrap/` is only the initial seed and is not updated daily in git.
+
+A failed download/checksum stops the build instead of resetting history. A failed deployment leaves the previous website online. If updating `latest.json` fails after new assets are uploaded, retry logic verifies and reuses already-uploaded source packs.
 
 ## Import official records yourself
 
-1. Wait for the current workflow to finish and download the ZIP named in `latest.json`.
-2. In a local project copy, close the tracker and move any existing `data` folder aside. Extract the checkpoint's `data` folder into the project. Start `START-WINDOWS.cmd` and use **Data & archive** to import official figures, portfolios, TRI data, complete IDCW distributions or AMC publications.
+1. Wait for the current workflow to finish. In a local project copy with GitHub CLI authenticated to the repository, run `uv run --frozen python scripts/github_state.py restore`. This reconstructs the current `data` folder from the database checkpoint and required source packs.
+2. Start `START-WINDOWS.cmd` and use **Data & archive** to import official figures, portfolios, TRI data, complete IDCW distributions or AMC publications.
 3. Close the tracker. In PowerShell inside the project:
 
    ```powershell
@@ -65,7 +71,7 @@ The local in-app backup is useful for local recovery; use the `pack` command abo
 ## Limits and troubleshooting
 
 - GitHub Pages on Free requires a public repository. This project uses standard GitHub-hosted Actions runners for the public repository.
-- Pages has a 1 GB published-site limit; export stops before 900 MiB. Release assets have a 2 GiB per-file limit; checkpoints stop before 1,800 MiB. The included site is well below those thresholds. A growing archive may eventually need a storage change; free unlimited retention is not promised.
+- Pages has a 1 GB published-site limit; this project applies a much lower static-site guard. GitHub release assets have a 2 GiB per-file limit. Source evidence is split into reusable packs and the changing SQLite checkpoint is stored separately, so normal daily checkpoint uploads remain small. Free unlimited retention is not promised.
 - **Pages not enabled:** select GitHub Actions in Settings → Pages and rerun.
 - **Resource not accessible by integration** or protected-branch push errors: inspect Actions permissions and branch rules. The workflow requests contents write, Pages write and OIDC permissions. Ask the repository owner for a permitted setup if organization policy restricts it.
 - **Immutable archive release:** this project needs to update the pointer in `tracker-history`. Use a mutable archive release or adapt storage before enabling release immutability for this dedicated research-data repository.
