@@ -132,6 +132,16 @@ def spreadsheet(content,family,url,h):
         sheets=[(s.name,[s.row_values(i) for i in range(s.nrows)],
                  [[book.format_map[book.xf_list[s.cell_xf_index(i,j)].format_key].format_str for j in range(s.ncols)] for i in range(s.nrows)]) for s in book.sheets()]
     count=0
+    if family=='Samco Small Cap Fund':
+        for sheet_name,rows,_ in sheets:
+            print('Samco workbook sheet: '+str(sheet_name),flush=True)
+            shown=0
+            for ri,row in enumerate(rows[:35],1):
+                values=[str(v).strip() for v in row if v not in (None,'')]
+                if not values:continue
+                print('Samco workbook row '+str(ri)+': '+json.dumps(values[:14],ensure_ascii=False)[:1200],flush=True)
+                shown+=1
+                if shown>=18:break
     for sheet,rows,formats in sheets:
         from .portfolio_parser import parse_sheet
         full=parse_sheet(rows,formats,family)

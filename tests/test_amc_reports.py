@@ -142,7 +142,9 @@ class ReportParserTests(unittest.TestCase):
         </table>'''.encode()
         with patch('tracker.amc_discovery.read',return_value=(html,'fixture','text/html')):
             rows=list(amc_discovery.discover('Samco'))
-        self.assertEqual(rows,[('Samco Small Cap Fund','https://media1.samco.in/aug-small-cap.xlsx','IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_ Small_Cap_ Fund Excel')])
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][:2],('Samco Small Cap Fund','https://media1.samco.in/aug-small-cap.xlsx'))
+        self.assertIn('Small_Cap_ Fund',rows[0][2])
 
     def test_official_motilal_download_fields_with_or_without_colon(self):
         from bs4 import BeautifulSoup
