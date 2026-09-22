@@ -166,6 +166,19 @@ class ReportParserTests(unittest.TestCase):
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100)
 
 
+    def test_pgim_discovery_prefers_latest_smallcap_excel(self):
+        from tracker import amc_discovery,db
+        db.init()
+        html='''<ul>
+        <li>PGIM INDIA SMALL CAP FUND Jul 2026 <a href="https://www.pgimindia.com/files/pgim-small-jul.xlsx">Download</a></li>
+        <li>PGIM INDIA SMALL CAP FUND Aug 2026 <a href="https://www.pgimindia.com/files/pgim-small-aug.pdf">PDF</a><a href="https://www.pgimindia.com/files/pgim-small-aug.xlsx">Excel</a></li>
+        <li>PGIM INDIA MIDCAP FUND Aug 2026 <a href="https://www.pgimindia.com/files/pgim-mid-aug.xlsx">Excel</a></li>
+        </ul>'''.encode()
+        with patch('tracker.amc_discovery.read',return_value=(html,'fixture','text/html')):
+            rows=list(amc_discovery.discover('PGIM'))
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][:2],('Pgim India Small Cap Fund','https://www.pgimindia.com/files/pgim-small-aug.xlsx'))
+
     def test_samco_discovery_prefers_latest_smallcap_excel(self):
         from tracker import amc_discovery,db
         db.init()
