@@ -164,6 +164,31 @@ class TrackerTests(unittest.TestCase):
             self.assertEqual(mock.call_count,2)
             self.assertIn('page=2',mock.call_args.args[0])
 
+    def test_fetch_retries_one_transient_get_failure_without_recording_false_error(self):
+        attempts=[]
+        class Response:
+            is_redirect=False
+            headers={'content-type':'application/pdf'}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def raise_for_status(self):return None
+            def iter_bytes(self):return iter((b'official bytes',))
+        class Client:
+            def __init__(self,*args,**kwargs):
+                attempts.append(kwargs['timeout'].read)
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def stream(self,*args,**kwargs):
+                if len(attempts)==1:raise providers.httpx.ReadTimeout('slow source')
+                return Response()
+        with patch('tracker.providers.public_url',side_effect=lambda url:url), \
+             patch('tracker.providers.httpx.Client',Client):
+            body,h,typ=providers.fetch('https://example.com/slow.pdf')
+        self.assertEqual(body,b'official bytes');self.assertEqual(typ,'application/pdf')
+        self.assertEqual(attempts,[30,60])
+        rows=db.rows("SELECT status,hash,detail FROM fetches WHERE url='https://example.com/slow.pdf' ORDER BY id")
+        self.assertEqual(len(rows),1);self.assertEqual(rows[0]['status'],'ok');self.assertEqual(rows[0]['hash'],h)
+
     def test_fetch_rejects_empty_archived_response(self):
         class Response:
             is_redirect=False
