@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v19'
+PARSER_VERSION='amc-reports-2026-09-v20'
 # v7 changes only spreadsheet portfolio interpretation; do not reparse hundreds
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
@@ -24,6 +24,7 @@ def monthly_sources(today=None):
         yield ('Mirae',f'https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---{name}-{year}.pdf','Monthly active factsheet')
         yield ('SBI',f'https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-{name}-{year}.pdf','Small cap monthly factsheet')
         yield ('JM Financial',f'https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20{calendar.month_name[month]}%20{year}.pdf','Monthly factsheet')
+        yield ('HSBC',f'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-{name}-{year}.pdf','Monthly factsheet')
         yield ('Kotak',f'https://www.kotakmf.com/factsheet/{calendar.month_name[month]}_{year}/kotak/SMALL-CAP.html','Small cap monthly factsheet')
 
 

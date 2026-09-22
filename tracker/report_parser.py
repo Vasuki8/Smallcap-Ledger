@@ -217,6 +217,61 @@ def equity_positions(text,family):
 
 
 
+
+def hsbc_complete_portfolio(text):
+    """Fully reconcile HSBC Small Cap's monthly factsheet table."""
+    normalized=normalize(text)
+    if not owns_page(normalized,'HSBC Small Cap Fund'):return None
+    total_match=re.search(r'Total Net Assets as on\s+('+DATE+r')\s+(-?\d+(?:\.\d+)?)%',normalized,re.I)
+    if not total_match:return None
+    day=dated(total_match.group(1));grand=float(total_match.group(2))
+    if not day or abs(grand-100)>.03:return None
+    start=re.search(r'Issuer\s+Market Cap/\s*\n?\s*Ratings\s+%\s*to\s*Net\s*Assets',normalized,re.I)
+    if not start:return None
+    section=normalized[start.end():total_match.start()]
+    lines=[re.sub(r'\s+',' ',x).strip() for x in section.splitlines() if x.strip()]
+    positions=[];sector=None;sector_total=None;sector_positions=[]
+    def finish_sector():
+        nonlocal sector,sector_total,sector_positions
+        if sector is None:return True
+        if not sector_positions:return False
+        tolerance=max(.04,.006*len(sector_positions))
+        if abs(sum(x['weight'] for x in sector_positions)-sector_total)>tolerance:return False
+        positions.extend(sector_positions)
+        sector=None;sector_total=None;sector_positions=[]
+        return True
+    cash_total=None
+    for line in lines:
+        if re.fullmatch(r'Issuer Market Cap/\s*Ratings % to Net Assets',line,re.I):continue
+        m=re.fullmatch(r'(.+?)\s+(Small Cap|Mid Cap|Large Cap)\s+(-?\d+(?:\.\d+)?)%',line,re.I)
+        if m:
+            if sector is None:return None
+            weight=float(m.group(3))
+            if not 0<=weight<=20:return None
+            sector_positions.append({'name':m.group(1).strip(),'isin':None,'sector':sector,'weight':weight,'asset_type':'Equity'})
+            continue
+        m=re.fullmatch(r'Cash Equivalent\s+(-?\d+(?:\.\d+)?)%',line,re.I)
+        if m:
+            if not finish_sector():return None
+            cash_total=float(m.group(1));break
+        m=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)%',line)
+        if m:
+            if not finish_sector():return None
+            sector=m.group(1).strip();sector_total=float(m.group(2));sector_positions=[]
+    if cash_total is None or not positions:return None
+    tail=normalized[normalized.find('Cash Equivalent',start.end()):total_match.start()]
+    repo=re.search(r'TREPS\*?\s+(-?\d+(?:\.\d+)?)%',tail,re.I)
+    cash=re.search(r'Net Current Assets:\s*(-?\d+(?:\.\d+)?)%',tail,re.I)
+    if not repo or not cash:return None
+    repo_weight=float(repo.group(1));cash_weight=float(cash.group(1))
+    if abs((repo_weight+cash_weight)-cash_total)>.03:return None
+    equity=sum(x['weight'] for x in positions)
+    if abs((equity+cash_total)-grand)>max(.08,.006*len(positions)):return None
+    if len({x['name'].lower() for x in positions})!=len(positions):return None
+    positions.append({'name':'TREPS','isin':None,'sector':None,'weight':repo_weight,'asset_type':'Money market'})
+    positions.append({'name':'Net Current Assets','isin':None,'sector':None,'weight':cash_weight,'asset_type':'Cash and net current assets'})
+    return {'day':day,'positions':positions}
+
 def lic_complete_portfolio(text):
     """Fully reconcile LIC MF Small Cap's portfolio page from the monthly factsheet."""
     normalized=normalize(text)

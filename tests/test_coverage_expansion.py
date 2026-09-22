@@ -310,6 +310,39 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
 
 
 
+
+    def test_hsbc_complete_portfolio_reconciles_sector_and_cash_totals(self):
+        from tracker.report_parser import hsbc_complete_portfolio
+        text='''HSBC Small Cap Fund
+Small Cap Fund - An open ended equity scheme predominantly investing in small cap stocks.
+Investment Objective: To generate long term capital growth.
+Fund Details
+Date of Allotment 12-May-14
+Benchmark: NIFTY Small Cap 250 TRI
+Issuer Market Cap/
+Ratings % to Net Assets
+Industrial Products 60.00%
+Alpha Limited Small Cap 20.00%
+Beta Limited Mid Cap 20.00%
+Gamma Limited Small Cap 20.00%
+Banks 38.00%
+Delta Bank Limited Small Cap 19.00%
+Epsilon Bank Limited Mid Cap 19.00%
+Cash Equivalent 2.00%
+TREPS* 1.20%
+Net Current Assets: 0.80%
+Total Net Assets as on 31-July-2026 100.00%
+*TREPS : Tri-Party Repo fully collateralized by G-Sec'''
+        result=hsbc_complete_portfolio(text)
+        self.assertEqual(result['day'],'2026-07-31')
+        self.assertEqual(len(result['positions']),7)
+        self.assertAlmostEqual(sum(x['weight'] for x in result['positions']),100,places=2)
+        self.assertEqual(result['positions'][-2]['asset_type'],'Money market')
+        self.assertEqual(result['positions'][-1]['asset_type'],'Cash and net current assets')
+        bad=text.replace('Banks 38.00%','Banks 39.00%')
+        self.assertIsNone(hsbc_complete_portfolio(bad))
+
+
     def test_axis_top_holdings_are_partial_and_reconcile_to_stated_total(self):
         from tracker.amc_metrics import parse_page
         f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
