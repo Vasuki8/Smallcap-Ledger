@@ -5,7 +5,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v5'
+PARSER_VERSION='amc-reports-2026-09-v6'
 
 
 def monthly_sources(today=None):

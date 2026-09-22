@@ -132,18 +132,8 @@ def spreadsheet(content,family,url,h):
         sheets=[(s.name,[s.row_values(i) for i in range(s.nrows)],
                  [[book.format_map[book.xf_list[s.cell_xf_index(i,j)].format_key].format_str for j in range(s.ncols)] for i in range(s.nrows)]) for s in book.sheets()]
     count=0
-    if family=='Samco Small Cap Fund':
-        for sheet_name,rows,_ in sheets:
-            print('Samco workbook sheet: '+str(sheet_name),flush=True)
-            shown=0
-            for ri,row in enumerate(rows[:35],1):
-                values=[str(v).strip() for v in row if v not in (None,'')]
-                if not values:continue
-                print('Samco workbook row '+str(ri)+': '+json.dumps(values[:14],ensure_ascii=False)[:1200],flush=True)
-                shown+=1
-                if shown>=18:break
     for sheet,rows,formats in sheets:
-        from .portfolio_parser import parse_sheet
+        from .portfolio_parser import parse_sheet,owns_sheet
         full=parse_sheet(rows,formats,family)
         if full:
             if full['aum'] is not None:db.metric(family,'All','aum',full['day'],full['aum'],'INR crore',url,h)
@@ -160,10 +150,11 @@ def spreadsheet(content,family,url,h):
             if any('isin' in v for v in cells) and any('nav' in v or 'aum' in v or ('net' in v and 'asset' in v) for v in cells):
                 header=cells;header_index=i;break
         if header is None: continue
-        if not any(same_fund_title(v,family) for row in rows[:header_index] for v in row if v):continue
+        if not owns_sheet(rows,header_index,family):continue
         def col(pred): return next((i for i,v in enumerate(header) if pred(v)),None)
         ic=col(lambda x:'isin' in x)
         nc=col(lambda x:'name' in x or 'instrument' in x or 'issuer' in x)
+        if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
         wc=col(lambda x:('nav' in x or 'aum' in x or ('net' in x and 'asset' in x)) and ('%' in x or 'percent' in x))
         sc=col(lambda x:'industry' in x or 'sector' in x)
         if nc is None or wc is None: continue

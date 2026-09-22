@@ -24,21 +24,10 @@ def months(today=None,count=3):
 def store_report(amc,family,url,title='Official report'):
     url=quote(url,safe=':/?&=%#+')
     if not disclosures.official_publication_url(url,amc):raise ValueError('Unregistered AMC report host')
-    body,h,typ=read(url)
-    if amc=='Samco':
-        print('Samco portfolio response: '+str(typ)+' · '+str(len(body))+' bytes · '+repr(body[:24]),flush=True)
-        if not body.startswith((b'PK',b'\\xd0\\xcf',b'%PDF')):
-            print('Samco portfolio response preview: '+body[:400].decode('utf-8',errors='replace').replace('\n',' ')[:400],flush=True)
+    body,h,_=read(url)
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
-    count=amc_reports.extract(body,family,url,h)
-    if amc=='Samco' and not count and body.startswith((b'PK',b'\xd0\xcf')) and re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):
-        # Diagnostic/recovery path for a previously cached v5 unrecognized file.
-        # The final parser-version bump will make this unnecessary.
-        count=disclosures.spreadsheet(body,family,url,h)
-        print('Samco direct spreadsheet parse: '+str(count)+' dated facts/holdings',flush=True)
-    return count
-
+    return amc_reports.extract(body,family,url,h)
 
 def discover(amc):
     """Yield (family, URL, label); parsers independently verify scheme ownership."""
@@ -105,7 +94,6 @@ def discover(amc):
         newest_rows=[r for r in rows if (r[0],r[1])==newest]
         # Prefer the structured Excel copy. If absent, keep one official fallback.
         chosen=max(newest_rows,key=lambda r:r[2])
-        print('Samco selected monthly portfolio: '+chosen[3],flush=True)
         yield family,chosen[3],chosen[4] or 'Samco Small Cap monthly portfolio'
 
     elif amc=='TRUST':

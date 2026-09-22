@@ -9,23 +9,36 @@ from datetime import date
 from .providers import number
 
 
+def owns_sheet(rows,header_index,family):
+    """Require an exact scheme identity in the spreadsheet heading."""
+    from .disclosures import same_fund_title
+    for row in rows[:header_index]:
+        for value in row:
+            if value is None:continue
+            text=str(value)
+            if family=='The Wealth Company Small Cap Fund':
+                text=re.sub(r'^WCSC\s*-\s*','',text,flags=re.I)
+            if same_fund_title(text,family):return True
+            if family=='Samco Small Cap Fund' and re.match(
+                r'^\s*MONTHLY\s+PORTFOLIO\s+STATEMENT\s+OF\s+SAMCO\s+SMALL\s+CAP\s+FUND\s+AS\s+ON\b',
+                text,re.I):return True
+    return False
+
+
 def parse_sheet(rows,formats,family):
-    from .disclosures import same_fund_title,report_date
+    from .disclosures import report_date
     header=None;hi=None
     for i,row in enumerate(rows[:35]):
         cells=[str(v or '').lower() for v in row]
         if any('isin' in v for v in cells) and any('%' in v and re.search(r'nav|aum|net.*asset',v) for v in cells):header=cells;hi=i;break
     if header is None:return None
-    def owned(value):
-        text=str(value)
-        if family=='The Wealth Company Small Cap Fund':text=re.sub(r'^WCSC\s*-\s*','',text,flags=re.I)
-        return same_fund_title(text,family)
-    if not any(owned(v) for row in rows[:hi] for v in row if v):return None
+    if not owns_sheet(rows,hi,family):return None
     prefix=' '.join(str(v) for row in rows[:hi] for v in row if v is not None)
     day=report_date(prefix)
     if not day or day>date.today().isoformat():return None
     def col(predicate):return next((i for i,v in enumerate(header) if predicate(v)),None)
     ic=col(lambda v:'isin' in v);nc=col(lambda v:'name' in v or 'instrument' in v or 'issuer' in v)
+    if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
     wc=col(lambda v:'%' in v and re.search(r'nav|aum|net.*asset',v))
     vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'value',v))
     sc=col(lambda v:'industry' in v or 'rating' in v or 'sector' in v);qc=col(lambda v:'quantity' in v)

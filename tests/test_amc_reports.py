@@ -132,6 +132,28 @@ class ReportParserTests(unittest.TestCase):
         self.assertEqual([x['name'] for x in positions],['Alpha Fertilizers And Petrochemicals Corporation Ltd','Beta Ltd'])
         self.assertAlmostEqual(sum(x['weight'] for x in positions),4.21)
 
+    def test_samco_wrapped_portfolio_heading_and_merged_name_column(self):
+        from tracker.portfolio_parser import parse_sheet
+        f='Samco Small Cap Fund'
+        rows=[
+            ['SAMCO MUTUAL FUND',None,None,None,None,None,None,None],
+            [None]*8,
+            ['MONTHLY PORTFOLIO STATEMENT OF SAMCO SMALL CAP FUND AS ON August 31, 2026',None,None,None,None,None,None,None],
+            [None]*8,
+            ['Name of the Instrument',None,'ISIN','Industry','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net Assets','YTM'],
+            ['Equity & Equity related',None,None,None,None,None,None,None],
+            ['(a) Listed / awaiting listing on Stock Exchanges',None,None,None,None,None,None,None],
+            ['AENP01','Ather Energy Limited','INE0LEZ01016','Automobiles',45160,775.71,0.0395,None],
+        ]
+        formats=[['']*8 for _ in rows];formats[-1][6]='0.00%'
+        parsed=parse_sheet(rows,formats,f)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertFalse(parsed['complete'])
+        self.assertEqual(parsed['positions'][0]['name'],'Ather Energy Limited')
+        self.assertEqual(parsed['positions'][0]['isin'],'INE0LEZ01016')
+        self.assertAlmostEqual(parsed['positions'][0]['weight'],3.95)
+
     def test_samco_discovery_prefers_latest_smallcap_excel(self):
         from tracker import amc_discovery,db
         db.init()
