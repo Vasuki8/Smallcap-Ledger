@@ -156,6 +156,17 @@ The normal workflow remains `.github/workflows/daily.yml`:
 - ordinary pushes rebuild/deploy and run the AMC report-upgrade step, but do **not** run the full daily collector
 - every successful publication restores the previous cumulative archive first, validates the generated site, saves a new cumulative checkpoint, records `deployment/update-status.json`, and then deploys Pages
 
+
+### UI/navigation refresh — 2026-09-22
+
+The public interface received a navigation-focused light-theme refresh in PR #5 (merged as `d9907899c80ee9dae2d21cecd4bdbcb8c6eac7f5`). The change is UI-only: it does not alter collection, calculations, source evidence, or historical storage.
+
+- Primary navigation is simplified to **Funds**, **Data**, and **Updates**.
+- Desktop uses a lighter research workspace with clearer search/filter hierarchy.
+- Fund-detail tabs remain visible while scrolling.
+- Mobile uses a persistent bottom navigation bar and a compact sticky header.
+- Fund tables, metric cards, badges, forms, and responsive spacing were cleaned up for easier scanning.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
