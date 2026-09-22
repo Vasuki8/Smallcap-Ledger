@@ -309,6 +309,29 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(available_expenses(s)[0]['plan'],'Direct')
 
 
+
+    def test_axis_top_holdings_are_partial_and_reconcile_to_stated_total(self):
+        from tracker.amc_metrics import parse_page
+        f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
+        html='''<html><h1>Axis Small Cap Fund</h1>
+        <p>AUM (In Cr.) ₹ 31,448.32 As On Aug 31, 2026</p>
+        <p>Expense Ratio 0.71% As On Sep 21, 2026</p>
+        <p>Top 10 Stocks (%) 18.52 Top 5 Stocks (%) 10.79 Top 3 Stocks (%) 7.13</p>
+        <table><tr><th>Stocks</th><th>% of holdings</th></tr>
+        <tr><td>A Limited</td><td>2.43</td></tr><tr><td>B Limited</td><td>2.39</td></tr>
+        <tr><td>C Limited</td><td>2.31</td></tr><tr><td>D Limited</td><td>1.91</td></tr>
+        <tr><td>E Limited</td><td>1.75</td></tr><tr><td>F Limited</td><td>1.71</td></tr>
+        <tr><td>G Limited</td><td>1.66</td></tr><tr><td>H Limited</td><td>1.52</td></tr>
+        <tr><td>I Limited</td><td>1.44</td></tr><tr><td>J Limited</td><td>1.40</td></tr></table>
+        <p>Updated as on: September 16, 2026</p></html>'''
+        self.assertEqual(parse_page(html,f,u,'axis'),11)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-09-16','complete':0})
+        rows=db.rows('SELECT name,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual(len(rows),10);self.assertTrue(all(x['asset_type']=='Equity' for x in rows))
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),18.52,places=2)
+
+
     def test_kotak_monthly_factsheet_reconciles_complete_portfolio(self):
         from tracker.amc_metrics import parse_page
         f='Kotak Small Cap Fund';u='https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html'
