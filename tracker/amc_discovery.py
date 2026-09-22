@@ -28,11 +28,11 @@ def store_report(amc,family,url,title='Official report'):
     if amc=='Samco':
         print('Samco portfolio response: '+str(typ)+' · '+str(len(body))+' bytes · '+repr(body[:24]),flush=True)
         if not body.startswith((b'PK',b'\\xd0\\xcf',b'%PDF')):
-            print('Samco portfolio response preview: '+body[:400].decode('utf-8',errors='replace').replace('\\n',' ')[:400],flush=True)
+            print('Samco portfolio response preview: '+body[:400].decode('utf-8',errors='replace').replace('\n',' ')[:400],flush=True)
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
     count=amc_reports.extract(body,family,url,h)
-    if amc=='Samco' and not count and body.startswith((b'PK',b'\\xd0\\xcf')) and re.search(r'\\.xlsx?(?:[?#]|$)',url,re.I):
+    if amc=='Samco' and not count and body.startswith((b'PK',b'\xd0\xcf')) and re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):
         # Diagnostic/recovery path for a previously cached v5 unrecognized file.
         # The final parser-version bump will make this unnecessary.
         count=disclosures.spreadsheet(body,family,url,h)
