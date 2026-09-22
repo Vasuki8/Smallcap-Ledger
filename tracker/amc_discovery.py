@@ -162,6 +162,44 @@ def discover(amc):
         chosen=max(newest_rows,key=lambda r:r[2])
         yield family,chosen[3],chosen[4] or 'Samco Small Cap monthly portfolio'
 
+    elif amc=='quant Mutual':
+        family='Quant Small Cap Fund'
+        page='https://quantmutual.com/statutory-disclosures'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        candidates={}
+        # Quant exposes portfolio archives through a mix of ordinary links,
+        # data attributes and JavaScript-backed disclosure rows. Retain nearby
+        # row/list context; the downstream spreadsheet/PDF parser still has to
+        # prove exact scheme ownership before saving any holdings.
+        for tag in soup.find_all(True):
+            container=tag.find_parent(['tr','li','div']) or tag.parent
+            context=(container.get_text(' ',strip=True) if container else tag.get_text(' ',strip=True))[:1600]
+            attrs=' '.join(str(v) for v in tag.attrs.values())
+            for raw_value in [attrs,tag.get('href','') if hasattr(tag,'get') else '']:
+                for m in re.finditer(r'(?:(?:https?:)?//[^"\'\s<>]+|/[^"\'\s<>]+)\.(?:xlsx?|xml|pdf)(?:\?[^"\'\s<>]*)?',str(raw_value).replace('\\/','/'),re.I):
+                    url=urljoin(page,m.group(0))
+                    if disclosures.official_publication_url(url,amc):
+                        candidates[url]=context or url.rsplit('/',1)[-1]
+        for url,title in providers.candidate_links(soup,page).items():
+            if disclosures.official_publication_url(url,amc):
+                candidates.setdefault(url,title)
+        rows=[]
+        for url,title in candidates.items():
+            combined=unquote(url+' '+title)
+            if not re.search(r'\.(?:xlsx?|xml|pdf)(?:[?#]|$)',url,re.I):continue
+            specific=bool(re.search(r'quant[\s_\-]*small[\s_\-]*cap|small[\s_\-]*cap[\s_\-]*fund',combined,re.I))
+            monthly=bool(re.search(r'monthly[\s_\-]*portfolio|portfolio[\s_\-]*statement',combined,re.I))
+            all_funds=monthly and bool(re.search(r'all[\s_\-]*(?:funds|schemes)|monthly[\s_\-]*portfolio(?![\s_\-]*fund)',combined,re.I))
+            if not (specific and monthly or all_funds):continue
+            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
+            year=max(years,default=0)
+            month=max((i for i in range(1,13) if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+            rows.append((year,month,url,title))
+        if not rows:raise ValueError('No downloadable Quant monthly portfolio file was exposed by the statutory disclosure page')
+        # A small bounded set covers the latest structured layouts and lets the
+        # parser verify whether an all-funds file actually contains Small Cap.
+        for _,_,url,title in sorted(rows,reverse=True)[:4]:
+            yield family,url,title or 'Quant monthly portfolio'
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
         body={'systemQueryFileName':'productsweb.xml','tagName':'GetOneProductWeb','searchField':'p.slug','searchValue':'trustmf-small-cap-fund','sortField':'','sortDirection':''}
@@ -220,5 +258,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
