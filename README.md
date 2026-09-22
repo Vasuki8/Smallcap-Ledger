@@ -18,7 +18,7 @@ See **[COVERAGE-AS-OF.md](COVERAGE-AS-OF.md)** for exact included counts, dates 
 
 All AMFI-listed plans and options in the small-cap equity category are retained, including Direct, Regular, IDCW and other published variants. The initial directory filter is Direct/Growth; choose All plans and All options to see every series. Payout and reinvestment can share one AMFI NAV series; the available ISINs and option labels remain visible.
 
-Numeric AUM, fees, complete portfolios, archived documents and distribution histories are **not complete across all funds**. Missing values remain unavailable, never zero or estimated. Every metric has its own reporting or observation date. Old values are retained when a source fails. Historical documents can only be retained if they are still accessible when discovered.
+Historical AUM/fee depth, complete portfolios, archived documents and distribution histories are **not complete across all funds**. Current sourced AUM and expense coverage is complete for the tracked fund universe, while older history can still contain gaps. Missing values remain unavailable, never zero or estimated. Every metric has its own reporting or observation date. Old values are retained when a source fails. Historical documents can only be retained if they are still accessible when discovered.
 
 ## Sources
 
@@ -27,7 +27,7 @@ Numeric AUM, fees, complete portfolios, archived documents and distribution hist
 | Category, plans, codes, ISINs, latest NAV | [AMFI](https://www.amfiindia.com/spages/NAVAll.txt) | Official daily values take precedence over other values for the same code/date. |
 | Older NAV | [MFapi](https://www.mfapi.in/) | Free third-party numeric history; clearly attributed. This is a data provider, not a news feed. |
 | Expense ratios and components | [AMC reports through AMFI](https://www.amfiindia.com/ter-of-mf-schemes) | Direct/Regular figures with separate TER, BER, brokerage, transaction costs and statutory levies. Checks current and previous months; initially backfills three months. |
-| AUM | Official AMC pages and dated reports | HDFC, Axis, DSP, Kotak, Aditya Birla Sun Life, Tata, ITI and Mahindra Manulife parsers, plus supported PDFs such as Nippon India's. AMFI's fund-performance API was inaccessible here and is not relied on. |
+| AUM | [AMFI Fund Performance](https://www.amfiindia.com/otherdata/fund-performance) plus official AMC pages and dated reports | Daily scheme AUM from AMFI is retained with its NAV/report date and archived response hash. Month-end and average AUM from AMC factsheets remain separate historical observations. Verified current coverage: 36/36 funds. |
 | Nifty Smallcap 250 TRI | [NSE Indices](https://www.niftyindices.com/reports/historical-data) | Actual total-return index levels, including historical backfill. |
 | Holdings and fund facts | Original AMC Excel/XML/PDF reports | Supported layouts only. Automatically extracted holdings remain labelled partial. |
 | Fund communications | `tracker/sources.json` and discovered official AMC pages | Original links and saved versions. Fund-specific and fund-house-wide publications are labelled separately. External publisher news is excluded. |
@@ -126,14 +126,24 @@ Latest verified audit in `deployment/update-status.json`:
 | Benchmark observations | **5,326** |
 | Portfolio snapshots | **154** |
 | Archived document versions | **852** |
-| AUM coverage | **35 / 36 funds** |
+| AUM coverage | **36 / 36 funds** |
 | Expense coverage | **36 / 36 funds** |
-| Full retained archive size | **1,187,009,404 bytes** |
+| Full retained archive size | **1,187,418,323 bytes** |
 | Publication-file budget | **262,144,000 bytes (250 MiB)** |
 | Publication files bundled into Pages | **177** |
 | Publication bytes bundled into Pages | **262,143,558 bytes** |
 
 The repaired catch-up Pages artifact was approximately **338 MB** and passed `scripts/validate_site.py`. The successful recovery deployment was GitHub Actions run **35680822286**.
+
+### AUM coverage completed
+
+The final missing AUM fund was **Bandhan Small Cap Fund**. Bandhan's public CMS pages did not expose a direct factsheet file URL and its public WordPress media API returned 401, so no access-control bypass was used. Instead, the tracker now uses AMFI's official Fund Performance feed in `tracker/amfi_metrics.py`.
+
+The production collector dynamically resolves the open-ended equity / Small Cap filter, checks recent business dates until AMFI has a category-wide response, archives the exact JSON bytes by SHA-256, and stores only matched positive `dailyAUM` values as dated scheme-level AUM observations. It does not overwrite older factsheet observations.
+
+Verified production run **35685317689** collected **36/36** small-cap AUM values from AMFI as of **2026-09-18**. For Bandhan Small Cap Fund, AMFI returned `dailyAUM = 35153.113` with `navDate = 18-Sep-2026`. The run passed **65 tests**, static-site validation, cumulative archive publication and GitHub Pages deployment. Production collector commit: `005a34e583568524afa251c89f30476833b48ac9`.
+
+The AMFI daily-AUM collector is part of the scheduled `metrics` update path. The temporary push-only AUM refresh used for verification has been removed, so ordinary code pushes do not perform the full daily data refresh.
 
 ### Current automatic-update behavior
 
@@ -150,7 +160,7 @@ The normal workflow remains `.github/workflows/daily.yml`:
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
 
-The highest-value remaining data task is the **1 fund still missing sourced AUM**, followed by checking freshness/quality of portfolio coverage and continuing to improve official AMC-source extraction. Preserve the existing rules: never estimate missing values, retain reporting dates and source evidence, preserve conflicts/revisions, and keep the full historical archive separate from the bounded public Pages payload.
+The AUM coverage gap is now closed. The highest-value remaining data task is checking **portfolio freshness and completeness**, followed by continuing to improve official AMC-source extraction. Preserve the existing rules: never estimate missing values, retain reporting dates and source evidence, preserve conflicts/revisions, and keep the full historical archive separate from the bounded public Pages payload.
 
 For operational reliability, consider adding a regression/health check that fails or prominently warns when `latest_nav_date` is materially behind the latest available AMFI small-cap NAV date. This would detect a future collection or publication failure before the website remains stale for many days.
 

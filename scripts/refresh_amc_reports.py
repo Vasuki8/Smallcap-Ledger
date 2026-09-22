@@ -10,13 +10,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from tracker import db,providers,disclosures,amc_reports,amfi_metrics
+from tracker import db,providers,disclosures,amc_reports
 
 
 def run():
     db.init();disclosures.seed_sources()
-    try:print(amfi_metrics.daily_aum(lambda msg:print(msg,flush=True)),flush=True)
-    except Exception as e:print('::warning::AMFI daily AUM: '+(str(e) or type(e).__name__).splitlines()[0][:350],flush=True)
     from tracker import reviewed_reports
     print(f'{reviewed_reports.apply()} reviewed official figures retained with source notes',flush=True)
     key='amc_upgrade_'+amc_reports.PARSER_VERSION
