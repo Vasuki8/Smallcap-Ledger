@@ -257,6 +257,12 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(self.client.get('/api/status',headers={'Host':'evil.example'}).status_code,403)
         self.assertEqual(self.client.post('/api/settings',headers={'X-Smallcap-Client':'local','Origin':'https://evil.example'},json={'auto_update':False}).status_code,403)
 
+    def test_status_reports_storage_breakdown(self):
+        status=self.client.get('/api/status').json()
+        self.assertGreater(status['counts']['database_bytes'],0)
+        self.assertGreaterEqual(status['counts']['archive_bytes'],0)
+        self.assertEqual(status['counts']['total_storage_bytes'],status['counts']['database_bytes']+status['counts']['archive_bytes'])
+
     def test_archive_round_trip_and_backup(self):
         original=b'The original source bytes';h=db.archive(original,'text/plain')
         self.assertEqual(self.client.get('/api/archive/'+h).content,original)

@@ -50,6 +50,10 @@ def pack(target):
     with tempfile.TemporaryDirectory() as tmp:
         snapshot=Path(tmp)/'ledger.sqlite3'
         with db.connect() as source,sqlite3.connect(snapshot) as dest:source.backup(dest)
+        # Compact only the disposable checkpoint copy. This reclaims free SQLite
+        # pages without mutating the live cumulative database or deleting records.
+        with sqlite3.connect(snapshot) as compact:
+            compact.execute('VACUUM')
         with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
             z.write(snapshot,'data/ledger.sqlite3')
             for r in db.rows('SELECT hash,path FROM archives ORDER BY hash'):
