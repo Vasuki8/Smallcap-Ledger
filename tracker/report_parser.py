@@ -418,6 +418,178 @@ def pgim_complete_portfolio(text):
     if len({(x['name'],x['asset_type']) for x in positions})!=len(positions):return None
     return {'day':day,'positions':positions}
 
+
+def boi_complete_portfolio(text):
+    """Reconcile Bank of India Small Cap's four-column monthly portfolio table.
+
+    BOI's PDF extraction order follows visual columns rather than reading order:
+    the final equity sectors can appear before the EQUITY HOLDINGS label. Parse
+    the bounded portfolio block by explicit section totals and reject it unless
+    every sector/subsection and the published grand total reconcile.
+    """
+    normalized=normalize(text)
+    family='Bank Of India Small Cap Fund'
+    if not owns_page(normalized,family):return None
+    m=re.search(r'All\s+data\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
+    starts=[i for i,x in enumerate(lines) if re.search(r'Portfolio\s+Holdings',x,re.I)]
+    end=next((i for i,x in enumerate(lines) if re.fullmatch(r'INVESTMENT\s+OBJECTIVE',x,re.I)),None)
+    if not starts or end is None:return None
+    start=starts[0]
+    if start>=end:return None
+    rows=lines[start:end]
+
+    def numeric(line):
+        q=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%?',line)
+        if not q:return None
+        return q.group(1).strip(),float(q.group(2))
+
+    reserved=re.compile(
+        r'^(?:Portfolio Holdings|Industry/ Rating|Assets|EQUITY HOLDINGS|CASH\s*&\s*CASH EQUIVALENT|'
+        r'GOVERNMENT BOND AND|TREASURY BILL|MONEY MARKET INSTRUMENTS|MCAP Categorization|Mcap Category|'
+        r'PORTFOLIO DETAILS|GRAND TOTAL|Total|Indicates Top 10 Equity Holdings)',re.I)
+    def sectorish(label):
+        letters=re.sub(r'[^A-Za-z]','',label)
+        return bool(letters) and label==label.upper() and not re.search(r'\b(?:LTD|LIMITED)\b',label,re.I)
+
+    positions=[];sector_totals=[];equity_total=None;cash_total=None;grand=None
+    cash_positions=[];debt_positions=[];money_positions=[]
+    debt_subtotals=[];money_subtotals=[]
+    mode='equity';subsection=None;i=0
+    while i<len(rows):
+        line=rows[i].strip();i+=1
+        if not line:continue
+        if re.fullmatch(r'EQUITY HOLDINGS',line,re.I):mode='equity';subsection=None;continue
+        if re.fullmatch(r'CASH\s*&\s*CASH EQUIVALENT',line,re.I):mode='cash';subsection=None;continue
+        if re.fullmatch(r'GOVERNMENT BOND AND',line,re.I):mode='debt';subsection=None;continue
+        if re.fullmatch(r'TREASURY BILL',line,re.I) and mode=='debt':subsection='Treasury Bill';continue
+        if re.fullmatch(r'MONEY MARKET INSTRUMENTS',line,re.I):mode='money';subsection=None;continue
+        if re.match(r'MCAP Categorization|Mcap Category',line,re.I):mode='ignore';subsection=None;continue
+        if re.fullmatch(r'PORTFOLIO DETAILS',line,re.I):continue
+        if re.fullmatch(r'GRAND TOTAL\s+\d+(?:\.\d+)?',line,re.I):
+            grand=float(re.search(r'(-?\d+(?:\.\d+)?)    """Values directly beneath BOI's labels in a visually aligned PDF column.
+
+    Caller must first identify the exact scheme page and its reporting date.
+    PDF text order otherwise places both values before both labels.
+    """
+    if not day or day>date.today().isoformat():return []
+    if family=='UTI Small Cap Fund':
+        out=[]
+        for label,key in [('Fund Size Monthly Average','average_aum'),('Closing AUM','aum')]:
+            m=re.search(label+r'\s*:\s*(?:`|₹)\s*Crore\s*'+NUMBER,text,re.I)
+            if m:
+                v=float(m.group(1).replace(',',''))
+                if 0<v<10_000_000:out.append(dict(metric=key,value=v,plan='All',as_of=day,unit='INR crore'))
+        return out
+    if family!='Bank Of India Small Cap Fund':return []
+    out=[];lines=text.splitlines()
+    for i,line in enumerate(lines):
+        for label,key in [('AVERAGE AUM','average_aum'),('LATEST AUM','aum')]:
+            x=line.find(label)
+            if x<0:continue
+            for following in lines[i+1:i+4]:
+                m=re.match(r'\s*(?:`|₹|Rs\.?)\s*'+NUMBER+r'\s*Cr(?:ore)?s?\.?',following[x:x+70],re.I)
+                if m:
+                    v=float(m.group(1).replace(',',''))
+                    if 0<v<10_000_000:out.append(dict(metric=key,value=v,plan='All',as_of=day,unit='INR crore'))
+                    break
+    return out
+,line).group(1));continue
+        parsed=numeric(line)
+        if parsed:
+            label,value=parsed
+            label=re.sub(r'^[4✓✔]\s*','',label).strip()
+            if label.lower()=='total':
+                if mode=='equity':equity_total=value
+                elif mode=='cash':cash_total=value
+                elif mode=='debt':debt_subtotals.append((subsection,value))
+                elif mode=='money':money_subtotals.append((subsection,value))
+                continue
+            # BOI can place a wrapped company/sector/rating continuation after
+            # the percentage because of its visual-column PDF encoding.
+            continuation=[]
+            while i<len(rows) and not numeric(rows[i]) and not reserved.match(rows[i]):
+                continuation.append(rows[i]);i+=1
+            if mode=='equity':
+                if sectorish(label):
+                    if continuation and all(x==x.upper() for x in continuation):
+                        label=' '.join([label,*continuation]);continuation=[]
+                    sector_totals.append({'sector':label,'total':value,'start':len(positions)})
+                else:
+                    name=' '.join([label,*continuation]).strip()
+                    if not sector_totals:return None
+                    positions.append({'name':name,'isin':None,'sector':sector_totals[-1]['sector'],'weight':value,'asset_type':'Equity'})
+            elif mode=='cash':
+                name=' '.join([label,*continuation]).strip()
+                if value>0:cash_positions.append({'name':name,'isin':None,'sector':None,'weight':value,'asset_type':'Cash and net current assets'})
+            elif mode=='debt':
+                name=' '.join([label,*continuation]).strip()
+                if value>0:debt_positions.append({'name':name,'isin':None,'sector':subsection,'weight':value,'asset_type':'Debt'})
+            elif mode=='money':
+                name=' '.join([label,*continuation]).strip()
+                name=re.sub(r'\s+\([^)]*(?:A1\+?|SOVEREIGN)[^)]*\)\s*    """Values directly beneath BOI's labels in a visually aligned PDF column.
+
+    Caller must first identify the exact scheme page and its reporting date.
+    PDF text order otherwise places both values before both labels.
+    """
+    if not day or day>date.today().isoformat():return []
+    if family=='UTI Small Cap Fund':
+        out=[]
+        for label,key in [('Fund Size Monthly Average','average_aum'),('Closing AUM','aum')]:
+            m=re.search(label+r'\s*:\s*(?:`|₹)\s*Crore\s*'+NUMBER,text,re.I)
+            if m:
+                v=float(m.group(1).replace(',',''))
+                if 0<v<10_000_000:out.append(dict(metric=key,value=v,plan='All',as_of=day,unit='INR crore'))
+        return out
+    if family!='Bank Of India Small Cap Fund':return []
+    out=[];lines=text.splitlines()
+    for i,line in enumerate(lines):
+        for label,key in [('AVERAGE AUM','average_aum'),('LATEST AUM','aum')]:
+            x=line.find(label)
+            if x<0:continue
+            for following in lines[i+1:i+4]:
+                m=re.match(r'\s*(?:`|₹|Rs\.?)\s*'+NUMBER+r'\s*Cr(?:ore)?s?\.?',following[x:x+70],re.I)
+                if m:
+                    v=float(m.group(1).replace(',',''))
+                    if 0<v<10_000_000:out.append(dict(metric=key,value=v,plan='All',as_of=day,unit='INR crore'))
+                    break
+    return out
+,'',name,flags=re.I)
+                if value>0:money_positions.append({'name':name,'isin':None,'sector':subsection,'weight':value,'asset_type':'Money market'})
+            continue
+
+        # Section names inside money-market/debt blocks have no percentage.
+        if mode=='money' and not reserved.match(line):subsection=line;continue
+        if mode=='debt' and not reserved.match(line):subsection=line;continue
+
+    if equity_total is None or cash_total is None or grand is None or abs(grand-100)>.03:return None
+    if len(sector_totals)<2 or not positions:return None
+    # Each sector subtotal must match only its own issuer rows.
+    for j,s in enumerate(sector_totals):
+        stop=sector_totals[j+1]['start'] if j+1<len(sector_totals) else len(positions)
+        group=positions[s['start']:stop]
+        if not group:return None
+        if abs(sum(x['weight'] for x in group)-s['total'])>max(.03,.011*len(group)):return None
+    if abs(sum(s['total'] for s in sector_totals)-equity_total)>.08:return None
+
+    def validate_subtotals(items,subtotals):
+        for section,total in subtotals:
+            subtotal=sum(x['weight'] for x in items if x['sector']==section)
+            if abs(subtotal-total)>.03:return False
+        return True
+    if not validate_subtotals(debt_positions,debt_subtotals):return None
+    if not validate_subtotals(money_positions,money_subtotals):return None
+    if abs(sum(x['weight'] for x in cash_positions)-cash_total)>.03:return None
+    debt_total=sum(x['weight'] for x in debt_positions)
+    money_total=sum(x['weight'] for x in money_positions)
+    if abs((equity_total+debt_total+money_total+cash_total)-grand)>.04:return None
+    all_positions=positions+debt_positions+money_positions+cash_positions
+    if any(not 0<=x['weight']<=100 for x in all_positions):return None
+    return {'day':day,'positions':all_positions}
+
+
 def layout_aum(text,family,day):
     """Values directly beneath BOI's labels in a visually aligned PDF column.
 
