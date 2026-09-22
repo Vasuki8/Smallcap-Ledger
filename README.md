@@ -167,6 +167,19 @@ The public interface received a navigation-focused light-theme refresh in PR #5 
 - Mobile uses a persistent bottom navigation bar and a compact sticky header.
 - Fund tables, metric cards, badges, forms, and responsive spacing were cleaned up for easier scanning.
 
+
+### Fund-detail UI refresh — 2026-09-22
+
+A second UI-only refinement was merged in PR #6 (commit `d98bb4351edc6000257665386eed5fe9b2639e75`). It does not change financial calculations, collectors, source rules, or stored data.
+
+- Fund pages now use a compact fund header with clearer plan/option metadata and plan switching.
+- Overview surfaces NAV, AUM, expense ratio, 1-year return, and 3-year CAGR before deeper sections.
+- An **At a glance** panel provides fund facts plus direct links to Portfolio, Fees, and official documents.
+- The investment objective is collapsed by default to reduce vertical scrolling.
+- Performance, Portfolio, and Fees layouts were tightened for faster scanning.
+- Fund communications now supports title/type search in addition to document-type filters.
+- Mobile fund pages retain sticky section tabs and the bottom navigation introduced in PR #5.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
