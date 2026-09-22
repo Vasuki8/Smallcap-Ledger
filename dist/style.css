@@ -857,3 +857,239 @@ button,[role="button"],.primary-link,.secondary-link,.nav a,.tabs a{
 @media(prefers-reduced-motion:reduce){
   .skip-link,.status-hero,.metric-card,.panel,.coverage-item,.retention-grid>div{transition:none}
 }
+
+
+/* === Minimal product direction === */
+:root{
+  --canvas:#fbfcfe;
+  --panel:#fff;
+  --line:#e7eaf0;
+  --ink:#172033;
+  --muted:#6b7280;
+  --blue:#2f5bea;
+  --sidebar-width:210px;
+}
+body{background:var(--canvas)}
+.layout{grid-template-columns:var(--sidebar-width) minmax(0,1fr)}
+.sidebar{
+  padding:24px 14px 18px;
+  background:#fff;
+}
+.brand{padding:0 8px;font-size:1rem;gap:9px}
+.brand-icon{
+  width:32px;height:32px;border-radius:9px;
+  box-shadow:none;
+}
+.nav{margin-top:32px;gap:4px}
+.nav a{
+  padding:10px 11px;
+  border:0;
+  border-radius:9px;
+  color:#596273;
+}
+.nav a:hover{background:#f6f8fc;color:#25395f}
+.nav a.active{
+  background:#f0f4ff;
+  color:#2448b8;
+  border:0;
+}
+.minimal-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:.72rem;
+  color:#7b8492;
+  border-top:0;
+  padding:0 8px 6px;
+}
+.minimal-status span{
+  width:7px;height:7px;border-radius:50%;
+  background:#12b76a;
+}
+.topbar{
+  height:58px;
+  padding:0 28px;
+  box-shadow:none;
+}
+.breadcrumb{font-size:.8rem;color:#89909d}
+#refresh-all{
+  width:34px;height:34px;min-height:34px;
+  padding:0;border-radius:9px;
+  box-shadow:none;
+  font-size:1rem;
+}
+.main{max-width:1380px;padding:28px 30px 64px}
+.minimal-heading{margin-bottom:22px}
+.minimal-heading h1{font-size:1.85rem;margin-bottom:6px}
+.minimal-heading p{font-size:.9rem;color:#747d8c}
+.freshness{
+  font-size:.75rem;
+  color:#6f7785;
+  white-space:nowrap;
+}
+.panel{
+  border-radius:12px;
+  box-shadow:none;
+  border-color:var(--line);
+}
+.minimal-directory{overflow:hidden}
+.minimal-controls{
+  display:grid;
+  grid-template-columns:minmax(260px,1fr) minmax(150px,.5fr) minmax(190px,.65fr) auto;
+  gap:10px;
+  align-items:center;
+  padding:14px 16px;
+  border-bottom:1px solid #eef1f4;
+  background:#fff;
+}
+.minimal-controls select,.minimal-controls input{
+  box-shadow:none;
+  border-color:#d7dce4;
+}
+.minimal-controls .directory-search-wrap input{min-width:0}
+.minimal-controls #result-count{text-align:right}
+.minimal-fund-table th{
+  background:#fbfcfe;
+  padding:11px 14px;
+  font-size:.7rem;
+}
+.minimal-fund-table td{padding:14px}
+.minimal-fund-table .fund-mark{
+  width:30px;height:30px;border-radius:8px;
+  background:#f1f4fb;
+  border-color:#e3e8f2;
+}
+.minimal-fund-table tr:hover{background:#fafbfe}
+.minimal-pagination{
+  padding:12px 15px;
+  background:#fff;
+}
+.minimal-note{margin-top:14px}
+.minimal-fund-hero{
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:18px;
+  margin-bottom:8px;
+}
+.minimal-fund-hero h1{
+  font-size:1.85rem;
+  margin:4px 0 5px;
+}
+.fund-subtitle{margin:0;color:#727b89;font-size:.86rem}
+.minimal-tabs{
+  gap:24px;
+  margin-bottom:18px;
+  background:var(--canvas);
+  padding-top:0;
+}
+.minimal-tabs a{
+  padding:10px 0 12px;
+  font-size:.82rem;
+}
+.summary-panel{padding:0}
+.summary-strip{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.summary-strip.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.summary-strip>div{
+  padding:18px 20px;
+  border-right:1px solid #edf0f3;
+}
+.summary-strip>div:last-child{border-right:0}
+.summary-strip span{
+  display:block;
+  color:#7b8492;
+  font-size:.72rem;
+  margin-bottom:6px;
+}
+.summary-strip b{
+  display:block;
+  font-size:1.2rem;
+  line-height:1.2;
+  font-variant-numeric:tabular-nums;
+}
+.summary-strip small{
+  display:block;
+  margin-top:4px;
+  color:#8a929f;
+  font-size:.68rem;
+}
+.minimal-overview{
+  grid-template-columns:minmax(0,1.8fr) minmax(260px,.8fr);
+}
+.minimal-facts h2{margin-bottom:10px}
+.minimal-facts .fact{
+  grid-template-columns:105px minmax(0,1fr);
+  padding:9px 0;
+}
+.minimal-details{padding:17px 19px}
+.minimal-details summary{
+  font-size:.9rem;
+  font-weight:650;
+}
+.minimal-data-grid{grid-template-columns:1fr 1fr}
+.minimal-health{margin-bottom:16px}
+.minimal-source-table th{background:#fbfcfe}
+.minimal-source-table td{padding:13px 14px}
+.secondary-link{font-size:.8rem}
+.chart-legend{font-size:.76rem;gap:18px}
+.footer-note{color:#7b8492}
+
+@media(max-width:1000px){
+  :root{--sidebar-width:176px}
+  .minimal-controls{
+    grid-template-columns:1fr 150px 180px;
+  }
+  .minimal-controls #result-count{grid-column:1/-1;text-align:left}
+  .summary-strip{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .summary-strip>div:nth-child(3){border-right:0}
+  .summary-strip>div:nth-child(n+4){border-top:1px solid #edf0f3}
+  .minimal-overview,.minimal-data-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:800px){
+  .main{padding:20px 14px 32px}
+  .topbar{height:54px;padding:0 14px}
+  .minimal-heading{margin-bottom:16px}
+  .minimal-heading h1{font-size:1.5rem}
+  .freshness{font-size:.7rem}
+  .minimal-controls{
+    grid-template-columns:1fr 1fr;
+    padding:12px;
+  }
+  .minimal-controls .directory-search-wrap{grid-column:1/-1}
+  .minimal-controls #result-count{grid-column:1/-1}
+  .minimal-fund-hero{grid-template-columns:1fr;gap:12px}
+  .minimal-tabs{
+    top:54px;
+    margin-left:-14px;
+    margin-right:-14px;
+    padding-left:14px;
+    padding-right:14px;
+    gap:20px;
+  }
+  .summary-strip,.summary-strip.four{grid-template-columns:1fr 1fr}
+  .summary-strip>div{
+    padding:15px;
+    border-right:1px solid #edf0f3;
+    border-top:1px solid #edf0f3;
+  }
+  .summary-strip>div:nth-child(-n+2){border-top:0}
+  .summary-strip>div:nth-child(2n){border-right:0}
+  .minimal-fund-table tr{
+    grid-template-columns:1fr 1fr;
+    padding:14px 12px;
+  }
+}
+
+@media(max-width:480px){
+  .sidebar{height:66px}
+  body{padding-bottom:70px}
+  .nav a{min-height:50px}
+  .minimal-controls{grid-template-columns:1fr}
+  .minimal-controls .directory-search-wrap,.minimal-controls #result-count{grid-column:1}
+  .summary-strip,.summary-strip.four{grid-template-columns:1fr 1fr}
+  .summary-strip b{font-size:1.05rem}
+  .minimal-fund-table .fund-name{grid-column:1/-1}
+}
