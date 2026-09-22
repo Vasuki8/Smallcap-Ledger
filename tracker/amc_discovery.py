@@ -117,19 +117,10 @@ def discover(amc):
                             chunk_size=1024*1024;max_scan=32*1024*1024
                             with httpx.Client(timeout=httpx.Timeout(30,connect=15),headers={'User-Agent':providers.USER_AGENT,'Accept':'*/*'},follow_redirects=False) as client:
                                 probe=client.get(src,headers={'Range':'bytes=0-0'})
-                                if probe.status_code!=206:
-                                    raise ValueError('Static bundle server did not honor HTTP Range')
-                                m=re.match(r'bytes\s+\d+-\d+/(\d+)',probe.headers.get('content-range',''),re.I)
-                                if not m:raise ValueError('Static bundle omitted Content-Range total')
-                                total=int(m.group(1))
-                                if total>max_scan:raise ValueError('Static bundle exceeds 32 MiB bounded scan')
                                 previous=''
-                                for start in range(0,total,chunk_size):
-                                    end=min(total-1,start+chunk_size-1)
-                                    rr=client.get(src,headers={'Range':f'bytes={start}-{end}'})
-                                    if rr.status_code!=206 or len(rr.content)>chunk_size+1024:
-                                        raise ValueError('Static bundle range response was not bounded')
-                                    text=previous+rr.content.decode('utf-8',errors='replace')
+                                def inspect_piece(piece):
+                                    nonlocal previous
+                                    text=previous+piece.decode('utf-8',errors='replace')
                                     previous=text[-700:]
                                     for value in re.findall(r'https?://[^"'+"'"+r'\\\s]+\.(?:pdf|xlsx?|xml)(?:\?[^"'+"'"+r'\\\s]*)?',text,re.I):
                                         add(value,'Bandhan investor-site document')
@@ -141,6 +132,30 @@ def discover(amc):
                                         for value in re.findall(r'["\']([^"\']{3,320})["\']',snippet):
                                             if re.search(r'fact|sheet|download|api|asset',value,re.I):
                                                 bundle_hints.append(value[:300])
+                                if probe.status_code==206:
+                                    m=re.match(r'bytes\s+\d+-\d+/(\d+)',probe.headers.get('content-range',''),re.I)
+                                    if not m:raise ValueError('Static bundle omitted Content-Range total')
+                                    total=int(m.group(1))
+                                    if total>max_scan:raise ValueError('Static bundle exceeds 32 MiB bounded scan')
+                                    for start in range(0,total,chunk_size):
+                                        end=min(total-1,start+chunk_size-1)
+                                        rr=client.get(src,headers={'Range':f'bytes={start}-{end}'})
+                                        if rr.status_code!=206 or len(rr.content)>chunk_size+1024:
+                                            raise ValueError('Static bundle range response was not bounded')
+                                        inspect_piece(rr.content)
+                                elif probe.status_code==200:
+                                    # Server ignores Range. Stream once, retain only a small
+                                    # overlap, and abort before 32 MiB instead of buffering.
+                                    total=0;previous=''
+                                    with client.stream('GET',src) as rr:
+                                        rr.raise_for_status()
+                                        if rr.is_redirect:raise ValueError('Static bundle redirected during bounded scan')
+                                        for piece in rr.iter_bytes(chunk_size=64*1024):
+                                            total+=len(piece)
+                                            if total>max_scan:raise ValueError('Static bundle exceeds 32 MiB bounded stream scan')
+                                            inspect_piece(piece)
+                                else:
+                                    raise ValueError('Static bundle returned '+str(probe.status_code))
                             print('Bandhan bounded bundle scan completed: '+str(total)+' bytes',flush=True)
                         except Exception as range_error:
                             range_detail=(str(range_error) or type(range_error).__name__).splitlines()[0][:220]
