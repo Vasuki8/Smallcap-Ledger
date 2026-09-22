@@ -78,31 +78,15 @@ def discover(amc):
             yield family,f'https://www.mahindramanulife.com/digital-factsheet/{name}-{year}/Equity-funds/Small-Cap-Fund.html','Monthly digital factsheet'
     elif amc=='PGIM':
         family='Pgim India Small Cap Fund'
-        page='https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio'
-        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
-        candidates={}
-        for a in soup.select('a[href]'):
-            url=urljoin(page,a.get('href',''))
-            container=a.find_parent(['tr','li']) or a.parent
-            context=(container.get_text(' ',strip=True) if container else a.get_text(' ',strip=True))[:1200]
-            candidates[url]=context or a.get_text(' ',strip=True) or url.rsplit('/',1)[-1]
-        for url,title in providers.candidate_links(soup,page).items():candidates.setdefault(url,title)
-        rows=[]
-        for url,title in candidates.items():
-            combined=unquote(url+' '+title)
-            if not disclosures.official_publication_url(url,amc):continue
-            if not re.search(r'PGIM\s+INDIA\s+SMALL\s+CAP\s+FUND|small[ _%-]*cap[ _%-]*fund',combined,re.I):continue
-            ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I)
-            if not ext:continue
-            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
-            year=max(years,default=0)
-            month=max((i for i in range(1,13) if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
-            kind=ext.group(1).lower();priority=3 if kind in ('xls','xlsx') else 2 if kind=='xml' else 1
-            rows.append((year,month,priority,url,title))
-        if not rows:raise ValueError('No official PGIM India Small Cap monthly portfolio file was exposed by the disclosure page')
-        newest=max((y,m) for y,m,_,_,_ in rows)
-        chosen=max((r for r in rows if (r[0],r[1])==newest),key=lambda r:r[2])
-        yield family,chosen[3],chosen[4] or 'PGIM India Small Cap monthly portfolio'
+        today=date.today()
+        # PGIM's factsheet index is JS-driven, but the AMC serves the monthly
+        # factsheet itself at a stable official document path. Fetch the two most
+        # recent completed months; store_report still enforces registered AMC ownership.
+        for offset in (1,2):
+            year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
+            name=calendar.month_name[month]
+            yield family,f'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - {name} {year}.pdf',f'Factsheet - {name} {year}'
+
     elif amc=='Samco':
         family='Samco Small Cap Fund'
         page='https://www.samcomf.com/StatutoryDisclosure'
