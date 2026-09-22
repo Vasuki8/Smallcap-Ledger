@@ -326,6 +326,15 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         <tr><td>Grand Total</td><td></td><td>100.00</td></tr></table>
         <p>Net Asset Value (NAV) (as on August 31, 2026)</p><p>AUM Rs 19,678.75 crs</p>
         <p>Benchmark NIFTY Smallcap 250 TRI</p><p>Data as on 31st August, 2026 unless otherwise specified.</p></html>'''
+        # A responsive duplicate that has the same headings but cannot reconcile
+        # must not prevent a later valid table on the same official page.
+        broken='''<table><tr><th>Issuer/Instrument</th><th>% to Net Assets</th></tr>
+        <tr><td>Healthcare Services</td><td>14.27</td></tr>
+        <tr><td>Equity &amp; Equity related - Total</td><td>99.05</td></tr>
+        <tr><td>Triparty Repo</td><td>1.05</td></tr>
+        <tr><td>Net Current Assets/(Liabilities)</td><td>-0.10</td></tr>
+        <tr><td>Grand Total</td><td>100.00</td></tr></table>'''
+        html=html.replace('<table>',broken+'<table>',1)
         self.assertEqual(parse_page(html,f,u,'kotak'),5)
         snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
         self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})

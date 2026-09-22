@@ -178,52 +178,54 @@ def canara_portfolio(soup,day,url,h):
 def kotak_portfolio(soup,day,url,h):
     """Parse Kotak's full monthly Small Cap factsheet portfolio by reconciliation."""
     from .disclosures import portfolio
-    table=None
-    for candidate in soup.select('table'):
-        text=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
-        if re.search(r'Issuer\s*/\s*Instrument',text,re.I) and re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',text,re.I) and re.search(r'Grand\s+Total',text,re.I):
-            table=candidate;break
-    if table is None:return 0
-    equity_rows=[];equity_total=None;repo=None;cash=None;grand=None
-    for tr in table.select('tr'):
-        cells=tr.find_all(['th','td'],recursive=False)
-        texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
-        if not texts:continue
-        label=next((x for x in texts if x), '')
-        raw=next((x for x in reversed(texts[1:]) if re.fullmatch(r'-?[\d,]+(?:\.\d+)?\s*%?',x)),None)
-        if not label or raw is None:continue
-        value=number(raw);key=re.sub(r'[^a-z]','',label.lower())
-        if key=='equityequityrelatedtotal':equity_total=value;continue
-        if key=='tripartyrepo':repo=value;continue
-        if key in ('netcurrentassetsliabilities','netcurrentassetsliability'):cash=value;continue
-        if key=='grandtotal':grand=value;continue
-        if equity_total is None:equity_rows.append((label,value))
-    if None in (equity_total,repo,cash,grand) or abs(grand-100)>.03 or not equity_rows:return 0
-    positions=[];i=0;sector_totals=0.0
-    while i<len(equity_rows):
-        sector,sector_total=equity_rows[i];i+=1
-        if not 0<=sector_total<=100:return 0
-        group=[];subtotal=0.0
+    def parse_table(table):
+        equity_rows=[];equity_total=None;repo=None;cash=None;grand=None
+        for tr in table.select('tr'):
+            cells=tr.find_all(['th','td'],recursive=False)
+            texts=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in cells]
+            if not texts:continue
+            label=next((x for x in texts if x),'')
+            raw=next((x for x in reversed(texts[1:]) if re.fullmatch(r'-?[\d,]+(?:\.\d+)?\s*%?',x)),None)
+            if not label or raw is None:continue
+            value=number(raw);key=re.sub(r'[^a-z]','',label.lower())
+            if key=='equityequityrelatedtotal':equity_total=value;continue
+            if key=='tripartyrepo':repo=value;continue
+            if key in ('netcurrentassetsliabilities','netcurrentassetsliability'):cash=value;continue
+            if key=='grandtotal':grand=value;continue
+            if equity_total is None:equity_rows.append((label,value))
+        if None in (equity_total,repo,cash,grand) or abs(grand-100)>.03 or not equity_rows:return None
+        positions=[];i=0;sector_totals=0.0
         while i<len(equity_rows):
-            name,weight=equity_rows[i]
-            if not 0<=weight<=100:return 0
-            group.append((name,weight));subtotal+=weight;i+=1
+            sector,sector_total=equity_rows[i];i+=1
+            if not 0<=sector_total<=100:return None
+            group=[];subtotal=0.0
+            while i<len(equity_rows):
+                name,weight=equity_rows[i]
+                if not 0<=weight<=100:return None
+                group.append((name,weight));subtotal+=weight;i+=1
+                tolerance=max(.03,.006*len(group))
+                if abs(subtotal-sector_total)<=tolerance:break
+                if subtotal>sector_total+tolerance:return None
             tolerance=max(.03,.006*len(group))
-            if abs(subtotal-sector_total)<=tolerance:break
-            if subtotal>sector_total+tolerance:return 0
-        tolerance=max(.03,.006*len(group))
-        if not group or abs(subtotal-sector_total)>tolerance:return 0
-        sector_totals+=sector_total
-        positions.extend({'name':name,'isin':None,'sector':sector,'weight':weight,'asset_type':'Equity'} for name,weight in group)
-    if abs(sector_totals-equity_total)>max(.08,.006*len(positions)):return 0
-    if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.006*len(positions)):return 0
-    if abs((equity_total+repo+cash)-grand)>.03:return 0
-    if len({x['name'] for x in positions})!=len(positions):return 0
-    positions.append({'name':'Triparty Repo','isin':None,'sector':None,'weight':repo,'asset_type':'Money market'})
-    positions.append({'name':'Net Current Assets/(Liabilities)','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
-    portfolio('Kotak Small Cap Fund',day,positions,True,url,h)
-    return len(positions)
-
+            if not group or abs(subtotal-sector_total)>tolerance:return None
+            sector_totals+=sector_total
+            positions.extend({'name':name,'isin':None,'sector':sector,'weight':weight,'asset_type':'Equity'} for name,weight in group)
+        if abs(sector_totals-equity_total)>max(.08,.006*len(positions)):return None
+        if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.006*len(positions)):return None
+        if abs((equity_total+repo+cash)-grand)>.03:return None
+        if len({x['name'] for x in positions})!=len(positions):return None
+        positions.append({'name':'Triparty Repo','isin':None,'sector':None,'weight':repo,'asset_type':'Money market'})
+        positions.append({'name':'Net Current Assets/(Liabilities)','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
+        return positions
+    for table in soup.select('table'):
+        text=re.sub(r'\s+',' ',table.get_text(' ',strip=True))
+        if not (re.search(r'Issuer\s*/\s*Instrument',text,re.I) and re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',text,re.I) and re.search(r'Grand\s+Total',text,re.I)):
+            continue
+        positions=parse_table(table)
+        if positions:
+            portfolio('Kotak Small Cap Fund',day,positions,True,url,h)
+            return len(positions)
+    return 0
 
 def parse_page(content,family,url,h):
     from .structured_reports import extract
@@ -245,7 +247,10 @@ def parse_page(content,family,url,h):
     if family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
         exact=exact or any('CANARA ROBECO SMALL CAP FUND'==tag.get_text(' ',strip=True).upper() for tag in soup.select('h1,h2,h3,h4'))
     if kotak_monthly:
-        exact=exact or any(re.fullmatch(r'KOTAK\s+SMALL\s+CAP\s+FUND',re.sub(r'\s+',' ',tag.get_text(' ',strip=True)),re.I) for tag in soup.select('td,th,div,p'))
+        visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
+        exact=exact or bool(re.search(r'\bKOTAK\s+SMALL\s+CAP\s+FUND\b',visible,re.I) and
+                            re.search(r'predominantly\s+investing\s+in\s+small\s+cap\s+stocks',visible,re.I) and
+                            re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',visible,re.I))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
     if kotak_monthly:
