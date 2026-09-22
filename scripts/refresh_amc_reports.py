@@ -4,6 +4,7 @@ Known official report URLs provide reproducible starting coverage. The daily
 document collector discovers subsequent reports from their registered AMC pages.
 """
 from pathlib import Path
+import os
 import json
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -20,6 +21,13 @@ def run():
     key='amc_upgrade_'+amc_reports.PARSER_VERSION
     if db.setting(key,False):
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
+    # Thin split restores omit historical source binaries during normal runs.
+    # A parser-version upgrade is the exceptional case that needs the retained
+    # originals again, so materialize them before reprocessing.
+    if os.environ.get('SMALLCAP_DATABASE_ONLY_RESTORE')=='1' and os.environ.get('GITHUB_REPOSITORY'):
+        from scripts.github_state import materialize_all_source_packs
+        restored=materialize_all_source_packs()
+        print(f'Materialized {restored} archived source files for parser upgrade',flush=True)
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     source_rows=json.loads((ROOT/'tracker/sources.json').read_text())
     def collect(row):
