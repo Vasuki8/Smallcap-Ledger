@@ -189,8 +189,9 @@ def discover(amc):
             if not re.search(r'\.(?:xlsx?|xml|pdf)(?:[?#]|$)',url,re.I):continue
             specific=bool(re.search(r'quant[\s_\-]*small[\s_\-]*cap|small[\s_\-]*cap[\s_\-]*fund',combined,re.I))
             monthly=bool(re.search(r'monthly[\s_\-]*portfolio|portfolio[\s_\-]*statement',combined,re.I))
-            all_funds=monthly and bool(re.search(r'all[\s_\-]*(?:funds|schemes)|monthly[\s_\-]*portfolio(?![\s_\-]*fund)',combined,re.I))
-            if not (specific and monthly or all_funds):continue
+            portfolio_path=bool(re.search(r'/portfolio/',urlparse(url).path,re.I))
+            all_funds=(monthly or portfolio_path) and bool(re.search(r'all[\s_\-]*(?:funds|schemes)|monthly[\s_\-]*portfolio(?![\s_\-]*fund)',combined,re.I))
+            if not (specific and (monthly or portfolio_path) or all_funds):continue
             years=[int(x) for x in re.findall(r'20[12]\d',combined)]
             year=max(years,default=0)
             month=max((i for i in range(1,13) if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
