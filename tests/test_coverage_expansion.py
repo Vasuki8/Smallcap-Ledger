@@ -343,6 +343,82 @@ Scheme Category: Small Cap Fund'''
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Small Cap Fund','Large Cap Fund',1)))
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
 
+    def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
+        from tracker.report_parser import boi_complete_portfolio
+        text='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026 (Unless indicated otherwise)
+Portfolio Holdings % to Net
+Industry/ Rating Assets
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+TREPS / Reverse Repo Investments 0.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 1.20
+Canara Bank (CRISIL A1+) 0.80
+Total 2.00
+GRAND TOTAL 100.00
+PORTFOLIO DETAILS
+EQUITY HOLDINGS
+INVESTMENT OBJECTIVE'''
+        result=boi_complete_portfolio(text)
+        self.assertIsNotNone(result)
+        self.assertEqual(result['day'],'2026-03-31')
+        self.assertAlmostEqual(sum(x['weight'] for x in result['positions']),100,places=2)
+        self.assertEqual([x['asset_type'] for x in result['positions'][-4:]],[
+            'Debt','Money market','Money market','Cash and net current assets'])
+        bad=text.replace('OTHERS 92.00','OTHERS 91.00')
+        self.assertIsNone(boi_complete_portfolio(bad))
+        self.assertIsNone(boi_complete_portfolio(text.replace('Bank of India Small Cap Fund','Bank of India Mid Cap Fund',1)))
+
+    def test_boi_factsheet_pdf_saves_complete_snapshot(self):
+        from tracker import disclosures
+        page_text='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+Portfolio Holdings % to Net
+Industry/ Rating Assets
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 2.00
+Total 2.00
+GRAND TOTAL 100.00
+INVESTMENT OBJECTIVE'''
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:page_text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bank Of India Small Cap Fund','https://www.boimf.in/factsheet.pdf','boi')
+        self.assertGreater(count,0)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund'")
+        self.assertEqual(snap,{'as_of':'2026-03-31','complete':1})
+
     def test_hsbc_complete_portfolio_reconciles_sector_and_cash_totals(self):
         from tracker.report_parser import hsbc_complete_portfolio
         text='''HSBC Small Cap Fund
