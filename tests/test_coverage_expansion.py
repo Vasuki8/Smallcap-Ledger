@@ -433,6 +433,39 @@ Total Net Assets as on 31-July-2026 100.00%
         self.assertAlmostEqual(sum(x['weight'] for x in rows),100,places=2)
         self.assertEqual(float(db.one("SELECT value FROM metrics WHERE metric='aum'")['value']),19678.75)
 
+    def test_portfolio_gap_audit_distinguishes_facts_only_from_source_gap(self):
+        from tracker import coverage,amc_reports
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (101,'Gap Small Cap Fund','Gap Small Cap Fund','Gap Mutual Fund','Direct','Growth','test'))
+            c.execute("""INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
+              VALUES(?,?,?,?,?,?,?,?,?)""",('Gap Small Cap Fund','August factsheet','factsheet','Fund',
+              'https://gap.example/factsheet.pdf','2026-08-31',db.now(),db.now(),'AMC'))
+            did=c.execute("SELECT id FROM documents WHERE family='Gap Small Cap Fund'").fetchone()[0]
+        h=db.archive(b'gap factsheet fixture','application/pdf')
+        with db.connect() as c:
+            c.execute('INSERT INTO document_versions(document_id,hash,observed_at) VALUES(?,?,?)',(did,h,db.now()))
+            c.execute("INSERT INTO source_pages(amc_match,url,label,last_checked,status,detail) VALUES(?,?,?,?,?,?)",
+                      ('Gap','https://gap.example/downloads','Downloads',db.now(),'Checked','Page checked'))
+        amc_reports.init()
+        with db.connect() as c:
+            c.execute('INSERT INTO document_extractions VALUES(?,?,?,?,?,?,?,?)',
+                      ('Gap Small Cap Fund',h,amc_reports.PARSER_VERSION,'https://gap.example/factsheet.pdf',
+                       'parsed',5,'5 dated facts; 0 holdings',db.now()))
+        row=next(x for x in coverage.report()['funds'] if x['family']=='Gap Small Cap Fund')
+        self.assertEqual(row['portfolio_gap']['reason'],'facts_only_no_portfolio')
+        self.assertEqual(row['portfolio_gap']['document']['kind'],'factsheet')
+        self.assertEqual(row['portfolio_gap']['extraction']['records'],5)
+
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (102,'Unavailable Small Cap Fund','Unavailable Small Cap Fund','Unavailable Mutual Fund','Direct','Growth','test'))
+            c.execute("INSERT INTO source_pages(amc_match,url,label,last_checked,status,detail) VALUES(?,?,?,?,?,?)",
+                      ('Unavailable','https://unavailable.example/downloads','Downloads',db.now(),'Gap','Timed out'))
+        row=next(x for x in coverage.report()['funds'] if x['family']=='Unavailable Small Cap Fund')
+        self.assertEqual(row['portfolio_gap']['reason'],'source_unavailable')
+        self.assertEqual(row['portfolio_gap']['source_page']['status'],'Gap')
+
     def test_portfolio_freshness_target_has_new_month_grace(self):
         from datetime import date
         from tracker.coverage import expected_portfolio_as_of
