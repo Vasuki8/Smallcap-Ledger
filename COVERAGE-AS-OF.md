@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-22T14:24:48+00:00
+Prepared: 2026-09-22T14:40:22+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **18 / 36 funds**. Reported benchmark identity: **18 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **19 / 36 funds**. Reported benchmark identity: **18 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -35,7 +35,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Mirae Asset Small Cap Fund | ₹ 5,906.34 · 2026-09-18 | 0.34% BER · 2026-07-31 | 10 positions · 2026-07-31 · partial | Nifty Smallcap 250 (TRI) · 2026-07-31 | 4 |
 | Motilal Oswal Small Cap Fund | ₹ 8,351.26 · 2026-09-18 | 0.85% TER · 2026-09-20 | 63 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
 | Nippon India Small Cap Fund | ₹ 82,618.95 · 2026-09-18 | 0.68% TER · 2026-09-21 | 257 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 622 |
-| Pgim India Small Cap Fund | ₹ 1,784.34 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | Gap | 6 |
+| Pgim India Small Cap Fund | ₹ 1,784.34 · 2026-09-18 | 0.93% TER · 2026-09-21 | 70 positions · 2026-07-31 · complete | Gap | 6 |
 | Quant Small Cap Fund | ₹ 35,458.32 · 2026-09-18 | 0.93% TER · 2026-09-21 | Gap | NIFTY SMALLCAP 250 TRI · 2026-08-31 | 14 |
 | Quantum Small Cap Fund | ₹ 265.21 · 2026-09-18 | 0.83% TER · 2026-09-20 | 60 positions · 2026-08-31 · complete | BSE 250 SmallCap TRI · 2025-08-31 | 75 |
 | SBI Small Cap Fund | ₹ 42,245.73 · 2026-09-18 | 0.79% TER · 2026-09-20 | 68 positions · 2026-07-31 · partial | BSE 250 Small Cap Index TRI · 2026-07-31 | 2 |
