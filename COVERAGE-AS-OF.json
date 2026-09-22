@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T16:10:07+00:00",
+  "built_at": "2026-09-22T17:26:44+00:00",
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
@@ -871,7 +871,12 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=3&pageSize=1000"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-05-31",
+        "source": "https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/06/lic-mf-factsheet-31st-may-2026.pdf",
+        "complete": 1,
+        "positions": 61
+      },
       "official_publications": 26
     },
     {
@@ -1530,7 +1535,7 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 20,
+    "portfolio": 21,
     "benchmark_identity": 18
   },
   "notes": [

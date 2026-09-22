@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-22T16:10:07+00:00
+Prepared: 2026-09-22T17:26:44+00:00
 
 **36 funds, 143 NAV series, 280,984 NAV observations. Latest included NAV: 2026-09-21.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **20 / 36 funds**. Reported benchmark identity: **18 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Latest parsed portfolio: **21 / 36 funds**. Reported benchmark identity: **18 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -30,7 +30,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Iti Small Cap Fund | ₹ 3,711.30 · 2026-09-18 | 0.86% TER · 2026-09-21 | 87 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 9 |
 | Jm Small Cap Fund | ₹ 934.47 · 2026-09-18 | 0.59% BER · 2026-08-31 | Gap | Gap | 4 |
 | Kotak Small Cap Fund | ₹ 19,531.68 · 2026-09-18 | 0.6459% TER · 2026-09-19 | Gap | Gap | 6 |
-| LIC Mf Small Cap Fund | ₹ 850.51 · 2026-09-18 | 1.31% TER · 2026-09-21 | Gap | Gap | 26 |
+| LIC Mf Small Cap Fund | ₹ 850.51 · 2026-09-18 | 1.31% TER · 2026-09-21 | 61 positions · 2026-05-31 · complete | Gap | 26 |
 | Mahindra Manulife Small Cap Fund | ₹ 5,480.75 · 2026-09-18 | 0.47% BER · 2026-08-31 | 82 positions · 2026-08-31 · complete | BSE 250 Small Cap TRI · 2026-08-31 | 10 |
 | Mirae Asset Small Cap Fund | ₹ 5,906.34 · 2026-09-18 | 0.34% BER · 2026-07-31 | 10 positions · 2026-07-31 · partial | Nifty Smallcap 250 (TRI) · 2026-07-31 | 4 |
 | Motilal Oswal Small Cap Fund | ₹ 8,351.26 · 2026-09-18 | 0.85% TER · 2026-09-20 | 63 positions · 2026-08-31 · complete | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
