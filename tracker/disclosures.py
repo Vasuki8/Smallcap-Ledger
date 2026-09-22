@@ -192,20 +192,22 @@ def factsheet_pdf(content,family,url,h):
     count=0
     for page in reader.pages:
         text=page.extract_text() or ''
-        if not owns_page(text,family):continue
-        facts=page_facts(text,family)
+        owned=owns_page(text,family)
+        full=None
+        if family=='Pgim India Small Cap Fund':
+            from .report_parser import pgim_complete_portfolio
+            full=pgim_complete_portfolio(text)
+        if not owned and not full:continue
+        facts=page_facts(text,family) if owned else []
         if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
             from .report_parser import layout_aum
             facts.extend(layout_aum(page.extract_text(extraction_mode='layout'),family,report_date(text)))
         for fact in facts:
             db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
         count+=len(facts)
-        if family=='Pgim India Small Cap Fund':
-            from .report_parser import pgim_complete_portfolio
-            full=pgim_complete_portfolio(text)
-            if full:
-                portfolio(family,full['day'],full['positions'],True,url,h);count+=len(full['positions'])
-                continue
+        if full:
+            portfolio(family,full['day'],full['positions'],True,url,h);count+=len(full['positions'])
+            continue
         positions=equity_positions(text,family)
         if positions and facts:
             portfolio(family,facts[0]['as_of'],positions,False,url,h);count+=len(positions)

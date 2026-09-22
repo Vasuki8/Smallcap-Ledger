@@ -54,6 +54,19 @@ class CoverageExpansionTests(unittest.TestCase):
         row['GROUP_NAME']='Sundaram Mid Cap Fund'
         self.assertEqual(extract(json.dumps([row]),f,u,'bad'),0)
 
+    def test_pgim_pdf_allows_reconciled_page_when_generic_owner_order_is_reversed(self):
+        from tracker import disclosures
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:'PGIM reversed-title fixture')
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        full={'day':'2026-07-31','positions':[
+            {'name':'Example Holdings Limited','isin':None,'sector':'Test','weight':97.0,'asset_type':'Equity'},
+            {'name':'Cash & Current Assets','isin':None,'sector':None,'weight':3.0,'asset_type':'Cash and net current assets'}]}
+        with patch('pypdf.PdfReader',return_value=reader), \
+             patch('tracker.report_parser.owns_page',return_value=False), \
+             patch('tracker.report_parser.pgim_complete_portfolio',return_value=full):
+            self.assertEqual(disclosures.factsheet_pdf(b'%PDF','Pgim India Small Cap Fund','https://www.pgimindia.com/test.pdf','hash'),2)
+        self.assertEqual(db.one("SELECT complete FROM portfolios WHERE family='Pgim India Small Cap Fund'")['complete'],1)
+
     def test_pgim_complete_portfolio_reconciles_equity_debt_and_cash(self):
         from tracker.report_parser import pgim_complete_portfolio
         issuers='\n'.join([f'Example Holdings {i} Limited {97.26/20:.3f}' for i in range(1,21)])
