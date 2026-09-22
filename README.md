@@ -52,6 +52,8 @@ Sources requiring sign-in, a challenge or unsupported dynamic rendering remain g
 
 Each GitHub run restores the previous cumulative archive from the `tracker-history` release. It uses the bundled seed only when that release does not exist. A failed download or checksum never silently resets history. After collection and site validation, it uploads a new ZIP before updating `latest.json`. The previous checkpoint is also retained. Obsolete whole-checkpoint copies may be removed, while **each checkpoint still contains all retained historical records and original files**. Expiring Actions caches and artifacts are not the primary archive.
 
+To keep GitHub Pages deployable as the archive grows, the public static site serves only the newest saved copy of each AMC publication. Older saved document versions remain preserved in the cumulative `tracker-history` release and are not deleted from the underlying archive.
+
 Collection has a 40-minute budget. If interrupted, completed records are retained, the interrupted job is labelled, and the next run prioritizes the least recently checked sources. A failed later build leaves the last published site online. Builds commit a compact collection audit to `deployment/update-status.json`.
 
 ## Local edition and imports
