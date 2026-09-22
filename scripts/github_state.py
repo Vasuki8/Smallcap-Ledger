@@ -1,7 +1,8 @@
-"""Durable, verified cumulative archives for a stateless GitHub Actions runner.
+"""Durable, verified history for a stateless GitHub Actions runner.
 
-Each checkpoint contains all retained observations and all original source files.
-The pointer is switched only after the new immutable ZIP asset is uploaded.
+Release format 2 separates the changing SQLite database from reusable source-file
+packs. Restore remains backward compatible with the original cumulative ZIP.
+The latest pointer is switched only after every required asset is uploaded.
 """
 from __future__ import annotations
 import argparse
@@ -24,6 +25,8 @@ from tracker import db
 TAG='tracker-history'
 MAX_ZIP=1800*1024*1024
 MAX_EXPANDED=6*1024**3
+SOURCE_PACK_RAW_LIMIT=128*1024*1024
+FORMAT=2
 
 
 def digest(path):
@@ -31,6 +34,71 @@ def digest(path):
     with Path(path).open('rb') as f:
         for block in iter(lambda:f.read(1024*1024),b''):h.update(block)
     return h.hexdigest()
+
+
+def _database_snapshot(path):
+    path=Path(path)
+    with db.connect() as source,sqlite3.connect(path) as dest:source.backup(dest)
+    # Compact only the disposable checkpoint copy. This reclaims free SQLite
+    # pages without mutating the live cumulative database or deleting records.
+    with sqlite3.connect(path) as compact:compact.execute('VACUUM')
+
+
+def pack_database(target):
+    target=Path(target);target.parent.mkdir(parents=True,exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        snapshot=Path(tmp)/'ledger.sqlite3';_database_snapshot(snapshot)
+        with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+            z.write(snapshot,'data/ledger.sqlite3')
+    if target.stat().st_size>MAX_ZIP:raise ValueError('Database checkpoint approaches the GitHub release asset size limit')
+    return {'asset':target.name,'sha256':digest(target),'bytes':target.stat().st_size}
+
+
+def _archive_bucket(first_seen):
+    match=re.match(r'^(\d{4}-\d{2})',str(first_seen or ''))
+    return match.group(1) if match else 'undated'
+
+
+def source_pack_plan(rows,raw_limit=SOURCE_PACK_RAW_LIMIT):
+    """Return deterministic append-stable source packs grouped by first-seen month."""
+    if raw_limit<=0:raise ValueError('Source pack limit must be positive')
+    groups={}
+    for row in rows:
+        item=dict(row);item['bytes']=int(item['bytes'])
+        if item['bytes']<0:raise ValueError('Archive byte count cannot be negative')
+        groups.setdefault(_archive_bucket(item.get('first_seen')),[]).append(item)
+    plans=[]
+    for bucket in sorted(groups):
+        ordered=sorted(groups[bucket],key=lambda x:(x.get('first_seen') or '',x['hash']))
+        parts=[];current=[];size=0
+        for item in ordered:
+            if current and size+item['bytes']>raw_limit:
+                parts.append(current);current=[];size=0
+            current.append(item);size+=item['bytes']
+        if current:parts.append(current)
+        for number,members in enumerate(parts,1):
+            identity='\n'.join(f"{m['hash']}:{m['bytes']}:{m['path']}" for m in members)
+            fingerprint=hashlib.sha256(identity.encode()).hexdigest()[:16]
+            plans.append({'asset':f'sources-{bucket}-p{number:03d}-{fingerprint}.zip',
+                          'bucket':bucket,'part':number,
+                          'raw_bytes':sum(m['bytes'] for m in members),
+                          'members':members})
+    return plans
+
+
+def pack_source_pack(target,plan):
+    target=Path(target);target.parent.mkdir(parents=True,exist_ok=True)
+    with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+        for row in plan['members']:
+            p=(db.DATA/row['path']).resolve()
+            if not p.is_relative_to(db.DATA.resolve()) or not p.is_file() or p.stat().st_size!=row['bytes'] or digest(p)!=row['hash']:
+                raise ValueError('Missing or damaged original '+row['hash'])
+            z.write(p,'data/'+row['path'])
+    if target.stat().st_size>MAX_ZIP:raise ValueError('Source pack approaches the GitHub release asset size limit')
+    return {'asset':target.name,'bucket':plan['bucket'],'part':plan['part'],
+            'raw_bytes':plan['raw_bytes'],'members':len(plan['members']),
+            'hashes':[row['hash'] for row in plan['members']],
+            'bytes':target.stat().st_size}
 
 
 def verify_data(folder):
@@ -48,12 +116,7 @@ def verify_data(folder):
 def pack(target):
     target=Path(target);target.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        snapshot=Path(tmp)/'ledger.sqlite3'
-        with db.connect() as source,sqlite3.connect(snapshot) as dest:source.backup(dest)
-        # Compact only the disposable checkpoint copy. This reclaims free SQLite
-        # pages without mutating the live cumulative database or deleting records.
-        with sqlite3.connect(snapshot) as compact:
-            compact.execute('VACUUM')
+        snapshot=Path(tmp)/'ledger.sqlite3';_database_snapshot(snapshot)
         with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
             z.write(snapshot,'data/ledger.sqlite3')
             for r in db.rows('SELECT hash,path FROM archives ORDER BY hash'):
@@ -82,6 +145,56 @@ def unpack(archive,destination):
         verify_data(Path(tmp)/'data')
         if destination.exists():destination.rmdir()
         shutil.move(str(Path(tmp)/'data'),str(destination))
+
+
+def _validate_zip_member(info,prefix):
+    name=PurePosixPath(info.filename)
+    if name.is_absolute() or '..' in name.parts or '\\' in info.filename or not name.parts:
+        raise ValueError('Unsafe archive path')
+    if not str(name).startswith(prefix) or (info.external_attr>>16)&0o170000==0o120000:
+        raise ValueError('Invalid archive member '+info.filename)
+    return name
+
+
+def _restore_split_assets(database_zip,source_zips,destination,database_meta=None,pack_meta=None):
+    destination=Path(destination).resolve()
+    if destination.exists() and any(destination.iterdir()):raise ValueError('Restore requires an empty data directory')
+    destination.parent.mkdir(parents=True,exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=destination.parent) as tmp:
+        tmp=Path(tmp);stage=tmp/'data';stage.mkdir()
+        if database_meta:
+            if database_zip.stat().st_size!=database_meta['bytes'] or digest(database_zip)!=database_meta['sha256']:
+                raise ValueError('Database checkpoint checksum failed')
+        with zipfile.ZipFile(database_zip) as z:
+            infos=z.infolist()
+            if len(infos)!=1 or infos[0].filename!='data/ledger.sqlite3':
+                raise ValueError('Database checkpoint has unexpected contents')
+            _validate_zip_member(infos[0],'data/ledger.sqlite3')
+            z.extractall(tmp)
+        seen=set();expanded=(stage/'ledger.sqlite3').stat().st_size
+        metas=pack_meta or [{} for _ in source_zips]
+        for archive,meta in zip(source_zips,metas):
+            if meta.get('bytes') is not None and archive.stat().st_size!=meta['bytes']:
+                raise ValueError('Source pack size check failed: '+archive.name)
+            with zipfile.ZipFile(archive) as z:
+                for info in z.infolist():
+                    name=_validate_zip_member(info,'data/archive/')
+                    if info.is_dir():continue
+                    if info.filename in seen:raise ValueError('Duplicate source file across packs')
+                    seen.add(info.filename);expanded+=info.file_size
+                    if expanded>MAX_EXPANDED:raise ValueError('Expanded archive is too large')
+                z.extractall(tmp)
+        verify_data(stage)
+        if destination.exists():destination.rmdir()
+        shutil.move(str(stage),str(destination))
+
+
+def _checkpoint_summary(manifest):
+    if int(manifest.get('format',1))>=2:
+        return {'format':2,'created_at':manifest.get('created_at'),
+                'database':manifest['database'],'source_packs':manifest.get('source_packs',[])}
+    return {'format':1,'created_at':manifest.get('created_at'),'asset':manifest['asset'],
+            'sha256':manifest['sha256'],'bytes':manifest['bytes']}
 
 
 def gh(*args,check=True):
@@ -125,18 +238,82 @@ def restore(seed):
     if r is None:
         restore_seed(seed,db.DATA);print('Restored the bundled historical starting archive');return
     with tempfile.TemporaryDirectory() as tmp:
-        pointer=download_asset(repo,'latest.json',tmp)
-        manifest=json.loads(pointer.read_text())
-        state=download_asset(repo,manifest['asset'],tmp)
-        if state.stat().st_size!=manifest['bytes'] or digest(state)!=manifest['sha256']:raise ValueError('Release archive checksum failed; history was not reset')
-        unpack(state,db.DATA)
-    print('Restored '+manifest['asset'])
+        tmp=Path(tmp);pointer=download_asset(repo,'latest.json',tmp)
+        manifest=json.loads(pointer.read_text());fmt=int(manifest.get('format',1))
+        if fmt<2:
+            state=download_asset(repo,manifest['asset'],tmp)
+            if state.stat().st_size!=manifest['bytes'] or digest(state)!=manifest['sha256']:
+                raise ValueError('Release archive checksum failed; history was not reset')
+            unpack(state,db.DATA);print('Restored '+manifest['asset']);return
+        database=download_asset(repo,manifest['database']['asset'],tmp)
+        packs=[download_asset(repo,p['asset'],tmp) for p in manifest.get('source_packs',[])]
+        _restore_split_assets(database,packs,db.DATA,manifest['database'],manifest.get('source_packs',[]))
+    print(f"Restored split checkpoint {manifest['database']['asset']} with {len(packs)} source packs")
 
 
-def publish():
+def publish_split():
     repo=repository();r=release(repo)
     if r is None:
-        gh('release','create',TAG,'--repo',repo,'--target',os.environ.get('GITHUB_SHA','main'),'--title','Smallcap Ledger historical archive','--notes','Cumulative SQLite records and original source files. Download latest.json to identify the current checkpoint. Every checkpoint retains all collected historical observations.','--prerelease')
+        gh('release','create',TAG,'--repo',repo,'--target',os.environ.get('GITHUB_SHA','main'),
+           '--title','Smallcap Ledger historical archive',
+           '--notes','Split durable history: latest SQLite checkpoint plus reusable source-file packs. latest.json identifies the active verified set.','--prerelease')
+        r=json.loads(gh('api',f'repos/{repo}/releases/tags/{TAG}').stdout)
+    if r.get('immutable'):raise ValueError('The tracker-history release is immutable; a writable archive location is required')
+    assets={a['name']:a for a in r['assets']}
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp=Path(tmp);previous=None
+        if 'latest.json' in assets:
+            old=download_asset(repo,'latest.json',tmp);previous=json.loads(old.read_text());old.unlink()
+        rows=db.rows('SELECT hash,path,bytes,first_seen FROM archives ORDER BY first_seen,hash')
+        previous_packs=list((previous or {}).get('source_packs',[])) if int((previous or {}).get('format',1))>=2 else []
+        covered={h for p in previous_packs for h in p.get('hashes',[])}
+        current_hashes={row['hash'] for row in rows}
+        if covered-current_hashes:
+            raise ValueError('Current database no longer references source files retained by the previous checkpoint')
+        new_rows=[row for row in rows if row['hash'] not in covered]
+        plans=source_pack_plan(new_rows)
+        # Existing format-2 source packs are immutable and reused verbatim.
+        # Only hashes not covered by the previous checkpoint create new assets.
+        pack_records=previous_packs.copy()
+        for plan in plans:
+            name=plan['asset']
+            if name in assets:
+                raise ValueError('New source-pack name unexpectedly collides with an existing release asset')
+            target=tmp/name;record=pack_source_pack(target,plan)
+            gh('release','upload',TAG,str(target),'--repo',repo);pack_records.append(record)
+        run=os.environ.get('GITHUB_RUN_ID',db.now().replace(':','').replace('+',''))
+        attempt=os.environ.get('GITHUB_RUN_ATTEMPT','1')
+        database_asset=f'database-{run}-{attempt}.zip'
+        database=pack_database(tmp/database_asset)
+        gh('release','upload',TAG,str(tmp/database_asset),'--repo',repo)
+        manifest={'format':FORMAT,'created_at':db.now(),'database':database,'source_packs':pack_records,
+                  'source_pack_raw_limit':SOURCE_PACK_RAW_LIMIT,
+                  'previous':_checkpoint_summary(previous) if previous else None}
+        pointer=tmp/'latest.json';pointer.write_text(json.dumps(manifest,indent=2)+'\n')
+        gh('release','upload',TAG,str(pointer),'--repo',repo,'--clobber')
+        keep={'latest.json',database_asset,*[p['asset'] for p in pack_records]}
+        if manifest['previous']:
+            old=manifest['previous']
+            if old['format']==1:keep.add(old['asset'])
+            else:
+                keep.add(old['database']['asset']);keep.update(p['asset'] for p in old.get('source_packs',[]))
+        for asset in r['assets']:
+            name=asset['name']
+            managed=(re.fullmatch(r'database-[A-Za-z0-9_.-]+\.zip',name) or
+                     re.fullmatch(r'sources-[A-Za-z0-9_.-]+\.zip',name))
+            if managed and name not in keep:
+                gh('release','delete-asset',TAG,name,'--repo',repo,'--yes')
+    print(f"Saved split checkpoint {database_asset} with {len(pack_records)} reusable source packs")
+
+
+
+def publish_legacy():
+    """Original cumulative ZIP publisher retained for staged migration."""
+    repo=repository();r=release(repo)
+    if r is None:
+        gh('release','create',TAG,'--repo',repo,'--target',os.environ.get('GITHUB_SHA','main'),
+           '--title','Smallcap Ledger historical archive',
+           '--notes','Cumulative SQLite records and original source files. Download latest.json to identify the current checkpoint.','--prerelease')
         r=json.loads(gh('api',f'repos/{repo}/releases/tags/{TAG}').stdout)
     if r.get('immutable'):raise ValueError('The tracker-history release is immutable; a writable archive location is required')
     with tempfile.TemporaryDirectory() as tmp:
@@ -144,8 +321,8 @@ def publish():
         target=Path(tmp)/asset;manifest=pack(target)
         previous=None
         if any(a['name']=='latest.json' for a in r['assets']):
-            old=download_asset(repo,'latest.json',tmp);previous=json.loads(old.read_text())['asset'];old.unlink()
-        # Never overwrite the sole valid checkpoint. Retain the previous one too.
+            old=download_asset(repo,'latest.json',tmp);old_manifest=json.loads(old.read_text());old.unlink()
+            if int(old_manifest.get('format',1))<2:previous=old_manifest.get('asset')
         gh('release','upload',TAG,str(target),'--repo',repo)
         manifest['previous_asset']=previous
         pointer=Path(tmp)/'latest.json';pointer.write_text(json.dumps(manifest,indent=2)+'\n')
@@ -156,6 +333,12 @@ def publish():
                 gh('release','delete-asset',TAG,a['name'],'--repo',repo,'--yes')
     print('Saved cumulative archive '+asset)
 
+
+def publish():
+    # Format 2 is deliberately opt-in for the migration run. Until enabled,
+    # production keeps using the proven cumulative checkpoint format.
+    if os.environ.get('SMALLCAP_ARCHIVE_FORMAT')=='2':publish_split()
+    else:publish_legacy()
 
 def seed(target,part_mb=20):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
