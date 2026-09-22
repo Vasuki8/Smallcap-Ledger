@@ -78,7 +78,7 @@ def parse_page(content,family,url,h):
     if family=='Tata Small Cap Fund' and soup.title:
         exact=soup.title.get_text().startswith('Tata Small Cap Fund Direct Growth')
     if family=='Mahindra Manulife Small Cap Fund' and '/digital-factsheet/' in url:
-        exact=any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
+        exact=exact or any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
     patterns={
