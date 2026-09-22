@@ -192,6 +192,17 @@ A third UI-only refinement was merged in PR #7 (commit `2322e5c3b7fe2b568f4e4e6f
 - Mobile directory cards are simplified and include a direct **Open fund** action.
 - Empty search/filter states now include a reset path instead of leaving the user stuck.
 
+
+### Data and update-health UI refresh — 2026-09-22
+
+A fourth UI-only refinement was merged in PR #8 (commit `5efcb6f932cad58c8f4475249a80e8a5d9d481a4`). It does not change scheduling, collectors, source rules, calculations, or historical storage.
+
+- **Data & archive** now emphasizes retained observations, AUM/expense coverage, portfolio snapshots, source evidence, and archive health.
+- Archive actions, maintenance links, and recent update activity are easier to find.
+- **Updates** now presents the daily schedule as an operational health view rather than a settings-heavy page.
+- Source checks are summarized as **healthy** versus **needs attention** states, with better detail visibility on mobile.
+- The source-status table is responsive and easier to scan without horizontal scrolling.
+
 ### Recommended next work
 
 Do not re-investigate the September publication-size incident unless a new run shows the same failure. Start by checking the latest scheduled workflow and `deployment/update-status.json`.
