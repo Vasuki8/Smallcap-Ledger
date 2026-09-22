@@ -46,7 +46,10 @@ def discover(amc):
         for url,title in candidates.items():
             combined=unquote(url+' '+title)
             if not disclosures.official_publication_url(url,amc):continue
-            if not re.search(r'monthly\s+portfolio\s*-?\s*all\s+funds',combined,re.I):continue
+            path=urlparse(url).path.rsplit('/',1)[-1]
+            all_funds=bool(re.search(r'monthly\s+portfolio\s*-?\s*all\s+funds',combined,re.I)
+                           or re.match(r'BOBBNPMF_Monthly_Portfolio_',path,re.I))
+            if not all_funds:continue
             if not re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):continue
             day=None
             m=re.search(r'(\d{1,2})[-_/](\d{1,2})[-_/](20\d{2})',combined)

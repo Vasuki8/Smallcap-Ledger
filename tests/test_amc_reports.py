@@ -170,14 +170,15 @@ class ReportParserTests(unittest.TestCase):
         from tracker import amc_discovery,db
         db.init()
         html='''<ul>
-        <li>Monthly Portfolio - all funds as on 31st July 2026 <a href="/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-07-2026_19000.xls">Download</a></li>
-        <li>Monthly Portfolio - all funds as on 31st August 2026 <a href="/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls">Download</a></li>
-        <li>Monthly Portfolio for Baroda BNP Paribas Large Cap Fund as on 31st August 2026 <a href="/assets/download_documents/large-cap-31-08-2026.xls">Download</a></li>
+        <li>31st July 2026 <a href="/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-07-2026_19000.xls">Download</a></li>
+        <li>31st August 2026 <a href="/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls">Download</a></li>
+        <li>Baroda BNP Paribas Large Cap Fund 31st August 2026 <a href="/assets/download_documents/YR56_19960.xlsx">Download</a></li>
         </ul>'''.encode()
         with patch('tracker.amc_discovery.read',return_value=(html,'fixture','text/html')):
             rows=list(amc_discovery.discover('Baroda'))
         self.assertEqual(len(rows),1)
         self.assertEqual(rows[0][:2],('Baroda Bnp Paribas Small Cap Fund','https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls'))
+
 
     def test_pgim_discovery_uses_official_monthly_factsheet_paths(self):
         from tracker import amc_discovery
