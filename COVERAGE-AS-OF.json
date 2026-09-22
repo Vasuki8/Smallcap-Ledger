@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T21:57:39+00:00",
+  "built_at": "2026-09-22T22:01:26+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -51,7 +51,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": false,
-      "official_publications": 28
+      "official_publications": 28,
+      "portfolio_gap": null
     },
     {
       "family": "Aditya Birla Sun Life Small Cap Fund",
@@ -97,7 +98,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 4
+      "official_publications": 4,
+      "portfolio_gap": {
+        "reason": "facts_only_no_portfolio",
+        "document": {
+          "title": "Empower - Monthly Factsheet",
+          "kind": "factsheet",
+          "url": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf",
+          "last_seen": "2026-09-22T21:56:26+00:00",
+          "hash": "d338bd0b783f8dd71e4d588bdcf71d29d76dcccd4600b4741db23ed50b9ffb36",
+          "observed_at": "2026-09-06T07:23:38+00:00"
+        },
+        "extraction": {
+          "status": "parsed",
+          "records": 5,
+          "detail": "5 dated facts; 0 holdings (portfolio may be partial)",
+          "checked_at": "2026-09-22T21:45:06+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf"
+        },
+        "source_page": {
+          "amc_match": "Aditya Birla",
+          "url": "https://mutualfund.adityabirlacapital.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:57:00+00:00",
+          "status": "Checked",
+          "detail": "2 relevant links; 2 documents archived; 5 facts/holdings; 1 documents without extracted tables; 0 download/parser gaps"
+        }
+      }
     },
     {
       "family": "Axis Small Cap Fund",
@@ -142,7 +170,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 5
+      "official_publications": 5,
+      "portfolio_gap": null
     },
     {
       "family": "Bajaj Finserv Small Cap Fund",
@@ -188,7 +217,20 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 1
+      "official_publications": 1,
+      "portfolio_gap": {
+        "reason": "source_unavailable",
+        "document": null,
+        "extraction": null,
+        "source_page": {
+          "amc_match": "Bajaj",
+          "url": "https://www.bajajamc.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:54:23+00:00",
+          "status": "Gap",
+          "detail": "Client error '403 Forbidden' for url 'https://www.bajajamc.com/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+        }
+      }
     },
     {
       "family": "Bandhan Small Cap Fund",
@@ -228,7 +270,20 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 0
+      "official_publications": 0,
+      "portfolio_gap": {
+        "reason": "source_not_exposing_portfolio",
+        "document": null,
+        "extraction": null,
+        "source_page": {
+          "amc_match": "Bandhan",
+          "url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
+          "label": "Factsheets",
+          "last_checked": "2026-09-22T21:54:23+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "Bank Of India Small Cap Fund",
@@ -268,7 +323,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 6
+      "official_publications": 6,
+      "portfolio_gap": {
+        "reason": "facts_only_no_portfolio",
+        "document": {
+          "title": "FACTSHEET AUGUST 2026",
+          "kind": "factsheet",
+          "url": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5",
+          "last_seen": "2026-09-22T22:00:29+00:00",
+          "hash": "762c097943b21d3dabb77708daf08bcd59c7050e1abfd5de99d0f83030a1f561",
+          "observed_at": "2026-09-22T02:23:02+00:00"
+        },
+        "extraction": {
+          "status": "parsed",
+          "records": 3,
+          "detail": "3 dated facts; 0 holdings (portfolio may be partial)",
+          "checked_at": "2026-09-22T21:15:15+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5"
+        },
+        "source_page": {
+          "amc_match": "Bank of India",
+          "url": "https://www.boimf.in/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:54:25+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "Baroda Bnp Paribas Small Cap Fund",
@@ -313,7 +395,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 6
+      "official_publications": 6,
+      "portfolio_gap": null
     },
     {
       "family": "Canara Robeco Small Cap Fund",
@@ -358,7 +441,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 6
+      "official_publications": 6,
+      "portfolio_gap": null
     },
     {
       "family": "DSP Small Cap Fund",
@@ -409,7 +493,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 14
+      "official_publications": 14,
+      "portfolio_gap": null
     },
     {
       "family": "Edelweiss Small Cap Fund",
@@ -455,7 +540,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 2
+      "official_publications": 2,
+      "portfolio_gap": {
+        "reason": "facts_only_no_portfolio",
+        "document": {
+          "title": "Factsheet - September 2026",
+          "kind": "factsheet",
+          "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
+          "last_seen": "2026-09-22T21:46:54+00:00",
+          "hash": "ecda95db8183525b4b429c835d10d883b4db0757dabff2b562002d5a16cec366",
+          "observed_at": "2026-09-22T21:46:58+00:00"
+        },
+        "extraction": {
+          "status": "parsed",
+          "records": 2,
+          "detail": "2 dated facts; 0 holdings (portfolio may be partial)",
+          "checked_at": "2026-09-22T21:47:19+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf"
+        },
+        "source_page": {
+          "amc_match": "Edelweiss",
+          "url": "https://www.edelweissmf.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:54:30+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "Franklin India Small Cap Fund",
@@ -500,7 +612,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": false,
-      "official_publications": 2
+      "official_publications": 2,
+      "portfolio_gap": null
     },
     {
       "family": "Groww Small Cap Fund",
@@ -534,7 +647,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 7
+      "official_publications": 7,
+      "portfolio_gap": {
+        "reason": "unsupported_document_layout",
+        "document": {
+          "title": "GMF Schemes Applicable risk factors.pdf",
+          "kind": "factsheet",
+          "url": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact Sheet/Factsheet Disclosures/GMF Schemes Applicable risk factors.pdf",
+          "last_seen": "2026-09-22T21:38:59+00:00",
+          "hash": "377c50a2379f4dec5ce48c85f1f609b64aeb386e6c44586226410dff6eb79d38",
+          "observed_at": "2026-09-22T21:39:01+00:00"
+        },
+        "extraction": {
+          "status": "unrecognized",
+          "records": 0,
+          "detail": "Original archived; no supported, unambiguous dated scheme table found",
+          "checked_at": "2026-09-22T21:39:02+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact Sheet/Factsheet Disclosures/GMF Schemes Applicable risk factors.pdf"
+        },
+        "source_page": {
+          "amc_match": "Groww",
+          "url": "https://www.growwmf.in/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:54:39+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "HDFC Small Cap Fund",
@@ -591,7 +731,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 17
+      "official_publications": 17,
+      "portfolio_gap": null
     },
     {
       "family": "HSBC Small Cap Fund",
@@ -636,7 +777,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": false,
-      "official_publications": 2
+      "official_publications": 2,
+      "portfolio_gap": null
     },
     {
       "family": "Helios Small Cap Fund",
@@ -687,7 +829,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 165
+      "official_publications": 165,
+      "portfolio_gap": null
     },
     {
       "family": "ICICI Prudential Small Cap Fund",
@@ -721,7 +864,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 1
+      "official_publications": 1,
+      "portfolio_gap": {
+        "reason": "facts_only_no_portfolio",
+        "document": {
+          "title": "Complete",
+          "kind": "factsheet",
+          "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+          "last_seen": "2026-09-22T22:00:09+00:00",
+          "hash": "0a492e7e08bacbc030edb89674ee89b28ed48898153e73f4603a75e421b7a63d",
+          "observed_at": "2026-09-09T19:59:35+00:00"
+        },
+        "extraction": {
+          "status": "parsed",
+          "records": 2,
+          "detail": "2 dated facts; 0 holdings (portfolio may be partial)",
+          "checked_at": "2026-09-22T21:14:09+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf"
+        },
+        "source_page": {
+          "amc_match": "ICICI",
+          "url": "https://www.icicipruamc.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:54:43+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "Invesco India Small Cap Fund",
@@ -760,7 +930,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 2
+      "official_publications": 2,
+      "portfolio_gap": null
     },
     {
       "family": "Iti Small Cap Fund",
@@ -811,7 +982,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 9
+      "official_publications": 9,
+      "portfolio_gap": null
     },
     {
       "family": "Jm Small Cap Fund",
@@ -845,7 +1017,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 4
+      "official_publications": 4,
+      "portfolio_gap": {
+        "reason": "facts_only_no_portfolio",
+        "document": {
+          "title": "Factsheet July 2026",
+          "kind": "factsheet",
+          "url": "https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20July%202026.pdf",
+          "last_seen": "2026-09-22T21:42:08+00:00",
+          "hash": "5a25f1dc274d1966efbdc34a26a5aaa36e25d93628bf628a2cb0d32eaeb9800e",
+          "observed_at": "2026-09-22T02:56:33+00:00"
+        },
+        "extraction": {
+          "status": "parsed",
+          "records": 4,
+          "detail": "4 dated facts; 0 holdings (portfolio may be partial)",
+          "checked_at": "2026-09-22T21:42:10+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20July%202026.pdf"
+        },
+        "source_page": {
+          "amc_match": "JM Financial",
+          "url": "https://www.jmfinancialmf.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:54:45+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "Kotak Small Cap Fund",
@@ -896,7 +1095,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 8
+      "official_publications": 8,
+      "portfolio_gap": null
     },
     {
       "family": "LIC Mf Small Cap Fund",
@@ -941,7 +1141,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": false,
-      "official_publications": 26
+      "official_publications": 26,
+      "portfolio_gap": null
     },
     {
       "family": "Mahindra Manulife Small Cap Fund",
@@ -986,7 +1187,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 11
+      "official_publications": 11,
+      "portfolio_gap": null
     },
     {
       "family": "Mirae Asset Small Cap Fund",
@@ -1031,7 +1233,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 4
+      "official_publications": 4,
+      "portfolio_gap": null
     },
     {
       "family": "Motilal Oswal Small Cap Fund",
@@ -1082,7 +1285,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 7
+      "official_publications": 7,
+      "portfolio_gap": null
     },
     {
       "family": "Nippon India Small Cap Fund",
@@ -1133,7 +1337,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 653
+      "official_publications": 653,
+      "portfolio_gap": null
     },
     {
       "family": "Pgim India Small Cap Fund",
@@ -1178,7 +1383,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": false,
-      "official_publications": 6
+      "official_publications": 6,
+      "portfolio_gap": null
     },
     {
       "family": "Quant Small Cap Fund",
@@ -1224,7 +1430,34 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 14
+      "official_publications": 14,
+      "portfolio_gap": {
+        "reason": "unsupported_document_layout",
+        "document": {
+          "title": "Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf",
+          "kind": "portfolio",
+          "url": "https://quantmutual.com/Admin/MonthlyFortnightlyPortfolio/Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf",
+          "last_seen": "2026-09-22T21:43:14+00:00",
+          "hash": "2a77ec1365129686e5e2353584b9d7154215786af00a2bfa4167d5a1881948f3",
+          "observed_at": "2026-09-22T02:57:23+00:00"
+        },
+        "extraction": {
+          "status": "unrecognized",
+          "records": 0,
+          "detail": "Original archived; no supported, unambiguous dated scheme table found",
+          "checked_at": "2026-09-22T21:43:16+00:00",
+          "parser_version": "amc-reports-2026-09-v21",
+          "source": "https://quantmutual.com/Admin/MonthlyFortnightlyPortfolio/Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf"
+        },
+        "source_page": {
+          "amc_match": "quant Mutual",
+          "url": "https://quantmutual.com/",
+          "label": "Fund house and disclosures",
+          "last_checked": "2026-09-22T21:54:25+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "Quantum Small Cap Fund",
@@ -1275,7 +1508,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 75
+      "official_publications": 75,
+      "portfolio_gap": null
     },
     {
       "family": "SBI Small Cap Fund",
@@ -1326,7 +1560,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 2
+      "official_publications": 2,
+      "portfolio_gap": null
     },
     {
       "family": "Samco Small Cap Fund",
@@ -1371,7 +1606,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 620
+      "official_publications": 620,
+      "portfolio_gap": null
     },
     {
       "family": "Sundaram Small Cap Fund",
@@ -1416,7 +1652,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 6
+      "official_publications": 6,
+      "portfolio_gap": null
     },
     {
       "family": "Tata Small Cap Fund",
@@ -1456,7 +1693,20 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 2
+      "official_publications": 2,
+      "portfolio_gap": {
+        "reason": "source_not_exposing_portfolio",
+        "document": null,
+        "extraction": null,
+        "source_page": {
+          "amc_match": "Tata",
+          "url": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth",
+          "label": "Fund figures and publications",
+          "last_checked": "2026-09-22T21:56:57+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "The Wealth Company Small Cap Fund",
@@ -1501,7 +1751,8 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 18
+      "official_publications": 18,
+      "portfolio_gap": null
     },
     {
       "family": "Trustmf Small Cap Fund",
@@ -1541,7 +1792,20 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 1
+      "official_publications": 1,
+      "portfolio_gap": {
+        "reason": "source_not_exposing_portfolio",
+        "document": null,
+        "extraction": null,
+        "source_page": {
+          "amc_match": "Trust",
+          "url": "https://www.trustmf.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:55:38+00:00",
+          "status": "Limited",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      }
     },
     {
       "family": "UTI Small Cap Fund",
@@ -1580,7 +1844,8 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 7
+      "official_publications": 7,
+      "portfolio_gap": null
     },
     {
       "family": "Union Small Cap Fund",
@@ -1620,9 +1885,36 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 1
+      "official_publications": 1,
+      "portfolio_gap": {
+        "reason": "document_not_archived",
+        "document": {
+          "title": "July 2026 Small Cap factsheet",
+          "kind": "factsheet",
+          "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
+          "last_seen": "2026-09-22T22:00:09+00:00",
+          "hash": null,
+          "observed_at": null
+        },
+        "extraction": null,
+        "source_page": {
+          "amc_match": "Union",
+          "url": "https://www.unionmf.com/",
+          "label": "Fund house",
+          "last_checked": "2026-09-22T21:56:52+00:00",
+          "status": "Gap",
+          "detail": "timed out"
+        }
+      }
     }
   ],
+  "portfolio_gap_reasons": {
+    "facts_only_no_portfolio": 5,
+    "source_unavailable": 1,
+    "source_not_exposing_portfolio": 3,
+    "unsupported_document_layout": 2,
+    "document_not_archived": 1
+  },
   "counts": {
     "funds": 36,
     "aum": 36,

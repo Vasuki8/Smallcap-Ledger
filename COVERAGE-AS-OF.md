@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-22T21:57:39+00:00
+Prepared: 2026-09-22T22:01:26+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
@@ -46,6 +46,23 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Trustmf Small Cap Fund | ₹ 3,828.10 · 2026-09-21 | 1.54% TER · 2026-09-21 | Gap | Gap | 1 |
 | UTI Small Cap Fund | ₹ 5,372.16 · 2026-09-21 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Gap | 7 |
 | Union Small Cap Fund | ₹ 2,752.34 · 2026-09-21 | 1.08% TER · 2026-09-21 | Gap | Gap | 1 |
+
+## Portfolio gap diagnosis
+
+| Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
+| --- | --- | --- | --- | --- |
+| Aditya Birla Sun Life Small Cap Fund | Facts parsed; no holdings | factsheet: Empower - Monthly Factsheet · archived 2026-09-06 | parsed · 5 records · 5 dated facts; 0 holdings (portfolio may be partial) | Checked · 2026-09-22 · 2 relevant links; 2 documents archived; 5 facts/holdings; 1 documents without extracted tables; 0 do |
+| Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
+| Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Bank Of India Small Cap Fund | Facts parsed; no holdings | factsheet: FACTSHEET AUGUST 2026 · archived 2026-09-22 | parsed · 3 records · 3 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Edelweiss Small Cap Fund | Facts parsed; no holdings | factsheet: Factsheet - September 2026 · archived 2026-09-22 | parsed · 2 records · 2 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Groww Small Cap Fund | Unsupported document layout | factsheet: GMF Schemes Applicable risk factors.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| ICICI Prudential Small Cap Fund | Facts parsed; no holdings | factsheet: Complete · archived 2026-09-09 | parsed · 2 records · 2 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Jm Small Cap Fund | Facts parsed; no holdings | factsheet: Factsheet July 2026 · archived 2026-09-22 | parsed · 4 records · 4 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Quant Small Cap Fund | Unsupported document layout | portfolio: Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Tata Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Union Small Cap Fund | Document known but not archived | factsheet: July 2026 Small Cap factsheet | Gap | Gap · 2026-09-22 · timed out |
 
 ## Notes
 
