@@ -34,6 +34,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_ARCHIVE_FORMAT: '2'
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6

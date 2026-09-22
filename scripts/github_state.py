@@ -101,6 +101,25 @@ def pack_source_pack(target,plan):
             'bytes':target.stat().st_size}
 
 
+
+def verify_source_pack_zip(archive,plan):
+    """Verify an already-uploaded immutable source pack before reusing it."""
+    archive=Path(archive)
+    expected={'data/'+row['path']:row for row in plan['members']}
+    with zipfile.ZipFile(archive) as z:
+        infos=[i for i in z.infolist() if not i.is_dir()]
+        if set(i.filename for i in infos)!=set(expected):
+            raise ValueError('Source pack contents do not match expected archive members')
+        for info in infos:
+            _validate_zip_member(info,'data/archive/')
+            row=expected[info.filename]
+            if info.file_size!=row['bytes']:raise ValueError('Source pack member size mismatch')
+            h=hashlib.sha256()
+            with z.open(info) as stream:
+                for block in iter(lambda:stream.read(1024*1024),b''):h.update(block)
+            if h.hexdigest()!=row['hash']:raise ValueError('Source pack member checksum failed: '+row['hash'])
+    return True
+
 def verify_data(folder):
     folder=Path(folder)
     with sqlite3.connect(f'file:{(folder/"ledger.sqlite3").as_posix()}?mode=ro',uri=True) as c:
@@ -278,7 +297,16 @@ def publish_split():
         for plan in plans:
             name=plan['asset']
             if name in assets:
-                raise ValueError('New source-pack name unexpectedly collides with an existing release asset')
+                # A prior migration attempt may have uploaded immutable packs
+                # before failing later. Verify and reuse them on retry.
+                existing=download_asset(repo,name,tmp)
+                verify_source_pack_zip(existing,plan)
+                pack_records.append({'asset':name,'bucket':plan['bucket'],'part':plan['part'],
+                                     'raw_bytes':plan['raw_bytes'],'members':len(plan['members']),
+                                     'hashes':[row['hash'] for row in plan['members']],
+                                     'bytes':existing.stat().st_size})
+                existing.unlink()
+                continue
             target=tmp/name;record=pack_source_pack(target,plan)
             gh('release','upload',TAG,str(target),'--repo',repo);pack_records.append(record)
         run=os.environ.get('GITHUB_RUN_ID',db.now().replace(':','').replace('+',''))
