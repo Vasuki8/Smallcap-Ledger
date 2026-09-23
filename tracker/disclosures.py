@@ -81,9 +81,24 @@ def portfolio(family,day,positions,complete,source,h):
     with db.connect() as c:
         c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
         sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
-        if not c.execute("SELECT 1 FROM holdings WHERE snapshot_id=? LIMIT 1",(sid,)).fetchone():
+        existing=c.execute("SELECT id,isin,name,asset_type,quantity FROM holdings WHERE snapshot_id=?",(sid,)).fetchall()
+        if not existing:
             c.executemany("INSERT INTO holdings(snapshot_id,isin,name,sector,weight,quantity,asset_type) VALUES(?,?,?,?,?,?,?)",
                           [(sid,x.get("isin"),x["name"],x.get("sector"),x["weight"],x.get("quantity"),x.get("asset_type","Equity")) for x in positions])
+        elif any(x.get("quantity") is not None for x in positions):
+            # Parser upgrades may discover a published quantity column for a
+            # retained snapshot that was originally stored weight-only. Fill
+            # only missing quantities; source hash/date/weights stay unchanged.
+            for x in positions:
+                q=x.get("quantity")
+                if q is None:continue
+                if x.get("isin"):
+                    c.execute("UPDATE holdings SET quantity=? WHERE snapshot_id=? AND isin=? AND quantity IS NULL",
+                              (q,sid,x["isin"]))
+                else:
+                    c.execute("""UPDATE holdings SET quantity=? WHERE snapshot_id=?
+                      AND lower(trim(name))=lower(trim(?)) AND asset_type=? AND quantity IS NULL""",
+                              (q,sid,x["name"],x.get("asset_type","Equity")))
     db.prune_portfolio_history(family)
     return sid
 

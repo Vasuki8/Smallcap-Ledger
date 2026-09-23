@@ -109,6 +109,17 @@ class TrackerTests(unittest.TestCase):
         removed=next(x for x in payload['changes'] if x['name']=='Gamma Limited')
         self.assertEqual(removed['share_change'],-400)
 
+    def test_portfolio_reparse_backfills_quantity_without_replacing_weights(self):
+        family='Quantity Backfill Small Cap Fund'
+        positions=[{'name':'Alpha Limited','isin':'INE000000001','sector':'Banks','weight':60,'asset_type':'Equity'},
+                   {'name':'Beta Limited','isin':'INE000000002','sector':'Finance','weight':40,'asset_type':'Equity'}]
+        sid=disclosures.portfolio(family,'2026-08-31',positions,True,'https://example.com/aug.xlsx','same-hash')
+        enriched=[dict(x,quantity=q) for x,q in zip(positions,(1250,2500))]
+        self.assertEqual(disclosures.portfolio(family,'2026-08-31',enriched,True,'https://example.com/aug.xlsx','same-hash'),sid)
+        rows=db.rows('SELECT name,weight,quantity FROM holdings WHERE snapshot_id=? ORDER BY name',(sid,))
+        self.assertEqual([(x['name'],x['weight'],x['quantity']) for x in rows],
+                         [('Alpha Limited',60,1250),('Beta Limited',40,2500)])
+
     def test_pdf_fund_heading_and_report_dates(self):
         from types import SimpleNamespace
         text='Test Small Cap Fund\nSmall cap Fund\nDetails as on May 31, 2026\nType of Scheme\nAn open-ended equity scheme predominantly investing in small cap stocks.\nFund Size\nMonth End: Rs. 74000 Cr\nNAV as on May 29, 2026\nBase Expense Ratio\nRegular 1.14\nDirect 0.54\nPortfolio as on May 31, 2026\nAlpha 1.77\nCash 98.23\nSIP results'
