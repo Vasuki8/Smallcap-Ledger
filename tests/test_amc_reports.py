@@ -365,6 +365,21 @@ Month End AUM: Rs. 100 Cr''')
             self.assertTrue(amc_reports.should_reprocess_existing(family,url,'retained'))
             self.assertFalse(amc_reports.should_reprocess_existing(family,'https://files.hdfcfund.com/old.pdf','retained'))
 
+    def test_groww_discovery_prefers_latest_monthly_workbook(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <a href="https://assets-netstorage.growwmf.in/portfolio/Monthly-Portfolio-July-31-2026.xlsx">Monthly Portfolio- July 31 2026.xlsx</a>
+        <a href="https://assets-netstorage.growwmf.in/portfolio/Monthly-Portfolio-Aug-31-2026.xlsx">Monthly Portfolio- Aug 31 2026.xlsx</a>
+        <a href="https://assets-netstorage.growwmf.in/portfolio/Fortnightly-Portfolio-Sep-15-2026.xlsx">Fortnightly Portfolio- Sep 15 2026.xlsx</a>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Groww'))
+        self.assertEqual(rows,[(
+            'Groww Small Cap Fund',
+            'https://assets-netstorage.growwmf.in/portfolio/Monthly-Portfolio-Aug-31-2026.xlsx',
+            'Monthly Portfolio- Aug 31 2026.xlsx')])
+
     def test_quant_statutory_discovery_prefers_monthly_portfolio_files(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
