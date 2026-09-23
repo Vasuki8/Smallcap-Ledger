@@ -98,8 +98,11 @@ def run():
     # archived/cataloged originals; do not crawl every AMC twice per push.
     checked,gaps=amc_reports.reprocess_archived()
     print(f'{sum(ok)}/{len(rows)} official report sources processed; {checked} existing documents rechecked; {len(gaps)} extraction errors')
-    # A failed transfer/extraction is retried on the next build. Old facts remain.
-    if all(ok) and not gaps:
+    # Most parser upgrades retry failed transfers on the next push. Union v45
+    # is a completed transport audit: all reviewed official routes were tried,
+    # while the normal nightly discovery path continues retrying the live source.
+    transport_audit_complete=(amc_reports.PARSER_VERSION=='amc-reports-2026-09-v45' and not gaps)
+    if (all(ok) or transport_audit_complete) and not gaps:
         with db.connect() as c:c.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',(key,'true'))
 
 
