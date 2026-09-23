@@ -1276,6 +1276,32 @@ Total Net Assets as on 31-July-2026 100.00%
         self.assertIsNone(hsbc_complete_portfolio(bad))
 
 
+    def test_hsbc_august_joined_market_cap_label_still_reconciles(self):
+        from tracker.report_parser import hsbc_complete_portfolio
+        text='''HSBC Small Cap Fund
+Small Cap Fund - An open ended equity scheme predominantly investing in small cap stocks.
+Fund Details
+Date of Allotment 12-May-14
+Benchmark: NIFTY Small Cap 250 TRI
+Issuer Market Cap/
+Ratings % to Net Assets
+Aerospace & Defense 0.86%
+PARAS DEFENCE AND SPACE TECHNOLOGIES LTDSmall Cap 0.59%
+Data Patterns (India) Limited Small Cap 0.27%
+Industrial Products 98.12%
+Alpha Industrial Limited Small Cap 98.12%
+Cash Equivalent 1.02%
+TREPS* 1.09%
+Net Current Assets: -0.07%
+Total Net Assets as on 31-August-2026 100.00%
+*TREPS : Tri-Party Repo fully collateralized by G-Sec'''
+        parsed=hsbc_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(parsed['positions'][0]['name'],'PARAS DEFENCE AND SPACE TECHNOLOGIES LTD')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertIsNone(hsbc_complete_portfolio(text.replace('Aerospace & Defense 0.86%','Aerospace & Defense 0.87%')))
+
     def test_axis_top_holdings_are_partial_and_reconcile_to_stated_total(self):
         from tracker.amc_metrics import parse_page
         f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
