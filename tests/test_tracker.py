@@ -329,6 +329,17 @@ class TrackerTests(unittest.TestCase):
         result=subprocess.run(['node','-e',"const a=require('./dist/analytics.js');console.log(JSON.stringify(a.response({option:'IDCW'},[['2024-01-01',100],['2024-02-01',95]],{data:[['2024-01-01',100],['2024-02-01',110]]})));"],cwd=db.ROOT,text=True,capture_output=True,check=True)
         idcw=json.loads(result.stdout);self.assertFalse(idcw['can_total_return']);self.assertEqual(idcw['comparison'],[]);self.assertIsNone(idcw['sip'])
 
+    def test_db_init_reclassifies_retained_risk_factor_factsheet_as_disclosure(self):
+        with db.connect() as c:
+            c.execute("""INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
+              VALUES(?,?,?,?,?,?,?,?,?)""",(
+                'Groww Small Cap Fund','GMF Schemes Applicable risk factors.pdf','factsheet','Fund',
+                'https://assets.example/Fact Sheet/GMF Schemes Applicable risk factors.pdf',
+                None,db.now(),db.now(),'AMC'))
+        db.init()
+        row=db.one("SELECT kind FROM documents WHERE title='GMF Schemes Applicable risk factors.pdf'")
+        self.assertEqual(row['kind'],'disclosure')
+
     def test_document_classifier_does_not_treat_portfolio_notices_as_holdings(self):
         self.assertEqual(providers.classify(
             'Press Release to create a segregated portfolio in 3 schemes',
