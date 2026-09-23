@@ -115,7 +115,7 @@ def init(recover=False):
         # Historical cleanup: portfolio-related notices/press releases are
         # disclosures, not actual holdings documents.
         c.execute("""UPDATE documents SET kind='disclosure'
-          WHERE kind='portfolio' AND (
+          WHERE kind IN ('portfolio','factsheet') AND (
             lower(title) LIKE '%press release%' OR
             lower(title) LIKE '%notice%' OR
             lower(title) LIKE '%circular%' OR
