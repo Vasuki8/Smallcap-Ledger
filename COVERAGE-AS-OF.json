@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T19:14:01+00:00",
+  "built_at": "2026-09-23T19:17:21+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -1555,23 +1555,16 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html",
+        "complete": 0,
+        "positions": 10
+      },
       "portfolio_complete": false,
-      "portfolio_fresh": false,
-      "official_publications": 3,
-      "portfolio_gap": {
-        "reason": "source_not_exposing_portfolio",
-        "document": null,
-        "extraction": null,
-        "source_page": {
-          "amc_match": "Tata",
-          "url": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth",
-          "label": "Fund figures and publications",
-          "last_checked": "2026-09-22T21:56:57+00:00",
-          "status": "Limited",
-          "detail": "Page archived; no automatically readable fund documents found"
-        }
-      }
+      "portfolio_fresh": true,
+      "official_publications": 4,
+      "portfolio_gap": null
     },
     {
       "family": "The Wealth Company Small Cap Fund",
@@ -1757,7 +1750,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T19:12:23+00:00",
+          "last_seen": "2026-09-23T19:17:11+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1775,7 +1768,7 @@
   ],
   "portfolio_gap_reasons": {
     "source_unavailable": 1,
-    "source_not_exposing_portfolio": 3,
+    "source_not_exposing_portfolio": 2,
     "document_not_archived": 1
   },
   "counts": {
@@ -1784,11 +1777,11 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 31,
+    "portfolio": 32,
     "portfolio_complete": 19,
-    "portfolio_fresh": 19,
+    "portfolio_fresh": 20,
     "portfolio_fresh_complete": 13,
-    "portfolio_partial": 12,
+    "portfolio_partial": 13,
     "benchmark_identity": 21
   },
   "notes": [

@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-23T19:14:01+00:00
+Prepared: 2026-09-23T19:17:21+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **31 / 36 any**, **19 complete**, **19 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **32 / 36 any**, **19 complete**, **20 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -41,7 +41,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | SBI Small Cap Fund | ₹ 41,996.11 · 2026-09-21 | 0.79% TER · 2026-09-20 | 68 positions · 2026-07-31 · partial · older | BSE 250 Small Cap Index TRI · 2026-07-31 | 2 |
 | Samco Small Cap Fund | ₹ 255.06 · 2026-09-21 | 1.97% TER · 2026-09-21 | 78 positions · 2026-08-31 · complete · current | Gap | 620 |
 | Sundaram Small Cap Fund | ₹ 4,181.09 · 2026-09-21 | 0.97% TER · 2026-09-21 | 73 positions · 2026-08-31 · partial · current | Gap | 6 |
-| Tata Small Cap Fund | ₹ 13,457.80 · 2026-09-21 | 0.51% TER · 2026-09-20 | Gap | Gap | 3 |
+| Tata Small Cap Fund | ₹ 13,457.80 · 2026-09-21 | 0.51% TER · 2026-09-20 | 10 positions · 2026-08-31 · partial · current | Gap | 4 |
 | The Wealth Company Small Cap Fund | ₹ 139.96 · 2026-09-21 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete · current | Gap | 18 |
 | Trustmf Small Cap Fund | ₹ 3,828.10 · 2026-09-21 | 1.54% TER · 2026-09-21 | Gap | Gap | 1 |
 | UTI Small Cap Fund | ₹ 5,372.16 · 2026-09-21 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Gap | 7 |
@@ -53,7 +53,6 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | --- | --- | --- | --- | --- |
 | Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
-| Tata Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Union Small Cap Fund | Document known but not archived | factsheet: July 2026 Small Cap factsheet | Gap | Gap · 2026-09-22 · timed out |
 
