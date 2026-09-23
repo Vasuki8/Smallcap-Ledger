@@ -480,25 +480,33 @@ Scheme Category: Small Cap Fund'''
         snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Aditya Birla Sun Life Small Cap Fund' AND hash='absl-full'")
         self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})
 
-    def test_jm_top25_reconciles_named_other_equity_and_treps(self):
+    def test_jm_top25_reconciles_both_real_pdf_orders(self):
         from tracker.report_parser import jm_top25_portfolio
-        text='''Jm Small Cap Fund
+        rows=[f'Company {i} Limited 2.00' for i in range(1,25)]
+        rows.insert(14,'Jammu & Kashmir Bank 2.00')
+        table='\n'.join(rows)
+        base='''Jm Small Cap Fund
 An open ended equity scheme predominantly investing in small cap stocks
+INCEPTION DATE 18th June, 2024
 Details as on August 31, 2026
-SCHEME PORTFOLIO (TOP 25 STOCKS)
-Name of Instrument (Equity Shares) % to NAV
-Company 1 Limited 2.00\nCompany 2 Limited 2.00\nCompany 3 Limited 2.00\nCompany 4 Limited 2.00\nCompany 5 Limited 2.00\nCompany 6 Limited 2.00\nCompany 7 Limited 2.00\nCompany 8 Limited 2.00\nCompany 9 Limited 2.00\nCompany 10 Limited 2.00\nCompany 11 Limited 2.00\nCompany 12 Limited 2.00\nCompany 13 Limited 2.00\nCompany 14 Limited 2.00\nCompany 15 Limited 2.00\nCompany 16 Limited 2.00\nCompany 17 Limited 2.00\nCompany 18 Limited 2.00\nCompany 19 Limited 2.00\nCompany 20 Limited 2.00\nCompany 21 Limited 2.00\nCompany 22 Limited 2.00\nCompany 23 Limited 2.00\nCompany 24 Limited 2.00\nCompany 25 Limited 2.00
-Other Equity Stocks 49.00
+'''
+        totals='''Other Equity Stocks 49.00
 Total Equity Holdings 99.00
 TREPS & Others * 1.00
 Total Assets 100.00
-* includes net receivables / payables if any'''
-        parsed=jm_top25_portfolio(text)
-        self.assertIsNotNone(parsed)
-        self.assertEqual(parsed['day'],'2026-08-31')
-        self.assertEqual(len(parsed['positions']),25)
-        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),50.0,places=2)
-        self.assertIsNone(jm_top25_portfolio(text.replace('Other Equity Stocks 49.00','Other Equity Stocks 48.00')))
+'''
+        heading='SCHEME PORTFOLIO (TOP 25 STOCKS)\n'
+        header='Name of Instrument % to NAV\n'
+        before=base+heading+header+table+'\n'+totals
+        after=base+header+table+'\n'+totals+heading
+        for text in (before,after):
+            parsed=jm_top25_portfolio(text)
+            self.assertIsNotNone(parsed)
+            self.assertEqual(parsed['day'],'2026-08-31')
+            self.assertEqual(len(parsed['positions']),25)
+            self.assertEqual(parsed['positions'][14]['name'],'Jammu & Kashmir Bank')
+            self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),50.0,places=2)
+        self.assertIsNone(jm_top25_portfolio(before.replace('Other Equity Stocks 49.00','Other Equity Stocks 48.00')))
 
     def test_jm_factsheet_saves_top25_as_partial_only(self):
         from tracker import disclosures
