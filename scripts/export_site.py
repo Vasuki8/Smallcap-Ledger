@@ -83,7 +83,7 @@ def export(output:Path,repository=''):
         write(Path('communications')/f'{family_id}.json',docs)
     for sid in snapshot_ids:
         p=holdings(sid);write(Path('portfolios')/f'{sid}.json',p)
-        csv_file(Path('downloads')/f'portfolio-{sid}.csv',p['holdings'],['isin','name','sector','weight','asset_type'])
+        csv_file(Path('downloads')/f'portfolio-{sid}.csv',p['holdings'],['isin','name','sector','quantity','previous_quantity','share_change','weight','previous_weight','weight_change','asset_type'])
         downloads[f'/api/export/portfolio/{sid}']=f'data/downloads/portfolio-{sid}.csv'
     benchmark={}
     for b in db.rows('SELECT name,MIN(date) first,MAX(date) last,COUNT(*) points FROM benchmark GROUP BY name'):
