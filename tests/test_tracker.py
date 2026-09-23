@@ -337,6 +337,9 @@ class TrackerTests(unittest.TestCase):
             'Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf',
             'https://example.com/monthly/portfolio/notice.pdf'),'disclosure')
         self.assertEqual(providers.classify(
+            'GMF Schemes Applicable risk factors.pdf',
+            'https://example.com/Fact Sheet/Factsheet Disclosures/GMF Schemes Applicable risk factors.pdf'),'disclosure')
+        self.assertEqual(providers.classify(
             'Monthly Portfolio August 2026',
             'https://example.com/monthly_portfolio_august_2026.xlsx'),'portfolio')
 
