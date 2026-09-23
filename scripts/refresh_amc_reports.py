@@ -68,6 +68,36 @@ def run():
         except Exception as e:
             print(f"::warning::{row['family']}: {(str(e) or type(e).__name__).splitlines()[0][:250]}",flush=True);return False
     with ThreadPoolExecutor(max_workers=2) as pool:ok=list(pool.map(collect,rows))
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v49':
+        # Refresh the latest complete portfolios from current official sources.
+        # Abakkus uses its disclosure-page discovery because the workbook name
+        # is publisher-generated; HSBC and PGIM use reviewed August catalog URLs.
+        try:
+            from tracker import amc_discovery
+            attempted=0
+            for family,url,title in amc_discovery.discover('Abakkus'):
+                attempted+=1
+                try:
+                    amc_discovery.store_report('Abakkus',family,url,title)
+                except Exception as exc:
+                    print(f"::warning::Abakkus current portfolio candidate: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+                snap=db.one("SELECT as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,id DESC LIMIT 1",
+                            ('Abakkus Small Cap Fund',))
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:
+                    break
+            print(f'Abakkus current-source refresh: {attempted} candidate(s) attempted',flush=True)
+        except Exception as exc:
+            print(f"::warning::Abakkus current-source discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+
+        for family in ('Abakkus Small Cap Fund','HSBC Small Cap Fund','Pgim India Small Cap Fund'):
+            snap=db.one("SELECT as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,id DESC LIMIT 1",(family,))
+            current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+            if current:
+                print(f'{family}: current complete portfolio verified at {snap["as_of"]}',flush=True)
+            else:
+                detail='none' if not snap else f'{snap["as_of"]}, complete={snap["complete"]}'
+                print(f'::warning::{family}: current complete portfolio not recovered; latest is {detail}',flush=True)
+            ok.append(current)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v44':
         # One-time targeted recovery for TRUSTMF. The normal nightly collector
         # uses the same discovery path; this push replay proves and archives the
