@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v45'
+PARSER_VERSION='amc-reports-2026-09-v46'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -33,6 +33,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v43':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v44':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v45':frozenset({'Union Small Cap Fund'}),
+    'amc-reports-2026-09-v46':frozenset({'Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Tata Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -116,6 +117,11 @@ def should_reprocess_existing(family,url,h=None):
         # Union's primary single-scheme route is unreachable from GitHub Actions.
         # Replay only Union PDFs and try reviewed official fallback/alternate routes.
         return family=='Union Small Cap Fund' and path.endswith('.pdf')
+    if PARSER_VERSION=='amc-reports-2026-09-v46':
+        # v46 backfills benchmark identity from reviewed catalog sources only.
+        # The catalog pass materializes those exact originals; do not replay the
+        # broader historical document archive for this metadata-only change.
+        return False
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
     # v25 only changes strict benchmark-label parsing. Re-open retained PDF
