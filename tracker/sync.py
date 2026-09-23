@@ -6,6 +6,17 @@ from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import datetime,timezone,timedelta
 from . import db,providers,disclosures,amfi_metrics,amc_metrics
 
+def needs_nav_history_recovery(previous,now=None):
+    """Full history is needed only after a real collection gap or failed run."""
+    if not previous:return True
+    if previous.get('status') in ('error','interrupted'):return True
+    try:finished=datetime.fromisoformat(previous['finished_at'])
+    except (KeyError,TypeError,ValueError):return True
+    now=now or datetime.now(timezone.utc)
+    if finished.tzinfo is None:finished=finished.replace(tzinfo=timezone.utc)
+    return (now-finished).total_seconds()>36*3600
+
+
 class Updater:
     def __init__(self):
         self.lock=threading.Lock();self.running={};self.stop=threading.Event()
@@ -27,15 +38,24 @@ class Updater:
 
     def run(self,kind):
         errors=[];detail=""
+        previous_nav=(db.one("SELECT finished_at,status FROM jobs WHERE kind='nav' AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1")
+                      if kind=='nav' else None)
         with db.connect() as c:
             jid=c.execute("INSERT INTO jobs(kind,started_at,status) VALUES(?,?,'running')",(kind,db.now())).lastrowid
         try:
             if kind=="nav":
                 self.progress(kind,"Checking the official AMFI small-cap category")
                 detail=providers.latest_nav()
-                # Backfill all available dates once daily, including dates missed while the computer was off.
-                cutoff=datetime.now(timezone.utc).date().isoformat()
-                schemes=db.rows("SELECT code,family FROM schemes WHERE history_checked IS NULL OR history_status LIKE 'Error:%' OR substr(history_checked,1,10)<? ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code",(cutoff,))
+                # latest_nav() already saves today's official AMFI value. Re-downloading
+                # every scheme's full MFAPI history every day made scheduled runs very
+                # slow. Full recovery is reserved for a real scheduler gap/failed run;
+                # otherwise backfill only new/errors plus a 30-day maintenance refresh.
+                recover_all=needs_nav_history_recovery(previous_nav)
+                maintenance_cutoff=(datetime.now(timezone.utc)-timedelta(days=30)).date().isoformat()
+                if recover_all:
+                    schemes=db.rows("SELECT code,family FROM schemes ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code")
+                else:
+                    schemes=db.rows("SELECT code,family FROM schemes WHERE history_checked IS NULL OR history_status LIKE 'Error:%' OR substr(history_checked,1,10)<? ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code",(maintenance_cutoff,))
                 with ThreadPoolExecutor(max_workers=3) as pool:
                     futures={pool.submit(providers.backfill,x['code']):x for x in schemes}
                     for i,f in enumerate(as_completed(futures),1):
