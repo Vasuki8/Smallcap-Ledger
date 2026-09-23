@@ -68,6 +68,31 @@ def run():
         except Exception as e:
             print(f"::warning::{row['family']}: {(str(e) or type(e).__name__).splitlines()[0][:250]}",flush=True);return False
     with ThreadPoolExecutor(max_workers=2) as pool:ok=list(pool.map(collect,rows))
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v44':
+        # One-time targeted recovery for TRUSTMF. The normal nightly collector
+        # uses the same discovery path; this push replay proves and archives the
+        # newly discovered official monthly disclosure without crawling all AMCs.
+        try:
+            from tracker import amc_discovery
+            candidates=[row for row in amc_discovery.discover('TRUST')
+                        if 'portfolio' in (row[2]+' '+row[1]).lower()]
+            if not candidates:raise ValueError('TRUSTMF API returned no monthly portfolio candidate')
+            parsed=0;attempted=0;failures=[]
+            for family,url,title in candidates[:2]:
+                attempted+=1
+                try:
+                    parsed+=amc_discovery.store_report('TRUST',family,url,title)
+                    if parsed:break
+                except Exception as exc:
+                    failures.append((str(exc) or type(exc).__name__)[:180])
+            if not parsed:
+                raise ValueError('TRUSTMF monthly disclosure archived but yielded no supported holdings'
+                                 + (': '+'; '.join(failures) if failures else ''))
+            print(f'TRUSTMF API recovery: {parsed} dated facts/holdings from {attempted} candidate(s)',flush=True)
+            ok.append(True)
+        except Exception as exc:
+            print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
