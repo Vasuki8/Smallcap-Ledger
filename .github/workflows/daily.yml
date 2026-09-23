@@ -58,10 +58,6 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
-      - name: Inspect archived ICICI factsheet layout
-        continue-on-error: true
-        timeout-minutes: 6
-        run: uv run --frozen python scripts/inspect_icici_layout.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20

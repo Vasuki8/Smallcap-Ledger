@@ -134,6 +134,11 @@ def page_facts(text,family):
     if family=='Bajaj Finserv Small Cap Fund':
         m=re.search(r'AUM \(IN CR\):\s*Month end AUM - INR '+NUMBER,flat,re.I)
         if m:add('aum',float(m.group(1).replace(',','')))
+    if family=='ICICI Prudential Small Cap Fund':
+        # ICICI prints the scheme benchmark in the return table rather than as
+        # a standalone "Benchmark:" label.
+        if re.search(r'Nifty\s+Smallcap\s+250\s+TRI\s*\(\s*Benchmark\s*\)',flat,re.I):
+            add('benchmark','Nifty Smallcap 250 TRI',unit='Reported')
     if family=='Quantum Small Cap Fund' and re.search(r'AUM\s*₹\s*\(In Crores\)',flat,re.I):
         for label,key in [('Absolute AUM','aum'),(r'Average AUM\*?','average_aum')]:
             m=re.search(label+r'\s*:\s*'+NUMBER,flat,re.I)
@@ -481,6 +486,119 @@ def absl_complete_portfolio(text):
                       'weight':cash,'asset_type':'Cash and net current assets'})
     return {'day':day,'positions':positions}
 
+
+
+def icici_named_portfolio(first_page,second_page):
+    """Reconcile ICICI Small Cap's named holdings while preserving its disclosed gap.
+
+    The factsheet spans two pages. It publishes named issuer rows and sector
+    subtotals, then separately discloses "Equity less than 1% of corpus".
+    Those undisclosed constituents are validation evidence only, so the
+    returned snapshot is intentionally partial.
+    """
+    first=normalize(first_page);second=normalize(second_page)
+    combined=first+'\n'+second
+    family='ICICI Prudential Small Cap Fund'
+    if not owns_page(first,family):return None
+    if not re.search(r'An\s+open\s+ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',first,re.I):return None
+    if not re.search(r'(?:Date\s+of\s+inception|Inception/Allotment\s+date)\s*:\s*18-Oct-(?:07|2007)',first,re.I):return None
+
+    m=re.search(r'Portfolio\s+as\s+on\s+('+DATE+r')',combined,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    equity=re.search(r'Equity\s+Shares\s+(-?\d+(?:\.\d+)?)\s*%',first,re.I)
+    omitted=re.search(r'Equity\s+less\s+than\s+1%\s+of\s+corpus\s+(-?\d+(?:\.\d+)?)\s*%',second,re.I)
+    cash=re.search(r'Short\s+Term\s+Debt\s+and\s+net\s+current\s+assets\s+(-?\d+(?:\.\d+)?)\s*%',second,re.I)
+    grand=re.search(r'Total\s+Net\s+Assets\s+(-?\d+(?:\.\d+)?)\s*%',second,re.I)
+    if not all((equity,omitted,cash,grand)):return None
+    equity_total=float(equity.group(1));omitted_weight=float(omitted.group(1))
+    cash_weight=float(cash.group(1));grand_total=float(grand.group(1))
+    if not (50<=equity_total<=100 and 0<omitted_weight<=15 and 0<=cash_weight<=30):return None
+    if abs(grand_total-100)>.02 or abs((equity_total+cash_weight)-grand_total)>.03:return None
+
+    def rows_from(text,start_pattern,end_pattern=None):
+        lines=[re.sub(r'\s+',' ',x).strip() for x in text.splitlines()]
+        start=next((i for i,x in enumerate(lines) if re.fullmatch(start_pattern,x,re.I)),None)
+        if start is None:return []
+        end=len(lines)
+        if end_pattern:
+            end=next((i for i,x in enumerate(lines[start+1:],start+1)
+                      if re.fullmatch(end_pattern,x,re.I)),len(lines))
+        out=[];pending=None
+        ignored=re.compile(
+            r'^(?:\d+|Small\s+Cap\s+Fund|Category|Portfolio\s+as\s+on.*|'
+            r'Company/Issuer.*|NAV|Rating|Base\s+Expense\s+Ratio.*|'
+            r'For\s+TER.*|https?://.*|financials.*|Total\+Expense.*)$',re.I)
+        for raw in lines[start+1:end]:
+            line=re.sub(r'^[•●]\s*','',raw).strip()
+            if not line:continue
+            if ignored.fullmatch(line):
+                pending=None;continue
+            row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line)
+            if row:
+                label=' '.join(([pending] if pending else [])+[row.group(1).strip()]).strip()
+                pending=None;value=float(row.group(2))
+                if not re.search(r'[A-Za-z]',label) or not 0<value<25:return []
+                out.append((label,value))
+            else:
+                # Real ICICI rows wrap at most once (for example ZF Commercial
+                # Vehicle Control Systems / India Ltd). Keep only the adjacent
+                # preceding fragment; unrelated footnotes can never accumulate.
+                pending=line
+        return out
+
+    first_rows=rows_from(first,r'Equity\s+Shares\s+[-\d.]+\s*%')
+    second_rows=rows_from(second,r'(?:Company/Issuer.*|Portfolio\s+as\s+on.*)',
+                          r'Equity\s+less\s+than\s+1%\s+of\s+corpus\s+[-\d.]+\s*%')
+    # If the page header is split, start directly at the first published sector.
+    if not second_rows:
+        lines=[re.sub(r'\s+',' ',x).strip() for x in second.splitlines()]
+        start=next((i for i,x in enumerate(lines) if re.fullmatch(r'Insurance\s+[-\d.]+\s*%',x,re.I)),None)
+        if start is not None:
+            synthetic='TABLE\n'+'\n'.join(lines[start:])
+            second_rows=rows_from(synthetic,r'TABLE',
+                                  r'Equity\s+less\s+than\s+1%\s+of\s+corpus\s+[-\d.]+\s*%')
+    rows=first_rows+second_rows
+    if len(rows)<50:return None
+
+    # Infer sector boundaries from the AMC's own arithmetic. Every sector row is
+    # followed by one or more issuer rows whose weights reconcile to its subtotal.
+    from functools import lru_cache
+    @lru_cache(None)
+    def solve(i):
+        if i==len(rows):return ()
+        if i+1>=len(rows):return None
+        target=rows[i][1];subtotal=0.0
+        for j in range(i+1,len(rows)):
+            subtotal+=rows[j][1]
+            count=j-i
+            tolerance=max(.03,.011*count)
+            if abs(subtotal-target)<=tolerance:
+                rest=solve(j+1)
+                if rest is not None:return ((i,j+1),)+rest
+            if subtotal>target+max(.08,tolerance):break
+        return None
+
+    groups=solve(0)
+    if not groups or len(groups)<20:return None
+    positions=[];sector_total=0.0
+    for start,stop in groups:
+        sector,subtotal=rows[start]
+        members=rows[start+1:stop]
+        if not members:return None
+        sector_total+=subtotal
+        for name,weight in members:
+            positions.append({'name':name,'isin':None,'sector':sector,
+                              'weight':weight,'asset_type':'Equity'})
+
+    named_total=sum(x['weight'] for x in positions)
+    if len(positions)<50 or len({x['name'].lower() for x in positions})!=len(positions):return None
+    if abs(named_total-sector_total)>max(.08,.011*len(groups)):return None
+    if abs((sector_total+omitted_weight)-equity_total)>.08:return None
+    # Do not add the omitted-equity aggregate or balancing cash as holdings.
+    # Their purpose here is only to prove the named rows belong to this portfolio.
+    return {'day':day,'positions':positions}
 
 
 def jm_top25_portfolio(text):
