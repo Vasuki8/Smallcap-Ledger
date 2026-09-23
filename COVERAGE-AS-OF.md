@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-23T21:11:32+00:00
+Prepared: 2026-09-23T21:15:11+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **34 / 36 any**, **19 complete**, **21 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **27 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **34 / 36 any**, **19 complete**, **21 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **28 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -42,7 +42,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Samco Small Cap Fund | ₹ 255.06 · 2026-09-21 | 1.97% TER · 2026-09-21 | 78 positions · 2026-08-31 · complete · current | Gap | 620 |
 | Sundaram Small Cap Fund | ₹ 4,181.09 · 2026-09-21 | 0.97% TER · 2026-09-21 | 73 positions · 2026-08-31 · partial · current | Gap | 6 |
 | Tata Small Cap Fund | ₹ 13,457.80 · 2026-09-21 | 0.51% TER · 2026-09-20 | 10 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2026-08-31 | 4 |
-| The Wealth Company Small Cap Fund | ₹ 139.96 · 2026-09-21 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete · current | Gap | 18 |
+| The Wealth Company Small Cap Fund | ₹ 139.96 · 2026-09-21 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete · current | NIFTY SmallCap 250 TRI · 2026-09-23 | 19 |
 | Trustmf Small Cap Fund | ₹ 3,828.10 · 2026-09-21 | 1.54% TER · 2026-09-21 | 70 positions · 2026-08-31 · partial · current | Gap | 3 |
 | UTI Small Cap Fund | ₹ 5,372.16 · 2026-09-21 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Gap | 7 |
 | Union Small Cap Fund | ₹ 2,752.34 · 2026-09-21 | 1.08% TER · 2026-09-21 | Gap | Gap | 1 |
