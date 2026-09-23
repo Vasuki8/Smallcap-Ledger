@@ -35,23 +35,22 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(a['family'],b['family']);self.assertEqual(b['plan'],'Direct');self.assertEqual(b['option'],'Growth')
         self.assertFalse(providers.parse_amfi(current.replace('Small Cap Fund)','Mid Cap Fund)')))
 
-    def test_nav_history_recovery_only_after_real_gap_or_failure(self):
-        from tracker.sync import needs_nav_history_recovery
+    def test_nav_history_recovery_cutoff_only_after_real_gap(self):
+        from tracker.sync import nav_history_recovery_since
         now=datetime(2026,9,23,18,30,tzinfo=timezone.utc)
-        self.assertTrue(needs_nav_history_recovery(None,now))
-        self.assertTrue(needs_nav_history_recovery(
-            {'status':'error','finished_at':'2026-09-23T18:00:00+00:00'},now))
-        self.assertTrue(needs_nav_history_recovery(
-            {'status':'ok','finished_at':'2026-09-21T18:00:00+00:00'},now))
-        self.assertFalse(needs_nav_history_recovery(
+        self.assertEqual(nav_history_recovery_since(None,now),'')
+        self.assertEqual(nav_history_recovery_since(
+            {'status':'ok','finished_at':'2026-09-21T18:00:00+00:00'},now),
+            '2026-09-21T18:00:00+00:00')
+        self.assertIsNone(nav_history_recovery_since(
             {'status':'ok','finished_at':'2026-09-23T00:30:00+00:00'},now))
-        self.assertFalse(needs_nav_history_recovery(
-            {'status':'partial','finished_at':'2026-09-23T00:30:00+00:00'},now))
 
-    def test_daily_nav_backfill_has_monthly_maintenance_not_today_cutoff(self):
+    def test_daily_nav_backfill_is_incremental_and_monthly_maintained(self):
         source=(Path(__file__).resolve().parents[1]/'tracker'/'sync.py').read_text()
         self.assertIn('timedelta(days=30)',source)
-        self.assertIn('recover_all=needs_nav_history_recovery(previous_nav)',source)
+        self.assertIn('recovery_since=nav_history_recovery_since(previous_nav)',source)
+        self.assertIn("history_checked<?",source)
+        self.assertIn("status IN ('ok','partial')",source)
         self.assertNotIn('cutoff=datetime.now(timezone.utc).date().isoformat()',source)
 
     def test_official_nav_precedence_and_revisions(self):
