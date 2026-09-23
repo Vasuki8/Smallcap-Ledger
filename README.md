@@ -409,4 +409,22 @@ Standing rules remain: official AMC/AMFI evidence only; no invented/estimated fi
 
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents/hashes remain in cumulative history.
 
+
+### Pending freshness release — PR #83
+
+Production remains at the benchmark-complete state until this release is merged and verified. Draft PR **#83** (`backend/stale-complete-refresh-v2`) prepares one fail-closed **v50** migration for all six stale complete portfolios:
+
+- Abakkus Small Cap Fund
+- Aditya Birla Sun Life Small Cap Fund
+- Franklin India Small Cap Fund
+- HSBC Small Cap Fund
+- LIC Mf Small Cap Fund
+- PGIM India Small Cap Fund
+
+The release discovers current Abakkus/ABSL/Franklin/LIC documents from official AMC pages instead of guessing filenames; HSBC and PGIM use reviewed August factsheet URLs already on `main`. It does **not** mark the migration complete unless every target has a complete portfolio dated **2026-08-31 or later**.
+
+Current workflow note: scheduled run **#231** is exercising the normal daily collection on the v49 main head. It skips one-time parser-upgrade migrations by design. Do not infer v49 success from that run unless `COVERAGE-AS-OF.json` actually advances the targeted portfolio dates. PR #83 deliberately supersedes v49 so the first and second refresh batches cannot be lost through version ordering.
+
+Before merging PR #83: verify the newest production run has finished, re-check `COVERAGE-AS-OF.json`, and refresh the PR branch from `main` if the run wrote a new status commit. After merge, require the normal syntax/test/site/archive/deploy gate to pass before accepting any freshness increase.
+
 This is a backend/data handoff. Do not start a UI pass unless explicitly requested.

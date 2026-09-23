@@ -195,6 +195,31 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn(('Pgim India Small Cap Fund',
             'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf'),urls)
 
+    def test_v50_supersedes_both_complete_refresh_batches(self):
+        from tracker import amc_reports
+        expected={
+            'Abakkus Small Cap Fund','Aditya Birla Sun Life Small Cap Fund',
+            'Franklin India Small Cap Fund','HSBC Small Cap Fund',
+            'LIC Mf Small Cap Fund','Pgim India Small Cap Fund',
+        }
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v50'):
+            for family in expected:
+                self.assertTrue(amc_reports.parser_upgrade_applies(family))
+                self.assertFalse(amc_reports.should_reprocess_existing(
+                    family,'https://example.com/factsheet.pdf','hash'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Groww Small Cap Fund'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        for pair in (
+            "('Abakkus','Abakkus Small Cap Fund')",
+            "('Aditya Birla','Aditya Birla Sun Life Small Cap Fund')",
+            "('Franklin','Franklin India Small Cap Fund')",
+            "('LIC','LIC Mf Small Cap Fund')",
+        ):
+            self.assertIn(pair,source)
+        self.assertIn("'HSBC Small Cap Fund'",source)
+        self.assertIn("'Pgim India Small Cap Fund'",source)
+        self.assertIn("snap['as_of']>='2026-08-31' and snap['complete']",source)
+
     def test_v49_targets_current_complete_portfolio_refresh(self):
         from tracker import amc_reports
         expected={'Abakkus Small Cap Fund','HSBC Small Cap Fund','Pgim India Small Cap Fund'}
@@ -510,6 +535,49 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(len(rows),1)
         self.assertEqual(rows[0][:2],('Baroda Bnp Paribas Small Cap Fund','https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls'))
 
+
+    def test_absl_discovery_prefers_latest_official_factsheet(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div data-file="/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf">ABSL Factsheet Aug 2026</div>
+        <div data-file="/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_sep-2026.pdf">ABSL Factsheet Sep 2026</div>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Aditya Birla'))
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][0],'Aditya Birla Sun Life Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('absl-factsheet_sep-2026.pdf'))
+
+    def test_lic_discovery_prefers_latest_dated_official_factsheet(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div data-file="/assets/downloads/monthly_fact_sheet/2026-2027/08/lic-mf-factsheet-31st-july-2026.pdf">Fact Sheet 31st July 2026</div>
+        <div data-file="/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf">Fact Sheet 31st August 2026</div>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('LIC'))
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][0],'LIC Mf Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('lic-mf-factsheet-31st-august-2026.pdf'))
+
+    def test_franklin_discovery_prefers_latest_official_monthly_portfolio(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div data-file="/downloads/portfolio/Franklin-Small-Cap-as-on-July-31-2026.xlsx">Monthly Portfolio As on July 31 2026</div>
+        <div data-file="/downloads/portfolio/Franklin-Small-Cap-as-on-August-31-2026.xlsx">Monthly Portfolio As on August 31 2026</div>
+        <a href="/downloads/portfolio/Franklin-Small-Cap-as-on-August-31-2026.pdf">Monthly Portfolio As on August 31 2026</a>
+        </body></html>'''
+        def fake_read(url,body=None):
+            return html,'page','text/html'
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Franklin'))
+        self.assertEqual(rows[0][0],'Franklin India Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('Franklin-Small-Cap-as-on-August-31-2026.xlsx'))
+        self.assertEqual(len(rows),2)
+        self.assertFalse(any('July-31-2026' in row[1] for row in rows))
 
     def test_pgim_discovery_uses_official_monthly_factsheet_paths(self):
         from tracker import amc_discovery

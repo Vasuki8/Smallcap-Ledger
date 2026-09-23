@@ -65,11 +65,58 @@ def discover(amc):
         if not rows:raise ValueError('No official Baroda BNP Paribas all-funds monthly portfolio workbook was exposed')
         day,url,title=max(rows,key=lambda r:r[0])
         yield family,url,title or f'Monthly Portfolio - all funds as on {day.isoformat()}'
+    elif amc=='Aditya Birla':
+        family='Aditya Birla Sun Life Small Cap Fund'
+        page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        rows=[]
+        for url,title in providers.candidate_links(soup,page).items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            if not re.search(r'\.pdf(?:[?#]|$)',url,re.I):continue
+            if not re.search(r'absl(?:mf)?[^/]{0,80}(?:factsheet|empower)|(?:factsheet|empower)[^/]{0,80}absl',combined,re.I):continue
+            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
+            year=max(years,default=0)
+            month=max((i for i in range(1,13)
+                       if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+            if year:rows.append((year,month,url,title))
+        if not rows:raise ValueError('No official ABSL factsheet PDF was exposed by the factsheet archive')
+        newest=max((y,m) for y,m,_,_ in rows)
+        for _,_,url,title in [r for r in rows if (r[0],r[1])==newest][:2]:
+            yield family,url,title or 'Latest ABSL factsheet'
     elif amc=='Bank of India':
         body={'pagno':0,'category':None,'fromDate':None,'toDate':None,'LibraryName':'InvestorCorner','folderName':'FACTSHEETS','CategoryValue':'no'}
         raw,_,_=read('https://www.boimf.in/AjaxService.asmx/GetDocuments',body)
         rows=json.loads(json.loads(raw)['d'])['Documents']
         for row in rows[:3]:yield 'Bank Of India Small Cap Fund',row['FolderUrl'],row['DocName']
+    elif amc=='Franklin':
+        family='Franklin India Small Cap Fund'
+        page='https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        candidates=[]
+        for url,title in providers.candidate_links(soup,page).items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            ext=re.search(r'\.(xlsx?|xls|pdf)(?:[?#]|$)',url,re.I)
+            if not ext:continue
+            if not re.search(r'portfolio|monthly|as[ _-]*on',combined,re.I):continue
+            day=None
+            dmy=re.search(r'as[ _-]*on[ _-]*(\d{1,2})[ _-]+([A-Za-z]+)[,_ -]+(20\d{2})',combined,re.I)
+            mdy=re.search(r'as[ _-]*on[ _-]*([A-Za-z]+)[ _-]+(\d{1,2})[,_ -]+(20\d{2})',combined,re.I)
+            numeric=re.search(r'(\d{1,2})[._/-](\d{1,2})[._/-](20\d{2})',combined)
+            try:
+                if dmy:day=datetime.strptime(f'{dmy.group(1)} {dmy.group(2)} {dmy.group(3)}','%d %B %Y').date()
+                elif mdy:day=datetime.strptime(f'{mdy.group(2)} {mdy.group(1)} {mdy.group(3)}','%d %B %Y').date()
+                elif numeric:day=date(int(numeric.group(3)),int(numeric.group(2)),int(numeric.group(1)))
+            except ValueError:day=None
+            if day and day<=date.today():
+                kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
+                candidates.append((day,priority,url,title))
+        if not candidates:raise ValueError('No official Franklin monthly portfolio download discovered')
+        newest=max(x[0] for x in candidates)
+        pool=[x for x in candidates if x[0]==newest]
+        for _,_,url,title in sorted(pool,key=lambda x:x[1],reverse=True)[:2]:
+            yield family,url,title or f'Monthly portfolio as on {newest.isoformat()}'
     elif amc=='Union':
         # The Union fund-house homepage is slow, but the Small Cap factsheet is
         # published at a stable first-party URL. Fetch it directly every run;
@@ -174,6 +221,32 @@ def discover(amc):
             year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
             name=calendar.month_name[month].lower()
             yield family,f'https://www.mahindramanulife.com/digital-factsheet/{name}-{year}/Equity-funds/Small-Cap-Fund.html','Monthly digital factsheet'
+    elif amc=='LIC':
+        family='LIC Mf Small Cap Fund'
+        page='https://www.licmf.com/downloads/factsheet'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        rows=[]
+        for url,title in providers.candidate_links(soup,page).items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            if not re.search(r'\.pdf(?:[?#]|$)',url,re.I):continue
+            if not re.search(r'fact[ _-]*sheet|factsheet',combined,re.I):continue
+            day=None
+            m=re.search(r'(\d{1,2})(?:st|nd|rd|th)?[ _-]+([A-Za-z]+)[ _-]+(20\d{2})',combined,re.I)
+            if m:
+                try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
+                except ValueError:pass
+            if not day:
+                years=[int(x) for x in re.findall(r'20[12]\d',combined)]
+                year=max(years,default=0)
+                month=max((i for i in range(1,13)
+                           if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+                if year and month:day=date(year,month,calendar.monthrange(year,month)[1])
+            if day and day<=date.today():rows.append((day,url,title))
+        if not rows:raise ValueError('No official LIC MF factsheet PDF was exposed by the factsheet archive')
+        newest=max(x[0] for x in rows)
+        for _,url,title in [r for r in rows if r[0]==newest][:2]:
+            yield family,url,title or f'Factsheet as on {newest.isoformat()}'
     elif amc=='PGIM':
         family='Pgim India Small Cap Fund'
         today=date.today()
@@ -400,5 +473,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','Franklin','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
