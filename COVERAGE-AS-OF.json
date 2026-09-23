@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T03:17:11+00:00",
+  "built_at": "2026-09-23T03:51:02+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -330,7 +330,7 @@
           "title": "FACTSHEET AUGUST 2026",
           "kind": "factsheet",
           "url": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5",
-          "last_seen": "2026-09-23T03:15:59+00:00",
+          "last_seen": "2026-09-23T03:48:10+00:00",
           "hash": "762c097943b21d3dabb77708daf08bcd59c7050e1abfd5de99d0f83030a1f561",
           "observed_at": "2026-09-22T02:23:02+00:00"
         },
@@ -338,8 +338,8 @@
           "status": "parsed",
           "records": 3,
           "detail": "3 dated facts; 0 holdings (portfolio may be partial)",
-          "checked_at": "2026-09-23T01:04:44+00:00",
-          "parser_version": "amc-reports-2026-09-v23",
+          "checked_at": "2026-09-23T03:48:45+00:00",
+          "parser_version": "amc-reports-2026-09-v24",
           "source": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5"
         },
         "source_page": {
@@ -537,37 +537,16 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-07-31",
+        "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_August__2026_10082026160011.pdf",
+        "complete": 0,
+        "positions": 30
+      },
       "portfolio_complete": false,
       "portfolio_fresh": false,
       "official_publications": 2,
-      "portfolio_gap": {
-        "reason": "facts_only_no_portfolio",
-        "document": {
-          "title": "Factsheet - September 2026",
-          "kind": "factsheet",
-          "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
-          "last_seen": "2026-09-22T21:46:54+00:00",
-          "hash": "ecda95db8183525b4b429c835d10d883b4db0757dabff2b562002d5a16cec366",
-          "observed_at": "2026-09-22T21:46:58+00:00"
-        },
-        "extraction": {
-          "status": "parsed",
-          "records": 2,
-          "detail": "2 dated facts; 0 holdings (portfolio may be partial)",
-          "checked_at": "2026-09-22T21:47:19+00:00",
-          "parser_version": "amc-reports-2026-09-v21",
-          "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf"
-        },
-        "source_page": {
-          "amc_match": "Edelweiss",
-          "url": "https://www.edelweissmf.com/",
-          "label": "Fund house",
-          "last_checked": "2026-09-22T21:54:30+00:00",
-          "status": "Limited",
-          "detail": "Page archived; no automatically readable fund documents found"
-        }
-      }
+      "portfolio_gap": null
     },
     {
       "family": "Franklin India Small Cap Fund",
@@ -1432,23 +1411,16 @@
       "portfolio_fresh": false,
       "official_publications": 14,
       "portfolio_gap": {
-        "reason": "unsupported_document_layout",
+        "reason": "document_not_archived",
         "document": {
-          "title": "Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf",
-          "kind": "portfolio",
-          "url": "https://quantmutual.com/Admin/MonthlyFortnightlyPortfolio/Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf",
-          "last_seen": "2026-09-22T21:43:14+00:00",
-          "hash": "2a77ec1365129686e5e2353584b9d7154215786af00a2bfa4167d5a1881948f3",
-          "observed_at": "2026-09-22T02:57:23+00:00"
+          "title": "a",
+          "kind": "factsheet",
+          "url": "https://quantmutual.com/Admin/Factsheet/quant_Factsheet_June_2026.pdf",
+          "last_seen": "2026-09-22T21:45:26+00:00",
+          "hash": null,
+          "observed_at": null
         },
-        "extraction": {
-          "status": "unrecognized",
-          "records": 0,
-          "detail": "Original archived; no supported, unambiguous dated scheme table found",
-          "checked_at": "2026-09-22T21:43:16+00:00",
-          "parser_version": "amc-reports-2026-09-v21",
-          "source": "https://quantmutual.com/Admin/MonthlyFortnightlyPortfolio/Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf"
-        },
+        "extraction": null,
         "source_page": {
           "amc_match": "quant Mutual",
           "url": "https://quantmutual.com/",
@@ -1695,23 +1667,9 @@
       "portfolio_fresh": false,
       "official_publications": 3,
       "portfolio_gap": {
-        "reason": "unsupported_document_layout",
-        "document": {
-          "title": "Press Release to create a segregated portfolio in 3 schemes",
-          "kind": "portfolio",
-          "url": "https://betacms.tatamutualfund.com/system/files/2023-06/dhfl_update_press_release_07062019.pdf",
-          "last_seen": "2026-09-23T03:16:54+00:00",
-          "hash": "f2991ca40b578c6d3cdde2fde906e6fe694da7791c006381bfd76acf01ccf556",
-          "observed_at": "2026-09-23T03:16:54+00:00"
-        },
-        "extraction": {
-          "status": "unrecognized",
-          "records": 0,
-          "detail": "Original archived; no supported, unambiguous dated scheme table found",
-          "checked_at": "2026-09-23T03:16:54+00:00",
-          "parser_version": "amc-reports-2026-09-v23",
-          "source": "https://betacms.tatamutualfund.com/system/files/2023-06/dhfl_update_press_release_07062019.pdf"
-        },
+        "reason": "source_not_exposing_portfolio",
+        "document": null,
+        "extraction": null,
         "source_page": {
           "amc_match": "Tata",
           "url": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth",
@@ -1906,7 +1864,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T03:15:07+00:00",
+          "last_seen": "2026-09-23T03:47:44+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1923,11 +1881,11 @@
     }
   ],
   "portfolio_gap_reasons": {
-    "facts_only_no_portfolio": 5,
+    "facts_only_no_portfolio": 4,
     "source_unavailable": 1,
-    "source_not_exposing_portfolio": 2,
-    "unsupported_document_layout": 3,
-    "document_not_archived": 1
+    "source_not_exposing_portfolio": 3,
+    "unsupported_document_layout": 1,
+    "document_not_archived": 2
   },
   "counts": {
     "funds": 36,
@@ -1935,11 +1893,11 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 24,
+    "portfolio": 25,
     "portfolio_complete": 17,
     "portfolio_fresh": 16,
     "portfolio_fresh_complete": 12,
-    "portfolio_partial": 7,
+    "portfolio_partial": 8,
     "benchmark_identity": 19
   },
   "notes": [
