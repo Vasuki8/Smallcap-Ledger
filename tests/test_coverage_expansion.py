@@ -738,7 +738,7 @@ Venus Pipes & Tubes Ltd Industrial Products 0.20%
 Schneider Electric Infrastructure Ltd. Electrical Equipment 0.20%
 J.Kumar Infraprojects Limited Construction 0.20%
 Karur Vysya Bank Limited Banks 0.20%
-Others 0.80%
+Others 0.60%
 Total 87.60%
 Tri Party Repo (TREPs)
 The Clearing Corporation of India Ltd. 10.40%
