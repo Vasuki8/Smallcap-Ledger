@@ -764,13 +764,15 @@ Portfolio Holdings'''
         text='''quant Small Cap Fund
 Investment Objective: The primary investment objective of the scheme is to seek to generate capital appreciation & provide long-term growth opportunities by investing in a portfolio of Small Cap companies.
 INCEPTION DATE
-29 October 1996
+29 Oc tober 1996
 BENCHMARK INDEX:
-NIFTY SMALLCAP 250 TRI
+NIFTY SMAL
+LCAP 250 TRI
 PORTFOLIO TOP HOLDING
-LIST OF SECURITIES % TO NAV
+LIST OF SECURITIES % T O NAV
 Reliance Industries Ltd. 9.47
-RBL Bank Ltd. 5.77
+RBL Bank
+Ltd. 5.77
 Adani Power Ltd. 4.38
 HFCL Ltd. 3.44
 Sun TV Network Ltd. 2.92
@@ -780,15 +782,19 @@ Aster DM Healthcare Ltd. 2.61
 Aurobindo Pharma Ltd. 2.31
 Adani Green Energy Ltd. 2.20
 Equity & Equity Related Instruments 95.21
-Debt & Money Market Instruments 4.79
+Debt & Money Market Instruments
 and Net Current Assets
-Grand Total 100.00
-PORTFOLIO CONCENTRATION
-Top Holding % of Portfolio
-10 38.76
-20 57.81
-30 72.33
-As on April 30, 2026'''
+4.79
+Grand Total 100.00PORTFOLIO CONCENTRATION
+Top Holding
+10
+20
+30
+% of Portfolio
+38.76
+57.81
+72.33
+As on April 30, 2026 14'''
         parsed=quant_top10_portfolio(text)
         self.assertIsNotNone(parsed)
         self.assertEqual(parsed['day'],'2026-04-30')
@@ -796,7 +802,7 @@ As on April 30, 2026'''
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions'][:10]),38.76,places=2)
         self.assertEqual(parsed['positions'][-1]['asset_type'],'Debt, money market and net current assets')
         self.assertEqual(parsed['positions'][-1]['weight'],4.79)
-        self.assertIsNone(quant_top10_portfolio(text.replace('10 38.76','10 39.76')))
+        self.assertIsNone(quant_top10_portfolio(text.replace('% of Portfolio\n38.76','% of Portfolio\n39.76')))
         self.assertIsNone(quant_top10_portfolio(text.replace('Grand Total 100.00','Grand Total 99.00')))
         self.assertIsNone(quant_top10_portfolio(text.replace('quant Small Cap Fund','quant Mid Cap Fund',1)))
 
