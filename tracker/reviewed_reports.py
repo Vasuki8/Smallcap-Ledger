@@ -24,9 +24,14 @@ def apply():
         if r['as_of']>date.today().isoformat():raise ValueError('Future reviewed report date')
         for f in r['facts']:
             metric=f['metric'];v=f['value']
-            if metric not in ('aum','average_aum','ter','base_expense_ratio'):raise ValueError('Unsupported reviewed figure')
-            if not 0<=v<(10_000_000 if 'aum' in metric else 5):raise ValueError('Invalid reviewed figure')
-            db.metric(r['family'],f.get('plan','All'),metric,r['as_of'],v,'INR crore' if 'aum' in metric else '% p.a.',r['source'])
+            if metric not in ('aum','average_aum','ter','base_expense_ratio','benchmark'):raise ValueError('Unsupported reviewed figure')
+            if metric=='benchmark':
+                if not isinstance(v,str) or not v.strip() or len(v)>160:raise ValueError('Invalid reviewed benchmark')
+                unit=f.get('unit','Reported')
+            else:
+                if not isinstance(v,(int,float)) or not 0<=v<(10_000_000 if 'aum' in metric else 5):raise ValueError('Invalid reviewed figure')
+                unit='INR crore' if 'aum' in metric else '% p.a.'
+            db.metric(r['family'],f.get('plan','All'),metric,r['as_of'],v,unit,r['source'])
             count+=1
         save_document(r['family'],r['title'],r['source'],'factsheet','Fund',origin='AMC')
     return count
@@ -36,7 +41,15 @@ def annotate(fact):
     if fact.get('hash'):return fact
     for r in reports():
         if (fact['family'],fact['as_of'],fact['source'])!=(r['family'],r['as_of'],r['source']):continue
-        if any((fact['metric'],fact['plan'],float(fact['value']))==(f['metric'],f.get('plan','All'),f['value']) for f in r['facts']):
-            fact['source_note']='Reviewed official report · '+r['note']
-            fact['reviewed_at']=r['reviewed_at']
+        for f in r['facts']:
+            if (fact['metric'],fact['plan'])!=(f['metric'],f.get('plan','All')):continue
+            if fact['metric']=='benchmark':
+                matched=str(fact['value']).strip()==str(f['value']).strip()
+            else:
+                try:matched=float(fact['value'])==float(f['value'])
+                except (TypeError,ValueError):matched=False
+            if matched:
+                fact['source_note']='Reviewed official report · '+r['note']
+                fact['reviewed_at']=r['reviewed_at']
+                break
     return fact
