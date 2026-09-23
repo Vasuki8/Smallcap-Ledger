@@ -68,7 +68,7 @@ Month End AUM: Rs. 100 Cr''')
         text=self.report('Invesco India Smallcap Fund','AuM as on\n31st July, 2026: ₹ 14474.79 crores\nSCHEME BENCHMARK\nAs per AMFI Tier I Benchmark i.e. BSE 250 Small Cap Index TRI\nBase Expense Ratio\nRegular 1.45%\nDirect 0.41%')
         facts=page_facts(text,f)
         self.assertEqual(next(x['value'] for x in facts if x['metric']=='aum'),14474.79)
-        self.assertEqual(next(x['value'] for x in facts if x['metric']=='benchmark'),'BSE 250 Smallcap TRI')
+        self.assertEqual(next(x['value'] for x in facts if x['metric']=='benchmark'),'BSE 250 Small Cap Index TRI')
         self.assertEqual(len(facts),4)
 
     def test_combined_ber_ter_columns(self):
