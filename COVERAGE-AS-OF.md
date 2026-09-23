@@ -1,17 +1,17 @@
 # Included data coverage
 
-Prepared: 2026-09-23T14:23:05+00:00
+Prepared: 2026-09-23T14:34:50+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **25 / 36 any**, **17 complete**, **16 current**, **12 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **19 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **26 / 36 any**, **18 complete**, **16 current**, **12 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **19 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
 | Fund | AUM · ₹ Cr / date | Direct fee / date | Latest parsed portfolio | Reported benchmark / date | AMC publications |
 | --- | --- | --- | --- | --- | ---: |
 | Abakkus Small Cap Fund | ₹ 3,131.94 · 2026-09-21 | 1.25% TER · 2026-09-21 | 68 positions · 2026-07-31 · complete · older | NIFTY SmallCap 250 TRI · 2026-09-22 | 28 |
-| Aditya Birla Sun Life Small Cap Fund | ₹ 6,201.91 · 2026-09-21 | 1.08% TER · 2026-09-16 | Gap | BSE 250 Small Cap Index TRI · 2026-07-31 | 4 |
+| Aditya Birla Sun Life Small Cap Fund | ₹ 6,201.91 · 2026-09-21 | 1.08% TER · 2026-09-16 | 89 positions · 2026-07-31 · complete · older | BSE 250 Small Cap Index TRI · 2026-07-31 | 4 |
 | Axis Small Cap Fund | ₹ 31,479.29 · 2026-09-21 | 0.71% Expense ratio · type not specified · 2026-09-21 | 10 positions · 2026-09-16 · partial · current | Nifty Smallcap 250 TRI · 2026-09-23 | 5 |
 | Bajaj Finserv Small Cap Fund | ₹ 2,747.20 · 2026-09-21 | 0.96% TER · 2026-09-21 | Gap | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
 | Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-21 | 0.61% TER · 2026-09-20 | Gap | Gap | 0 |
@@ -51,7 +51,6 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 
 | Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
 | --- | --- | --- | --- | --- |
-| Aditya Birla Sun Life Small Cap Fund | Facts parsed; no holdings | factsheet: Empower - Monthly Factsheet · archived 2026-09-06 | parsed · 5 records · 5 dated facts; 0 holdings (portfolio may be partial) | Checked · 2026-09-22 · 2 relevant links; 2 documents archived; 5 facts/holdings; 1 documents without extracted tables; 0 do |
 | Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Bank Of India Small Cap Fund | Facts parsed; no holdings | factsheet: FACTSHEET AUGUST 2026 · archived 2026-09-22 | parsed · 3 records · 3 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |

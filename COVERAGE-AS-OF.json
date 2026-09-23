@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T14:23:05+00:00",
+  "built_at": "2026-09-23T14:34:50+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -95,37 +95,16 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
-      "portfolio": null,
-      "portfolio_complete": false,
+      "portfolio": {
+        "as_of": "2026-07-31",
+        "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf",
+        "complete": 1,
+        "positions": 89
+      },
+      "portfolio_complete": true,
       "portfolio_fresh": false,
       "official_publications": 4,
-      "portfolio_gap": {
-        "reason": "facts_only_no_portfolio",
-        "document": {
-          "title": "Empower - Monthly Factsheet",
-          "kind": "factsheet",
-          "url": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf",
-          "last_seen": "2026-09-22T21:56:26+00:00",
-          "hash": "d338bd0b783f8dd71e4d588bdcf71d29d76dcccd4600b4741db23ed50b9ffb36",
-          "observed_at": "2026-09-06T07:23:38+00:00"
-        },
-        "extraction": {
-          "status": "parsed",
-          "records": 5,
-          "detail": "5 dated facts; 0 holdings (portfolio may be partial)",
-          "checked_at": "2026-09-22T21:45:06+00:00",
-          "parser_version": "amc-reports-2026-09-v21",
-          "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf"
-        },
-        "source_page": {
-          "amc_match": "Aditya Birla",
-          "url": "https://mutualfund.adityabirlacapital.com/",
-          "label": "Fund house",
-          "last_checked": "2026-09-22T21:57:00+00:00",
-          "status": "Checked",
-          "detail": "2 relevant links; 2 documents archived; 5 facts/holdings; 1 documents without extracted tables; 0 download/parser gaps"
-        }
-      }
+      "portfolio_gap": null
     },
     {
       "family": "Axis Small Cap Fund",
@@ -1864,7 +1843,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T14:22:22+00:00",
+          "last_seen": "2026-09-23T14:33:58+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1881,9 +1860,9 @@
     }
   ],
   "portfolio_gap_reasons": {
-    "facts_only_no_portfolio": 4,
     "source_unavailable": 1,
     "source_not_exposing_portfolio": 3,
+    "facts_only_no_portfolio": 3,
     "unsupported_document_layout": 1,
     "document_not_archived": 2
   },
@@ -1893,8 +1872,8 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 25,
-    "portfolio_complete": 17,
+    "portfolio": 26,
+    "portfolio_complete": 18,
     "portfolio_fresh": 16,
     "portfolio_fresh_complete": 12,
     "portfolio_partial": 8,
