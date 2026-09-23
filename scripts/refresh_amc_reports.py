@@ -6,6 +6,7 @@ document collector discovers subsequent reports from their registered AMC pages.
 from pathlib import Path
 import os
 import json
+import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
@@ -200,6 +201,37 @@ def run():
         except Exception as exc:
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
+        # Temporary source-layout diagnostic for ABSL's client-rendered portfolio archive.
+        # It prints only first-party URLs/config snippets; no data is accepted from it.
+        try:
+            from bs4 import BeautifulSoup
+            page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
+            providers.can_crawl(page)
+            raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
+            soup=BeautifulSoup(raw,'html.parser')
+            found=providers.candidate_links(soup,page)
+            print(f'ABSL_PORTFOLIO_DIAG candidates={len(found)} bytes={len(raw)}',flush=True)
+            for url,title in list(found.items())[:40]:
+                print(f'ABSL_PORTFOLIO_DIAG_LINK {url} :: {str(title)[:180]}',flush=True)
+            for tag in soup.find_all(['script','a','input','select','button','div']):
+                vals=[]
+                for k,v in tag.attrs.items():
+                    value=' '.join(v) if isinstance(v,list) else str(v)
+                    if re.search(r'portfolio|download|ajax|api|xlsx?|\.xls|document',value,re.I):
+                        vals.append(f'{k}={value}')
+                if vals:
+                    print('ABSL_PORTFOLIO_DIAG_ATTR '+tag.name+' '+' '.join(vals)[:700],flush=True)
+            txt=raw.decode('utf-8','ignore')
+            seen=set()
+            for m in re.finditer(r'.{0,120}(?:portfolio|download|ajax|api|xlsx?|\\.xls).{0,220}',txt,re.I|re.S):
+                snippet=re.sub(r'\\s+',' ',m.group(0)).strip()
+                if snippet in seen:continue
+                seen.add(snippet)
+                print('ABSL_PORTFOLIO_DIAG_SNIP '+snippet[:900],flush=True)
+                if len(seen)>=40:break
+        except Exception as exc:
+            print(f"::warning::ABSL portfolio diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
