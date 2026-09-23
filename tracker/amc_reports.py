@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v43'
+PARSER_VERSION='amc-reports-2026-09-v44'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -31,6 +31,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v41':frozenset({'Bajaj Finserv Small Cap Fund'}),
     'amc-reports-2026-09-v42':frozenset({'Bajaj Finserv Small Cap Fund'}),
     'amc-reports-2026-09-v43':frozenset({'Trustmf Small Cap Fund'}),
+    'amc-reports-2026-09-v44':frozenset({'Trustmf Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -106,6 +107,10 @@ def should_reprocess_existing(family,url,h=None):
         # Retry TRUSTMF using reviewed alternate monthly factsheet URLs. Existing
         # content-signature guards reject HTML app shells at .pdf routes.
         return family=='Trustmf Small Cap Fund' and path.endswith('.pdf')
+    if PARSER_VERSION=='amc-reports-2026-09-v44':
+        # v44 discovers TRUSTMF's current monthly disclosure through its
+        # first-party API instead of replaying stale HTML-at-PDF routes.
+        return False
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
     # v25 only changes strict benchmark-label parsing. Re-open retained PDF
