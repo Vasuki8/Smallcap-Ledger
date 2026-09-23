@@ -56,6 +56,11 @@ def run():
             if existing:
                 body=(db.DATA/existing['path']).read_bytes();h=existing['hash']
             else:providers.can_crawl(url);body,h,_=providers.fetch(url)
+            path=urlparse(url).path.lower()
+            if path.endswith('.pdf') and not body.startswith(b'%PDF'):
+                raise ValueError('Official PDF URL returned non-PDF content; document association was not refreshed')
+            if path.endswith(('.xlsx','.xls')) and not body.startswith((b'PK',b'\xd0\xcf')):
+                raise ValueError('Official spreadsheet URL returned non-spreadsheet content; document association was not refreshed')
             did=providers.save_document(family,'Official '+providers.classify('',url),url,providers.classify('',url),'Fund');providers.doc_version(did,h)
             count=amc_reports.extract(body,family,url,h)
             print(f'{family}: {count} dated facts/holdings',flush=True)
