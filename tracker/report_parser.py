@@ -193,6 +193,80 @@ def page_facts(text,family):
 
 
 
+
+def groww_reconciled_portfolio(text):
+    """Parse Groww Small Cap's published holdings while preserving AMC aggregates.
+
+    Groww's factsheet can publish an "Others" equity bucket instead of naming
+    every stock. The result therefore remains partial even when the published
+    equity/TREPS/cash components reconcile exactly to 100%.
+    """
+    normalized=normalize(text)
+    if not re.search(r'(?:^|\n)\s*GROWW\s+Small\s+Cap\s+Fund\s*(?:\n|$)',normalized,re.I):return None
+    if not re.search(r'open\s+ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',normalized,re.I):return None
+    if not re.search(r'\b29(?:st|th)?\s+January,?\s+2026\b',normalized,re.I):return None
+    if not re.search(r'\bNifty\s+Smallcap\s+250\s+Index\b',normalized,re.I):return None
+    m=re.search(r'Data\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
+    start=next((i for i,x in enumerate(lines) if re.fullmatch(r'Equity\s*&\s*Equity\s+Related\s+Holdings',x,re.I)),None)
+    if start is None:return None
+
+    positions=[];equity_total=None;repo_total=None;repo_position=None;cash=None;grand=None
+    mode='equity'
+    for line in lines[start+1:]:
+        if re.fullmatch(r'Tri\s+Party\s+Repo\s*\(TREPs\)',line,re.I):
+            mode='repo';continue
+        gm=re.fullmatch(r'Grand\s+Total\s+(-?\d+(?:\.\d+)?)\s*%',line,re.I)
+        if gm:
+            grand=float(gm.group(1));break
+        cm=re.fullmatch(r'\*?TREPS\s*/\s*Reverse\s+Repo\s*/\s*Net\s+current\s+assets\s+(-?\d+(?:\.\d+)?)\s*%',line,re.I)
+        if cm:
+            cash=float(cm.group(1));continue
+        tm=re.fullmatch(r'Total\s+(-?\d+(?:\.\d+)?)\s*%',line,re.I)
+        if tm:
+            if mode=='equity' and equity_total is None:equity_total=float(tm.group(1))
+            elif mode=='repo' and repo_total is None:repo_total=float(tm.group(1))
+            continue
+        if mode=='equity':
+            other=re.fullmatch(r'Others\s+(-?\d+(?:\.\d+)?)\s*%',line,re.I)
+            if other:
+                weight=float(other.group(1))
+                positions.append({'name':'Others (AMC aggregate)','isin':None,'sector':None,
+                                  'weight':weight,'asset_type':'Equity'})
+                continue
+            row=re.fullmatch(r'(.+?\b(?:Limited|Ltd\.?))\s+(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line,re.I)
+            if row:
+                name=row.group(1).strip();sector=re.sub(r'^Eq\s+','',row.group(2).strip(),flags=re.I)
+                weight=float(row.group(3))
+                if not 0<weight<25:return None
+                positions.append({'name':name,'isin':None,'sector':sector,'weight':weight,'asset_type':'Equity'})
+                continue
+        elif mode=='repo':
+            row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line)
+            if row and not re.fullmatch(r'Total',row.group(1),re.I):
+                weight=float(row.group(2))
+                if not 0<=weight<=100:return None
+                repo_position={'name':row.group(1).strip(),'isin':None,'sector':None,
+                               'weight':weight,'asset_type':'Money market'}
+                continue
+
+    if None in (equity_total,repo_total,cash,grand) or abs(grand-100)>.03:return None
+    if len(positions)<20 or not any(x['name']=='Others (AMC aggregate)' for x in positions):return None
+    equity=sum(x['weight'] for x in positions)
+    tolerance=max(.08,.011*len(positions))
+    if abs(equity-equity_total)>tolerance:return None
+    if repo_position is None or abs(repo_position['weight']-repo_total)>.03:return None
+    if abs((equity_total+repo_total+cash)-grand)>.03:return None
+    if len({x['name'].lower() for x in positions})!=len(positions):return None
+    positions.append(repo_position)
+    positions.append({'name':'TREPS/Reverse Repo/Net current assets','isin':None,'sector':None,
+                      'weight':cash,'asset_type':'Cash and net current assets'})
+    return {'day':day,'positions':positions}
+
+
 def bajaj_complete_portfolio(text):
     """Fully reconcile Bajaj Finserv Small Cap's published monthly portfolio."""
     normalized=normalize(text)
