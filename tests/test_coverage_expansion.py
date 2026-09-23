@@ -488,12 +488,12 @@ Scheme Category: Small Cap Fund'''
                'Nifty Smallcap 250 TRI (Benchmark)',
                'Portfolio as on August 31, 2026',
                'Equity Shares 97.50%']
-        for sector in range(5):
-            first.append(f'Sector {sector+1} 18.00%')
-            for holding in range(5):
+        for sector in range(20):
+            first.append(f'Sector {sector+1} 4.50%')
+            for holding in range(3):
                 name=('Issuer Without Suffix' if sector==2 and holding==2
                       else f'Company {sector+1}-{holding+1} Ltd')
-                first.append(f'{name} 3.60%')
+                first.append(f'{name} 1.50%')
         second=['Small Cap Fund','Category','Portfolio as on August 31, 2026',
                 'Company/Issuer Rating % to','NAV',
                 'Equity less than 1% of corpus 7.50%',
@@ -502,7 +502,7 @@ Scheme Category: Small Cap Fund'''
         parsed=icici_named_portfolio('\n'.join(first),'\n'.join(second))
         self.assertIsNotNone(parsed)
         self.assertEqual(parsed['day'],'2026-08-31')
-        self.assertEqual(len(parsed['positions']),25)
+        self.assertEqual(len(parsed['positions']),60)
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),90.0,places=2)
         self.assertTrue(any(x['name']=='Issuer Without Suffix' for x in parsed['positions']))
         self.assertIsNone(icici_named_portfolio(
@@ -516,10 +516,10 @@ Scheme Category: Small Cap Fund'''
                'Nifty Smallcap 250 TRI (Benchmark)',
                'Portfolio as on August 31, 2026',
                'Equity Shares 97.50%']
-        for sector in range(5):
-            first.append(f'Sector {sector+1} 18.00%')
-            for holding in range(5):
-                first.append(f'Company {sector+1}-{holding+1} Ltd 3.60%')
+        for sector in range(20):
+            first.append(f'Sector {sector+1} 4.50%')
+            for holding in range(3):
+                first.append(f'Company {sector+1}-{holding+1} Ltd 1.50%')
         second=['Small Cap Fund','Category','Portfolio as on August 31, 2026',
                 'Company/Issuer Rating % to','NAV',
                 'Equity less than 1% of corpus 7.50%',
@@ -533,10 +533,10 @@ Scheme Category: Small Cap Fund'''
                 b'%PDF','ICICI Prudential Small Cap Fund',
                 'https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf',
                 'icici-partial')
-        self.assertGreaterEqual(count,25)
+        self.assertGreaterEqual(count,60)
         snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='ICICI Prudential Small Cap Fund' AND hash='icici-partial'")
         self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
-        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='icici-partial')")['n'],25)
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='icici-partial')")['n'],60)
         benchmark=db.one("SELECT value,as_of FROM metrics WHERE family='ICICI Prudential Small Cap Fund' AND metric='benchmark' AND hash='icici-partial'")
         self.assertEqual(benchmark,{'value':'Nifty Smallcap 250 TRI','as_of':'2026-08-31'})
 
