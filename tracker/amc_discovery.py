@@ -70,6 +70,11 @@ def discover(amc):
         raw,_,_=read('https://www.boimf.in/AjaxService.asmx/GetDocuments',body)
         rows=json.loads(json.loads(raw)['d'])['Documents']
         for row in rows[:3]:yield 'Bank Of India Small Cap Fund',row['FolderUrl'],row['DocName']
+    elif amc=='Union':
+        # The Union fund-house homepage is slow, but the Small Cap factsheet is
+        # published at a stable first-party URL. Fetch it directly every run;
+        # downstream parsing still has to prove exact scheme ownership/date.
+        yield 'Union Small Cap Fund','https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf','Union Small Cap Fund factsheet'
     elif amc=='UTI':
         for year,month,name in months():
             raw,_,_=read(f'https://www.utimf.com/api/get-fact-sheet?year={year}&month={name}')
@@ -300,5 +305,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)

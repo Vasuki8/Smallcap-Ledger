@@ -69,11 +69,13 @@ def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024):
     # Public GETs occasionally fail on slow AMC hosts. Retry only transient
     # transport failures once; never retry HTTP status errors, validation
     # failures, oversize responses, or POST requests.
-    attempts=2 if body is None else 1
+    host=(urlparse(original).hostname or '').lower().removeprefix('www.')
+    read_timeouts=(60,120) if body is None and host=='unionmf.com' else (30,60)
+    attempts=len(read_timeouts) if body is None else 1
     try:
         for attempt in range(attempts):
             current=original
-            timeout=30 if attempt==0 else 60
+            timeout=read_timeouts[attempt] if body is None else 30
             try:
                 with httpx.Client(timeout=httpx.Timeout(timeout,connect=15),headers={"User-Agent":USER_AGENT,"Accept":"*/*"}, follow_redirects=False) as client:
                     for _ in range(6):
