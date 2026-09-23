@@ -112,6 +112,13 @@ def init(recover=False):
         c.execute("DELETE FROM document_versions WHERE document_id IN (SELECT id FROM documents WHERE kind='news')")
         c.execute("DELETE FROM documents WHERE kind='news'")
         c.execute("DELETE FROM settings WHERE key='news_interval_hours'")
+        # Historical cleanup: portfolio-related notices/press releases are
+        # disclosures, not actual holdings documents.
+        c.execute("""UPDATE documents SET kind='disclosure'
+          WHERE kind='portfolio' AND (
+            lower(title) LIKE '%press release%' OR
+            lower(title) LIKE '%notice%' OR
+            lower(title) LIKE '%circular%')""")
         if recover:
             c.execute("UPDATE jobs SET status='interrupted',finished_at=?,detail='Application stopped before this update finished; the next run resumes retained history.' WHERE status='running'", (now(),))
     migrate_portfolio_completeness()

@@ -264,6 +264,17 @@ class TrackerTests(unittest.TestCase):
         result=subprocess.run(['node','-e',"const a=require('./dist/analytics.js');console.log(JSON.stringify(a.response({option:'IDCW'},[['2024-01-01',100],['2024-02-01',95]],{data:[['2024-01-01',100],['2024-02-01',110]]})));"],cwd=db.ROOT,text=True,capture_output=True,check=True)
         idcw=json.loads(result.stdout);self.assertFalse(idcw['can_total_return']);self.assertEqual(idcw['comparison'],[]);self.assertIsNone(idcw['sip'])
 
+    def test_document_classifier_does_not_treat_portfolio_notices_as_holdings(self):
+        self.assertEqual(providers.classify(
+            'Press Release to create a segregated portfolio in 3 schemes',
+            'https://example.com/portfolio/press-release.pdf'),'disclosure')
+        self.assertEqual(providers.classify(
+            'Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf',
+            'https://example.com/monthly/portfolio/notice.pdf'),'disclosure')
+        self.assertEqual(providers.classify(
+            'Monthly Portfolio August 2026',
+            'https://example.com/monthly_portfolio_august_2026.xlsx'),'portfolio')
+
     def test_partial_portfolio_is_not_a_sale_signal(self):
         h1=db.archive(b'first portfolio','text/csv');h2=db.archive(b'second portfolio','text/csv')
         disclosures.portfolio('Test Small Cap Fund','2024-01-31',[{'name':'Alpha','weight':4},{'name':'Beta','weight':3}],False,'https://example.com/p1',h1)

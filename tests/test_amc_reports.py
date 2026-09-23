@@ -104,6 +104,9 @@ class ReportParserTests(unittest.TestCase):
         <div>Fortnightly Portfolio August 2026
           <a href="/system/files/2026-09/Tata_Fortnightly_Portfolio_August_2026.xlsx">Excel</a>
         </div>
+        <div>Press Release to create a segregated portfolio in 3 schemes
+          <a href="/system/files/2023-06/dhfl_update_press_release_07062019.pdf">PDF</a>
+        </div>
         </body></html>'''
         with patch('tracker.amc_discovery.read',return_value=(html,'hash','text/html')):
             rows=list(discover('Tata'))
