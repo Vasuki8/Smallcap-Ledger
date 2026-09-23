@@ -201,6 +201,47 @@ def discover(amc):
         # parser verify whether an all-funds file actually contains Small Cap.
         for _,_,url,title in sorted(rows,reverse=True)[:4]:
             yield family,url,title or 'Quant monthly portfolio'
+    elif amc=='Tata':
+        family='Tata Small Cap Fund'
+        page='https://www.tatamutualfund.com/schemes-related/portfolio'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        candidates={}
+        # Tata's disclosure page can expose downloads through anchors, data-*
+        # attributes or embedded JSON. Preserve nearby context, but only accept
+        # official downloadable monthly-portfolio files.
+        for url,title in providers.candidate_links(soup,page).items():
+            if disclosures.official_publication_url(url,amc):
+                candidates[url]=title
+        for tag in soup.find_all(True):
+            container=tag.find_parent(['tr','li','div','section']) or tag.parent
+            context=(container.get_text(' ',strip=True) if container else tag.get_text(' ',strip=True))[:1800]
+            attrs=' '.join(str(v) for v in tag.attrs.values()).replace('\\/','/')
+            for m in re.finditer(r'(?:(?:https?:)?//[^"\'\s<>]+|/[^"\'\s<>]+)\.(?:xlsx?|xml|pdf)(?:\?[^"\'\s<>]*)?',attrs,re.I):
+                url=urljoin(page,m.group(0))
+                if disclosures.official_publication_url(url,amc):
+                    candidates.setdefault(url,context or url.rsplit('/',1)[-1])
+        rows=[]
+        for url,title in candidates.items():
+            combined=unquote(url+' '+title)
+            ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I)
+            if not ext:continue
+            if not re.search(r'portfolio',combined,re.I):continue
+            # Monthly portfolio disclosure only; exclude factsheets/SIDs and
+            # debt-only weekly/fortnightly files.
+            if re.search(r'fortnight|weekly|factsheet|sid|kim',combined,re.I):continue
+            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
+            year=max(years,default=0)
+            month=max((i for i in range(1,13)
+                       if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+            kind=ext.group(1).lower()
+            priority=3 if kind in ('xls','xlsx') else 2 if kind=='xml' else 1
+            rows.append((year,month,priority,url,title))
+        if not rows:raise ValueError('No official Tata monthly portfolio download was exposed by the portfolio page')
+        dated=[r for r in rows if r[0] and r[1]]
+        pool=dated or rows
+        newest=max((r[0],r[1]) for r in pool)
+        chosen=max((r for r in pool if (r[0],r[1])==newest),key=lambda r:r[2])
+        yield family,chosen[3],chosen[4] or 'Tata monthly portfolio'
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
         body={'systemQueryFileName':'productsweb.xml','tagName':'GetOneProductWeb','searchField':'p.slug','searchValue':'trustmf-small-cap-fund','sortField':'','sortDirection':''}
@@ -259,5 +300,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
