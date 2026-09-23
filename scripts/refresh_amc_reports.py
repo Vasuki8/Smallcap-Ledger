@@ -202,46 +202,39 @@ def run():
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
-        # Temporary same-session diagnostic for ABSL's public accordion API.
+        # Temporary ABSL JavaScript diagnostic: discover how the public accordion
+        # invokes its first-party endpoint. No portfolio data is accepted here.
         try:
-            import httpx
             from bs4 import BeautifulSoup
-            from urllib.parse import urljoin
+            from urllib.parse import urljoin,urlparse
             page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
-            providers.can_crawl(page)
-            providers.public_url(page)
-            with httpx.Client(timeout=httpx.Timeout(30,connect=15),
-                              headers={'User-Agent':providers.USER_AGENT,'Accept':'*/*'},
-                              follow_redirects=True) as client:
-                first=client.get(page)
-                first.raise_for_status()
-                soup=BeautifulSoup(first.content,'html.parser')
-                item=next((li for li in soup.select('li[data-accordian-api]')
-                           if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
-                if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
-                endpoint=urljoin(page,item.get('data-accordian-api',''))
-                providers.public_url(endpoint)
-                providers.can_crawl(endpoint)
-                token=soup.select_one('input[name="__RequestVerificationToken"]')
-                headers={'Referer':page,'X-Requested-With':'XMLHttpRequest','Accept':'text/html, */*; q=0.01'}
-                if token and token.get('value'):headers['RequestVerificationToken']=token['value']
-                print('ABSL_SESSION_ENDPOINT '+endpoint,flush=True)
-                print('ABSL_SESSION_COOKIES '+','.join(sorted(client.cookies.keys())),flush=True)
-                response=client.get(endpoint,headers=headers)
-                print(f'ABSL_SESSION_STATUS {response.status_code} type={response.headers.get("content-type","")} bytes={len(response.content)}',flush=True)
-                if response.status_code>=400:
-                    print('ABSL_SESSION_ERROR_BODY '+re.sub(r'\s+',' ',response.text)[:3000],flush=True)
-                    response.raise_for_status()
-                response_soup=BeautifulSoup(response.content,'html.parser')
-                found=providers.candidate_links(response_soup,endpoint)
-                print(f'ABSL_SESSION_LINKS {len(found)}',flush=True)
-                for url,title in found.items():
-                    combined=url+' '+str(title)
-                    if re.search(r'portfolio|small\s*cap|aug|sep|2026|xlsx?|\.xls|\.pdf',combined,re.I):
-                        print('ABSL_SESSION_LINK '+url+' :: '+str(title)[:350],flush=True)
-                print('ABSL_SESSION_BODY '+re.sub(r'\s+',' ',response.text)[:16000],flush=True)
+            raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
+            soup=BeautifulSoup(raw,'html.parser')
+            scripts=[]
+            for tag in soup.find_all('script'):
+                src=tag.get('src')
+                if not src:continue
+                u=urljoin(page,src)
+                if urlparse(u).netloc.endswith('adityabirlacapital.com'):
+                    scripts.append(u)
+            needles=(r'data-accordian-api',r'FactsheetAccordionById',r'tabInject',r'accord_header')
+            print(f'ABSL_ACCORDION_JS scripts={len(set(scripts))}',flush=True)
+            hits=0
+            for u in dict.fromkeys(scripts):
+                try:
+                    js,_,_=providers.fetch(u,max_bytes=6*1024*1024)
+                    source=js.decode('utf-8','ignore')
+                except Exception:
+                    continue
+                for needle in needles:
+                    for m in list(re.finditer(needle,source,re.I))[:6]:
+                        snippet=re.sub(r'\s+',' ',source[max(0,m.start()-1200):m.end()+2200]).strip()
+                        print('ABSL_ACCORDION_JS_HIT '+u+' :: '+snippet[:3600],flush=True)
+                        hits+=1
+                if hits>=20:break
+            if not hits:print('ABSL_ACCORDION_JS_HIT none',flush=True)
         except Exception as exc:
-            print(f"::warning::ABSL same-session diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            print(f"::warning::ABSL accordion JS diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
