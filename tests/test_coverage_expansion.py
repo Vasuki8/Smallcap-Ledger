@@ -433,6 +433,53 @@ Scheme Category: Small Cap Fund'''
         bench=db.one("SELECT value,as_of FROM metrics WHERE family='Bank Of India Small Cap Fund' AND metric='benchmark' AND hash='boi-page'")
         self.assertEqual(bench,{'value':'NIFTY Smallcap 250 TRI','as_of':'2026-06-30'})
 
+    def test_absl_complete_portfolio_reconciles_sector_totals_and_cash(self):
+        from tracker.report_parser import absl_complete_portfolio
+        lines=[
+            'Aditya Birla Sun Life Small Cap Fund',
+            'An open ended equity scheme predominantly investing in small cap stocks.',
+            'Portfolio Holdings as on July 31, 2026',
+            'Sector/Issuer Name % of Net AUM',
+            'Equity & Equity Related',
+        ]
+        # Four sectors, ten securities each: 80% equity + 20% cash = 100%.
+        for sector in range(4):
+            lines.append(f'Sector {sector+1} 20.00 %')
+            for holding in range(10):
+                lines.append(f'Company {sector+1}-{holding+1} Ltd. 2.00 %')
+        lines += ['Net Cash and Cash Equivalent 20.00 %','Grand Total 100.00 %']
+        text='\n'.join(lines)
+        parsed=absl_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-07-31')
+        self.assertEqual(len(parsed['positions']),41)
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertIsNone(absl_complete_portfolio(text.replace('Sector 2 20.00 %','Sector 2 19.00 %')))
+
+    def test_absl_factsheet_saves_reconciled_portfolio_as_complete(self):
+        from tracker import disclosures
+        lines=[
+            'Aditya Birla Sun Life Small Cap Fund',
+            'An open ended equity scheme predominantly investing in small cap stocks.',
+            'Portfolio Holdings as on July 31, 2026',
+            'Sector/Issuer Name % of Net AUM',
+            'Equity & Equity Related',
+        ]
+        for sector in range(4):
+            lines.append(f'Sector {sector+1} 20.00 %')
+            for holding in range(10):
+                lines.append(f'Company {sector+1}-{holding+1} Ltd. 2.00 %')
+        lines += ['Net Cash and Cash Equivalent 20.00 %','Grand Total 100.00 %']
+        text='\n'.join(lines)
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Aditya Birla Sun Life Small Cap Fund',
+                                            'https://mutualfund.adityabirlacapital.com/absl.pdf','absl-full')
+        self.assertEqual(count,41)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Aditya Birla Sun Life Small Cap Fund' AND hash='absl-full'")
+        self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})
+
     def test_edelweiss_top30_reconciles_published_top10_total(self):
         from tracker.report_parser import edelweiss_top30_portfolio
         text='''Edelweiss Small Cap Fund
