@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T21:33:05+00:00",
+  "built_at": "2026-09-23T21:34:30+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -230,7 +230,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2025-03-31",
+        "value": "BSE 250 SmallCap TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://assets.bandhanmutual.com/2025/04/59b0d496-bandhan-performance-table-march-2025.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-20",
@@ -242,10 +248,17 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 0,
+      "official_publications": 1,
       "portfolio_gap": {
-        "reason": "source_not_exposing_portfolio",
-        "document": null,
+        "reason": "document_not_archived",
+        "document": {
+          "title": "March 2025 performance table · Bandhan Small Cap Fund",
+          "kind": "factsheet",
+          "url": "https://assets.bandhanmutual.com/2025/04/59b0d496-bandhan-performance-table-march-2025.pdf",
+          "last_seen": "2026-09-23T21:34:24+00:00",
+          "hash": null,
+          "observed_at": null
+        },
         "extraction": null,
         "source_page": {
           "amc_match": "Bandhan",
@@ -831,7 +844,13 @@
         "source": "https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-08-31",
+        "value": "BSE 250 Smallcap TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp"
+      },
       "fee": {
         "metric": "base_expense_ratio",
         "as_of": "2026-08-31",
@@ -1535,7 +1554,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-05-31",
+        "value": "Nifty Small Cap 250 TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.sundarammutual.com/uploaddir/individual_factsheet/select_small_cap/Sundaram_Small_Cap_Fund_6_2026_150626_163202.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -1552,7 +1577,7 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 6,
+      "official_publications": 7,
       "portfolio_gap": null
     },
     {
@@ -1685,7 +1710,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2024-11-27",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.trustmf.com/trustmfsys/wp-content/uploads/2024/09/TRUSTMF-Small-Cap-Fund_SID_27.11.2024.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -1702,7 +1733,7 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 3,
+      "official_publications": 4,
       "portfolio_gap": null
     },
     {
@@ -1725,7 +1756,13 @@
       "ter_observed": null,
       "base_expense_ratio": null,
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2023-08-31",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://doc.utimf.com/uticontainer/UTISmallCapFund31082023-75120231016-214522.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-07-31",
@@ -1742,7 +1779,7 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 7,
+      "official_publications": 8,
       "portfolio_gap": null
     },
     {
@@ -1771,7 +1808,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-09-23",
+        "value": "BSE 250 SmallCap Index (TRI)",
+        "unit": "Observed on official scheme document",
+        "plan": "All",
+        "source": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -1783,14 +1826,14 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 1,
+      "official_publications": 2,
       "portfolio_gap": {
         "reason": "document_not_archived",
         "document": {
-          "title": "July 2026 Small Cap factsheet",
+          "title": "Union Small Cap Fund Scheme Information Document",
           "kind": "factsheet",
-          "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T21:33:00+00:00",
+          "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
+          "last_seen": "2026-09-23T21:34:24+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1807,8 +1850,7 @@
     }
   ],
   "portfolio_gap_reasons": {
-    "source_not_exposing_portfolio": 1,
-    "document_not_archived": 1
+    "document_not_archived": 2
   },
   "counts": {
     "funds": 36,
@@ -1821,7 +1863,7 @@
     "portfolio_fresh": 21,
     "portfolio_fresh_complete": 13,
     "portfolio_partial": 15,
-    "benchmark_identity": 30
+    "benchmark_identity": 36
   },
   "notes": [
     "Coverage means at least one dated record, not necessarily the latest reporting month.",
