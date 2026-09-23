@@ -26,8 +26,9 @@ def run():
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
-            'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
-            'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf',
+            'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
+            'https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_sep-2026.pdf',
+            'https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf',
         }
         rows=[row for row in rows if row['url'] in current_catalog]
     source_rows=json.loads((ROOT/'tracker/sources.json').read_text())
@@ -113,7 +114,9 @@ def run():
             ('Abakkus','Abakkus Small Cap Fund'),
             ('Aditya Birla','Aditya Birla Sun Life Small Cap Fund'),
             ('Franklin','Franklin India Small Cap Fund'),
+            ('HSBC','HSBC Small Cap Fund'),
             ('LIC','LIC Mf Small Cap Fund'),
+            ('PGIM','Pgim India Small Cap Fund'),
         )
         for amc,family in discovery_targets:
             attempted=0
@@ -121,9 +124,12 @@ def run():
                 for discovered_family,url,title in amc_discovery.discover(amc):
                     if discovered_family!=family:continue
                     attempted+=1
-                    try:amc_discovery.store_report(amc,family,url,title)
+                    print(f'{family} current candidate #{attempted}: {url} · {title[:140]}',flush=True)
+                    try:
+                        records=amc_discovery.store_report(amc,family,url,title)
+                        print(f'{family} current candidate #{attempted}: {records} dated facts/holdings parsed',flush=True)
                     except Exception as exc:
-                        print(f"::warning::{family} current candidate: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+                        print(f"::warning::{family} current candidate #{attempted}: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
                     snap=db.one("SELECT as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,id DESC LIMIT 1",(family,))
                     if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
                     if attempted>=4:break
