@@ -129,6 +129,25 @@ Month End AUM: Rs. 100 Cr''')
                 'Samco Small Cap Fund',
                 'https://www.samcomf.com/portfolio.xlsx'))
 
+    def test_v45_parser_upgrade_targets_only_union(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v45'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Union Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Bandhan Small Cap Fund'))
+            self.assertTrue(amc_reports.should_reprocess_existing(
+                'Union Small Cap Fund',
+                'https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-march-2026.pdf'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Quant Small Cap Fund',
+                'https://quantmutual.com/Admin/Factsheet/factsheet.pdf'))
+
+    def test_union_catalog_keeps_reviewed_omnibus_fallback(self):
+        rows=json.loads((Path(__file__).resolve().parents[1]/'tracker'/'report_catalog.json').read_text())
+        urls=[row['url'] for row in rows if row['family']=='Union Small Cap Fund']
+        self.assertIn(
+            'https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-march-2026.pdf?sfvrsn=3ddcc4de_5',
+            urls)
+
     def test_bandhan_wordpress_attachment_discovery_uses_official_media(self):
         from tracker.amc_discovery import discover
         post=[{
