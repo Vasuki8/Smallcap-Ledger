@@ -807,6 +807,38 @@ As on April 30, 2026 14'''
         self.assertIsNone(quant_top10_portfolio(text.replace('quant Small Cap Fund','quant Mid Cap Fund',1)))
 
 
+    def test_trustmf_named_portfolio_is_partial_and_dated(self):
+        from tracker.report_parser import trustmf_named_portfolio
+        text='''TRUSTMF Small Cap Fund
+(An open-ended equity scheme predominantly investing in small cap stocks)
+Date of Allotment
+04th November 2024
+Benchmark
+NIFTY Smallcap 250 TRI
+Portfolio as on June 30, 2025
+Company/Issuer Industry % To Net Assets
+Multi Commodity Exchange of India Limited^ Capital Markets 3.13
+Karur Vysya Bank Limited^ Banks 2.75
+PNB Housing Finance Limited^ Finance 2.58
+Solar Industries India Limited^ Chemicals & Petrochemicals 2.35
+Coforge Limited^ IT - Software 2.27
+Apollo Micro Systems Limited^ Aerospace & Defense 2.06
+Radico Khaitan Limited^ Beverages 1.99
+Welspun Corp Limited^ Industrial Products 1.93
+S.J.S. Enterprises Limited^ Auto Components 1.83
+Nuvama Wealth Management Limited^ Capital Markets 1.83
+Gabriel India Limited^ Auto Components 1.79
+Shaily Engineering Plastics Limited^ Industrial Products 1.76
+'''
+        parsed=trustmf_named_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2025-06-30')
+        self.assertGreaterEqual(len(parsed['positions']),10)
+        self.assertEqual(parsed['positions'][0]['name'],'Multi Commodity Exchange of India Limited')
+        self.assertIsNone(trustmf_named_portfolio(text.replace('TRUSTMF Small Cap Fund','TRUSTMF Flexi Cap Fund',1)))
+        self.assertIsNone(trustmf_named_portfolio(text.replace('NIFTY Smallcap 250 TRI','NIFTY 500 TRI',1)))
+
+
     def test_union_complete_portfolio_reconciles_all_published_assets(self):
         from tracker.report_parser import union_complete_portfolio
         equities=[(f'Company {i} Ltd.',4.90) for i in range(1,20)]
