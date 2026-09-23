@@ -4,11 +4,16 @@ This script never archives or stores the response. It exists only to establish
 whether AMFI exposes a reusable public portfolio feed for current tracker gaps.
 """
 from __future__ import annotations
+from pathlib import Path
+import sys
 import json
 import re
 from datetime import date
 from urllib.parse import urlencode
 from bs4 import BeautifulSoup
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 
 from tracker import db
 from tracker.providers import fetch
