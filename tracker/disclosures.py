@@ -265,6 +265,10 @@ def factsheet_pdf(content,family,url,h):
         if family=='Groww Small Cap Fund':
             from .report_parser import groww_reconciled_portfolio
             partial=groww_reconciled_portfolio(text)
+        if family=='Quant Small Cap Fund':
+            from .report_parser import quant_top10_portfolio
+            layout_text=page.extract_text(extraction_mode='layout') or ''
+            partial=quant_top10_portfolio(layout_text)
         if family=='Bajaj Finserv Small Cap Fund':
             from .report_parser import bajaj_complete_portfolio
             full=bajaj_complete_portfolio(text)
