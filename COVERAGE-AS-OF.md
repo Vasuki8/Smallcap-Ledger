@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-23T19:27:07+00:00
+Prepared: 2026-09-23T19:32:53+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
@@ -43,7 +43,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Sundaram Small Cap Fund | ₹ 4,181.09 · 2026-09-21 | 0.97% TER · 2026-09-21 | 73 positions · 2026-08-31 · partial · current | Gap | 6 |
 | Tata Small Cap Fund | ₹ 13,457.80 · 2026-09-21 | 0.51% TER · 2026-09-20 | 10 positions · 2026-08-31 · partial · current | Gap | 4 |
 | The Wealth Company Small Cap Fund | ₹ 139.96 · 2026-09-21 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete · current | Gap | 18 |
-| Trustmf Small Cap Fund | ₹ 3,828.10 · 2026-09-21 | 1.54% TER · 2026-09-21 | Gap | Gap | 1 |
+| Trustmf Small Cap Fund | ₹ 3,828.10 · 2026-09-21 | 1.54% TER · 2026-09-21 | Gap | Gap | 2 |
 | UTI Small Cap Fund | ₹ 5,372.16 · 2026-09-21 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Gap | 7 |
 | Union Small Cap Fund | ₹ 2,752.34 · 2026-09-21 | 1.08% TER · 2026-09-21 | Gap | Gap | 1 |
 
@@ -53,7 +53,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | --- | --- | --- | --- | --- |
 | Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
-| Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Trustmf Small Cap Fund | Archived document not parsed | factsheet: TRUSTMF Factsheet June 2025 2 · archived 2026-09-23 | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Union Small Cap Fund | Document known but not archived | factsheet: July 2026 Small Cap factsheet | Gap | Gap · 2026-09-22 · timed out |
 
 ## Notes

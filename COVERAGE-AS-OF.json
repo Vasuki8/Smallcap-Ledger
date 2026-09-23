@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T19:27:07+00:00",
+  "built_at": "2026-09-23T19:32:53+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -1650,10 +1650,17 @@
       "portfolio": null,
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 1,
+      "official_publications": 2,
       "portfolio_gap": {
-        "reason": "source_not_exposing_portfolio",
-        "document": null,
+        "reason": "document_not_parsed",
+        "document": {
+          "title": "TRUSTMF Factsheet June 2025 2",
+          "kind": "factsheet",
+          "url": "https://www.trustmf.com/trustmfsys/wp-content/uploads/2025/07/TRUSTMF-Factsheet-June-2025-2.pdf",
+          "last_seen": "2026-09-23T19:32:38+00:00",
+          "hash": "6b14881b9121c4a30e1dbcb69d1dbd501522a70ee790c2819264f96cd0429168",
+          "observed_at": "2026-09-23T19:32:38+00:00"
+        },
         "extraction": null,
         "source_page": {
           "amc_match": "Trust",
@@ -1750,7 +1757,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T19:26:42+00:00",
+          "last_seen": "2026-09-23T19:32:34+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1768,7 +1775,8 @@
   ],
   "portfolio_gap_reasons": {
     "source_unavailable": 1,
-    "source_not_exposing_portfolio": 2,
+    "source_not_exposing_portfolio": 1,
+    "document_not_parsed": 1,
     "document_not_archived": 1
   },
   "counts": {
