@@ -344,8 +344,8 @@ Current production-verified coverage:
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
 | Complete portfolio | **20 / 36** |
-| Current portfolio | **22 / 36** |
-| Current + complete | **14 / 36** |
+| Current portfolio | **23 / 36** |
+| Current + complete | **15 / 36** |
 | Partial latest portfolio | **14 / 36** |
 
 ### Latest completed backend batch — Groww August portfolio recovery
@@ -363,14 +363,25 @@ Current production-verified coverage:
 
 This moved production from **19 → 20 complete portfolios**, **21 → 22 current portfolios**, **13 → 14 current+complete**, and **15 → 14 partial latest portfolios**.
 
+### Latest completed backend batch — HSBC August portfolio recovery
+
+**HSBC Small Cap Fund is now current and complete.**
+
+- The official August `The Asset` PDF was already archived and continued to provide the August AUM/BER/benchmark facts, but the complete portfolio remained at July.
+- The real August portfolio table exposed two layout differences: one holding joined the issuer suffix directly to the market-cap label (`...LTDSmall Cap`), and the complete portfolio moved to a dedicated **Additional Disclosure** page that does not repeat the normal scheme-description sentence.
+- The HSBC parser now accepts the joined market-cap token and has a narrow portfolio-only ownership path requiring the exact `HSBC Small Cap Fund` heading plus the portfolio/table heading, explicit grand total, TREPS, and Net Current Assets anchors. Existing sector, cash, duplicate, date, weight, and 100% reconciliation checks remain unchanged.
+- Parser v55 targets HSBC only. The final parser repair is commit `7786f285e186f6170be4df9e9251e189750d9787`; the v55 replay is `1b0c80baf5d28f1b3cb2dda872301d965017cc30`; the dedicated regression is retained in `tests/test_coverage_expansion.py`.
+- Production run **#266** passed syntax, the full **163-test** regression suite, site generation/validation, cumulative archive publication, status recording, and Pages deployment.
+- Status commit `7b615a9420fe816e7c34f66b53244ac76e9b3735` records HSBC at **2026-08-31**, **115 positions**, **complete=1**, **current=true**.
+- Production portfolio freshness improved **22 → 23 current** and **14 → 15 current+complete**. Complete coverage remains **20 / 36** because HSBC was already complete at July.
+
 ### Stale-complete freshness audit — v50 outcome
 
-The six previously identified stale complete funds remain at **2026-07-31** after v50 and the exact-source retry. Do not repeat the broad v50 batch; further work must be source/layout-specific.
+The remaining five stale complete funds are still at **2026-07-31**. HSBC has now been repaired separately under v55. Do not repeat the broad v50 batch; further work must be source/layout-specific.
 
 - **Abakkus Small Cap Fund** — 68 positions. Current official material can be reached, but the latest discovered documents did not produce a reconciled August-or-newer complete snapshot.
 - **Aditya Birla Sun Life Small Cap Fund** — 89 positions. Current official factsheet material was fetched, but the existing complete parser did not produce an August-or-newer complete snapshot from the current layout.
 - **Franklin India Small Cap Fund** — 91 positions. The reviewed current fund page did not expose a usable monthly portfolio download to the GitHub collector; current document parsing did not advance the portfolio.
-- **HSBC Small Cap Fund** — 110 positions. The August official `The Asset` PDF is reachable and produced many dated records, but the complete-portfolio parser did not reconcile the current layout to a new snapshot. **This is the highest-value next parser investigation because source bytes are already available.**
 - **LIC MF Small Cap Fund** — 58 positions. Current official factsheet evidence was collected, but the portfolio parser did not advance beyond July.
 - **PGIM India Small Cap Fund** — 70 positions. The original guessed August API PDF route returned non-PDF content. Later exact-source discovery was added, but production still did not obtain a complete August snapshot.
 
@@ -402,7 +413,6 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 - Abakkus — 2026-07-31, 68 positions.
 - Aditya Birla Sun Life — 2026-07-31, 89 positions.
 - Franklin India — 2026-07-31, 91 positions.
-- HSBC — 2026-07-31, 110 positions.
 - LIC MF — 2026-07-31, 58 positions.
 - PGIM India — 2026-07-31, 70 positions.
 
@@ -419,8 +429,8 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **HSBC August layout first.** The source is already reachable and archived; inspect the real August Small Cap page text and make the smallest parser-layout correction that still reconciles the full portfolio to 100%.
-2. Then handle **ABSL / LIC / PGIM / Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
+1. **Aditya Birla Sun Life next.** Its current official factsheet material is already reachable; inspect the concrete August layout and make the smallest fully reconciled parser correction.
+2. Then handle **LIC / PGIM / Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
 3. For stale partials, prefer structured official monthly portfolios when available. Groww is the model: exact source discovery + scheme identity + reporting date + reconciliation before changing completeness.
 4. Keep Union and Bandhan on source-discovery watch rather than repeating already-exhausted parser/CMS work.
 5. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
