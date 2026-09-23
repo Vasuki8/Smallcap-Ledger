@@ -128,6 +128,28 @@ Month End AUM: Rs. 100 Cr''')
                 'Samco Small Cap Fund',
                 'https://www.samcomf.com/portfolio.xlsx'))
 
+    def test_bandhan_wordpress_attachment_discovery_uses_official_media(self):
+        from tracker.amc_discovery import discover
+        post=[{
+            'content':{'rendered':'<p>Monthly portfolio disclosure</p>'},
+            '_links':{'wp:attachment':[{'href':'https://cmsnew.bandhanmutual.com/wp-json/wp/v2/media?parent=123'}]}
+        }]
+        media=[
+            {'source_url':'https://cmsnew.bandhanmutual.com/wp-content/uploads/2026/09/Bandhan-Small-Cap-Portfolio-August-2026.xlsx',
+             'title':{'rendered':'Bandhan Small Cap Portfolio August 2026'}},
+            {'source_url':'https://cmsnew.bandhanmutual.com/wp-content/uploads/2026/09/Bandhan-Small-Cap-Portfolio-August-2026.pdf',
+             'title':{'rendered':'Bandhan Small Cap Portfolio August 2026'}},
+        ]
+        def fake_read(url,body=None):
+            if '/wp-json/wp/v2/posts?' in url:return (json.dumps(post).encode(),'h','application/json')
+            if '/wp-json/wp/v2/media?' in url:return (json.dumps(media).encode(),'m','application/json')
+            return (b'<html></html>','p','text/html')
+        with patch('tracker.amc_discovery.read',side_effect=fake_read):
+            rows=list(discover('Bandhan'))
+        self.assertEqual(rows[0][0],'Bandhan Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('.xlsx'))
+        self.assertTrue(all('bandhanmutual.com' in x[1] for x in rows))
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
