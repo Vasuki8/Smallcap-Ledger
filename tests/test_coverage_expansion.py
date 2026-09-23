@@ -1011,7 +1011,7 @@ Investment Objective'''
         self.assertEqual(len([x for x in parsed['positions'] if x['asset_type']=='Debt']),2)
         self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100.01,places=2)
-        self.assertIsNone(union_complete_portfolio(text.replace('364 DAY T-BILL 0.07%','364 DAY T-BILL 0.06%')))
+        self.assertIsNone(union_complete_portfolio(text.replace('364 DAY T-BILL 0.07%','364 DAY T-BILL 0.03%')))
         self.assertIsNone(union_complete_portfolio(text.replace('No. of Stocks 20 250','No. of Stocks 21 250')))
 
     def test_tata_combined_page_stores_only_explicit_top10_as_partial(self):
