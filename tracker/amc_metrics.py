@@ -16,6 +16,7 @@ PAGES=[
     ('Kotak','Kotak Small Cap Fund','https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g'),
     ('Aditya Birla','Aditya Birla Sun Life Small Cap Fund','https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Small-Cap-Fund.html'),
     ('Tata','Tata Small Cap Fund','https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth'),
+    ('Tata','Tata Small Cap Fund','https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html'),
     ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
     ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
@@ -205,6 +206,51 @@ def axis_top_holdings(soup,page_text,url,h):
 
 
 
+
+def tata_top10_holdings(soup,page_text,url,h):
+    """Retain Tata's explicitly dated Top-10 holdings as a partial snapshot."""
+    from .disclosures import portfolio
+    d=re.search(r'\bAs\s+on\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4})\b',page_text,re.I)
+    if not d:return 0
+    day=report_date('as on '+d.group(1))
+    if not day or day>date.today().isoformat():return 0
+
+    positions=[]
+    for table in soup.select('table'):
+        tx=re.sub(r'\s+',' ',table.get_text(' ',strip=True))
+        if not (re.search(r'Top\s*10\s*Holdings',tx,re.I) and re.search(r'%\s*to\s*Net\s*Assets',tx,re.I)):continue
+        for tr in table.select('tr'):
+            cells=[re.sub(r'\s+',' ',x.get_text(' ',strip=True)).strip()
+                   for x in tr.find_all(['th','td'],recursive=False)]
+            if len(cells)<2:continue
+            raw=next((x for x in reversed(cells) if re.fullmatch(r'\d+(?:\.\d+)?\s*%',x)),None)
+            if raw is None:continue
+            name=next((x for x in cells[:-1]
+                       if x and not re.fullmatch(r'\d+',x)
+                       and not re.search(r'Top\s*10\s*Holdings|%\s*to\s*Net\s*Assets',x,re.I)),None)
+            if not name:continue
+            weight=number(raw)
+            if not 0<weight<20:return 0
+            positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+        if positions:break
+
+    if not positions:
+        block=re.search(r'Top\s*10\s*Holdings\s*%\s*to\s*Net\s*Assets\s+(.*?)(?:Quantitative\s+Measures|Major\s+Risk\s+Factors)',page_text,re.I)
+        if block:
+            for m in re.finditer(r'(?:\b\d{1,2}\s+)?([A-Za-z][A-Za-z0-9&().,/\-\' ]{2,120}?)\s+(\d+(?:\.\d+)?)%',block.group(1)):
+                name=re.sub(r'^\d{1,2}\s+','',re.sub(r'\s+',' ',m.group(1))).strip()
+                weight=float(m.group(2))
+                if not name or not 0<weight<20:return 0
+                positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+
+    if len(positions)!=10:return 0
+    if len({x['name'].lower() for x in positions})!=10:return 0
+    total=sum(x['weight'] for x in positions)
+    if not 20<=total<=60:return 0
+    portfolio('Tata Small Cap Fund',day,positions,False,url,h)
+    return len(positions)
+
+
 def boi_top_holdings(soup,page_text,url,h):
     """Retain BOI's explicitly dated Top 10 holdings as a partial snapshot."""
     from .disclosures import portfolio
@@ -364,14 +410,23 @@ def parse_page(content,family,url,h):
     expected=next((u for _,f,u in PAGES if f==family),None)
     actual=urlparse(url)
     kotak_monthly=family=='Kotak Small Cap Fund' and (actual.hostname or '').lower().removeprefix('www.')=='kotakmf.com' and bool(re.fullmatch(r'/factsheet/[A-Za-z]+_\d{4}/kotak/SMALL-CAP\.html',actual.path,re.I))
+    tata_combined=family=='Tata Small Cap Fund' and (actual.hostname or '').lower()=='info.tatamutualfund.com' and actual.path.rstrip('/')=='/combined/TATA/Small-Cap-Fund.html'
     if expected:
         known=urlparse(expected)
-        if (actual.hostname or '').removeprefix('www.')!=(known.hostname or '').removeprefix('www.') or (actual.path.rstrip('/')!=known.path.rstrip('/') and not kotak_monthly):return 0
+        if (actual.hostname or '').removeprefix('www.')!=(known.hostname or '').removeprefix('www.') or (actual.path.rstrip('/')!=known.path.rstrip('/') and not kotak_monthly):
+            if not tata_combined:return 0
     soup=BeautifulSoup(content,'html.parser')
     exact=any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('h1,h2,h3'))
     # Tata renders its fund title in a div; its document title identifies the plan.
     if family=='Tata Small Cap Fund' and soup.title:
-        exact=soup.title.get_text().startswith('Tata Small Cap Fund Direct Growth')
+        title=soup.title.get_text(' ',strip=True)
+        if tata_combined:
+            visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
+            exact=(title=='Tata Small Cap Fund'
+                   and bool(re.search(r'Type\s+of\s+Scheme\s*:\s*An\s+equity\s+scheme\s+with\s+focus\s+towards\s+small\s+cap\s+stocks',visible,re.I))
+                   and bool(re.search(r'Benchmark\s+Name\s+Nifty\s+Smallcap\s+250\s+TRI',visible,re.I)))
+        else:
+            exact=title.startswith('Tata Small Cap Fund Direct Growth')
     if family=='Bank Of India Small Cap Fund':
         visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
         exact=exact or bool(
@@ -394,6 +449,9 @@ def parse_page(content,family,url,h):
                             re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',visible,re.I))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
+    if tata_combined:
+        saved=tata_top10_holdings(soup,text,url,h)
+        return saved
     if family=='Bank Of India Small Cap Fund':return boi_top_holdings(soup,text,url,h)
     if family=='Jm Small Cap Fund':return jm_top_holdings(soup,text,url,h)
     if kotak_monthly:
