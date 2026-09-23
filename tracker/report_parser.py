@@ -261,8 +261,8 @@ def quant_top10_portfolio(text):
     normalized=normalize(text)
     if not re.search(r'(?:^|\n)\s*quant\s+Small\s+Cap\s+Fund\s*(?:\n|$)',normalized,re.I):return None
     if not re.search(r'Investment\s+Objective\s*:[\s\S]{0,500}?portfolio\s+of\s+Small\s+Cap\s+companies',normalized,re.I):return None
-    if not re.search(r'\b29\s+October\s+1996\b',normalized,re.I):return None
-    if not re.search(r'\bNIFTY\s+SMALLCAP\s+250\s+TRI\b',normalized,re.I):return None
+    if not re.search(r'\b29\s+Oc\s*tober\s+1996\b',normalized,re.I):return None
+    if not re.search(r'\bNIFTY\s+SMAL\s*LCAP\s+250\s+TRI\b',normalized,re.I):return None
     dates=[dated(m.group(1)) for m in re.finditer(r'As\s+on\s+('+DATE+r')',normalized,re.I)]
     dates=[x for x in dates if x]
     if not dates:return None
