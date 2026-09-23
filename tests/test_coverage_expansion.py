@@ -714,13 +714,13 @@ Benchmark
 Nifty Smallcap 250 Index
 Data as on 31st May 2026
 Equity & Equity Related Holdings
-TD Power Systems Limited Electrical Equipment 40.00%
-Tamilnad Mercantile Bank Ltd. Banks 20.00%
-Home First Finance Company India Limited Finance 10.00%
-City Union Bank Limited Banks 5.00%
-Apar Industries Ltd Electrical Equipment 4.00%
-Ujjivan Small Finance Bank Limited Banks 2.00%
-Azad Engineering Limited Electrical Equipment 1.00%
+TD Power Systems Limited Electrical Equipment 20.00%
+Tamilnad Mercantile Bank Ltd. Banks 18.00%
+Home First Finance Company India Limited Finance 16.00%
+City Union Bank Limited Banks 12.00%
+Apar Industries Ltd Electrical Equipment 8.00%
+Ujjivan Small Finance Bank Limited Banks 5.00%
+Azad Engineering Limited Electrical Equipment 3.00%
 Prudent Corporate Advisory Services Ltd Capital Markets 0.50%
 Navin Fluorine International Limited Chemicals & Petrochemicals 0.50%
 Craftsman Automation Limited Auto Components 0.40%
