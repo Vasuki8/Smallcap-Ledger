@@ -300,22 +300,65 @@ def discover(amc):
         chosen=max((r for r in rows if (r[0],r[1])==newest),key=lambda r:r[2])
         yield family,chosen[3],chosen[4] or 'Tata monthly portfolio'
     elif amc=='TRUST':
+        family='Trustmf Small Cap Fund'
         url='https://www.trustmf.com/api/api/Trust/GetData'
         body={'systemQueryFileName':'productsweb.xml','tagName':'GetOneProductWeb','searchField':'p.slug','searchValue':'trustmf-small-cap-fund','sortField':'','sortDirection':''}
         raw,h,_=read(url,body)
         rows=json.loads(raw).get('resultSetArray',[])
-        row=next((r for r in rows if r.get('slug')=='trustmf-small-cap-fund' and disclosures.same_fund_title(r.get('title',''),'Trustmf Small Cap Fund')),None)
+        row=next((r for r in rows if r.get('slug')=='trustmf-small-cap-fund' and disclosures.same_fund_title(r.get('title',''),family)),None)
         if row:
             # US-format timestamp is the field format used by this public API.
             day=datetime.strptime(row['aumasondate'],'%m/%d/%Y %I:%M:%S %p').date()
             value=providers.number(row['monthendaum'])
             if day<=date.today() and 0<value<10_000_000:
                 page='https://www.trustmf.com/our-products/trustmf-small-cap-fund'
-                db.metric('Trustmf Small Cap Fund','All','aum',day.isoformat(),value,'INR crore',page,h)
-                did=providers.save_document('Trustmf Small Cap Fund','Official fund page data',page,'source page','Fund',origin='AMC');providers.doc_version(did,h)
+                db.metric(family,'All','aum',day.isoformat(),value,'INR crore',page,h)
+                did=providers.save_document(family,'Official fund page data',page,'source page','Fund',origin='AMC');providers.doc_version(did,h)
         body['tagName']='GetDownloadsForProductWeb';raw,_,_=read(url,body)
         for row in json.loads(raw).get('resultSetArray',[]):
-            if row.get('slug')=='trustmf-small-cap-fund' and re.search('leaflet|factsheet',row.get('title',''),re.I):yield 'Trustmf Small Cap Fund',row['fileurl'],row['title']
+            if row.get('slug')=='trustmf-small-cap-fund' and re.search('leaflet|factsheet',row.get('title',''),re.I):
+                target=urljoin('https://www.trustmf.com/',str(row.get('fileurl') or ''))
+                if target and disclosures.official_publication_url(target,amc):
+                    yield family,target,row['title']
+
+        # TRUSTMF's SPA publishes monthly portfolio disclosures through the
+        # same first-party read-only API, but under disclosuresweb.xml rather
+        # than the product-download query above. Prefer the newest structured
+        # workbook; downstream parsing still proves exact scheme ownership.
+        portfolio_body={
+            'systemQueryFileName':'disclosuresweb.xml',
+            'tagName':'GetDisclosureByType',
+            'searchField':'',
+            'searchValue':'',
+            'sortField':'uploaddate',
+            'sortDirection':'DESC',
+            'replaceField':'_slug_',
+            'replaceValue':'portfolio-monthly-disclosure',
+        }
+        raw,_,_=read(url,portfolio_body)
+        disclosures_rows=json.loads(raw).get('resultSetArray',[])
+        candidates=[]
+        for item in disclosures_rows if isinstance(disclosures_rows,list) else []:
+            title=str(item.get('title') or '').strip()
+            target=urljoin('https://www.trustmf.com/',str(item.get('fileurl') or item.get('slug') or '').strip())
+            if not target or not disclosures.official_publication_url(target,amc):continue
+            ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',target,re.I)
+            if not ext:continue
+            m=re.search(r'as\s+on\s+(\d{1,2})[./-](\d{1,2})[./-](20\d{2})',title,re.I)
+            day=None
+            if m:
+                try:day=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
+                except ValueError:pass
+            # Prefer structured workbooks over PDFs when the same reporting
+            # date is exposed more than once.
+            kind=ext.group(1).lower()
+            priority=3 if kind in ('xls','xlsx') else 2 if kind=='xml' else 1
+            candidates.append((day or date.min,priority,target,title))
+        if not candidates:raise ValueError('TRUSTMF official disclosure API exposed no monthly portfolio download')
+        newest=max(x[0] for x in candidates)
+        pool=[x for x in candidates if x[0]==newest] if newest!=date.min else candidates
+        for _,_,target,title in sorted(pool,key=lambda x:x[1],reverse=True)[:2]:
+            yield family,target,title or 'TRUSTMF monthly portfolio'
     elif amc=='Sundaram':
         raw,h,_=read('https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json')
         from .structured_reports import extract
