@@ -116,6 +116,14 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn("rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]",source)
         self.assertIn("amc_reports.parser_upgrade_applies(row['family'])",source)
 
+
+    def test_v33_parser_upgrade_targets_only_groww(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v33'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Groww Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Quant Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Union Small Cap Fund'))
+
     def test_boi_pdf_is_opted_into_targeted_historical_reprocess(self):
         from tracker import amc_reports
         with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v24'):
