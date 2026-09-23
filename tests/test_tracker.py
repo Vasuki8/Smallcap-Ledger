@@ -61,21 +61,53 @@ class TrackerTests(unittest.TestCase):
         book=openpyxl.Workbook();wrong=book.active;wrong.title='Other Small Cap'
         wrong.append(['Test Nifty Smallcap 250 Index Fund (An open ended index scheme)'])
         wrong.append(['Portfolio as on July 31,2026'])
-        wrong.append(['ISIN','Name of the Instrument','Industry','% to NAV'])
-        wrong.append(['INF123456789','Test Small Cap Fund','',.8])
+        wrong.append(['ISIN','Name of the Instrument','Industry','Quantity','% to NAV'])
+        wrong.append(['INF123456789','Test Small Cap Fund','',100,.8])
         sheet=book.create_sheet('SC')
         sheet.append(['Test Small Cap Fund (An open-ended equity scheme predominantly investing in small cap stocks)'])
         sheet.append(['Portfolio as on July 31,2026'])
-        sheet.append(['ISIN','Name of the Instrument','Industry','% to NAV'])
-        sheet.append(['','Equity & equity related','',''])
-        sheet.append(['INE123456789','Alpha','Banks',.0189]);sheet['D5'].number_format='0.00%'
-        sheet.append(['INE123456788','Beta','Finance',2.0])
+        sheet.append(['ISIN','Name of the Instrument','Industry','Quantity','% to NAV'])
+        sheet.append(['','Equity & equity related','','',''])
+        sheet.append(['INE123456789','Alpha','Banks',1200,.0189]);sheet['E5'].number_format='0.00%'
+        sheet.append(['INE123456788','Beta','Finance',2400,2.0])
         out=io.BytesIO();book.save(out);book.close();body=out.getvalue();h=db.archive(body)
         self.assertEqual(disclosures.spreadsheet(body,'Test Small Cap Fund','https://example.com/workbook.xlsx',h),2)
         p=db.one('SELECT * FROM portfolios WHERE hash=?',(h,));self.assertEqual(p['as_of'],'2026-07-31')
         positions=db.rows('SELECT * FROM holdings WHERE snapshot_id=? ORDER BY name',(p['id'],))
         self.assertAlmostEqual(positions[0]['weight'],1.89);self.assertAlmostEqual(positions[1]['weight'],2.0)
+        self.assertEqual([positions[0]['quantity'],positions[1]['quantity']],[1200,2400])
         self.assertEqual(positions[0]['asset_type'],'Equity')
+
+    def test_portfolios_keep_two_months_and_compute_share_change(self):
+        from tracker.app import holdings as portfolio_holdings
+        family='Rolling Quantity Small Cap Fund'
+        with db.connect() as c:
+            c.execute('INSERT OR IGNORE INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (991,family+' Direct Growth',family,'Rolling AMC','Direct','Growth','test'))
+        disclosures.portfolio(family,'2026-06-30',[
+            {'name':'Alpha Limited','isin':'INE000000001','sector':'Test','quantity':900,'weight':60,'asset_type':'Equity'},
+            {'name':'Old Limited','isin':'INE000000009','sector':'Test','quantity':400,'weight':40,'asset_type':'Equity'}],
+            True,'https://example.com/june.xlsx','june')
+        disclosures.portfolio(family,'2026-07-31',[
+            {'name':'Alpha Limited','isin':'INE000000001','sector':'Test','quantity':1000,'weight':50,'asset_type':'Equity'},
+            {'name':'Gamma Limited','isin':'INE000000003','sector':'Test','quantity':400,'weight':50,'asset_type':'Equity'}],
+            True,'https://example.com/july.xlsx','july')
+        disclosures.portfolio(family,'2026-08-31',[
+            {'name':'Alpha Limited','isin':'INE000000001','sector':'Test','quantity':1200,'weight':55,'asset_type':'Equity'},
+            {'name':'Beta Limited','isin':'INE000000002','sector':'Test','quantity':300,'weight':45,'asset_type':'Equity'}],
+            True,'https://example.com/aug.xlsx','aug')
+        months=[x['month'] for x in db.rows(
+            "SELECT DISTINCT substr(as_of,1,7) month FROM portfolios WHERE family=? ORDER BY month",(family,))]
+        self.assertEqual(months,['2026-07','2026-08'])
+        current=db.one("SELECT id FROM portfolios WHERE family=? AND as_of='2026-08-31'",(family,))
+        payload=portfolio_holdings(current['id'])
+        self.assertEqual(payload['previous']['as_of'],'2026-07-31')
+        alpha=next(x for x in payload['holdings'] if x['name']=='Alpha Limited')
+        beta=next(x for x in payload['holdings'] if x['name']=='Beta Limited')
+        self.assertEqual((alpha['quantity'],alpha['previous_quantity'],alpha['share_change']),(1200,1000,200))
+        self.assertEqual((beta['quantity'],beta['previous_quantity'],beta['share_change']),(300,0,300))
+        removed=next(x for x in payload['changes'] if x['name']=='Gamma Limited')
+        self.assertEqual(removed['share_change'],-400)
 
     def test_pdf_fund_heading_and_report_dates(self):
         from types import SimpleNamespace

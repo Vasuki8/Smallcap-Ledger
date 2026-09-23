@@ -153,7 +153,13 @@ def franklin_positions(table):
         try:value=number(cells[-2]);weight=number(cells[-1])
         except ValueError:return []
         if re.search(r'\b(?:others|less than|top \d+|remaining)\b',name,re.I) or not -100<=weight<=100:return []
-        positions.append({'name':name,'weight':weight,'sector':sector,'asset_type':asset});values.append(value)
+        quantity=None
+        if asset=='Equity' and len(cells)==4:
+            try:
+                candidate=number(cells[1])
+                if 0<=candidate<1e15:quantity=candidate
+            except ValueError:return []
+        positions.append({'name':name,'weight':weight,'quantity':quantity,'sector':sector,'asset_type':asset});values.append(value)
     if not total or abs(total[1]-100)>.01 or not positions:return []
     if abs(sum(values)-total[0])>max(.05,.011*len(values)):return []
     if abs(sum(x['weight'] for x in positions)-100)>max(.05,.0051*len(positions)):return []

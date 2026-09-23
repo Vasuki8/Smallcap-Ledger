@@ -125,7 +125,12 @@ def fund(code:int):
     s['plans']=db.rows("SELECT code,name,plan,option,isin,reinvestment_isin,metadata_json FROM schemes WHERE family=? ORDER BY plan,option",(s['family'],))
     for p in s['plans']:p['option_label']=option_label(p)
     s['metric_history']=db.rows("SELECT * FROM metrics WHERE family=? ORDER BY as_of DESC,id DESC",(s['family'],))
-    s['portfolios']=db.rows("SELECT p.*,COUNT(h.id) holding_count,SUM(h.weight) disclosed_weight FROM portfolios p LEFT JOIN holdings h ON p.id=h.snapshot_id WHERE family=? GROUP BY p.id ORDER BY as_of DESC,complete DESC,p.id DESC",(s['family'],))
+    s['portfolios']=db.rows("""SELECT p.*,COUNT(h.id) holding_count,SUM(h.weight) disclosed_weight,
+      SUM(CASE WHEN h.quantity IS NOT NULL THEN 1 ELSE 0 END) quantity_count
+      FROM portfolios p LEFT JOIN holdings h ON p.id=h.snapshot_id
+      WHERE p.family=? AND p.as_of=(SELECT MAX(as_of) FROM portfolios WHERE family=?)
+      GROUP BY p.id ORDER BY p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
+      (s['family'],s['family']))
     s['sources']=db.rows("SELECT * FROM source_pages WHERE instr(lower(?),lower(amc_match))>0 ORDER BY id",(s['amc'],))
     s['distribution_coverage']=db.one("SELECT * FROM distribution_coverage WHERE code=?",(code,))
     return s
@@ -175,18 +180,47 @@ def holdings(snapshot_id:int):
     p=db.one("SELECT * FROM portfolios WHERE id=?",(snapshot_id,))
     if not p:raise HTTPException(404,"Snapshot not found")
     p['holdings']=db.rows("SELECT * FROM holdings WHERE snapshot_id=? ORDER BY weight DESC",(snapshot_id,))
-    prior=db.one("SELECT * FROM portfolios WHERE family=? AND as_of<? AND complete=? ORDER BY as_of DESC,id DESC LIMIT 1",(p['family'],p['as_of'],p['complete']))
+    current=date.fromisoformat(p['as_of']);previous_month=(current.replace(day=1)-timedelta(days=1)).strftime('%Y-%m')
+    prior=db.one("""SELECT p.*,COUNT(h.id) holding_count,
+      SUM(CASE WHEN h.quantity IS NOT NULL THEN 1 ELSE 0 END) quantity_count
+      FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+      WHERE p.family=? AND substr(p.as_of,1,7)=?
+      GROUP BY p.id ORDER BY p.as_of DESC,p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
+      (p['family'],previous_month))
     p['previous']=prior;p['changes']=[]
     if prior:
         old=db.rows("SELECT * FROM holdings WHERE snapshot_id=?",(prior['id'],))
         key=lambda h:h['isin'] or h['name'].lower().strip()
         before={key(h):h for h in old};after={key(h):h for h in p['holdings']}
+        for h in p['holdings']:
+            a=before.get(key(h))
+            h['previous_weight']=a['weight'] if a else (0 if prior['complete'] else None)
+            h['weight_change']=(h['weight']-h['previous_weight']) if h['previous_weight'] is not None else None
+            h['previous_quantity']=a['quantity'] if a and a.get('quantity') is not None else (
+                0 if not a and prior['complete'] and h.get('quantity') is not None else None)
+            h['share_change']=(h['quantity']-h['previous_quantity']) if (
+                h.get('quantity') is not None and h['previous_quantity'] is not None) else None
         for k in set(before)|set(after):
-            a=before.get(k);b=after.get(k);change=(b['weight'] if b else 0)-(a['weight'] if a else 0)
-            if abs(change)<0.005:continue
-            label=('Added' if not a else 'Removed' if not b else 'Weight change') if p['complete'] and prior['complete'] else ('Entered disclosed list' if not a else 'Left disclosed list' if not b else 'Disclosed weight change')
-            p['changes'].append({"name":(b or a)['name'],"before":a['weight'] if a else None,"after":b['weight'] if b else None,"change":change,"type":label})
-        p['changes'].sort(key=lambda x:abs(x['change']),reverse=True)
+            a=before.get(k);b=after.get(k)
+            weight_change=(b['weight'] if b else 0)-(a['weight'] if a else 0)
+            share_change=None
+            if b and b.get('quantity') is not None:
+                if a and a.get('quantity') is not None:share_change=b['quantity']-a['quantity']
+                elif not a and prior['complete']:share_change=b['quantity']
+            elif not b and a and a.get('quantity') is not None and p['complete']:
+                share_change=-a['quantity']
+            if abs(weight_change)<0.005 and (share_change is None or abs(share_change)<1e-9):continue
+            label=('Added' if not a else 'Removed' if not b else 'Changed') if p['complete'] and prior['complete'] else (
+                'Entered disclosed list' if not a else 'Left disclosed list' if not b else 'Changed')
+            p['changes'].append({"name":(b or a)['name'],"before":a['weight'] if a else None,
+                                 "after":b['weight'] if b else None,"change":weight_change,
+                                 "quantity_before":a.get('quantity') if a else None,
+                                 "quantity_after":b.get('quantity') if b else None,
+                                 "share_change":share_change,"type":label})
+        p['changes'].sort(key=lambda x:(abs(x['share_change']) if x['share_change'] is not None else -1,abs(x['change'])),reverse=True)
+    else:
+        for h in p['holdings']:
+            h['previous_weight']=None;h['weight_change']=None;h['previous_quantity']=None;h['share_change']=None
     return p
 
 
@@ -300,7 +334,8 @@ def export_metrics(code:int):
 @app.get('/api/export/portfolio/{snapshot_id}')
 def export_portfolio(snapshot_id:int):
     p=holdings(snapshot_id)
-    return csv_response([{k:h[k] for k in ('isin','name','sector','weight','asset_type')} for h in p['holdings']],f'portfolio-{p["as_of"]}.csv')
+    fields=('isin','name','sector','quantity','previous_quantity','share_change','weight','previous_weight','weight_change','asset_type')
+    return csv_response([{k:h.get(k) for k in fields} for h in p['holdings']],f'portfolio-{p["as_of"]}.csv')
 
 
 @app.get('/api/export/backup')
@@ -350,8 +385,13 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
         elif kind=='portfolio':
             s=scheme(code);day=providers.iso(as_of)
             if day>date.today().isoformat():raise ValueError('Portfolio date cannot be in the future')
-            positions=[{'name':r['name'].strip(),'isin':r.get('isin') or None,'sector':r.get('sector') or None,'weight':providers.number(r['weight']),'asset_type':r.get('asset_type') or 'Equity'} for r in records]
+            positions=[]
+            for r in records:
+                quantity=providers.number(r['quantity']) if (r.get('quantity') or '').strip() else None
+                positions.append({'name':r['name'].strip(),'isin':r.get('isin') or None,'sector':r.get('sector') or None,
+                                  'weight':providers.number(r['weight']),'quantity':quantity,'asset_type':r.get('asset_type') or 'Equity'})
             if any(not p['name'] for p in positions):raise ValueError('Each holding needs a name')
+            if any(p['quantity'] is not None and p['quantity']<0 for p in positions):raise ValueError('Quantity cannot be negative')
             if complete and not 95<=sum(p['weight'] for p in positions)<=105:raise ValueError('A complete portfolio must total approximately 100%; include cash and other assets, or leave completeness unchecked')
             disclosures.portfolio(s['family'],day,positions,complete,source,h)
         elif kind=='metrics':
@@ -389,7 +429,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
 
 @app.get('/api/templates/{kind}')
 def template(kind:str):
-    templates={'benchmark':'date,value\n','portfolio':'isin,name,sector,weight,asset_type\n','metrics':'metric,plan,as_of,value\n','distributions':'ex_date,amount,reinvestment_nav\n'}
+    templates={'benchmark':'date,value\n','portfolio':'isin,name,sector,quantity,weight,asset_type\n','metrics':'metric,plan,as_of,value\n','distributions':'ex_date,amount,reinvestment_nav\n'}
     if kind not in templates:raise HTTPException(404)
     return Response(templates[kind],media_type='text/csv',headers={'Content-Disposition':f'attachment; filename="{kind}-template.csv"'})
 

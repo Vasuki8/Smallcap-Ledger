@@ -44,6 +44,17 @@ class CoverageExpansionTests(unittest.TestCase):
         s='UTI SMALL CAP FUND\nAn open ended equity scheme predominantly investing in Small cap stocks.\nPortfolio as on 31st July, 2026\nMonth-end Total Expense Ratio (%)*\nMinimum Investment Amount\nRegular : 2.00\nDirect : 0.86'
         self.assertEqual([(x['plan'],x['value']) for x in page_facts(s,'UTI Small Cap Fund')],[('Regular',2),('Direct',.86)])
 
+    def test_franklin_html_preserves_equity_share_quantity(self):
+        table=BeautifulSoup('''<table>
+        <tr><th>Company Name</th><th>No. of shares</th><th>Market Value</th><th>% of assets</th></tr>
+        <tr><td>Banks</td><td></td><td></td><td></td></tr>
+        <tr><td>Alpha Limited</td><td>1,250</td><td>60</td><td>60</td></tr>
+        <tr><td>Beta Limited</td><td>2,500</td><td>40</td><td>40</td></tr>
+        <tr><td>Total Asset</td><td></td><td>100</td><td>100</td></tr>
+        </table>''','html.parser').table
+        positions=franklin_positions(table)
+        self.assertEqual([x['quantity'] for x in positions],[1250,2500])
+
     def test_sundaram_dates_are_not_interchangeable(self):
         f='Sundaram Small Cap Fund';u=URLS[f]
         row={'FUNDGROUP_ID':'SC','GROUP_NAME':f,'MONTHENDAUM':'3,922','AUM':'3,926','AUMASONDATE':'31-Jul-2026','REG_TOT_TER_DISP':'2.01 %','DP_TOT_TER_DISP':'0.97 %','TER_DATE_DISP':'07-Sep-2026','DIR_NAV_DT':'08-Sep-2026'}

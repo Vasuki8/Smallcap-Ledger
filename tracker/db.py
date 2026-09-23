@@ -79,7 +79,7 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS holdings(
           id INTEGER PRIMARY KEY, snapshot_id INTEGER NOT NULL REFERENCES portfolios(id),
           isin TEXT, name TEXT NOT NULL, sector TEXT, weight REAL NOT NULL,
-          asset_type TEXT NOT NULL DEFAULT 'Equity');
+          quantity REAL, asset_type TEXT NOT NULL DEFAULT 'Equity');
         CREATE INDEX IF NOT EXISTS idx_holdings_snapshot ON holdings(snapshot_id);
         CREATE TABLE IF NOT EXISTS documents(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, title TEXT NOT NULL,
@@ -122,6 +122,8 @@ def init(recover=False):
         if recover:
             c.execute("UPDATE jobs SET status='interrupted',finished_at=?,detail='Application stopped before this update finished; the next run resumes retained history.' WHERE status='running'", (now(),))
     migrate_portfolio_completeness()
+    migrate_holding_quantity()
+    prune_portfolio_history()
 
 
 def migrate_portfolio_completeness():
@@ -141,6 +143,51 @@ def migrate_portfolio_completeness():
         c.execute('CREATE INDEX idx_portfolios_family_date ON portfolios(family,as_of)')
         if c.execute('PRAGMA foreign_key_check').fetchone():raise ValueError('Portfolio migration failed reference validation')
 
+
+
+def migrate_holding_quantity():
+    """Add source-published security quantity without rewriting existing rows."""
+    with connect() as c:
+        columns={row['name'] for row in c.execute('PRAGMA table_info(holdings)').fetchall()}
+        if 'quantity' not in columns:
+            c.execute('ALTER TABLE holdings ADD COLUMN quantity REAL')
+
+
+def prune_portfolio_history(family=None):
+    """Retain parsed holdings only for the newest two calendar months per fund.
+
+    Original AMC documents and hashes remain in the source archive. Within each
+    retained month, only the latest reporting date is kept; multiple verified
+    views of that same date may coexist until the API selects the preferred one.
+    """
+    with connect() as c:
+        families=[family] if family else [row['family'] for row in c.execute(
+            'SELECT DISTINCT family FROM portfolios').fetchall()]
+        removed=0
+        for current in families:
+            months=[row['month'] for row in c.execute(
+                "SELECT DISTINCT substr(as_of,1,7) month FROM portfolios WHERE family=? ORDER BY month DESC",
+                (current,)).fetchall()]
+            keep=set(months[:2])
+            doomed=set()
+            if keep:
+                marks=','.join('?' for _ in keep)
+                params=(current,*sorted(keep))
+                doomed.update(row['id'] for row in c.execute(
+                    f"SELECT id FROM portfolios WHERE family=? AND substr(as_of,1,7) NOT IN ({marks})",params).fetchall())
+                for month in keep:
+                    latest=c.execute(
+                        "SELECT MAX(as_of) FROM portfolios WHERE family=? AND substr(as_of,1,7)=?",
+                        (current,month)).fetchone()[0]
+                    doomed.update(row['id'] for row in c.execute(
+                        "SELECT id FROM portfolios WHERE family=? AND substr(as_of,1,7)=? AND as_of<?",
+                        (current,month,latest)).fetchall())
+            if doomed:
+                ids=tuple(sorted(doomed));marks=','.join('?' for _ in ids)
+                c.execute(f'DELETE FROM holdings WHERE snapshot_id IN ({marks})',ids)
+                c.execute(f'DELETE FROM portfolios WHERE id IN ({marks})',ids)
+                removed+=len(ids)
+        return removed
 
 def rows(sql, params=()):
     with connect() as c:
