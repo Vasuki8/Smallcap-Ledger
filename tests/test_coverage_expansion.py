@@ -650,13 +650,13 @@ Alpha Industries Ltd 3.50%\nBeta Bank Ltd 3.40%\nGamma Pharma Ltd 2.70%\nDelta S
             'Portfolio Holdings % to Net','Industry/ Rating Assets',
             'EQUITY HOLDINGS',
         ]
-        for sector in range(4):
-            rows.append(f'SECTOR {sector+1} 10.00')
+        for sector in range(9):
+            rows.append(f'SECTOR {sector+1} 5.00')
             for holding in range(5):
-                rows.append(f'Company {sector+1}-{holding+1} Limited 2.00')
-        rows.append('OTHERS 40.00')
-        for holding in range(13):
-            rows.append(f'Other Company {holding+1} Limited 3.00')
+                rows.append(f'Company {sector+1}-{holding+1} Limited 1.00')
+        rows.append('OTHERS 35.00')
+        for holding in range(17):
+            rows.append(f'Other Company {holding+1} Limited 2.00')
         rows += ['EQUITY INDUSTRY ALLOCATION','INVESTMENT OBJECTIVE']
         parsed=boi_multicolumn_complete_portfolio('\n'.join(rows))
         self.assertIsNotNone(parsed)
@@ -685,13 +685,13 @@ Alpha Industries Ltd 3.50%\nBeta Bank Ltd 3.40%\nGamma Pharma Ltd 2.70%\nDelta S
             'Portfolio Holdings % to Net','Industry/ Rating Assets',
             'Portfolio Holdings % to Net','Industry/ Rating Assets','EQUITY HOLDINGS',
         ]
-        for sector in range(4):
-            rows.append(f'SECTOR {sector+1} 10.00')
+        for sector in range(9):
+            rows.append(f'SECTOR {sector+1} 5.00')
             for holding in range(5):
-                rows.append(f'Company {sector+1}-{holding+1} Limited 2.00')
-        rows.append('OTHERS 40.00')
-        for holding in range(13):
-            rows.append(f'Other Company {holding+1} Limited 3.00')
+                rows.append(f'Company {sector+1}-{holding+1} Limited 1.00')
+        rows.append('OTHERS 35.00')
+        for holding in range(17):
+            rows.append(f'Other Company {holding+1} Limited 2.00')
         rows += ['EQUITY INDUSTRY ALLOCATION','INVESTMENT OBJECTIVE']
         text='\n'.join(rows)
         page=SimpleNamespace(extract_text=lambda *args,**kwargs:text)
