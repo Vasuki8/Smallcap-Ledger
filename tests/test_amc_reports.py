@@ -511,6 +511,32 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(rows[0][:2],('Baroda Bnp Paribas Small Cap Fund','https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls'))
 
 
+    def test_absl_discovery_prefers_latest_official_factsheet(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div data-file="/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_aug-2026.pdf">ABSL Factsheet Aug 2026</div>
+        <div data-file="/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_sep-2026.pdf">ABSL Factsheet Sep 2026</div>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Aditya Birla'))
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][0],'Aditya Birla Sun Life Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('absl-factsheet_sep-2026.pdf'))
+
+    def test_lic_discovery_prefers_latest_dated_official_factsheet(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div data-file="/assets/downloads/monthly_fact_sheet/2026-2027/08/lic-mf-factsheet-31st-july-2026.pdf">Fact Sheet 31st July 2026</div>
+        <div data-file="/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf">Fact Sheet 31st August 2026</div>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('LIC'))
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][0],'LIC Mf Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('lic-mf-factsheet-31st-august-2026.pdf'))
+
     def test_franklin_discovery_prefers_latest_official_monthly_portfolio(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
