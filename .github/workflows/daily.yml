@@ -53,6 +53,9 @@ jobs:
         run: uv run --frozen python -m compileall -q tracker scripts tests
       - name: Restore cumulative history
         run: uv run --frozen python scripts/github_state.py restore
+      - name: Probe centralized AMFI portfolio feed
+        if: github.event_name == 'push'
+        run: uv run --frozen python -c "import json; from tracker import db,amfi_metrics; db.init(); print(json.dumps(amfi_metrics.probe_portfolio_endpoint(),indent=2))"
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
