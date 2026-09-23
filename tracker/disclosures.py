@@ -77,12 +77,14 @@ def portfolio(family,day,positions,complete,source,h):
     if not positions or not day: return None
     if any(not -100<=x["weight"]<=100 for x in positions): raise ValueError("Portfolio weights outside expected percentage units")
     if sum(x["weight"] for x in positions)>110: raise ValueError("Portfolio weight total suggests duplicated rows or wrong units")
+    if any(x.get("quantity") is not None and x["quantity"]<0 for x in positions): raise ValueError("Portfolio quantity cannot be negative")
     with db.connect() as c:
         c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
         sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
         if not c.execute("SELECT 1 FROM holdings WHERE snapshot_id=? LIMIT 1",(sid,)).fetchone():
-            c.executemany("INSERT INTO holdings(snapshot_id,isin,name,sector,weight,asset_type) VALUES(?,?,?,?,?,?)",
-                          [(sid,x.get("isin"),x["name"],x.get("sector"),x["weight"],x.get("asset_type","Equity")) for x in positions])
+            c.executemany("INSERT INTO holdings(snapshot_id,isin,name,sector,weight,quantity,asset_type) VALUES(?,?,?,?,?,?,?)",
+                          [(sid,x.get("isin"),x["name"],x.get("sector"),x["weight"],x.get("quantity"),x.get("asset_type","Equity")) for x in positions])
+    db.prune_portfolio_history(family)
     return sid
 
 
@@ -174,6 +176,7 @@ def spreadsheet(content,family,url,h):
         if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
         wc=col(lambda x:('nav' in x or 'aum' in x or ('net' in x and 'asset' in x)) and ('%' in x or 'percent' in x))
         sc=col(lambda x:'industry' in x or 'sector' in x)
+        qc=col(lambda x:'quantity' in x or bool(re.search(r'\bqty\b|no\.?\s*of\s*(?:shares|units)',x,re.I)))
         if nc is None or wc is None: continue
         positions=[];asset_type='Unclassified'
         for ri,row in enumerate(rows[header_index+1:],header_index+1):
@@ -193,7 +196,14 @@ def spreadsheet(content,family,url,h):
             # number format, not a guess from the sum or the size of a holding.
             fmt=re.sub(r'"[^"\n]*"|\\.', '',formats[ri][wc])
             if isinstance(row[wc],(int,float)) and '%' in fmt:weight*=100
-            positions.append({"name":str(row[nc]),"isin":isin,"weight":weight,"sector":str(row[sc] or '') if sc is not None else None,'asset_type':asset_type})
+            quantity=None
+            if qc is not None and qc<len(row) and asset_type in ('Equity','Fund units') and str(row[qc] or '').strip():
+                try:
+                    candidate=number(row[qc])
+                    if 0<=candidate<1e15:quantity=candidate
+                except ValueError:pass
+            positions.append({"name":str(row[nc]),"isin":isin,"weight":weight,"sector":str(row[sc] or '') if sc is not None else None,
+                              'quantity':quantity,'asset_type':asset_type})
         # This extractor deliberately stores an ISIN-only view. Cash/derivatives may be omitted.
         if positions:
             portfolio(family,day,positions,False,url,h);count+=len(positions)
