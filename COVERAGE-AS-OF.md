@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-23T22:35:40+00:00
+Prepared: 2026-09-23T22:44:47+00:00
 
 **36 funds, 143 NAV series, 281,300 NAV observations. Latest included NAV: 2026-09-23.**
 
@@ -21,7 +21,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | DSP Small Cap Fund | ₹ 21,629.07 · 2026-09-22 | 0.81% TER · 2026-09-23 | 80 positions · 2026-06-30 · partial · older | BSE 250 Small Cap TRI · 2026-09-23 | 14 |
 | Edelweiss Small Cap Fund | ₹ 7,158.51 · 2026-09-22 | 0.65% TER · 2026-09-23 | 30 positions · 2026-07-31 · partial · older | Nifty Smallcap 250 · 2026-08-31 | 2 |
 | Franklin India Small Cap Fund | ₹ 14,592.60 · 2026-09-22 | 1.07% TER · 2026-09-23 | 91 positions · 2026-07-31 · complete · older | Nifty Smallcap 250 · 2026-08-31 | 2 |
-| Groww Small Cap Fund | ₹ 933.20 · 2026-09-22 | 1.12% TER · 2026-04-30 | 40 positions · 2026-05-31 · partial · older | Nifty Smallcap 250 Index · 2026-05-31 | 8 |
+| Groww Small Cap Fund | ₹ 933.20 · 2026-09-22 | 1.12% TER · 2026-04-30 | 40 positions · 2026-05-31 · partial · older | Nifty Smallcap 250 Index · 2026-05-31 | 9 |
 | HDFC Small Cap Fund | ₹ 41,896.86 · 2026-09-22 | 0.77% TER · 2026-09-16 | 87 positions · 2026-08-31 · complete · current | BSE 250 SmallCap Index (Total Returns Index) · 2026-09-23 | 17 |
 | HSBC Small Cap Fund | ₹ 19,026.15 · 2026-09-22 | 0.56% BER · 2026-08-31 | 110 positions · 2026-07-31 · complete · older | Nifty Smallcap 250 TRI · 2026-08-31 | 3 |
 | Helios Small Cap Fund | ₹ 1,895.56 · 2026-09-22 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | Nifty Small Cap 250 Total Return Index (TRI) · 2026-09-23 | 165 |
