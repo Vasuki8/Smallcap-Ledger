@@ -141,6 +141,21 @@ Month End AUM: Rs. 100 Cr''')
                 'Quant Small Cap Fund',
                 'https://quantmutual.com/Admin/Factsheet/factsheet.pdf'))
 
+    def test_v46_targets_only_benchmark_recovery_families(self):
+        from tracker import amc_reports
+        expected={
+            'Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund',
+            'Groww Small Cap Fund','LIC Mf Small Cap Fund',
+            'Pgim India Small Cap Fund','Tata Small Cap Fund',
+        }
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v46'):
+            for family in expected:
+                self.assertTrue(amc_reports.parser_upgrade_applies(family))
+                self.assertFalse(amc_reports.should_reprocess_existing(
+                    family,'https://example.com/factsheet.pdf','hash'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Union Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Bandhan Small Cap Fund'))
+
     def test_union_transport_audit_does_not_retry_every_push(self):
         source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
         self.assertIn("transport_audit_complete=(amc_reports.PARSER_VERSION=='amc-reports-2026-09-v45' and not gaps)",source)
