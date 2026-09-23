@@ -343,88 +343,88 @@ Current production-verified coverage:
 | Direct fee | **36 / 36** |
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
-| Complete portfolio | **19 / 36** |
-| Current portfolio | **21 / 36** |
-| Current + complete | **13 / 36** |
-| Partial latest portfolio | **15 / 36** |
+| Complete portfolio | **20 / 36** |
+| Current portfolio | **22 / 36** |
+| Current + complete | **14 / 36** |
+| Partial latest portfolio | **14 / 36** |
 
-### Latest benchmark-identity batch
+### Latest completed backend batch — Groww August portfolio recovery
 
-Benchmark coverage is now complete at **36/36**.
+**Groww Small Cap Fund is now current and complete.**
 
-- Earlier targeted extraction/replays recovered Baroda BNP Paribas, Franklin, Groww, LIC MF, PGIM India, Tata, The Wealth Company, Bank of India, and Samco from exact official AMC pages/factsheets.
-- Some official pages/documents are dynamically rendered, old, or not reliably machine-readable. The existing `reviewed_reports` mechanism was extended in commit `0f4b380526872e16f01d5bf4e17fff0e935df722` to support string-valued benchmark identities while preserving source URL/date and **never fabricating an archive hash**.
-- Commit `87db70ec0503556fe55099bc8ee9f5b3214f1c87` adds reviewed official benchmark evidence for the final six gaps:
-  - Bandhan Small Cap Fund — **BSE 250 SmallCap TRI**, official Bandhan performance table, 2025-03-31.
-  - Invesco India Small Cap Fund — **BSE 250 Smallcap TRI**, official fund page, 2026-08-31.
-  - Sundaram Small Cap Fund — **Nifty Small Cap 250 TRI**, official June 2026 factsheet; performance data dated 2026-05-31.
-  - TRUSTMF Small Cap Fund — **Nifty Smallcap 250 TRI**, official SID dated 2024-11-27.
-  - UTI Small Cap Fund — **Nifty Smallcap 250 TRI**, official factsheet dated 2023-08-31.
-  - Union Small Cap Fund — **BSE 250 SmallCap Index (TRI)**, current official SID observed 2026-09-23.
-- Commit `14f29aa994358d4f5d41cb6ab11109ca90abac3b` adds regression coverage proving reviewed benchmark records retain the official source/date and an empty source hash.
-- Production run **#225** passed syntax, reviewed/source replay, the full regression suite, site generation, site validation, cumulative archive publication, status recording, artifact upload, and Pages deployment. Production status commit `5903f3bff883ff69b11f69471f77a4f3a211222b` records **36/36 benchmark identity**.
+- The official statutory-disclosure page exposes the structured monthly workbook:
+  `https://assets-netstorage.growwmf.in/compliance_docs/Statutory%20Disclosure/Portfolio/2026%20-2027/Monthly%20Portfolio-%20Aug%2031%202026.xlsx`.
+- Discovery now selects the newest **Monthly Portfolio** workbook and deliberately ignores fortnightly files.
+- The real workbook uses the sheet identity `IB60-Groww Small Cap Fund`. Commit `343b56e585c31e083136bda221e4f34c0a9893d2` adds a Groww-only normalization for that official internal scheme-code prefix before the existing exact-family ownership check.
+- The first attempt had already cached the workbook as `unrecognized` under parser v51. Parser v52 (`dd747f77158610fa7951aec1d5e50e4a2d2b35cf`, `c1dfd195bb540f3f9d8f494cfe1defdcbf15afb9`) forces the corrected parser over the retained original without changing the source bytes.
+- Production run **#254** passed syntax, targeted extraction, the full regression suite, site generation/validation, cumulative archive publication, status recording, and Pages deployment.
+- Production now stores Groww at **2026-08-31**, **62 positions**, **complete=1**. Status commit `97eda4ee9aa6c794adbd6dc5b34dfd60bb1880fd` records the improved coverage.
+- The temporary workbook-layout diagnostic was removed after the parser fix.
+
+This moved production from **19 → 20 complete portfolios**, **21 → 22 current portfolios**, **13 → 14 current+complete**, and **15 → 14 partial latest portfolios**.
+
+### Stale-complete freshness audit — v50 outcome
+
+The six previously identified stale complete funds remain at **2026-07-31** after v50 and the exact-source retry. Do not repeat the broad v50 batch; further work must be source/layout-specific.
+
+- **Abakkus Small Cap Fund** — 68 positions. Current official material can be reached, but the latest discovered documents did not produce a reconciled August-or-newer complete snapshot.
+- **Aditya Birla Sun Life Small Cap Fund** — 89 positions. Current official factsheet material was fetched, but the existing complete parser did not produce an August-or-newer complete snapshot from the current layout.
+- **Franklin India Small Cap Fund** — 91 positions. The reviewed current fund page did not expose a usable monthly portfolio download to the GitHub collector; current document parsing did not advance the portfolio.
+- **HSBC Small Cap Fund** — 110 positions. The August official `The Asset` PDF is reachable and produced many dated records, but the complete-portfolio parser did not reconcile the current layout to a new snapshot. **This is the highest-value next parser investigation because source bytes are already available.**
+- **LIC MF Small Cap Fund** — 58 positions. Current official factsheet evidence was collected, but the portfolio parser did not advance beyond July.
+- **PGIM India Small Cap Fund** — 70 positions. The original guessed August API PDF route returned non-PDF content. Later exact-source discovery was added, but production still did not obtain a complete August snapshot.
+
+Relevant exact-source/freshness commits include `ae4007a8017905cb2ece77071a335fd02ddefd6b`, `2ad4629782f93b0cbe053d5ef6a389907918a99f`, `3608f780c560108fc7fec8869948483bf924471b`, and `b6e2903e72297344a0d7bcffd346b8921050d8a6`. The latest v50 retry passed the release gate but correctly left coverage unchanged because none of the six passed the August+complete acceptance condition.
+
+### Daily-update reliability fix
+
+The scheduled updater was spending roughly half an hour re-downloading every scheme's full MFAPI NAV history on ordinary daily runs even though the current AMFI NAV had already been collected.
+
+- Commit `7f2609a6ca7629e61c51e6da5712e62ffbc06ca1` removes the daily all-scheme historical re-download.
+- Commits `e1589d64efaac5987eab896c9bed1157b561b1f1` and `de751ccc691f63fb7b187893a48deaa476ced461` make gap recovery incremental and add regression coverage.
+- Normal runs now collect the current official AMFI NAV, backfill only new/error schemes, and use a 30-day maintenance refresh. After a real scheduler gap, only histories not successfully refreshed since the last good NAV run are retried.
+- HSBC was also added to permanent nightly AMC report discovery so its current monthly factsheets continue to be checked automatically.
+
+Do not revert this to a once-per-day full-history fetch.
 
 ### Remaining zero-portfolio gaps
 
 Only two funds still have no parsed portfolio:
 
-- **Union Small Cap Fund** — `document_not_archived`. The complete parser supports both the single-scheme and omnibus official layouts and is regression-tested. The GitHub runner still cannot retrieve Union PDF bytes reliably. This is a transport/source-access problem, not a parser problem. Nightly discovery continues to retry the live official source.
-- **Bandhan Small Cap Fund** — `source_not_exposing_portfolio`. The public CMS/factsheet page, WordPress metadata and attachment path have already been audited. Revisit only when a genuinely new official downloadable/API endpoint is demonstrated.
+- **Bandhan Small Cap Fund** — currently reported as `document_not_archived`. The tracker has reviewed official evidence, but no current downloadable Small Cap portfolio bytes have been obtained. The public factsheet/CMS/WordPress paths were already audited. Revisit only with a genuinely new official portfolio attachment/API route.
+- **Union Small Cap Fund** — `document_not_archived`. The complete parser is already regression-tested, but the GitHub runner still receives transport failures from Union's official host. This remains a source-access problem, not a parser-layout problem.
 
 Do not weaken source identity, content-signature, date, or reconciliation checks merely to make these two counts non-null.
 
-### Next non-blocked backend priority
+### Current portfolio freshness backlog
 
-Portfolio freshness/completeness is now the largest useful gap.
+**Stale complete**:
+- Abakkus — 2026-07-31, 68 positions.
+- Aditya Birla Sun Life — 2026-07-31, 89 positions.
+- Franklin India — 2026-07-31, 91 positions.
+- HSBC — 2026-07-31, 110 positions.
+- LIC MF — 2026-07-31, 58 positions.
+- PGIM India — 2026-07-31, 70 positions.
 
-**Stale complete portfolios** — highest-value refresh targets because complete parsers already exist:
-- Abakkus Small Cap Fund — 2026-07-31, 68 positions.
-- Aditya Birla Sun Life Small Cap Fund — 2026-07-31, 89 positions.
-- Franklin India Small Cap Fund — 2026-07-31, 91 positions.
-- HSBC Small Cap Fund — 2026-07-31, 110 positions.
-- LIC Mf Small Cap Fund — 2026-07-31, 58 positions.
-- PGIM India Small Cap Fund — 2026-07-31, 70 positions.
+**Stale partial**:
+- Bajaj Finserv — 2026-07-31, 13 positions.
+- DSP — 2026-06-30, 80 positions.
+- Edelweiss — 2026-07-31, 30 positions.
+- Mirae Asset — 2026-07-31, 10 positions.
+- Quant — 2026-07-31, 11 positions.
+- SBI — 2026-07-31, 68 positions.
 
-**Other stale partial portfolios**:
-- Bajaj Finserv — 2026-07-31.
-- DSP — 2026-06-30.
-- Edelweiss — 2026-07-31.
-- Groww — 2026-05-31.
-- Mirae Asset — 2026-07-31.
-- Quant — 2026-07-31.
-- SBI — 2026-07-31.
+**Fresh partial**:
+Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
-**Fresh but partial**:
-Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI. Improve these only when the official source publishes more constituent detail; never infer missing holdings from aggregate buckets.
+### Recommended next backend work
 
-Recommended sequence for the next prompt:
+1. **HSBC August layout first.** The source is already reachable and archived; inspect the real August Small Cap page text and make the smallest parser-layout correction that still reconciles the full portfolio to 100%.
+2. Then handle **ABSL / LIC / PGIM / Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
+3. For stale partials, prefer structured official monthly portfolios when available. Groww is the model: exact source discovery + scheme identity + reporting date + reconciliation before changing completeness.
+4. Keep Union and Bandhan on source-discovery watch rather than repeating already-exhausted parser/CMS work.
+5. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
-1. Verify the newest run/coverage first.
-2. Refresh the six **stale complete** funds from their latest official monthly source, batching source families rather than changing parser rules globally.
-3. If a latest source is unavailable, retain the old portfolio and record the source failure; never make an older snapshot appear current.
-4. After freshness, improve existing partial portfolios only when more detailed official evidence is available.
-5. Keep Union/Bandhan on source-discovery watch rather than repeating already-completed parser/CMS work.
-
-Standing rules remain: official AMC/AMFI evidence only; no invented/estimated figures; exact reporting dates; source URL/hash or explicit reviewed-source note; conflicts/revisions preserved; and no portfolio marked complete without full reconciliation.
-
-Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents/hashes remain in cumulative history.
-
-
-### Pending freshness release — PR #83
-
-Production remains at the benchmark-complete state until this release is merged and verified. Draft PR **#83** (`backend/stale-complete-refresh-v2`) prepares one fail-closed **v50** migration for all six stale complete portfolios:
-
-- Abakkus Small Cap Fund
-- Aditya Birla Sun Life Small Cap Fund
-- Franklin India Small Cap Fund
-- HSBC Small Cap Fund
-- LIC Mf Small Cap Fund
-- PGIM India Small Cap Fund
-
-The release discovers current Abakkus/ABSL/Franklin/LIC documents from official AMC pages instead of guessing filenames; HSBC and PGIM use reviewed August factsheet URLs already on `main`. It does **not** mark the migration complete unless every target has a complete portfolio dated **2026-08-31 or later**.
-
-Current workflow note: scheduled run **#231** is exercising the normal daily collection on the v49 main head. It skips one-time parser-upgrade migrations by design. Do not infer v49 success from that run unless `COVERAGE-AS-OF.json` actually advances the targeted portfolio dates. PR #83 deliberately supersedes v49 so the first and second refresh batches cannot be lost through version ordering.
-
-Before merging PR #83: verify the newest production run has finished, re-check `COVERAGE-AS-OF.json`, and refresh the PR branch from `main` if the run wrote a new status commit. After merge, require the normal syntax/test/site/archive/deploy gate to pass before accepting any freshness increase.
+Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
 
 This is a backend/data handoff. Do not start a UI pass unless explicitly requested.
