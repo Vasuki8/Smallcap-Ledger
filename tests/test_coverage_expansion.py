@@ -704,6 +704,60 @@ Alpha Industries Ltd 3.50%\nBeta Bank Ltd 3.40%\nGamma Pharma Ltd 2.70%\nDelta S
         snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund' AND hash='boi-real'")
         self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
 
+    def test_groww_portfolio_reconciles_but_remains_partial_due_to_others_bucket(self):
+        from tracker.report_parser import groww_reconciled_portfolio
+        text='''GROWW Small Cap Fund
+May 2026
+The objective of the Scheme is to generate long term capital appreciation.
+29th January, 2026
+Benchmark
+Nifty Smallcap 250 Index
+Data as on 31st May 2026
+Equity & Equity Related Holdings
+TD Power Systems Limited Electrical Equipment 40.00%
+Tamilnad Mercantile Bank Ltd. Banks 20.00%
+Home First Finance Company India Limited Finance 10.00%
+City Union Bank Limited Banks 5.00%
+Apar Industries Ltd Electrical Equipment 4.00%
+Ujjivan Small Finance Bank Limited Banks 2.00%
+Azad Engineering Limited Electrical Equipment 1.00%
+Prudent Corporate Advisory Services Ltd Capital Markets 0.50%
+Navin Fluorine International Limited Chemicals & Petrochemicals 0.50%
+Craftsman Automation Limited Auto Components 0.40%
+SBFC Finance Limited Finance 0.40%
+Creditaccess Grameen Limited Finance 0.40%
+RBL Bank Limited Banks 0.40%
+Galaxy Surfactants Limited Chemicals & Petrochemicals 0.30%
+LG Balakrishnan & Bros Limited Auto Components 0.30%
+Yatharth Hospital & Trauma Care Serv Ltd Healthcare Services 0.20%
+Tenneco Clean Air India Limited Auto Components 0.20%
+Sharda Motor Industries Limited Auto Components 0.20%
+OnEMI Technology Solutions Limited IT - Software 0.20%
+Fine Organic Industries Limited Chemicals & Petrochemicals 0.20%
+Venus Pipes & Tubes Ltd Industrial Products 0.20%
+Schneider Electric Infrastructure Ltd. Electrical Equipment 0.20%
+J.Kumar Infraprojects Limited Construction 0.20%
+Karur Vysya Bank Limited Banks 0.20%
+Others 0.80%
+Total 87.60%
+Tri Party Repo (TREPs)
+The Clearing Corporation of India Ltd. 10.40%
+Total 10.40%
+*TREPS/Reverse Repo/Net current assets 2.00%
+Grand Total 100.00%
+(An open ended equity scheme predominantly investing in small cap stocks)
+Company Name Industry/ Rating % to NAV
+Portfolio Holdings'''
+        parsed=groww_reconciled_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-05-31')
+        self.assertEqual(parsed['positions'][-2]['asset_type'],'Money market')
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertTrue(any(x['name']=='Others (AMC aggregate)' for x in parsed['positions']))
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertIsNone(groww_reconciled_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
+        self.assertIsNone(groww_reconciled_portfolio(text.replace('GROWW Small Cap Fund','GROWW Mid Cap Fund',1)))
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
