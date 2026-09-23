@@ -315,6 +315,7 @@ Cash & Other Receivables Total 5.97%
 Top 10 holdings Grand Total 100.00%'''
         parsed=lic_complete_portfolio(text)
         self.assertEqual(parsed['day'],'2026-03-31')
+        self.assertEqual(parsed['benchmark'],'Nifty Smallcap 250 - TRI')
         self.assertEqual(len(parsed['positions']),21)
         self.assertEqual(parsed['positions'][0]['sector'],'Agricultural, Commercial & Construction Vehicles')
         self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
