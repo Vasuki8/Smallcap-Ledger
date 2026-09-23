@@ -758,6 +758,48 @@ Portfolio Holdings'''
         self.assertIsNone(groww_reconciled_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
         self.assertIsNone(groww_reconciled_portfolio(text.replace('GROWW Small Cap Fund','GROWW Mid Cap Fund',1)))
 
+
+    def test_quant_top10_portfolio_reconciles_published_concentration(self):
+        from tracker.report_parser import quant_top10_portfolio
+        text='''quant Small Cap Fund
+Investment Objective: The primary investment objective of the scheme is to seek to generate capital appreciation & provide long-term growth opportunities by investing in a portfolio of Small Cap companies.
+INCEPTION DATE
+29 October 1996
+BENCHMARK INDEX:
+NIFTY SMALLCAP 250 TRI
+PORTFOLIO TOP HOLDING
+LIST OF SECURITIES % TO NAV
+Reliance Industries Ltd. 9.47
+RBL Bank Ltd. 5.77
+Adani Power Ltd. 4.38
+HFCL Ltd. 3.44
+Sun TV Network Ltd. 2.92
+Piramal Finance Ltd. 2.85
+Anand Rathi Wealth Ltd. 2.81
+Aster DM Healthcare Ltd. 2.61
+Aurobindo Pharma Ltd. 2.31
+Adani Green Energy Ltd. 2.20
+Equity & Equity Related Instruments 95.21
+Debt & Money Market Instruments 4.79
+and Net Current Assets
+Grand Total 100.00
+PORTFOLIO CONCENTRATION
+Top Holding % of Portfolio
+10 38.76
+20 57.81
+30 72.33
+As on April 30, 2026'''
+        parsed=quant_top10_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-04-30')
+        self.assertEqual(len(parsed['positions']),11)
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions'][:10]),38.76,places=2)
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Debt, money market and net current assets')
+        self.assertEqual(parsed['positions'][-1]['weight'],4.79)
+        self.assertIsNone(quant_top10_portfolio(text.replace('10 38.76','10 39.76')))
+        self.assertIsNone(quant_top10_portfolio(text.replace('Grand Total 100.00','Grand Total 99.00')))
+        self.assertIsNone(quant_top10_portfolio(text.replace('quant Small Cap Fund','quant Mid Cap Fund',1)))
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
