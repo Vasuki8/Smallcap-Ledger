@@ -267,8 +267,10 @@ def factsheet_pdf(content,family,url,h):
             partial=groww_reconciled_portfolio(text)
         if family=='Quant Small Cap Fund':
             from .report_parser import quant_top10_portfolio
-            layout_text=page.extract_text(extraction_mode='layout') or ''
-            partial=quant_top10_portfolio(layout_text)
+            partial=quant_top10_portfolio(text)
+            if not partial:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:partial=quant_top10_portfolio(layout_text)
         if family=='Union Small Cap Fund':
             from .report_parser import union_complete_portfolio
             full=union_complete_portfolio(text)
