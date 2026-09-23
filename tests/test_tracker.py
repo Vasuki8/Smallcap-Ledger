@@ -164,6 +164,28 @@ class TrackerTests(unittest.TestCase):
             self.assertEqual(mock.call_count,2)
             self.assertIn('page=2',mock.call_args.args[0])
 
+    def test_union_get_uses_longer_bounded_retry_timeouts(self):
+        attempts=[]
+        class Response:
+            is_redirect=False
+            headers={'content-type':'application/pdf'}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def raise_for_status(self):return None
+            def iter_bytes(self):return iter((b'union pdf',))
+        class Client:
+            def __init__(self,*args,**kwargs):attempts.append(kwargs['timeout'].read)
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def stream(self,*args,**kwargs):
+                if len(attempts)==1:raise providers.httpx.ReadTimeout('slow union source')
+                return Response()
+        with patch('tracker.providers.public_url',side_effect=lambda url:url), \
+             patch('tracker.providers.httpx.Client',Client):
+            body,h,typ=providers.fetch('https://www.unionmf.com/docs/factsheet.pdf')
+        self.assertEqual(body,b'union pdf')
+        self.assertEqual(attempts,[60,120])
+
     def test_fetch_retries_one_transient_get_failure_without_recording_false_error(self):
         attempts=[]
         class Response:
