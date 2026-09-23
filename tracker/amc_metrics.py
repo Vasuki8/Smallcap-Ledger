@@ -211,27 +211,44 @@ def boi_top_holdings(soup,page_text,url,h):
     if not d:return 0
     day=report_date('as on '+d.group(1))
     if not day or day>date.today().isoformat():return 0
-    table=None
+
+    positions=[]
     for candidate in soup.select('table'):
         tx=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
-        if re.search(r'Portfolio\s+Details',tx,re.I) and re.search(r'%\s*to\s*Net\s*Assets',tx,re.I):
-            table=candidate;break
-    if table is None:return 0
-    positions=[]
-    for tr in table.select('tr'):
-        cells=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in tr.find_all(['th','td'],recursive=False)]
-        if len(cells)<2:continue
-        name=cells[0];raw=cells[-1]
-        if not name or re.search(r'Portfolio\s+Details|%\s*to\s*Net\s*Assets',name,re.I):continue
-        if not re.fullmatch(r'\d+(?:\.\d+)?\s*%?',raw):continue
-        weight=number(raw)
-        if not 0<weight<20:return 0
-        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
-    if not 5<=len(positions)<=15:return 0
+        if not (re.search(r'Portfolio\s+Details',tx,re.I) and re.search(r'%\s*to\s*Net\s*Assets',tx,re.I)):continue
+        for tr in candidate.select('tr'):
+            cells=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in tr.find_all(['th','td'],recursive=False)]
+            if len(cells)<2:continue
+            name=cells[0];raw=cells[-1]
+            if not name or re.search(r'Portfolio\s+Details|%\s*to\s*Net\s*Assets',name,re.I):continue
+            if not re.fullmatch(r'\d+(?:\.\d+)?\s*%?',raw):continue
+            weight=number(raw)
+            if not 0<weight<20:return 0
+            positions.append({'name':name,'isin':None,'sector':None,'weight':weight,
+                              'asset_type':'Money market' if re.search(r'TREPS|Reverse Repo',name,re.I) else 'Equity'})
+        if positions:break
+
+    # Some BOI responses flatten the holdings grid instead of emitting a table.
+    # Keep parsing tightly bounded to the Top 10 section and require the same
+    # count/weight safeguards before retaining it as a partial snapshot.
+    if not positions:
+        block=re.search(r'Top\s*10\s+Portfolio\s+Holdings\s+(.*?)(?:Sector\s+Allocation|Fund\s+Performance)',page_text,re.I)
+        if block:
+            body=re.sub(r'^.*?Portfolio\s+Details\s+%?\s*to\s*Net\s*Assets\s*','',block.group(1),flags=re.I)
+            for m in re.finditer(r'([A-Za-z][A-Za-z0-9&().,/\-\' ]{2,100}?)\s+(\d+(?:\.\d+)?)%',body):
+                name=re.sub(r'\s+',' ',m.group(1)).strip(' -|')
+                if re.search(r'Portfolio\s+Details|Net\s+Assets',name,re.I):continue
+                weight=float(m.group(2))
+                if not 0<weight<20:return 0
+                positions.append({'name':name,'isin':None,'sector':None,'weight':weight,
+                                  'asset_type':'Money market' if re.search(r'TREPS|Reverse Repo',name,re.I) else 'Equity'})
+
+    if not 8<=len(positions)<=12:return 0
     if len({x['name'].lower() for x in positions})!=len(positions):return 0
-    if not 5<=sum(x['weight'] for x in positions)<=60:return 0
+    total=sum(x['weight'] for x in positions)
+    if not 12<=total<=60:return 0
     portfolio('Bank Of India Small Cap Fund',day,positions,False,url,h)
-    b=re.search(r'Benchmark\s+Riskometer\s*:?\s*(NIFTY\s+Smallcap\s+250\s+TRI)',page_text,re.I)
+    b=re.search(r'Benchmark\s+Riskometer\s*:?\s*(NIFTY\s+Smallcap\s+250\s+(?:Total\s+Return\s+Index\s*\(TRI\)|TRI))',page_text,re.I)
     if b:db.metric('Bank Of India Small Cap Fund','All','benchmark',day,'NIFTY Smallcap 250 TRI','Reported',url,h)
     return len(positions)
 
@@ -302,6 +319,12 @@ def parse_page(content,family,url,h):
     # Tata renders its fund title in a div; its document title identifies the plan.
     if family=='Tata Small Cap Fund' and soup.title:
         exact=soup.title.get_text().startswith('Tata Small Cap Fund Direct Growth')
+    if family=='Bank Of India Small Cap Fund':
+        visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
+        exact=exact or bool(
+            actual.path.rstrip('/').lower()=='/products/equity-funds/bank-of-india-small-cap-fund' and
+            re.search(r'\bBank\s+Of\s+India\s+Small\s+Cap\s+Fund\b',visible,re.I) and
+            re.search(r'predominantly\s+investing\s+in\s+small\s+cap\s+stocks',visible,re.I))
     if family=='Mahindra Manulife Small Cap Fund' and '/digital-factsheet/' in url:
         exact=exact or any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
     if family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
