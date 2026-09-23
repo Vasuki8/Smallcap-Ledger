@@ -37,7 +37,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v47':frozenset({'Invesco India Small Cap Fund','The Wealth Company Small Cap Fund'}),
     'amc-reports-2026-09-v48':frozenset({'Bank Of India Small Cap Fund','Invesco India Small Cap Fund','Samco Small Cap Fund'}),
     'amc-reports-2026-09-v49':frozenset({'Abakkus Small Cap Fund','HSBC Small Cap Fund','Pgim India Small Cap Fund'}),
-    'amc-reports-2026-09-v50':frozenset({'Aditya Birla Sun Life Small Cap Fund','Franklin India Small Cap Fund','LIC Mf Small Cap Fund'}),
+    'amc-reports-2026-09-v50':frozenset({'Abakkus Small Cap Fund','Aditya Birla Sun Life Small Cap Fund','Franklin India Small Cap Fund','HSBC Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
