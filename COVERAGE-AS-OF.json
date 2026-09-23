@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T17:48:08+00:00",
+  "built_at": "2026-09-23T18:54:45+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -581,37 +581,16 @@
         "plan": "Direct",
         "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20-%20April%202026.pdf"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-05-31",
+        "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf",
+        "complete": 0,
+        "positions": 40
+      },
       "portfolio_complete": false,
       "portfolio_fresh": false,
-      "official_publications": 7,
-      "portfolio_gap": {
-        "reason": "unsupported_document_layout",
-        "document": {
-          "title": "Ratios for GMF Factsheet.pdf",
-          "kind": "factsheet",
-          "url": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact Sheet/Factsheet Disclosures/Ratios for GMF Factsheet.pdf",
-          "last_seen": "2026-09-22T21:38:56+00:00",
-          "hash": "4f28ae85502b57662f5b81cf8b41126d400f408127ba6b6ce2bf6fd72af49cc1",
-          "observed_at": "2026-09-22T21:38:58+00:00"
-        },
-        "extraction": {
-          "status": "unrecognized",
-          "records": 0,
-          "detail": "Original archived; no supported, unambiguous dated scheme table found",
-          "checked_at": "2026-09-22T21:38:59+00:00",
-          "parser_version": "amc-reports-2026-09-v21",
-          "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact Sheet/Factsheet Disclosures/Ratios for GMF Factsheet.pdf"
-        },
-        "source_page": {
-          "amc_match": "Groww",
-          "url": "https://www.growwmf.in/",
-          "label": "Fund house",
-          "last_checked": "2026-09-22T21:54:39+00:00",
-          "status": "Limited",
-          "detail": "Page archived; no automatically readable fund documents found"
-        }
-      }
+      "official_publications": 8,
+      "portfolio_gap": null
     },
     {
       "family": "HDFC Small Cap Fund",
@@ -1792,7 +1771,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T17:48:02+00:00",
+          "last_seen": "2026-09-23T18:48:31+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1811,7 +1790,6 @@
   "portfolio_gap_reasons": {
     "source_unavailable": 1,
     "source_not_exposing_portfolio": 3,
-    "unsupported_document_layout": 1,
     "document_not_archived": 2
   },
   "counts": {
@@ -1820,11 +1798,11 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 29,
+    "portfolio": 30,
     "portfolio_complete": 19,
     "portfolio_fresh": 19,
     "portfolio_fresh_complete": 13,
-    "portfolio_partial": 10,
+    "portfolio_partial": 11,
     "benchmark_identity": 21
   },
   "notes": [

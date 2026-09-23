@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-23T17:48:08+00:00
+Prepared: 2026-09-23T18:54:45+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **29 / 36 any**, **19 complete**, **19 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **30 / 36 any**, **19 complete**, **19 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -21,7 +21,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | DSP Small Cap Fund | ₹ 21,600.46 · 2026-09-21 | 0.81% TER · 2026-09-21 | 80 positions · 2026-06-30 · partial · older | BSE 250 Small Cap TRI · 2026-09-22 | 14 |
 | Edelweiss Small Cap Fund | ₹ 7,157.90 · 2026-09-21 | 0.65% TER · 2026-09-21 | 30 positions · 2026-07-31 · partial · older | Nifty Smallcap 250 · 2026-08-31 | 2 |
 | Franklin India Small Cap Fund | ₹ 14,593.61 · 2026-09-21 | 1.07% TER · 2026-09-21 | 91 positions · 2026-07-31 · complete · older | Gap | 2 |
-| Groww Small Cap Fund | ₹ 926.00 · 2026-09-21 | 1.12% TER · 2026-04-30 | Gap | Gap | 7 |
+| Groww Small Cap Fund | ₹ 926.00 · 2026-09-21 | 1.12% TER · 2026-04-30 | 40 positions · 2026-05-31 · partial · older | Gap | 8 |
 | HDFC Small Cap Fund | ₹ 41,888.73 · 2026-09-21 | 0.77% TER · 2026-09-16 | 87 positions · 2026-08-31 · complete · current | BSE 250 SmallCap (Total Returns Index) · 2026-09-22 | 17 |
 | HSBC Small Cap Fund | ₹ 19,048.21 · 2026-09-21 | 0.56% BER · 2026-08-31 | 110 positions · 2026-07-31 · complete · older | Nifty Smallcap 250 TRI · 2026-08-31 | 2 |
 | Helios Small Cap Fund | ₹ 1,881.88 · 2026-09-21 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | NIFTY Small Cap 250 · 2026-08-31 | 165 |
@@ -53,7 +53,6 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | --- | --- | --- | --- | --- |
 | Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
-| Groww Small Cap Fund | Unsupported document layout | factsheet: Ratios for GMF Factsheet.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Quant Small Cap Fund | Document known but not archived | factsheet: a | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Tata Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
