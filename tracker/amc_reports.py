@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v37'
+PARSER_VERSION='amc-reports-2026-09-v38'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -25,6 +25,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v35':frozenset({'Union Small Cap Fund'}),
     'amc-reports-2026-09-v36':frozenset({'Quant Small Cap Fund'}),
     'amc-reports-2026-09-v37':frozenset({'Tata Small Cap Fund'}),
+    'amc-reports-2026-09-v38':frozenset({'Union Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -78,6 +79,10 @@ def should_reprocess_existing(family,url,h=None):
     if PARSER_VERSION=='amc-reports-2026-09-v36':
         # Replay only quant PDFs after matching the AMC's real text extraction.
         return family=='Quant Small Cap Fund' and path.endswith('.pdf')
+    if PARSER_VERSION=='amc-reports-2026-09-v38':
+        # Retry Union's versioned official Small Cap factsheet after the
+        # corrected complete-portfolio regression fixture.
+        return family=='Union Small Cap Fund' and path.endswith('.pdf')
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
     # v25 only changes strict benchmark-label parsing. Re-open retained PDF
