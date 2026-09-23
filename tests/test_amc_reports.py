@@ -511,6 +511,23 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(rows[0][:2],('Baroda Bnp Paribas Small Cap Fund','https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls'))
 
 
+    def test_franklin_discovery_prefers_latest_official_monthly_portfolio(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div data-file="/downloads/portfolio/Franklin-Small-Cap-as-on-July-31-2026.xlsx">Monthly Portfolio As on July 31 2026</div>
+        <div data-file="/downloads/portfolio/Franklin-Small-Cap-as-on-August-31-2026.xlsx">Monthly Portfolio As on August 31 2026</div>
+        <a href="/downloads/portfolio/Franklin-Small-Cap-as-on-August-31-2026.pdf">Monthly Portfolio As on August 31 2026</a>
+        </body></html>'''
+        def fake_read(url,body=None):
+            return html,'page','text/html'
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Franklin'))
+        self.assertEqual(rows[0][0],'Franklin India Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('Franklin-Small-Cap-as-on-August-31-2026.xlsx'))
+        self.assertEqual(len(rows),2)
+        self.assertFalse(any('July-31-2026' in row[1] for row in rows))
+
     def test_pgim_discovery_uses_official_monthly_factsheet_paths(self):
         from tracker import amc_discovery
         with patch('tracker.amc_discovery.date') as fake:
