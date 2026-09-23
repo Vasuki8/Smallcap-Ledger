@@ -457,7 +457,33 @@ def absl_complete_portfolio(text):
         row=re.fullmatch(r'(?:[●•]\s*)?(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line)
         if not row:continue
         label=row.group(1).strip();value=float(row.group(2))
-        if re.search(r'^(?:% of|Total AUM|Derivatives|Net AUM|Equity\s*&\s*Equity Related)    """Parse Edelweiss Small Cap's published Top 30 list as a partial snapshot.
+        if re.search(r'^(?:% of|Total AUM|Derivatives|Net AUM|Equity\s*&\s*Equity Related)$',label,re.I):continue
+        if not 0<value<=100:return None
+        if re.search(r'\b(?:Ltd\.?|Limited)\b',label,re.I):
+            if not sectors:return None
+            positions.append({'name':label,'isin':None,'sector':sectors[-1]['sector'],
+                              'weight':value,'asset_type':'Equity'})
+        else:
+            sectors.append({'sector':label,'total':value,'start':len(positions)})
+
+    if cash is None or grand is None or abs(grand-100)>.02:return None
+    if not 0<=cash<=30 or len(sectors)<5 or len(positions)<40:return None
+    for i,s in enumerate(sectors):
+        stop=sectors[i+1]['start'] if i+1<len(sectors) else len(positions)
+        group=positions[s['start']:stop]
+        if not group:return None
+        if abs(sum(x['weight'] for x in group)-s['total'])>max(.03,.011*len(group)):return None
+    equity_total=sum(s['total'] for s in sectors)
+    if abs((equity_total+cash)-grand)>.04:return None
+    if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.011*len(positions)):return None
+    if len({x['name'].lower() for x in positions})!=len(positions):return None
+    positions.append({'name':'Net Cash and Cash Equivalent','isin':None,'sector':None,
+                      'weight':cash,'asset_type':'Cash and net current assets'})
+    return {'day':day,'positions':positions}
+
+
+def edelweiss_top30_portfolio(text):
+    """Parse Edelweiss Small Cap's published Top 30 list as a partial snapshot.
 
     The factsheet also publishes an independent Top-10 aggregate. Reconcile the
     first ten extracted holdings to that total before retaining any rows.
