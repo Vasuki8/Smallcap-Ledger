@@ -711,6 +711,156 @@ def edelweiss_top30_portfolio(text):
     return {'day':day,'positions':positions}
 
 
+
+def boi_multicolumn_complete_portfolio(text):
+    """Reconstruct BOI Small Cap's four-column factsheet portfolio.
+
+    The PDF text extractor emits the last equity column before the first three.
+    Reorder those two fragments, reconcile every equity sector subtotal, then
+    independently reconcile treasury-bill, money-market, cash and grand totals.
+    """
+    normalized=normalize(text)
+    family='Bank Of India Small Cap Fund'
+    if not owns_page(normalized,family):return None
+    m=re.search(r'All\s+data\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
+    def numeric(line,allow_negative=False):
+        line=re.sub(r'^[4✓✔]\s*','',line).strip()
+        if allow_negative:
+            q=re.fullmatch(r'(.+?)\s+\((\d+(?:\.\d+)?)\)\s*%?',line)
+            if q:return q.group(1).strip(),-float(q.group(2))
+        q=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%?',line)
+        if not q:return None
+        return q.group(1).strip(),float(q.group(2))
+
+    def sectorish(label):
+        letters=re.sub(r'[^A-Za-z]','',label)
+        return bool(letters) and label==label.upper() and not re.search(r'\b(?:LTD|LIMITED)\b',label,re.I)
+
+    # The real PDF has an early continuation of the final equity sector followed
+    # by "Total <equity>", then debt/money/cash. The first three equity columns
+    # appear later under PORTFOLIO DETAILS / EQUITY HOLDINGS.
+    gov=next((i for i,x in enumerate(lines) if re.fullmatch(r'GOVERNMENT\s+BOND\s+AND',x,re.I)),None)
+    if gov is None:return None
+    equity_total_index=next((i for i in range(gov-1,-1,-1)
+                             if re.fullmatch(r'Total\s+\d+(?:\.\d+)?',lines[i],re.I)),None)
+    if equity_total_index is None:return None
+    equity_total=float(re.search(r'(\d+(?:\.\d+)?)$',lines[equity_total_index]).group(1))
+    header_indices=[i for i in range(equity_total_index)
+                    if re.fullmatch(r'Industry/\s*Rating\s+Assets',lines[i],re.I)]
+    if not header_indices:return None
+    tail_start=header_indices[-1]+1
+    tail_rows=lines[tail_start:equity_total_index]
+
+    details=next((i for i,x in enumerate(lines)
+                  if re.fullmatch(r'PORTFOLIO\s+DETAILS',x,re.I)),None)
+    if details is None:return None
+    equity_start=next((i for i in range(details+1,len(lines))
+                       if re.fullmatch(r'EQUITY\s+HOLDINGS',lines[i],re.I)),None)
+    if equity_start is None:return None
+    equity_end=next((i for i in range(equity_start+1,len(lines))
+                     if re.fullmatch(r'EQUITY\s+INDUSTRY\s+ALLOCATION',lines[i],re.I)),None)
+    if equity_end is None:return None
+    main_rows=lines[equity_start+1:equity_end]
+
+    positions=[];sectors=[]
+    def append_equity_rows(rows,allow_sectors=True):
+        i=0
+        while i<len(rows):
+            line=rows[i];i+=1
+            parsed=numeric(line)
+            if not parsed:continue
+            label,value=parsed
+            if allow_sectors and sectorish(label):
+                sectors.append({'sector':label,'total':value,'start':len(positions)})
+                continue
+            if not sectors:return False
+            if not 0<=value<25:return False
+            continuation=[]
+            while i<len(rows) and numeric(rows[i]) is None:
+                nxt=rows[i]
+                if re.search(r'^(?:EQUITY\s+INDUSTRY|MCAP\s+Categorization|Risk-o-meter|All\s+data\s+as\s+on)',nxt,re.I):break
+                if sectorish(nxt):break
+                continuation.append(nxt);i+=1
+            name=' '.join([label,*continuation]).strip()
+            if not name:return False
+            positions.append({'name':name,'isin':None,'sector':sectors[-1]['sector'],
+                              'weight':value,'asset_type':'Equity'})
+        return True
+
+    if not append_equity_rows(main_rows,True):return None
+    if not sectors or sectors[-1]['sector'].upper()!='OTHERS':return None
+    # The early fragment is the continuation of OTHERS, not a new sector.
+    if not append_equity_rows(tail_rows,False):return None
+
+    if len(sectors)<10 or len(positions)<40:return None
+    for j,s in enumerate(sectors):
+        stop=sectors[j+1]['start'] if j+1<len(sectors) else len(positions)
+        group=positions[s['start']:stop]
+        if not group:return None
+        if abs(sum(x['weight'] for x in group)-s['total'])>max(.03,.011*len(group)):return None
+    if abs(sum(s['total'] for s in sectors)-equity_total)>.08:return None
+    if abs(sum(x['weight'] for x in positions)-equity_total)>max(.08,.011*len(positions)):return None
+    if len({x['name'].lower() for x in positions})!=len(positions):return None
+
+    # Parse the asset-class tail exactly as published.
+    debt=[];money=[];debt_total=None;money_total=None;cash_total=None;grand=None
+    cash_components=[];mode=None;subsection=None;i=equity_total_index+1
+    while i<len(lines):
+        line=lines[i];i+=1
+        if re.fullmatch(r'GOVERNMENT\s+BOND\s+AND',line,re.I):
+            mode='debt';subsection=None;continue
+        if mode=='debt' and re.fullmatch(r'TREASURY\s+BILL',line,re.I):
+            subsection='Treasury Bill';continue
+        if re.fullmatch(r'MONEY\s+MARKET\s+INSTRUMENTS',line,re.I):
+            mode='money';subsection=None;continue
+        if mode=='money' and re.fullmatch(r'Certificate\s+of\s+Deposit',line,re.I):
+            subsection='Certificate of Deposit';continue
+        if re.fullmatch(r'CASH\s*&\s*CASH\s+EQUIVALENT',line,re.I):
+            mode='cash';subsection=None;continue
+        gm=re.fullmatch(r'GRAND\s+TOTAL\s+(\d+(?:\.\d+)?)',line,re.I)
+        if gm:
+            grand=float(gm.group(1));break
+        parsed=numeric(line,allow_negative=True)
+        if not parsed:continue
+        label,value=parsed
+        if label.lower()=='total':
+            if mode=='debt':debt_total=value
+            elif mode=='money':money_total=value
+            elif mode=='cash':cash_total=value
+            continue
+        continuation=[]
+        while i<len(lines) and numeric(lines[i],allow_negative=True) is None:
+            nxt=lines[i]
+            if re.search(r'^(?:MONEY\s+MARKET\s+INSTRUMENTS|CASH\s*&\s*CASH\s+EQUIVALENT|GRAND\s+TOTAL|Total\b|MCAP\s+Categorization)',nxt,re.I):break
+            if mode=='debt' and re.fullmatch(r'TREASURY\s+BILL',nxt,re.I):break
+            if mode=='money' and re.fullmatch(r'Certificate\s+of\s+Deposit',nxt,re.I):break
+            continuation.append(nxt);i+=1
+        name=' '.join([label,*continuation]).strip()
+        if mode=='debt' and value>=0:
+            debt.append({'name':name,'isin':None,'sector':subsection,'weight':value,'asset_type':'Debt'})
+        elif mode=='money' and value>=0:
+            money.append({'name':name,'isin':None,'sector':subsection,'weight':value,'asset_type':'Money market'})
+        elif mode=='cash':
+            cash_components.append(value)
+
+    if None in (debt_total,money_total,cash_total,grand):return None
+    if abs(grand-100)>.02:return None
+    if abs(sum(x['weight'] for x in debt)-debt_total)>.03:return None
+    if abs(sum(x['weight'] for x in money)-money_total)>.04:return None
+    if abs(sum(cash_components)-cash_total)>.03:return None
+    if abs((equity_total+debt_total+money_total+cash_total)-grand)>.04:return None
+
+    # Preserve the AMC-published cash aggregate rather than inventing a balancing
+    # row from TREPS and negative receivables.
+    cash=[{'name':'Cash & Cash Equivalent','isin':None,'sector':None,
+           'weight':cash_total,'asset_type':'Cash and net current assets'}]
+    return {'day':day,'positions':positions+debt+money+cash}
+
+
 def boi_complete_portfolio(text):
     """Reconcile Bank of India Small Cap's published monthly portfolio."""
     normalized=normalize(text)
