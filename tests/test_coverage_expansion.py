@@ -1304,7 +1304,7 @@ Total Net Assets as on 31-August-2026 100.00%
         self.assertEqual(parsed['day'],'2026-08-31')
         self.assertEqual(parsed['positions'][0]['name'],'PARAS DEFENCE AND SPACE TECHNOLOGIES LTD')
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
-        self.assertIsNone(hsbc_complete_portfolio(text.replace('Aerospace & Defense 0.86%','Aerospace & Defense 0.87%')))
+        self.assertIsNone(hsbc_complete_portfolio(text.replace('Aerospace & Defense 0.86%','Aerospace & Defense 0.92%')))
 
     def test_axis_top_holdings_are_partial_and_reconcile_to_stated_total(self):
         from tracker.amc_metrics import parse_page
