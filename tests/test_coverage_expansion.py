@@ -480,6 +480,48 @@ Scheme Category: Small Cap Fund'''
         snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Aditya Birla Sun Life Small Cap Fund' AND hash='absl-full'")
         self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})
 
+    def test_jm_top25_reconciles_named_other_equity_and_treps(self):
+        from tracker.report_parser import jm_top25_portfolio
+        text='''Jm Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+Details as on August 31, 2026
+SCHEME PORTFOLIO (TOP 25 STOCKS)
+Name of Instrument (Equity Shares) % to NAV
+Company 1 Limited 2.00\nCompany 2 Limited 2.00\nCompany 3 Limited 2.00\nCompany 4 Limited 2.00\nCompany 5 Limited 2.00\nCompany 6 Limited 2.00\nCompany 7 Limited 2.00\nCompany 8 Limited 2.00\nCompany 9 Limited 2.00\nCompany 10 Limited 2.00\nCompany 11 Limited 2.00\nCompany 12 Limited 2.00\nCompany 13 Limited 2.00\nCompany 14 Limited 2.00\nCompany 15 Limited 2.00\nCompany 16 Limited 2.00\nCompany 17 Limited 2.00\nCompany 18 Limited 2.00\nCompany 19 Limited 2.00\nCompany 20 Limited 2.00\nCompany 21 Limited 2.00\nCompany 22 Limited 2.00\nCompany 23 Limited 2.00\nCompany 24 Limited 2.00\nCompany 25 Limited 2.00
+Other Equity Stocks 49.00
+Total Equity Holdings 99.00
+TREPS & Others * 1.00
+Total Assets 100.00
+* includes net receivables / payables if any'''
+        parsed=jm_top25_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(len(parsed['positions']),25)
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),50.0,places=2)
+        self.assertIsNone(jm_top25_portfolio(text.replace('Other Equity Stocks 49.00','Other Equity Stocks 48.00')))
+
+    def test_jm_factsheet_saves_top25_as_partial_only(self):
+        from tracker import disclosures
+        text='''Jm Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+Details as on August 31, 2026
+SCHEME PORTFOLIO (TOP 25 STOCKS)
+Name of Instrument (Equity Shares) % to NAV
+Company 1 Limited 2.00\nCompany 2 Limited 2.00\nCompany 3 Limited 2.00\nCompany 4 Limited 2.00\nCompany 5 Limited 2.00\nCompany 6 Limited 2.00\nCompany 7 Limited 2.00\nCompany 8 Limited 2.00\nCompany 9 Limited 2.00\nCompany 10 Limited 2.00\nCompany 11 Limited 2.00\nCompany 12 Limited 2.00\nCompany 13 Limited 2.00\nCompany 14 Limited 2.00\nCompany 15 Limited 2.00\nCompany 16 Limited 2.00\nCompany 17 Limited 2.00\nCompany 18 Limited 2.00\nCompany 19 Limited 2.00\nCompany 20 Limited 2.00\nCompany 21 Limited 2.00\nCompany 22 Limited 2.00\nCompany 23 Limited 2.00\nCompany 24 Limited 2.00\nCompany 25 Limited 2.00
+Other Equity Stocks 49.00
+Total Equity Holdings 99.00
+TREPS & Others * 1.00
+Total Assets 100.00'''
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Jm Small Cap Fund',
+                                            'https://www.jmfinancialmf.com/factsheet.pdf','jm-top25')
+        self.assertGreaterEqual(count,25)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Jm Small Cap Fund' AND hash='jm-top25'")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='jm-top25')")['n'],25)
+
     def test_edelweiss_top30_reconciles_published_top10_total(self):
         from tracker.report_parser import edelweiss_top30_portfolio
         text='''Edelweiss Small Cap Fund
