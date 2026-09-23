@@ -18,6 +18,10 @@ def owns_sheet(rows,header_index,family):
             text=str(value)
             if family=='The Wealth Company Small Cap Fund':
                 text=re.sub(r'^WCSC\s*-\s*','',text,flags=re.I)
+            if family=='Groww Small Cap Fund':
+                # Groww's official monthly workbook prefixes the scheme name
+                # with its internal code, e.g. "IB60-Groww Small Cap Fund".
+                text=re.sub(r'^[A-Z]{1,4}\d+\s*-\s*','',text,flags=re.I)
             if same_fund_title(text,family):return True
             if family=='Samco Small Cap Fund' and re.match(
                 r'^\s*MONTHLY\s+PORTFOLIO\s+STATEMENT\s+OF\s+SAMCO\s+SMALL\s+CAP\s+FUND\s+AS\s+ON\b',
