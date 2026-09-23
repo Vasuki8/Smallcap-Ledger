@@ -6,13 +6,14 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v25'
+PARSER_VERSION='amc-reports-2026-09-v26'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
 PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v24':frozenset({'Edelweiss Small Cap Fund'}),
     'amc-reports-2026-09-v25':frozenset({'Bandhan Small Cap Fund','Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','ICICI Prudential Small Cap Fund','Invesco India Small Cap Fund','Jm Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Samco Small Cap Fund','Sundaram Small Cap Fund','Tata Small Cap Fund','The Wealth Company Small Cap Fund','Trustmf Small Cap Fund','UTI Small Cap Fund','Union Small Cap Fund'}),
+    'amc-reports-2026-09-v26':frozenset({'Abakkus Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','HDFC Small Cap Fund','Helios Small Cap Fund','Motilal Oswal Small Cap Fund','Nippon India Small Cap Fund','Quantum Small Cap Fund','Samco Small Cap Fund','Sundaram Small Cap Fund','The Wealth Company Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -23,9 +24,14 @@ def parser_upgrade_applies(family):
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
 
-def should_reprocess_existing(family,url):
-    """Keep broad historical reparsing narrow; opt in verified PDF families explicitly."""
+def should_reprocess_existing(family,url,h=None):
+    """Keep parser upgrades narrow and avoid replaying discarded portfolio history."""
     path=urlparse(url).path.lower()
+    if PARSER_VERSION=='amc-reports-2026-09-v26':
+        # Quantity backfill is useful only for the rolling snapshots retained in
+        # portfolios. Older source documents stay archived but are not reparsed.
+        return bool(h and path.endswith(REPROCESS_EXISTING_EXTENSIONS)
+                    and db.one("SELECT 1 FROM portfolios WHERE family=? AND hash=?",(family,h)))
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
     # v25 only changes strict benchmark-label parsing. Re-open retained PDF
@@ -118,7 +124,7 @@ def reprocess_archived():
         if not parser_upgrade_applies(row['family']):continue
         if exclusion_reason(row['family'],row['url']):continue
         if classify('',row['url']) not in ('factsheet','portfolio','scheme document'):continue
-        if not should_reprocess_existing(row['family'],row['url']):continue
+        if not should_reprocess_existing(row['family'],row['url'],row['hash']):continue
         try:
             extract((db.DATA/row['path']).read_bytes(),row['family'],row['url'],row['hash']);checked+=1
         except Exception as e:gaps.append(row['family']+': '+str(e)[:120])
