@@ -6,15 +6,14 @@ from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import datetime,timezone,timedelta
 from . import db,providers,disclosures,amfi_metrics,amc_metrics
 
-def needs_nav_history_recovery(previous,now=None):
-    """Full history is needed only after a real collection gap or failed run."""
-    if not previous:return True
-    if previous.get('status') in ('error','interrupted'):return True
-    try:finished=datetime.fromisoformat(previous['finished_at'])
-    except (KeyError,TypeError,ValueError):return True
+def nav_history_recovery_since(previous_good,now=None):
+    """Return the last good NAV-run time only when a real scheduler gap exists."""
+    if not previous_good:return ''
+    try:finished=datetime.fromisoformat(previous_good['finished_at'])
+    except (KeyError,TypeError,ValueError):return ''
     now=now or datetime.now(timezone.utc)
     if finished.tzinfo is None:finished=finished.replace(tzinfo=timezone.utc)
-    return (now-finished).total_seconds()>36*3600
+    return previous_good['finished_at'] if (now-finished).total_seconds()>36*3600 else None
 
 
 class Updater:
@@ -38,7 +37,7 @@ class Updater:
 
     def run(self,kind):
         errors=[];detail=""
-        previous_nav=(db.one("SELECT finished_at,status FROM jobs WHERE kind='nav' AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1")
+        previous_nav=(db.one("SELECT finished_at,status FROM jobs WHERE kind='nav' AND finished_at IS NOT NULL AND status IN ('ok','partial') ORDER BY id DESC LIMIT 1")
                       if kind=='nav' else None)
         with db.connect() as c:
             jid=c.execute("INSERT INTO jobs(kind,started_at,status) VALUES(?,?,'running')",(kind,db.now())).lastrowid
@@ -50,10 +49,15 @@ class Updater:
                 # every scheme's full MFAPI history every day made scheduled runs very
                 # slow. Full recovery is reserved for a real scheduler gap/failed run;
                 # otherwise backfill only new/errors plus a 30-day maintenance refresh.
-                recover_all=needs_nav_history_recovery(previous_nav)
+                recovery_since=nav_history_recovery_since(previous_nav)
                 maintenance_cutoff=(datetime.now(timezone.utc)-timedelta(days=30)).date().isoformat()
-                if recover_all:
+                if previous_nav is None:
                     schemes=db.rows("SELECT code,family FROM schemes ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code")
+                elif recovery_since:
+                    # If a prior recovery was interrupted, histories already
+                    # refreshed after the last good run are excluded next time.
+                    schemes=db.rows("SELECT code,family FROM schemes WHERE history_checked IS NULL OR history_status LIKE 'Error:%' OR history_checked<? OR substr(history_checked,1,10)<? ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code",
+                                    (recovery_since,maintenance_cutoff))
                 else:
                     schemes=db.rows("SELECT code,family FROM schemes WHERE history_checked IS NULL OR history_status LIKE 'Error:%' OR substr(history_checked,1,10)<? ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code",(maintenance_cutoff,))
                 with ThreadPoolExecutor(max_workers=3) as pool:
