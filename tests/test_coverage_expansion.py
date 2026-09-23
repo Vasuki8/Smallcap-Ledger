@@ -384,6 +384,47 @@ INVESTMENT OBJECTIVE'''
         self.assertIsNone(boi_complete_portfolio(bad))
         self.assertIsNone(boi_complete_portfolio(text.replace('Bank of India Small Cap Fund','Bank of India Mid Cap Fund',1)))
 
+    def test_boi_pdf_falls_back_to_layout_text_for_complete_portfolio(self):
+        from tracker import disclosures
+        standard='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+LATEST AUM'''
+        layout='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+Portfolio Holdings
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 2.00
+Total 2.00
+GRAND TOTAL 100.00
+INVESTMENT OBJECTIVE'''
+        class Page:
+            def extract_text(self,*args,**kwargs):
+                return layout if kwargs.get('extraction_mode')=='layout' else standard
+        reader=SimpleNamespace(is_encrypted=False,pages=[Page()])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bank Of India Small Cap Fund',
+                                            'https://www.boimf.in/factsheet.pdf','boi-layout')
+        self.assertGreater(count,0)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund' AND hash='boi-layout'")
+        self.assertEqual(snap,{'as_of':'2026-03-31','complete':1})
+
     def test_boi_factsheet_pdf_saves_complete_snapshot(self):
         from tracker import disclosures
         page_text='''Bank of India Small Cap Fund
