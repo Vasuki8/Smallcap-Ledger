@@ -202,32 +202,46 @@ def run():
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
-        # Temporary ABSL monthly-portfolio endpoint diagnostic. The endpoint is
-        # read from the official Portfolio page rather than guessed.
+        # Temporary same-session diagnostic for ABSL's public accordion API.
         try:
+            import httpx
             from bs4 import BeautifulSoup
             from urllib.parse import urljoin
             page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
-            raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
-            soup=BeautifulSoup(raw,'html.parser')
-            item=next((li for li in soup.select('li[data-accordian-api]')
-                       if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
-            if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
-            endpoint=urljoin(page,item.get('data-accordian-api',''))
-            print('ABSL_MONTHLY_ENDPOINT '+endpoint,flush=True)
-            payload,source,mime=providers.fetch(endpoint,max_bytes=8*1024*1024)
-            print(f'ABSL_MONTHLY_RESPONSE bytes={len(payload)} source={source} mime={mime}',flush=True)
-            body=payload.decode('utf-8','ignore')
-            response_soup=BeautifulSoup(payload,'html.parser')
-            found=providers.candidate_links(response_soup,endpoint)
-            print(f'ABSL_MONTHLY_LINKS {len(found)}',flush=True)
-            for url,title in found.items():
-                combined=(url+' '+str(title))
-                if re.search(r'portfolio|small\\s*cap|aug|sep|2026|xlsx?|\\.xls|\\.pdf',combined,re.I):
-                    print('ABSL_MONTHLY_LINK '+url+' :: '+str(title)[:300],flush=True)
-            print('ABSL_MONTHLY_BODY '+re.sub(r'\\s+',' ',body)[:16000],flush=True)
+            providers.can_crawl(page)
+            providers.public_url(page)
+            with httpx.Client(timeout=httpx.Timeout(30,connect=15),
+                              headers={'User-Agent':providers.USER_AGENT,'Accept':'*/*'},
+                              follow_redirects=True) as client:
+                first=client.get(page)
+                first.raise_for_status()
+                soup=BeautifulSoup(first.content,'html.parser')
+                item=next((li for li in soup.select('li[data-accordian-api]')
+                           if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
+                if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
+                endpoint=urljoin(page,item.get('data-accordian-api',''))
+                providers.public_url(endpoint)
+                providers.can_crawl(endpoint)
+                token=soup.select_one('input[name="__RequestVerificationToken"]')
+                headers={'Referer':page,'X-Requested-With':'XMLHttpRequest','Accept':'text/html, */*; q=0.01'}
+                if token and token.get('value'):headers['RequestVerificationToken']=token['value']
+                print('ABSL_SESSION_ENDPOINT '+endpoint,flush=True)
+                print('ABSL_SESSION_COOKIES '+','.join(sorted(client.cookies.keys())),flush=True)
+                response=client.get(endpoint,headers=headers)
+                print(f'ABSL_SESSION_STATUS {response.status_code} type={response.headers.get("content-type","")} bytes={len(response.content)}',flush=True)
+                if response.status_code>=400:
+                    print('ABSL_SESSION_ERROR_BODY '+re.sub(r'\s+',' ',response.text)[:3000],flush=True)
+                    response.raise_for_status()
+                response_soup=BeautifulSoup(response.content,'html.parser')
+                found=providers.candidate_links(response_soup,endpoint)
+                print(f'ABSL_SESSION_LINKS {len(found)}',flush=True)
+                for url,title in found.items():
+                    combined=url+' '+str(title)
+                    if re.search(r'portfolio|small\s*cap|aug|sep|2026|xlsx?|\.xls|\.pdf',combined,re.I):
+                        print('ABSL_SESSION_LINK '+url+' :: '+str(title)[:350],flush=True)
+                print('ABSL_SESSION_BODY '+re.sub(r'\s+',' ',response.text)[:16000],flush=True)
         except Exception as exc:
-            print(f"::warning::ABSL monthly endpoint diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            print(f"::warning::ABSL same-session diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
