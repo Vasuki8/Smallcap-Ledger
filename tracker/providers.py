@@ -295,7 +295,7 @@ def classify(title,url):
     s=(title_text+" "+url).lower()
     # Notices/press releases can mention a portfolio without containing the
     # portfolio itself. Keep them out of portfolio coverage and parser queues.
-    if re.search(r'\b(?:press\s+release|notice|circular)\b',title_text):return "disclosure"
+    if re.search(r'(?:^|[^a-z0-9])(?:press[\s_-]*release|notice|circular)(?:[^a-z0-9]|$)',title_text):return "disclosure"
     if re.search(r"portfolio|holdings",s): return "portfolio"
     if re.search(r"factsheet|fact.sheet|fund.facts|fund.spectrum|fund.watch",s): return "factsheet"
     if re.search(r"newsletter|market.*(?:view|outlook|update)|equity.outlook|investment.view|cio.*(?:view|letter)|product.?note|presentation",s): return "market view"
