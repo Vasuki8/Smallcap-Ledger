@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v46'
+PARSER_VERSION='amc-reports-2026-09-v47'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -34,6 +34,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v44':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v45':frozenset({'Union Small Cap Fund'}),
     'amc-reports-2026-09-v46':frozenset({'Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','Invesco India Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Samco Small Cap Fund','Tata Small Cap Fund','The Wealth Company Small Cap Fund','UTI Small Cap Fund'}),
+    'amc-reports-2026-09-v47':frozenset({'Bank Of India Small Cap Fund','Invesco India Small Cap Fund','Samco Small Cap Fund','The Wealth Company Small Cap Fund','UTI Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -121,6 +122,10 @@ def should_reprocess_existing(family,url,h=None):
         # v46 backfills benchmark identity from reviewed catalog sources only.
         # The catalog pass materializes those exact originals; do not replay the
         # broader historical document archive for this metadata-only change.
+        return False
+    if PARSER_VERSION=='amc-reports-2026-09-v47':
+        # v47 replays the reviewed sources added after v46 was already marked
+        # applied. This remains a metadata-only exact-catalog replay.
         return False
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
