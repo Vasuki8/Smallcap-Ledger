@@ -421,6 +421,42 @@ Scheme Category: Small Cap Fund'''
         bench=db.one("SELECT value,as_of FROM metrics WHERE family='Bank Of India Small Cap Fund' AND metric='benchmark' AND hash='boi-page'")
         self.assertEqual(bench,{'value':'NIFTY Smallcap 250 TRI','as_of':'2026-06-30'})
 
+    def test_edelweiss_top30_reconciles_published_top10_total(self):
+        from tracker.report_parser import edelweiss_top30_portfolio
+        text='''Edelweiss Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+Data as on August 31, 2026
+Top 30 Holdings
+Top 10 stocks@ : 24.20%
+Company Name Allocation
+Alpha Industries Ltd 3.50%\nBeta Bank Ltd 3.40%\nGamma Pharma Ltd 2.70%\nDelta Systems Ltd 2.30%\nEpsilon Foods Ltd 2.10%\nZeta Finance Ltd 2.10%\nEta Motors Ltd 2.10%\nTheta Chemicals Ltd 2.00%\nIota Services Ltd 2.00%\nKappa Health Ltd 2.00%\nLambda Products Ltd 1.90%\nMu Technologies Ltd 1.90%\nNu Finance Ltd 1.80%\nXi Industries Ltd 1.80%\nOmicron Foods Ltd 1.80%\nPi Capital Ltd 1.70%\nRho Motors Ltd 1.70%\nSigma Labs Ltd 1.70%\nTau Services Ltd 1.60%\nUpsilon Systems Ltd 1.60%\nPhi Industries Ltd 1.60%\nChi Bank Ltd 1.50%\nPsi Pharma Ltd 1.50%\nOmega Foods Ltd 1.50%\nAster Finance Ltd 1.40%\nBirch Motors Ltd 1.40%\nCedar Systems Ltd 1.40%\nDune Industries Ltd 1.30%\nElm Services Ltd 1.30%\nFir Products Ltd 1.30%
+EDELWEISS MUTUAL FUND | AUGUST 2026'''
+        parsed=edelweiss_top30_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(len(parsed['positions']),30)
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions'][:10]),24.20,places=2)
+        self.assertIsNone(edelweiss_top30_portfolio(text.replace('Top 10 stocks@ : 24.20%','Top 10 stocks@ : 19.99%')))
+
+    def test_edelweiss_factsheet_saves_top30_as_partial_only(self):
+        from tracker import disclosures
+        text='''Edelweiss Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+Data as on August 31, 2026
+Top 30 Holdings
+Top 10 stocks@ : 24.20%
+Company Name Allocation
+Alpha Industries Ltd 3.50%\nBeta Bank Ltd 3.40%\nGamma Pharma Ltd 2.70%\nDelta Systems Ltd 2.30%\nEpsilon Foods Ltd 2.10%\nZeta Finance Ltd 2.10%\nEta Motors Ltd 2.10%\nTheta Chemicals Ltd 2.00%\nIota Services Ltd 2.00%\nKappa Health Ltd 2.00%\nLambda Products Ltd 1.90%\nMu Technologies Ltd 1.90%\nNu Finance Ltd 1.80%\nXi Industries Ltd 1.80%\nOmicron Foods Ltd 1.80%\nPi Capital Ltd 1.70%\nRho Motors Ltd 1.70%\nSigma Labs Ltd 1.70%\nTau Services Ltd 1.60%\nUpsilon Systems Ltd 1.60%\nPhi Industries Ltd 1.60%\nChi Bank Ltd 1.50%\nPsi Pharma Ltd 1.50%\nOmega Foods Ltd 1.50%\nAster Finance Ltd 1.40%\nBirch Motors Ltd 1.40%\nCedar Systems Ltd 1.40%\nDune Industries Ltd 1.30%\nElm Services Ltd 1.30%\nFir Products Ltd 1.30%'''
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Edelweiss Small Cap Fund',
+                                            'https://www.edelweissmf.com/factsheet.pdf','edel-top30')
+        self.assertGreaterEqual(count,30)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Edelweiss Small Cap Fund' AND hash='edel-top30'")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='edel-top30')")['n'],30)
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund

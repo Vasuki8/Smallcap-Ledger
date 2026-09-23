@@ -210,7 +210,10 @@ def factsheet_pdf(content,family,url,h):
     for page in reader.pages:
         text=page.extract_text() or ''
         owned=owns_page(text,family)
-        full=None
+        full=None;partial=None
+        if family=='Edelweiss Small Cap Fund':
+            from .report_parser import edelweiss_top30_portfolio
+            partial=edelweiss_top30_portfolio(text)
         if family=='Pgim India Small Cap Fund':
             from .report_parser import pgim_complete_portfolio
             full=pgim_complete_portfolio(text)
@@ -229,7 +232,7 @@ def factsheet_pdf(content,family,url,h):
             if not full:
                 layout_text=page.extract_text(extraction_mode='layout') or ''
                 if layout_text!=text:full=boi_complete_portfolio(layout_text)
-        if not owned and not full:continue
+        if not owned and not full and not partial:continue
         facts=page_facts(text,family) if owned else []
         if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
             from .report_parser import layout_aum
@@ -239,6 +242,9 @@ def factsheet_pdf(content,family,url,h):
         count+=len(facts)
         if full:
             portfolio(family,full['day'],full['positions'],True,url,h);count+=len(full['positions'])
+            continue
+        if partial:
+            portfolio(family,partial['day'],partial['positions'],False,url,h);count+=len(partial['positions'])
             continue
         positions=equity_positions(text,family)
         if positions and facts:
