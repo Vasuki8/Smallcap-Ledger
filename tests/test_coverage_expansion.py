@@ -343,6 +343,34 @@ Scheme Category: Small Cap Fund'''
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Small Cap Fund','Large Cap Fund',1)))
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
 
+    def test_boi_official_fund_page_saves_dated_partial_top_holdings_and_benchmark(self):
+        from tracker.amc_metrics import parse_page
+        html=b'''<html><head><title>Bank of India Small Cap Fund</title></head><body>
+        <h1>Bank of India Small Cap Fund</h1>
+        <div>The above Riskometer is based on the scheme portfolio as on 30th June, 2026.</div>
+        <div>Benchmark Riskometer : NIFTY Smallcap 250 TRI (Tier 1)</div>
+        <h2>Top 10 Portfolio Holdings</h2>
+        <table><tr><th>Portfolio Details</th><th>% to Net Assets</th></tr>
+        <tr><td>TREPS / Reverse Repo Investments</td><td>6.2%</td></tr>
+        <tr><td>Sky Gold And Diamonds Limited</td><td>2.8%</td></tr>
+        <tr><td>City Union Bank Limited</td><td>2.5%</td></tr>
+        <tr><td>Wockhardt Limited</td><td>2.4%</td></tr>
+        <tr><td>Quality Power Electrical Eqp Ltd</td><td>2.3%</td></tr>
+        <tr><td>Computer Age Management Services Limited</td><td>2.1%</td></tr>
+        <tr><td>Arvind Limited</td><td>2.0%</td></tr>
+        <tr><td>Shreeji Shipping Global Limited</td><td>2.0%</td></tr>
+        <tr><td>Sterlite Technologies Limited</td><td>2.0%</td></tr>
+        <tr><td>PG Electroplast Limited</td><td>1.9%</td></tr></table>
+        </body></html>'''
+        url='https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund'
+        saved=parse_page(html,'Bank Of India Small Cap Fund',url,'boi-page')
+        self.assertEqual(saved,10)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund' AND hash='boi-page'")
+        self.assertEqual(snap,{'as_of':'2026-06-30','complete':0})
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='boi-page')")['n'],10)
+        bench=db.one("SELECT value,as_of FROM metrics WHERE family='Bank Of India Small Cap Fund' AND metric='benchmark' AND hash='boi-page'")
+        self.assertEqual(bench,{'value':'NIFTY Smallcap 250 TRI','as_of':'2026-06-30'})
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
