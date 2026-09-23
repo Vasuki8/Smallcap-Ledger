@@ -800,6 +800,44 @@ As on April 30, 2026'''
         self.assertIsNone(quant_top10_portfolio(text.replace('Grand Total 100.00','Grand Total 99.00')))
         self.assertIsNone(quant_top10_portfolio(text.replace('quant Small Cap Fund','quant Mid Cap Fund',1)))
 
+
+    def test_union_complete_portfolio_reconciles_all_published_assets(self):
+        from tracker.report_parser import union_complete_portfolio
+        equities=[(f'Company {i} Ltd.',4.90) for i in range(1,20)]
+        equities.append(('Bank of Maharashtra',5.57))
+        rows='\\n'.join(f'{name} {weight:.2f}%' for name,weight in equities)
+        text=f'''(Small Cap Fund - An Open Ended Equity Scheme predominantly investing in Small Cap stocks)
+Data as on July 31, 2026
+Union
+SMALL CAP FUND
+Date of allotment
+10 June 2014
+Benchmark Index
+BSE 250 SmallCap Index (TRI)
+Industry/Company/Issuer % to Net Assets
+Portfolio
+BANKS 98.67%
+{rows}
+Equity Shares 98.67%
+TREASURY BILLS 0.04%
+91 DAY T-BILL 0.04%
+Sovereign 0.04%
+Triparty Repo, Cash, Cash Equivalents & 1.29%
+Net Current Assets
+Grand Total 100.00%
+Union Mutual Fund - Registration No. MF/066/11/01
+No. of Stocks 20 251'''
+        parsed=union_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-07-31')
+        self.assertEqual(len(parsed['positions']),22)
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions'] if x['asset_type']=='Equity'),98.67,places=2)
+        self.assertEqual(parsed['positions'][-2]['asset_type'],'Debt')
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertIsNone(union_complete_portfolio(text.replace('No. of Stocks 20','No. of Stocks 21')))
+        self.assertIsNone(union_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
+        self.assertIsNone(union_complete_portfolio(text.replace('Union\\nSMALL CAP FUND','Union\\nMID CAP FUND',1)))
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
