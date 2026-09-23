@@ -205,6 +205,17 @@ Month End AUM: Rs. 100 Cr''')
         self.assertNotIn("'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf',\n        }",source)
         self.assertIn("rows=[row for row in rows if row['url'] in current_catalog]",source)
 
+    def test_v51_targets_current_groww_monthly_portfolio(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v51'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Groww Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Quant Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Groww Small Cap Fund','https://example.com/portfolio.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("amc_discovery.discover('Groww')",source)
+        self.assertIn("snap['as_of']>='2026-08-31' and snap['positions']>=20",source)
+
     def test_v50_supersedes_both_complete_refresh_batches(self):
         from tracker import amc_reports
         expected={
@@ -375,6 +386,21 @@ Month End AUM: Rs. 100 Cr''')
                   VALUES(?,?,?,?,?,?)""",(family,'2026-08-31',1,url,'retained',db.now()))
             self.assertTrue(amc_reports.should_reprocess_existing(family,url,'retained'))
             self.assertFalse(amc_reports.should_reprocess_existing(family,'https://files.hdfcfund.com/old.pdf','retained'))
+
+    def test_groww_discovery_prefers_latest_monthly_workbook(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <a href="https://assets-netstorage.growwmf.in/portfolio/Monthly-Portfolio-July-31-2026.xlsx">Monthly Portfolio- July 31 2026.xlsx</a>
+        <a href="https://assets-netstorage.growwmf.in/portfolio/Monthly-Portfolio-Aug-31-2026.xlsx">Monthly Portfolio- Aug 31 2026.xlsx</a>
+        <a href="https://assets-netstorage.growwmf.in/portfolio/Fortnightly-Portfolio-Sep-15-2026.xlsx">Fortnightly Portfolio- Sep 15 2026.xlsx</a>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Groww'))
+        self.assertEqual(rows,[(
+            'Groww Small Cap Fund',
+            'https://assets-netstorage.growwmf.in/portfolio/Monthly-Portfolio-Aug-31-2026.xlsx',
+            'Monthly Portfolio- Aug 31 2026.xlsx')])
 
     def test_quant_statutory_discovery_prefers_monthly_portfolio_files(self):
         from tracker.amc_discovery import discover
