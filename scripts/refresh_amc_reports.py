@@ -24,6 +24,12 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
+        current_catalog={
+            'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
+            'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf',
+        }
+        rows=[row for row in rows if row['url'] in current_catalog]
     source_rows=json.loads((ROOT/'tracker/sources.json').read_text())
     # Thin split restores omit historical source binaries during normal runs.
     # Parser upgrades materialize only originals that can actually be read by
