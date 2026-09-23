@@ -33,7 +33,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v43':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v44':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v45':frozenset({'Union Small Cap Fund'}),
-    'amc-reports-2026-09-v46':frozenset({'Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Samco Small Cap Fund','Tata Small Cap Fund','The Wealth Company Small Cap Fund','UTI Small Cap Fund'}),
+    'amc-reports-2026-09-v46':frozenset({'Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','Invesco India Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Samco Small Cap Fund','Tata Small Cap Fund','The Wealth Company Small Cap Fund','UTI Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
