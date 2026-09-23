@@ -44,7 +44,10 @@ def extract(content,family,url,h):
     if family=='Pgim India Small Cap Fund':
         if not any(same_fund_title(x.get_text(' ',strip=True),family) for x in soup.select('h1')):return 0
         m=re.search(r'\bAUM\s+as on\s+('+DATE+r')\s*₹\s*([\d,.]+)\s*Cr',text,re.I)
-        if m:put('aum',number(m.group(2)),dated(m.group(1)))
+        day=dated(m.group(1)) if m else None
+        if m:put('aum',number(m.group(2)),day)
+        b=re.search(r'\bBenchmark\s+(Nifty\s+Smallcap\s+250\s*-\s*TRI)\b',text,re.I)
+        if b and day:put('benchmark','Nifty Smallcap 250 - TRI',day,unit='Reported')
         # Unqualified "Expense Ratio" cannot establish TER versus BER.
         return saved
     header=soup.select_one('table')
@@ -60,6 +63,8 @@ def extract(content,family,url,h):
     if m:put('base_expense_ratio',number(m.group(1)),day,'Direct','% p.a.')
     m=re.search(r'BASE EXPENSE RATIO\s*#?\s*:\s*([\d.]+)%',text,re.I)
     if m and re.search(r'Growth Plan Rs.*Direct - Growth Plan Rs',text):put('base_expense_ratio',number(m.group(1)),day,'Regular','% p.a.')
+    m=re.search(r'\bBENCHMARK\s*:?\s*(Nifty\s+Smallcap\s+250)\b',text,re.I)
+    if m:put('benchmark','Nifty Smallcap 250',day,unit='Reported')
     for table in soup.select('table'):
         if re.search(r'Company Name.*No\. of shares.*Market Value.*% of',table.get_text(' ',strip=True)):
             positions=franklin_positions(table)
@@ -70,11 +75,15 @@ def extract(content,family,url,h):
 def baroda(content,family,url,h):
     soup=BeautifulSoup(content,'html.parser')
     if not soup.title or re.sub(r'[^a-z]','',soup.title.get_text().lower())!='bbnppsmallcapfund':return 0
-    text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True));count=0
+    text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True));count=0;report_day=None
     for label,key in [('Monthly AAUM','average_aum'),('AUM','aum')]:
         m=re.search(r'\b'+label+r'## As on\s+('+DATE+r')\s*:\s*₹\s*([\d,.]+)\s*Crores',text,re.I)
         if m and dated(m.group(1)) and 0<number(m.group(2))<10_000_000:
-            db.metric(family,'All',key,dated(m.group(1)),number(m.group(2)),'INR crore',url,h);count+=1
+            report_day=dated(m.group(1))
+            db.metric(family,'All',key,report_day,number(m.group(2)),'INR crore',url,h);count+=1
+    b=re.search(r'Benchmark\s+Index\s*\(AMFI\s+Tier\s+1\)\s*(Nifty\s+Small\s+Cap\s+250\s+TRI)',text,re.I)
+    if b and report_day:
+        db.metric(family,'All','benchmark',report_day,'Nifty Smallcap 250 TRI','Reported',url,h);count+=1
     return count
 
 
