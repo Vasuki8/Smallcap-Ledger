@@ -284,8 +284,11 @@ def factsheet_pdf(content,family,url,h):
                 layout_text=page.extract_text(extraction_mode='layout') or ''
                 if layout_text!=text:full=union_complete_portfolio(layout_text)
         if family=='Bajaj Finserv Small Cap Fund':
-            from .report_parser import bajaj_complete_portfolio
+            from .report_parser import bajaj_complete_portfolio,bajaj_top10_portfolio
             full=bajaj_complete_portfolio(text)
+            if not full and page_index+1<len(reader.pages):
+                next_text=reader.pages[page_index+1].extract_text() or ''
+                partial=bajaj_top10_portfolio(text,next_text)
         if family=='Bank Of India Small Cap Fund':
             from .report_parser import boi_multicolumn_complete_portfolio,boi_complete_portfolio
             full=boi_multicolumn_complete_portfolio(text) or boi_complete_portfolio(text)
