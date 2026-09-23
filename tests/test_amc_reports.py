@@ -205,6 +205,16 @@ Month End AUM: Rs. 100 Cr''')
         self.assertNotIn("'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf',\n        }",source)
         self.assertIn("rows=[row for row in rows if row['url'] in current_catalog]",source)
 
+    def test_v52_reparses_groww_after_scheme_code_fix(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v52'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Groww Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Quant Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Groww Small Cap Fund','https://example.com/portfolio.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v52'",source)
+
     def test_v51_targets_current_groww_monthly_portfolio(self):
         from tracker import amc_reports
         with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v51'):
