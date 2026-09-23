@@ -271,6 +271,12 @@ def factsheet_pdf(content,family,url,h):
             if not partial:
                 layout_text=page.extract_text(extraction_mode='layout') or ''
                 if layout_text!=text:partial=quant_top10_portfolio(layout_text)
+        if family=='Trustmf Small Cap Fund':
+            from .report_parser import trustmf_named_portfolio
+            partial=trustmf_named_portfolio(text)
+            if not partial:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:partial=trustmf_named_portfolio(layout_text)
         if family=='Union Small Cap Fund':
             from .report_parser import union_complete_portfolio
             full=union_complete_portfolio(text)
