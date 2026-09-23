@@ -187,6 +187,14 @@ Month End AUM: Rs. 100 Cr''')
             self.assertFalse(amc_reports.parser_upgrade_applies('Bandhan Small Cap Fund'))
             self.assertFalse(amc_reports.parser_upgrade_applies('Union Small Cap Fund'))
 
+    def test_august_refresh_catalog_has_current_hsbc_and_pgim_sources(self):
+        rows=json.loads((Path(__file__).resolve().parents[1]/'tracker'/'report_catalog.json').read_text())
+        urls={(row['family'],row['url']) for row in rows}
+        self.assertIn(('HSBC Small Cap Fund',
+            'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf'),urls)
+        self.assertIn(('Pgim India Small Cap Fund',
+            'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf'),urls)
+
     def test_v48_targets_only_live_benchmark_pages(self):
         from tracker import amc_reports
         expected={'Bank Of India Small Cap Fund','Invesco India Small Cap Fund','Samco Small Cap Fund'}
