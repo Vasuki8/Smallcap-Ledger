@@ -1061,6 +1061,32 @@ Investment Objective'''
                           'unit':'Observed on official fund page'})
         self.assertEqual(parse_page(html.replace('Small Cap Fund','Mid Cap Fund'),f,u,'wrong'),0)
 
+    def test_invesco_live_page_retains_dated_benchmark(self):
+        from tracker.amc_metrics import parse_page
+        f='Invesco India Small Cap Fund'
+        u='https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp'
+        html='''<html><body><h1>Invesco India Small Cap Fund</h1>
+        <p>To generate capital appreciation by investing predominantly in stocks of smallcap companies.</p>
+        <p>AUM as on 31 August 2026 ₹15,799.46 Cr</p>
+        <p>Benchmark As per AMFI Tier I Benchmark i.e. BSE 250 Smallcap TRI</p>
+        </body></html>'''
+        self.assertEqual(parse_page(html,f,u,'invesco-live'),1)
+        self.assertEqual(db.one("SELECT value,as_of FROM metrics WHERE family=? AND metric='benchmark'",(f,)),
+                         {'value':'BSE 250 Smallcap TRI','as_of':'2026-08-31'})
+
+    def test_samco_live_page_retains_dated_benchmark(self):
+        from tracker.amc_metrics import parse_page
+        f='Samco Small Cap Fund'
+        u='https://www.samcomf.com/mutual-funds/samco-small-cap-fund-direct-growth/scdgg'
+        html='''<html><body><h1>Samco Small Cap Fund</h1>
+        <p>An open-ended equity scheme predominantly investing in small cap stocks</p>
+        <p>Cumulative performance (as on 31/08/2026)</p>
+        <p>Benchmark: Nifty Small Cap 250 TRI Additional Benchmark: Nifty 50 Total Returns Index</p>
+        </body></html>'''
+        self.assertEqual(parse_page(html,f,u,'samco-live'),1)
+        self.assertEqual(db.one("SELECT value,as_of FROM metrics WHERE family=? AND metric='benchmark'",(f,)),
+                         {'value':'Nifty Smallcap 250 TRI','as_of':'2026-08-31'})
+
     def test_tata_combined_page_stores_only_explicit_top10_as_partial(self):
         from tracker.amc_metrics import parse_page
         url='https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html'
