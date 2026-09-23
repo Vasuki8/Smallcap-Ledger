@@ -22,6 +22,22 @@ Month End AUM: Rs. 100 Cr''')
         self.assertEqual(bench,[{'metric':'benchmark','value':'Nifty Smallcap 250 TRI','plan':'All',
                                  'as_of':'2026-08-31','unit':'Reported'}])
 
+    def test_benchmark_label_variants_cover_total_return_and_small_cap_spacing(self):
+        f='Test Small Cap Fund'
+        boi=self.report(f,'''Portfolio as on August 31, 2026
+BENCHMARK^
+NIFTY Smallcap 250 Total Return Index (TRI) (Tier 1)
+Month End AUM: Rs. 100 Cr''')
+        facts=page_facts(boi,f)
+        self.assertEqual([x['value'] for x in facts if x['metric']=='benchmark'],
+                         ['NIFTY Smallcap 250 Total Return Index (TRI)'])
+        samco=self.report(f,'''Data as on August 31, 2026
+Benchmark: Nifty Small Cap 250 TRI Additional Benchmark: Nifty 50 TRI
+Month End AUM: Rs. 100 Cr''')
+        facts=page_facts(samco,f)
+        self.assertEqual([x['value'] for x in facts if x['metric']=='benchmark'],
+                         ['Nifty Small Cap 250 TRI'])
+
     def test_scheme_benchmark_bse_label_is_trimmed_to_index_name(self):
         f='Test Small Cap Fund'
         text=self.report(f,'''Portfolio as on August 31, 2026
