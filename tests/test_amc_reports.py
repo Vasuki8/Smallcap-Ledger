@@ -1,6 +1,7 @@
 import io
 import json
 import unittest
+from datetime import date
 from pathlib import Path
 from unittest.mock import patch
 from types import SimpleNamespace
@@ -578,6 +579,20 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertTrue(rows[0][1].endswith('Franklin-Small-Cap-as-on-August-31-2026.xlsx'))
         self.assertEqual(len(rows),2)
         self.assertFalse(any('July-31-2026' in row[1] for row in rows))
+
+    def test_hsbc_discovery_uses_recent_official_monthly_factsheets(self):
+        from tracker import amc_discovery
+        with patch('tracker.amc_discovery.date') as fake:
+            fake.today.return_value=date(2026,9,23)
+            rows=list(amc_discovery.discover('HSBC'))
+        self.assertEqual(rows,[
+            ('HSBC Small Cap Fund',
+             'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
+             'The Asset - August 2026'),
+            ('HSBC Small Cap Fund',
+             'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-july-2026.pdf',
+             'The Asset - July 2026'),
+        ])
 
     def test_pgim_discovery_uses_official_monthly_factsheet_paths(self):
         from tracker import amc_discovery
