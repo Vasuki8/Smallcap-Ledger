@@ -36,8 +36,7 @@ def run():
           JOIN document_versions v ON v.document_id=d.id
           LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
           WHERE d.origin='AMC' AND e.hash IS NULL''',(amc_reports.PARSER_VERSION,))
-        extensions=tuple(x.lower() for x in amc_reports.REPROCESS_EXISTING_EXTENSIONS)
-        needed.update(row['hash'] for row in pending if urlparse(row['url']).path.lower().endswith(extensions))
+        needed.update(row['hash'] for row in pending if amc_reports.should_reprocess_existing(row['family'],row['url']))
         from scripts.github_state import materialize_hashes
         restored=materialize_hashes(needed)
         print(f'Materialized {restored} archived source files needed for parser upgrade',flush=True)
