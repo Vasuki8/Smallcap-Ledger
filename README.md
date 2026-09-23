@@ -329,3 +329,58 @@ Other categories can be added by extending AMFI classification, category selecti
 Portfolio holdings are now intentionally **non-historical** in the structured database and website. For each fund, Smallcap Ledger retains parsed holdings only for the **current portfolio month and the immediately previous calendar month**. Older parsed portfolio snapshots/holdings are pruned automatically; the original AMC documents and hashes remain in the source archive for audit evidence.
 
 Where an AMC portfolio workbook or page explicitly publishes security quantity, the holding stores that quantity. The current portfolio API/site compares it with the immediately previous month and exposes **previous quantity, change in shares/units, previous weight, and weight change**. Missing quantities remain null and are never estimated. The Portfolio tab no longer offers historical snapshot browsing; the prior month exists only to calculate changes.
+
+### Backend handoff — 2026-09-23
+
+Treat the repository, `COVERAGE-AS-OF.json`, and `deployment/update-status.json` as the source of truth before continuing. Do not restart from the older portfolio counts elsewhere in this README.
+
+Current production-verified coverage as of 2026-09-23:
+
+| Data measure | Coverage |
+| --- | ---: |
+| Funds | **36 / 36** |
+| AUM | **36 / 36** |
+| Direct fee | **36 / 36** |
+| Any parsed portfolio | **29 / 36** |
+| Complete portfolio | **19 / 36** |
+| Current portfolio | **19 / 36** |
+| Current + complete | **13 / 36** |
+| Partial latest portfolio | **10 / 36** |
+| Benchmark identity | **21 / 36** |
+
+Important backend progress already completed today:
+
+- **Bank Of India Small Cap Fund** now has a production-backed complete portfolio parser reconstructed from the retained real four-column AMC factsheet layout. Main implementation commit: `f0012c1b9e855f3e2bc64fb7d9a5ac28bd2b3144`.
+- **JM Small Cap Fund** now has a reconciled current Top-25 partial portfolio from its retained official factsheet. Production parser work landed through `8b9be924f965629c094539127d6e5db39b9d5e43` and the real-layout fix `9234406bf53bbc5d52f52676630abe786808bbdc`.
+- **ICICI Prudential Small Cap Fund** now has a fresh named partial portfolio recovered across adjacent pages of its retained official factsheet. Main implementation commit: `25dc8a08e7bb77b989899036f1ae0873bd110c87`.
+- Risk-factor-only PDFs are no longer allowed to masquerade as factsheet coverage. Retained documents were reclassified through `38d48cd090566e8af8b395d72a4bcb2e2d0bbded` and `e6ed16388173f0b7f9ceffb2ad2e9b37bb59c825`.
+- Structured portfolio storage intentionally retains only the current portfolio month plus the immediately previous calendar month; original AMC documents/hashes remain in the historical source archive.
+- Publication remains fail-closed: Python syntax, parser upgrades, tests, generated-site validation, archive save, and Pages deployment must all pass before a new website is published.
+
+Remaining portfolio gaps from the latest coverage audit:
+
+- **Bajaj Finserv Small Cap Fund** — source unavailable.
+- **Bandhan Small Cap Fund** — source page is public but the downloadable portfolio attachment is hidden by the CMS.
+- **Groww Small Cap Fund** — retained document still does not expose a supported unambiguous portfolio table.
+- **Quant Small Cap Fund** — official document is known but not archived successfully.
+- **Tata Small Cap Fund** — official portfolio page does not currently expose a usable downloadable file to the collector.
+- **TRUSTMF Small Cap Fund** — source checked, portfolio file not exposed.
+- **Union Small Cap Fund** — known Small Cap factsheet URL still fails archival retrieval.
+
+Latest development batch:
+
+- PR #74 / commit `e5d8ded85a3b28b37fe36d8fdc7a398e948de44e` added a **Bandhan WordPress attachment resolver**. It resolves the exact dated Small Cap monthly portfolio posts through Bandhan's official read-only WordPress REST metadata, follows each post's `wp:attachment` relation, prefers attached XLSX/XML over PDF, and still requires the existing downstream ownership/parser checks before storing holdings.
+- Runs **#144** and **#145** failed only in the new synthetic Bandhan regression fixture; neither failed run published an archive or website. PR #75 / commit `a236078daa9f5b3fadcfe422b7d037dfb99d7f95` isolated the fixture from the temporary source registry, and PR #77 / commit `58f5d15fd1ce62c1c3028b8c7c544b2f68285089` added the fixture's missing JSON import.
+- Run **#146** then passed the AMC upgrade, **125-test** gate, site generation, site validation, archive save, and status/coverage recording. The resulting production coverage remained **29/36** and Bandhan remained `source_not_exposing_portfolio`: the live Bandhan CMS/WordPress metadata still did not expose a usable portfolio attachment to the collector.
+- **Do not spend another immediate iteration on Bandhan page/attachment selectors.** The source path is now audited and tested; move to a more tractable remaining source and revisit Bandhan only with new official endpoint evidence.
+
+Recommended next work:
+
+1. Start with **Groww Small Cap Fund**. Use the retained/official monthly Groww factsheets rather than the undated current product-page holdings. Build or repair a real-layout portfolio parser only when exact scheme identity, report date, equity/TREPS/cash totals, and grand total can be reconciled. Official 2026 monthly factsheets have exposed detailed Small Cap holdings and explicit totals, making Groww the strongest next recovery candidate.
+2. After Groww, prioritize **Union / Quant** archival retrieval: both have known official document URLs but currently fail archival materialization.
+3. Then revisit **Tata / TRUST** structured portfolio discovery, followed by Bajaj source access.
+4. Bandhan remains a valid later target, but only return to it when a new official downloadable attachment/API endpoint can be demonstrated.
+5. Preserve the standing rules: official AMC/AMFI evidence only, no estimated values, exact reporting dates, source URL/hash retention, conflicts preserved, and no fund marked complete without full reconciliation.
+
+This is a backend/data handoff. Do not start a new UI pass unless explicitly requested.
+
