@@ -236,6 +236,9 @@ def factsheet_pdf(content,family,url,h):
         text=page.extract_text() or ''
         owned=owns_page(text,family)
         full=None;partial=None
+        if family=='Aditya Birla Sun Life Small Cap Fund':
+            from .report_parser import absl_complete_portfolio
+            full=absl_complete_portfolio(text)
         if family=='Edelweiss Small Cap Fund':
             from .report_parser import edelweiss_top30_portfolio
             partial=edelweiss_top30_portfolio(text)

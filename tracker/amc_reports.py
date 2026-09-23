@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v27'
+PARSER_VERSION='amc-reports-2026-09-v28'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -15,6 +15,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v25':frozenset({'Bandhan Small Cap Fund','Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','ICICI Prudential Small Cap Fund','Invesco India Small Cap Fund','Jm Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Samco Small Cap Fund','Sundaram Small Cap Fund','Tata Small Cap Fund','The Wealth Company Small Cap Fund','Trustmf Small Cap Fund','UTI Small Cap Fund','Union Small Cap Fund'}),
     'amc-reports-2026-09-v26':frozenset({'Abakkus Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','HDFC Small Cap Fund','Helios Small Cap Fund','Motilal Oswal Small Cap Fund','Nippon India Small Cap Fund','Quantum Small Cap Fund','Samco Small Cap Fund','Sundaram Small Cap Fund','The Wealth Company Small Cap Fund'}),
     'amc-reports-2026-09-v27':frozenset({'Edelweiss Small Cap Fund'}),
+    'amc-reports-2026-09-v28':frozenset({'Aditya Birla Sun Life Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -38,6 +39,10 @@ def should_reprocess_existing(family,url,h=None):
         # only this fund's official PDFs so the Top-30 parser can advance the
         # rolling portfolio from July to the August month-end.
         return family=='Edelweiss Small Cap Fund' and path.endswith('.pdf')
+    if PARSER_VERSION=='amc-reports-2026-09-v28':
+        # ABSL's already archived monthly factsheet contains a full reconciled
+        # Small Cap portfolio page. Re-open only ABSL PDFs for this parser bump.
+        return family=='Aditya Birla Sun Life Small Cap Fund' and path.endswith('.pdf')
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
     # v25 only changes strict benchmark-label parsing. Re-open retained PDF
