@@ -844,6 +844,26 @@ No. of Stocks 20 251'''
         self.assertIsNone(union_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
         self.assertIsNone(union_complete_portfolio(text.replace('Union\nSMALL CAP FUND','Union\nMID CAP FUND',1)))
 
+
+    def test_tata_combined_page_stores_only_explicit_top10_as_partial(self):
+        from tracker.amc_metrics import parse_page
+        url='https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html'
+        rows=''.join(f'<tr><td>{i}</td><td>Company {i} Limited</td><td>{3.0+i/10:.2f}%</td></tr>' for i in range(1,11))
+        html=f'''<html><head><title>Tata Small Cap Fund</title></head><body>
+        <h1>Tata Small Cap Fund</h1>
+        <div>As on 31st August 2026</div>
+        <div>Type of Scheme: An equity scheme with focus towards small cap stocks</div>
+        <div>Benchmark Name Nifty Smallcap 250 TRI</div>
+        <table><tr><th>Top 10 Holdings</th><th></th><th>% to Net Assets</th></tr>{rows}</table>
+        </body></html>'''.encode()
+        self.assertEqual(parse_page(html,'Tata Small Cap Fund',url,'tata-hash'),10)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Tata Small Cap Fund'")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings")['n'],10)
+        self.assertEqual(parse_page(html.replace(b'Tata Small Cap Fund',b'Tata Mid Cap Fund'),
+                                    'Tata Small Cap Fund',url,'wrong'),0)
+
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
