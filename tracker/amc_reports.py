@@ -7,6 +7,17 @@ from urllib.parse import urlparse
 from . import db
 
 PARSER_VERSION='amc-reports-2026-09-v24'
+# Parser upgrades are full-catalog by default. Versions listed here changed
+# only specific family parsers and can safely avoid replaying unrelated source
+# binaries. A future unlisted version automatically falls back to all families.
+PARSER_UPGRADE_FAMILIES={
+    'amc-reports-2026-09-v24':frozenset({'Edelweiss Small Cap Fund'}),
+}
+
+def parser_upgrade_applies(family):
+    targets=PARSER_UPGRADE_FAMILIES.get(PARSER_VERSION)
+    return targets is None or family in targets
+
 # v7 changes only spreadsheet portfolio interpretation; do not reparse hundreds
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
@@ -99,6 +110,7 @@ def reprocess_archived():
       LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
       WHERE d.origin='AMC' AND e.hash IS NULL ORDER BY d.last_seen DESC''',(PARSER_VERSION,))
     for row in rows:
+        if not parser_upgrade_applies(row['family']):continue
         if exclusion_reason(row['family'],row['url']):continue
         if classify('',row['url']) not in ('factsheet','portfolio','scheme document'):continue
         if not should_reprocess_existing(row['family'],row['url']):continue
