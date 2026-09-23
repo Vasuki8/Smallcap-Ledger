@@ -87,6 +87,23 @@ class CoverageExpansionTests(unittest.TestCase):
             self.assertEqual(disclosures.factsheet_pdf(b'%PDF','Pgim India Small Cap Fund','https://www.pgimindia.com/test.pdf','hash'),2)
         self.assertEqual(db.one("SELECT complete FROM portfolios WHERE family='Pgim India Small Cap Fund'")['complete'],1)
 
+    def test_pdf_parser_persists_validated_benchmark_without_generic_page_owner(self):
+        from tracker import disclosures
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:'LIC parser benchmark fixture')
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        parsed={'day':'2026-07-31','benchmark':'Nifty Smallcap 250 - TRI','positions':[
+            {'name':'Example Holdings Limited','isin':None,'sector':'Test','weight':95.0,'asset_type':'Equity'},
+            {'name':'Cash & Other Receivables','isin':None,'sector':None,'weight':5.0,'asset_type':'Cash and net current assets'}]}
+        with patch('pypdf.PdfReader',return_value=reader), \
+             patch('tracker.report_parser.owns_page',return_value=False), \
+             patch('tracker.report_parser.lic_complete_portfolio',return_value=parsed):
+            count=disclosures.factsheet_pdf(b'%PDF','LIC Mf Small Cap Fund',
+                                            'https://www.licmf.com/factsheet.pdf','lic-benchmark')
+        self.assertEqual(count,3)
+        self.assertEqual(db.one("SELECT value,as_of,source,hash FROM metrics WHERE metric='benchmark'"),
+                         {'value':'Nifty Smallcap 250 - TRI','as_of':'2026-07-31',
+                          'source':'https://www.licmf.com/factsheet.pdf','hash':'lic-benchmark'})
+
     def test_pgim_complete_portfolio_reconciles_equity_debt_and_cash(self):
         from tracker.report_parser import pgim_complete_portfolio
         issuers='\n'.join([f'Example Holdings {i} Limited {97.26/20:.3f}' for i in range(1,21)])
