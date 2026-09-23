@@ -6,6 +6,7 @@ document collector discovers subsequent reports from their registered AMC pages.
 from pathlib import Path
 import os
 import json
+import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
