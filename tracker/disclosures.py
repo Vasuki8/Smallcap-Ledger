@@ -232,13 +232,18 @@ def factsheet_pdf(content,family,url,h):
     if reader.is_encrypted or len(reader.pages)>400:return 0
     from .report_parser import page_facts,owns_page,equity_positions
     count=0
-    for page in reader.pages:
+    for page_index,page in enumerate(reader.pages):
         text=page.extract_text() or ''
         owned=owns_page(text,family)
         full=None;partial=None
         if family=='Aditya Birla Sun Life Small Cap Fund':
             from .report_parser import absl_complete_portfolio
             full=absl_complete_portfolio(text)
+        if family=='ICICI Prudential Small Cap Fund' and re.search(r'(?:Date\s+of\s+inception|Inception/Allotment\s+date)\s*:\s*18-Oct-(?:07|2007)',text,re.I):
+            from .report_parser import icici_named_portfolio
+            if page_index+1<len(reader.pages):
+                next_text=reader.pages[page_index+1].extract_text() or ''
+                partial=icici_named_portfolio(text,next_text)
         if family=='Jm Small Cap Fund':
             from .report_parser import jm_top25_portfolio
             partial=jm_top25_portfolio(text)
