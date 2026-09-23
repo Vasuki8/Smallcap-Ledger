@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T15:37:43+00:00",
+  "built_at": "2026-09-23T16:53:04+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -810,7 +810,13 @@
         "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-08-31",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf"
+      },
       "fee": {
         "metric": "base_expense_ratio",
         "as_of": "2026-08-31",
@@ -819,37 +825,16 @@
         "plan": "Direct",
         "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf"
       },
-      "portfolio": null,
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+        "complete": 0,
+        "positions": 83
+      },
       "portfolio_complete": false,
-      "portfolio_fresh": false,
+      "portfolio_fresh": true,
       "official_publications": 1,
-      "portfolio_gap": {
-        "reason": "facts_only_no_portfolio",
-        "document": {
-          "title": "Complete",
-          "kind": "factsheet",
-          "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
-          "last_seen": "2026-09-23T03:15:23+00:00",
-          "hash": "0a492e7e08bacbc030edb89674ee89b28ed48898153e73f4603a75e421b7a63d",
-          "observed_at": "2026-09-09T19:59:35+00:00"
-        },
-        "extraction": {
-          "status": "parsed",
-          "records": 2,
-          "detail": "2 dated facts; 0 holdings (portfolio may be partial)",
-          "checked_at": "2026-09-23T01:03:04+00:00",
-          "parser_version": "amc-reports-2026-09-v23",
-          "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf"
-        },
-        "source_page": {
-          "amc_match": "ICICI",
-          "url": "https://www.icicipruamc.com/",
-          "label": "Fund house",
-          "last_checked": "2026-09-22T21:54:43+00:00",
-          "status": "Limited",
-          "detail": "Page archived; no automatically readable fund documents found"
-        }
-      }
+      "portfolio_gap": null
     },
     {
       "family": "Invesco India Small Cap Fund",
@@ -1828,7 +1813,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T15:37:38+00:00",
+          "last_seen": "2026-09-23T16:52:36+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1847,7 +1832,7 @@
   "portfolio_gap_reasons": {
     "source_unavailable": 1,
     "source_not_exposing_portfolio": 3,
-    "facts_only_no_portfolio": 2,
+    "facts_only_no_portfolio": 1,
     "unsupported_document_layout": 1,
     "document_not_archived": 2
   },
@@ -1857,12 +1842,12 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 27,
+    "portfolio": 28,
     "portfolio_complete": 18,
-    "portfolio_fresh": 17,
+    "portfolio_fresh": 18,
     "portfolio_fresh_complete": 12,
-    "portfolio_partial": 9,
-    "benchmark_identity": 20
+    "portfolio_partial": 10,
+    "benchmark_identity": 21
   },
   "notes": [
     "Coverage means at least one dated record, not necessarily the latest reporting month.",

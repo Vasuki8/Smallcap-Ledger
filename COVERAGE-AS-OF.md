@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-23T15:37:43+00:00
+Prepared: 2026-09-23T16:53:04+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **27 / 36 any**, **18 complete**, **17 current**, **12 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **20 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **28 / 36 any**, **18 complete**, **18 current**, **12 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -25,7 +25,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | HDFC Small Cap Fund | ₹ 41,888.73 · 2026-09-21 | 0.77% TER · 2026-09-16 | 87 positions · 2026-08-31 · complete · current | BSE 250 SmallCap (Total Returns Index) · 2026-09-22 | 17 |
 | HSBC Small Cap Fund | ₹ 19,048.21 · 2026-09-21 | 0.56% BER · 2026-08-31 | 110 positions · 2026-07-31 · complete · older | Nifty Smallcap 250 TRI · 2026-08-31 | 2 |
 | Helios Small Cap Fund | ₹ 1,881.88 · 2026-09-21 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | NIFTY Small Cap 250 · 2026-08-31 | 165 |
-| ICICI Prudential Small Cap Fund | ₹ 9,820.40 · 2026-09-21 | 0.7% BER · 2026-08-31 | Gap | Gap | 1 |
+| ICICI Prudential Small Cap Fund | ₹ 9,820.40 · 2026-09-21 | 0.7% BER · 2026-08-31 | 83 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2026-08-31 | 1 |
 | Invesco India Small Cap Fund | ₹ 16,277.78 · 2026-09-21 | 0.4% BER · 2026-08-31 | 69 positions · 2026-08-31 · partial · current | Gap | 2 |
 | Iti Small Cap Fund | ₹ 3,707.13 · 2026-09-21 | 0.86% TER · 2026-09-21 | 87 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 9 |
 | Jm Small Cap Fund | ₹ 958.96 · 2026-09-21 | 0.59% BER · 2026-08-31 | 25 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2026-06-30 | 4 |
@@ -55,7 +55,6 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Bank Of India Small Cap Fund | Facts parsed; no holdings | factsheet: FACTSHEET AUGUST 2026 · archived 2026-09-22 | parsed · 3 records · 3 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Groww Small Cap Fund | Unsupported document layout | factsheet: GMF Schemes Applicable risk factors.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
-| ICICI Prudential Small Cap Fund | Facts parsed; no holdings | factsheet: Complete · archived 2026-09-09 | parsed · 2 records · 2 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Quant Small Cap Fund | Document known but not archived | factsheet: a | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Tata Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
