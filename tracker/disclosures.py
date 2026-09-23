@@ -262,6 +262,9 @@ def factsheet_pdf(content,family,url,h):
         if family=='HSBC Small Cap Fund':
             from .report_parser import hsbc_complete_portfolio
             full=hsbc_complete_portfolio(text)
+        if family=='Groww Small Cap Fund':
+            from .report_parser import groww_reconciled_portfolio
+            partial=groww_reconciled_portfolio(text)
         if family=='Bajaj Finserv Small Cap Fund':
             from .report_parser import bajaj_complete_portfolio
             full=bajaj_complete_portfolio(text)
