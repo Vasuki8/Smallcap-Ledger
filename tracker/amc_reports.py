@@ -20,6 +20,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v30':frozenset({'Jm Small Cap Fund'}),
     'amc-reports-2026-09-v31':frozenset({'ICICI Prudential Small Cap Fund'}),
     'amc-reports-2026-09-v32':frozenset({'Bank Of India Small Cap Fund'}),
+    'amc-reports-2026-09-v33':frozenset({'Groww Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
