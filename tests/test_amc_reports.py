@@ -91,6 +91,27 @@ class ReportParserTests(unittest.TestCase):
             'Samco Small Cap Fund',
             'https://www.samcomf.com/portfolio.xlsx'))
 
+    def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <div>Monthly Portfolio August 2026
+          <a data-file="/system/files/2026-09/Tata_Monthly_Portfolio_August_2026.xlsx">Excel</a>
+          <a href="/system/files/2026-09/Tata_Monthly_Portfolio_August_2026.pdf">PDF</a>
+        </div>
+        <div>Monthly Portfolio July 2026
+          <a href="/system/files/2026-08/Tata_Monthly_Portfolio_July_2026.xlsx">Excel</a>
+        </div>
+        <div>Fortnightly Portfolio August 2026
+          <a href="/system/files/2026-09/Tata_Fortnightly_Portfolio_August_2026.xlsx">Excel</a>
+        </div>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'hash','text/html')):
+            rows=list(discover('Tata'))
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0][0],'Tata Small Cap Fund')
+        self.assertEqual(rows[0][1],
+            'https://www.tatamutualfund.com/system/files/2026-09/Tata_Monthly_Portfolio_August_2026.xlsx')
+
     def test_quant_statutory_discovery_prefers_monthly_portfolio_files(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
