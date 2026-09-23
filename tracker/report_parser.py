@@ -167,7 +167,7 @@ def page_facts(text,family):
         if m:
             for plan,v in zip(('Regular','Direct'),m.groups()):add('base_expense_ratio',float(v),plan,unit='% p.a.')
     for pattern,key in [
-        (r'(?:^|\n)\s*(?:#\s*)?(?:(?:AMFI\s+Tier\s*1|Primary|Scheme|First\s+Tier)\s+)?Benchmark(?:\s+Index|\s+Name)?\s*[:#\-\n ]\s*([^\n]+)','benchmark'),
+        (r'(?:^|\n)\s*(?:#\s*)?(?:(?:AMFI\s+Tier\s*1|Primary|Scheme|First\s+Tier)\s+)?Benchmark(?:\s+Index|\s+Name)?\s*[:#^*\-\n ]+\s*([^\n]+)','benchmark'),
         (r'(?:^|\n)(?:Date of Allotment|Inception Date)\s*[:\n]\s*([^\n]+)','fund_launch'),
     ]:
         m=re.search(pattern,text,re.I)
@@ -177,7 +177,7 @@ def page_facts(text,family):
                 # Keep only the explicitly labelled index name. Factsheets often
                 # append riskometer/footnote text on the same extracted line.
                 recognized=[
-                    r'(?:Nifty|NIFTY)\s+Smallcap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
+                    r'(?:Nifty|NIFTY)\s+Small\s*Cap\s+250(?:\s+(?:Total\s+Returns?\s+Index|Index))?(?:\s*\(TRI\)|\s+TRI)?',
                     r'(?:S&P\s+)?BSE\s+250\s+Small\s*Cap(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
                     r'(?:S&P\s+)?BSE\s+Small\s*Cap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
                     r'CRISIL[^\n:;|]{1,100}?(?:TRI|Index)',
