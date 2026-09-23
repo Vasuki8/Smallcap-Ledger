@@ -21,6 +21,7 @@ PAGES=[
     ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
     ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
     ('Bank of India','Bank Of India Small Cap Fund','https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund'),
+    ('JM Financial','Jm Small Cap Fund','https://www.jmfinancialmf.com/products/Equity/JM-Small-Cap-Fund/J647/Direct-Plan-Growth-Option'),
     ('Sundaram','Sundaram Small Cap Fund','https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json'),
 ]
 
@@ -252,6 +253,58 @@ def boi_top_holdings(soup,page_text,url,h):
     if b:db.metric('Bank Of India Small Cap Fund','All','benchmark',day,'NIFTY Smallcap 250 TRI','Reported',url,h)
     return len(positions)
 
+
+def jm_top_holdings(soup,page_text,url,h):
+    """Retain JM's explicitly dated visible holdings as a partial snapshot."""
+    from .disclosures import portfolio
+    # The official product page labels the holdings block with a reporting date.
+    d=re.search(r'As\s+on\s*[-–:]?\s*(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s*,?\s*\d{4})\s+Holdings\b',page_text,re.I)
+    if not d:
+        d=re.search(r'Holdings\b.*?As\s+on\s*[-–:]?\s*(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s*,?\s*\d{4})',page_text,re.I)
+    if not d:return 0
+    day=report_date('as on '+d.group(1))
+    if not day or day>date.today().isoformat():return 0
+
+    positions=[]
+    # Prefer a literal holdings table if the server-rendered response exposes it.
+    for table in soup.select('table'):
+        tx=re.sub(r'\s+',' ',table.get_text(' ',strip=True))
+        if not re.search(r'holdings|%.*(?:NAV|holding)',tx,re.I):continue
+        rows=[]
+        for tr in table.select('tr'):
+            cells=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in tr.find_all(['th','td'],recursive=False)]
+            if len(cells)<2:continue
+            raw=cells[-1]
+            if not re.fullmatch(r'\d+(?:\.\d+)?\s*%?',raw):continue
+            name=next((x for x in cells[:-1] if x),'').strip()
+            if not name or re.search(r'holding|instrument|sector|%.*NAV',name,re.I):continue
+            weight=number(raw)
+            if not 0<weight<20:return 0
+            rows.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+        if 5<=len(rows)<=30:
+            positions=rows;break
+
+    # Current JM product pages can flatten the first visible holdings into text.
+    if not positions:
+        block=re.search(r'Holdings\s+(.*?)(?:See\s+All\s+Holdings|Portfolio\s+As\s+on|Performance\b)',page_text,re.I)
+        if block:
+            body=block.group(1)
+            for m in re.finditer(r'([A-Za-z][A-Za-z0-9&().,/\-\' ]{2,100}?)\s+(\d+(?:\.\d+)?)%',body):
+                name=re.sub(r'\s+',' ',m.group(1)).strip(' -|')
+                if re.search(r'Select holding sector|Current Allocation|Equity|Debt/Cash',name,re.I):continue
+                weight=float(m.group(2))
+                if not 0<weight<20:return 0
+                positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+
+    if not 5<=len(positions)<=30:return 0
+    if len({x['name'].lower() for x in positions})!=len(positions):return 0
+    total=sum(x['weight'] for x in positions)
+    if not 5<=total<=98:return 0
+    portfolio('Jm Small Cap Fund',day,positions,False,url,h)
+    if re.search(r'\bNifty\s+Smallcap\s+250\s+TRI\b',page_text,re.I):
+        db.metric('Jm Small Cap Fund','All','benchmark',day,'Nifty Smallcap 250 TRI','Reported',url,h)
+    return len(positions)
+
 def kotak_portfolio(soup,day,url,h):
     """Parse Kotak's full monthly Small Cap factsheet portfolio by reconciliation."""
     from .disclosures import portfolio
@@ -325,6 +378,11 @@ def parse_page(content,family,url,h):
             actual.path.rstrip('/').lower()=='/products/equity-funds/bank-of-india-small-cap-fund' and
             re.search(r'\bBank\s+Of\s+India\s+Small\s+Cap\s+Fund\b',visible,re.I) and
             re.search(r'predominantly\s+investing\s+in\s+small\s+cap\s+stocks',visible,re.I))
+    if family=='Jm Small Cap Fund':
+        visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
+        exact=exact or bool(
+            actual.path.lower().startswith('/products/equity/jm-small-cap-fund/') and
+            re.search(r'\bJM\s+Small\s+Cap\s+Fund\b',visible,re.I))
     if family=='Mahindra Manulife Small Cap Fund' and '/digital-factsheet/' in url:
         exact=exact or any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
     if family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
@@ -337,6 +395,7 @@ def parse_page(content,family,url,h):
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
     if family=='Bank Of India Small Cap Fund':return boi_top_holdings(soup,text,url,h)
+    if family=='Jm Small Cap Fund':return jm_top_holdings(soup,text,url,h)
     if kotak_monthly:
         day=report_date(text)
         if not day or day>date.today().isoformat():return 0

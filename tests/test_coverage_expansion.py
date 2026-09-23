@@ -343,6 +343,28 @@ Scheme Category: Small Cap Fund'''
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Small Cap Fund','Large Cap Fund',1)))
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
 
+    def test_jm_official_page_saves_dated_partial_holdings_and_benchmark(self):
+        from tracker.amc_metrics import parse_page
+        html=b'''<html><body><h1>JM Small Cap Fund</h1>
+        <div>Benchmark Index Nifty Smallcap 250 TRI</div>
+        <div>As on - 31st Aug, 2026</div>
+        <h3>Holdings</h3>
+        <div>Garware Hi-Tech Films Limited 4.60%</div>
+        <div>Navin Fluorine International Limited 3.20%</div>
+        <div>Acutaas Chemicals Limited 2.90%</div>
+        <div>Five-Star Business Finance Limited 2.80%</div>
+        <div>Fusion Finance Limited 2.70%</div>
+        <button>See All Holdings</button>
+        <div>Portfolio As on - 31st Aug, 2026 Current Allocation Equity 98.39 % Debt/Cash 1.61 %</div>
+        </body></html>'''
+        url='https://www.jmfinancialmf.com/products/Equity/JM-Small-Cap-Fund/J647/Direct-Plan-Growth-Option'
+        saved=parse_page(html,'Jm Small Cap Fund',url,'jm-page')
+        self.assertEqual(saved,5)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Jm Small Cap Fund' AND hash='jm-page'")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
+        bench=db.one("SELECT value,as_of FROM metrics WHERE family='Jm Small Cap Fund' AND metric='benchmark' AND hash='jm-page'")
+        self.assertEqual(bench,{'value':'Nifty Smallcap 250 TRI','as_of':'2026-08-31'})
+
     def test_boi_official_page_accepts_flattened_top_holdings_without_heading_tag(self):
         from tracker.amc_metrics import parse_page
         html=b'''<html><head><title>BOI Mutual Fund</title></head><body>
