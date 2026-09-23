@@ -322,3 +322,10 @@ The AUM coverage gap is now closed. The highest-value remaining data task is che
 For operational reliability, consider adding a regression/health check that fails or prominently warns when `latest_nav_date` is materially behind the latest available AMFI small-cap NAV date. This would detect a future collection or publication failure before the website remains stale for many days.
 
 Other categories can be added by extending AMFI classification, category selection in the API/UI, and benchmark/source mappings. This edition enables only small-cap equity.
+
+
+### Rolling portfolio storage and share changes — 2026-09-23
+
+Portfolio holdings are now intentionally **non-historical** in the structured database and website. For each fund, Smallcap Ledger retains parsed holdings only for the **current portfolio month and the immediately previous calendar month**. Older parsed portfolio snapshots/holdings are pruned automatically; the original AMC documents and hashes remain in the source archive for audit evidence.
+
+Where an AMC portfolio workbook or page explicitly publishes security quantity, the holding stores that quantity. The current portfolio API/site compares it with the immediately previous month and exposes **previous quantity, change in shares/units, previous weight, and weight change**. Missing quantities remain null and are never estimated. The Portfolio tab no longer offers historical snapshot browsing; the prior month exists only to calculate changes.
