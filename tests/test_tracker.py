@@ -342,11 +342,13 @@ class TrackerTests(unittest.TestCase):
 
     def test_partial_portfolio_is_not_a_sale_signal(self):
         h1=db.archive(b'first portfolio','text/csv');h2=db.archive(b'second portfolio','text/csv')
-        disclosures.portfolio('Test Small Cap Fund','2024-01-31',[{'name':'Alpha','weight':4},{'name':'Beta','weight':3}],False,'https://example.com/p1',h1)
-        sid=disclosures.portfolio('Test Small Cap Fund','2024-02-29',[{'name':'Alpha','weight':5}],False,'https://example.com/p2',h2)
+        family='Partial Comparison Small Cap Fund'
+        disclosures.portfolio(family,'2024-01-31',[{'name':'Alpha','weight':4},{'name':'Beta','weight':3}],False,'https://example.com/p1',h1)
+        sid=disclosures.portfolio(family,'2024-02-29',[{'name':'Alpha','weight':5}],False,'https://example.com/p2',h2)
         r=self.client.get('/api/portfolios/'+str(sid)).json()
         beta=next(x for x in r['changes'] if x['name']=='Beta')
         self.assertEqual(beta['type'],'Left disclosed list')
+        self.assertIsNone(beta['share_change'])
 
     def test_rejected_metric_import_does_not_partially_write(self):
         before=db.one('SELECT COUNT(*) n FROM metrics')['n']
