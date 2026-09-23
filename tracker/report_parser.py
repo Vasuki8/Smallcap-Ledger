@@ -298,7 +298,7 @@ def union_complete_portfolio(text):
     positions.append({'name':'Triparty Repo, Cash, Cash Equivalents & Net Current Assets',
                       'isin':None,'sector':None,'weight':cash,
                       'asset_type':'Cash and net current assets'})
-    return {'day':day,'positions':positions}
+    return {'day':day,'positions':positions,'benchmark':'BSE 250 SmallCap Index (TRI)'}
 
 def quant_top10_portfolio(text):
     """Parse quant Small Cap's explicitly published Top-10 portfolio as partial."""
@@ -436,7 +436,7 @@ def groww_reconciled_portfolio(text):
     positions.append(repo_position)
     positions.append({'name':'TREPS/Reverse Repo/Net current assets','isin':None,'sector':None,
                       'weight':cash,'asset_type':'Cash and net current assets'})
-    return {'day':day,'positions':positions}
+    return {'day':day,'positions':positions,'benchmark':'Nifty Smallcap 250 Index'}
 
 
 
@@ -502,7 +502,7 @@ def bajaj_top10_portfolio(summary_page, holdings_page):
     positions.append({'name':'Equity Options','isin':None,'sector':None,
                       'weight':options,'asset_type':'Derivative'})
     if abs(sum(x['weight'] for x in positions)-100)>.03:return None
-    return {'day':day,'positions':positions}
+    return {'day':day,'positions':positions,'benchmark':'BSE 250 SmallCap TRI'}
 
 def bajaj_complete_portfolio(text):
     """Fully reconcile Bajaj Finserv Small Cap's published monthly portfolio."""
@@ -697,7 +697,7 @@ def lic_complete_portfolio(text):
     if abs((equity_total+cash)-grand)>.03:return None
     positions.append({'name':'Cash & Other Receivables','isin':None,'sector':None,'weight':cash,'asset_type':'Cash and net current assets'})
     if len({(x['name'],x['asset_type']) for x in positions})!=len(positions):return None
-    return {'day':day,'positions':positions}
+    return {'day':day,'positions':positions,'benchmark':'Nifty Smallcap 250 - TRI'}
 
 
 def pgim_complete_portfolio(text):
