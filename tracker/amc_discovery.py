@@ -70,6 +70,42 @@ def discover(amc):
         raw,_,_=read('https://www.boimf.in/AjaxService.asmx/GetDocuments',body)
         rows=json.loads(json.loads(raw)['d'])['Documents']
         for row in rows[:3]:yield 'Bank Of India Small Cap Fund',row['FolderUrl'],row['DocName']
+    elif amc=='Franklin':
+        family='Franklin India Small Cap Fund'
+        page='https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        candidates=[]
+        for url,title in providers.candidate_links(soup,page).items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            ext=re.search(r'\.(xlsx?|xls|pdf)(?:[?#]|$)',url,re.I)
+            if not ext:continue
+            if not re.search(r'portfolio|monthly|as[ _-]*on',combined,re.I):continue
+            day=None
+            for pattern in (
+                r'as[ _-]*on[ _-]*(\d{1,2})[ _-]+([A-Za-z]+)[ _-]+(20\d{2})',
+                r'as[ _-]*on[ _-]*([A-Za-z]+)[ _-]+(\d{1,2})[,_ -]+(20\d{2})',
+                r'(\d{1,2})[._/-](\d{1,2})[._/-](20\d{2})',
+            ):
+                m=re.search(pattern,combined,re.I)
+                if not m:continue
+                try:
+                    if pattern.startswith('as[ _-]*on[ _-]*([A'):
+                        day=datetime.strptime(f'{m.group(2)} {m.group(1)} {m.group(3)}','%d %B %Y').date()
+                    elif '[._/-]' in pattern:
+                        day=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
+                    else:
+                        day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
+                except ValueError:day=None
+                if day:break
+            if day and day<=date.today():
+                kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
+                candidates.append((day,priority,url,title))
+        if not candidates:raise ValueError('No official Franklin monthly portfolio download discovered')
+        newest=max(x[0] for x in candidates)
+        pool=[x for x in candidates if x[0]==newest]
+        for _,_,url,title in sorted(pool,key=lambda x:x[1],reverse=True)[:2]:
+            yield family,url,title or f'Monthly portfolio as on {newest.isoformat()}'
     elif amc=='Union':
         # The Union fund-house homepage is slow, but the Small Cap factsheet is
         # published at a stable first-party URL. Fetch it directly every run;
@@ -400,5 +436,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Bank of India','Baroda','Canara','Franklin','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
