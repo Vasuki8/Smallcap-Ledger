@@ -266,8 +266,8 @@ def factsheet_pdf(content,family,url,h):
             from .report_parser import bajaj_complete_portfolio
             full=bajaj_complete_portfolio(text)
         if family=='Bank Of India Small Cap Fund':
-            from .report_parser import boi_complete_portfolio
-            full=boi_complete_portfolio(text)
+            from .report_parser import boi_multicolumn_complete_portfolio,boi_complete_portfolio
+            full=boi_multicolumn_complete_portfolio(text) or boi_complete_portfolio(text)
             if not full:
                 layout_text=page.extract_text(extraction_mode='layout') or ''
                 if layout_text!=text:full=boi_complete_portfolio(layout_text)
