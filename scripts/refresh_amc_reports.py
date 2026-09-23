@@ -174,26 +174,6 @@ def run():
         else:
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::Groww current portfolio not recovered; latest is {detail}',flush=True)
-            # One-run bounded diagnostic for the newly archived workbook layout.
-            # Never OCR or infer values; print only cells already present in the
-            # official structured file so the source-specific parser can be fixed.
-            try:
-                groww_fetch=db.one("""SELECT a.path,f.url FROM fetches f JOIN archives a ON a.hash=f.hash
-                  WHERE f.status='ok' AND f.url LIKE '%groww%' AND f.url LIKE '%.xlsx%'
-                  ORDER BY f.id DESC LIMIT 1""")
-                if groww_fetch:
-                    import io,openpyxl
-                    body=(db.DATA/groww_fetch['path']).read_bytes()
-                    book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
-                    print('GROWW_XLSX_SOURCE',groww_fetch['url'],flush=True)
-                    for sheet in book.worksheets:
-                        rows=[[c.value for c in row] for row in list(sheet.iter_rows(max_row=45))]
-                        prefix=' '.join(str(v) for row in rows for v in row if v is not None)
-                        if 'small cap' in prefix.lower():
-                            print('GROWW_XLSX_SHEET',sheet.title,repr(rows[:45]),flush=True)
-                    book.close()
-            except Exception as exc:
-                print(f"::warning::Groww workbook diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
         ok.append(current)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v44':
         # One-time targeted recovery for TRUSTMF. The normal nightly collector
