@@ -149,7 +149,7 @@ def run():
                 detail='none' if not snap else f'{snap["as_of"]}, complete={snap["complete"]}'
                 print(f'::warning::{family}: current complete portfolio not recovered; latest is {detail}',flush=True)
             ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v51':
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v51','amc-reports-2026-09-v52'):
         from tracker import amc_discovery
         family='Groww Small Cap Fund';attempted=0
         try:
