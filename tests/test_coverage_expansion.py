@@ -214,6 +214,25 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(db.one('SELECT COUNT(*) n FROM document_versions')['n'],0)
         self.assertEqual(db.one("SELECT COUNT(*) n FROM metrics WHERE metric='aum'")['n'],1)
 
+    def test_reviewed_benchmark_identity_has_source_note_without_fake_hash(self):
+        from tracker import reviewed_reports
+        r=next(x for x in reviewed_reports.reports()
+               if any(f['metric']=='benchmark' for f in x['facts']))
+        with db.connect() as conn:
+            conn.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(1,?,?,?,?,?,?)',
+                         (r['family'],r['family'],r['amc'],'Direct','Growth','test'))
+        reviewed_reports.apply();reviewed_reports.apply()
+        fact=db.one("SELECT * FROM metrics WHERE family=? AND metric='benchmark'",(r['family'],))
+        expected=next(x for x in r['facts'] if x['metric']=='benchmark')
+        self.assertEqual(fact['value'],expected['value'])
+        self.assertEqual(fact['as_of'],r['as_of'])
+        self.assertEqual(fact['hash'],'')
+        annotated=reviewed_reports.annotate(fact)
+        self.assertIn('Reviewed official report',annotated['source_note'])
+        self.assertEqual(annotated['reviewed_at'],r['reviewed_at'])
+        self.assertEqual(db.one('SELECT COUNT(*) n FROM document_versions')['n'],0)
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM metrics WHERE metric='benchmark'")['n'],1)
+
     def test_baroda_monthly_average_cannot_become_month_end(self):
         f='Baroda Bnp Paribas Small Cap Fund';u='https://www.barodabnpparibasmf.in/efactsheet/Jul2026/Innerpages/Small-cap.html'
         html='<title>BBNPP Small Cap Fund</title><p>Monthly AAUM## As on July 31, 2026 : ₹ 1,278.20 Crores</p><p>Benchmark Index (AMFI Tier 1) Nifty Small Cap 250 TRI</p>'
