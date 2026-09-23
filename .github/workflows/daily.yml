@@ -58,6 +58,11 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
+      - name: Inspect retained Quant Small Cap factsheet layout
+        if: github.event_name == 'push'
+        continue-on-error: true
+        timeout-minutes: 6
+        run: uv run --frozen python scripts/inspect_quant_layout.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
