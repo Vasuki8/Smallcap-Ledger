@@ -11,6 +11,13 @@ PARSER_VERSION='amc-reports-2026-09-v22'
 # of historical PDFs during the one-time upgrade.
 REPROCESS_EXISTING_EXTENSIONS=('.xls','.xlsx')
 
+def should_reprocess_existing(family,url):
+    """Keep broad historical reparsing narrow; opt in verified PDF families explicitly."""
+    path=urlparse(url).path.lower()
+    if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
+    return family=='Bank Of India Small Cap Fund' and path.endswith('.pdf')
+
+
 
 def monthly_sources(today=None):
     today=today or date.today()
@@ -94,7 +101,7 @@ def reprocess_archived():
     for row in rows:
         if exclusion_reason(row['family'],row['url']):continue
         if classify('',row['url']) not in ('factsheet','portfolio','scheme document'):continue
-        if REPROCESS_EXISTING_EXTENSIONS and not urlparse(row['url']).path.lower().endswith(REPROCESS_EXISTING_EXTENSIONS):continue
+        if not should_reprocess_existing(row['family'],row['url']):continue
         try:
             extract((db.DATA/row['path']).read_bytes(),row['family'],row['url'],row['hash']);checked+=1
         except Exception as e:gaps.append(row['family']+': '+str(e)[:120])
