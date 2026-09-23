@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T21:03:36+00:00",
+  "built_at": "2026-09-23T21:05:49+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -329,7 +329,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-07-31",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.barodabnpparibasmf.in/efactsheet/Jul2026/Innerpages/Small-cap.html"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -525,7 +531,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-08-31",
+        "value": "Nifty Smallcap 250",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -565,7 +577,13 @@
       "ter_observed": null,
       "base_expense_ratio": null,
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-05-31",
+        "value": "Nifty Smallcap 250 Index",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-04-30",
@@ -1003,7 +1021,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=3&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-05-31",
+        "value": "Nifty Smallcap 250 - TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/06/lic-mf-factsheet-31st-may-2026.pdf"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -1245,7 +1269,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=4&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-08-31",
+        "value": "Nifty Smallcap 250 - TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-21",
@@ -1539,7 +1569,13 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
       },
       "expense_ratio": null,
-      "benchmark": null,
+      "benchmark": {
+        "as_of": "2026-08-31",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported",
+        "plan": "All",
+        "source": "https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html"
+      },
       "fee": {
         "metric": "ter",
         "as_of": "2026-09-20",
@@ -1736,7 +1772,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T21:03:31+00:00",
+          "last_seen": "2026-09-23T21:04:54+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1767,7 +1803,7 @@
     "portfolio_fresh": 21,
     "portfolio_fresh_complete": 13,
     "portfolio_partial": 15,
-    "benchmark_identity": 21
+    "benchmark_identity": 27
   },
   "notes": [
     "Coverage means at least one dated record, not necessarily the latest reporting month.",
