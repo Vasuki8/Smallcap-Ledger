@@ -1044,6 +1044,22 @@ Investment Objective'''
         self.assertIsNone(union_complete_portfolio(text.replace('364 DAY T-BILL 0.07%','364 DAY T-BILL 0.03%')))
         self.assertIsNone(union_complete_portfolio(text.replace('No. of Stocks 20 250','No. of Stocks 21 250')))
 
+    def test_wealth_company_page_retains_observed_benchmark_identity(self):
+        from tracker.amc_metrics import parse_page
+        f='The Wealth Company Small Cap Fund'
+        u='https://www.wealthcompanyamc.in/our-nfos/nfo/the-wealth-company-small-cap-fund/'
+        html='''<html><head><title>The Wealth Company Small Cap Fund</title></head><body>
+        <h1>The Wealth Company Small Cap Fund</h1>
+        <p>Type: An open ended equity scheme predominantly investing in small cap stocks</p>
+        <p>Benchmark: NIFTY SmallCap 250 index (TRI)</p>
+        <p>Benchmark Risk-o-meter NIFTY SmallCap 250 index (TRI)</p>
+        </body></html>'''
+        self.assertEqual(parse_page(html,f,u,'wealth-benchmark'),1)
+        self.assertEqual(db.one("SELECT value,as_of,unit FROM metrics WHERE family=? AND metric='benchmark'",(f,)),
+                         {'value':'NIFTY SmallCap 250 TRI','as_of':date.today().isoformat(),
+                          'unit':'Observed on official fund page'})
+        self.assertEqual(parse_page(html.replace('Small Cap Fund','Mid Cap Fund'),f,u,'wrong'),0)
+
     def test_tata_combined_page_stores_only_explicit_top10_as_partial(self):
         from tracker.amc_metrics import parse_page
         url='https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html'
