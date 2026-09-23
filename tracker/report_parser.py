@@ -162,13 +162,23 @@ def page_facts(text,family):
         if m:
             for plan,v in zip(('Regular','Direct'),m.groups()):add('base_expense_ratio',float(v),plan,unit='% p.a.')
     for pattern,key in [
-        (r'(?:^|\n)(?:AMFI Tier 1 |Primary )?Benchmark(?: Index| Name)?\s*[:\n ]\s*([^\n]+)','benchmark'),
+        (r'(?:^|\n)\s*(?:#\s*)?(?:(?:AMFI\s+Tier\s*1|Primary|Scheme|First\s+Tier)\s+)?Benchmark(?:\s+Index|\s+Name)?\s*[:#\-\n ]\s*([^\n]+)','benchmark'),
         (r'(?:^|\n)(?:Date of Allotment|Inception Date)\s*[:\n]\s*([^\n]+)','fund_launch'),
     ]:
         m=re.search(pattern,text,re.I)
         if m:
             v=m.group(1).strip()
-            if key=='benchmark' and re.search(r'Nifty|BSE|CRISIL',v,re.I):add(key,v,unit='Reported')
+            if key=='benchmark':
+                # Keep only the explicitly labelled index name. Factsheets often
+                # append riskometer/footnote text on the same extracted line.
+                recognized=[
+                    r'(?:Nifty|NIFTY)\s+Smallcap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
+                    r'(?:S&P\s+)?BSE\s+250\s+SmallCap(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
+                    r'(?:S&P\s+)?BSE\s+SmallCap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
+                    r'CRISIL[^\n:;|]{1,100}?(?:TRI|Index)',
+                ]
+                index=next((x.group(0).strip() for pattern in recognized if (x:=re.search(pattern,v,re.I))),None)
+                if index:add(key,index,unit='Reported')
             elif key=='fund_launch' and dated(v):add(key,dated(v),unit='Reported')
     if family=='SBI Small Cap Fund' and re.search(r'Benchmark BSE 250 Small Cap\s+Index TRI',text):
         for fact in out:
