@@ -1289,7 +1289,11 @@ Aerospace & Defense 0.86%
 PARAS DEFENCE AND SPACE TECHNOLOGIES LTDSmall Cap 0.59%
 Data Patterns (India) Limited Small Cap 0.27%
 Industrial Products 98.12%
-Alpha Industrial Limited Small Cap 98.12%
+Alpha Industrial Limited Small Cap 19.624%
+Beta Industrial Limited Small Cap 19.624%
+Gamma Industrial Limited Small Cap 19.624%
+Delta Industrial Limited Small Cap 19.624%
+Epsilon Industrial Limited Small Cap 19.624%
 Cash Equivalent 1.02%
 TREPS* 1.09%
 Net Current Assets: -0.07%
