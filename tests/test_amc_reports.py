@@ -108,24 +108,25 @@ Month End AUM: Rs. 100 Cr''')
 
     def test_v24_parser_upgrade_targets_only_edelweiss(self):
         from tracker import amc_reports
-        self.assertEqual(amc_reports.PARSER_VERSION,'amc-reports-2026-09-v24')
-        self.assertTrue(amc_reports.parser_upgrade_applies('Edelweiss Small Cap Fund'))
-        self.assertFalse(amc_reports.parser_upgrade_applies('Bank Of India Small Cap Fund'))
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v24'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Edelweiss Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Bank Of India Small Cap Fund'))
         source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
         self.assertIn("rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]",source)
         self.assertIn("amc_reports.parser_upgrade_applies(row['family'])",source)
 
     def test_boi_pdf_is_opted_into_targeted_historical_reprocess(self):
-        from tracker.amc_reports import should_reprocess_existing
-        self.assertTrue(should_reprocess_existing(
-            'Bank Of India Small Cap Fund',
-            'https://www.boimf.in/docs/factsheet-august-2026.pdf?x=1'))
-        self.assertFalse(should_reprocess_existing(
-            'Edelweiss Small Cap Fund',
-            'https://www.edelweissmf.com/factsheet-september-2026.pdf'))
-        self.assertTrue(should_reprocess_existing(
-            'Samco Small Cap Fund',
-            'https://www.samcomf.com/portfolio.xlsx'))
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v24'):
+            self.assertTrue(amc_reports.should_reprocess_existing(
+                'Bank Of India Small Cap Fund',
+                'https://www.boimf.in/docs/factsheet-august-2026.pdf?x=1'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Edelweiss Small Cap Fund',
+                'https://www.edelweissmf.com/factsheet-september-2026.pdf'))
+            self.assertTrue(amc_reports.should_reprocess_existing(
+                'Samco Small Cap Fund',
+                'https://www.samcomf.com/portfolio.xlsx'))
 
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover

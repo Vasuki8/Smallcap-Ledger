@@ -173,8 +173,8 @@ def page_facts(text,family):
                 # append riskometer/footnote text on the same extracted line.
                 recognized=[
                     r'(?:Nifty|NIFTY)\s+Smallcap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
-                    r'(?:S&P\s+)?BSE\s+250\s+SmallCap(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
-                    r'(?:S&P\s+)?BSE\s+SmallCap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
+                    r'(?:S&P\s+)?BSE\s+250\s+Small\s*Cap(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
+                    r'(?:S&P\s+)?BSE\s+Small\s*Cap\s+250(?:\s+Index)?(?:\s*\(TRI\)|\s+TRI)?',
                     r'CRISIL[^\n:;|]{1,100}?(?:TRI|Index)',
                 ]
                 index=next((x.group(0).strip() for pattern in recognized if (x:=re.search(pattern,v,re.I))),None)
