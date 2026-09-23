@@ -451,6 +451,11 @@ def parse_page(content,family,url,h):
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
     if tata_combined:
         saved=tata_top10_holdings(soup,text,url,h)
+        d=re.search(r'\bAs\s+on\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4})\b',text,re.I)
+        day=report_date('as on '+d.group(1)) if d else None
+        if saved and day and re.search(r'Benchmark\s+Name\s+Nifty\s+Smallcap\s+250\s+TRI',text,re.I):
+            db.metric(family,'All','benchmark',day,'Nifty Smallcap 250 TRI','Reported',url,h)
+            saved+=1
         return saved
     if family=='Bank Of India Small Cap Fund':return boi_top_holdings(soup,text,url,h)
     if family=='Jm Small Cap Fund':return jm_top_holdings(soup,text,url,h)
