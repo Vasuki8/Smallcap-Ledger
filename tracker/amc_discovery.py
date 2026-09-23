@@ -225,22 +225,22 @@ def discover(amc):
             combined=unquote(url+' '+title)
             ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I)
             if not ext:continue
-            if not re.search(r'portfolio',combined,re.I):continue
-            # Monthly portfolio disclosure only; exclude factsheets/SIDs and
-            # debt-only weekly/fortnightly files.
-            if re.search(r'fortnight|weekly|factsheet|sid|kim',combined,re.I):continue
+            # Require an actual monthly portfolio disclosure, not a notice,
+            # press release, segregated-portfolio announcement or stale document
+            # that merely contains the word "portfolio".
+            if not re.search(r'monthly[\s_%-]*portfolio|portfolio[\s_%-]*monthly',combined,re.I):continue
+            if re.search(r'press\s*release|notice|circular|segregated|fortnight|weekly|factsheet|sid|kim',combined,re.I):continue
             years=[int(x) for x in re.findall(r'20[12]\d',combined)]
             year=max(years,default=0)
             month=max((i for i in range(1,13)
                        if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+            if not year or not month or year<date.today().year-1:continue
             kind=ext.group(1).lower()
             priority=3 if kind in ('xls','xlsx') else 2 if kind=='xml' else 1
             rows.append((year,month,priority,url,title))
         if not rows:raise ValueError('No official Tata monthly portfolio download was exposed by the portfolio page')
-        dated=[r for r in rows if r[0] and r[1]]
-        pool=dated or rows
-        newest=max((r[0],r[1]) for r in pool)
-        chosen=max((r for r in pool if (r[0],r[1])==newest),key=lambda r:r[2])
+        newest=max((r[0],r[1]) for r in rows)
+        chosen=max((r for r in rows if (r[0],r[1])==newest),key=lambda r:r[2])
         yield family,chosen[3],chosen[4] or 'Tata monthly portfolio'
     elif amc=='TRUST':
         url='https://www.trustmf.com/api/api/Trust/GetData'
