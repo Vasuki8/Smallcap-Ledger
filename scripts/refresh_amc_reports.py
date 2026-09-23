@@ -202,33 +202,32 @@ def run():
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
-        # Temporary DOM diagnostic for ABSL's client-rendered portfolio archive.
+        # Temporary ABSL monthly-portfolio endpoint diagnostic. The endpoint is
+        # read from the official Portfolio page rather than guessed.
         try:
             from bs4 import BeautifulSoup
+            from urllib.parse import urljoin
             page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
-            providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
-            nodes=soup.find_all(string=re.compile(r'Monthly\s+Portfolio',re.I))
-            print(f'ABSL_PORTFOLIO_DOM nodes={len(nodes)} bytes={len(raw)}',flush=True)
-            shown=0
-            for node in nodes:
-                text_value=' '.join(str(node).split())
-                if len(text_value)>160:continue
-                parent=node.parent
-                for _ in range(5):
-                    if parent and parent.parent:parent=parent.parent
-                html=str(parent) if parent else str(node)
-                html=re.sub(r'\s+',' ',html).strip()
-                print('ABSL_PORTFOLIO_DOM_NODE '+html[:12000],flush=True)
-                shown+=1
-                if shown>=8:break
-            for tag in soup.find_all(True):
-                attrs=' '.join(f'{k}={" ".join(v) if isinstance(v,list) else v}' for k,v in tag.attrs.items())
-                if re.search(r'portfolio',attrs,re.I) and re.search(r'data-|url|path|api|ajax|endpoint|source',attrs,re.I):
-                    print('ABSL_PORTFOLIO_DOM_ATTR '+tag.name+' '+attrs[:2000],flush=True)
+            item=next((li for li in soup.select('li[data-accordian-api]')
+                       if re.search(r'^Monthly\\s+Portfolio$',li.get_text(' ',strip=True),re.I)),None)
+            if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
+            endpoint=urljoin(page,item.get('data-accordian-api',''))
+            print('ABSL_MONTHLY_ENDPOINT '+endpoint,flush=True)
+            payload,source,mime=providers.fetch(endpoint,max_bytes=8*1024*1024)
+            print(f'ABSL_MONTHLY_RESPONSE bytes={len(payload)} source={source} mime={mime}',flush=True)
+            body=payload.decode('utf-8','ignore')
+            response_soup=BeautifulSoup(payload,'html.parser')
+            found=providers.candidate_links(response_soup,endpoint)
+            print(f'ABSL_MONTHLY_LINKS {len(found)}',flush=True)
+            for url,title in found.items():
+                combined=(url+' '+str(title))
+                if re.search(r'portfolio|small\\s*cap|aug|sep|2026|xlsx?|\\.xls|\\.pdf',combined,re.I):
+                    print('ABSL_MONTHLY_LINK '+url+' :: '+str(title)[:300],flush=True)
+            print('ABSL_MONTHLY_BODY '+re.sub(r'\\s+',' ',body)[:16000],flush=True)
         except Exception as exc:
-            print(f"::warning::ABSL portfolio DOM diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            print(f"::warning::ABSL monthly endpoint diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
