@@ -226,6 +226,9 @@ def factsheet_pdf(content,family,url,h):
         if family=='Bank Of India Small Cap Fund':
             from .report_parser import boi_complete_portfolio
             full=boi_complete_portfolio(text)
+            if not full:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:full=boi_complete_portfolio(layout_text)
         if not owned and not full:continue
         facts=page_facts(text,family) if owned else []
         if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
