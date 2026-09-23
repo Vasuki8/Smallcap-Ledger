@@ -480,6 +480,66 @@ Scheme Category: Small Cap Fund'''
         snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Aditya Birla Sun Life Small Cap Fund' AND hash='absl-full'")
         self.assertEqual(snap,{'as_of':'2026-07-31','complete':1})
 
+    def test_icici_partial_portfolio_reconciles_named_rows_and_disclosed_gap(self):
+        from tracker.report_parser import icici_named_portfolio
+        first=['ICICI Prudential Small Cap Fund',
+               '(An open ended equity scheme predominantly investing in small cap stocks.)',
+               'Date of inception:18-Oct-07.',
+               'Nifty Smallcap 250 TRI (Benchmark)',
+               'Portfolio as on August 31, 2026',
+               'Equity Shares 97.50%']
+        for sector in range(5):
+            first.append(f'Sector {sector+1} 18.00%')
+            for holding in range(5):
+                name=('Issuer Without Suffix' if sector==2 and holding==2
+                      else f'Company {sector+1}-{holding+1} Ltd')
+                first.append(f'{name} 3.60%')
+        second=['Small Cap Fund','Category','Portfolio as on August 31, 2026',
+                'Company/Issuer Rating % to','NAV',
+                'Equity less than 1% of corpus 7.50%',
+                'Short Term Debt and net current assets 2.50%',
+                'Total Net Assets 100.00%']
+        parsed=icici_named_portfolio('\n'.join(first),'\n'.join(second))
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(len(parsed['positions']),25)
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),90.0,places=2)
+        self.assertTrue(any(x['name']=='Issuer Without Suffix' for x in parsed['positions']))
+        self.assertIsNone(icici_named_portfolio(
+            '\n'.join(first),'\n'.join(second).replace('7.50%','6.50%',1)))
+
+    def test_icici_two_page_factsheet_saves_partial_and_benchmark(self):
+        from tracker import disclosures
+        first=['ICICI Prudential Small Cap Fund',
+               '(An open ended equity scheme predominantly investing in small cap stocks.)',
+               'Date of inception:18-Oct-07.',
+               'Nifty Smallcap 250 TRI (Benchmark)',
+               'Portfolio as on August 31, 2026',
+               'Equity Shares 97.50%']
+        for sector in range(5):
+            first.append(f'Sector {sector+1} 18.00%')
+            for holding in range(5):
+                first.append(f'Company {sector+1}-{holding+1} Ltd 3.60%')
+        second=['Small Cap Fund','Category','Portfolio as on August 31, 2026',
+                'Company/Issuer Rating % to','NAV',
+                'Equity less than 1% of corpus 7.50%',
+                'Short Term Debt and net current assets 2.50%',
+                'Total Net Assets 100.00%']
+        pages=[SimpleNamespace(extract_text=lambda *args,**kwargs:'\n'.join(first)),
+               SimpleNamespace(extract_text=lambda *args,**kwargs:'\n'.join(second))]
+        reader=SimpleNamespace(is_encrypted=False,pages=pages)
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(
+                b'%PDF','ICICI Prudential Small Cap Fund',
+                'https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf',
+                'icici-partial')
+        self.assertGreaterEqual(count,25)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='ICICI Prudential Small Cap Fund' AND hash='icici-partial'")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='icici-partial')")['n'],25)
+        benchmark=db.one("SELECT value,as_of FROM metrics WHERE family='ICICI Prudential Small Cap Fund' AND metric='benchmark' AND hash='icici-partial'")
+        self.assertEqual(benchmark,{'value':'Nifty Smallcap 250 TRI','as_of':'2026-08-31'})
+
     def test_jm_top25_reconciles_both_real_pdf_orders(self):
         from tracker.report_parser import jm_top25_portfolio
         rows=[f'Company {i} Limited 2.00' for i in range(1,25)]
