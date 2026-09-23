@@ -24,6 +24,7 @@ PAGES=[
     ('Bank of India','Bank Of India Small Cap Fund','https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund'),
     ('JM Financial','Jm Small Cap Fund','https://www.jmfinancialmf.com/products/Equity/JM-Small-Cap-Fund/J647/Direct-Plan-Growth-Option'),
     ('Sundaram','Sundaram Small Cap Fund','https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json'),
+    ('The Wealth','The Wealth Company Small Cap Fund','https://www.wealthcompanyamc.in/our-nfos/nfo/the-wealth-company-small-cap-fund/'),
 ]
 
 
@@ -458,6 +459,12 @@ def parse_page(content,family,url,h):
             saved+=1
         return saved
     if family=='Bank Of India Small Cap Fund':return boi_top_holdings(soup,text,url,h)
+    if family=='The Wealth Company Small Cap Fund':
+        if re.search(r'\bBenchmark\s*:\s*NIFTY\s+Small\s*Cap\s+250\s+index\s*\(TRI\)',text,re.I):
+            db.metric(family,'All','benchmark',date.today().isoformat(),'NIFTY SmallCap 250 TRI',
+                      'Observed on official fund page',url,h)
+            return 1
+        return 0
     if family=='Jm Small Cap Fund':return jm_top_holdings(soup,text,url,h)
     if kotak_monthly:
         day=report_date(text)
