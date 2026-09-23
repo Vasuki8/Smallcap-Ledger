@@ -61,7 +61,6 @@ jobs:
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
-        continue-on-error: true
         run: uv run --frozen python scripts/refresh_amc_reports.py
       - name: Collect daily data
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
