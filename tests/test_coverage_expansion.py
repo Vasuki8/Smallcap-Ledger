@@ -442,10 +442,10 @@ Scheme Category: Small Cap Fund'''
             'Sector/Issuer Name % of Net AUM',
             'Equity & Equity Related',
         ]
-        # Four sectors, ten securities each: 80% equity + 20% cash = 100%.
-        for sector in range(4):
-            lines.append(f'Sector {sector+1} 20.00 %')
-            for holding in range(10):
+        # Five sectors, eight securities each: 80% equity + 20% cash = 100%.
+        for sector in range(5):
+            lines.append(f'Sector {sector+1} 16.00 %')
+            for holding in range(8):
                 lines.append(f'Company {sector+1}-{holding+1} Ltd. 2.00 %')
         lines += ['Net Cash and Cash Equivalent 20.00 %','Grand Total 100.00 %']
         text='\n'.join(lines)
@@ -454,7 +454,7 @@ Scheme Category: Small Cap Fund'''
         self.assertEqual(parsed['day'],'2026-07-31')
         self.assertEqual(len(parsed['positions']),41)
         self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
-        self.assertIsNone(absl_complete_portfolio(text.replace('Sector 2 20.00 %','Sector 2 19.00 %')))
+        self.assertIsNone(absl_complete_portfolio(text.replace('Sector 2 16.00 %','Sector 2 15.00 %')))
 
     def test_absl_factsheet_saves_reconciled_portfolio_as_complete(self):
         from tracker import disclosures
@@ -465,9 +465,9 @@ Scheme Category: Small Cap Fund'''
             'Sector/Issuer Name % of Net AUM',
             'Equity & Equity Related',
         ]
-        for sector in range(4):
-            lines.append(f'Sector {sector+1} 20.00 %')
-            for holding in range(10):
+        for sector in range(5):
+            lines.append(f'Sector {sector+1} 16.00 %')
+            for holding in range(8):
                 lines.append(f'Company {sector+1}-{holding+1} Ltd. 2.00 %')
         lines += ['Net Cash and Cash Equivalent 20.00 %','Grand Total 100.00 %']
         text='\n'.join(lines)
