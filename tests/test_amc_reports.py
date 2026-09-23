@@ -160,9 +160,10 @@ Month End AUM: Rs. 100 Cr''')
     def test_v46_targets_only_benchmark_recovery_families(self):
         from tracker import amc_reports
         expected={
-            'Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund',
-            'Groww Small Cap Fund','LIC Mf Small Cap Fund',
-            'Pgim India Small Cap Fund','Tata Small Cap Fund',
+            'Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund',
+            'Franklin India Small Cap Fund','Groww Small Cap Fund',
+            'LIC Mf Small Cap Fund','Pgim India Small Cap Fund',
+            'Samco Small Cap Fund','Tata Small Cap Fund','UTI Small Cap Fund',
         }
         with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v46'):
             for family in expected:
