@@ -99,16 +99,17 @@ def run():
                 print(f'::warning::{family}: current complete portfolio not recovered; latest is {detail}',flush=True)
             ok.append(current)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
-        # Refresh three stale complete portfolios through current official
-        # discovery pages. A download/parse attempt is not success unless the
-        # stored snapshot advances to the August 2026 month-end and remains complete.
+        # Supersede v49 and refresh all six stale complete portfolios in one
+        # release. Current HSBC/PGIM catalog URLs are processed above; Abakkus,
+        # ABSL, Franklin and LIC require official archive-page discovery.
         from tracker import amc_discovery
-        targets=(
+        discovery_targets=(
+            ('Abakkus','Abakkus Small Cap Fund'),
             ('Aditya Birla','Aditya Birla Sun Life Small Cap Fund'),
             ('Franklin','Franklin India Small Cap Fund'),
             ('LIC','LIC Mf Small Cap Fund'),
         )
-        for amc,family in targets:
+        for amc,family in discovery_targets:
             attempted=0
             try:
                 for discovered_family,url,title in amc_discovery.discover(amc):
@@ -122,6 +123,13 @@ def run():
                     if attempted>=4:break
             except Exception as exc:
                 print(f"::warning::{family} current discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+
+        required=(
+            'Abakkus Small Cap Fund','Aditya Birla Sun Life Small Cap Fund',
+            'Franklin India Small Cap Fund','HSBC Small Cap Fund',
+            'LIC Mf Small Cap Fund','Pgim India Small Cap Fund',
+        )
+        for family in required:
             snap=db.one("SELECT as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,id DESC LIMIT 1",(family,))
             current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
             if current:print(f'{family}: current complete portfolio verified at {snap["as_of"]}',flush=True)
