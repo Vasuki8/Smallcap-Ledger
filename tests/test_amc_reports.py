@@ -196,6 +196,13 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn(('Pgim India Small Cap Fund',
             'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf'),urls)
 
+    def test_v50_catalog_phase_uses_only_current_fixed_urls(self):
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("current_catalog={",source)
+        self.assertIn("the-asset-august-2026.pdf",source)
+        self.assertIn("Factsheet%20-%20August%202026.pdf",source)
+        self.assertIn("rows=[row for row in rows if row['url'] in current_catalog]",source)
+
     def test_v50_supersedes_both_complete_refresh_batches(self):
         from tracker import amc_reports
         expected={
