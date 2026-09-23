@@ -374,10 +374,13 @@ Latest development batch:
 - Run **#146** then passed the AMC upgrade, **125-test** gate, site generation, site validation, archive save, and status/coverage recording. The resulting production coverage remained **29/36** and Bandhan remained `source_not_exposing_portfolio`: the live Bandhan CMS/WordPress metadata still did not expose a usable portfolio attachment to the collector.
 - **Do not spend another immediate iteration on Bandhan page/attachment selectors.** The source path is now audited and tested; move to a more tractable remaining source and revisit Bandhan only with new official endpoint evidence.
 
+- PR #78 / commit `16e9f25838a0e0a71de1bc05e52bdcfdb8442f2f` adds the **Groww Small Cap May 2026 portfolio recovery** from the official AMC factsheet and bumps the report parser to v33. The parser requires exact scheme/date identity, reconciles equity + TREPS + net-current-assets to the published 100% grand total, and deliberately stores the result as **partial** because Groww publishes an aggregated `Others` equity bucket.
+- GitHub Actions run **#148** is the production replay for Groww. At handoff time it had passed Python syntax and cumulative-history restore and was inside the AMC report-upgrade stage. **Check run #148 and the newest coverage file first.** If it succeeds, Groww should become an old/partial portfolio dated 2026-05-31; do not mark it fresh or complete.
+
 Recommended next work:
 
-1. Start with **Groww Small Cap Fund**. Use the retained/official monthly Groww factsheets rather than the undated current product-page holdings. Build or repair a real-layout portfolio parser only when exact scheme identity, report date, equity/TREPS/cash totals, and grand total can be reconciled. Official 2026 monthly factsheets have exposed detailed Small Cap holdings and explicit totals, making Groww the strongest next recovery candidate.
-2. After Groww, prioritize **Union / Quant** archival retrieval: both have known official document URLs but currently fail archival materialization.
+1. **Check Groww run #148 first.** If it passed and coverage moved to 30/36, remove Groww from the gap list and treat its 2026-05-31 snapshot as partial + stale. If it failed, inspect the real May factsheet extraction/reconciliation error and make the smallest source-specific correction; do not relax the ownership or 100% reconciliation guards.
+2. Next prioritize **Union / Quant** archival retrieval: both have known official document URLs but currently fail archival materialization.
 3. Then revisit **Tata / TRUST** structured portfolio discovery, followed by Bajaj source access.
 4. Bandhan remains a valid later target, but only return to it when a new official downloadable attachment/API endpoint can be demonstrated.
 5. Preserve the standing rules: official AMC/AMFI evidence only, no estimated values, exact reporting dates, source URL/hash retention, conflicts preserved, and no fund marked complete without full reconciliation.
