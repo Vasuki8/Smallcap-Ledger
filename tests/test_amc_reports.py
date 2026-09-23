@@ -152,6 +152,36 @@ Month End AUM: Rs. 100 Cr''')
         self.assertTrue(rows[0][1].endswith('.xlsx'))
         self.assertTrue(all('bandhanmutual.com' in x[1] for x in rows))
 
+    def test_trust_monthly_disclosure_api_prefers_latest_structured_file(self):
+        from tracker.amc_discovery import discover
+        calls=[]
+        def fake_read(url,body=None):
+            calls.append(body)
+            tag=(body or {}).get('tagName')
+            if tag=='GetOneProductWeb':
+                return (json.dumps({'resultSetArray':[]}).encode(),'product','application/json')
+            if tag=='GetDownloadsForProductWeb':
+                return (json.dumps({'resultSetArray':[]}).encode(),'downloads','application/json')
+            if tag=='GetDisclosureByType':
+                rows=[
+                    {'title':'Monthly Portfolio Disclosure as on 31.07.2026',
+                     'fileurl':'/uploads/TRUSTMF-Portfolio-July-2026.xlsx'},
+                    {'title':'Monthly Portfolio Disclosure as on 31.08.2026',
+                     'fileurl':'/uploads/TRUSTMF-Portfolio-August-2026.pdf'},
+                    {'title':'Monthly Portfolio Disclosure as on 31.08.2026',
+                     'fileurl':'/uploads/TRUSTMF-Portfolio-August-2026.xlsx'},
+                ]
+                return (json.dumps({'resultSetArray':rows}).encode(),'portfolio','application/json')
+            raise AssertionError(tag)
+        with patch('tracker.amc_discovery.read',side_effect=fake_read):
+            rows=list(discover('TRUST'))
+        self.assertEqual(rows[0][0],'Trustmf Small Cap Fund')
+        self.assertTrue(rows[0][1].endswith('TRUSTMF-Portfolio-August-2026.xlsx'))
+        self.assertTrue(all('31.08.2026' in row[2] for row in rows))
+        payload=next(x for x in calls if x and x.get('tagName')=='GetDisclosureByType')
+        self.assertEqual(payload['systemQueryFileName'],'disclosuresweb.xml')
+        self.assertEqual(payload['replaceValue'],'portfolio-monthly-disclosure')
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
