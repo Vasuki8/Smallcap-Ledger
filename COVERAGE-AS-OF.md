@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-23T02:35:34+00:00
+Prepared: 2026-09-23T03:17:11+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
@@ -41,7 +41,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | SBI Small Cap Fund | ₹ 41,996.11 · 2026-09-21 | 0.79% TER · 2026-09-20 | 68 positions · 2026-07-31 · partial · older | BSE 250 Small Cap Index TRI · 2026-07-31 | 2 |
 | Samco Small Cap Fund | ₹ 255.06 · 2026-09-21 | 1.97% TER · 2026-09-21 | 78 positions · 2026-08-31 · complete · current | Gap | 620 |
 | Sundaram Small Cap Fund | ₹ 4,181.09 · 2026-09-21 | 0.97% TER · 2026-09-21 | 73 positions · 2026-08-31 · partial · current | Gap | 6 |
-| Tata Small Cap Fund | ₹ 13,457.80 · 2026-09-21 | 0.51% TER · 2026-09-20 | Gap | Gap | 2 |
+| Tata Small Cap Fund | ₹ 13,457.80 · 2026-09-21 | 0.51% TER · 2026-09-20 | Gap | Gap | 3 |
 | The Wealth Company Small Cap Fund | ₹ 139.96 · 2026-09-21 | 2.05% TER · 2026-09-21 | 59 positions · 2026-08-31 · complete · current | Gap | 18 |
 | Trustmf Small Cap Fund | ₹ 3,828.10 · 2026-09-21 | 1.54% TER · 2026-09-21 | Gap | Gap | 1 |
 | UTI Small Cap Fund | ₹ 5,372.16 · 2026-09-21 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Gap | 7 |
@@ -60,7 +60,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | ICICI Prudential Small Cap Fund | Facts parsed; no holdings | factsheet: Complete · archived 2026-09-09 | parsed · 2 records · 2 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Jm Small Cap Fund | Facts parsed; no holdings | factsheet: Factsheet July 2026 · archived 2026-09-22 | parsed · 4 records · 4 dated facts; 0 holdings (portfolio may be partial) | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Quant Small Cap Fund | Unsupported document layout | portfolio: Notice_Hosting_Monthly_Portfolio_Disclosure_August_2026.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
-| Tata Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Tata Small Cap Fund | Unsupported document layout | portfolio: Press Release to create a segregated portfolio in 3 schemes · archived 2026-09-23 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Union Small Cap Fund | Document known but not archived | factsheet: July 2026 Small Cap factsheet | Gap | Gap · 2026-09-22 · timed out |
 
