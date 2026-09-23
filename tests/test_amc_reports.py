@@ -195,19 +195,29 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn(('Pgim India Small Cap Fund',
             'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf'),urls)
 
-    def test_v50_targets_second_complete_refresh_batch(self):
+    def test_v50_supersedes_both_complete_refresh_batches(self):
         from tracker import amc_reports
-        expected={'Aditya Birla Sun Life Small Cap Fund','Franklin India Small Cap Fund','LIC Mf Small Cap Fund'}
+        expected={
+            'Abakkus Small Cap Fund','Aditya Birla Sun Life Small Cap Fund',
+            'Franklin India Small Cap Fund','HSBC Small Cap Fund',
+            'LIC Mf Small Cap Fund','Pgim India Small Cap Fund',
+        }
         with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v50'):
             for family in expected:
                 self.assertTrue(amc_reports.parser_upgrade_applies(family))
                 self.assertFalse(amc_reports.should_reprocess_existing(
                     family,'https://example.com/factsheet.pdf','hash'))
-            self.assertFalse(amc_reports.parser_upgrade_applies('HSBC Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Groww Small Cap Fund'))
         source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
-        self.assertIn("('Aditya Birla','Aditya Birla Sun Life Small Cap Fund')",source)
-        self.assertIn("('Franklin','Franklin India Small Cap Fund')",source)
-        self.assertIn("('LIC','LIC Mf Small Cap Fund')",source)
+        for pair in (
+            "('Abakkus','Abakkus Small Cap Fund')",
+            "('Aditya Birla','Aditya Birla Sun Life Small Cap Fund')",
+            "('Franklin','Franklin India Small Cap Fund')",
+            "('LIC','LIC Mf Small Cap Fund')",
+        ):
+            self.assertIn(pair,source)
+        self.assertIn("'HSBC Small Cap Fund'",source)
+        self.assertIn("'Pgim India Small Cap Fund'",source)
         self.assertIn("snap['as_of']>='2026-08-31' and snap['complete']",source)
 
     def test_v49_targets_current_complete_portfolio_refresh(self):
