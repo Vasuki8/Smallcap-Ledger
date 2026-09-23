@@ -195,6 +195,67 @@ def page_facts(text,family):
 
 
 
+
+def union_complete_portfolio(text):
+    """Fully reconcile Union Small Cap's one-page monthly factsheet portfolio."""
+    normalized=normalize(text)
+    if not re.search(r'\bUnion\s+SMALL\s+CAP\s+FUND\b',normalized,re.I):return None
+    if not re.search(r'Small\s+Cap\s+Fund\s*-\s*An\s+Open\s+Ended\s+Equity\s+Scheme\s+predominantly\s+investing\s+in\s+Small\s+Cap\s+stocks',normalized,re.I):return None
+    if not re.search(r'\b10\s+June\s+2014\b',normalized,re.I):return None
+    if not re.search(r'\bBSE\s+250\s+SmallCap\s+Index\s*\(TRI\)',normalized,re.I):return None
+    m=re.search(r'Data\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
+    start=next((i for i,x in enumerate(lines)
+                if re.search(r'Industry/Company/Issuer',x,re.I)
+                and re.search(r'%\s+to\s+Net',x,re.I)),None)
+    end=next((i for i,x in enumerate(lines)
+              if start is not None and i>start and re.search(r'^Union\s+Mutual\s+Fund\s*-\s*Registration',x,re.I)),None)
+    if start is None or end is None:return None
+
+    equity_total=None;grand=None;cash=None;tbill=None;positions=[]
+    for line in lines[start+1:end]:
+        row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%',line)
+        if not row:continue
+        label=re.sub(r'^[ü•●\s]+','',row.group(1)).strip()
+        weight=float(row.group(2))
+        key=re.sub(r'[^a-z0-9]','',label.lower())
+        if key=='equityshares':
+            equity_total=weight;continue
+        if key=='grandtotal':
+            grand=weight;continue
+        if re.match(r'^Triparty\s+Repo,?\s+Cash,?\s+Cash\s+Equivalents',label,re.I):
+            cash=weight;continue
+        if key=='treasurybills':continue
+        if key=='sovereign':continue
+        if re.fullmatch(r'91\s+DAY\s+T-BILL',label,re.I):
+            tbill=weight
+            positions.append({'name':'91 DAY T-BILL','isin':None,'sector':None,
+                              'weight':weight,'asset_type':'Debt'})
+            continue
+        letters=re.sub(r'[^A-Za-z]','',label)
+        if letters and label.upper()==label:continue
+        if not 0<weight<20:return None
+        positions.append({'name':label,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+
+    stocks=re.search(r'No\.\s+of\s+Stocks\s+(\d+)',normalized,re.I)
+    stock_count=int(stocks.group(1)) if stocks else None
+    equities=[x for x in positions if x['asset_type']=='Equity']
+    if None in (equity_total,grand,cash,tbill,stock_count):return None
+    if stock_count<20 or len(equities)!=stock_count:return None
+    if len({x['name'].lower() for x in equities})!=len(equities):return None
+    tolerance=max(.05,.006*len(equities))
+    if abs(sum(x['weight'] for x in equities)-equity_total)>tolerance:return None
+    if abs((equity_total+tbill+cash)-grand)>.04 or abs(grand-100)>.03:return None
+    if abs(sum(x['weight'] for x in positions)+cash-grand)>tolerance:return None
+    positions.append({'name':'Triparty Repo, Cash, Cash Equivalents & Net Current Assets',
+                      'isin':None,'sector':None,'weight':cash,
+                      'asset_type':'Cash and net current assets'})
+    return {'day':day,'positions':positions}
+
+
 def quant_top10_portfolio(text):
     """Parse quant Small Cap's explicitly published Top-10 portfolio as partial."""
     normalized=normalize(text)
