@@ -10,6 +10,26 @@ class ReportParserTests(unittest.TestCase):
     def report(self,family,body):
         return family+'\nAn open-ended equity scheme predominantly investing in small cap stocks\n'+body
 
+    def test_explicit_scheme_benchmark_labels_ignore_additional_benchmark(self):
+        f='Test Small Cap Fund'
+        text=self.report(f,'''Data as on August 31, 2026
+#Benchmark Index: Nifty Smallcap 250 TRI Benchmark Riskometer Very High
+Additional Benchmark Index: Nifty 50 TRI
+Month End AUM: Rs. 100 Cr''')
+        facts=page_facts(text,f)
+        bench=[x for x in facts if x['metric']=='benchmark']
+        self.assertEqual(bench,[{'metric':'benchmark','value':'Nifty Smallcap 250 TRI','plan':'All',
+                                 'as_of':'2026-08-31','unit':'Reported'}])
+
+    def test_scheme_benchmark_bse_label_is_trimmed_to_index_name(self):
+        f='Test Small Cap Fund'
+        text=self.report(f,'''Portfolio as on August 31, 2026
+Scheme Benchmark - BSE 250 SmallCap Index (TRI) ^^ (Benchmark) is very high risk
+Month End AUM: Rs. 100 Cr''')
+        facts=page_facts(text,f)
+        bench=next(x for x in facts if x['metric']=='benchmark')
+        self.assertEqual(bench['value'],'BSE 250 SmallCap Index (TRI)')
+
     def test_month_end_not_average_or_nav_day(self):
         text=self.report('Test Small Cap Fund','Details as on May 31, 2026\nNAV as on May 29, 2026\nMonth End: Rs. 1200 Cr\nMonthly Average AUM 1190 Cr\nBase Expense Ratio\nRegular 1.20\nDirect 0.40')
         facts=page_facts(text,'Test Small Cap Fund')
