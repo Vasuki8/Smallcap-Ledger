@@ -202,52 +202,33 @@ def run():
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
-        # Temporary source-layout diagnostic for ABSL's client-rendered portfolio archive.
-        # It prints first-party component/config references only; no data is accepted from it.
+        # Temporary DOM diagnostic for ABSL's client-rendered portfolio archive.
         try:
             from bs4 import BeautifulSoup
-            from urllib.parse import urljoin,urlparse
             page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
-            txt=raw.decode('utf-8','ignore')
-            print(f'ABSL_PORTFOLIO_DIAG bytes={len(raw)}',flush=True)
-            for m in list(re.finditer(r'Monthly\s+Portfolio',txt,re.I))[:6]:
-                snippet=re.sub(r'\s+',' ',txt[max(0,m.start()-1800):m.end()+2600]).strip()
-                print('ABSL_PORTFOLIO_DIAG_COMPONENT '+snippet[:4500],flush=True)
-            script_urls=[]
-            for tag in soup.find_all('script'):
-                src=tag.get('src')
-                if src:
-                    u=urljoin(page,src)
-                    if urlparse(u).netloc.endswith('adityabirlacapital.com'):
-                        script_urls.append(u)
-                else:
-                    body=tag.string or tag.get_text(' ',strip=True)
-                    if re.search(r'portfolio|ajax|api|download',body,re.I):
-                        snippet=re.sub(r'\s+',' ',body).strip()
-                        print('ABSL_PORTFOLIO_DIAG_INLINE '+snippet[:4500],flush=True)
-            for u in list(dict.fromkeys(script_urls)):
-                print('ABSL_PORTFOLIO_DIAG_SCRIPT '+u,flush=True)
-            interesting={'global.js','main1.js','main.js','bslmasterlayout.js','downloadshare.js','getintouch.js','header.js','footer.js'}
-            for u in list(dict.fromkeys(script_urls)):
-                name=urlparse(u).path.rsplit('/',1)[-1].lower()
-                if name not in interesting:continue
-                try:
-                    providers.can_crawl(u)
-                    js,_,_=providers.fetch(u,max_bytes=4*1024*1024)
-                    source=js.decode('utf-8','ignore')
-                except Exception as exc:
-                    print(f'ABSL_PORTFOLIO_DIAG_JS_ERROR {u} :: {(str(exc) or type(exc).__name__)[:180]}',flush=True)
-                    continue
-                matches=list(re.finditer(r'portfolio',source,re.I))
-                print(f'ABSL_PORTFOLIO_DIAG_JS {u} bytes={len(js)} portfolio_hits={len(matches)}',flush=True)
-                for m in matches[:20]:
-                    snippet=re.sub(r'\s+',' ',source[max(0,m.start()-450):m.end()+900]).strip()
-                    print('ABSL_PORTFOLIO_DIAG_JS_SNIP '+snippet[:1400],flush=True)
+            nodes=soup.find_all(string=re.compile(r'Monthly\s+Portfolio',re.I))
+            print(f'ABSL_PORTFOLIO_DOM nodes={len(nodes)} bytes={len(raw)}',flush=True)
+            shown=0
+            for node in nodes:
+                text_value=' '.join(str(node).split())
+                if len(text_value)>160:continue
+                parent=node.parent
+                for _ in range(5):
+                    if parent and parent.parent:parent=parent.parent
+                html=str(parent) if parent else str(node)
+                html=re.sub(r'\s+',' ',html).strip()
+                print('ABSL_PORTFOLIO_DOM_NODE '+html[:12000],flush=True)
+                shown+=1
+                if shown>=8:break
+            for tag in soup.find_all(True):
+                attrs=' '.join(f'{k}={" ".join(v) if isinstance(v,list) else v}' for k,v in tag.attrs.items())
+                if re.search(r'portfolio',attrs,re.I) and re.search(r'data-|url|path|api|ajax|endpoint|source',attrs,re.I):
+                    print('ABSL_PORTFOLIO_DOM_ATTR '+tag.name+' '+attrs[:2000],flush=True)
         except Exception as exc:
-            print(f"::warning::ABSL portfolio diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            print(f"::warning::ABSL portfolio DOM diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
