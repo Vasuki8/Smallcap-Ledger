@@ -194,6 +194,68 @@ def page_facts(text,family):
 
 
 
+
+def quant_top10_portfolio(text):
+    """Parse quant Small Cap's explicitly published Top-10 portfolio as partial."""
+    normalized=normalize(text)
+    if not re.search(r'(?:^|\n)\s*quant\s+Small\s+Cap\s+Fund\s*(?:\n|$)',normalized,re.I):return None
+    if not re.search(r'Investment\s+Objective\s*:[\s\S]{0,500}?portfolio\s+of\s+Small\s+Cap\s+companies',normalized,re.I):return None
+    if not re.search(r'\b29\s+October\s+1996\b',normalized,re.I):return None
+    if not re.search(r'\bNIFTY\s+SMALLCAP\s+250\s+TRI\b',normalized,re.I):return None
+    dates=[dated(m.group(1)) for m in re.finditer(r'As\s+on\s+('+DATE+r')',normalized,re.I)]
+    dates=[x for x in dates if x]
+    if not dates:return None
+    day=dates[-1]
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
+    start=next((i for i,x in enumerate(lines)
+                if re.search(r'LIST\s+OF\s+SECURITIES',x,re.I)
+                and re.search(r'%\s*T\s*O\s*NAV',x,re.I)),None)
+    if start is None:return None
+    stop=next((i for i,x in enumerate(lines[start+1:],start+1)
+               if re.search(r'^Equity\s*&\s*Equity\s+Related\s+Instruments\b',x,re.I)),None)
+    if stop is None:return None
+
+    positions=[];pending=[]
+    for line in lines[start+1:stop]:
+        if not line:continue
+        row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%?',line)
+        if not row:
+            pending.append(line)
+            if len(pending)>2:return None
+            continue
+        name=' '.join(pending+[row.group(1).strip()]).strip();pending=[]
+        weight=float(row.group(2))
+        if not name or not 0<weight<25:return None
+        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+    if pending or len(positions)!=10:return None
+    if len({x['name'].lower() for x in positions})!=len(positions):return None
+
+    equity=re.search(r'Equity\s*&\s*Equity\s+Related\s+Instruments\s+(-?\d+(?:\.\d+)?)\s*%?',normalized,re.I)
+    debt=(re.search(r'Debt\s*&\s*Money\s+Market\s+Instruments\s+and\s+Net\s+Current\s+Assets\s+(-?\d+(?:\.\d+)?)\s*%?',normalized,re.I)
+          or re.search(r'Debt\s*&\s*Money\s+Market\s+Instruments\s+(-?\d+(?:\.\d+)?)\s*%?\s+and\s+Net\s+Current\s+Assets',normalized,re.I))
+    grand=re.search(r'Grand\s+Total\s+(-?\d+(?:\.\d+)?)\s*%?',normalized,re.I)
+    if not all((equity,debt,grand)):return None
+    equity_total=float(equity.group(1));debt_total=float(debt.group(1));grand_total=float(grand.group(1))
+    if abs(grand_total-100)>.03 or abs((equity_total+debt_total)-grand_total)>.03:return None
+    if not 0<sum(x['weight'] for x in positions)<equity_total:return None
+
+    concentration=None
+    ci=next((i for i,x in enumerate(lines) if re.search(r'PORTFOLIO\s+CONCENTRATION',x,re.I)),None)
+    if ci is not None:
+        for line in lines[ci:ci+12]:
+            m=re.fullmatch(r'10\s+(-?\d+(?:\.\d+)?)',line)
+            if m:
+                concentration=float(m.group(1));break
+    if concentration is None:return None
+    if abs(sum(x['weight'] for x in positions)-concentration)>.03:return None
+
+    positions.append({'name':'Debt & Money Market Instruments and Net Current Assets (AMC aggregate)',
+                      'isin':None,'sector':None,'weight':debt_total,
+                      'asset_type':'Debt, money market and net current assets'})
+    return {'day':day,'positions':positions}
+
+
 def groww_reconciled_portfolio(text):
     """Parse Groww Small Cap's published holdings while preserving AMC aggregates.
 
