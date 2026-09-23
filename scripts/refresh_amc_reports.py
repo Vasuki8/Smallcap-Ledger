@@ -39,7 +39,7 @@ def run():
           WHERE d.origin='AMC' AND e.hash IS NULL''',(amc_reports.PARSER_VERSION,))
         needed.update(row['hash'] for row in pending
                       if amc_reports.parser_upgrade_applies(row['family'])
-                      and amc_reports.should_reprocess_existing(row['family'],row['url']))
+                      and amc_reports.should_reprocess_existing(row['family'],row['url'],row['hash']))
         from scripts.github_state import materialize_hashes
         restored=materialize_hashes(needed)
         print(f'Materialized {restored} archived source files needed for parser upgrade',flush=True)
