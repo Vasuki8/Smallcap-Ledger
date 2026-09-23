@@ -211,7 +211,7 @@ def run():
             raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
             item=next((li for li in soup.select('li[data-accordian-api]')
-                       if re.search(r'^Monthly\\s+Portfolio$',li.get_text(' ',strip=True),re.I)),None)
+                       if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
             if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
             endpoint=urljoin(page,item.get('data-accordian-api',''))
             print('ABSL_MONTHLY_ENDPOINT '+endpoint,flush=True)
