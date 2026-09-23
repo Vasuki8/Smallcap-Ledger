@@ -1,42 +1,42 @@
 {
-  "built_at": "2026-09-23T21:40:51+00:00",
+  "built_at": "2026-09-23T22:17:15+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
-    "nav_points": 281150,
-    "benchmark_points": 5327,
-    "portfolios": 88,
-    "documents": 1191,
-    "archive_bytes": 1645806250,
-    "database_bytes": 97136640,
-    "total_storage_bytes": 1742942890,
+    "nav_points": 281300,
+    "benchmark_points": 5328,
+    "portfolios": 94,
+    "documents": 1473,
+    "archive_bytes": 1875263684,
+    "database_bytes": 101507072,
+    "total_storage_bytes": 1976770756,
     "aum_funds": 36,
     "fee_funds": 36,
-    "latest_nav_date": "2026-09-22"
+    "latest_nav_date": "2026-09-23"
   },
   "recent_jobs": [
     {
       "kind": "amc-reports",
-      "started_at": "2026-09-23T03:50:59+00:00",
-      "finished_at": "2026-09-23T03:50:59+00:00",
+      "started_at": "2026-09-23T21:54:28+00:00",
+      "finished_at": "2026-09-23T21:54:28+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-09-23T03:50:58+00:00",
-      "finished_at": "2026-09-23T03:50:58+00:00",
+      "started_at": "2026-09-23T21:54:26+00:00",
+      "finished_at": "2026-09-23T21:54:26+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-09-23T03:50:54+00:00",
-      "finished_at": "2026-09-23T03:50:54+00:00",
+      "started_at": "2026-09-23T21:54:25+00:00",
+      "finished_at": "2026-09-23T21:54:25+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-09-23T03:50:52+00:00",
-      "finished_at": "2026-09-23T03:50:52+00:00",
+      "started_at": "2026-09-23T21:54:20+00:00",
+      "finished_at": "2026-09-23T21:54:20+00:00",
       "status": "ok"
     }
   ],
@@ -48,7 +48,7 @@
     "cron": "30 18 * * *",
     "scheduled_time_is_not_guaranteed": true,
     "publication_file_budget_bytes": 262144000,
-    "publication_files_included": 204,
-    "publication_bytes_included": 262143733
+    "publication_files_included": 208,
+    "publication_bytes_included": 262143449
   }
 }
