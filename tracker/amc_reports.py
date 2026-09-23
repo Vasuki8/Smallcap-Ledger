@@ -33,7 +33,6 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v43':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v44':frozenset({'Trustmf Small Cap Fund'}),
     'amc-reports-2026-09-v45':frozenset({'Union Small Cap Fund'}),
-    'amc-reports-2026-09-v45':frozenset({'Union Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -115,11 +114,7 @@ def should_reprocess_existing(family,url,h=None):
         return False
     if PARSER_VERSION=='amc-reports-2026-09-v45':
         # Union's primary single-scheme route is unreachable from GitHub Actions.
-        # Replay only Union PDFs and try the reviewed omnibus AMC factsheet route.
-        return family=='Union Small Cap Fund' and path.endswith('.pdf')
-    if PARSER_VERSION=='amc-reports-2026-09-v45':
-        # Retry Union through the alternate official bare hostname; parser rules
-        # remain unchanged and still require complete 100% reconciliation.
+        # Replay only Union PDFs and try reviewed official fallback/alternate routes.
         return family=='Union Small Cap Fund' and path.endswith('.pdf')
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
