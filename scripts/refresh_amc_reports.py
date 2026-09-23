@@ -32,7 +32,7 @@ def run():
         for row in rows:
             existing=db.one("SELECT hash FROM fetches WHERE url=? AND status='ok' AND hash IS NOT NULL ORDER BY id DESC LIMIT 1",(row['url'],))
             if existing:needed.add(existing['hash'])
-        pending=db.rows('''SELECT DISTINCT d.url,v.hash FROM documents d
+        pending=db.rows('''SELECT DISTINCT d.family,d.url,v.hash FROM documents d
           JOIN document_versions v ON v.document_id=d.id
           LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
           WHERE d.origin='AMC' AND e.hash IS NULL''',(amc_reports.PARSER_VERSION,))

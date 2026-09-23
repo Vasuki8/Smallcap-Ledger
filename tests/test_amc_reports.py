@@ -71,6 +71,13 @@ class ReportParserTests(unittest.TestCase):
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-small-cap.xlsx',links)
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
 
+    def test_parser_upgrade_pending_query_retains_family_identity(self):
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn('SELECT DISTINCT d.family,d.url,v.hash FROM documents d',source)
+        workflow=(Path(__file__).resolve().parents[1]/'.github'/'workflows'/'daily.yml').read_text()
+        upgrade=workflow.split('- name: Apply official AMC report collector upgrade',1)[1].split('- name: Collect daily data',1)[0]
+        self.assertNotIn('continue-on-error: true',upgrade)
+
     def test_boi_pdf_is_opted_into_targeted_historical_reprocess(self):
         from tracker.amc_reports import should_reprocess_existing
         self.assertTrue(should_reprocess_existing(
