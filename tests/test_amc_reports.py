@@ -71,6 +71,18 @@ class ReportParserTests(unittest.TestCase):
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/bandhan-small-cap.xlsx',links)
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
 
+    def test_boi_pdf_is_opted_into_targeted_historical_reprocess(self):
+        from tracker.amc_reports import should_reprocess_existing
+        self.assertTrue(should_reprocess_existing(
+            'Bank Of India Small Cap Fund',
+            'https://www.boimf.in/docs/factsheet-august-2026.pdf?x=1'))
+        self.assertFalse(should_reprocess_existing(
+            'Edelweiss Small Cap Fund',
+            'https://www.edelweissmf.com/factsheet-september-2026.pdf'))
+        self.assertTrue(should_reprocess_existing(
+            'Samco Small Cap Fund',
+            'https://www.samcomf.com/portfolio.xlsx'))
+
     def test_quant_statutory_discovery_prefers_monthly_portfolio_files(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
