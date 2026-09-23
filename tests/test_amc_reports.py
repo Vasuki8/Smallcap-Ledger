@@ -151,6 +151,18 @@ Month End AUM: Rs. 100 Cr''')
         self.assertEqual(rows[0][1],
             'https://www.tatamutualfund.com/system/files/2026-09/Tata_Monthly_Portfolio_August_2026.xlsx')
 
+    def test_v26_quantity_reprocess_is_limited_to_retained_workbook_hashes(self):
+        from tracker import amc_reports
+        family='HDFC Small Cap Fund'
+        url='https://files.hdfcfund.com/current.xlsx'
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v26'):
+            self.assertFalse(amc_reports.should_reprocess_existing(family,url,'missing'))
+            with db.connect() as c:
+                c.execute("""INSERT INTO portfolios(family,as_of,complete,source,hash,observed_at)
+                  VALUES(?,?,?,?,?,?)""",(family,'2026-08-31',1,url,'retained',db.now()))
+            self.assertTrue(amc_reports.should_reprocess_existing(family,url,'retained'))
+            self.assertFalse(amc_reports.should_reprocess_existing(family,'https://files.hdfcfund.com/old.pdf','retained'))
+
     def test_quant_statutory_discovery_prefers_monthly_portfolio_files(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
