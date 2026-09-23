@@ -364,13 +364,15 @@ def discover(amc):
             day=None
             m=re.search(r'(\d{1,2})(?:st|nd|rd|th)?[ ,_-]+([A-Za-z]+)[ ,_-]+(20\d{2})',combined,re.I)
             if m:
-                try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
-                except ValueError:pass
+                for fmt in ('%d %B %Y','%d %b %Y'):
+                    try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}',fmt).date();break
+                    except ValueError:pass
             if not day:
                 m=re.search(r'([A-Za-z]+)[ ,_-]+(\d{1,2})(?:st|nd|rd|th)?[ ,_-]+(20\d{2})',combined,re.I)
                 if m:
-                    try:day=datetime.strptime(f'{m.group(2)} {m.group(1)} {m.group(3)}','%d %B %Y').date()
-                    except ValueError:pass
+                    for fmt in ('%d %B %Y','%d %b %Y'):
+                        try:day=datetime.strptime(f'{m.group(2)} {m.group(1)} {m.group(3)}',fmt).date();break
+                        except ValueError:pass
             if day and day<=date.today():rows.append((day,url,title))
         if not rows:raise ValueError('No official Groww monthly portfolio workbook was exposed')
         newest=max(x[0] for x in rows)
