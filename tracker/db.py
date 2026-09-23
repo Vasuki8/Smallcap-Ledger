@@ -118,7 +118,8 @@ def init(recover=False):
           WHERE kind='portfolio' AND (
             lower(title) LIKE '%press release%' OR
             lower(title) LIKE '%notice%' OR
-            lower(title) LIKE '%circular%')""")
+            lower(title) LIKE '%circular%' OR
+            lower(title) LIKE '%risk factor%')""")
         if recover:
             c.execute("UPDATE jobs SET status='interrupted',finished_at=?,detail='Application stopped before this update finished; the next run resumes retained history.' WHERE status='running'", (now(),))
     migrate_portfolio_completeness()
