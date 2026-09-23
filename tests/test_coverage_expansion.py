@@ -627,6 +627,83 @@ Alpha Industries Ltd 3.50%\nBeta Bank Ltd 3.40%\nGamma Pharma Ltd 2.70%\nDelta S
         self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
         self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='edel-top30')")['n'],30)
 
+    def test_boi_multicolumn_reconstructs_equity_tail_and_asset_classes(self):
+        from tracker.report_parser import boi_multicolumn_complete_portfolio
+        rows=[
+            'Bank of India Small Cap Fund',
+            '(An open ended equity scheme predominantly investing in small cap stocks)',
+            'All data as on August 31, 2026 (Unless indicated otherwise)',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'Tail Holding Limited 1.00',
+            'Total 80.00',
+            'GOVERNMENT BOND AND','TREASURY BILL','Treasury Bill',
+            '364 Days Tbill (SOV) 5.00','Total 5.00',
+            'MONEY MARKET INSTRUMENTS','Certificate of Deposit',
+            'Alpha Bank Limited (CRISIL A1+) 2.50',
+            'Beta Bank Limited (ICRA A1+) 2.50','Total 5.00',
+            'CASH & CASH EQUIVALENT',
+            'Net Receivables/Payables (0.05)',
+            'TREPS / Reverse Repo Investments 10.05','Total 10.00',
+            'GRAND TOTAL 100.00','PORTFOLIO DETAILS',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'EQUITY HOLDINGS',
+        ]
+        for sector in range(4):
+            rows.append(f'SECTOR {sector+1} 10.00')
+            for holding in range(5):
+                rows.append(f'Company {sector+1}-{holding+1} Limited 2.00')
+        rows.append('OTHERS 40.00')
+        for holding in range(13):
+            rows.append(f'Other Company {holding+1} Limited 3.00')
+        rows += ['EQUITY INDUSTRY ALLOCATION','INVESTMENT OBJECTIVE']
+        parsed=boi_multicolumn_complete_portfolio('\n'.join(rows))
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertEqual(parsed['positions'][-1]['weight'],10.0)
+        self.assertIsNone(boi_multicolumn_complete_portfolio(
+            '\n'.join(rows).replace('Total 5.00','Total 4.00',1)))
+
+    def test_boi_factsheet_prefers_real_multicolumn_parser(self):
+        from tracker import disclosures
+        rows=[
+            'Bank of India Small Cap Fund',
+            '(An open ended equity scheme predominantly investing in small cap stocks)',
+            'All data as on August 31, 2026 (Unless indicated otherwise)',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'Tail Holding Limited 1.00','Total 80.00',
+            'GOVERNMENT BOND AND','TREASURY BILL','Treasury Bill',
+            '364 Days Tbill (SOV) 5.00','Total 5.00',
+            'MONEY MARKET INSTRUMENTS','Certificate of Deposit',
+            'Alpha Bank Limited (CRISIL A1+) 5.00','Total 5.00',
+            'CASH & CASH EQUIVALENT','TREPS / Reverse Repo Investments 10.00','Total 10.00',
+            'GRAND TOTAL 100.00','PORTFOLIO DETAILS',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets',
+            'Portfolio Holdings % to Net','Industry/ Rating Assets','EQUITY HOLDINGS',
+        ]
+        for sector in range(4):
+            rows.append(f'SECTOR {sector+1} 10.00')
+            for holding in range(5):
+                rows.append(f'Company {sector+1}-{holding+1} Limited 2.00')
+        rows.append('OTHERS 40.00')
+        for holding in range(13):
+            rows.append(f'Other Company {holding+1} Limited 3.00')
+        rows += ['EQUITY INDUSTRY ALLOCATION','INVESTMENT OBJECTIVE']
+        text='\n'.join(rows)
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(
+                b'%PDF','Bank Of India Small Cap Fund',
+                'https://www.boimf.in/factsheet-august-2026.pdf','boi-real')
+        self.assertGreater(count,30)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund' AND hash='boi-real'")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
