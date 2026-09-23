@@ -303,6 +303,11 @@ def factsheet_pdf(content,family,url,h):
         for fact in facts:
             db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
         count+=len(facts)
+        parsed=full or partial
+        if parsed and parsed.get('benchmark') and not any(fact['metric']=='benchmark' for fact in facts):
+            db.metric(family,'All','benchmark',parsed['day'],parsed['benchmark'],
+                      parsed.get('benchmark_unit','Reported'),url,h)
+            count+=1
         if full:
             portfolio(family,full['day'],full['positions'],True,url,h);count+=len(full['positions'])
             continue
