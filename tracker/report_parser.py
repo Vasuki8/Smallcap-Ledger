@@ -431,6 +431,71 @@ def groww_reconciled_portfolio(text):
     return {'day':day,'positions':positions}
 
 
+
+def bajaj_top10_portfolio(summary_page, holdings_page):
+    """Reconcile Bajaj Finserv Small Cap's published Top-10 plus AMC aggregates.
+
+    The monthly factsheet names only the Top 10 holdings, then publishes an
+    "Other Equities" aggregate. The snapshot is therefore intentionally partial
+    even though the published equity/options/cash totals reconcile to 100%.
+    """
+    first=normalize(summary_page);second=normalize(holdings_page)
+    if not re.search(r'Bajaj\s+Finserv\s+Small\s+Cap\s+Fund',first,re.I):return None
+    if not re.search(r'An\s+open\s+ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',first,re.I):return None
+    if not re.search(r'Inception\s+Date\s*:\s*18(?:st|th)?\s+July\s+2025',first,re.I):return None
+    if not re.search(r'Benchmark\s*:\s*BSE\s+250\s+SmallCap\s+TRI',first,re.I):return None
+    m=re.search(r'Data\s+as\s+on\s+('+DATE+r')',first,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in second.splitlines() if x.strip()]
+    try:
+        start=next(i for i,x in enumerate(lines) if re.fullmatch(r'Name\s*\(Top\s*10\s*Holdings\)\s*\(%\s*to\s*NAV\)',x,re.I))
+        other_i=next(i for i,x in enumerate(lines[start+1:],start+1) if re.fullmatch(r'Other\s+Equities',x,re.I))
+    except StopIteration:
+        return None
+    names=lines[start+1:other_i]
+    if len(names)!=10 or len({x.lower() for x in names})!=10:return None
+
+    values=[]
+    for line in lines[other_i+1:]:
+        if re.fullmatch(r'Total\s+Equities',line,re.I):continue
+        m=re.fullmatch(r'(-?\d+(?:\.\d+)?)\s*%',line)
+        if m:
+            values.append(float(m.group(1)))
+            if len(values)>=12:break
+        elif values:
+            break
+    if len(values)<12:return None
+    top_weights=values[:10];other_equities=values[10];equity_total=values[11]
+    if any(not 0<w<25 for w in top_weights):return None
+    if abs((sum(top_weights)+other_equities)-equity_total)>max(.04,.006*len(top_weights)):return None
+
+    # Asset Allocation appears earlier on the same page in label-first/value-later
+    # PDF extraction order. Require the exact published totals before storing.
+    asset_start=next((i for i,x in enumerate(lines) if re.fullmatch(r'Asset\s+Allocation',x,re.I)),None)
+    equity=None;cash=None;options=None
+    if asset_start is not None:
+        window=lines[asset_start:asset_start+12]
+        labels=[x for x in window if re.search(r'Net\s+Equities|Reverse\s+Repo\s*/\s*TREPS|Equity\s+Options',x,re.I)]
+        nums=[float(m.group(1)) for x in window if (m:=re.fullmatch(r'(-?\d+(?:\.\d+)?)\s*%',x))]
+        if len(labels)>=3 and len(nums)>=3:
+            equity,cash,options=nums[:3]
+    if None in (equity,cash,options):return None
+    if abs(equity-equity_total)>.03:return None
+    if abs((equity+cash+options)-100)>.03:return None
+
+    positions=[{'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'}
+               for name,weight in zip(names,top_weights)]
+    positions.append({'name':'Other Equities (AMC aggregate)','isin':None,'sector':None,
+                      'weight':other_equities,'asset_type':'Equity'})
+    positions.append({'name':'Reverse Repo / TREPS & Net Current Assets','isin':None,'sector':None,
+                      'weight':cash,'asset_type':'Money market and net current assets'})
+    positions.append({'name':'Equity Options','isin':None,'sector':None,
+                      'weight':options,'asset_type':'Derivative'})
+    if abs(sum(x['weight'] for x in positions)-100)>.03:return None
+    return {'day':day,'positions':positions}
+
 def bajaj_complete_portfolio(text):
     """Fully reconcile Bajaj Finserv Small Cap's published monthly portfolio."""
     normalized=normalize(text)
