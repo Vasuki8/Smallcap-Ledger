@@ -55,6 +55,14 @@ class CoverageExpansionTests(unittest.TestCase):
         positions=franklin_positions(table)
         self.assertEqual([x['quantity'] for x in positions],[1250,2500])
 
+    def test_franklin_dated_page_retains_explicit_benchmark(self):
+        f='Franklin India Small Cap Fund';u=URLS[f]
+        html='''<html><table><tr><td><span>Franklin India Small Cap Fund</span> As on July 31, 2026</td></tr></table>
+        <p>BENCHMARK: Nifty Smallcap 250</p></html>'''
+        self.assertEqual(extract(html,f,u,'franklin-benchmark'),1)
+        self.assertEqual(db.one("SELECT value,as_of,unit FROM metrics WHERE metric='benchmark'"),
+                         {'value':'Nifty Smallcap 250','as_of':'2026-07-31','unit':'Reported'})
+
     def test_sundaram_dates_are_not_interchangeable(self):
         f='Sundaram Small Cap Fund';u=URLS[f]
         row={'FUNDGROUP_ID':'SC','GROUP_NAME':f,'MONTHENDAUM':'3,922','AUM':'3,926','AUMASONDATE':'31-Jul-2026','REG_TOT_TER_DISP':'2.01 %','DP_TOT_TER_DISP':'0.97 %','TER_DATE_DISP':'07-Sep-2026','DIR_NAV_DT':'08-Sep-2026'}
@@ -104,9 +112,11 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
 
     def test_pgim_exact_heading_date_and_ambiguous_fee(self):
         f='Pgim India Small Cap Fund';u=URLS[f]
-        html='<h1>PGIM India Small Cap Fund</h1><p>AUM as on 31 Aug 2026 ₹1,793.27 Cr</p><p>Expense Ratio (08 Sep 2026) 0.93%</p>'
-        self.assertEqual(extract(html,f,u,'h'),1)
-        self.assertEqual(db.one('SELECT metric,value,as_of FROM metrics'),{'metric':'aum','value':'1793.27','as_of':'2026-08-31'})
+        html='<h1>PGIM India Small Cap Fund</h1><p>AUM as on 31 Aug 2026 ₹1,793.27 Cr</p><p>Benchmark Nifty Smallcap 250 - TRI</p><p>Expense Ratio (08 Sep 2026) 0.93%</p>'
+        self.assertEqual(extract(html,f,u,'h'),2)
+        facts={r['metric']:dict(r) for r in db.rows('SELECT metric,value,as_of,unit FROM metrics')}
+        self.assertEqual(facts['aum'],{'metric':'aum','value':'1793.27','as_of':'2026-08-31','unit':'INR crore'})
+        self.assertEqual(facts['benchmark'],{'metric':'benchmark','value':'Nifty Smallcap 250 - TRI','as_of':'2026-08-31','unit':'Reported'})
         self.assertIsNone(extract(html,f,u+'/wrong','h'))
         self.assertEqual(extract(html.replace('31 Aug 2026','31 Aug 2099'),f,u,'future'),0)
 
@@ -188,9 +198,11 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
 
     def test_baroda_monthly_average_cannot_become_month_end(self):
         f='Baroda Bnp Paribas Small Cap Fund';u='https://www.barodabnpparibasmf.in/efactsheet/Jul2026/Innerpages/Small-cap.html'
-        html='<title>BBNPP Small Cap Fund</title><p>Monthly AAUM## As on July 31, 2026 : ₹ 1,278.20 Crores</p>'
-        self.assertEqual(extract(html,f,u,'h'),1)
-        self.assertEqual(db.one('SELECT metric FROM metrics')['metric'],'average_aum')
+        html='<title>BBNPP Small Cap Fund</title><p>Monthly AAUM## As on July 31, 2026 : ₹ 1,278.20 Crores</p><p>Benchmark Index (AMFI Tier 1) Nifty Small Cap 250 TRI</p>'
+        self.assertEqual(extract(html,f,u,'h'),2)
+        facts={r['metric']:dict(r) for r in db.rows('SELECT metric,value,as_of FROM metrics')}
+        self.assertEqual(facts['average_aum']['as_of'],'2026-07-31')
+        self.assertEqual(facts['benchmark'],{'metric':'benchmark','value':'Nifty Smallcap 250 TRI','as_of':'2026-07-31'})
         self.assertEqual(extract(html.replace('Small Cap','Mid Cap'),f,u,'bad'),0)
 
     def test_canara_html_portfolio_reconciles_treps_and_cash(self):
@@ -852,6 +864,7 @@ Portfolio Holdings'''
         parsed=groww_reconciled_portfolio(text)
         self.assertIsNotNone(parsed)
         self.assertEqual(parsed['day'],'2026-05-31')
+        self.assertEqual(parsed['benchmark'],'Nifty Smallcap 250 Index')
         self.assertEqual(parsed['positions'][-2]['asset_type'],'Money market')
         self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
         self.assertTrue(any(x['name']=='Others (AMC aggregate)' for x in parsed['positions']))
@@ -1025,9 +1038,11 @@ Investment Objective'''
         <div>Benchmark Name Nifty Smallcap 250 TRI</div>
         <table><tr><th>Top 10 Holdings</th><th></th><th>% to Net Assets</th></tr>{rows}</table>
         </body></html>'''.encode()
-        self.assertEqual(parse_page(html,'Tata Small Cap Fund',url,'tata-hash'),10)
+        self.assertEqual(parse_page(html,'Tata Small Cap Fund',url,'tata-hash'),11)
         snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Tata Small Cap Fund'")
         self.assertEqual(snap,{'as_of':'2026-08-31','complete':0})
+        self.assertEqual(db.one("SELECT value,as_of FROM metrics WHERE family='Tata Small Cap Fund' AND metric='benchmark'"),
+                         {'value':'Nifty Smallcap 250 TRI','as_of':'2026-08-31'})
         self.assertEqual(db.one("SELECT COUNT(*) n FROM holdings")['n'],10)
         self.assertEqual(parse_page(html.replace(b'Tata Small Cap Fund',b'Tata Mid Cap Fund'),
                                     'Tata Small Cap Fund',url,'wrong'),0)
