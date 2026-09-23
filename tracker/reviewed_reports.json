@@ -8,8 +8,14 @@
     "reviewed_at": "2026-09-09",
     "note": "July 2026 report; automatic download unavailable. AUM includes inter-scheme investments where applicable.",
     "facts": [
-      {"metric": "aum", "value": 1287.55},
-      {"metric": "average_aum", "value": 1278.20}
+      {
+        "metric": "aum",
+        "value": 1287.55
+      },
+      {
+        "metric": "average_aum",
+        "value": 1278.2
+      }
     ]
   },
   {
@@ -21,10 +27,24 @@
     "reviewed_at": "2026-09-09",
     "note": "Page 1; automatic PDF download unavailable. AUM includes inter-scheme investments as disclosed.",
     "facts": [
-      {"metric": "aum", "value": 2401.95},
-      {"metric": "average_aum", "value": 2342.05},
-      {"metric": "base_expense_ratio", "plan": "Regular", "value": 1.72},
-      {"metric": "base_expense_ratio", "plan": "Direct", "value": 0.79}
+      {
+        "metric": "aum",
+        "value": 2401.95
+      },
+      {
+        "metric": "average_aum",
+        "value": 2342.05
+      },
+      {
+        "metric": "base_expense_ratio",
+        "plan": "Regular",
+        "value": 1.72
+      },
+      {
+        "metric": "base_expense_ratio",
+        "plan": "Direct",
+        "value": 0.79
+      }
     ]
   },
   {
@@ -36,10 +56,24 @@
     "reviewed_at": "2026-09-09",
     "note": "Page 44; older April report. Newer report and automatic PDF download remain unavailable.",
     "facts": [
-      {"metric": "aum", "value": 296.07},
-      {"metric": "average_aum", "value": 213.93},
-      {"metric": "ter", "plan": "Regular", "value": 2.90},
-      {"metric": "ter", "plan": "Direct", "value": 1.12}
+      {
+        "metric": "aum",
+        "value": 296.07
+      },
+      {
+        "metric": "average_aum",
+        "value": 213.93
+      },
+      {
+        "metric": "ter",
+        "plan": "Regular",
+        "value": 2.9
+      },
+      {
+        "metric": "ter",
+        "plan": "Direct",
+        "value": 1.12
+      }
     ]
   },
   {
@@ -51,8 +85,110 @@
     "reviewed_at": "2026-09-09",
     "note": "Page 16, May factsheet: data uses the last working day unless stated otherwise (29 May). Newer report and automatic PDF download remain unavailable.",
     "facts": [
-      {"metric": "aum", "value": 694.93},
-      {"metric": "average_aum", "value": 682.98}
+      {
+        "metric": "aum",
+        "value": 694.93
+      },
+      {
+        "metric": "average_aum",
+        "value": 682.98
+      }
+    ]
+  },
+  {
+    "amc": "Bandhan",
+    "family": "Bandhan Small Cap Fund",
+    "source": "https://assets.bandhanmutual.com/2025/04/59b0d496-bandhan-performance-table-march-2025.pdf",
+    "title": "March 2025 performance table · Bandhan Small Cap Fund",
+    "as_of": "2025-03-31",
+    "reviewed_at": "2026-09-23",
+    "note": "Official Bandhan performance table identifies BSE 250 SmallCap TRI as the scheme benchmark.",
+    "facts": [
+      {
+        "metric": "benchmark",
+        "value": "BSE 250 SmallCap TRI",
+        "unit": "Reported"
+      }
+    ]
+  },
+  {
+    "amc": "Invesco",
+    "family": "Invesco India Small Cap Fund",
+    "source": "https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp",
+    "title": "Official Invesco India Small Cap Fund page",
+    "as_of": "2026-08-31",
+    "reviewed_at": "2026-09-23",
+    "note": "Official fund page reports AUM and portfolio as of 31 August 2026 and identifies BSE 250 Smallcap TRI as AMFI Tier I benchmark.",
+    "facts": [
+      {
+        "metric": "benchmark",
+        "value": "BSE 250 Smallcap TRI",
+        "unit": "Reported"
+      }
+    ]
+  },
+  {
+    "amc": "Sundaram",
+    "family": "Sundaram Small Cap Fund",
+    "source": "https://www.sundarammutual.com/uploaddir/individual_factsheet/select_small_cap/Sundaram_Small_Cap_Fund_6_2026_150626_163202.pdf",
+    "title": "June 2026 Sundaram Small Cap Fund factsheet",
+    "as_of": "2026-05-31",
+    "reviewed_at": "2026-09-23",
+    "note": "Official June 2026 factsheet states performance data as of 31 May 2026 and Benchmark (Tier I) Nifty Small Cap 250 TRI.",
+    "facts": [
+      {
+        "metric": "benchmark",
+        "value": "Nifty Small Cap 250 TRI",
+        "unit": "Reported"
+      }
+    ]
+  },
+  {
+    "amc": "TRUST",
+    "family": "Trustmf Small Cap Fund",
+    "source": "https://www.trustmf.com/trustmfsys/wp-content/uploads/2024/09/TRUSTMF-Small-Cap-Fund_SID_27.11.2024.pdf",
+    "title": "TRUSTMF Small Cap Fund SID · 27 November 2024",
+    "as_of": "2024-11-27",
+    "reviewed_at": "2026-09-23",
+    "note": "Official SID states that scheme performance is benchmarked to the Nifty Smallcap 250 TRI index.",
+    "facts": [
+      {
+        "metric": "benchmark",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported"
+      }
+    ]
+  },
+  {
+    "amc": "UTI",
+    "family": "UTI Small Cap Fund",
+    "source": "https://doc.utimf.com/uticontainer/UTISmallCapFund31082023-75120231016-214522.pdf",
+    "title": "September 2023 UTI Small Cap Fund factsheet",
+    "as_of": "2023-08-31",
+    "reviewed_at": "2026-09-23",
+    "note": "Official factsheet data as of 31 August 2023 identifies Nifty Smallcap 250 TRI as the scheme benchmark.",
+    "facts": [
+      {
+        "metric": "benchmark",
+        "value": "Nifty Smallcap 250 TRI",
+        "unit": "Reported"
+      }
+    ]
+  },
+  {
+    "amc": "Union",
+    "family": "Union Small Cap Fund",
+    "source": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
+    "title": "Union Small Cap Fund Scheme Information Document",
+    "as_of": "2026-09-23",
+    "reviewed_at": "2026-09-23",
+    "note": "Current official SID observed on 23 September 2026 states AMFI Tier I benchmark BSE 250 SmallCap Index (TRI).",
+    "facts": [
+      {
+        "metric": "benchmark",
+        "value": "BSE 250 SmallCap Index (TRI)",
+        "unit": "Observed on official scheme document"
+      }
     ]
   }
 ]
