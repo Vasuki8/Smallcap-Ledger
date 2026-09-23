@@ -20,6 +20,7 @@ PAGES=[
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
     ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
     ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
+    ('Bank of India','Bank Of India Small Cap Fund','https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund'),
     ('Sundaram','Sundaram Small Cap Fund','https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json'),
 ]
 
@@ -202,6 +203,38 @@ def axis_top_holdings(soup,page_text,url,h):
     return 0
 
 
+
+def boi_top_holdings(soup,page_text,url,h):
+    """Retain BOI's explicitly dated Top 10 holdings as a partial snapshot."""
+    from .disclosures import portfolio
+    d=re.search(r'portfolio\s+as\s+on\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s*,?\s*\d{4})',page_text,re.I)
+    if not d:return 0
+    day=report_date('as on '+d.group(1))
+    if not day or day>date.today().isoformat():return 0
+    table=None
+    for candidate in soup.select('table'):
+        tx=re.sub(r'\s+',' ',candidate.get_text(' ',strip=True))
+        if re.search(r'Portfolio\s+Details',tx,re.I) and re.search(r'%\s*to\s*Net\s*Assets',tx,re.I):
+            table=candidate;break
+    if table is None:return 0
+    positions=[]
+    for tr in table.select('tr'):
+        cells=[re.sub(r'\s+',' ',c.get_text(' ',strip=True)).strip() for c in tr.find_all(['th','td'],recursive=False)]
+        if len(cells)<2:continue
+        name=cells[0];raw=cells[-1]
+        if not name or re.search(r'Portfolio\s+Details|%\s*to\s*Net\s*Assets',name,re.I):continue
+        if not re.fullmatch(r'\d+(?:\.\d+)?\s*%?',raw):continue
+        weight=number(raw)
+        if not 0<weight<20:return 0
+        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+    if not 5<=len(positions)<=15:return 0
+    if len({x['name'].lower() for x in positions})!=len(positions):return 0
+    if not 5<=sum(x['weight'] for x in positions)<=60:return 0
+    portfolio('Bank Of India Small Cap Fund',day,positions,False,url,h)
+    b=re.search(r'Benchmark\s+Riskometer\s*:?\s*(NIFTY\s+Smallcap\s+250\s+TRI)',page_text,re.I)
+    if b:db.metric('Bank Of India Small Cap Fund','All','benchmark',day,'NIFTY Smallcap 250 TRI','Reported',url,h)
+    return len(positions)
+
 def kotak_portfolio(soup,day,url,h):
     """Parse Kotak's full monthly Small Cap factsheet portfolio by reconciliation."""
     from .disclosures import portfolio
@@ -280,6 +313,7 @@ def parse_page(content,family,url,h):
                             re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',visible,re.I))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
+    if family=='Bank Of India Small Cap Fund':return boi_top_holdings(soup,text,url,h)
     if kotak_monthly:
         day=report_date(text)
         if not day or day>date.today().isoformat():return 0
