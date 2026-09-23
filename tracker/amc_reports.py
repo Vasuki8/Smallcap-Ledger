@@ -6,12 +6,13 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v24'
+PARSER_VERSION='amc-reports-2026-09-v25'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
 PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v24':frozenset({'Edelweiss Small Cap Fund'}),
+    'amc-reports-2026-09-v25':frozenset({'Bandhan Small Cap Fund','Bank Of India Small Cap Fund','Baroda Bnp Paribas Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund','ICICI Prudential Small Cap Fund','Invesco India Small Cap Fund','Jm Small Cap Fund','LIC Mf Small Cap Fund','Pgim India Small Cap Fund','Samco Small Cap Fund','Sundaram Small Cap Fund','Tata Small Cap Fund','The Wealth Company Small Cap Fund','Trustmf Small Cap Fund','UTI Small Cap Fund','Union Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -26,7 +27,11 @@ def should_reprocess_existing(family,url):
     """Keep broad historical reparsing narrow; opt in verified PDF families explicitly."""
     path=urlparse(url).path.lower()
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
-    return family=='Bank Of India Small Cap Fund' and path.endswith('.pdf')
+    if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
+    # v25 only changes strict benchmark-label parsing. Re-open retained PDF
+    # evidence solely for the families that were missing benchmark identity.
+    if PARSER_VERSION=='amc-reports-2026-09-v25' and parser_upgrade_applies(family) and path.endswith('.pdf'):return True
+    return False
 
 
 
