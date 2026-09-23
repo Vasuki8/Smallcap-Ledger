@@ -144,7 +144,8 @@ Month End AUM: Rs. 100 Cr''')
             if '/wp-json/wp/v2/posts?' in url:return (json.dumps(post).encode(),'h','application/json')
             if '/wp-json/wp/v2/media?' in url:return (json.dumps(media).encode(),'m','application/json')
             return (b'<html></html>','p','text/html')
-        with patch('tracker.amc_discovery.read',side_effect=fake_read):
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
             rows=list(discover('Bandhan'))
         self.assertEqual(rows[0][0],'Bandhan Small Cap Fund')
         self.assertTrue(rows[0][1].endswith('.xlsx'))
