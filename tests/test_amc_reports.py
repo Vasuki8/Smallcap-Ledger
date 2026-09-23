@@ -79,6 +79,13 @@ class ReportParserTests(unittest.TestCase):
         upgrade=workflow.split('- name: Apply official AMC report collector upgrade',1)[1].split('- name: Collect daily data',1)[0]
         self.assertNotIn('continue-on-error: true',upgrade)
 
+    def test_parser_upgrade_does_not_duplicate_daily_amc_discovery(self):
+        root=Path(__file__).resolve().parents[1]
+        upgrade=(root/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertNotIn('amc_discovery.update(',upgrade)
+        sync=(root/'tracker'/'sync.py').read_text()
+        self.assertIn('amc_discovery.update',sync)
+
     def test_v24_parser_upgrade_targets_only_edelweiss(self):
         from tracker import amc_reports
         self.assertEqual(amc_reports.PARSER_VERSION,'amc-reports-2026-09-v24')
