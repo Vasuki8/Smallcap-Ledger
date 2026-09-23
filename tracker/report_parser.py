@@ -602,7 +602,13 @@ def hsbc_complete_portfolio(text):
         # HSBC's August 2026 format moves the complete portfolio to a dedicated
         # Additional Disclosure page. Accept only that exact scheme page and
         # only when all table/cash/grand-total anchors are present.
-        exact_heading=bool(re.search(r'(?m)^\s*HSBC Small Cap Fund\s*    day=dated(total_match.group(1));grand=float(total_match.group(2))
+        exact_heading=bool(re.search(r'(?m)^\s*HSBC Small Cap Fund\s*$',normalized,re.I))
+        portfolio_heading=bool(re.search(r'(?m)^\s*Portfolio\s*$',normalized,re.I))
+        table_heading=bool(re.search(r'Issuer\s+Market Cap/\s*\n?\s*Ratings\s+%\s*to\s*Net\s*Assets',normalized,re.I))
+        cash_anchors=bool(re.search(r'\bTREPS\*?\s+-?\d',normalized,re.I) and
+                          re.search(r'Net Current Assets:\s*-?\d',normalized,re.I))
+        if not (exact_heading and portfolio_heading and table_heading and cash_anchors):return None
+    day=dated(total_match.group(1));grand=float(total_match.group(2))
     if not day or abs(grand-100)>.03:return None
     start=re.search(r'Issuer\s+Market Cap/\s*\n?\s*Ratings\s+%\s*to\s*Net\s*Assets',normalized,re.I)
     if not start:return None
