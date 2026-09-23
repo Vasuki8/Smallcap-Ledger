@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-23T17:09:54+00:00
+Prepared: 2026-09-23T17:11:53+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
@@ -53,7 +53,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | --- | --- | --- | --- | --- |
 | Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
-| Groww Small Cap Fund | Unsupported document layout | factsheet: GMF Schemes Applicable risk factors.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
+| Groww Small Cap Fund | Unsupported document layout | factsheet: Ratios for GMF Factsheet.pdf · archived 2026-09-22 | unrecognized · 0 records · Original archived; no supported, unambiguous dated scheme table found | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Quant Small Cap Fund | Document known but not archived | factsheet: a | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Tata Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Trustmf Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
