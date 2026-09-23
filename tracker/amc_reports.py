@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v29'
+PARSER_VERSION='amc-reports-2026-09-v30'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -17,6 +17,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v27':frozenset({'Edelweiss Small Cap Fund'}),
     'amc-reports-2026-09-v28':frozenset({'Aditya Birla Sun Life Small Cap Fund'}),
     'amc-reports-2026-09-v29':frozenset({'Jm Small Cap Fund'}),
+    'amc-reports-2026-09-v30':frozenset({'Jm Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -47,6 +48,10 @@ def should_reprocess_existing(family,url,h=None):
     if PARSER_VERSION=='amc-reports-2026-09-v29':
         # JM's current monthly factsheets are already archived. Re-open only JM
         # PDFs so the reconciled Top-25 parser can recover the latest snapshot.
+        return family=='Jm Small Cap Fund' and path.endswith('.pdf')
+    if PARSER_VERSION=='amc-reports-2026-09-v30':
+        # JM changed PDF text ordering across monthly factsheets. Replay only
+        # archived JM PDFs for the table-header anchored Top-25 parser.
         return family=='Jm Small Cap Fund' and path.endswith('.pdf')
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
