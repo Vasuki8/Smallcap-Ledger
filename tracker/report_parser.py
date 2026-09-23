@@ -308,6 +308,11 @@ def quant_top10_portfolio(text):
             m=re.fullmatch(r'10\s+(-?\d+(?:\.\d+)?)',line)
             if m:
                 concentration=float(m.group(1));break
+    if concentration is None:
+        vertical=re.search(
+            r'PORTFOLIO\s+CONCENTRATION\s+Top\s+Holding\s+10\s+20\s+30\s+%\s+of\s+Portfolio\s+(-?\d+(?:\.\d+)?)',
+            normalized,re.I)
+        if vertical:concentration=float(vertical.group(1))
     if concentration is None:return None
     if abs(sum(x['weight'] for x in positions)-concentration)>.03:return None
 
