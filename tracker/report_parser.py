@@ -139,6 +139,11 @@ def page_facts(text,family):
         # a standalone "Benchmark:" label.
         if re.search(r'Nifty\s+Smallcap\s+250\s+TRI\s*\(\s*Benchmark\s*\)',flat,re.I):
             add('benchmark','Nifty Smallcap 250 TRI',unit='Reported')
+    if family=='Invesco India Small Cap Fund':
+        # Invesco prints the scheme benchmark under a two-line "SCHEME
+        # BENCHMARK" heading, followed by the AMFI Tier-I label.
+        if re.search(r'SCHEME\s+BENCHMARK[\s\S]{0,120}?BSE\s+250\s+Small\s*Cap(?:\s+Index)?\s+TRI',text,re.I):
+            add('benchmark','BSE 250 Smallcap TRI',unit='Reported')
     if family=='Quantum Small Cap Fund' and re.search(r'AUM\s*₹\s*\(In Crores\)',flat,re.I):
         for label,key in [('Absolute AUM','aum'),(r'Average AUM\*?','average_aum')]:
             m=re.search(label+r'\s*:\s*'+NUMBER,flat,re.I)
