@@ -1278,11 +1278,10 @@ Total Net Assets as on 31-July-2026 100.00%
 
     def test_hsbc_august_joined_market_cap_label_still_reconciles(self):
         from tracker.report_parser import hsbc_complete_portfolio
-        text='''HSBC Small Cap Fund
-Small Cap Fund - An open ended equity scheme predominantly investing in small cap stocks.
-Fund Details
-Date of Allotment 12-May-14
-Benchmark: NIFTY Small Cap 250 TRI
+        text='''Additional Disclosure
+Past Performance is not an indicator or guarantee of future results
+HSBC Small Cap Fund
+Portfolio
 Issuer Market Cap/
 Ratings % to Net Assets
 Aerospace & Defense 0.86%
@@ -1303,6 +1302,7 @@ Total Net Assets as on 31-August-2026 100.00%
         self.assertIsNotNone(parsed)
         self.assertEqual(parsed['day'],'2026-08-31')
         self.assertEqual(parsed['positions'][0]['name'],'PARAS DEFENCE AND SPACE TECHNOLOGIES LTD')
+        self.assertFalse(__import__('tracker.report_parser',fromlist=['owns_page']).owns_page(text,'HSBC Small Cap Fund'))
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
         self.assertIsNone(hsbc_complete_portfolio(text.replace('Aerospace & Defense 0.86%','Aerospace & Defense 0.92%')))
 
