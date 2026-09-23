@@ -594,6 +594,10 @@ def equity_positions(text,family):
 
 def hsbc_complete_portfolio(text):
     """Fully reconcile HSBC Small Cap's monthly factsheet table."""
+    if re.search(r'HSBC\s+Small\s+Cap\s+Fund|Issuer\s+Market\s+Cap|Cash\s+Equivalent|Total\s+Net\s+Assets',text,re.I):
+        print('HSBC_LAYOUT_DIAG_BEGIN')
+        print(text[:24000])
+        print('HSBC_LAYOUT_DIAG_END')
     normalized=normalize(text)
     if not owns_page(normalized,'HSBC Small Cap Fund'):return None
     total_match=re.search(r'Total Net Assets as on\s+('+DATE+r')\s+(-?\d+(?:\.\d+)?)%',normalized,re.I)
