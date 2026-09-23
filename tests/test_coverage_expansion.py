@@ -512,6 +512,7 @@ Total Assets 100.00
         from tracker import disclosures
         text='''Jm Small Cap Fund
 An open ended equity scheme predominantly investing in small cap stocks
+INCEPTION DATE 18th June, 2024
 Details as on August 31, 2026
 SCHEME PORTFOLIO (TOP 25 STOCKS)
 Name of Instrument (Equity Shares) % to NAV
