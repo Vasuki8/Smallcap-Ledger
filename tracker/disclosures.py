@@ -239,6 +239,12 @@ def factsheet_pdf(content,family,url,h):
         if family=='Aditya Birla Sun Life Small Cap Fund':
             from .report_parser import absl_complete_portfolio
             full=absl_complete_portfolio(text)
+        if family=='Jm Small Cap Fund':
+            from .report_parser import jm_top25_portfolio
+            partial=jm_top25_portfolio(text)
+            if not partial:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:partial=jm_top25_portfolio(layout_text)
         if family=='Edelweiss Small Cap Fund':
             from .report_parser import edelweiss_top30_portfolio
             partial=edelweiss_top30_portfolio(text)
