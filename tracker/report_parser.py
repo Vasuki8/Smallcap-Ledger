@@ -482,6 +482,63 @@ def absl_complete_portfolio(text):
     return {'day':day,'positions':positions}
 
 
+
+def jm_top25_portfolio(text):
+    """Parse JM Small Cap's reconciled Top-25 table as a partial snapshot."""
+    normalized=normalize(text)
+    family='Jm Small Cap Fund'
+    if not owns_page(normalized,family):return None
+    m=re.search(r'Details\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    start=re.search(r'SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)',normalized,re.I)
+    if not start:return None
+    tail=normalized[start.end():]
+    other=re.search(r'Other\s+Equity\s+Stocks\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
+    equity=re.search(r'Total\s+Equity\s+Holdings\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
+    treps=re.search(r'TREPS\s*&\s*Others\s*\*?\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
+    total=re.search(r'Total\s+Assets\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
+    if not all((other,equity,treps,total)):return None
+    other_weight=float(other.group(1));equity_total=float(equity.group(1))
+    treps_weight=float(treps.group(1));grand=float(total.group(1))
+    if abs(grand-100)>.02:return None
+    if not (0<=other_weight<=70 and 50<=equity_total<=100 and 0<=treps_weight<=30):return None
+    if abs((equity_total+treps_weight)-grand)>.03:return None
+
+    section=tail[:other.start()]
+    positions=[];pending=[]
+    heading=re.compile(r'^(?:SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)\s*)?(?:Name\s+of\s+Instrument\s*\(Equity\s+Shares\)\s*%?\s*to\s*NAV)?$',re.I)
+    for raw in section.splitlines():
+        line=re.sub(r'\s+',' ',raw).strip().lstrip('●•').strip()
+        if not line or heading.fullmatch(line):continue
+        line=re.sub(r'^(?:SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)\s*)+','',line,flags=re.I).strip()
+        if not line:continue
+        row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%?',line)
+        number_only=re.fullmatch(r'(-?\d+(?:\.\d+)?)\s*%?',line)
+        if number_only and pending:
+            name=' '.join(pending).strip();weight=float(number_only.group(1));pending=[]
+        elif row:
+            name=' '.join(pending+[row.group(1).strip()]).strip();weight=float(row.group(2));pending=[]
+        else:
+            if re.search(r'Name\s+of\s+Instrument|%?\s*to\s*NAV',line,re.I):
+                pending=[];continue
+            pending.append(line)
+            if len(pending)>3:pending=pending[-3:]
+            continue
+        name=re.sub(r'^Name\s+of\s+Instrument\s*\(Equity\s+Shares\)\s*','',name,flags=re.I).strip()
+        if not re.search(r'\b(?:Ltd\.?|Limited)\b',name,re.I):return None
+        if not 0<weight<15:return None
+        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+        if len(positions)>25:return None
+
+    if len(positions)!=25:return None
+    if len({x['name'].lower() for x in positions})!=25:return None
+    named_total=sum(x['weight'] for x in positions)
+    if abs((named_total+other_weight)-equity_total)>.08:return None
+    return {'day':day,'positions':positions}
+
+
 def edelweiss_top30_portfolio(text):
     """Parse Edelweiss Small Cap's published Top 30 list as a partial snapshot.
 
