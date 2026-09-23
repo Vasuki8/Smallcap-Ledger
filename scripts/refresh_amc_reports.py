@@ -202,39 +202,30 @@ def run():
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
-        # Temporary ABSL JavaScript diagnostic: discover how the public accordion
-        # invokes its first-party endpoint. No portfolio data is accepted here.
+        # Temporary ABSL endpoint validation using the exact GET parameters
+        # used by the AMC's own public resourceAccordianAjax JavaScript.
         try:
             from bs4 import BeautifulSoup
-            from urllib.parse import urljoin,urlparse
+            from urllib.parse import urljoin
             page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
             raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
-            scripts=[]
-            for tag in soup.find_all('script'):
-                src=tag.get('src')
-                if not src:continue
-                u=urljoin(page,src)
-                if urlparse(u).netloc.endswith('adityabirlacapital.com'):
-                    scripts.append(u)
-            needles=(r'data-accordian-api',r'FactsheetAccordionById',r'tabInject',r'accord_header')
-            print(f'ABSL_ACCORDION_JS scripts={len(set(scripts))}',flush=True)
-            hits=0
-            for u in dict.fromkeys(scripts):
-                try:
-                    js,_,_=providers.fetch(u,max_bytes=6*1024*1024)
-                    source=js.decode('utf-8','ignore')
-                except Exception:
-                    continue
-                for needle in needles:
-                    for m in list(re.finditer(needle,source,re.I))[:6]:
-                        snippet=re.sub(r'\s+',' ',source[max(0,m.start()-1200):m.end()+2200]).strip()
-                        print('ABSL_ACCORDION_JS_HIT '+u+' :: '+snippet[:3600],flush=True)
-                        hits+=1
-                if hits>=20:break
-            if not hits:print('ABSL_ACCORDION_JS_HIT none',flush=True)
+            item=next((li for li in soup.select('li[data-accordian-api]')
+                       if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
+            if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
+            endpoint=urljoin(page,item.get('data-accordian-api',''))+'&month=%20&year=0'
+            payload,source,mime=providers.fetch(endpoint,max_bytes=8*1024*1024)
+            data=json.loads(payload)
+            print(f'ABSL_ENDPOINT_OK source={source} mime={mime} return={data.get("ReturnCode")} rows={len(data.get("AccordionList") or [])}',flush=True)
+            for row in (data.get('AccordionList') or [])[:40]:
+                print('ABSL_ENDPOINT_ROW '+json.dumps({
+                    'ResourceLink':row.get('ResourceLink'),
+                    'pdfUrl':row.get('pdfUrl'),
+                    'shareTitle':row.get('shareTitle'),
+                    'ResourceName':row.get('ResourceName'),
+                },ensure_ascii=False)[:1500],flush=True)
         except Exception as exc:
-            print(f"::warning::ABSL accordion JS diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            print(f"::warning::ABSL endpoint validation: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
