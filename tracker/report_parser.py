@@ -199,28 +199,28 @@ def page_facts(text,family):
 def trustmf_named_portfolio(text):
     """Parse dated TRUSTMF Small Cap named holdings as an explicit partial snapshot."""
     normalized=normalize(text)
-    if not re.search(r'TRUSTMF\\s+Small\\s+Cap\\s+Fund',normalized,re.I):return None
-    if not re.search(r'open[\\s-]*ended\\s+equity\\s+scheme\\s+predominantly\\s+investing\\s+in\\s+small\\s+cap\\s+stocks',normalized,re.I):return None
-    if not re.search(r'04(?:th)?\\s+November\\s+2024',normalized,re.I):return None
-    if not re.search(r'NIFTY\\s+Smallcap\\s+250\\s+TRI',normalized,re.I):return None
-    m=re.search(r'Portfolio\\s+as\\s+on\\s+('+DATE+r')',normalized,re.I)
+    if not re.search(r'TRUSTMF\s+Small\s+Cap\s+Fund',normalized,re.I):return None
+    if not re.search(r'open[\s-]*ended\s+equity\s+scheme\s+predominantly\s+investing\s+in\s+small\s+cap\s+stocks',normalized,re.I):return None
+    if not re.search(r'04(?:th)?\s+November\s+2024',normalized,re.I):return None
+    if not re.search(r'NIFTY\s+Smallcap\s+250\s+TRI',normalized,re.I):return None
+    m=re.search(r'Portfolio\s+as\s+on\s+('+DATE+r')',normalized,re.I)
     day=dated(m.group(1)) if m else None
     if not day:return None
 
-    lines=[re.sub(r'\\s+',' ',x).strip() for x in normalized.splitlines()]
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
     start=next((i for i,x in enumerate(lines) if re.search(r'Company/Issuer',x,re.I)),None)
     if start is None:return None
     positions=[]
     for line in lines[start+1:start+180]:
-        if re.search(r'^(?:TRUSTMF\\s+Banking|TRUSTMF\\s+Corporate|Performance\\s+Details|Product\\s+Suitability)',line,re.I):break
-        row=re.fullmatch(r'(.+?)\\s+(-?\\d+(?:\\.\\d+)?)\\s*%?',line)
+        if re.search(r'^(?:TRUSTMF\s+Banking|TRUSTMF\s+Corporate|Performance\s+Details|Product\s+Suitability)',line,re.I):break
+        row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%?',line)
         if not row:continue
         raw=row.group(1).strip();weight=float(row.group(2))
         if not 0<weight<25:continue
         if re.fullmatch(r'Equity|Total|Cash.*|Net.*|[A-Z &/-]{4,}',raw):continue
-        company=re.match(r'(.+?\\b(?:Limited|Ltd\\.?|Bank(?:\\s+Limited)?|Corporation(?:\\s+Limited)?))\\b',raw,re.I)
+        company=re.match(r'(.+?\b(?:Limited|Ltd\.?|Bank(?:\s+Limited)?|Corporation(?:\s+Limited)?))\b',raw,re.I)
         if not company:continue
-        name=re.sub(r'[\\^*]+\\Z','',company.group(1)).strip()
+        name=re.sub(r'[\^*]+\Z','',company.group(1)).strip()
         if len(name)<4:continue
         positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
     dedup={}
