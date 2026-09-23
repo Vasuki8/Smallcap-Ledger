@@ -23,6 +23,7 @@ def run():
     if db.setting(key,False):
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
+    rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
     source_rows=json.loads((ROOT/'tracker/sources.json').read_text())
     # Thin split restores omit historical source binaries during normal runs.
     # Parser upgrades materialize only originals that can actually be read by
@@ -36,7 +37,9 @@ def run():
           JOIN document_versions v ON v.document_id=d.id
           LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
           WHERE d.origin='AMC' AND e.hash IS NULL''',(amc_reports.PARSER_VERSION,))
-        needed.update(row['hash'] for row in pending if amc_reports.should_reprocess_existing(row['family'],row['url']))
+        needed.update(row['hash'] for row in pending
+                      if amc_reports.parser_upgrade_applies(row['family'])
+                      and amc_reports.should_reprocess_existing(row['family'],row['url']))
         from scripts.github_state import materialize_hashes
         restored=materialize_hashes(needed)
         print(f'Materialized {restored} archived source files needed for parser upgrade',flush=True)
