@@ -5,6 +5,7 @@ import re
 from datetime import date,timedelta
 import httpx
 from urllib.parse import urlencode
+from bs4 import BeautifulSoup
 from . import db
 from .providers import fetch,number,iso
 
@@ -15,9 +16,76 @@ POLLING_BASE=BASE+'/gateway/pollingsebi'
 PERFORMANCE_FILTERS='/api/amfi/fundperformancefilters'
 PERFORMANCE_SUBCATEGORY='/api/amfi/getsubcategory'
 PERFORMANCE_DATA='/api/amfi/fundperformance'
+PORTFOLIO_DISCLOSURE='https://portal.amfiindia.com/DownloadSchemeData_Po.aspx'
 
 
 def normalized(value):return re.sub('[^a-z0-9]','',str(value).split('(')[0].lower())
+
+
+def inspect_portfolio_response(content,family):
+    """Return read-only diagnostics for AMFI's scheme portfolio response."""
+    soup=BeautifulSoup(content,'html.parser')
+    page_text=' '.join(soup.stripped_strings)
+    tables=soup.find_all('table')
+    table_info=[]
+    for table in tables:
+        rows=[]
+        for tr in table.find_all('tr'):
+            cells=[' '.join(x.stripped_strings) for x in tr.find_all(['th','td'])]
+            if cells:rows.append(cells)
+        table_info.append(rows)
+    largest=max(table_info,key=len,default=[])
+    headers=largest[0] if largest else []
+    pct_cells=0
+    for row in largest[1:]:
+        for value in row:
+            if re.fullmatch(r'-?[\d,]+(?:\.\d+)?\s*%?',value.strip()):
+                try:
+                    n=number(value)
+                    if -100<=n<=100:pct_cells+=1
+                except ValueError:
+                    pass
+    expected=normalized(family)
+    visible=normalized(page_text)
+    dates=re.findall(r'\b(?:\d{1,2}[-/ ][A-Za-z]{3,9}[-/ ]\d{4}|\d{1,2}[-/]\d{1,2}[-/]\d{4})\b',page_text)
+    return {
+        'bytes':len(content),
+        'tables':len(tables),
+        'largest_table_rows':len(largest),
+        'largest_table_columns':max((len(r) for r in largest),default=0),
+        'headers':headers[:12],
+        'family_visible':bool(expected and expected in visible),
+        'date_mentions':dates[:6],
+        'numeric_cells':pct_cells,
+        'sample_rows':[row[:6] for row in largest[1:4]],
+    }
+
+
+def probe_portfolio_endpoint(families=('Bank Of India Small Cap Fund','Edelweiss Small Cap Fund')):
+    """Probe the public AMFI scheme-portfolio endpoint without storing its data."""
+    today=date.today()
+    year,month=divmod(today.year*12+today.month-2,12);month+=1
+    diagnostics=[]
+    for family in families:
+        scheme=db.one("""SELECT code,name,family,plan,option FROM schemes WHERE family=?
+          ORDER BY CASE WHEN plan='Direct' AND option='Growth' THEN 0
+                        WHEN option='Growth' THEN 1 ELSE 2 END,code LIMIT 1""",(family,))
+        if not scheme:
+            diagnostics.append({'family':family,'status':'missing_scheme_code'})
+            continue
+        params={'mession':'24','mession_code':scheme['code'],'mf':month,'yr':year,'myession':'S'}
+        url=PORTFOLIO_DISCLOSURE+'?'+urlencode(params)
+        try:
+            body,_,typ=fetch(url,archive=False,max_bytes=5*1024*1024)
+            info=inspect_portfolio_response(body,family)
+            info.update({'family':family,'scheme_code':scheme['code'],'plan':scheme['plan'],
+                         'option':scheme['option'],'month':month,'year':year,
+                         'content_type':typ,'status':'ok'})
+        except Exception as e:
+            info={'family':family,'scheme_code':scheme['code'],'month':month,'year':year,
+                  'status':'unavailable','detail':(str(e) or type(e).__name__)[:220]}
+        diagnostics.append(info)
+    return diagnostics
 
 
 def save_fees(records,source,content_hash):
