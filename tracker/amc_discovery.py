@@ -101,22 +101,14 @@ def discover(amc):
             if not ext:continue
             if not re.search(r'portfolio|monthly|as[ _-]*on',combined,re.I):continue
             day=None
-            for pattern in (
-                r'as[ _-]*on[ _-]*(\d{1,2})[ _-]+([A-Za-z]+)[ _-]+(20\d{2})',
-                r'as[ _-]*on[ _-]*([A-Za-z]+)[ _-]+(\d{1,2})[,_ -]+(20\d{2})',
-                r'(\d{1,2})[._/-](\d{1,2})[._/-](20\d{2})',
-            ):
-                m=re.search(pattern,combined,re.I)
-                if not m:continue
-                try:
-                    if pattern.startswith('as[ _-]*on[ _-]*([A'):
-                        day=datetime.strptime(f'{m.group(2)} {m.group(1)} {m.group(3)}','%d %B %Y').date()
-                    elif '[._/-]' in pattern:
-                        day=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
-                    else:
-                        day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
-                except ValueError:day=None
-                if day:break
+            dmy=re.search(r'as[ _-]*on[ _-]*(\d{1,2})[ _-]+([A-Za-z]+)[,_ -]+(20\d{2})',combined,re.I)
+            mdy=re.search(r'as[ _-]*on[ _-]*([A-Za-z]+)[ _-]+(\d{1,2})[,_ -]+(20\d{2})',combined,re.I)
+            numeric=re.search(r'(\d{1,2})[._/-](\d{1,2})[._/-](20\d{2})',combined)
+            try:
+                if dmy:day=datetime.strptime(f'{dmy.group(1)} {dmy.group(2)} {dmy.group(3)}','%d %B %Y').date()
+                elif mdy:day=datetime.strptime(f'{mdy.group(2)} {mdy.group(1)} {mdy.group(3)}','%d %B %Y').date()
+                elif numeric:day=date(int(numeric.group(3)),int(numeric.group(2)),int(numeric.group(1)))
+            except ValueError:day=None
             if day and day<=date.today():
                 kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
                 candidates.append((day,priority,url,title))
