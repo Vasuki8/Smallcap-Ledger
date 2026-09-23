@@ -351,6 +351,31 @@ def discover(amc):
         chosen=max(newest_rows,key=lambda r:r[2])
         yield family,chosen[3],chosen[4] or 'Samco Small Cap monthly portfolio'
 
+    elif amc=='Groww':
+        family='Groww Small Cap Fund'
+        page='https://www.growwmf.in/statutory-disclosure/portfolio'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        rows=[]
+        for url,title in providers.candidate_links(soup,page).items():
+            combined=unquote(url+' '+title)
+            if not disclosures.official_publication_url(url,amc):continue
+            if not re.search(r'\.(?:xlsx?|xls)(?:[?#]|$)',url,re.I):continue
+            if not re.search(r'\bMonthly\s+Portfolio\b',combined,re.I):continue
+            day=None
+            m=re.search(r'(\d{1,2})(?:st|nd|rd|th)?[ ,_-]+([A-Za-z]+)[ ,_-]+(20\d{2})',combined,re.I)
+            if m:
+                try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
+                except ValueError:pass
+            if not day:
+                m=re.search(r'([A-Za-z]+)[ ,_-]+(\d{1,2})(?:st|nd|rd|th)?[ ,_-]+(20\d{2})',combined,re.I)
+                if m:
+                    try:day=datetime.strptime(f'{m.group(2)} {m.group(1)} {m.group(3)}','%d %B %Y').date()
+                    except ValueError:pass
+            if day and day<=date.today():rows.append((day,url,title))
+        if not rows:raise ValueError('No official Groww monthly portfolio workbook was exposed')
+        newest=max(x[0] for x in rows)
+        for _,url,title in [r for r in rows if r[0]==newest][:2]:
+            yield family,url,title or f'Monthly Portfolio - {newest.isoformat()}'
     elif amc=='quant Mutual':
         family='Quant Small Cap Fund'
         page='https://quantmutual.com/statutory-disclosures'
@@ -532,5 +557,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','Franklin','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
