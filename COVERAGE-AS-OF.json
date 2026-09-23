@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-23T16:55:27+00:00",
+  "built_at": "2026-09-23T17:07:51+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -299,37 +299,16 @@
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
-      "portfolio": null,
-      "portfolio_complete": false,
-      "portfolio_fresh": false,
+      "portfolio": {
+        "as_of": "2026-08-31",
+        "source": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5",
+        "complete": 1,
+        "positions": 103
+      },
+      "portfolio_complete": true,
+      "portfolio_fresh": true,
       "official_publications": 6,
-      "portfolio_gap": {
-        "reason": "facts_only_no_portfolio",
-        "document": {
-          "title": "FACTSHEET AUGUST 2026",
-          "kind": "factsheet",
-          "url": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5",
-          "last_seen": "2026-09-23T03:48:10+00:00",
-          "hash": "762c097943b21d3dabb77708daf08bcd59c7050e1abfd5de99d0f83030a1f561",
-          "observed_at": "2026-09-22T02:23:02+00:00"
-        },
-        "extraction": {
-          "status": "parsed",
-          "records": 3,
-          "detail": "3 dated facts; 0 holdings (portfolio may be partial)",
-          "checked_at": "2026-09-23T03:48:45+00:00",
-          "parser_version": "amc-reports-2026-09-v24",
-          "source": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5"
-        },
-        "source_page": {
-          "amc_match": "Bank of India",
-          "url": "https://www.boimf.in/",
-          "label": "Fund house",
-          "last_checked": "2026-09-22T21:54:25+00:00",
-          "status": "Limited",
-          "detail": "Page archived; no automatically readable fund documents found"
-        }
-      }
+      "portfolio_gap": null
     },
     {
       "family": "Baroda Bnp Paribas Small Cap Fund",
@@ -1813,7 +1792,7 @@
           "title": "July 2026 Small Cap factsheet",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-23T16:55:23+00:00",
+          "last_seen": "2026-09-23T17:05:42+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1832,7 +1811,6 @@
   "portfolio_gap_reasons": {
     "source_unavailable": 1,
     "source_not_exposing_portfolio": 3,
-    "facts_only_no_portfolio": 1,
     "unsupported_document_layout": 1,
     "document_not_archived": 2
   },
@@ -1842,10 +1820,10 @@
     "fee": 36,
     "ter": 28,
     "base_expense_ratio": 33,
-    "portfolio": 28,
-    "portfolio_complete": 18,
-    "portfolio_fresh": 18,
-    "portfolio_fresh_complete": 12,
+    "portfolio": 29,
+    "portfolio_complete": 19,
+    "portfolio_fresh": 19,
+    "portfolio_fresh_complete": 13,
     "portfolio_partial": 10,
     "benchmark_identity": 21
   },
