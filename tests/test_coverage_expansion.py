@@ -355,6 +355,107 @@ Scheme Category: Small Cap Fund'''
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Small Cap Fund','Large Cap Fund',1)))
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
 
+    def test_bajaj_top10_factsheet_preserves_other_equities_as_partial(self):
+        from tracker.report_parser import bajaj_top10_portfolio
+        summary='''Bajaj Finserv Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+Inception Date:
+18th July 2025
+Benchmark:
+BSE 250 SmallCap TRI
+Data as on 31st July 2026'''
+        holdings='''Asset Allocation
+Net Equities
+Reverse Repo / TREPS & Net Current Assets
+Equity Options
+98.28%
+1.68%
+0.04%
+Equity Holding
+Name (Top 10 Holdings) (% to NAV)
+Rubicon Research Limited
+S.J.S. Enterprises Limited
+Zydus Wellness Limited
+Neuland Laboratories Limited
+Welspun Corp Limited
+Schaeffler India Limited
+The Federal Bank Limited
+Angel One Limited
+Timken India Limited
+Piramal Pharma Limited
+Other Equities
+Total Equities
+4.09%
+3.21%
+3.02%
+2.97%
+2.71%
+2.70%
+2.50%
+2.40%
+2.38%
+2.06%
+70.24%
+98.28%'''
+        parsed=bajaj_top10_portfolio(summary,holdings)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-07-31')
+        self.assertEqual(len(parsed['positions']),13)
+        self.assertEqual(parsed['positions'][10]['name'],'Other Equities (AMC aggregate)')
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Derivative')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertIsNone(bajaj_top10_portfolio(summary,holdings.replace('70.24%','69.24%')))
+
+    def test_bajaj_top10_factsheet_saves_partial_snapshot(self):
+        from tracker import disclosures
+        summary='''Bajaj Finserv Small Cap Fund
+An open ended equity scheme predominantly investing in small cap stocks
+Inception Date: 18th July 2025
+Benchmark: BSE 250 SmallCap TRI
+Data as on 31st July 2026'''
+        holdings='''Asset Allocation
+Net Equities
+Reverse Repo / TREPS & Net Current Assets
+Equity Options
+98.28%
+1.68%
+0.04%
+Equity Holding
+Name (Top 10 Holdings) (% to NAV)
+Rubicon Research Limited
+S.J.S. Enterprises Limited
+Zydus Wellness Limited
+Neuland Laboratories Limited
+Welspun Corp Limited
+Schaeffler India Limited
+The Federal Bank Limited
+Angel One Limited
+Timken India Limited
+Piramal Pharma Limited
+Other Equities
+Total Equities
+4.09%
+3.21%
+3.02%
+2.97%
+2.71%
+2.70%
+2.50%
+2.40%
+2.38%
+2.06%
+70.24%
+98.28%'''
+        pages=[SimpleNamespace(extract_text=lambda *args,**kwargs:summary),
+               SimpleNamespace(extract_text=lambda *args,**kwargs:holdings)]
+        reader=SimpleNamespace(is_encrypted=False,pages=pages)
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bajaj Finserv Small Cap Fund',
+                                            'https://media.bajajamc.com/factsheet.pdf','bajaj-top10')
+        self.assertGreaterEqual(count,13)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bajaj Finserv Small Cap Fund' AND hash='bajaj-top10'")
+        self.assertEqual(snap,{'as_of':'2026-07-31','complete':0})
+
     def test_jm_official_page_saves_dated_partial_holdings_and_benchmark(self):
         from tracker.amc_metrics import parse_page
         html=b'''<html><body><h1>JM Small Cap Fund</h1>
