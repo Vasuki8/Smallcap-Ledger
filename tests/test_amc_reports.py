@@ -153,7 +153,7 @@ Month End AUM: Rs. 100 Cr''')
             'https://www.tatamutualfund.com/system/files/2026-09/Tata_Monthly_Portfolio_August_2026.xlsx')
 
     def test_v26_quantity_reprocess_is_limited_to_retained_workbook_hashes(self):
-        from tracker import amc_reports
+        from tracker import amc_reports,db
         family='HDFC Small Cap Fund'
         url='https://files.hdfcfund.com/current.xlsx'
         with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v26'):
