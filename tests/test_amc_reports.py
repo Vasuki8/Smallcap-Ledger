@@ -587,29 +587,57 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(len(rows),2)
         self.assertFalse(any('July-31-2026' in row[1] for row in rows))
 
-    def test_hsbc_discovery_uses_recent_official_monthly_factsheets(self):
+    def test_hsbc_discovery_uses_archive_exact_link_then_stable_fallback(self):
         from tracker import amc_discovery
-        with patch('tracker.amc_discovery.date') as fake:
+        html=b'''<html><body>
+        <a href="/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-real-aug-2026.pdf">The Asset as on - August 2026</a>
+        <a href="/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-real-jul-2026.pdf">The Asset as on - July 2026</a>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            self.assertEqual(list(amc_discovery.discover('HSBC')),[(
+                'HSBC Small Cap Fund',
+                'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-real-aug-2026.pdf',
+                'The Asset as on - August 2026')])
+        with patch('tracker.amc_discovery.read',side_effect=ValueError('archive unavailable')), \
+             patch('tracker.amc_discovery.date') as fake:
             fake.today.return_value=date(2026,9,23)
             rows=list(amc_discovery.discover('HSBC'))
-        self.assertEqual(rows,[
-            ('HSBC Small Cap Fund',
-             'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
-             'The Asset - August 2026'),
-            ('HSBC Small Cap Fund',
-             'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-july-2026.pdf',
-             'The Asset - July 2026'),
-        ])
+        self.assertEqual(rows[0],(
+            'HSBC Small Cap Fund',
+            'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
+            'The Asset - August 2026'))
 
-    def test_pgim_discovery_uses_official_monthly_factsheet_paths(self):
+    def test_pgim_discovery_prefers_structured_monthly_portfolio(self):
         from tracker import amc_discovery
-        with patch('tracker.amc_discovery.date') as fake:
-            fake.today.return_value=__import__('datetime').date(2026,9,22)
+        monthly=b'''<html><body>
+        <a href="/downloads/monthly-portfolio-july-2026.pdf">Monthly Portfolio July 2026</a>
+        <a href="/downloads/monthly-portfolio-august-2026.xlsx">Monthly Portfolio August 2026</a>
+        </body></html>'''
+        factsheet=b'''<html><body>
+        <a href="/downloads/factsheet-august-2026.pdf">Factsheet - August 2026</a>
+        </body></html>'''
+        def fake_read(url,body=None):
+            return (monthly if 'Monthly-Portfolio' in url else factsheet),'page','text/html'
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
             rows=list(amc_discovery.discover('PGIM'))
-        self.assertEqual(rows,[
-            ('Pgim India Small Cap Fund','https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - August 2026.pdf','Factsheet - August 2026'),
-            ('Pgim India Small Cap Fund','https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - July 2026.pdf','Factsheet - July 2026'),
-        ])
+        self.assertEqual(rows[0],(
+            'Pgim India Small Cap Fund',
+            'https://www.pgimindia.com/downloads/monthly-portfolio-august-2026.xlsx',
+            'Monthly Portfolio August 2026'))
+        self.assertEqual(len(rows),2)
+
+    def test_pgim_discovery_keeps_stable_fallback_when_indexes_fail(self):
+        from tracker import amc_discovery
+        with patch('tracker.amc_discovery.read',side_effect=ValueError('index unavailable')), \
+             patch('tracker.amc_discovery.date') as fake:
+            fake.today.return_value=date(2026,9,22)
+            rows=list(amc_discovery.discover('PGIM'))
+        self.assertEqual(rows[0],(
+            'Pgim India Small Cap Fund',
+            'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - August 2026.pdf',
+            'Factsheet - August 2026'))
 
 
     def test_samco_discovery_prefers_latest_smallcap_excel(self):
