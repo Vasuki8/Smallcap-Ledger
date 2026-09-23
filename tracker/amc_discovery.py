@@ -249,24 +249,73 @@ def discover(amc):
             yield family,url,title or f'Factsheet as on {newest.isoformat()}'
     elif amc=='HSBC':
         family='HSBC Small Cap Fund'
-        today=date.today()
-        # HSBC publishes the consolidated monthly factsheet ("The Asset") at a
-        # stable first-party path. Check the two most recent completed months;
-        # the downstream complete parser must still prove exact scheme/date/100%.
-        for offset in (1,2):
-            year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
-            name=calendar.month_name[month].lower()
-            yield family,f'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-{name}-{year}.pdf',f'The Asset - {calendar.month_name[month]} {year}'
+        page='https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets'
+        rows=[]
+        try:
+            raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+            for url,title in providers.candidate_links(soup,page).items():
+                combined=unquote(url+' '+title)
+                if not disclosures.official_publication_url(url,amc):continue
+                if not re.search(r'\.pdf(?:[?#]|$)',url,re.I):continue
+                m=re.search(r'The\s+Asset\s+as\s+on\s*[-–:]?\s*([A-Za-z]+)\s+(20\d{2})',combined,re.I)
+                if not m:continue
+                try:day=date(int(m.group(2)),datetime.strptime(m.group(1),'%B').month,
+                             calendar.monthrange(int(m.group(2)),datetime.strptime(m.group(1),'%B').month)[1])
+                except ValueError:continue
+                rows.append((day,url,title))
+        except Exception:
+            rows=[]
+        if rows:
+            newest=max(x[0] for x in rows)
+            for _,url,title in [r for r in rows if r[0]==newest][:2]:
+                yield family,url,title or f'The Asset as on - {newest.strftime("%B %Y")}'
+        else:
+            # Conservative fallback to the documented first-party naming pattern.
+            today=date.today()
+            for offset in (1,2):
+                year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
+                name=calendar.month_name[month].lower()
+                yield family,f'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-{name}-{year}.pdf',f'The Asset - {calendar.month_name[month]} {year}'
     elif amc=='PGIM':
         family='Pgim India Small Cap Fund'
-        today=date.today()
-        # PGIM's factsheet index is JS-driven, but the AMC serves the monthly
-        # factsheet itself at a stable official document path. Fetch the two most
-        # recent completed months; store_report still enforces registered AMC ownership.
-        for offset in (1,2):
-            year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
-            name=calendar.month_name[month]
-            yield family,f'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - {name} {year}.pdf',f'Factsheet - {name} {year}'
+        candidates=[]
+        pages=[
+            ('https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio',3),
+            ('https://www.pgimindia.com/mutual-funds/forms-and-product-updates/Fund-Factsheet',1),
+        ]
+        for page,source_priority in pages:
+            try:raw,_,_=read(page)
+            except Exception:continue
+            soup=BeautifulSoup(raw,'html.parser')
+            for url,title in providers.candidate_links(soup,page).items():
+                combined=unquote(url+' '+title)
+                if not disclosures.official_publication_url(url,amc):continue
+                ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I)
+                if not ext:continue
+                if source_priority==3:
+                    if not re.search(r'monthly\s+portfolio|portfolio.*monthly',combined,re.I):continue
+                else:
+                    if not re.search(r'factsheet',combined,re.I):continue
+                month=max((i for i in range(1,13)
+                           if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
+                years=[int(x) for x in re.findall(r'20[12]\d',combined)]
+                year=max(years,default=0)
+                if not year or not month:continue
+                day=date(year,month,calendar.monthrange(year,month)[1])
+                kind=ext.group(1).lower()
+                format_priority=3 if kind in ('xls','xlsx') else 2 if kind=='xml' else 1
+                candidates.append((day,source_priority,format_priority,url,title))
+        if candidates:
+            newest=max(x[0] for x in candidates)
+            pool=[x for x in candidates if x[0]==newest]
+            for _,_,_,url,title in sorted(pool,key=lambda x:(x[1],x[2]),reverse=True)[:2]:
+                yield family,url,title or f'PGIM monthly report - {newest.isoformat()}'
+        else:
+            today=date.today()
+            for offset in (1,2):
+                year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
+                name=calendar.month_name[month]
+                yield family,f'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - {name} {year}.pdf',f'Factsheet - {name} {year}'
 
     elif amc=='Samco':
         family='Samco Small Cap Fund'
