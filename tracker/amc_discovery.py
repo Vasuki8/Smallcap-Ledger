@@ -74,7 +74,7 @@ def discover(amc):
             combined=unquote(url+' '+title)
             if not disclosures.official_publication_url(url,amc):continue
             if not re.search(r'\.pdf(?:[?#]|$)',url,re.I):continue
-            if not re.search(r'factsheet|fact[ _-]*sheet',combined,re.I):continue
+            if not re.search(r'absl(?:mf)?[^/]{0,80}(?:factsheet|empower)|(?:factsheet|empower)[^/]{0,80}absl',combined,re.I):continue
             years=[int(x) for x in re.findall(r'20[12]\d',combined)]
             year=max(years,default=0)
             month=max((i for i in range(1,13)
