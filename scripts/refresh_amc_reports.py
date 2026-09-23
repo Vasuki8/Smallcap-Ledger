@@ -62,6 +62,14 @@ def run():
             if path.endswith(('.xlsx','.xls')) and not body.startswith((b'PK',b'\xd0\xcf')):
                 raise ValueError('Official spreadsheet URL returned non-spreadsheet content; document association was not refreshed')
             did=providers.save_document(family,'Official '+providers.classify('',url),url,providers.classify('',url),'Fund');providers.doc_version(did,h)
+            if family=='Bajaj Finserv Small Cap Fund' and amc_reports.PARSER_VERSION=='amc-reports-2026-09-v41' and body.startswith(b'%PDF'):
+                import io
+                from pypdf import PdfReader
+                reader=PdfReader(io.BytesIO(body))
+                for pi,page in enumerate(reader.pages):
+                    text=page.extract_text() or ''
+                    if re.search(r'Bajaj\s+Finserv\s+Small\s+Cap\s+Fund|Scheme\s+Category\s*:\s*Small\s+Cap',text,re.I):
+                        print('BAJAJ_LAYOUT_PAGE',pi+1,repr(text[:12000]),flush=True)
             count=amc_reports.extract(body,family,url,h)
             print(f'{family}: {count} dated facts/holdings',flush=True)
             return True
