@@ -20,10 +20,12 @@ PAGES=[
     ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
     ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
+    ('Invesco','Invesco India Small Cap Fund','https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp'),
     ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
     ('Bank of India','Bank Of India Small Cap Fund','https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund'),
     ('JM Financial','Jm Small Cap Fund','https://www.jmfinancialmf.com/products/Equity/JM-Small-Cap-Fund/J647/Direct-Plan-Growth-Option'),
     ('Sundaram','Sundaram Small Cap Fund','https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json'),
+    ('Samco','Samco Small Cap Fund','https://www.samcomf.com/mutual-funds/samco-small-cap-fund-direct-growth/scdgg'),
     ('The Wealth','The Wealth Company Small Cap Fund','https://www.wealthcompanyamc.in/our-nfos/nfo/the-wealth-company-small-cap-fund/'),
 ]
 
@@ -439,6 +441,18 @@ def parse_page(content,family,url,h):
         exact=exact or bool(
             actual.path.lower().startswith('/products/equity/jm-small-cap-fund/') and
             re.search(r'\bJM\s+Small\s+Cap\s+Fund\b',visible,re.I))
+    if family=='Invesco India Small Cap Fund':
+        visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
+        exact=exact or bool(
+            actual.path.rstrip('/').lower()=='/our-funds/fund/equity/invesco-india-small-cap-fund/scgp' and
+            re.search(r'\bInvesco\s+India\s+Small\s*Cap\s+Fund\b',visible,re.I) and
+            re.search(r'capital\s+appreciation.*predominantly.*smallcap',visible,re.I))
+    if family=='Samco Small Cap Fund':
+        visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
+        exact=exact or bool(
+            actual.path.rstrip('/').lower()=='/mutual-funds/samco-small-cap-fund-direct-growth/scdgg' and
+            re.search(r'\bSamco\s+Small\s+Cap\s+Fund\b',visible,re.I) and
+            re.search(r'predominantly\s+investing\s+in\s+small\s+cap\s+stocks',visible,re.I))
     if family=='Mahindra Manulife Small Cap Fund' and '/digital-factsheet/' in url:
         exact=exact or any(same_fund_title(tag.get_text(' ',strip=True),family) for tag in soup.select('.fund-name,.fundname,.scheme-name,.heading,p.p-4'))
     if family=='Canara Robeco Small Cap Fund' and '/digital-factsheet/' in url:
@@ -459,6 +473,22 @@ def parse_page(content,family,url,h):
             saved+=1
         return saved
     if family=='Bank Of India Small Cap Fund':return boi_top_holdings(soup,text,url,h)
+    if family=='Invesco India Small Cap Fund':
+        d=re.search(r'AUM\s+as\s+on\s+(\d{1,2}\s+[A-Za-z]+\s+\d{4})',text,re.I)
+        day=report_date('as on '+d.group(1)) if d else None
+        b=re.search(r'Benchmark\s+As\s+per\s+AMFI\s+Tier\s+I\s+Benchmark\s+i\.?e\.?\s*(BSE\s+250\s+Small\s*cap(?:\s+Index)?\s+TRI)',text,re.I)
+        if day and b:
+            db.metric(family,'All','benchmark',day,re.sub(r'\s+',' ',b.group(1)).strip(),'Reported',url,h)
+            return 1
+        return 0
+    if family=='Samco Small Cap Fund':
+        d=re.search(r'Cumulative\s+performance\s*\(as\s+on\s+(\d{1,2}/\d{1,2}/\d{4})\)',text,re.I)
+        day=report_date('as on '+d.group(1)) if d else None
+        b=re.search(r'Benchmark\s*:\s*(Nifty\s+Small\s*Cap\s+250\s+TRI)',text,re.I)
+        if day and b:
+            db.metric(family,'All','benchmark',day,'Nifty Smallcap 250 TRI','Reported',url,h)
+            return 1
+        return 0
     if family=='The Wealth Company Small Cap Fund':
         if re.search(r'\bBenchmark\s*:\s*NIFTY\s+Small\s*Cap\s+250\s+index\s*\(TRI\)',text,re.I):
             db.metric(family,'All','benchmark',date.today().isoformat(),'NIFTY SmallCap 250 TRI',
