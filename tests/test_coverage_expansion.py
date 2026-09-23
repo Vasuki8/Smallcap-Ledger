@@ -811,7 +811,7 @@ As on April 30, 2026 14'''
         from tracker.report_parser import union_complete_portfolio
         equities=[(f'Company {i} Ltd.',4.90) for i in range(1,20)]
         equities.append(('Bank of Maharashtra',5.57))
-        rows='\\n'.join(f'{name} {weight:.2f}%' for name,weight in equities)
+        rows='\n'.join(f'{name} {weight:.2f}%' for name,weight in equities)
         text=f'''(Small Cap Fund - An Open Ended Equity Scheme predominantly investing in Small Cap stocks)
 Data as on July 31, 2026
 Union
@@ -842,7 +842,7 @@ No. of Stocks 20 251'''
         self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
         self.assertIsNone(union_complete_portfolio(text.replace('No. of Stocks 20','No. of Stocks 21')))
         self.assertIsNone(union_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
-        self.assertIsNone(union_complete_portfolio(text.replace('Union\\nSMALL CAP FUND','Union\\nMID CAP FUND',1)))
+        self.assertIsNone(union_complete_portfolio(text.replace('Union\nSMALL CAP FUND','Union\nMID CAP FUND',1)))
 
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
