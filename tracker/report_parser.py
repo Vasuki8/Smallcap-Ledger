@@ -488,18 +488,28 @@ def jm_top25_portfolio(text):
     normalized=normalize(text)
     family='Jm Small Cap Fund'
     if not owns_page(normalized,family):return None
+    # This inception date makes the omnibus JM factsheet page identity explicit.
+    if not re.search(r'INCEPTION\s+DATE\s+18th\s+June,?\s+2024',normalized,re.I):return None
+    if not re.search(r'SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)',normalized,re.I):return None
+
     m=re.search(r'Details\s+as\s+on\s+('+DATE+r')',normalized,re.I)
     day=dated(m.group(1)) if m else None
     if not day:return None
 
-    start=re.search(r'SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)',normalized,re.I)
-    if not start:return None
-    tail=normalized[start.end():]
+    # JM's PDF text order changed between June and July/August month-ends:
+    # the "SCHEME PORTFOLIO" heading can occur either before or after the table.
+    # Anchor directly on the table header instead of relying on heading order.
+    header=re.search(
+        r'Name\s+of\s+Instrument(?:\s*\(\s*Equity\s+Shares\s*\))?\s*%?\s*to\s*NAV',
+        normalized,re.I)
+    if not header:return None
+    tail=normalized[header.end():]
     other=re.search(r'Other\s+Equity\s+Stocks\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
     equity=re.search(r'Total\s+Equity\s+Holdings\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
     treps=re.search(r'TREPS\s*&\s*Others\s*\*?\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
     total=re.search(r'Total\s+Assets\s+(-?\d+(?:\.\d+)?)\s*%?',tail,re.I)
     if not all((other,equity,treps,total)):return None
+
     other_weight=float(other.group(1));equity_total=float(equity.group(1))
     treps_weight=float(treps.group(1));grand=float(total.group(1))
     if abs(grand-100)>.02:return None
@@ -508,11 +518,12 @@ def jm_top25_portfolio(text):
 
     section=tail[:other.start()]
     positions=[];pending=[]
-    heading=re.compile(r'^(?:SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)\s*)?(?:Name\s+of\s+Instrument\s*\(Equity\s+Shares\)\s*%?\s*to\s*NAV)?$',re.I)
+    reserved=re.compile(
+        r'^(?:Name\s+of\s+Instrument|Other\s+Equity\s+Stocks|Total\s+Equity\s+Holdings|'
+        r'TREPS\s*&\s*Others|Total\s+Assets|Details\s+as\s+on|SCHEME\s+PORTFOLIO|'
+        r'PORTFOLIO\s+CLASSIFICATION)',re.I)
     for raw in section.splitlines():
         line=re.sub(r'\s+',' ',raw).strip().lstrip('●•').strip()
-        if not line or heading.fullmatch(line):continue
-        line=re.sub(r'^(?:SCHEME\s+PORTFOLIO\s*\(\s*TOP\s*25\s+STOCKS\s*\)\s*)+','',line,flags=re.I).strip()
         if not line:continue
         row=re.fullmatch(r'(.+?)\s+(-?\d+(?:\.\d+)?)\s*%?',line)
         number_only=re.fullmatch(r'(-?\d+(?:\.\d+)?)\s*%?',line)
@@ -521,18 +532,16 @@ def jm_top25_portfolio(text):
         elif row:
             name=' '.join(pending+[row.group(1).strip()]).strip();weight=float(row.group(2));pending=[]
         else:
-            if re.search(r'Name\s+of\s+Instrument|%?\s*to\s*NAV',line,re.I):
-                pending=[];continue
+            if reserved.search(line):return None
             pending.append(line)
-            if len(pending)>3:pending=pending[-3:]
+            if len(pending)>4:return None
             continue
-        name=re.sub(r'^Name\s+of\s+Instrument\s*\(Equity\s+Shares\)\s*','',name,flags=re.I).strip()
-        if not re.search(r'\b(?:Ltd\.?|Limited)\b',name,re.I):return None
+        if reserved.search(name) or not re.search(r'[A-Za-z]',name):return None
         if not 0<weight<15:return None
         positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
         if len(positions)>25:return None
 
-    if len(positions)!=25:return None
+    if pending or len(positions)!=25:return None
     if len({x['name'].lower() for x in positions})!=25:return None
     named_total=sum(x['weight'] for x in positions)
     if abs((named_total+other_weight)-equity_total)>.08:return None
