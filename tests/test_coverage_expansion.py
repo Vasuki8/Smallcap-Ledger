@@ -343,6 +343,34 @@ Scheme Category: Small Cap Fund'''
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Small Cap Fund','Large Cap Fund',1)))
         self.assertIsNone(bajaj_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%')))
 
+    def test_boi_official_page_accepts_flattened_top_holdings_without_heading_tag(self):
+        from tracker.amc_metrics import parse_page
+        html=b'''<html><head><title>BOI Mutual Fund</title></head><body>
+        <div>Bank Of India SMALL CAP FUND</div>
+        <div>An open ended equity scheme predominantly investing in small cap stocks</div>
+        <div>The above Riskometer is based on the portfolio as on 30th June, 2026.</div>
+        <div>Benchmark Riskometer : NIFTY Smallcap 250 Total Return Index(TRI)(Tier 1)</div>
+        <section>Top 10 Portfolio Holdings Portfolio Details % to Net Assets
+        TREPS / Reverse Repo Investments 6.2%
+        Sky Gold And Diamonds Limited 2.8%
+        City Union Bank Limited 2.5%
+        Wockhardt Limited 2.4%
+        Quality Power Electrical Eqp Ltd 2.3%
+        Computer Age Management Services Limited 2.1%
+        Arvind Limited 2.0%
+        Shreeji Shipping Global Limited 2.0%
+        Sterlite Technologies Limited 2.0%
+        PG Electroplast Limited 1.9%
+        Sector Allocation Data Not Available</section>
+        </body></html>'''
+        url='https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund'
+        saved=parse_page(html,'Bank Of India Small Cap Fund',url,'boi-flat')
+        self.assertEqual(saved,10)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE hash='boi-flat'")
+        self.assertEqual(snap,{'as_of':'2026-06-30','complete':0})
+        types=db.rows("SELECT asset_type FROM holdings WHERE snapshot_id=(SELECT id FROM portfolios WHERE hash='boi-flat') ORDER BY id")
+        self.assertEqual(types[0]['asset_type'],'Money market')
+
     def test_boi_official_fund_page_saves_dated_partial_top_holdings_and_benchmark(self):
         from tracker.amc_metrics import parse_page
         html=b'''<html><head><title>Bank of India Small Cap Fund</title></head><body>
