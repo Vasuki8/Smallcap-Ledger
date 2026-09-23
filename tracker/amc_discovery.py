@@ -247,6 +247,16 @@ def discover(amc):
         newest=max(x[0] for x in rows)
         for _,url,title in [r for r in rows if r[0]==newest][:2]:
             yield family,url,title or f'Factsheet as on {newest.isoformat()}'
+    elif amc=='HSBC':
+        family='HSBC Small Cap Fund'
+        today=date.today()
+        # HSBC publishes the consolidated monthly factsheet ("The Asset") at a
+        # stable first-party path. Check the two most recent completed months;
+        # the downstream complete parser must still prove exact scheme/date/100%.
+        for offset in (1,2):
+            year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
+            name=calendar.month_name[month].lower()
+            yield family,f'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-{name}-{year}.pdf',f'The Asset - {calendar.month_name[month]} {year}'
     elif amc=='PGIM':
         family='Pgim India Small Cap Fund'
         today=date.today()
@@ -473,5 +483,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','Franklin','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','Franklin','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
