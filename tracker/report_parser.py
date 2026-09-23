@@ -419,6 +419,52 @@ def pgim_complete_portfolio(text):
     return {'day':day,'positions':positions}
 
 
+
+def edelweiss_top30_portfolio(text):
+    """Parse Edelweiss Small Cap's published Top 30 list as a partial snapshot.
+
+    The factsheet also publishes an independent Top-10 aggregate. Reconcile the
+    first ten extracted holdings to that total before retaining any rows.
+    """
+    normalized=normalize(text)
+    family='Edelweiss Small Cap Fund'
+    if not owns_page(normalized,family):return None
+
+    m=(re.search(r'Data\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+       or re.search(r'Top\s+(?:30\s+)?Holdings\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+       or re.search(r'\(\s*As\s+on\s+('+DATE+r')\s*\)',normalized,re.I))
+    day=dated(m.group(1)) if m else None
+    if not day:return None
+
+    t=re.search(r'Top\s*10\s*(?:stocks|holdings)[^0-9]{0,12}'+NUMBER+r'\s*%',normalized,re.I)
+    if not t:return None
+    top10=float(t.group(1).replace(',',''))
+    if not 5<=top10<=60:return None
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines()]
+    start=next((i for i,x in enumerate(lines) if re.fullmatch(r'Company\s+Name\s+Allocation',x,re.I)),None)
+    if start is None:return None
+    positions=[]
+    for line in lines[start+1:]:
+        if re.fullmatch(r'Company\s+Name\s+Allocation',line,re.I):continue
+        m=re.fullmatch(r'(.+?)\s+(\d+(?:\.\d+)?)\s*%',line)
+        if not m:
+            if len(positions)>=30:break
+            continue
+        name=m.group(1).strip();weight=float(m.group(2))
+        if re.search(r'Benchmark|Fund|Large\s+Cap|Mid\s+Cap|Small\s+Cap|Net\s+Equity',name,re.I):continue
+        if not 0<weight<10:return None
+        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+        if len(positions)==30:break
+
+    if len(positions)!=30:return None
+    if len({x['name'].lower() for x in positions})!=30:return None
+    if abs(sum(x['weight'] for x in positions[:10])-top10)>.04:return None
+    total=sum(x['weight'] for x in positions)
+    if not 35<=total<=85:return None
+    return {'day':day,'positions':positions}
+
+
 def boi_complete_portfolio(text):
     """Reconcile Bank of India Small Cap's published monthly portfolio."""
     normalized=normalize(text)
