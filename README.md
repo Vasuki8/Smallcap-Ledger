@@ -369,17 +369,18 @@ Remaining portfolio gaps from the latest coverage audit:
 
 Latest development batch:
 
-- PR #74 / commit `e5d8ded85a3b28b37fe36d8fdc7a398e948de44e` adds a **Bandhan WordPress attachment resolver**. It resolves the exact dated Small Cap monthly portfolio posts through Bandhan's official read-only WordPress REST metadata, follows each post's `wp:attachment` relation, prefers attached XLSX/XML over PDF, and still requires the existing downstream ownership/parser checks before storing holdings.
-- Run #144 reached the AMC upgrade but failed only in the new synthetic Bandhan regression fixture because the temporary test DB did not reproduce the production source-domain registry. No archive or website was published from that failed run.
-- PR #75 / commit `a236078daa9f5b3fadcfe422b7d037dfb99d7f95` isolates that synthetic test from the temporary source registry while leaving real production domain validation unchanged.
-- GitHub Actions run **#145** is the verification run for the corrected Bandhan attachment path. Check its final result and Bandhan job detail first before making further Bandhan changes.
+- PR #74 / commit `e5d8ded85a3b28b37fe36d8fdc7a398e948de44e` added a **Bandhan WordPress attachment resolver**. It resolves the exact dated Small Cap monthly portfolio posts through Bandhan's official read-only WordPress REST metadata, follows each post's `wp:attachment` relation, prefers attached XLSX/XML over PDF, and still requires the existing downstream ownership/parser checks before storing holdings.
+- Runs **#144** and **#145** failed only in the new synthetic Bandhan regression fixture; neither failed run published an archive or website. PR #75 / commit `a236078daa9f5b3fadcfe422b7d037dfb99d7f95` isolated the fixture from the temporary source registry, and PR #77 / commit `58f5d15fd1ce62c1c3028b8c7c544b2f68285089` added the fixture's missing JSON import.
+- Run **#146** then passed the AMC upgrade, **125-test** gate, site generation, site validation, archive save, and status/coverage recording. The resulting production coverage remained **29/36** and Bandhan remained `source_not_exposing_portfolio`: the live Bandhan CMS/WordPress metadata still did not expose a usable portfolio attachment to the collector.
+- **Do not spend another immediate iteration on Bandhan page/attachment selectors.** The source path is now audited and tested; move to a more tractable remaining source and revisit Bandhan only with new official endpoint evidence.
 
 Recommended next work:
 
-1. Check run #145 and the newest `COVERAGE-AS-OF.json`. If Bandhan attachment discovery returns a real XLSX/XML/PDF, inspect the parser result and complete the smallest source-specific fix needed to turn it into a reconciled portfolio.
-2. If Bandhan still exposes no usable attachment, stop iterating on page selectors and move to **Groww**. Groww's official fund page currently exposes holdings publicly, while its retained AMC factsheets need a real-layout portfolio parser/source repair.
-3. After Groww, prioritize **Union / Quant** archival retrieval, then Tata / TRUST, then Bajaj source access.
-4. Preserve the standing rules: official AMC/AMFI evidence only, no estimated values, exact reporting dates, source URL/hash retention, conflicts preserved, and no fund marked complete without full reconciliation.
+1. Start with **Groww Small Cap Fund**. Use the retained/official monthly Groww factsheets rather than the undated current product-page holdings. Build or repair a real-layout portfolio parser only when exact scheme identity, report date, equity/TREPS/cash totals, and grand total can be reconciled. Official 2026 monthly factsheets have exposed detailed Small Cap holdings and explicit totals, making Groww the strongest next recovery candidate.
+2. After Groww, prioritize **Union / Quant** archival retrieval: both have known official document URLs but currently fail archival materialization.
+3. Then revisit **Tata / TRUST** structured portfolio discovery, followed by Bajaj source access.
+4. Bandhan remains a valid later target, but only return to it when a new official downloadable attachment/API endpoint can be demonstrated.
+5. Preserve the standing rules: official AMC/AMFI evidence only, no estimated values, exact reporting dates, source URL/hash retention, conflicts preserved, and no fund marked complete without full reconciliation.
 
 This is a backend/data handoff. Do not start a new UI pass unless explicitly requested.
 
