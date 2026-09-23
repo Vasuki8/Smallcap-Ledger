@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-23T19:49:42+00:00
+Prepared: 2026-09-23T19:52:22+00:00
 
 **36 funds, 143 NAV series, 281,150 NAV observations. Latest included NAV: 2026-09-22.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **32 / 36 any**, **19 complete**, **20 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **33 / 36 any**, **19 complete**, **20 current**, **13 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **21 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -13,7 +13,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Abakkus Small Cap Fund | ₹ 3,131.94 · 2026-09-21 | 1.25% TER · 2026-09-21 | 68 positions · 2026-07-31 · complete · older | NIFTY SmallCap 250 TRI · 2026-09-22 | 28 |
 | Aditya Birla Sun Life Small Cap Fund | ₹ 6,201.91 · 2026-09-21 | 1.08% TER · 2026-09-16 | 89 positions · 2026-07-31 · complete · older | BSE 250 Small Cap Index TRI · 2026-07-31 | 4 |
 | Axis Small Cap Fund | ₹ 31,479.29 · 2026-09-21 | 0.71% Expense ratio · type not specified · 2026-09-21 | 10 positions · 2026-09-16 · partial · current | Nifty Smallcap 250 TRI · 2026-09-23 | 5 |
-| Bajaj Finserv Small Cap Fund | ₹ 2,747.20 · 2026-09-21 | 0.96% TER · 2026-09-21 | Gap | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
+| Bajaj Finserv Small Cap Fund | ₹ 2,747.20 · 2026-09-21 | 0.96% TER · 2026-09-21 | 13 positions · 2026-07-31 · partial · older | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
 | Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-21 | 0.61% TER · 2026-09-20 | Gap | Gap | 0 |
 | Bank Of India Small Cap Fund | ₹ 3,542.98 · 2026-09-21 | 0.74% TER · 2026-09-21 | 103 positions · 2026-08-31 · complete · current | Gap | 6 |
 | Baroda Bnp Paribas Small Cap Fund | ₹ 1,303.75 · 2026-09-21 | 1.21% TER · 2026-09-21 | 63 positions · 2026-08-31 · complete · current | Gap | 6 |
@@ -51,7 +51,6 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 
 | Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
 | --- | --- | --- | --- | --- |
-| Bajaj Finserv Small Cap Fund | Source unavailable | Gap | Gap | Gap · 2026-09-22 · Client error '403 Forbidden' for url 'https://www.bajajamc.com/' For more information check: https:/ |
 | Bandhan Small Cap Fund | Source checked; no portfolio exposed | Gap | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Trustmf Small Cap Fund | Archived document not parsed | factsheet: TRUSTMF Factsheet June 2025 2 · archived 2026-09-23 | Gap | Limited · 2026-09-22 · Page archived; no automatically readable fund documents found |
 | Union Small Cap Fund | Document known but not archived | factsheet: July 2026 Small Cap factsheet | Gap | Gap · 2026-09-22 · timed out |
