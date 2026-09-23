@@ -98,6 +98,37 @@ def run():
                 detail='none' if not snap else f'{snap["as_of"]}, complete={snap["complete"]}'
                 print(f'::warning::{family}: current complete portfolio not recovered; latest is {detail}',flush=True)
             ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
+        # Refresh three stale complete portfolios through current official
+        # discovery pages. A download/parse attempt is not success unless the
+        # stored snapshot advances to the August 2026 month-end and remains complete.
+        from tracker import amc_discovery
+        targets=(
+            ('Aditya Birla','Aditya Birla Sun Life Small Cap Fund'),
+            ('Franklin','Franklin India Small Cap Fund'),
+            ('LIC','LIC Mf Small Cap Fund'),
+        )
+        for amc,family in targets:
+            attempted=0
+            try:
+                for discovered_family,url,title in amc_discovery.discover(amc):
+                    if discovered_family!=family:continue
+                    attempted+=1
+                    try:amc_discovery.store_report(amc,family,url,title)
+                    except Exception as exc:
+                        print(f"::warning::{family} current candidate: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+                    snap=db.one("SELECT as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,id DESC LIMIT 1",(family,))
+                    if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
+                    if attempted>=4:break
+            except Exception as exc:
+                print(f"::warning::{family} current discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+            snap=db.one("SELECT as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,id DESC LIMIT 1",(family,))
+            current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+            if current:print(f'{family}: current complete portfolio verified at {snap["as_of"]}',flush=True)
+            else:
+                detail='none' if not snap else f'{snap["as_of"]}, complete={snap["complete"]}'
+                print(f'::warning::{family}: current complete portfolio not recovered; latest is {detail}',flush=True)
+            ok.append(current)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v44':
         # One-time targeted recovery for TRUSTMF. The normal nightly collector
         # uses the same discovery path; this push replay proves and archives the
