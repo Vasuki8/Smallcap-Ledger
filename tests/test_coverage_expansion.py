@@ -978,6 +978,42 @@ No. of Stocks 20 251'''
         self.assertIsNone(union_complete_portfolio(text.replace('Union\nSMALL CAP FUND','Union\nMID CAP FUND',1)))
 
 
+    def test_union_omnibus_portfolio_supports_long_futures_and_multiple_tbills(self):
+        from tracker.report_parser import union_complete_portfolio
+        equities='\n'.join([f'Company {i} Ltd. 4.80%' for i in range(1,20)]
+                           +['Company 20 Ltd. 6.89%','Company 1 Ltd. (Futures) 0.97%'])
+        text=f'''Union
+SMALL CAP FUND
+(Small Cap Fund - An Open Ended Equity Scheme predominantly investing in Small Cap stocks)
+Factsheet as on March 31, 2026
+Date of allotment
+10 June 2014
+Benchmark Index
+BSE 250 SmallCap Index (TRI)
+No. of Stocks 20 250
+Industry/Company/Issuer % to Net Assets
+Portfolio
+TEST SECTOR 99.06%
+{equities}
+Equity Shares and Long Futures 99.06%
+TREASURY BILLS 0.37%
+Sovereign 0.37%
+91 DAY T-BILL 0.30%
+364 DAY T-BILL 0.07%
+Triparty Repo, Cash, Cash Equivalents & 0.58%
+Net Current Assets
+Grand Total 100.00%
+Investment Objective'''
+        parsed=union_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-03-31')
+        self.assertEqual(len([x for x in parsed['positions'] if x['asset_type']=='Equity']),21)
+        self.assertEqual(len([x for x in parsed['positions'] if x['asset_type']=='Debt']),2)
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100.01,places=2)
+        self.assertIsNone(union_complete_portfolio(text.replace('364 DAY T-BILL 0.07%','364 DAY T-BILL 0.06%')))
+        self.assertIsNone(union_complete_portfolio(text.replace('No. of Stocks 20 250','No. of Stocks 21 250')))
+
     def test_tata_combined_page_stores_only_explicit_top10_as_partial(self):
         from tracker.amc_metrics import parse_page
         url='https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html'
