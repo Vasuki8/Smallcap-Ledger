@@ -196,11 +196,13 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn(('Pgim India Small Cap Fund',
             'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf'),urls)
 
-    def test_v50_catalog_phase_uses_only_current_fixed_urls(self):
+    def test_v50_catalog_phase_uses_verified_september_sources(self):
         source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
         self.assertIn("current_catalog={",source)
-        self.assertIn("the-asset-august-2026.pdf",source)
-        self.assertIn("Factsheet%20-%20August%202026.pdf",source)
+        self.assertIn("Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf",source)
+        self.assertIn("absl-factsheet_sep-2026.pdf",source)
+        self.assertIn("lic-mf-factsheet-31st-august-2026.pdf",source)
+        self.assertNotIn("'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf',\n        }",source)
         self.assertIn("rows=[row for row in rows if row['url'] in current_catalog]",source)
 
     def test_v50_supersedes_both_complete_refresh_batches(self):
@@ -221,7 +223,9 @@ Month End AUM: Rs. 100 Cr''')
             "('Abakkus','Abakkus Small Cap Fund')",
             "('Aditya Birla','Aditya Birla Sun Life Small Cap Fund')",
             "('Franklin','Franklin India Small Cap Fund')",
+            "('HSBC','HSBC Small Cap Fund')",
             "('LIC','LIC Mf Small Cap Fund')",
+            "('PGIM','Pgim India Small Cap Fund')",
         ):
             self.assertIn(pair,source)
         self.assertIn("'HSBC Small Cap Fund'",source)
