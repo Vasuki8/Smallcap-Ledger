@@ -74,6 +74,18 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(len(result),2);self.assertEqual(result[0],["2024-01-01",100,100])
         self.assertAlmostEqual(result[-1][1],150);self.assertAlmostEqual(result[-1][2],110)
 
+    def test_groww_workbook_internal_code_prefix_establishes_scheme_identity(self):
+        from tracker.portfolio_parser import owns_sheet
+        rows=[
+            [None,'IB60-Groww Small Cap Fund'],
+            [None,'Portfolio as on 31-AUG-2026'],
+            [None,'ISIN','Name of Instrument','Rating/Industry','Quantity',
+             'Market Value (In Rs. lakh)','% To Net Assets'],
+        ]
+        self.assertTrue(owns_sheet(rows,2,'Groww Small Cap Fund'))
+        rows[0][1]='IB60-Groww Large Cap Fund'
+        self.assertFalse(owns_sheet(rows,2,'Groww Small Cap Fund'))
+
     def test_excel_fund_identity_and_percentage_storage(self):
         import io,openpyxl
         book=openpyxl.Workbook();wrong=book.active;wrong.title='Other Small Cap'
