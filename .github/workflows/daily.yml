@@ -58,10 +58,6 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
-      - name: Probe centralized AMFI portfolio endpoint
-        continue-on-error: true
-        timeout-minutes: 3
-        run: uv run --frozen python scripts/probe_amfi_portfolio.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
