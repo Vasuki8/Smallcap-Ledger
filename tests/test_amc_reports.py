@@ -141,6 +141,11 @@ Month End AUM: Rs. 100 Cr''')
                 'Quant Small Cap Fund',
                 'https://quantmutual.com/Admin/Factsheet/factsheet.pdf'))
 
+    def test_union_transport_audit_does_not_retry_every_push(self):
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("transport_audit_complete=(amc_reports.PARSER_VERSION=='amc-reports-2026-09-v45' and not gaps)",source)
+        self.assertIn("if (all(ok) or transport_audit_complete) and not gaps:",source)
+
     def test_union_catalog_keeps_reviewed_omnibus_fallback(self):
         rows=json.loads((Path(__file__).resolve().parents[1]/'tracker'/'report_catalog.json').read_text())
         urls=[row['url'] for row in rows if row['family']=='Union Small Cap Fund']
