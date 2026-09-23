@@ -88,7 +88,14 @@ def parse_sheet(rows,formats,family):
         if not -100<=w<=100:unknown.append(label);continue
         kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
         sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
-        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,'asset_type':kind});values.append(v)
+        quantity=None
+        if qc is not None and qc<len(row) and kind in ('Equity','Fund units') and not empty(row[qc]):
+            try:
+                candidate=numeric(row[qc])
+                if 0<=candidate<1e15:quantity=candidate
+            except ValueError:pass
+        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
+                          'quantity':quantity,'asset_type':kind});values.append(v)
     aum=None
     if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)
     complete=bool(aum and positions and not unknown)
