@@ -334,7 +334,7 @@ Where an AMC portfolio workbook or page explicitly publishes security quantity, 
 
 Treat the repository, `COVERAGE-AS-OF.json`, `deployment/update-status.json`, the `tracker-history` release, and the latest GitHub Actions runs as the source of truth before continuing. Do not restart from older portfolio counts elsewhere in this README.
 
-Current production-verified coverage:
+Current production-verified coverage (status built 2026-09-23 20:21 UTC):
 
 | Data measure | Coverage |
 | --- | ---: |
@@ -348,42 +348,41 @@ Current production-verified coverage:
 | Partial latest portfolio | **15 / 36** |
 | Benchmark identity | **21 / 36** |
 
-Important backend progress already completed today:
+Latest backend recovery state:
 
-- **Bank Of India Small Cap Fund** now has a production-backed complete portfolio parser reconstructed from the retained real four-column AMC factsheet layout. Main implementation commit: `f0012c1b9e855f3e2bc64fb7d9a5ac28bd2b3144`.
-- **JM Small Cap Fund** now has a reconciled current Top-25 partial portfolio from its retained official factsheet. Production parser work landed through `8b9be924f965629c094539127d6e5db39b9d5e43` and `9234406bf53bbc5d52f52676630abe786808bbdc`.
-- **ICICI Prudential Small Cap Fund** now has a fresh named partial portfolio recovered across adjacent pages of its retained official factsheet. Main implementation commit: `25dc8a08e7bb77b989899036f1ae0873bd110c87`.
-- **Groww Small Cap Fund** is recovered as a **partial, stale 2026-05-31** portfolio from the official AMC factsheet. The parser preserves the AMC's aggregated `Others` bucket and reconciles equity + TREPS + net-current-assets to 100%. Production run **#150** succeeded.
-- **Quant Small Cap Fund** now has an official **partial 2026-07-31** Top-10 portfolio from its retained factsheet. Production run **#156** succeeded.
-- **Tata Small Cap Fund** now has a **current partial Top-10** portfolio from its official monthly scheme page. Production run **#157** succeeded.
-- **Bajaj Finserv Small Cap Fund** is recovered from its retained official AMC factsheet as a **partial 2026-07-31** portfolio. The real PDF publishes Top 10 named holdings plus AMC aggregate buckets; the parser reconciles the published components to 100% while deliberately retaining `complete=0`.
-- **TRUSTMF Small Cap Fund** is now recovered as a **current partial 2026-08-31** portfolio from TRUSTMF's first-party monthly disclosure API. The official structured workbook is `https://trustmf.com/Content/2026/9/Monthly%20Port_20260909123835.xlsx`; production stores **70 positions**, `complete=0`. Discovery landed in `8dcf88471de906df106f51f287fc8fcaffabaf9c`; targeted production replay `753cbe9f0bb3e34fb4d836b035ce0866c1ae9d2e`; run **#182** succeeded.
-- Reviewed AMC report URLs now fail closed on wrong content signatures: a .pdf/.xls/.xlsx URL cannot silently refresh document evidence with an HTML shell or unrelated response.
-- Structured portfolio storage intentionally retains only the current portfolio month plus the immediately previous calendar month; original AMC documents/hashes remain in the historical source archive.
-- Publication remains fail-closed: syntax, parser upgrades, tests, generated-site validation, archive save, and Pages deployment must all pass before a new website is published.
+- **TRUSTMF Small Cap Fund is recovered.** Production run **#182** successfully discovered and parsed the AMC's official monthly disclosure workbook. The retained snapshot is **2026-08-31**, **70 positions**, partial (`complete=0`), source `https://trustmf.com/Content/2026/9/Monthly%20Port_20260909123835.xlsx`.
+- **Union Small Cap Fund remains the only transport-blocked AMC portfolio after the latest audit.** PR **#80** / commit `05f9488a542913c24955bc64289e5c6afa5df829` generalized the strict Union complete-portfolio parser to support both the single-scheme layout and the reviewed AMC omnibus factsheet, including long futures, multiple T-bills, stock-count checks, and full 100% reconciliation. The reviewed fallback is the official March 2026 omnibus factsheet.
+- Run **#183** did **not** publish because one synthetic negative fixture changed a T-bill by only 0.01%, which was still inside the parser's intended rounding tolerance. PR **#81** / commit `dfa3e4e94e9371fa3f79756aee4fe75a8e4cd4ff` corrected only that fixture.
+- Union transport was then tested through the original AMC route, the official omnibus archive route, and alternate official-host handling. The GitHub runner still cannot archive Union's PDF bytes; the production gap correctly remains `document_not_archived`. Do **not** weaken content/signature or reconciliation checks to force coverage.
+- Production run **#187** passed the full **136-test** suite, site generation, validation, cumulative archive save, status recording, and Pages deployment. Union remained null; coverage stayed **34/36**.
+- Follow-up commits `5ca885f71163d0d1a400bdebfddecdfef43e1fda` and `8bbc8c02a72e6ac1c8901903daa9d3c927cd900d` mark the Union v45 transport audit as completed so ordinary pushes do not repeatedly replay every reviewed failing Union URL. Normal nightly discovery can still retry the live source.
 
 ### Remaining portfolio gaps
 
-Only **two funds** remain without any parsed portfolio:
+Only **two** funds remain without a parsed portfolio:
 
-- **Union Small Cap Fund** — `document_not_archived`. Its complete-portfolio parser and the omnibus March-2026 fallback parser both pass regression tests, but GitHub Actions cannot currently reach Union's official host. Run **#184** tested three reviewed official routes: the primary single-scheme PDF, the reviewed omnibus AMC factsheet, and the bare-hostname variant. The runner returned DNS failure for one route and connection-refused errors for the others; production coverage therefore correctly remained unchanged. Run **#187** passed the full build/deploy gate after the v45 replay configuration was cleaned up.
-- **Bandhan Small Cap Fund** — `source_not_exposing_portfolio`. The public CMS path, WordPress post metadata, and attachment resolver are already audited. Do not repeat selector work unless a new official downloadable attachment/API endpoint is demonstrated.
+- **Union Small Cap Fund** — `document_not_archived`. The parser is ready and regression-tested; this is a transport/source-availability problem. Next useful work is to find an **official AMFI-hosted portfolio disclosure or another official Union endpoint that the GitHub runner can actually download**. Do not spend another iteration on parser layout unless new source bytes are obtained.
+- **Bandhan Small Cap Fund** — `source_not_exposing_portfolio`. The public CMS/factsheet path and WordPress attachment resolver have already been audited. Revisit only when a new official attachment/API endpoint can be demonstrated.
 
-### Latest Union batch
+### Important completed recoveries from this backend cycle
 
-- Added support for Union's official omnibus factsheet layout: long futures, multiple Treasury Bills, stock-count verification, aggregate totals, and complete 100% reconciliation remain required.
-- Added reviewed fallback `factsheet-march-2026.pdf?sfvrsn=3ddcc4de_5` and tested the alternate official bare hostname.
-- All reviewed Union routes still fail at the GitHub runner transport layer; this is **not a parser failure**.
-- The overlapping v45 work briefly duplicated the version mapping/replay guard; commit `3f6a04f45b92dc382a01517fe4dfcc80cd3c0ea6` cleaned that configuration.
-- Commit `5ca885f71163d0d1a400bdebfddecdfef43e1fda` makes v45 a one-time transport audit so failed Union transfers do not add delay to every future code push. The normal nightly discovery path still retries Union's live official source automatically.
-- Regression coverage for that behavior was added in `8bbc8c02a72e6ac1c8901903daa9d3c927cd900d`.
+- **Groww** — partial 2026-05-31 AMC factsheet portfolio; aggregated `Others` preserved and total reconciled.
+- **Quant** — partial 2026-07-31 official Top-10 portfolio.
+- **Tata** — current partial Top-10 portfolio from the official scheme page.
+- **Bajaj Finserv** — partial 2026-07-31 official factsheet portfolio with published aggregates preserved.
+- **Bank of India** — complete production-backed portfolio from the real retained four-column AMC factsheet.
+- **JM** and **ICICI Prudential** — source-specific partial portfolio recoveries with strict identity/date checks.
+- **TRUSTMF** — current 2026-08-31 official monthly workbook, 70 positions, partial.
+- Risk-factor-only PDFs are excluded from factsheet coverage, and reviewed PDF/spreadsheet URLs are rejected fail-closed if the response content signature is wrong.
 
-### Recommended next work
+### Recommended next backend work
 
-1. **Check the latest Union transport-audit workflow first.** If the test/build gate passed, keep the one-time v45 completion behavior and do not reopen parser work.
-2. **Bandhan:** search only for genuinely new official endpoints or downloadable assets. The existing CMS/WordPress selector path is exhausted.
-3. **Union:** revisit only if a new official Union/AMFI mirror, API, CDN host, or reachable downloadable route is found. The parser is already ready.
-4. With source-access blockers isolated, the next non-blocked backend expansion is **benchmark identity coverage (21/36)** and then improving freshness/completeness of existing partial portfolios.
-5. Preserve standing rules: official AMC/AMFI evidence only, no estimated values, exact reporting dates, source URL/hash retention, conflicts preserved, and no fund marked complete without full reconciliation.
+1. Check the **latest** GitHub Actions run first because main may have advanced after this handoff.
+2. Focus on an **AMFI-hosted or otherwise official reachable source for Union**. AMFI's public Portfolio Disclosure area is the most promising direction because Union itself states that monthly portfolios are also made available on AMFI.
+3. Revisit **Bandhan** only with new official endpoint evidence; avoid repeating already-audited selector/CMS work.
+4. After the last two zero-portfolio gaps are addressed or conclusively blocked, shift effort to **freshness and completeness** of existing partial portfolios rather than adding estimates.
+5. Preserve standing rules: official AMC/AMFI evidence only, no invented values, exact reporting dates, source URL/hash retention, conflicts/revisions preserved, and no fund marked complete without full reconciliation.
+
+Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original AMC documents and hashes remain in cumulative source history.
 
 This is a backend/data handoff. Do not start a new UI pass unless explicitly requested.
