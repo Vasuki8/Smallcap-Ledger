@@ -78,6 +78,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/refresh_hsbc_expenses.py
+      - name: Apply ICICI Prudential TER disclosure upgrade
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/refresh_icici_expenses.py
       - name: Collect daily data
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
         timeout-minutes: 40
