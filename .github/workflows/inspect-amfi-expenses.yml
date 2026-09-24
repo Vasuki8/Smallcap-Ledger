@@ -14,25 +14,29 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Trace Canara expense page scripts
+      - name: Extract Canara expense API strings
         run: |
           python - <<'PY'
-          import re,urllib.parse,urllib.request
+          import re,urllib.request
           UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
-          def fetch(url):
-              req=urllib.request.Request(url,headers=UA)
-              with urllib.request.urlopen(req,timeout=45) as r:
-                  body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl());return body,r.geturl()
-          body,final=fetch('https://www.canararobeco.com/expense-ratio')
-          html=body.decode('utf-8','ignore')
-          print('HTML',html)
-          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I)
-          for src in scripts:
-              full=urllib.parse.urljoin(final,src);print('SCRIPT',full)
-              try:s=fetch(full)[0].decode('utf-8','ignore')
-              except Exception as e:print('SCRIPT_ERROR',e);continue
-              if re.search(r'expense|ratio|ter|brokerage|statutory|api',s,re.I):
-                  print('SCRIPT_MATCH',full)
-                  for m in re.finditer(r'.{0,280}(?:expense|ratio|brokerage|statutory|api).{0,500}',s,re.I|re.S):
-                      print(re.sub(r'\s+',' ',m.group(0))[:900])
+          u='https://www.canararobeco.com/assets/index-BXrQDEhN.js'
+          req=urllib.request.Request(u,headers=UA)
+          with urllib.request.urlopen(req,timeout=45) as r:s=r.read().decode('utf-8','ignore')
+          print('JS_LEN',len(s))
+          strings=set()
+          for m in re.finditer(r'(["\'])(.{1,220}?)\1',s):
+              v=m.group(2)
+              if re.search(r'expense|ratio|brokerage|statutory|historical|ter',v,re.I):
+                  strings.add(v)
+          print('STRINGS')
+          for v in sorted(strings):
+              if len(v)<220: print(repr(v))
+          for needle in ['expense-ratio','EXPENSE_RATIO','Total Expense Ratio','Historical Expense Ratio','Base Expense Ratio','brokerageCost','statutoryLevies','totalTer','totalTER','Uet=']:
+              print('CONTEXT_FOR',needle)
+              start=0;n=0
+              while True:
+                  p=s.find(needle,start)
+                  if p<0 or n>=12:break
+                  print(s[max(0,p-1400):p+2400])
+                  start=p+len(needle);n+=1
           PY
