@@ -13,28 +13,44 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query JM Portfolio Disclosure API
+      - name: Decode JM Portfolio Disclosure API
         run: |
           python - <<'PY'
-          import urllib.request,json
+          import urllib.request,json,subprocess,base64,re
           base='https://jmmfapi.jmfinancialmf.com/api/'
+          key=b'6fa979f20126cb08aa645a8f495f6d85'
+          iv=b'I8zyA4lVhMCaJ5Kg'
           headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
                    'Content-Type':'application/json','Origin':'https://www.jmfinancialmf.com',
                    'Referer':'https://www.jmfinancialmf.com/downloads/Portfolio-Disclosure'}
+          def decrypt(value):
+              raw=base64.b64decode(value)
+              cp=subprocess.run(['openssl','enc','-d','-aes-256-cbc','-K',key.hex(),'-iv',iv.hex()],
+                                input=raw,capture_output=True,check=True)
+              return cp.stdout.decode('utf-8')
           def call(path,payload):
               req=urllib.request.Request(base+path,data=json.dumps(payload).encode(),headers=headers,method='POST')
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  outer=json.loads(r.read().decode())
+              plain=decrypt(outer['data']) if outer.get('data') else ''
+              print('PLAIN',path,plain[:120000])
+              try:return json.loads(plain)
+              except:return plain
+          drops=call('GetDownloadDrop',{'IICategoryID':'2'})
+          print('DROPS_JSON',json.dumps(drops,ensure_ascii=False))
+          candidates=[]
+          for item in drops if isinstance(drops,list) else []:
+              blob=json.dumps(item,ensure_ascii=False)
+              if re.search(r'portfolio|monthly|scheme',blob,re.I):
+                  candidates.append(item)
+          print('CANDIDATES',json.dumps(candidates,ensure_ascii=False))
+          ids=[]
+          for item in drops if isinstance(drops,list) else []:
+              sid=item.get('DownloadSubCategoryID') or item.get('SubCategoryID') or item.get('ID') or item.get('Value')
+              if sid is not None:ids.append(str(sid))
+          for sid in dict.fromkeys(['0','37']+ids):
               try:
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      b=r.read()
-                      print('RESP',path,r.status,r.headers.get('Content-Type'),len(b),b.decode('utf-8','replace')[:50000])
-                      return b
-              except Exception as e:
-                  print('ERROR',path,repr(e))
-                  if getattr(e,'read',None):
-                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:20000])
-                      except:pass
-          call('GetDownloadDrop',{'IICategoryID':'2'})
-          call('GetDownloadNew',{'IICategoryID':'2','IISubCategoryID':'0','IVsearch':''})
-          call('GetDownloadNew',{'IICategoryID':'2','IISubCategoryID':'37','IVsearch':''})
-          call('GetDownloadNewSub',{'IVSubCategoryName':'Monthly Portfolio'})
+                  rows=call('GetDownloadNew',{'IICategoryID':'2','IISubCategoryID':sid,'IVsearch':''})
+                  print('ROWS',sid,json.dumps(rows,ensure_ascii=False)[:120000])
+              except Exception as e:print('ROW_ERROR',sid,repr(e))
           PY
