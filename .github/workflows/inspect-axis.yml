@@ -14,68 +14,52 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect first-party Axis e-factsheet routes
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect exact Axis Small Cap e-factsheet
         run: |
-          python - <<'PY'
+          uv run --frozen python - <<'PY'
           import re, urllib.parse, urllib.request
-          from html.parser import HTMLParser
+          from bs4 import BeautifulSoup
 
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
-          class P(HTMLParser):
-              def __init__(self):
-                  super().__init__(); self.links=[]
-              def handle_starttag(self,tag,attrs):
-                  d=dict(attrs)
-                  if tag in ('a','link','script','img') and (d.get('href') or d.get('src')):
-                      self.links.append((tag,d.get('href') or d.get('src')))
-
-          def fetch(url):
-              try:
-                  req=urllib.request.Request(url,headers=UA)
-                  with urllib.request.urlopen(req,timeout=35) as r:
-                      body=r.read(); ct=r.headers.get('content-type','')
-                      print('FETCH',r.status,ct,len(body),r.geturl())
-                      return body,ct,r.geturl()
-              except Exception as e:
-                  print('ERROR',url,type(e).__name__,str(e))
-                  return b'','',url
-
-          base='https://www.axismf.com/efactsheet/Aug-2026/'
-          body,ct,final=fetch(base)
-          if body:
-              text=body.decode('utf-8','ignore')
-              print('SMALL_CAP_CONTEXT')
-              low=text.lower()
-              for m in re.finditer(r'small.{0,80}cap|cap.{0,80}small',low,re.I):
-                  print(text[max(0,m.start()-180):m.end()+300].replace('\n',' ')[:800])
-              p=P();p.feed(text)
-              print('INTERESTING_LINKS')
-              for tag,href in p.links:
-                  full=urllib.parse.urljoin(final,href)
-                  if re.search(r'small|portfolio|factsheet|\.pdf|\.xlsx?|innerpage',full,re.I):
-                      print(tag,full)
-
-          candidates=[
-            'Innerpage/Axis%20Regular%20Fund%20Pages%20August-2026.pdf',
-            'Innerpage/Axis%20Direct%20Fund%20Pages%20August-2026.pdf',
-            'Innerpage/Axis%20Regular%20Fund%20Pages%20Aug-2026.pdf',
-            'Innerpage/Axis%20Direct%20Fund%20Pages%20Aug-2026.pdf',
-            'Innerpage/Small-Cap-Fund.html',
-            'Innerpage/SMALL-CAP-FUND.html',
-            'Innerpage/Small-Cap.html',
-            'Innerpage/SMALL-CAP.html',
-            'Innerpage/Axis-Small-Cap-Fund.html',
-            'Innerpage/SMALL-CAP-FUND.pdf',
-          ]
-          for path in candidates:
-              url=urllib.parse.urljoin(base,path)
-              b,ct,final=fetch(url)
-              if b and ('html' in ct or path.lower().endswith('.html')):
-                  s=b.decode('utf-8','ignore')
-                  print('HTML_MATCH',path,
-                        bool(re.search(r'Axis\s+Small\s+Cap\s+Fund',s,re.I)),
-                        bool(re.search(r'Grand\s+Total|Portfolio',s,re.I)))
-                  for key in ('Axis Small Cap Fund','PORTFOLIO','Grand Total'):
-                      pos=s.lower().find(key.lower())
-                      if pos>=0: print('CTX',key,s[max(0,pos-200):pos+1000].replace('\n',' ')[:1200])
+          url='https://www.axismf.com/efactsheet/Aug-2026/Innerpage/SMALL-CAP.html'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          with urllib.request.urlopen(req,timeout=35) as r:
+              body=r.read(); final=r.geturl()
+          print('HTML_BYTES',len(body),final)
+          html=body.decode('utf-8','ignore')
+          soup=BeautifulSoup(html,'html.parser')
+          text='\n'.join(x.strip() for x in soup.stripped_strings)
+          for key in [
+              'Axis Small Cap Fund','PORTFOLIO','Domestic Equities',
+              'Instrument Type/Issuer Name','Grand Total',
+              'Krishna Institute','Torrent Pharmaceuticals','CCL Products'
+          ]:
+              print('KEY',key,'HTML',html.lower().find(key.lower()),'TEXT',text.lower().find(key.lower()))
+              pos=text.lower().find(key.lower())
+              if pos>=0: print('TEXT_CTX',text[max(0,pos-800):pos+4000])
+          print('TABLES',len(soup.find_all('table')))
+          for idx,table in enumerate(soup.find_all('table')):
+              t=' '.join(table.stripped_strings)
+              if re.search(r'portfolio|domestic equities|instrument type|krishna institute|grand total',t,re.I):
+                  print('TABLE',idx,'LEN',len(t))
+                  print(t[:8000])
+          print('URLS')
+          seen=set()
+          for tag in soup.find_all(['a','img','iframe','embed','object','script','link']):
+              raw=tag.get('href') or tag.get('src') or tag.get('data') or ''
+              if not raw: continue
+              full=urllib.parse.urljoin(final,raw)
+              if full in seen: continue
+              seen.add(full)
+              if re.search(r'portfolio|small|\.pdf(?:\?|$)|\.xlsx?(?:\?|$)|\.csv(?:\?|$)|\.png(?:\?|$)|\.jpe?g(?:\?|$)',full,re.I):
+                  print(tag.name,full)
+          print('PERCENT_LINES')
+          for line in text.splitlines():
+              if '%' in line and re.search(r'Equit|TREPS|Cash|Repo|Grand|Domestic|Foreign|Debt|Krishna|Torrent|CCL',line,re.I):
+                  print(line[:1000])
           PY
