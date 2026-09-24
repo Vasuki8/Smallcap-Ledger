@@ -13,44 +13,40 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query Bandhan scheme portfolio CMS taxonomy
+      - name: Inspect exact Bandhan Small Cap disclosure page
         run: |
           python - <<'PY'
-          import urllib.request,urllib.parse,json,re
-          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          variants=[
-            {'acf_key':'scheme_category','acf_value':'SCHEME_PORTFOLIOS','bypass_pagination':'true','posts_per_page':'2500'},
-            {'acf_key':'scheme_category','acf_value':'Scheme Portfolios','bypass_pagination':'true','posts_per_page':'2500'},
-            {'acf_key':'scheme_category','acf_value':'scheme-portfolios','bypass_pagination':'true','posts_per_page':'2500'},
-            {'acf_key':'disclosures_type','acf_value':'Monthly and Half-yearly Disclosures','bypass_pagination':'true','posts_per_page':'2500'},
+          import urllib.request,re,json,html
+          base='https://cmsnew.bandhanmutual.com'
+          slugs=[
+            'monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
+            'monthly-and-half-yearly-bandhan-small-cap-fund-31-july-2026',
+            'monthly-and-half-yearly-bandhan-small-cap-fund-30-june-2026',
           ]
-          H={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
-          for p in variants:
-              u=base+'?'+urllib.parse.urlencode(p)
+          H={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/xhtml+xml'}
+          for slug in slugs:
+              u=f'{base}/{slug}/'
               try:
-                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=40) as r:
-                      data=json.loads(r.read())
-                  rows=data.get('data') if isinstance(data,dict) else data
-                  rows=rows if isinstance(rows,list) else []
-                  print('QUERY',json.dumps(p),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows))
-                  for item in rows:
-                      acf=(item or {}).get('acf_fields') or {}
-                      mapping=acf.get('funds_mapping')
-                      fund=(mapping.get('post_title') or mapping.get('title') or mapping.get('post_name')) if isinstance(mapping,dict) else mapping
-                      files=[]
-                      for e in acf.get('disclosure_files') or []:
-                          link=(e or {}).get('document_link') or {}
-                          files.append({'name':(e or {}).get('document_name'),'filename':link.get('filename'),'url':link.get('url')})
-                      rec={'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
-                           'download_center_type':acf.get('download_center_type'),
-                           'scheme_category':acf.get('scheme_category'),
-                           'financial_year':acf.get('financial_year'),
-                           'month':acf.get('month'),
-                           'disclosures_type':acf.get('disclosures_type'),
-                           'fund':fund,'files':files}
-                      blob=json.dumps(rec,ensure_ascii=False)
-                      if re.search(r'Bandhan\s+Small\s+Cap',blob,re.I) or re.search(r'(?:31|August|Aug).*2026',blob,re.I):
-                          print('MATCH',blob)
-              except Exception as e:
-                  print('ERROR',json.dumps(p),repr(e))
+                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=35) as r:
+                      body=r.read().decode('utf-8','replace')
+                  print('PAGE',slug,'BYTES',len(body),'FINAL',r.geturl())
+                  for pat in (
+                    r'postid-(\d+)',r'\?p=(\d+)',r'"postId"\s*:\s*(\d+)',
+                    r'"post_id"\s*:\s*(\d+)',r'wp-json[^"\']+',
+                    r'https?://[^"\'<> ]+\.(?:xlsx?|xls|pdf)(?:\?[^"\'<> ]*)?'
+                  ):
+                      vals=[]
+                      for m in re.finditer(pat,body,re.I):
+                          vals.append(m.group(1) if m.lastindex else html.unescape(m.group(0)))
+                      if vals:print('PAGE_MATCH',slug,pat,json.dumps(list(dict.fromkeys(vals))[:80]))
+                  # Show short contexts around attachment/media/storage clues.
+                  for needle in ('storage.googleapis.com','wp-content/uploads','document_link','attachment','portfolio'):
+                      positions=[];start=0
+                      while len(positions)<12:
+                          i=body.lower().find(needle.lower(),start)
+                          if i<0:break
+                          positions.append(i);start=i+len(needle)
+                      for i in positions[:5]:
+                          print('CTX',slug,needle,repr(body[max(0,i-800):i+2200]))
+              except Exception as e:print('PAGE_ERROR',slug,repr(e))
           PY
