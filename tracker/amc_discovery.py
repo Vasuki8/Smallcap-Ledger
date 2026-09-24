@@ -263,73 +263,49 @@ def discover(amc):
                 if row.get('type','').lower()=='zip':yield 'UTI Small Cap Fund',row['url'],row['name']
     elif amc=='Bandhan':
         family='Bandhan Small Cap Fund'
-        root='https://cmsnew.bandhanmutual.com'
-        slugs=[
-            'monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
-            'monthly-and-half-yearly-bandhan-small-cap-fund-31-july-2026',
-            'monthly-and-half-yearly-bandhan-small-cap-fund-30-june-2026',
-        ]
-        candidates={}
-        def add_html(html,base,context=''):
-            soup=BeautifulSoup(html,'html.parser')
-            for url,title in providers.candidate_links(soup,base).items():
-                if disclosures.official_publication_url(url,amc):
-                    candidates[url]=context or title
-        for slug in slugs:
-            page=root+'/'+slug+'/'
-            try:
-                raw,_,_=read(page);add_html(raw,page,slug.replace('-',' '))
-            except Exception:
-                pass
-            # Bandhan's WordPress pages often render no direct attachment link.
-            # Resolve the same official post through the read-only WP REST API,
-            # then inspect its attached media objects without executing scripts.
-            api=root+'/wp-json/wp/v2/posts?slug='+slug
-            try:
-                raw,_,_=read(api)
-                posts=json.loads(raw)
-            except Exception:
-                posts=[]
-            for post in posts if isinstance(posts,list) else []:
-                rendered=((post.get('content') or {}).get('rendered') or '')
-                if rendered:add_html(rendered,page,slug.replace('-',' '))
-                links=post.get('_links') or {}
-                for rel in links.get('wp:attachment',[]):
-                    href=rel.get('href') if isinstance(rel,dict) else None
-                    if not href:continue
-                    try:
-                        media_raw,_,_=read(href)
-                        media=json.loads(media_raw)
-                    except Exception:
-                        continue
-                    for item in media if isinstance(media,list) else []:
-                        url=item.get('source_url')
-                        if not isinstance(url,str) or not disclosures.official_publication_url(url,amc):continue
-                        title=((item.get('title') or {}).get('rendered') or
-                               (item.get('caption') or {}).get('rendered') or
-                               slug.replace('-',' '))
-                        title=BeautifulSoup(str(title),'html.parser').get_text(' ',strip=True)
-                        candidates[url]=title
-        rows=[]
-        for url,title in candidates.items():
-            if not re.search(r'\.(?:pdf|xlsx?|xml)(?:[?#]|$)',url,re.I):continue
-            combined=unquote(url+' '+title)
-            if re.search(r'notice|press\s*release|riskometer|factsheet',combined,re.I):continue
-            # The parent post is already the exact dated Small Cap portfolio
-            # disclosure; prefer structured files when several attachments exist.
-            ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I).group(1).lower()
-            priority=3 if ext in ('xls','xlsx') else 2 if ext=='xml' else 1
-            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
-            year=max(years,default=0)
-            month=max((i for i in range(1,13)
-                       if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
-            rows.append((year,month,priority,url,title))
-        if not rows:raise ValueError('No downloadable Bandhan Small Cap portfolio attachment was exposed by the official CMS posts')
-        dated=[r for r in rows if r[0] and r[1]]
-        pool=dated or rows
-        newest=max((r[0],r[1]) for r in pool)
-        for row in sorted((r for r in pool if (r[0],r[1])==newest),key=lambda r:r[2],reverse=True)[:2]:
-            yield family,row[3],row[4] or 'Bandhan Small Cap monthly portfolio'
+        api='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
+        params={
+            'acf_key':'disclosures_type',
+            'acf_value':'Monthly and Half-yearly Disclosures',
+            'bypass_pagination':'true',
+            'posts_per_page':'2500',
+        }
+        raw,_,_=read(api+'?'+urlencode(params))
+        payload=json.loads(raw)
+        rows=payload.get('data') if isinstance(payload,dict) else None
+        candidates=[]
+        for item in rows if isinstance(rows,list) else []:
+            if not isinstance(item,dict):continue
+            acf=item.get('acf_fields') or {}
+            fund=acf.get('funds_mapping') or {}
+            if not disclosures.same_fund_title(fund.get('post_title',''),family):continue
+            title=str(item.get('title') or '').strip()
+            m=re.search(r'(\d{1,2})\s+([A-Za-z]+)\s+(20\d{2})',title)
+            if not m:continue
+            try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}','%d %B %Y').date()
+            except ValueError:continue
+            if day>date.today():continue
+            for entry in acf.get('disclosure_files') or []:
+                if not isinstance(entry,dict):continue
+                link=entry.get('document_link') or {}
+                target=str(link.get('url') or '').strip()
+                doc_name=str(entry.get('document_name') or link.get('title') or title).strip()
+                if not target or not disclosures.official_publication_url(target,amc):continue
+                if not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
+                if not disclosures.same_fund_title(re.sub(r'\s+\d{1,2}\s+[A-Za-z]+\s+20\d{2}$','',doc_name).strip(),family):
+                    continue
+                candidates.append((day,target,doc_name))
+        if not candidates:
+            raise ValueError('Bandhan official disclosure API exposed no Small Cap monthly portfolio workbook')
+        closed=[]
+        today=date.today()
+        for day,target,title in candidates:
+            month_end=date(day.year,day.month,calendar.monthrange(day.year,day.month)[1])
+            if day==month_end and day<date(today.year,today.month,1):closed.append((day,target,title))
+        pool=closed or candidates
+        newest=sorted(pool,key=lambda x:x[0],reverse=True)[:2]
+        for day,target,title in newest:
+            yield family,target,title or f'Bandhan Small Cap monthly portfolio {day.isoformat()}'
     elif amc=='Canara':
         family='Canara Robeco Small Cap Fund'
         today=date.today()
