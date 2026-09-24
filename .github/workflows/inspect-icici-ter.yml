@@ -1,4 +1,4 @@
-name: Inspect ICICI financial constants
+name: Inspect ICICI category config
 
 on:
   push:
@@ -14,22 +14,21 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve FILE_TYPE and category constants
+      - name: Resolve getConstants categoryConst
         run: |
           python - <<'PY'
           import re,urllib.request
-          files=[
+          urls=[
             'https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
-            'https://www.icicipruamc.com/static/js/downloadsFormsTypes.9ulBNFmg.js',
             'https://www.icicipruamc.com/static/js/index.BicS6zQ2.js',
           ]
-          for url in files:
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          for u in urls:
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
               with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-              print('\nFILE',url,'LEN',len(s))
-              for needle in ['FILE_TYPE', 'PAGE_NUMBER', 'PAGE_SIZE', 'TOTAL_EXPENSE_RATIO', 'FINANCIAL_YEAR', 'FUND_SCHEME']:
-                  pos=[m.start() for m in re.finditer(re.escape(needle),s)]
-                  print('NEEDLE',needle,'COUNT',len(pos))
-                  for p in pos[:20]:
-                      print('CTX',re.sub(r'\s+',' ',s[max(0,p-1200):p+2200])[:3500])
+              print('\nFILE',u)
+              for needle in ['function getConstants', 'getConstants=', '"categoryConst"', "'categoryConst'", 'categoryConst:', 'FILE_TYPE:"', 'PAGE_SIZE:', 'PAGE_NUMBER:']:
+                  ps=[m.start() for m in re.finditer(re.escape(needle),s)]
+                  print('NEEDLE',needle,'COUNT',len(ps))
+                  for p in ps[:30]:
+                      print('POS',p,'CTX',re.sub(r'\s+',' ',s[max(0,p-2500):p+4500])[:7200])
           PY
