@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -572,7 +572,7 @@ def run():
         except Exception as exc:
             print(f"::warning::Edelweiss v90 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v94':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v95':
         page='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
         try:
             from bs4 import BeautifulSoup
@@ -580,31 +580,43 @@ def run():
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
-            scripts=[]
+            main_url=None
             for tag in soup.find_all('script'):
                 src=tag.get('src')
                 if not src:continue
                 u=urljoin(page,src)
-                if urlparse(u).netloc.endswith('edelweissmf.com') and re.search(r'(?:main|runtime).*\.js(?:[?#]|$)',u,re.I):
-                    scripts.append(u)
-            seen=set()
-            for u in list(dict.fromkeys(scripts)):
-                providers.can_crawl(u)
-                body,_,_=providers.fetch(u,max_bytes=8*1024*1024)
-                js=body.decode('utf-8','ignore')
-                print('EDELWEISS_V94_SCRIPT '+u,flush=True)
-                # Extract quoted literals only; this avoids noisy minified-code dumps.
-                for m in re.finditer(r'(["\'\x60])((?:\\.|(?!\1).){1,500})\1',js,re.S):
-                    value=m.group(2).replace('\\/','/')
-                    if not re.search(r'portfolio|financial|disclos|download|scheme|api/',value,re.I):continue
-                    if re.search(r'data:image|svg|font|css|\.png|\.jpg|\.webp',value,re.I):continue
-                    value=re.sub(r'\\s+',' ',value).strip()
-                    if not value or value in seen:continue
-                    seen.add(value)
-                    print('EDELWEISS_V94_LITERAL '+value[:900],flush=True)
-                    if len(seen)>=220:break
+                if urlparse(u).netloc.endswith('edelweissmf.com') and re.search(r'/main\.[A-Za-z0-9]+\.js(?:[?#]|$)',u,re.I):
+                    main_url=u;break
+            if not main_url:raise ValueError('Edelweiss main bundle URL not found')
+            providers.can_crawl(main_url)
+            body,_,_=providers.fetch(main_url,max_bytes=10*1024*1024)
+            js=body.decode('utf-8','ignore')
+            print('EDELWEISS_V95_SCRIPT '+main_url,flush=True)
+            found=set()
+            patterns=[
+                r'https?://[^"\'\x60<>\\\s]{6,500}',
+                r'/(?:[A-Za-z0-9._~-]+/){0,8}(?:api|portfolio|portfolios|download|downloads|disclosure|disclosures|financials)[A-Za-z0-9._~/?=&%:+-]{0,400}',
+                r'(?:api|portfolio|portfolios|download|downloads|disclosure|disclosures|financials)[A-Za-z0-9._~/-]{2,220}',
+            ]
+            for pattern in patterns:
+                for m in re.finditer(pattern,js,re.I):
+                    value=m.group(0).replace('\\/','/').strip()
+                    if '<' in value or '>' in value:continue
+                    if re.search(r'\.css|\.svg|\.png|\.jpg|\.jpeg|\.webp|font|assets/images',value,re.I):continue
+                    if not re.search(r'portfolio|disclos|download|financial|api',value,re.I):continue
+                    if value in found:continue
+                    found.add(value)
+                    print('EDELWEISS_V95_TOKEN '+value[:1000],flush=True)
+                    if len(found)>=300:break
+                if len(found)>=300:break
+            # Also emit short contexts for exact high-value terms only.
+            for term in ('portfolio-of-schemes','financials-portfolios','portfolioOfSchemes','PortfolioOfSchemes','portfolioScheme','schemePortfolio'):
+                for m in list(re.finditer(re.escape(term),js,re.I))[:10]:
+                    ctx=re.sub(r'\\s+',' ',js[max(0,m.start()-240):m.end()+420]).strip()
+                    if '<' not in ctx and '>' not in ctx:
+                        print('EDELWEISS_V95_CONTEXT '+ctx[:900],flush=True)
         except Exception as exc:
-            print(f"::warning::Edelweiss v94 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::Edelweiss v95 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
