@@ -1,6 +1,8 @@
 import io
 import json
 import unittest
+import zipfile
+from xml.sax.saxutils import escape
 
 import openpyxl
 from datetime import date
@@ -177,6 +179,166 @@ class HsbcExpenseTests(unittest.TestCase):
         wb.close()
         with self.assertRaisesRegex(ValueError, "columns changed"):
             amc_expenses.parse_hsbc_workbook(out.getvalue(), date(2026, 9, 24))
+
+
+class IciciExpenseTests(unittest.TestCase):
+    def row(self, day="23/09/2026", *, scheme="ICICI Prudential Small Cap Fund",
+            regular_ter="2.1%", direct_ter="1.18%"):
+        return {
+            "A": scheme, "B": day,
+            "C": "1.5%", "D": "0.08%", "E": "0.01%", "F": "0.51%", "G": regular_ter,
+            "H": "0.7%", "I": "0.08%", "J": "0.01%", "K": "0.39%", "L": direct_ter,
+            "M": "NA", "N": "NA", "O": "NA", "P": "NA", "Q": "NA",
+            "R": "NA", "S": "NA", "T": "NA", "U": "NA", "V": "NA",
+        }
+
+    def workbook(self, data_rows, *, header_override=None):
+        rows = [
+            {"A": "Total Expense Ratio (TER) for Mutual Fund Schemes"},
+            {"C": "Regular Plan", "H": "Direct Plan", "M": "Unclaimed Dividend", "R": "Unclaimed Redemption"},
+            dict(amc_expenses._ICICI_HEADER),
+        ] + data_rows
+        if header_override:
+            rows[2].update(header_override)
+
+        def xml_row(number, values):
+            cells = []
+            for column, value in values.items():
+                text = escape(str(value))
+                cells.append(
+                    f'<c r="{column}{number}" t="inlineStr"><is><t>{text}</t></is></c>'
+                )
+            return f'<row r="{number}">' + "".join(cells) + "</row>"
+
+        xml = (
+            '<?xml version="1.0" encoding="UTF-8"?>'
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            '<dimension ref="A1"/>'
+            '<sheetData>'
+            + "".join(xml_row(i + 1, row) for i, row in enumerate(rows))
+            + "</sheetData></worksheet>"
+        )
+        out = io.BytesIO()
+        with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("xl/worksheets/sheet1.xml", xml)
+        return out.getvalue()
+
+    def categories(self):
+        return [{
+            "id": "parent",
+            "internalName": "total-expense-ratio",
+            "title": {"text": "Total Expense Ratio", "code": "TOTAL_EXPENSE_RATIO"},
+            "isEnabled": True,
+            "subCategory": [{
+                "id": "child",
+                "internalName": "Total Expense Ratio",
+                "title": {"text": "Total Expense Ratio", "code": "TOTAL_EXPENSE_RATIO"},
+                "isEnabled": True,
+                "filter": [
+                    {"key": {"code": "SHOW"}, "value": [{"code": "TER Details"}, {"code": "PDF"}]},
+                    {"key": {"code": "FINANCIAL_YEAR"}, "value": [{"code": "2026-2027"}]},
+                ],
+            }],
+        }]
+
+    def file(self, month="September", short="Sep", *, parent="parent", child="child"):
+        return {
+            "title": {"text": f"TotalExpenseRatio{month}2026", "code": f"TotalExpenseRatio{month}2026"},
+            "url": f"/financials-disclosures-files/Files/Total Expense Ratio/2026-2027/TotalExpenseRatio{short}2026.xlsx",
+            "category": "TOTAL_EXPENSE_RATIO",
+            "categoryName": "Total Expense Ratio",
+            "isEnabled": True,
+            "FINANCIAL_YEAR": ["2026-2027"],
+            "SHOW": ["TER Details"],
+            "level1Id": parent,
+            "level2Id": child,
+        }
+
+    def test_icici_category_and_latest_file_identity_are_strict(self):
+        parent, child, fy = amc_expenses._icici_category_ids(
+            self.categories(), date(2026, 9, 24)
+        )
+        self.assertEqual((parent, child, fy), ("parent", "child", "2026-2027"))
+        files = [self.file("September", "Sep"), self.file("August", "Aug")]
+        source = amc_expenses._icici_select_file(
+            files, parent, child, fy, date(2026, 9, 24)
+        )
+        self.assertEqual(
+            source,
+            "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/"
+            "Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+        )
+
+    def test_icici_future_file_and_wrong_metadata_cannot_be_promoted(self):
+        future = self.file("October", "Oct")
+        current = self.file()
+        source = amc_expenses._icici_select_file(
+            [future, current], "parent", "child", "2026-2027", date(2026, 9, 24)
+        )
+        self.assertTrue(source.endswith("TotalExpenseRatioSep2026.xlsx"))
+        bad = self.file(parent="other")
+        with self.assertRaisesRegex(ValueError, "no current TER Details"):
+            amc_expenses._icici_select_file(
+                [bad], "parent", "child", "2026-2027", date(2026, 9, 24)
+            )
+
+    def test_icici_latest_exact_row_retains_published_ber_and_total_ter(self):
+        book = self.workbook([self.row("22/09/2026"), self.row("23/09/2026")])
+        day, plans = amc_expenses.parse_icici_workbook(book, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.5)
+        self.assertEqual(plans["Regular"]["ter"], 2.1)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.7)
+        self.assertEqual(plans["Direct"]["ter"], 1.18)
+
+    def test_icici_future_row_wrong_scheme_and_duplicate_are_rejected(self):
+        book = self.workbook([self.row("23/09/2026"), self.row("25/09/2026")])
+        day, plans = amc_expenses.parse_icici_workbook(book, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Direct"]["ter"], 1.18)
+
+        wrong = self.workbook([self.row(scheme="ICICI Prudential MidCap Fund")])
+        with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+            amc_expenses.parse_icici_workbook(wrong, date(2026, 9, 24))
+
+        row = self.row()
+        duplicate = self.workbook([row, dict(row)])
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_icici_workbook(duplicate, date(2026, 9, 24))
+
+    def test_icici_header_and_component_reconciliation_are_strict(self):
+        changed = self.workbook([self.row()], header_override={"G": "Calculated TER (%)"})
+        with self.assertRaisesRegex(ValueError, "column G changed"):
+            amc_expenses.parse_icici_workbook(changed, date(2026, 9, 24))
+
+        bad_total = self.workbook([self.row(direct_ter="1.25%")])
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_icici_workbook(bad_total, date(2026, 9, 24))
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "ICICI"})
+    @patch("tracker.amc_expenses._icici_disclosure")
+    def test_icici_collector_stores_exact_source_hash_and_plan_metrics(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        source = (
+            "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/"
+            "Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx"
+        )
+        mock_disclosure.return_value = (source, self.workbook([self.row()]), "hash456")
+        result = amc_expenses.icici(today=date(2026, 9, 24))
+        self.assertIn("2026-09-23", result)
+        self.assertEqual(mock_metric.call_count, 10)
+        calls = {
+            (call.args[1], call.args[2]): call.args[4]
+            for call in mock_metric.call_args_list
+        }
+        self.assertEqual(calls[("Regular", "ter")], 2.1)
+        self.assertEqual(calls[("Direct", "ter")], 1.18)
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.7)
+        self.assertTrue(all(call.args[3] == "2026-09-23" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == source for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "hash456" for call in mock_metric.call_args_list))
 
 
 if __name__ == "__main__":
