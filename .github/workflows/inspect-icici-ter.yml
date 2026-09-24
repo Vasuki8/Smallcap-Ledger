@@ -1,4 +1,4 @@
-name: Inspect ICICI September TER workbook
+name: Inspect ICICI TER XLSX internals
 
 on:
   push:
@@ -14,43 +14,33 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
-        with:
-          version: '0.11.33'
-          python-version: '3.12'
-          enable-cache: true
-      - run: uv sync --frozen
-      - name: Inspect exact current ICICI TER workbook
+      - name: Inspect XLSX package internals
         run: |
-          uv run --frozen python - <<'PY'
-          import hashlib,io,json,re,urllib.parse,urllib.request
-          import openpyxl
-
+          python - <<'PY'
+          import io,re,urllib.parse,urllib.request,zipfile
           path='/financials-disclosures-files/Files/Total Expense Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx'
-          encoded=urllib.parse.quote(path,safe='/')
-          urls=[
-            'https://app.beta.icicipruamc.com/blob'+encoded,
-            'https://www.icicipruamc.com/blob'+encoded,
-          ]
-          body=None
-          for url in urls:
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.icicipruamc.com/'})
-              try:
-                  with urllib.request.urlopen(req,timeout=60) as r:
-                      b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl(),'MAGIC',b[:8])
-                  if b.startswith(b'PK'):
-                      body=b;print('SELECTED_URL',url);break
-              except Exception as e: print('FETCH_ERROR',url,type(e).__name__,e)
-          if body is None: raise SystemExit('No XLSX source returned')
-          print('SHA256',hashlib.sha256(body).hexdigest())
-          wb=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
-          print('SHEETS',wb.sheetnames)
-          for ws in wb.worksheets:
-              print('SHEET',ws.title,ws.max_row,ws.max_column)
-              for i,row in enumerate(ws.iter_rows(values_only=True),1):
-                  vals=[None if v is None else str(v) for v in row]
-                  joined=' | '.join(x or '' for x in vals)
-                  if i<=20 or re.search(r'ICICI\s+Prudential\s+Small\s+Cap|Small\s+Cap\s+Fund',joined,re.I):
-                      print('ROW',i,json.dumps(vals,ensure_ascii=False))
-          wb.close()
+          url='https://app.beta.icicipruamc.com/blob'+urllib.parse.quote(path,safe='/')
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.icicipruamc.com/'})
+          with urllib.request.urlopen(req,timeout=60) as r: body=r.read()
+          z=zipfile.ZipFile(io.BytesIO(body))
+          print('ENTRIES',len(z.namelist()))
+          for name in z.namelist():
+              info=z.getinfo(name)
+              print('ENTRY',name,info.file_size)
+          for name in z.namelist():
+              if not (name.endswith('.xml') or name.endswith('.rels') or name.endswith('.bin') or name.endswith('.csv')):
+                  continue
+              raw=z.read(name)
+              low=raw.lower()
+              if b'small cap' in low or b'prudential small' in low or b'total ter' in low or b'expense ratio' in low or name in ('xl/workbook.xml','xl/worksheets/sheet1.xml','xl/sharedStrings.xml'):
+                  print('\nCONTENT',name,'LEN',len(raw))
+                  try:
+                      text=raw.decode('utf-8','ignore')
+                      for needle in ['Small Cap','small cap','Total TER','Expense Ratio','ICICI Prudential']:
+                          p=text.lower().find(needle.lower())
+                          if p>=0:
+                              print('CTX',needle,text[max(0,p-2500):p+6000])
+                      if len(text)<15000: print(text)
+                  except Exception as e: print('DECODE_ERROR',e)
+          z.close()
           PY
