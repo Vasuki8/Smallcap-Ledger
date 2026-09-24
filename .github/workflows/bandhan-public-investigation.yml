@@ -19,37 +19,53 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect latest public Bandhan equity-hybrid workbook
+      - name: Validate current Bandhan Small Cap workbooks
         run: |
           uv run --frozen python - <<'PY'
-          import urllib.request,io,hashlib,json,re,openpyxl
+          import urllib.request,urllib.parse,json,re,io,hashlib,openpyxl
           from tracker.portfolio_parser import parse_sheet
-          url='https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2025/06/b100897c-bandhan-equity-hybrid-fund-portfolios-as-on-31-may-2025.xlsx'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=40) as r:
-              body=r.read()
-              print('SOURCE',r.status,r.headers.get('Content-Type'),len(body),hashlib.sha256(body).hexdigest())
-          assert body[:2]==b'PK'
-          book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
-          for ws in book.worksheets:
-              cells=list(ws.iter_rows())
-              data=[[c.value for c in row] for row in cells]
-              formats=[[c.number_format or '' for c in row] for row in cells]
-              prefix=' '.join(str(v) for row in data[:35] for v in row if v not in (None,''))
-              if 'small cap' not in (ws.title+' '+prefix).lower():continue
-              parsed=parse_sheet(data,formats,'Bandhan Small Cap Fund')
-              print('SHEET',ws.title,'ROWS',len(data))
-              print('HEAD',prefix[:5000])
-              if parsed:
-                  print('PARSED',json.dumps({
-                    'day':parsed['day'],'complete':parsed['complete'],
-                    'positions':len(parsed['positions']),
-                    'weight':sum(x['weight'] for x in parsed['positions']),
-                    'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])
-                  },ensure_ascii=False))
-              for i,row in enumerate(data):
-                  txt=' | '.join(str(x) for x in row if x not in (None,''))
-                  if any(k in txt.lower() for k in ('company','total','net asset','treps','repo','cash','margin','derivative','small cap fund')):
-                      print('ROW',i+1,txt[:2200])
-          book.close()
+          api='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
+          for post_id in (158853,155405):
+              req=urllib.request.Request(api+'?'+urllib.parse.urlencode({'id':post_id}),headers=headers)
+              with urllib.request.urlopen(req,timeout=40) as r:data=json.loads(r.read())
+              rows=data.get('data') or []
+              assert len(rows)==1 and int(rows[0]['id'])==post_id
+              item=rows[0];acf=item.get('acf_fields') or {};files=acf.get('disclosure_files') or []
+              print('API_ROW',json.dumps({'id':item['id'],'title':item['title'],'date':item['date'],
+                    'fund':(acf.get('funds_mapping') or {}).get('post_title'),
+                    'financial_year':acf.get('financial_year'),'disclosures_type':acf.get('disclosures_type'),
+                    'files':files},ensure_ascii=False))
+              assert len(files)==1
+              link=files[0]['document_link'];url=link['url']
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=40) as r:
+                  body=r.read();typ=r.headers.get('Content-Type')
+              h=hashlib.sha256(body).hexdigest()
+              print('SOURCE',post_id,url,len(body),typ,h,body[:8].hex())
+              assert body[:2]==b'PK'
+              book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+              found=0
+              for ws in book.worksheets:
+                  cells=list(ws.iter_rows())
+                  data0=[[c.value for c in row] for row in cells]
+                  formats=[[c.number_format or '' for c in row] for row in cells]
+                  prefix=' '.join(str(v) for row in data0[:40] for v in row if v not in (None,''))
+                  if 'small cap' not in (ws.title+' '+prefix).lower():continue
+                  found+=1
+                  parsed=parse_sheet(data0,formats,'Bandhan Small Cap Fund')
+                  print('SHEET',post_id,ws.title,'ROWS',len(data0),'HEAD',prefix[:2600])
+                  if parsed:
+                      print('PARSED',post_id,json.dumps({
+                        'day':parsed['day'],'complete':parsed['complete'],
+                        'positions':len(parsed['positions']),
+                        'weight':sum(x['weight'] for x in parsed['positions']),
+                        'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])
+                      },ensure_ascii=False))
+                  for i,row in enumerate(data0):
+                      txt=' | '.join(str(x) for x in row if x not in (None,''))
+                      if any(k in txt.lower() for k in ('grand total','net asset','treps','repo','cash','margin','derivative','name of the instrument','company')):
+                          print('ROW',post_id,i+1,txt[:1800])
+              book.close()
+              print('SMALLCAP_SHEETS',post_id,found)
           PY
