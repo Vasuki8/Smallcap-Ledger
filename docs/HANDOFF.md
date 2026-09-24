@@ -1,6 +1,77 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after Canara Robeco TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after HSBC Small Cap detailed TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: HSBC Small Cap detailed TER/BER recovery
+
+**HSBC Small Cap Fund now has current, explicitly labelled AMC-published BER and Total TER from the detailed TER workbook linked by HSBC's own factsheet.**
+
+PR #95 merged as commit `1077f6887d07b1e81de1dbf9ab1c03e88dd66096`. Isolated validation run **36064819731** passed compileall, all **224 tests**, and a live end-to-end AMC-link -> CAMS browser transport -> decoded workbook -> strict HSBC row parse. Production workflow **#465**, run **36064999961**, then passed the one-time HSBC recovery, the same **224-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The production run completed successfully at **2026-09-24T22:16:34Z**.
+
+### Source chain and retained evidence
+
+HSBC's exact retained August factsheet is:
+
+`https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf`
+
+Its HSBC Small Cap page publishes **Base Expense Ratio (BER)** only — Regular **1.42%**, Direct **0.56%**, as of **2026-08-31** — and explicitly directs readers to the detailed TER workbook:
+
+`https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx`
+
+That public CAMS route is an Angular download application rather than raw XLSX bytes. Its browser performs a public `GET_UPD_MB_RESULT` request to `https://digital.camsonline.com/api/v1/camsonline` and receives the workbook as base64 inside its encrypted transport envelope. `tracker/amc_expenses.py` mirrors only that public browser transport using constants embedded in the public application bundle; **no investor login, account credential, token, or private secret is used**. The decoded XLSX itself is archived and hashed as source evidence; the transient encrypted API response is not treated as the financial source.
+
+Exact decoded workbook evidence:
+
+- source link: `https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx`
+- bytes: **5,493,673**
+- SHA-256: `2fab33e3ece2a39e8dd73832672059a41bb02d605f53471717504665f5b5866c`
+- required sheet: **TER**
+- exact scheme code: **HEMIDF**
+- exact NSDL scheme code: **LTMF/O/E/SCF/14/02/0023**
+- exact scheme name: **HSBC Small Cap Fund**
+
+The newest non-future HSBC Small Cap row in the verified workbook is **2026-09-23**:
+
+| Plan | BER | Brokerage | Transaction cost | Statutory levies incl. GST | Total TER |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Regular | **1.42%** | 0.03% | 0.00% | 0.33% | **1.78%** |
+| Direct | **0.56%** | 0.03% | 0.00% | 0.18% | **0.77%** |
+
+The tracker stores the workbook's explicit **Total TER** field; it does **not** calculate TER from the components. Component reconciliation is only a rejection check. The parser also rejects a changed TER-sheet title/header, wrong scheme/NSDL identity, duplicate latest rows, future dates, invalid ranges, Total TER below BER, and component totals that fail the published Total TER within rounding tolerance.
+
+`scripts/refresh_hsbc_expenses.py` performed the idempotent push recovery and records `source_upgrade_hsbc-detailed-ter-v1` only after recent Regular/Direct BER+TER observations exist with the exact CAMS source and one non-empty workbook hash. Normal nightly collection remains active through `amc_expenses.update`; a source failure preserves prior observations.
+
+Production #465 logged:
+`HSBC Small Cap Fund: official detailed BER/TER as of 2026-09-23 (Direct 0.56%/0.77% BER/TER)`
+and retained hash `2fab33e3ece2a39e8dd73832672059a41bb02d605f53471717504665f5b5866c`.
+
+Status commit `5b0beffa3cf85bd55c21014d75dab0c0fc6fb001` records the published state. Pages artifact **10836118342** is **230,723,187 bytes** with digest `sha256:3cf0cc15bab4c9240d3dfe3bb1bd6e26f1c0b836e998b54dc38d2c371c8e0251`.
+
+### Coverage after this batch
+
+Coverage generated at **2026-09-24T22:15:26Z** is:
+
+- reported TER: **30 / 36** (up from 29 / 36)
+- base expense ratio / BER: **33 / 36**
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
+
+HSBC's published Direct fee is now **TER 0.77% as of 2026-09-23** rather than the older BER fallback. Its current AUM observation is **₹19,210.586 crore as of 2026-09-23** from AMFI, while the complete August portfolio remains **115 positions as of 2026-08-31**.
+
+The six remaining funds without reported TER are **Axis, ICICI Prudential, Invesco India, JM, Mahindra Manulife and Mirae Asset**. The three remaining BER gaps are **Axis, Groww and UTI**.
+
+### Next backend task
+
+**ICICI Prudential Small Cap Fund is the next preferred TER target.** The tracker already retains Direct BER **0.70% as of 2026-08-31** from the official ICICI Prudential complete factsheet:
+`https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf`.
+
+Trace the current ICICI Prudential first-party expense/TER disclosure path for an explicitly labelled Total TER. The earlier ICICI *portfolio ZIP* archive-DNS blocker is a separate issue and does not establish a TER blocker; do not conflate those source paths. Store Total TER only if published directly by ICICI Prudential/its explicitly delegated public disclosure route. Do not derive TER from BER, GST or other expense components.
+
+After ICICI Prudential, continue Invesco India, JM, Mahindra Manulife and Mirae Asset. Axis remains special because its current fund page exposes only an unqualified **Expense Ratio** observation; preserve that as `expense_ratio` until an explicitly labelled TER/BER source is found.
+
+No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in this HSBC batch.
 
 ## Latest completed batch: Canara Robeco current TER/BER recovery
 
