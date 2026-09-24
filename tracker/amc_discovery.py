@@ -106,14 +106,18 @@ def store_report(amc,family,url,title='Official report'):
     url=quote(url,safe=':/?&=%#+')
     if not disclosures.official_publication_url(url,amc):raise ValueError('Unregistered AMC report host')
     body,h,_=read(url)
-    sbi_workbook=(amc=='SBI' and family=='SBI Small Cap Fund'
-                  and urlparse(url).path.lower().endswith(('.xls','.xlsx')))
-    if sbi_workbook and not body.startswith((b'PK',b'\xd0\xcf')):
-        raise ValueError('SBI monthly workbook returned non-spreadsheet content')
+    workbook=urlparse(url).path.lower().endswith(('.xls','.xlsx'))
+    sbi_workbook=(amc=='SBI' and family=='SBI Small Cap Fund' and workbook)
+    bandhan_workbook=(amc=='Bandhan' and family=='Bandhan Small Cap Fund' and workbook)
+    if (sbi_workbook or bandhan_workbook) and not body.startswith((b'PK',b'\xd0\xcf')):
+        raise ValueError(f'{amc} monthly workbook returned non-spreadsheet content')
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
     if sbi_workbook:
         from .sbi_portfolios import PARSER_VERSION
+        return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
+    if bandhan_workbook:
+        from .bandhan_portfolios import PARSER_VERSION
         return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
     return amc_reports.extract(body,family,url,h)
 
@@ -262,74 +266,8 @@ def discover(amc):
             for row in json.loads(raw).get('rows',[])[:1]:
                 if row.get('type','').lower()=='zip':yield 'UTI Small Cap Fund',row['url'],row['name']
     elif amc=='Bandhan':
-        family='Bandhan Small Cap Fund'
-        root='https://cmsnew.bandhanmutual.com'
-        slugs=[
-            'monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
-            'monthly-and-half-yearly-bandhan-small-cap-fund-31-july-2026',
-            'monthly-and-half-yearly-bandhan-small-cap-fund-30-june-2026',
-        ]
-        candidates={}
-        def add_html(html,base,context=''):
-            soup=BeautifulSoup(html,'html.parser')
-            for url,title in providers.candidate_links(soup,base).items():
-                if disclosures.official_publication_url(url,amc):
-                    candidates[url]=context or title
-        for slug in slugs:
-            page=root+'/'+slug+'/'
-            try:
-                raw,_,_=read(page);add_html(raw,page,slug.replace('-',' '))
-            except Exception:
-                pass
-            # Bandhan's WordPress pages often render no direct attachment link.
-            # Resolve the same official post through the read-only WP REST API,
-            # then inspect its attached media objects without executing scripts.
-            api=root+'/wp-json/wp/v2/posts?slug='+slug
-            try:
-                raw,_,_=read(api)
-                posts=json.loads(raw)
-            except Exception:
-                posts=[]
-            for post in posts if isinstance(posts,list) else []:
-                rendered=((post.get('content') or {}).get('rendered') or '')
-                if rendered:add_html(rendered,page,slug.replace('-',' '))
-                links=post.get('_links') or {}
-                for rel in links.get('wp:attachment',[]):
-                    href=rel.get('href') if isinstance(rel,dict) else None
-                    if not href:continue
-                    try:
-                        media_raw,_,_=read(href)
-                        media=json.loads(media_raw)
-                    except Exception:
-                        continue
-                    for item in media if isinstance(media,list) else []:
-                        url=item.get('source_url')
-                        if not isinstance(url,str) or not disclosures.official_publication_url(url,amc):continue
-                        title=((item.get('title') or {}).get('rendered') or
-                               (item.get('caption') or {}).get('rendered') or
-                               slug.replace('-',' '))
-                        title=BeautifulSoup(str(title),'html.parser').get_text(' ',strip=True)
-                        candidates[url]=title
-        rows=[]
-        for url,title in candidates.items():
-            if not re.search(r'\.(?:pdf|xlsx?|xml)(?:[?#]|$)',url,re.I):continue
-            combined=unquote(url+' '+title)
-            if re.search(r'notice|press\s*release|riskometer|factsheet',combined,re.I):continue
-            # The parent post is already the exact dated Small Cap portfolio
-            # disclosure; prefer structured files when several attachments exist.
-            ext=re.search(r'\.(xlsx?|xml|pdf)(?:[?#]|$)',url,re.I).group(1).lower()
-            priority=3 if ext in ('xls','xlsx') else 2 if ext=='xml' else 1
-            years=[int(x) for x in re.findall(r'20[12]\d',combined)]
-            year=max(years,default=0)
-            month=max((i for i in range(1,13)
-                       if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
-            rows.append((year,month,priority,url,title))
-        if not rows:raise ValueError('No downloadable Bandhan Small Cap portfolio attachment was exposed by the official CMS posts')
-        dated=[r for r in rows if r[0] and r[1]]
-        pool=dated or rows
-        newest=max((r[0],r[1]) for r in pool)
-        for row in sorted((r for r in pool if (r[0],r[1])==newest),key=lambda r:r[2],reverse=True)[:2]:
-            yield family,row[3],row[4] or 'Bandhan Small Cap monthly portfolio'
+        from .bandhan_portfolios import discover as bandhan_discover
+        yield from bandhan_discover(read)
     elif amc=='Canara':
         family='Canara Robeco Small Cap Fund'
         today=date.today()
