@@ -277,7 +277,7 @@ def run():
                     print('ABAKKUS_V74_SELECT '+json.dumps({'index':index,'attrs':meta,'options':opts},ensure_ascii=False)[:10000],flush=True)
             txt=raw.decode('utf-8','ignore')
             found=set()
-            for m in re.finditer(r'(?:https?://[^"'<>\s]+|/[^"'<>\s]+)\.(?:xlsx?|pdf)(?:\?[^"'<>\s]*)?',txt,re.I):
+            for m in re.finditer(r"(?:https?://[^\\\"'<>\\s]+|/[^\\\"'<>\\s]+)\\.(?:xlsx?|pdf)(?:\\?[^\\\"'<>\\s]*)?",txt,re.I):
                 url=urljoin(page,m.group(0).replace('&amp;','&'))
                 ctx=re.sub(r'\s+',' ',txt[max(0,m.start()-260):m.end()+260]).strip()
                 if url in found:continue
