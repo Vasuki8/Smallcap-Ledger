@@ -23,32 +23,54 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Query official Invesco holdings API
+      - name: Inspect official Invesco Small Cap workbook
         run: |
           rm -rf "$SMALLCAP_DATA_DIR"
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json
+          import io,json
           from pathlib import Path
+          import openpyxl
           from tracker import providers,db,disclosures,amc_reports
+          from tracker.portfolio_parser import parse_sheet
           db.init();disclosures.seed_sources()
           root='https://www.invescomutualfund.com'
-          endpoints=[
-            root+'/api/ClassificationCompleteMonthlyHoldings',
-            root+'/api/CompleteMonthlyHoldings?year=0',
-            root+'/api/CompleteMonthlyHoldings?year=2026&classification=equity',
-            root+'/api/CompleteMonthlyHoldings?year=2026&classification=Equity',
-          ]
-          out=Path('audit')
-          for i,url in enumerate(endpoints):
-              try:
-                  body,h,typ=providers.fetch(url,max_bytes=12*1024*1024)
-                  print('API',url,len(body),typ,h)
-                  txt=body.decode('utf-8','ignore')
-                  print('BODY',txt[:30000])
-                  (out/f'api-{i}.json').write_bytes(body)
-              except Exception as e:
-                  print('API_ERROR',url,repr(e))
+          api=root+'/api/CompleteMonthlyHoldings?year=2026&classification=equity'
+          raw,api_hash,_=providers.fetch(api,max_bytes=12*1024*1024)
+          data=json.loads(raw)
+          row=next(x for x in data if str(x.get('Name') or '').strip()=='Invesco India Small Cap Fund')
+          url=row['AugUrl']
+          print('API_HASH',api_hash)
+          print('ROW',json.dumps(row,ensure_ascii=False))
+          body,h,typ=providers.fetch(url,max_bytes=25*1024*1024)
+          Path('audit/invesco-smallcap-august.xlsx').write_bytes(body)
+          print('SOURCE',url,len(body),typ,h,body[:8].hex())
+          count=amc_reports.extract(body,'Invesco India Small Cap Fund',url,h)
+          snaps=db.rows("""SELECT p.id,p.as_of,p.complete,p.hash,p.source,COUNT(h.id) positions,SUM(h.weight) weight
+            FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+            WHERE p.family='Invesco India Small Cap Fund'
+            GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC""")
+          print('EXTRACT',count,json.dumps(snaps))
+          book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+          for ws in book.worksheets:
+              cells=list(ws.iter_rows())
+              rows0=[[c.value for c in r] for r in cells]
+              formats=[[c.number_format or '' for c in r] for r in cells]
+              prefix=' '.join(str(v) for r in rows0[:35] for v in r if v not in (None,''))
+              if 'small cap' not in (ws.title+' '+prefix).lower():continue
+              parsed=parse_sheet(rows0,formats,'Invesco India Small Cap Fund')
+              info={'sheet':ws.title,'rows':len(rows0),'prefix':prefix[:1800]}
+              if parsed:
+                  info['parsed']={'day':parsed['day'],'complete':parsed['complete'],'positions':len(parsed['positions']),
+                                  'weight':sum(x['weight'] for x in parsed['positions']),
+                                  'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])[:120]}
+              print('SHEET',json.dumps(info,ensure_ascii=False))
+              unknown=(parsed or {}).get('unknown_rows',[])
+              for i,r in enumerate(rows0):
+                  txt=' | '.join(str(x) for x in r if x not in (None,''))
+                  if any(k in txt.lower() for k in ('grand total','net assets','net current','treps','repo','cash','margin','derivative','sub total','total for')) or any(str(u) in txt for u in unknown):
+                      print('ROWTRACE',i+1,txt[:2400])
+          book.close()
           PY
       - uses: actions/upload-artifact@v4
         if: always()
