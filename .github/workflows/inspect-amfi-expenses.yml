@@ -14,29 +14,22 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Extract Canara expense API strings
+      - name: Fetch live Canara TER API
         run: |
           python - <<'PY'
-          import re,urllib.request
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
-          u='https://www.canararobeco.com/assets/index-BXrQDEhN.js'
-          req=urllib.request.Request(u,headers=UA)
-          with urllib.request.urlopen(req,timeout=45) as r:s=r.read().decode('utf-8','ignore')
-          print('JS_LEN',len(s))
-          strings=set()
-          for m in re.finditer(r'(["\'])(.{1,220}?)\1',s):
-              v=m.group(2)
-              if re.search(r'expense|ratio|brokerage|statutory|historical|ter',v,re.I):
-                  strings.add(v)
-          print('STRINGS')
-          for v in sorted(strings):
-              if len(v)<220: print(repr(v))
-          for needle in ['expense-ratio','EXPENSE_RATIO','Total Expense Ratio','Historical Expense Ratio','Base Expense Ratio','brokerageCost','statutoryLevies','totalTer','totalTER','Uet=']:
-              print('CONTEXT_FOR',needle)
-              start=0;n=0
-              while True:
-                  p=s.find(needle,start)
-                  if p<0 or n>=12:break
-                  print(s[max(0,p-1400):p+2400])
-                  start=p+len(needle);n+=1
+          import json, urllib.parse, urllib.request
+          base='https://www.canararobeco.com/wp-json/ter/v1/records'
+          q=urllib.parse.urlencode({'from_date':'2026-09-22','to_date':'2026-09-24'})
+          req=urllib.request.Request(base+'?'+q,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Accept':'application/json'})
+          with urllib.request.urlopen(req,timeout=45) as r:
+              body=r.read(); print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
+          data=json.loads(body)
+          print('TYPE',type(data).__name__)
+          if isinstance(data,dict): print('KEYS',sorted(data.keys()))
+          rows=data.get('data',data) if isinstance(data,dict) else data
+          print('ROWS',len(rows) if isinstance(rows,list) else 'not-list')
+          if isinstance(rows,list):
+              for row in rows:
+                  if 'small cap' in str(row.get('scheme_name','')).lower():
+                      print('SMALL_CAP',json.dumps(row,sort_keys=True))
           PY
