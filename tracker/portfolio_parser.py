@@ -74,6 +74,8 @@ def parse_sheet(rows,formats,family):
         named_repo=(family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)) or (
                     family in ('Samco Small Cap Fund','Baroda Bnp Paribas Small Cap Fund') and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
+                    and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I))) or (
+                    family=='Pgim India Small Cap Fund' and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I)))
         if not valid_isin and not named_equity and not named_derivative and not named_repo:
             if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
