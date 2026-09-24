@@ -181,9 +181,17 @@ def franklin_positions(table):
             break
         if name.lower().startswith('total '):continue
         if not any(cells[1:]):sector=name;continue
-        # Franklin's August debt/cash section has a blank spacer column between
-        # issuer and rating. Collapse only that verified empty spacer shape.
-        if len(cells)==5 and not cells[1].strip():cells=[cells[0]]+cells[2:]
+        # Franklin's August HTML uses two verified five-cell row shapes:
+        # equity rows append an optional derivatives-exposure cell, while the
+        # debt/cash section inserts a blank spacer before Rating. Neither
+        # supplementary column is part of the published asset-weight total.
+        if len(cells)==5:
+            if asset=='Equity':
+                extra=cells[4].strip()
+                if extra and not re.fullmatch(r'-?[\d,.]+(?:\.\d+)?%?',extra):return []
+                cells=cells[:4]
+            elif not cells[1].strip():
+                cells=[cells[0]]+cells[2:]
         if len(cells) not in (3,4):return []
         if re.fullmatch(r'(?:Call,\s*cash and other current asset|Margin on Derivatives)',name,re.I):
             asset='Cash and net current assets';sector=None
