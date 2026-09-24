@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve ICICI downloads fileType payload
+      - name: Query ICICI monthly portfolio files
         run: |
           python - <<'PY'
           import urllib.request,uuid,json
@@ -21,32 +21,29 @@ jobs:
           common={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
                   'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
                   'Referer':'https://www.icicipruamc.com/','env':'api','baggage':''}
+          parent='60f45132-1a30-7412-f061-d71efe3e3653'
+          monthly='26a073d7-08d2-4a95-95fa-f83a4ee51e40'
+          basebody={'userType':'Investor','fileType':'DOCUMENTS','page':'1','size':'100'}
           variants=[
-            {'userType':'Investor','fileType':'DOCUMENTS'},
-            {'userType':'Investor','fileType':'DOCUMENTS',
-             'categoryId':'60f45132-1a30-7412-f061-d71efe3e3653',
-             'subCategoryId':'26a073d7-08d2-4a95-95fa-f83a4ee51e40'},
-            {'userType':'Investor','fileType':'DOCUMENTS',
-             'categoryId':'60f45132-1a30-7412-f061-d71efe3e3653',
-             'subCategoryId':'26a073d7-08d2-4a95-95fa-f83a4ee51e40',
-             'filter':[{'key':'FINANCIAL_YEAR','value':'2026-2027'}]},
-            {'userType':'Investor','fileType':'DOCUMENTS',
-             'categoryIds':['60f45132-1a30-7412-f061-d71efe3e3653'],
-             'subCategoryIds':['26a073d7-08d2-4a95-95fa-f83a4ee51e40'],
-             'filters':[{'key':'FINANCIAL_YEAR','value':'2026-2027'}]},
+            basebody,
+            {**basebody,'categoryId':parent},
+            {**basebody,'categoryId':monthly},
+            {**basebody,'categoryId':monthly,'financialYear':'2026-2027'},
+            {**basebody,'categoryId':monthly,'filter':{'FINANCIAL_YEAR':'2026-2027'}},
+            {**basebody,'categoryId':monthly,'filter':{'key':'FINANCIAL_YEAR','value':'2026-2027'}},
           ]
           for body in variants:
               headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
               req=urllib.request.Request(base,data=json.dumps(body).encode(),headers=headers,method='POST')
               print('REQUEST',json.dumps(body,sort_keys=True))
               try:
-                  with urllib.request.urlopen(req,timeout=20) as r:
-                      b=r.read(); print('FETCH',r.status,r.headers.get('Content-Type'),len(b))
+                  with urllib.request.urlopen(req,timeout=25) as r:
+                      b=r.read();print('FETCH',r.status,r.headers.get('Content-Type'),len(b))
                       text=b.decode('utf-8','replace')
-                      print('BODY',text[:60000])
+                      print('BODY',text[:80000])
               except Exception as e:
                   print('ERROR',repr(e))
                   if getattr(e,'read',None):
-                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:30000])
+                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:40000])
                       except:pass
           PY
