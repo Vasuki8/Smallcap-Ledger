@@ -208,6 +208,21 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(margin['asset_type'],'Cash and net current assets')
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
 
+    def test_dsp_repo_and_cash_margin_rows_can_reconcile_complete_workbook(self):
+        rows,fmt=self.sheet()
+        rows[0]=['DSP Small Cap Fund']
+        rows[3]=['INE123456789','Alpha Ltd','Banks',100,8743,.8743]
+        rows[5]=['','TREPS / Reverse Repo Investments','','',1000,.10]
+        rows.insert(6,['','Cash Margin','','',257,.0257]);fmt.insert(6,['General']*6)
+        fmt[6][5]='0.00%'
+        rows[7]=['','Grand Total','','',10000,1.0]
+        parsed=parse_sheet(rows,fmt,'DSP Small Cap Fund')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],[])
+        self.assertEqual([x['asset_type'] for x in parsed['positions']],[
+            'Equity','Money market','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+
     def test_missing_grand_total_does_not_establish_aum(self):
         rows,fmt=self.sheet();r=parse_sheet(rows[:-1],fmt[:-1],'Test Small Cap Fund')
         self.assertIsNone(r['aum']);self.assertFalse(r['complete'])
