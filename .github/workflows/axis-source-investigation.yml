@@ -11,6 +11,10 @@ jobs:
   investigate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_DATA_DIR: /tmp/tata-investigation-data
+      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -19,53 +23,86 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Trace live Tata portfolio page API
+      - name: Validate Tata monthly portfolio API and workbook
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json,re
+          import io,json,hashlib
           from pathlib import Path
-          from urllib.parse import urljoin,urlparse
-          import httpx
-          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin
+          import httpx,openpyxl,xlrd
+          from tracker import db,amc_reports
+          from tracker.portfolio_parser import parse_sheet
+          db.init()
           out=Path('audit')
-          page='https://www.tatamutualfund.com/schemes-related/portfolio'
-          c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/json,*/*','Referer':page},timeout=20,follow_redirects=True)
-          r=c.get(page);r.raise_for_status()
-          (out/'page.html').write_bytes(r.content)
-          soup=BeautifulSoup(r.text,'html.parser')
-          scripts=[urljoin(str(r.url),s.get('src','')) for s in soup.select('script[src]')]
-          scripts=[u for u in scripts if u.startswith('http')]
-          print('SCRIPTS',len(scripts))
-          rows=[]
-          terms=re.compile(r'portfolio|monthly|fortnight|weekly|download|scheme|document|api|ajax|year',re.I)
-          for i,u in enumerate(scripts[:80]):
-            try:
-              rr=c.get(u)
-              if rr.status_code!=200:continue
-              text=rr.text
-              if not terms.search(text):continue
-              name=f'script-{i}.js';(out/name).write_text(text,errors='replace')
-              snippets=[]
-              for m in list(terms.finditer(text))[:120]:
-                s=text[max(0,m.start()-350):m.start()+900].replace('\n',' ')
-                if s not in snippets:snippets.append(s)
-              urls=[]
-              for m in re.finditer(r'["\x27]([^"\x27]{3,300})["\x27]',text):
-                x=m.group(1)
-                if terms.search(x) and ('/' in x or 'api' in x.lower()) and x not in urls:urls.append(x)
-              row={'url':u,'file':name,'urls':urls[:150],'snippets':snippets[:80]}
-              rows.append(row)
-              print('BUNDLE',u)
-              for x in urls[:70]:print('URL',x)
-              for s in snippets[:12]:print('SNIP',s[:1200])
-            except Exception as e:
-              print('ERR',u,repr(e))
-          (out/'trace.json').write_text(json.dumps(rows,indent=2,ensure_ascii=False))
+          root='https://www.tatamutualfund.com'
+          api=root+'/cms-data/api/CMSDATA_portfolio?type=monthly'
+          c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','Referer':root+'/schemes-related/portfolio'},timeout=30,follow_redirects=True)
+          r=c.get(api);r.raise_for_status()
+          data=r.json()
+          (out/'api.json').write_text(json.dumps(data,indent=2,ensure_ascii=False))
+          print('API_ROWS',len(data))
+          for row in data[:40]:
+              print('META',json.dumps(row,ensure_ascii=False))
+          candidates=[]
+          for row in data:
+              title=' '.join(str(row.get(k) or '') for k in ('field_title','field_document_title'))
+              if '2026' in title and ('august' in title.lower() or 'aug' in title.lower()):
+                  candidates.append(row)
+          print('AUGUST_ROWS',json.dumps(candidates,ensure_ascii=False))
+          assert candidates,'No August 2026 Tata monthly portfolio metadata'
+          seen=set()
+          for idx,row in enumerate(candidates):
+              target=row.get('field_media_document')
+              if not target:continue
+              url=urljoin(root,str(target))
+              if url in seen:continue
+              seen.add(url)
+              rr=c.get(url);rr.raise_for_status()
+              body=rr.content; digest=hashlib.sha256(body).hexdigest()
+              print('SOURCE',idx,url,len(body),rr.headers.get('content-type'),digest,body[:8].hex())
+              (out/f'source-{idx}.bin').write_bytes(body)
+              count=amc_reports.extract(body,'Tata Small Cap Fund',url,digest)
+              snaps=db.rows("""SELECT p.id,p.as_of,p.complete,p.hash,p.source,
+                COUNT(h.id) positions,SUM(h.weight) weight
+                FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                WHERE p.family='Tata Small Cap Fund' GROUP BY p.id ORDER BY p.as_of DESC""")
+              print('EXTRACT',count,json.dumps(snaps,ensure_ascii=False))
+              if body[:2]==b'PK':
+                  book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+                  iterable=[]
+                  for ws in book.worksheets:
+                      rows=[[c.value for c in row] for row in ws.iter_rows()]
+                      formats=[[c.number_format or '' for c in row] for row in ws.iter_rows()]
+                      iterable.append((ws.title,rows,formats))
+              elif body[:4]==b'\xd0\xcf\x11\xe0':
+                  book=xlrd.open_workbook(file_contents=body,formatting_info=True)
+                  iterable=[]
+                  for ws in book.sheets():
+                      rows=[ws.row_values(i) for i in range(ws.nrows)]
+                      formats=[[book.format_map[book.xf_list[ws.cell_xf_index(i,j)].format_key].format_str for j in range(ws.ncols)] for i in range(ws.nrows)]
+                      iterable.append((ws.name,rows,formats))
+              else:
+                  iterable=[]
+              for name,rows,formats in iterable:
+                  prefix=' '.join(str(v) for row in rows[:30] for v in row if v is not None)
+                  if 'tata small cap' not in (name+' '+prefix).lower():continue
+                  parsed=parse_sheet(rows,formats,'Tata Small Cap Fund')
+                  info={'sheet':name,'rows':len(rows),'prefix':prefix[:1400]}
+                  if parsed:
+                      info['parsed']={'day':parsed['day'],'complete':parsed['complete'],'positions':len(parsed['positions']),'weight':sum(x['weight'] for x in parsed['positions']),'aum':parsed['aum']}
+                  excerpts=[]
+                  for ri,row2 in enumerate(rows):
+                      txt=' | '.join(str(x) for x in row2 if x not in (None,''))
+                      if any(k in txt.lower() for k in ('name of the instrument','grand total','net current','treps','cash','margin','derivative','tata small cap')):
+                          excerpts.append([ri+1,txt[:1800]])
+                      if len(excerpts)>=100:break
+                  info['excerpts']=excerpts
+                  print('SHEET',json.dumps(info,ensure_ascii=False))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tata-api-trace
+          name: tata-workbook-validation
           path: audit/
           retention-days: 3
