@@ -73,14 +73,16 @@ class JmPortfolioTests(unittest.TestCase):
             'FileName': 'CMS/downloads/Portfolio Disclosure/Monthly Portfolio of Schemes/Aug.xlsx',
             'FileEXT': '.xlsx'}]
         calls = []
-        def fake_read(url, body=None):
-            calls.append((url, body))
+        def fake_read(url, body=None, archive=True):
+            calls.append((url, body, archive))
             return (b'drop' if 'Drop' in url else b'listing', 'h', 'application/json')
         with patch('tracker.jm_portfolios._decrypt', side_effect=[drops, listing]):
             with self.assertRaisesRegex(ValueError, 'both closed-month'):
                 list(jm_portfolios.discover(fake_read, today=date(2026, 9, 24)))
         self.assertEqual(calls[0][1], {'IICategoryID': '2'})
+        self.assertFalse(calls[0][2])
         self.assertEqual(calls[1][1]['IISubCategoryID'], '4')
+        self.assertFalse(calls[1][2])
 
     def test_decrypt_rejects_invalid_public_api_envelope(self):
         with self.assertRaisesRegex(ValueError, 'invalid encrypted response'):
