@@ -317,6 +317,35 @@ def discover(amc):
                 yield family,f'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-{name}-{year}.pdf',f'The Asset - {calendar.month_name[month]} {year}'
     elif amc=='PGIM':
         family='Pgim India Small Cap Fund'
+        # The disclosure page is an Angular shell; its own public API exposes the
+        # exact monthly files. Prefer the Equity tab's dated Small Cap workbook.
+        details_url='https://www.pgimindia.com/api/v1/brochure/published/disclosure'
+        try:
+            raw,_,_=read(details_url,{'headerId':2,'sectionId':'SECTION_747960037'})
+            data=json.loads(raw)
+            rows=[]
+            def walk(value):
+                if isinstance(value,dict):
+                    title=str(value.get('title') or '').strip()
+                    url=str(value.get('pdfPath') or '').strip()
+                    if (str(value.get('disclosureSection') or '')=='SECTION_747960037'
+                        and str(value.get('disclosureTab') or '')=='12'
+                        and re.match(r'^PGIM\s+INDIA\s+SMALL\s+CAP\s+FUND\b',title,re.I)
+                        and re.search(r'\.xlsx?(?:[?#]|$)',url,re.I)
+                        and disclosures.official_publication_url(url,amc)):
+                        try:day=datetime.strptime(str(value.get('dateMonthYear') or '').strip(),'%d %B %Y').date()
+                        except ValueError:day=None
+                        if day and day<=date.today():rows.append((day,url,title))
+                    for v in value.values():walk(v)
+                elif isinstance(value,list):
+                    for v in value:walk(v)
+            walk(data)
+            if rows:
+                day,url,title=max(rows,key=lambda r:r[0])
+                yield family,url,title or f'PGIM India Small Cap Fund monthly portfolio {day.isoformat()}'
+                return
+        except Exception:
+            pass
         candidates=[]
         pages=[
             ('https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio',3),
