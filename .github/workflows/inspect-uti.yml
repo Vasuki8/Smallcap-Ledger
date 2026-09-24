@@ -1,0 +1,75 @@
+name: Inspect UTI August portfolio source
+
+on:
+  push:
+    branches: [backend/uti-portfolio-audit-v130]
+    paths: [.github/workflows/inspect-uti.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect exact official UTI ZIP
+        run: |
+          uv run --frozen python - <<'PY'
+          import io, re, urllib.request, zipfile
+          import openpyxl
+
+          url = 'https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16'
+          req = urllib.request.Request(url, headers={'User-Agent':'Smallcap-Ledger/1.0'})
+          body = urllib.request.urlopen(req, timeout=45).read()
+          print('ZIP_BYTES', len(body))
+          with zipfile.ZipFile(io.BytesIO(body)) as z:
+              print('OUTER_ENTRIES')
+              for info in z.infolist():
+                  print(info.filename, info.file_size)
+              matched=[i for i in z.infolist() if re.fullmatch(r'Sebi Exposure as on .+_final\.xlsx',i.filename.rsplit('/',1)[-1],re.I)]
+              print('MATCHED', [i.filename for i in matched])
+              for info in matched:
+                  wb=openpyxl.load_workbook(io.BytesIO(z.read(info)),data_only=True,read_only=True)
+                  print('SHEETS', wb.sheetnames)
+                  for ws in wb.worksheets:
+                      rows=list(ws.values)
+                      begin=next((i for i,r in enumerate(rows) if str((r[0] if r else '') or '').strip().lower()=='scheme: uti small cap fund'),None)
+                      if begin is None:
+                          continue
+                      print('SMALL_CAP_SHEET', ws.title, 'BEGIN', begin+1)
+                      end=next((i for i in range(begin+1,len(rows)) if str((rows[i][0] if rows[i] else '') or '').strip().lower()=='total : uti small cap fund'),None)
+                      print('END', None if end is None else end+1)
+                      block=rows[begin:(end+1 if end is not None else min(len(rows),begin+180))]
+                      numeric_sum=0.0
+                      numeric_count=0
+                      censored=[]
+                      non_isin=[]
+                      for offset,row in enumerate(block):
+                          vals=list(row)
+                          label=str((vals[0] if vals else '') or '').strip()
+                          isin=str((vals[7] if len(vals)>7 else '') or '').strip()
+                          weight=vals[4] if len(vals)>4 else None
+                          if isinstance(weight,(int,float)):
+                              numeric_sum += float(weight); numeric_count += 1
+                          if str(weight).strip() in ('*','#','$'):
+                              censored.append((begin+offset+1, vals[:9]))
+                          if label and not re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',isin) and offset>2:
+                              non_isin.append((begin+offset+1, vals[:9]))
+                      print('NUMERIC_WEIGHT_CELLS', numeric_count, numeric_sum)
+                      print('CENSORED_ROWS', len(censored))
+                      for x in censored: print('CENSORED', x)
+                      print('NON_ISIN_ROWS', len(non_isin))
+                      for x in non_isin[-30:]: print('NON_ISIN', x)
+                      print('TAIL')
+                      for offset,row in list(enumerate(block))[-30:]:
+                          print('ROW', begin+offset+1, list(row)[:9])
+                  wb.close()
+          PY
