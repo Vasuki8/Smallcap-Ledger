@@ -88,6 +88,14 @@ jobs:
                               print('FORMULA_ROW',rr,json.dumps(vals,default=str,ensure_ascii=False))
                       formula_book.close()
 
+                  for name0,data0,formats0 in iterable:
+                      prefix0=' '.join(str(v) for row in data0[:40] for v in row if v not in (None,''))
+                      if 'small cap' not in (name0+' '+prefix0).lower():continue
+                      for rr in range(146,159):
+                          if rr<=len(data0):
+                              txt=' | '.join(str(x) for x in data0[rr-1] if x not in (None,''))
+                              print('FOOTNOTE_ROW',rr,txt[:2500])
+
                   sheets=[]
                   for name,data,formats in iterable:
                       prefix=' '.join(str(v) for row in data[:40] for v in row if v not in (None,''))
