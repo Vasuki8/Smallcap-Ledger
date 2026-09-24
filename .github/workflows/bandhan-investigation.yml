@@ -10,34 +10,31 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve exact Bandhan portfolio post metadata
+      - name: Probe exact Bandhan finance API routes
         run: |
           python - <<'PY'
-          import urllib.request,urllib.parse,json,re
+          import urllib.request,json
           base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          variants=[
-            {'include':'158853','posts_per_page':'100'},
-            {'post_id':'158853','posts_per_page':'100'},
-            {'id':'158853','posts_per_page':'100'},
-            {'p':'158853','posts_per_page':'100'},
-            {'search':'Bandhan Small Cap Fund 31 August 2026','posts_per_page':'100'},
-            {'posts_per_page':'2500','bypass_pagination':'true'},
+          urls=[
+            base+'/158853',
+            base+'?post=158853',
+            base+'?post_id=158853',
+            base+'?id=158853',
           ]
           H={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
-          wanted={158853,155405,153274}
-          for p in variants:
-              u=base+'?'+urllib.parse.urlencode(p)
+          for u in urls:
               try:
-                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=40) as r:
-                      data=json.loads(r.read())
-                  rows=data.get('data') if isinstance(data,dict) else data
-                  rows=rows if isinstance(rows,list) else []
-                  exact=[x for x in rows if isinstance(x,dict) and (x.get('id') in wanted or re.search(r'Bandhan\s+Small\s+Cap\s+Fund.*(?:31\s+August|31\s+July|30\s+June)\s+2026',json.dumps(x),re.I))]
-                  print('QUERY',json.dumps(p),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows),'EXACT',len(exact))
-                  for x in exact:
-                      print('EXACT_ROW',json.dumps(x,ensure_ascii=False)[:60000])
-              except Exception as e:print('ERROR',json.dumps(p),repr(e))
+                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=20) as r:
+                      body=r.read()
+                  print('FETCH',u,r.status,r.headers.get('Content-Type'),len(body),r.geturl())
+                  txt=body.decode('utf-8','replace')
+                  print('BODY',u,txt[:12000])
+              except Exception as e:
+                  print('ERROR',u,repr(e))
+                  if getattr(e,'read',None):
+                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:3000])
+                      except:pass
           PY
