@@ -14,52 +14,52 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Compare official AMFI expense rows with tracker families
+      - name: Trace official AMFI TER filters and missing schemes
         run: |
           python - <<'PY'
           import json,re,urllib.parse,urllib.request
-          from difflib import SequenceMatcher
-
-          def norm(v):
-              return re.sub('[^a-z0-9]','',str(v).split('(')[0].lower())
-          with open('COVERAGE-AS-OF.json',encoding='utf-8') as f:
-              cov=json.load(f)
-          rows=cov.get('funds') or cov.get('rows') or []
-          families=[x['family'] for x in rows]
-          gaps=[x['family'] for x in rows if not x.get('ter')]
-          print('TER_GAPS',gaps)
-          fam_by_norm={norm(x):x for x in families}
-          amfi=[]
-          for page in range(1,8):
-              q=urllib.parse.urlencode({'MF_ID':'All','Month':'09-2026','strCat':'18','strType':'1','page':page,'pageSize':1000})
-              url='https://www.amfiindia.com/api/populate-te-rdata-revised?'+q
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json, text/plain, */*','Referer':'https://www.amfiindia.com/ter-of-mf-schemes'})
+          UA={'User-Agent':'Mozilla/5.0','Accept':'application/json, text/plain, */*','Referer':'https://www.amfiindia.com/ter-of-mf-schemes'}
+          gaps=['Axis','Canara','HSBC','ICICI','Invesco','JM','Mahindra','Mirae']
+          def fetch(url):
+              req=urllib.request.Request(url,headers=UA)
               with urllib.request.urlopen(req,timeout=45) as r:
-                  data=json.load(r)
-              recs=data.get('data',[]) if isinstance(data,dict) else data
-              print('PAGE',page,'ROWS',len(recs))
-              amfi.extend(recs)
-              meta=data.get('meta',{}) if isinstance(data,dict) else {}
-              pages=meta.get('totalPages') or meta.get('pageCount')
-              if not recs or (pages and page>=int(pages)) or len(recs)<int(meta.get('pageSize',1000)):
-                  break
+                  body=r.read(); print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl()); return body
+          page=fetch('https://www.amfiindia.com/ter-of-mf-schemes').decode('utf-8','ignore')
+          print('PAGE_FILTER_CONTEXT')
+          for m in re.finditer(r'.{0,250}(?:strCat|strType|populate-te-rdata-revised|SchemeCat).{0,450}',page,re.I|re.S):
+              print(re.sub(r'\s+',' ',m.group(0))[:800])
+          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',page,re.I)
+          for src in scripts:
+              full=urllib.parse.urljoin('https://www.amfiindia.com/ter-of-mf-schemes',src)
+              if not re.search(r'\.js(?:\?|$)',full,re.I): continue
+              try: s=fetch(full).decode('utf-8','ignore')
+              except Exception as e: print('SCRIPT_ERROR',full,e); continue
+              if re.search(r'populate-te-rdata-revised|strCat|strType',s,re.I):
+                  print('SCRIPT_MATCH',full)
+                  for m in re.finditer(r'.{0,350}(?:populate-te-rdata-revised|strCat|strType).{0,700}',s,re.I|re.S):
+                      print(re.sub(r'\s+',' ',m.group(0))[:1100])
 
-          small=[r for r in amfi if 'small' in str(r.get('SchemeCat_Desc','')).lower() and 'cap' in str(r.get('SchemeCat_Desc','')).lower()]
-          print('SMALL_ROWS',len(small))
-          for r in small:
-              name=str(r.get('Scheme_Name',''))
-              n=norm(name)
-              matched=fam_by_norm.get(n)
-              if matched or any(k in name.lower() for k in ['axis','canara','hsbc','icici','invesco','jm ','mahindra','mirae']):
-                  print('ROW',json.dumps({
-                    'Scheme_Name':name,'SchemeCat_Desc':r.get('SchemeCat_Desc'),'TER_Date':r.get('TER_Date'),
-                    'R_TER':r.get('R_TER'),'D_TER':r.get('D_TER'),'R_BER':r.get('R_BER'),'D_BER':r.get('D_BER'),
-                    'R_BaseTER':r.get('R_BaseTER'),'D_BaseTER':r.get('D_BaseTER'),'matched':matched
-                  },ensure_ascii=False))
-          print('NEAREST_FOR_GAPS')
-          names=sorted({str(r.get('Scheme_Name','')) for r in small})
-          for gap in gaps:
-              gn=norm(gap)
-              ranked=sorted(((SequenceMatcher(None,gn,norm(n)).ratio(),n) for n in names),reverse=True)[:5]
-              print(gap,ranked)
+          variants=[
+              ('cat18_type1','18','1'),('cat18_type0','18','0'),('cat18_type2','18','2'),
+              ('catall_type1','All','1'),('cat0_type1','0','1'),('catblank_type1','','1'),
+              ('catall_type0','All','0'),('catblank_type0','','0')
+          ]
+          for label,cat,typ in variants:
+              found=[]
+              total=0
+              for p in range(1,12):
+                  q=urllib.parse.urlencode({'MF_ID':'All','Month':'09-2026','strCat':cat,'strType':typ,'page':p,'pageSize':1000})
+                  try: payload=json.loads(fetch('https://www.amfiindia.com/api/populate-te-rdata-revised?'+q))
+                  except Exception as e: print('VARIANT_ERROR',label,p,type(e).__name__,e); break
+                  recs=payload.get('data',[]) if isinstance(payload,dict) else payload
+                  total+=len(recs)
+                  for r in recs:
+                      name=str(r.get('Scheme_Name',''))
+                      if any(k.lower() in name.lower() for k in gaps):
+                          found.append((name,r.get('SchemeCat_Desc'),r.get('TER_Date'),r.get('R_TER'),r.get('D_TER'),r.get('R_BER'),r.get('D_BER')))
+                  meta=payload.get('meta',{}) if isinstance(payload,dict) else {}
+                  pages=meta.get('totalPages') or meta.get('pageCount')
+                  if not recs or (pages and p>=int(pages)) or len(recs)<int(meta.get('pageSize',1000)): break
+              print('VARIANT',label,'TOTAL',total,'FOUND_UNIQUE')
+              for row in sorted(set(found)): print(row)
           PY
