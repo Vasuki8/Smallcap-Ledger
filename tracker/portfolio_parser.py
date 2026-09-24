@@ -57,7 +57,7 @@ def parse_sheet(rows,formats,family):
         value=numeric(row[wc]);fmt=re.sub(r'"[^"\n]*"|\\.','',formats[ri][wc] or '')
         return value*100 if isinstance(row[wc],(int,float)) and '%' in fmt else value
     def empty(value):return str(value or '').strip().lower() in ('','-','nil','0','0.0','0.00')
-    positions=[];values=[];grand=None;unknown=[];asset='Equity'
+    positions=[];values=[];grand=None;unknown=[];censored=[];asset='Equity'
     for ri,row in enumerate(rows[hi+1:],hi+1):
         if max(ic,nc,wc,vc)>=len(row):continue
         name=str(row[nc] or '').strip();label=name or ' '.join(str(x or '') for x in row[:max(nc,ic)+1]).strip()
@@ -91,7 +91,10 @@ def parse_sheet(rows,formats,family):
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
                     and bool(re.fullmatch(r'TREPS\s+\d{2}-[A-Za-z]{3}-\d{4}',name,re.I))) or (
                     family=='Jm Small Cap Fund' and not isin and asset=='Money market'
-                    and bool(re.fullmatch(r'CCIL',name,re.I)))
+                    and bool(re.fullmatch(r'CCIL',name,re.I))) or (
+                    family=='Bandhan Small Cap Fund' and not isin and asset=='Money market'
+                    and bool(re.fullmatch(r'TRP_\d{6}',code))
+                    and bool(re.fullmatch(r'Triparty Repo TRP_\d{6}',name,re.I)))
         if not valid_isin and not named_equity and not named_derivative and not named_repo:
             if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
             leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
@@ -102,6 +105,8 @@ def parse_sheet(rows,formats,family):
             if family=='Tata Small Cap Fund' and re.fullmatch(r'(?:I\)\s*REPO|CASH\s*/\s*NET CURRENT ASSET)\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='Quant Small Cap Fund' and re.fullmatch(r'NCA\s*-\s*NET CURRENT ASSETS\s*[*^#]?',label,re.I):
+                leaf=True
+            if family=='Bandhan Small Cap Fund' and re.fullmatch(r'(?:Cash Margin - Derivatives|Cash / Bank Balance)\s*[*^#]?',label,re.I):
                 leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
@@ -116,7 +121,51 @@ def parse_sheet(rows,formats,family):
                 continue
             if empty(row[wc]) and empty(row[vc]):continue
         try:w=weight(ri,row);v=numeric(row[vc])
-        except ValueError:unknown.append(label);continue
+        except ValueError:
+            if family=='Bandhan Small Cap Fund' and valid_isin and str(row[wc] or '').strip()=='
+        if not -100<=w<=100:unknown.append(label);continue
+        kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
+        sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
+        quantity=None
+        if qc is not None and qc<len(row) and kind in ('Equity','Fund units') and not empty(row[qc]):
+            try:
+                candidate=numeric(row[qc])
+                if 0<=candidate<1e15:quantity=candidate
+            except ValueError:pass
+        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
+                          'quantity':quantity,'asset_type':kind});values.append(v)
+    aum=None
+    if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)
+    complete=bool(aum and positions and not unknown)
+    if grand:
+        complete=complete and abs(sum(values)-grand[0])<=max(.05,.011*len(values))
+        complete=complete and abs(sum(x['weight'] for x in positions)-grand[1])<=max(.05,.0051*len(positions))
+    complete=complete and len({(p['isin'],p['name'],p['asset_type']) for p in positions})==len(positions)
+    return {'day':day,'aum':aum,'complete':bool(complete),'positions':positions,'unknown_rows':unknown,'censored_rows':censored}
+:
+                censored.append({'name':name,'isin':isin,'quantity':None if qc is None or qc>=len(row) else row[qc],
+                                 'marker':'
+        if not -100<=w<=100:unknown.append(label);continue
+        kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
+        sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
+        quantity=None
+        if qc is not None and qc<len(row) and kind in ('Equity','Fund units') and not empty(row[qc]):
+            try:
+                candidate=numeric(row[qc])
+                if 0<=candidate<1e15:quantity=candidate
+            except ValueError:pass
+        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
+                          'quantity':quantity,'asset_type':kind});values.append(v)
+    aum=None
+    if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)
+    complete=bool(aum and positions and not unknown)
+    if grand:
+        complete=complete and abs(sum(values)-grand[0])<=max(.05,.011*len(values))
+        complete=complete and abs(sum(x['weight'] for x in positions)-grand[1])<=max(.05,.0051*len(positions))
+    complete=complete and len({(p['isin'],p['name'],p['asset_type']) for p in positions})==len(positions)
+    return {'day':day,'aum':aum,'complete':bool(complete),'positions':positions,'unknown_rows':unknown}
+,'meaning':'Less Than 0.01% of NAV'})
+            unknown.append(label);continue
         if not -100<=w<=100:unknown.append(label);continue
         kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
         sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
