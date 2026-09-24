@@ -105,6 +105,33 @@ class CoverageExpansionTests(unittest.TestCase):
                          {'value':'Nifty Smallcap 250 - TRI','as_of':'2026-07-31',
                           'source':'https://www.licmf.com/factsheet.pdf','hash':'lic-benchmark'})
 
+    def test_lic_august_layout_reconciles_without_scheme_name_prefix(self):
+        from tracker.report_parser import lic_complete_portfolio
+        holdings=[]
+        for sector in range(2):
+            holdings.append(f'Sector {sector+1} 45.00%')
+            for issuer in range(10):
+                holdings.append(f'Company {sector+1}-{issuer+1} Ltd. 4.50%')
+        text='''Scheme Type: An open-ended equity scheme predominantly investing in small cap stocks
+Inception/Allotment Date: June 21, 2017
+First Tier Benchmark: Nifty Smallcap 250 - TRI
+PORTFOLIO as on 31/08/2026
+Company % of NAV
+Equity Holdings
+'''+ '\n'.join(holdings) + '''
+Equity Holdings Total 90.00%
+Cash & Other Receivables Total 10.00%
+Grand Total 100.00% Top 10 holdings'''
+        parsed=lic_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(len(parsed['positions']),21)
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertEqual(parsed['positions'][-1]['asset_type'],'Cash and net current assets')
+        self.assertIsNone(lic_complete_portfolio(text.replace(
+            'predominantly investing in small cap stocks','predominantly investing in mid cap stocks',1)))
+        self.assertIsNone(lic_complete_portfolio(text.replace('Grand Total 100.00%','Grand Total 99.00%',1)))
+
     def test_pgim_complete_portfolio_reconciles_equity_debt_and_cash(self):
         from tracker.report_parser import pgim_complete_portfolio
         issuers='\n'.join([f'Example Holdings {i} Limited {97.26/20:.3f}' for i in range(1,21)])
