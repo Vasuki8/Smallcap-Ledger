@@ -11,51 +11,35 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Extract Invesco TER endpoint candidates
+      - name: Query Invesco public TER API
         run: |
           python - <<'PY'
-          import re,urllib.parse,urllib.request
-          page='https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter'
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
+          import json,urllib.parse,urllib.request
+          base='https://www.invescomutualfund.com'
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':base+'/statutory-disclosures/ter-mutual-fund-since-2026/ter'}
           def fetch(url):
               req=urllib.request.Request(url,headers=UA)
-              with urllib.request.urlopen(req,timeout=45) as r:return r.read(),r.geturl()
-          html,final=fetch(page);html=html.decode('utf-8','ignore')
-          scripts=[urllib.parse.urljoin(final,x) for x in re.findall(r'<script[^>]+src=["\x27]([^"\x27]+)',html,re.I)]
-          candidates=set(); snippets=[]
-          for full in scripts:
-              try:b,_=fetch(full)
-              except Exception:continue
-              s=b.decode('utf-8','ignore')
-              if not re.search(r'Total Expense Ratio|ter-mutual-fund|expense.?ratio',s,re.I):continue
-              for v in re.findall(r'["\x27](/api/[^"\x27]+)["\x27]',s):
-                  candidates.add(v)
-              for term in ['Total Expense Ratio','ter-mutual-fund-since-2026','TER since','Base Expense Ratio','BER']:
-                  pos=0
-                  while True:
-                      pos=s.lower().find(term.lower(),pos)
-                      if pos<0:break
-                      ctx=s[max(0,pos-2500):pos+4000]
-                      apis=sorted(set(re.findall(r'/api/[A-Za-z0-9_?=&.:%/+-]+',ctx)))
-                      strs=sorted(set(re.findall(r'["\x27]([^"\x27]{1,120})["\x27]',ctx)))
-                      interesting=[x for x in strs if 'ter' in x.lower() or 'expense' in x.lower()]
-                      if apis or interesting:
-                          snippets.append((full,term,apis,interesting[:30]))
-                      pos+=len(term)
-          print('ALL_API_CANDIDATES')
-          for x in sorted(candidates):
-              if re.search(r'ter|expense|ratio|disclos',x,re.I): print(x)
-          print('TARGET_SNIPPETS')
-          seen=set()
-          for item in snippets:
-              key=(item[0],tuple(item[2]),tuple(item[3]))
-              if key in seen:continue
-              seen.add(key)
-              print('SCRIPT',item[0])
-              print('TERM',item[1])
-              print('APIS',item[2])
-              print('STRINGS',item[3])
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return json.loads(b)
+          plans=fetch(base+'/api/Common/GetAllPlans')
+          print('PLAN_TYPE',type(plans).__name__,'COUNT',len(plans) if isinstance(plans,list) else None)
+          for row in plans if isinstance(plans,list) else []:
+              if 'small' in json.dumps(row).lower() and 'cap' in json.dumps(row).lower():
+                  print('PLAN_ROW',json.dumps(row,ensure_ascii=False,sort_keys=True))
+          for month in (9,0):
+              q=urllib.parse.urlencode({
+                  'title':'Invesco India Small Cap Fund',
+                  'fincialYear':2026,
+                  'month':month,
+              })
+              data=fetch(base+'/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?'+q)
+              print('MONTH',month,'TYPE',type(data).__name__,'COUNT',len(data) if isinstance(data,list) else None)
+              if isinstance(data,list):
+                  for row in data[-20:]:
+                      print('TER_ROW',json.dumps(row,ensure_ascii=False,sort_keys=True,default=str))
+              else:
+                  print('TER_DATA',json.dumps(data,ensure_ascii=False,sort_keys=True,default=str))
           PY
