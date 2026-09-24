@@ -576,7 +576,7 @@ def run():
         page='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
         try:
             from bs4 import BeautifulSoup
-            from urllib.parse import urljoin,urlparse
+            from urllib.parse import urljoin
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
@@ -606,7 +606,7 @@ def run():
         page='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
         try:
             from bs4 import BeautifulSoup
-            from urllib.parse import urljoin,urlparse
+            from urllib.parse import urljoin
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
