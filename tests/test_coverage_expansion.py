@@ -1349,6 +1349,40 @@ Investment Objective'''
                                     'Tata Small Cap Fund',url,'wrong'),0)
 
 
+    def test_tata_structured_workbook_reconciles_repo_cash_and_net_assets(self):
+        from tracker.portfolio_parser import parse_sheet
+        rows=[
+            ['TATA SMALL CAP FUND','','','','','',''],
+            ['Tata Small Cap Fund','','','','','',''],
+            ['An open ended equity scheme predominantly investing in small cap stocks','','','','','',''],
+            ['Portfolio as on 31-08-26','','','','','',''],
+            ['NAME OF THE INSTRUMENT','YIELD ( IN % )','INDUSTRY','ISIN CODE','QUANTITY','MKT VAL(Rs. Lacs)','% to NAV'],
+            ['Alpha Industries Ltd','NA','Industrial Products','INE659A01023',100,91700,91.7],
+            ['NAME OF THE INSTRUMENT','YIELD ( IN % )','RATINGS','ISIN CODE','QUANTITY','MKT VAL(Rs. Lacs)','% to NAV'],
+            ['I) REPO','','','','',3100,3.1],
+            ['CASH / NET CURRENT ASSET','','','','',5200,5.2],
+            ['NET ASSETS','','','','',100000,100],
+        ]
+        formats=[['']*7 for _ in rows]
+        parsed=parse_sheet(rows,formats,'Tata Small Cap Fund')
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(len(parsed['positions']),3)
+        self.assertEqual([x['asset_type'] for x in parsed['positions']],
+                         ['Equity','Money market','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100.0,places=6)
+        self.assertAlmostEqual(parsed['aum'],1000.0,places=6)
+        self.assertEqual(parsed['positions'][0]['quantity'],100)
+        bad_identity=[row[:] for row in rows]
+        bad_identity[1][0]='Tata Mid Cap Fund'
+        bad_identity[0][0]='TATA MID CAP FUND'
+        self.assertIsNone(parse_sheet(bad_identity,formats,'Tata Small Cap Fund'))
+        bad_total=[row[:] for row in rows]
+        bad_total[-1][-1]=99
+        self.assertFalse(parse_sheet(bad_total,formats,'Tata Small Cap Fund')['complete'])
+
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund

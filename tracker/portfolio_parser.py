@@ -44,7 +44,7 @@ def parse_sheet(rows,formats,family):
     ic=col(lambda v:'isin' in v);nc=col(lambda v:'name' in v or 'instrument' in v or 'issuer' in v)
     if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
     wc=col(lambda v:'%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)))
-    vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'value',v))
+    vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'value|\bval\b',v))
     sc=col(lambda v:'industry' in v or 'rating' in v or 'sector' in v);qc=col(lambda v:'quantity' in v or bool(re.search(r'\bqty\b|no\.?\s*of\s*(?:shares|units)',v,re.I)))
     if None in (nc,wc,vc):return None
     divisor=100 if re.search(r'la(?:kh|c)s?\b',header[vc]) else 1 if re.search(r'crores?\b',header[vc]) else None
@@ -61,7 +61,13 @@ def parse_sheet(rows,formats,family):
     for ri,row in enumerate(rows[hi+1:],hi+1):
         if max(ic,nc,wc,vc)>=len(row):continue
         name=str(row[nc] or '').strip();label=name or ' '.join(str(x or '') for x in row[:max(nc,ic)+1]).strip()
-        if re.fullmatch(r'grand\s+total(?:\s*\(aum\))?|total\s+net\s+assets?',label,re.I):
+        # Some all-scheme workbooks repeat the column header before a new asset
+        # section. It is structural metadata, never a portfolio position.
+        repeated=[str(v or '').lower() for v in row]
+        if any('isin' in v for v in repeated) and any('%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)) for v in repeated):continue
+        grand_label=bool(re.fullmatch(r'grand\s+total(?:\s*\(aum\))?|total\s+net\s+assets?',label,re.I))
+        if family=='Tata Small Cap Fund' and re.fullmatch(r'NET\s+ASSETS?',label,re.I):grand_label=True
+        if grand_label:
             try:grand=(numeric(row[vc]),weight(ri,row))
             except ValueError:pass
             break
@@ -87,6 +93,8 @@ def parse_sheet(rows,formats,family):
             if family in ('Aditya Birla Sun Life Small Cap Fund','SBI Small Cap Fund') and re.fullmatch(r'Margin amount for Derivative positions\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='DSP Small Cap Fund' and re.fullmatch(r'(?:TREPS\s*/\s*Reverse Repo Investments|Cash Margin)\s*[*^#]?',label,re.I):
+                leaf=True
+            if family=='Tata Small Cap Fund' and re.fullmatch(r'(?:I\)\s*REPO|CASH\s*/\s*NET CURRENT ASSET)\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='Quant Small Cap Fund' and re.fullmatch(r'NCA\s*-\s*NET CURRENT ASSETS\s*[*^#]?',label,re.I):
                 leaf=True

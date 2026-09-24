@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v123'
+PARSER_VERSION='amc-reports-2026-09-v124'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -111,6 +111,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v121':frozenset({'Quant Small Cap Fund'}),
     'amc-reports-2026-09-v122':frozenset({'Quant Small Cap Fund'}),
     'amc-reports-2026-09-v123':frozenset({'Quant Small Cap Fund'}),
+    'amc-reports-2026-09-v124':frozenset({'Tata Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -401,6 +402,9 @@ def should_reprocess_existing(family,url,h=None):
         return False
     if PARSER_VERSION=='amc-reports-2026-09-v123':
         # v123 replays Quant after matching the verified futures contract-code column.
+        return False
+    if PARSER_VERSION=='amc-reports-2026-09-v124':
+        # v124 fetches Tata's current structured monthly workbook directly.
         return False
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True

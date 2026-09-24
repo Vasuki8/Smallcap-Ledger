@@ -28,7 +28,7 @@ _proxy_public_hosts = set()
 def iso(value):
     value=str(value).strip().strip("()")
     value=re.sub(r"^(?:As (?:on|of)|NAV as on)\s*", "", value, flags=re.I)
-    for fmt in ("%Y-%m-%d","%d-%b-%Y","%d-%m-%Y","%d %b %Y","%d/%m/%Y","%d/%m/%y","%d %B %Y","%B %d, %Y","%B %d %Y","%b %d %Y","%d-%b-%y"):
+    for fmt in ("%Y-%m-%d","%d-%b-%Y","%d-%m-%Y","%d-%m-%y","%d %b %Y","%d/%m/%Y","%d/%m/%y","%d %B %Y","%B %d, %Y","%B %d %Y","%b %d %Y","%d-%b-%y"):
         try: return datetime.strptime(value,fmt).date().isoformat()
         except ValueError: pass
     raise ValueError(f"Unrecognized date: {value[:60]}")
