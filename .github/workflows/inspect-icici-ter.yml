@@ -1,56 +1,57 @@
-name: Inspect ICICI TER XML rows
+name: Validate ICICI TER collector
 
 on:
   push:
     branches: [backend/icici-ter-v132]
-    paths: [.github/workflows/inspect-icici-ter.yml]
 
 permissions:
   contents: read
 
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - name: Parse exact ICICI TER XML rows
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run --frozen python -m compileall -q tracker scripts tests
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Verify live ICICI TER source chain
         run: |
-          python - <<'PY'
-          import io,hashlib,re,urllib.parse,urllib.request,zipfile
-          import xml.etree.ElementTree as ET
-          path='/financials-disclosures-files/Files/Total Expense Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx'
-          url='https://app.beta.icicipruamc.com/blob'+urllib.parse.quote(path,safe='/')
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.icicipruamc.com/'})
-          with urllib.request.urlopen(req,timeout=60) as r: body=r.read()
-          print('URL',url)
-          print('BYTES',len(body),'SHA256',hashlib.sha256(body).hexdigest())
-          z=zipfile.ZipFile(io.BytesIO(body))
-          raw=z.read('xl/worksheets/sheet1.xml')
-          root=ET.fromstring(raw)
-          ns={'x':'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
-          def value(cell):
-              parts=[t.text or '' for t in cell.findall('.//x:t',ns)]
-              if parts:return ''.join(parts)
-              v=cell.find('x:v',ns)
-              return '' if v is None else (v.text or '')
-          def row_values(row):
-              vals={}
-              for cell in row.findall('x:c',ns):
-                  ref=cell.attrib.get('r','')
-                  col=re.match(r'[A-Z]+',ref)
-                  if col: vals[col.group(0)]=value(cell)
-              return vals
-          rows=root.findall('.//x:sheetData/x:row',ns)
-          for row in rows[:5]:
-              print('HEADER_ROW',row.attrib.get('r'),row_values(row))
-          matches=[]
-          for row in rows:
-              vals=row_values(row)
-              if vals.get('A','').strip()=='ICICI Prudential Small Cap Fund':
-                  matches.append((int(row.attrib.get('r')),vals))
-          print('SMALLCAP_COUNT',len(matches))
-          for r,vals in matches:
-              print('SMALLCAP_ROW',r,vals)
-          z.close()
+          uv run --frozen python - <<'PY'
+          import hashlib
+          from datetime import date
+          from tracker import amc_expenses
+          from tracker.providers import fetch
+
+          today=date.today()
+          cats=amc_expenses._icici_api(amc_expenses.ICICI_CATEGORIES_API+'?userType=Investor')
+          parent,child,fy=amc_expenses._icici_category_ids(cats,today)
+          data=amc_expenses._icici_api(
+              amc_expenses.ICICI_FILES_API,
+              body={
+                  'categoryId':child,'userType':'Investor','fileType':'All',
+                  'page':'1','size':'20',
+                  'filter':[
+                      {'SHOW':[amc_expenses.ICICI_TER_SHOW]},
+                      {'FINANCIAL_YEAR':[fy]},
+                  ],
+                  'search':'',
+              },
+          )
+          source=amc_expenses._icici_select_file(data.get('files'),parent,child,fy,today)
+          body,_,_=fetch(source,archive=False,max_bytes=5*1024*1024)
+          day,plans=amc_expenses.parse_icici_workbook(body,today)
+          assert set(plans)=={'Regular','Direct'}
+          assert 0 <= plans['Direct']['base_expense_ratio'] <= plans['Direct']['ter'] <= 5
+          assert 0 <= plans['Regular']['base_expense_ratio'] <= plans['Regular']['ter'] <= 5
+          print('ICICI_SOURCE',source)
+          print('ICICI_VERIFIED',day,plans)
+          print('ICICI_WORKBOOK_BYTES',len(body))
+          print('ICICI_WORKBOOK_SHA256',hashlib.sha256(body).hexdigest())
           PY
