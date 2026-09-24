@@ -231,8 +231,8 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
             ['', 'Equity & Equity Related','','','','',''],
             ['EQ1','Alpha Limited','INE123456789','Banks',100,9000,.90],
             ['', 'Derivatives','','','','',''],
-            ['','KPIT Technologies Limited 29/09/2026','','Futures',10,500,.05],
-            ['', 'NCA-NET CURRENT ASSETS','','','',500,.05],
+            ['FUT1','KPIT Technologies Limited 29/09/2026','N.A.','IT - Software',-10,-50,-.005],
+            ['', 'NCA-NET CURRENT ASSETS','N.A.','N.A.','',1050,.105],
             ['', 'Grand Total','','','',10000,1.0],
         ]
         fmt=[['General']*7 for _ in rows]
