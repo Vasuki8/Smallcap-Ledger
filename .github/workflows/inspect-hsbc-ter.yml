@@ -11,38 +11,29 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
-        with:
-          version: '0.11.33'
-          python-version: '3.12'
-          enable-cache: true
-      - run: uv sync --frozen
-      - name: Inspect AMC-linked HSBC detailed TER workbook
+      - name: Inspect CAMS HSBC TER intermediary
         run: |
-          uv run --frozen python - <<'PY'
-          import io, json, re, urllib.request
-          import openpyxl
-
+          python - <<'PY'
+          import re, urllib.parse, urllib.request
           url='https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx'
-          req=urllib.request.Request(url,headers={
-              'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
-              'Referer':'https://www.assetmanagement.hsbc.co.in/'
-          })
-          with urllib.request.urlopen(req,timeout=60) as r:
-              body=r.read()
-              print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
-          print('MAGIC',body[:8])
-          wb=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
-          print('SHEETS',wb.sheetnames)
-          for ws in wb.worksheets:
-              print('SHEET',ws.title,ws.max_row,ws.max_column)
-              for i,row in enumerate(ws.iter_rows(values_only=True),1):
-                  vals=[None if v is None else str(v) for v in row]
-                  joined=' | '.join(x or '' for x in vals)
-                  if i<=12 or re.search(r'HSBC\s+Small\s+Cap\s+Fund|Small\s+Cap',joined,re.I):
-                      print('ROW',i,json.dumps(vals,ensure_ascii=False))
-          wb.close()
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.assetmanagement.hsbc.co.in/'})
+          with urllib.request.urlopen(req,timeout=45) as r:
+              body=r.read(); final=r.geturl()
+              print('FETCH',r.status,len(body),r.headers.get('content-type'),final)
+              print('HEADERS',dict(r.headers))
+          html=body.decode('utf-8','ignore')
+          print('HTML_BEGIN')
+          print(html)
+          print('HTML_END')
+          for pat in [
+              r'https?://[^"\'<> ]+',
+              r'[^"\'<> ]+\.xlsx(?:\?[^"\'<> ]*)?',
+              r'(?:href|src|url|action)\s*[:=]\s*["\']([^"\']+)'
+          ]:
+              print('PATTERN',pat)
+              for m in re.finditer(pat,html,re.I):
+                  print(m.group(0))
           PY
