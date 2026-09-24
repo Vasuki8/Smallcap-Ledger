@@ -344,8 +344,8 @@ Current production-verified coverage:
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
 | Complete portfolio | **20 / 36** |
-| Current portfolio | **24 / 36** |
-| Current + complete | **16 / 36** |
+| Current portfolio | **25 / 36** |
+| Current + complete | **17 / 36** |
 | Partial latest portfolio | **14 / 36** |
 
 ### Latest completed backend batch — Groww August portfolio recovery
@@ -388,13 +388,24 @@ This moved production from **19 → 20 complete portfolios**, **21 → 22 curren
 - Production now stores ABSL at **2026-08-31**, **89 positions**, **complete=1**, **current=true**. Status commit `92b16407607580d0da9f3e70fe52e83527a0f1a6` records the completeness recovery; `f6d8f2bf07d910ca61b5406cf1d05b78c2a4da96` is the final run's latest status refresh.
 - Production portfolio freshness is now **24 / 36 current** and **16 / 36 current+complete**; complete coverage is **20 / 36**.
 
+### Latest completed backend batch — LIC MF August portfolio recovery
+
+**LIC MF Small Cap Fund is now current and complete.**
+
+- The official August factsheet was already reachable and archived at `https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf`, but the complete portfolio remained at July.
+- The real August Small Cap page changed two extraction details: `Scheme Type` no longer includes the older `Small Cap Fund -` prefix, and the final PDF text is emitted as `Grand Total 100.00% Top 10 holdings`.
+- Parser v60 accepts those two verified LIC layout variants only. Scheme identity still requires the explicit Small Cap mandate, June 21 2017 inception, and Nifty Smallcap 250 first-tier benchmark. Completeness still requires the published equity total, cash/receivables total, grand total, named holdings and full 100% reconciliation.
+- Relevant v60 commits are `02f01333c04929d08e915200dc8034bc11bc7b1e`, `1ecba925176191eb05a44d8058e58afa6ad41b93`, `7827b00df339972a2b199885c0168f101efd80ad`, and regression commit `150fa31568dc49bf57c7949a879ffc653df26b34`.
+- Production run **#289** passed syntax, the full regression suite, site generation/validation, cumulative archive publication, status recording, and Pages deployment.
+- Status commit `7872de813475d4b03d765c5ea1943a15072f3935` records LIC MF at **2026-08-31**, **57 positions**, **complete=1**, **current=true**; the reported benchmark also advanced to **2026-08-31**.
+- Production portfolio freshness is now **25 / 36 current** and **17 / 36 current+complete**. Complete coverage remains **20 / 36** because LIC MF was already complete at July.
+
 ### Stale-complete freshness audit — v50 outcome
 
-The remaining four stale complete funds are still at **2026-07-31**. HSBC and ABSL have now been repaired separately. Do not repeat the broad v50 batch; further work must be source/layout-specific.
+The remaining three stale complete funds are still at **2026-07-31**. HSBC, ABSL, and LIC MF have now been repaired separately. Do not repeat the broad v50 batch; further work must be source/layout-specific.
 
 - **Abakkus Small Cap Fund** — 68 positions. Current official material can be reached, but the latest discovered documents did not produce a reconciled August-or-newer complete snapshot.
 - **Franklin India Small Cap Fund** — 91 positions. The reviewed current fund page did not expose a usable monthly portfolio download to the GitHub collector; current document parsing did not advance the portfolio.
-- **LIC MF Small Cap Fund** — 58 positions. Current official factsheet evidence was collected, but the portfolio parser did not advance beyond July.
 - **PGIM India Small Cap Fund** — 70 positions. The original guessed August API PDF route returned non-PDF content. Later exact-source discovery was added, but production still did not obtain a complete August snapshot.
 
 Relevant exact-source/freshness commits include `ae4007a8017905cb2ece77071a335fd02ddefd6b`, `2ad4629782f93b0cbe053d5ef6a389907918a99f`, `3608f780c560108fc7fec8869948483bf924471b`, and `b6e2903e72297344a0d7bcffd346b8921050d8a6`. The latest v50 retry passed the release gate but correctly left coverage unchanged because none of the six passed the August+complete acceptance condition.
@@ -424,7 +435,6 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 **Stale complete**:
 - Abakkus — 2026-07-31, 68 positions.
 - Franklin India — 2026-07-31, 91 positions.
-- LIC MF — 2026-07-31, 58 positions.
 - PGIM India — 2026-07-31, 70 positions.
 
 **Stale partial**:
@@ -440,8 +450,8 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **LIC MF next.** Its current official factsheet evidence is already reachable; inspect the concrete August layout and recover a complete snapshot only if the source reconciles fully.
-2. Then handle **PGIM / Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
+1. **PGIM India next.** Its July complete snapshot is retained and exact-source discovery already exists; inspect the current official August source/transport result and recover a complete snapshot only from concrete first-party evidence.
+2. Then handle **Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
 3. For stale partials, prefer structured official monthly portfolios when available. Groww is the model: exact source discovery + scheme identity + reporting date + reconciliation before changing completeness.
 4. Keep Union and Bandhan on source-discovery watch rather than repeating already-exhausted parser/CMS work.
 5. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
