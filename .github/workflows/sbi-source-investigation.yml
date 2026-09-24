@@ -65,17 +65,18 @@ jobs:
           assert rows[1]['hash']=='b080c169962567f08b34dc4117368dcfb0fe4e49c182a2f60da842682e6dd1c1'
           assert run(), 'Idempotent second run failed'
           PY
-      - name: Commit reviewed source changes only to the isolated branch
+      - name: Commit reviewed code to the isolated branch
         run: |
           test "$GITHUB_REF_NAME" = 'work/sbi-portfolio-20260924'
-          git rm .github/sbi-development.patch.b64 .github/workflows/sbi-source-investigation.yml
-          git add .github/workflows/daily.yml README.md docs/HANDOFF.md scripts/refresh_sbi_portfolios.py tests/test_sbi_portfolios.py tracker/amc_discovery.py tracker/amc_reports.py tracker/portfolio_parser.py tracker/sbi_portfolios.py
+          git restore -- .github/workflows/daily.yml
+          git rm .github/sbi-development.patch.b64
+          git add README.md docs/HANDOFF.md scripts/refresh_sbi_portfolios.py tests/test_sbi_portfolios.py tracker/amc_discovery.py tracker/amc_reports.py tracker/portfolio_parser.py tracker/sbi_portfolios.py
           git diff --cached --check
           git diff --cached --stat
           git commit -m 'Recover complete SBI monthly portfolios with source-scoped replay and regression tests [skip ci]'
-          git push origin HEAD:work/sbi-portfolio-20260924
           git rev-parse HEAD > audit/validated-commit.txt
           git archive --format=zip --output=audit/source.zip HEAD tracker scripts tests docs README.md .github pyproject.toml uv.lock requirements.txt .python-version
+          git push origin HEAD:work/sbi-portfolio-20260924
       - name: Retain validation evidence
         if: always()
         uses: actions/upload-artifact@v4
