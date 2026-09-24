@@ -1,0 +1,60 @@
+name: UTI portfolio investigation
+
+on:
+  push:
+    branches: [backend/uti-portfolio-audit-v128]
+
+permissions:
+  contents: read
+
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect live UTI Small Cap exposure block
+        run: |
+          uv run --frozen python - <<'PY'
+          import io,json,re,hashlib,zipfile
+          import openpyxl
+          from tracker import amc_discovery
+          from tracker.structured_reports import uti_rows
+
+          rows=list(amc_discovery.discover('UTI'))
+          print('DISCOVERY',json.dumps(rows,ensure_ascii=False))
+          zips=[x for x in rows if x[1].lower().split('?',1)[0].endswith('.zip')]
+          assert zips
+          family,url,title=zips[0]
+          body,h,typ=amc_discovery.read(url)
+          print('ZIP',url,title,len(body),typ,h,hashlib.sha256(body).hexdigest())
+          with zipfile.ZipFile(io.BytesIO(body)) as z:
+              print('ENTRIES',json.dumps([(i.filename,i.file_size) for i in z.infolist()],ensure_ascii=False))
+              matches=[i for i in z.infolist() if re.fullmatch(r'Sebi Exposure as on .+_final\.xlsx',i.filename.rsplit('/',1)[-1],re.I)]
+              assert len(matches)==1
+              data=z.read(matches[0])
+          book=openpyxl.load_workbook(io.BytesIO(data),data_only=True,read_only=True)
+          for ws in book.worksheets:
+              table=list(ws.values)
+              start=next((i for i,r in enumerate(table) if str((r[0] if r else '') or '').strip().lower()=='scheme: uti small cap fund'),None)
+              if start is None:continue
+              end=next((i for i,r in enumerate(table[start+1:],start+1)
+                        if str((r[0] if r else '') or '').strip().lower()=='total : uti small cap fund'),None)
+              print('SHEET',ws.title,'START',start+1,'END',None if end is None else end+1)
+              parsed=uti_rows(table)
+              print('PARSED',json.dumps(parsed,default=str,ensure_ascii=False))
+              for i in range(start,min(len(table),(end or start+180)+1)):
+                  row=table[i]
+                  txt=' | '.join(str(x) for x in row if x not in (None,''))
+                  print('ROW',i+1,txt[:2600])
+          book.close()
+          PY
