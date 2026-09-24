@@ -1212,6 +1212,41 @@ Shaily Engineering Plastics Limited^ Industrial Products 1.76
         self.assertIsNone(trustmf_named_portfolio(text.replace('NIFTY Smallcap 250 TRI','NIFTY 500 TRI',1)))
 
 
+    def test_trustmf_structured_workbook_reconciles_dated_treps(self):
+        from tracker.portfolio_parser import parse_sheet
+        rows=[
+            ['TMFCB','TRUSTMF Small Cap Fund','','','','',''],
+            ['', 'Monthly Portfolio Statement as on August 31, 2026','','','','',''],
+            ['', 'Name of the Instrument','ISIN','Industry','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net Assets'],
+            ['EQ01','Alpha Industries Limited','INE123456789','Industrial Products',100,95500,95.50],
+            ['', 'Sub Total','','','',95500,95.50],
+            ['', 'Total','','','',95500,95.50],
+            ['', 'CBLO / Reverse Repo / TREPS','','','','',''],
+            ['TRP_010926','TREPS 01-Sep-2026','','','',4500,4.50],
+            ['', 'Sub Total','','','',4500,4.50],
+            ['', 'Total','','','',4500,4.50],
+            ['', 'GRAND TOTAL','','','',100000,100.00],
+        ]
+        formats=[['General']*7 for _ in rows]
+        parsed=parse_sheet(rows,formats,'Trustmf Small Cap Fund')
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],[])
+        self.assertEqual(len(parsed['positions']),2)
+        self.assertEqual(parsed['positions'][1]['name'],'TREPS 01-Sep-2026')
+        self.assertEqual(parsed['positions'][1]['asset_type'],'Money market')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100.0,places=6)
+        self.assertAlmostEqual(parsed['aum'],1000.0,places=6)
+
+        bad=[row[:] for row in rows]
+        bad[7][1]='TREPS undated'
+        rejected=parse_sheet(bad,formats,'Trustmf Small Cap Fund')
+        self.assertFalse(rejected['complete'])
+        self.assertIn('TREPS undated',rejected['unknown_rows'])
+
+
+
     def test_union_complete_portfolio_reconciles_all_published_assets(self):
         from tracker.report_parser import union_complete_portfolio
         equities=[(f'Company {i} Ltd.',4.90) for i in range(1,20)]

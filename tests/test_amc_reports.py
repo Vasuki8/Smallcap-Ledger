@@ -343,6 +343,18 @@ Month End AUM: Rs. 100 Cr''')
         self.assertEqual(payload['systemQueryFileName'],'disclosuresweb.xml')
         self.assertEqual(payload['replaceValue'],'portfolio-monthly-disclosure')
 
+    def test_v125_targets_only_trustmf_current_structured_portfolio(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v125'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Trustmf Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Tata Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Trustmf Small Cap Fund','https://trustmf.com/Content/portfolio.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v125'",source)
+        self.assertIn("amc_discovery.discover('TRUST')",source)
+        self.assertIn("path.lower().endswith(('.xls','.xlsx'))",source)
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
