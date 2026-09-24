@@ -1,4 +1,4 @@
-name: Inspect AMFI small-cap expense rows
+name: Inspect Canara expense table
 
 on:
   push:
@@ -11,55 +11,33 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Trace official AMFI TER filters and missing schemes
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect live Canara expense table
         run: |
-          python - <<'PY'
-          import json,re,urllib.parse,urllib.request
-          UA={'User-Agent':'Mozilla/5.0','Accept':'application/json, text/plain, */*','Referer':'https://www.amfiindia.com/ter-of-mf-schemes'}
-          gaps=['Axis','Canara','HSBC','ICICI','Invesco','JM','Mahindra','Mirae']
-          def fetch(url):
-              req=urllib.request.Request(url,headers=UA)
-              with urllib.request.urlopen(req,timeout=45) as r:
-                  body=r.read(); print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl()); return body
-          page=fetch('https://www.amfiindia.com/ter-of-mf-schemes').decode('utf-8','ignore')
-          print('PAGE_FILTER_CONTEXT')
-          for m in re.finditer(r'.{0,250}(?:strCat|strType|populate-te-rdata-revised|SchemeCat).{0,450}',page,re.I|re.S):
-              print(re.sub(r'\s+',' ',m.group(0))[:800])
-          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',page,re.I)
-          for src in scripts:
-              full=urllib.parse.urljoin('https://www.amfiindia.com/ter-of-mf-schemes',src)
-              if not re.search(r'\.js(?:\?|$)',full,re.I): continue
-              try: s=fetch(full).decode('utf-8','ignore')
-              except Exception as e: print('SCRIPT_ERROR',full,e); continue
-              if re.search(r'populate-te-rdata-revised|strCat|strType',s,re.I):
-                  print('SCRIPT_MATCH',full)
-                  for m in re.finditer(r'.{0,350}(?:populate-te-rdata-revised|strCat|strType).{0,700}',s,re.I|re.S):
-                      print(re.sub(r'\s+',' ',m.group(0))[:1100])
-
-          variants=[
-              ('cat18_type1','18','1'),('cat18_type0','18','0'),('cat18_type2','18','2'),
-              ('catall_type1','All','1'),('cat0_type1','0','1'),('catblank_type1','','1'),
-              ('catall_type0','All','0'),('catblank_type0','','0')
-          ]
-          for label,cat,typ in variants:
-              found=[]
-              total=0
-              for p in range(1,12):
-                  q=urllib.parse.urlencode({'MF_ID':'All','Month':'09-2026','strCat':cat,'strType':typ,'page':p,'pageSize':1000})
-                  try: payload=json.loads(fetch('https://www.amfiindia.com/api/populate-te-rdata-revised?'+q))
-                  except Exception as e: print('VARIANT_ERROR',label,p,type(e).__name__,e); break
-                  recs=payload.get('data',[]) if isinstance(payload,dict) else payload
-                  total+=len(recs)
-                  for r in recs:
-                      name=str(r.get('Scheme_Name',''))
-                      if any(k.lower() in name.lower() for k in gaps):
-                          found.append((name,r.get('SchemeCat_Desc'),r.get('TER_Date'),r.get('R_TER'),r.get('D_TER'),r.get('R_BER'),r.get('D_BER')))
-                  meta=payload.get('meta',{}) if isinstance(payload,dict) else {}
-                  pages=meta.get('totalPages') or meta.get('pageCount')
-                  if not recs or (pages and p>=int(pages)) or len(recs)<int(meta.get('pageSize',1000)): break
-              print('VARIANT',label,'TOTAL',total,'FOUND_UNIQUE')
-              for row in sorted(set(found)): print(row)
+          uv run --frozen python - <<'PY'
+          import re,urllib.request
+          from bs4 import BeautifulSoup
+          url='https://www.canararobeco.com/expense-ratio'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          with urllib.request.urlopen(req,timeout=45) as r:
+              body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
+          soup=BeautifulSoup(body,'html.parser')
+          print('TITLE',soup.title.get_text(' ',strip=True) if soup.title else None)
+          for i,table in enumerate(soup.find_all('table')):
+              text=' '.join(table.stripped_strings)
+              if 'Canara Robeco Small Cap Fund' in text:
+                  print('TABLE_INDEX',i,'LEN',len(text))
+                  rows=table.find_all('tr')
+                  for j,tr in enumerate(rows):
+                      cells=[re.sub(r'\s+',' ',x.get_text(' ',strip=True)) for x in tr.find_all(['th','td'],recursive=False)]
+                      if any('Small Cap Fund' in x for x in cells) or j<5:
+                          print('ROW',j,cells)
           PY
