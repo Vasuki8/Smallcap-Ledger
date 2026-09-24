@@ -57,7 +57,7 @@ def parse_sheet(rows,formats,family):
         value=numeric(row[wc]);fmt=re.sub(r'"[^"\n]*"|\\.','',formats[ri][wc] or '')
         return value*100 if isinstance(row[wc],(int,float)) and '%' in fmt else value
     def empty(value):return str(value or '').strip().lower() in ('','-','nil','0','0.0','0.00')
-    positions=[];values=[];grand=None;unknown=[];asset='Equity'
+    positions=[];values=[];grand=None;unknown=[];asset='Equity';bandhan_cash_breakdown=False
     for ri,row in enumerate(rows[hi+1:],hi+1):
         if max(ic,nc,wc,vc)>=len(row):continue
         name=str(row[nc] or '').strip();label=name or ' '.join(str(x or '') for x in row[:max(nc,ic)+1]).strip()
@@ -65,6 +65,13 @@ def parse_sheet(rows,formats,family):
         # section. It is structural metadata, never a portfolio position.
         repeated=[str(v or '').lower() for v in row]
         if any('isin' in v for v in repeated) and any('%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)) for v in repeated):continue
+        if family=='Bandhan Small Cap Fund':
+            if re.fullmatch(r'(?:Cash Margin - Derivatives|Cash / Bank Balance)',label,re.I):
+                bandhan_cash_breakdown=True
+            if bandhan_cash_breakdown and re.fullmatch(r'Net Current Assets',label,re.I):
+                # In Bandhan's current workbook this is the subtotal of the
+                # explicit cash-margin/bank/receivables rows immediately above.
+                continue
         grand_label=bool(re.fullmatch(r'grand\s+total(?:\s*\(aum\))?|total\s+net\s+assets?',label,re.I))
         if family=='Tata Small Cap Fund' and re.fullmatch(r'NET\s+ASSETS?',label,re.I):grand_label=True
         if grand_label:
@@ -87,6 +94,9 @@ def parse_sheet(rows,formats,family):
                     and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I))) or (
                     family=='Pgim India Small Cap Fund' and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I))) or (
+                    family=='Bandhan Small Cap Fund' and not isin and asset=='Money market'
+                    and bool(re.fullmatch(r'TRP_\d{6}(?:_VAL)?',code))
+                    and bool(re.fullmatch(r'Triparty Repo TRP_\d{6}',name,re.I))) or (
                     family=='Trustmf Small Cap Fund' and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
                     and bool(re.fullmatch(r'TREPS\s+\d{2}-[A-Za-z]{3}-\d{4}',name,re.I))) or (
@@ -102,6 +112,8 @@ def parse_sheet(rows,formats,family):
             if family=='Tata Small Cap Fund' and re.fullmatch(r'(?:I\)\s*REPO|CASH\s*/\s*NET CURRENT ASSET)\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='Quant Small Cap Fund' and re.fullmatch(r'NCA\s*-\s*NET CURRENT ASSETS\s*[*^#]?',label,re.I):
+                leaf=True
+            if family=='Bandhan Small Cap Fund' and re.fullmatch(r'(?:Cash Margin - Derivatives|Cash / Bank Balance)',label,re.I):
                 leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'

@@ -290,28 +290,14 @@ Month End AUM: Rs. 100 Cr''')
             'https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-march-2026.pdf?sfvrsn=3ddcc4de_5',
             urls)
 
-    def test_bandhan_wordpress_attachment_discovery_uses_official_media(self):
+    def test_bandhan_discovery_delegates_to_public_finance_source(self):
         from tracker.amc_discovery import discover
-        post=[{
-            'content':{'rendered':'<p>Monthly portfolio disclosure</p>'},
-            '_links':{'wp:attachment':[{'href':'https://cmsnew.bandhanmutual.com/wp-json/wp/v2/media?parent=123'}]}
-        }]
-        media=[
-            {'source_url':'https://cmsnew.bandhanmutual.com/wp-content/uploads/2026/09/Bandhan-Small-Cap-Portfolio-August-2026.xlsx',
-             'title':{'rendered':'Bandhan Small Cap Portfolio August 2026'}},
-            {'source_url':'https://cmsnew.bandhanmutual.com/wp-content/uploads/2026/09/Bandhan-Small-Cap-Portfolio-August-2026.pdf',
-             'title':{'rendered':'Bandhan Small Cap Portfolio August 2026'}},
-        ]
-        def fake_read(url,body=None):
-            if '/wp-json/wp/v2/posts?' in url:return (json.dumps(post).encode(),'h','application/json')
-            if '/wp-json/wp/v2/media?' in url:return (json.dumps(media).encode(),'m','application/json')
-            return (b'<html></html>','p','text/html')
-        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
-             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
-            rows=list(discover('Bandhan'))
-        self.assertEqual(rows[0][0],'Bandhan Small Cap Fund')
-        self.assertTrue(rows[0][1].endswith('.xlsx'))
-        self.assertTrue(all('bandhanmutual.com' in x[1] for x in rows))
+        row=('Bandhan Small Cap Fund',
+             'https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/a.xlsx',
+             'Bandhan Small Cap Fund 31 August 2026')
+        with patch('tracker.bandhan_portfolios.discover',return_value=iter([row])) as mock:
+            self.assertEqual(list(discover('Bandhan')),[row])
+            mock.assert_called_once_with(__import__('tracker.amc_discovery',fromlist=['read']).read)
 
     def test_trust_monthly_disclosure_api_prefers_latest_structured_file(self):
         from tracker.amc_discovery import discover

@@ -18,7 +18,12 @@ def clean(v):
 def official_publication_url(url,amc_match):
     """Registered AMC domains, excluding known sections for another AMC's schemes."""
     if exclusion_reason(amc_match,url):return False
-    host=(urlparse(url).hostname or '').lower()
+    parsed=urlparse(url);host=(parsed.hostname or '').lower()
+    # Bandhan's public finance API returns disclosure binaries from one fixed
+    # Google Cloud Storage bucket. Accept only that exact bucket path.
+    if (str(amc_match).lower()=='bandhan' and host=='storage.googleapis.com'
+        and parsed.path.startswith('/nonprod-static-assets-121to59kaawfgfi7bol/')):
+        return True
     roots={urlparse(u).hostname.lower().removeprefix('www.') for amc,u,_ in json.loads((db.ROOT/'tracker'/'sources.json').read_text()) if amc.lower()==amc_match.lower()}
     # Custom source pages are explicit owner-provided AMC sources.
     roots.update((urlparse(r['url']).hostname or '').lower().removeprefix('www.') for r in db.rows('SELECT url FROM source_pages WHERE lower(amc_match)=lower(?)',(amc_match,)))
@@ -190,6 +195,29 @@ def spreadsheet(content,family,url,h):
                 and full['positions']):
                 portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
                 count+=len(full['positions']);continue
+            if family=='Bandhan Small Cap Fund' and full.get('unknown_rows') and full['positions']:
+                # Bandhan marks sub-0.01% holdings with a literal "$". Retain
+                # every exact numeric row only when all parser-unknown holdings
+                # are proven by the same sheet to be those censored rows.
+                header_index=None;header=None
+                for j,r in enumerate(rows[:35]):
+                    cells=[str(v or '').lower() for v in r]
+                    if any('isin' in v for v in cells) and any('%' in v and re.search(r'nav|aum',v) for v in cells):
+                        header_index=j;header=cells;break
+                censored=set()
+                if header is not None:
+                    ic=next((j for j,v in enumerate(header) if 'isin' in v),None)
+                    nc=next((j for j,v in enumerate(header) if 'name' in v or 'instrument' in v or 'issuer' in v),None)
+                    wc=next((j for j,v in enumerate(header) if '%' in v and re.search(r'nav|aum',v)),None)
+                    if None not in (ic,nc,wc):
+                        for r in rows[header_index+1:]:
+                            if max(ic,nc,wc)>=len(r):continue
+                            if str(r[wc] or '').strip()!=chr(36):continue
+                            if not re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',str(r[ic] or '').strip()):continue
+                            censored.add(str(r[nc] or '').strip())
+                if censored and set(full['unknown_rows'])==censored:
+                    portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
+                    count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
