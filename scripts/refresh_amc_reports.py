@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -673,6 +673,52 @@ def run():
         current=bool(snap and snap['as_of']>='2026-08-31' and snap['positions']==10 and not snap['complete'])
         if snap:print(f'EDELWEISS_V102_SNAPSHOT {snap["as_of"]} complete={snap["complete"]} positions={snap["positions"]}',flush=True)
         ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v105':
+        # Temporary Mirae source diagnostic. The public portfolio page is
+        # client-rendered; inspect only first-party HTML/script configuration.
+        try:
+            from bs4 import BeautifulSoup
+            from urllib.parse import urljoin,urlparse
+            page='https://www.miraeassetmf.co.in/downloads/portfolio'
+            providers.can_crawl(page)
+            raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
+            soup=BeautifulSoup(raw,'html.parser');txt=raw.decode('utf-8','ignore')
+            print(f'MIRAE_V105_PAGE bytes={len(raw)}',flush=True)
+            for tag in soup.find_all(['div','section','input','select','button','a']):
+                vals=[]
+                for k,v in tag.attrs.items():
+                    value=' '.join(v) if isinstance(v,list) else str(v)
+                    if re.search(r'portfolio|download|api|ajax|month|year',value,re.I):
+                        vals.append(f'{k}={value}')
+                if vals:
+                    print('MIRAE_V105_ATTR '+tag.name+' '+' '.join(vals)[:1000],flush=True)
+            scripts=[]
+            for tag in soup.find_all('script'):
+                src=tag.get('src')
+                if src:
+                    u=urljoin(page,src)
+                    if (urlparse(u).hostname or '').endswith('miraeassetmf.co.in'):scripts.append(u)
+                else:
+                    body=tag.string or tag.get_text(' ',strip=True)
+                    if re.search(r'portfolio|download|ajax|api',body,re.I):
+                        print('MIRAE_V105_INLINE '+re.sub(r'\s+',' ',body)[:3500],flush=True)
+            for u in list(dict.fromkeys(scripts)):
+                try:
+                    providers.can_crawl(u);body,_,_=providers.fetch(u,max_bytes=5*1024*1024)
+                    st=body.decode('utf-8','ignore')
+                except Exception as exc:
+                    print(f'MIRAE_V105_SCRIPT_ERR {u} :: {(str(exc) or type(exc).__name__)[:180]}',flush=True);continue
+                hits=[]
+                for m in re.finditer(r'.{0,220}(?:portfolio|download|ajax|api|xlsx?|\.xls).{0,500}',st,re.I|re.S):
+                    snippet=re.sub(r'\s+',' ',m.group(0)).strip()
+                    if snippet not in hits:hits.append(snippet)
+                    if len(hits)>=10:break
+                if hits:
+                    print('MIRAE_V105_SCRIPT '+u,flush=True)
+                    for hit in hits:print('MIRAE_V105_HIT '+hit[:1400],flush=True)
+        except Exception as exc:
+            print(f"::warning::Mirae v105 source audit: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
