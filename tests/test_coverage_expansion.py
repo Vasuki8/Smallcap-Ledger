@@ -1358,6 +1358,7 @@ Investment Objective'''
             ['Portfolio as on 31-08-26','','','','','',''],
             ['NAME OF THE INSTRUMENT','YIELD ( IN % )','INDUSTRY','ISIN CODE','QUANTITY','MKT VAL(Rs. Lacs)','% to NAV'],
             ['Alpha Industries Ltd','NA','Industrial Products','INE659A01023',100,91700,91.7],
+            ['NAME OF THE INSTRUMENT','YIELD ( IN % )','RATINGS','ISIN CODE','QUANTITY','MKT VAL(Rs. Lacs)','% to NAV'],
             ['I) REPO','','','','',3100,3.1],
             ['CASH / NET CURRENT ASSET','','','','',5200,5.2],
             ['NET ASSETS','','','','',100000,100],
