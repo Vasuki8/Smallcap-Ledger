@@ -11,50 +11,45 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Trace Invesco statutory TER page
+      - name: Locate Invesco TER API
         run: |
           python - <<'PY'
           import re,urllib.parse,urllib.request
-          urls=[
-            'https://www.invescomutualfund.com/aboutus?tab=Statutory&active=ExpenseRatioDisclosure',
-            'https://www.invescomutualfund.com/about-us?tab=Statutory&active=ExpenseRatioDisclosure',
-            'https://www.invescomutualfund.com/statutory-disclosures/risk-meter',
-          ]
+          page='https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter'
           UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
-          seen_scripts=set()
           def fetch(url):
               req=urllib.request.Request(url,headers=UA)
               with urllib.request.urlopen(req,timeout=45) as r:
                   b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return b,r.geturl()
-          pages=[]
-          for u in urls:
-              try:
-                  b,final=fetch(u)
-              except Exception as e:
-                  print('PAGE_ERROR',u,type(e).__name__,e);continue
-              html=b.decode('utf-8','ignore');pages.append((html,final))
-              print('PAGE_TITLE',re.findall(r'<title[^>]*>(.*?)</title>',html,re.I|re.S)[:1])
-              for m in re.finditer(r'.{0,220}(?:ExpenseRatioDisclosure|Total Expense Ratio|statutory-disclosures|expense ratio).{0,500}',html,re.I|re.S):
-                  print('PAGE_CTX',re.sub(r'\s+',' ',m.group(0))[:900])
-              for src in re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I):
-                  seen_scripts.add(urllib.parse.urljoin(final,src))
-          print('SCRIPT_COUNT',len(seen_scripts))
-          for full in sorted(seen_scripts):
+          html,final=fetch(page);shtml=html.decode('utf-8','ignore')
+          scripts=[urllib.parse.urljoin(final,x) for x in re.findall(r'<script[^>]+src=["\']([^"\']+)',shtml,re.I)]
+          print('SCRIPTS',len(scripts))
+          for full in scripts:
               try:b,_=fetch(full)
-              except Exception as e:
-                  print('SCRIPT_ERROR',full,type(e).__name__,e);continue
+              except Exception as e:print('SCRIPT_ERROR',full,e);continue
               s=b.decode('utf-8','ignore')
-              if not re.search(r'ExpenseRatioDisclosure|Total Expense Ratio|expense.?ratio|statutory|api/',s,re.I):
+              low=s.lower()
+              if not any(n in low for n in ['ter-mutual-fund','total expense ratio','expenseratio','expense ratio']):
                   continue
               print('SCRIPT_MATCH',full,'LEN',len(s))
-              for needle in ['ExpenseRatioDisclosure','Total Expense Ratio','expenseRatio','expense-ratio','statutory','api/']:
+              # Print fetch/API calls near TER component strings.
+              for m in re.finditer(r'fetch\(([^)]{1,300})\)',s):
+                  ctx=s[max(0,m.start()-1200):m.end()+1600]
+                  if re.search(r'ter|expense',ctx,re.I):
+                      print('FETCH_CTX',re.sub(r'\s+',' ',ctx)[:3200])
+              for needle in ['ter-mutual-fund-since-2026','Total Expense Ratio','ExpenseRatioDisclosure','ExpenseRatio','TERData','/api/']:
                   p=0;n=0
                   while True:
-                      p=s.lower().find(needle.lower(),p)
-                      if p<0 or n>=25:break
-                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1000):p+2200])[:3400])
+                      p=low.find(needle.lower(),p)
+                      if p<0 or n>=20:break
+                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1400):p+2600])[:4200])
                       p+=len(needle);n+=1
+          # Look for exact API-looking string literals across the page/bootstrap too.
+          joined=shtml
+          vals=sorted(set(re.findall(r'["\']([^"\']*(?:api|ter|expense)[^"\']*)["\']',joined,re.I)))
+          print('PAGE_STRINGS')
+          for v in vals[:250]: print(repr(v[:500]))
           PY
