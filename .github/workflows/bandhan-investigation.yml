@@ -13,34 +13,21 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Replay Bandhan scheme portfolio browser payload
+      - name: Trace Bandhan public API key header setup
         run: |
           python - <<'PY'
-          import urllib.request,json
-          url='https://pnservices.bandhanmutual.com/internal/investorservices/encdec/investor/v1/dashboard/cms-call'
-          headers={
-            'User-Agent':'Mozilla/5.0',
-            'Accept':'application/json,text/plain,*/*',
-            'Content-Type':'application/json',
-            'Origin':'https://bandhanmutual.com',
-            'Referer':'https://bandhanmutual.com/',
-          }
-          payloads=[
-            {'type':'SCHEME_PORTFOLIOS','data':{'subcategory':'monthly-and-half-yearly','page':1,'posts_per_page':1}},
-            {'type':'SCHEME_PORTFOLIOS','data':{'subcategory':'monthly-and-half-yearly','page':1,'posts_per_page':10,'financial_year':'2026'}},
-          ]
-          for payload in payloads:
-              body=json.dumps(payload,separators=(',',':')).encode()
-              req=urllib.request.Request(url,data=body,headers=headers,method='POST')
-              try:
-                  with urllib.request.urlopen(req,timeout=35) as r:
-                      out=r.read()
-                      print('STATUS',r.status,r.headers.get('Content-Type'),len(out),r.geturl())
-                      print('HEADERS',dict(r.headers))
-                      print('BODY',out.decode('utf-8','replace')[:60000])
-              except Exception as e:
-                  print('ERROR',repr(e))
-                  if hasattr(e,'read'):
-                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:10000])
-                      except Exception:pass
+          import urllib.request,re
+          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',
+                                     headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
+          needles=['x-api-key','api-key','apikey','API_KEY','apiKey','x-custom-timestamp']
+          for needle in needles:
+              pos=[];start=0
+              while len(pos)<30:
+                  i=js.lower().find(needle.lower(),start)
+                  if i<0:break
+                  pos.append(i);start=i+len(needle)
+              print('POSITIONS',needle,pos)
+              for i in pos:
+                  print('CTX',needle,i,repr(js[max(0,i-6500):i+9000]))
           PY
