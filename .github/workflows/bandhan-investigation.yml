@@ -13,40 +13,21 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query Bandhan scheme-portfolio filters
+      - name: Trace Bandhan scheme portfolio request helper
         run: |
           python - <<'PY'
-          import urllib.request,urllib.parse,json,re
-          endpoint='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?posts_per_page=2500'
-          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
-          variants=[
-            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1'},
-            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026'},
-            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','month':'August'},
-            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','month':'Aug'},
-            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','scheme':'Bandhan Small Cap Fund'},
-            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','month':'August','scheme':'Bandhan Small Cap Fund'},
-          ]
-          for q in variants:
-              url=endpoint+'&'+urllib.parse.urlencode(q)
-              try:
-                  req=urllib.request.Request(url,headers=headers)
-                  with urllib.request.urlopen(req,timeout=35) as r:data=json.load(r)
-                  rows=data.get('data') if isinstance(data,dict) else data
-                  print('VARIANT',json.dumps(q,separators=(',',':')),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows or []),'PAGES',data.get('totalPages') if isinstance(data,dict) else None)
-                  for item in (rows or [])[:8]:
-                      acf=item.get('acf_fields') or {}
-                      print('ITEM',json.dumps({
-                        'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
-                        'download_center_type':acf.get('download_center_type'),
-                        'financial_year':acf.get('financial_year'),
-                        'disclosures_type':acf.get('disclosures_type'),
-                        'fund':(acf.get('funds_mapping') or {}).get('post_title') if isinstance(acf.get('funds_mapping'),dict) else acf.get('funds_mapping'),
-                        'files':[{
-                          'document_name':x.get('document_name'),'month':x.get('month'),
-                          'url':(x.get('document_link') or {}).get('url'),
-                          'filename':(x.get('document_link') or {}).get('filename'),
-                        } for x in acf.get('disclosure_files') or []],
-                      },ensure_ascii=False,separators=(',',':')))
-              except Exception as e:print('ERROR',json.dumps(q),repr(e))
+          import urllib.request,re
+          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',
+                                     headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
+          for needle in ('_0x453e5e=', 'function _0x453e5e', '_0x27541e=', 'function _0x27541e',
+                         'getNewAdditionalDisclosureApi', 'posts_per_page=2500'):
+              pos=[];start=0
+              while len(pos)<20:
+                  i=js.find(needle,start)
+                  if i<0:break
+                  pos.append(i);start=i+len(needle)
+              print('POSITIONS',needle,pos)
+              for i in pos:
+                  print('CTX',needle,i,repr(js[max(0,i-9000):i+15000]))
           PY
