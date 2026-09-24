@@ -14,19 +14,25 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Locate ICICI financials page lazy chunk
+      - name: Locate financial disclosure chunk
         run: |
           python - <<'PY'
           import re, urllib.request
           u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
           req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-          needle='/about-us/financials-&-disclosures'
-          for p in [m.start() for m in re.finditer(re.escape(needle),s)]:
-              block=s[max(0,p-8000):p+8000]
-              print('POS',p)
-              print('JSFILES',sorted(set(re.findall(r'["\']([^"\']+\.js)["\']',block))))
-              print('IMPORTS',sorted(set(re.findall(r'import\(["\']([^"\']+)["\']\)',block))))
-              print('PRELOADS',sorted(set(re.findall(r'__vitePreload\(\(\)=>import\(["\']([^"\']+)["\']\)',block))))
-              print('CTX',re.sub(r'\s+',' ',block))
+          candidates=sorted(set(re.findall(r'["\'](\./[^"\']+\.js)["\']',s)))
+          print('CHUNKS',len(candidates))
+          for c in candidates:
+              if re.search(r'financ|disclos|about|download',c,re.I):
+                  print('NAMED',c)
+          # Locate lazy imports whose nearby code mentions financial/disclosure constants.
+          for m in re.finditer(r'import\(["\'](\./[^"\']+\.js)["\']\)',s):
+              block=s[max(0,m.start()-2500):m.end()+2500]
+              if re.search(r'FINANCIALS|financial|disclosure|TOTAL_EXPENSE_RATIO',block,re.I):
+                  print('IMPORT_NEAR',m.group(1))
+                  print('CTX',re.sub(r'\s+',' ',block)[:5200])
+          # Print the map dependency table region if present.
+          for needle in ['__vite__mapDeps','FinancialsDisclosure','FinancialDisclosure','financialsDisclosure']:
+              print('OCC',needle,[m.start() for m in re.finditer(re.escape(needle),s,re.I)][:30])
           PY
