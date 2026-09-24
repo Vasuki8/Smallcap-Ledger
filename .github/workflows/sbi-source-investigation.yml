@@ -1,0 +1,100 @@
+name: SBI source investigation (read-only)
+
+on:
+  push:
+    branches: [work/sbi-portfolio-20260924]
+
+permissions:
+  contents: read
+
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Preserve exact source revision for reproducible local tests
+        run: |
+          mkdir -p audit
+          git rev-parse HEAD > audit/source-commit.txt
+          git archive --format=zip --output=audit/source.zip HEAD tracker scripts tests dist docs README.md pyproject.toml requirements.txt uv.lock .github .python-version COVERAGE-AS-OF.json COVERAGE-AS-OF.md
+      - name: Check Python and existing regression suite
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest discover -s tests -v
+      - name: Inspect bounded first-party SBI discovery without publishing
+        run: |
+          uv run --frozen python - <<'PY'
+          import json, re, traceback
+          from pathlib import Path
+          from urllib.parse import urljoin, urlparse
+          from bs4 import BeautifulSoup
+          from tracker import db, providers, disclosures, amc_discovery
+          db.init()
+          out = Path('audit')
+          records = []
+          seen = set()
+          def fetch(url, label):
+              if url in seen:
+                  return None
+              seen.add(url)
+              if not disclosures.official_publication_url(url, 'SBI'):
+                  records.append({'url': url, 'label': label, 'status': 'unregistered-host'})
+                  return None
+              try:
+                  providers.can_crawl(url)
+                  body, digest, meta = providers.fetch(url, max_bytes=12*1024*1024)
+                  name = f'{len(records):02d}-{label}'
+                  (out/name).write_bytes(body)
+                  records.append({'url': url, 'label': label, 'status': 'ok', 'sha256': digest, 'bytes': len(body), 'file': name})
+                  print(json.dumps(records[-1]))
+                  return body
+              except Exception as exc:
+                  records.append({'url': url, 'label': label, 'status': 'error', 'error': str(exc)})
+                  print(json.dumps(records[-1]))
+                  return None
+          pages = ['https://www.sbimf.com/factsheets', 'https://www.sbimf.com/']
+          scripts = []
+          for page in pages:
+              raw = fetch(page, 'page.html')
+              if not raw:
+                  continue
+              soup = BeautifulSoup(raw, 'html.parser')
+              for a in soup.select('a[href]'):
+                  target = urljoin(page, a.get('href', ''))
+                  if 'portfolio' in target.lower() and disclosures.official_publication_url(target, 'SBI'):
+                      records.append({'url': target, 'label': a.get_text(' ', strip=True), 'status': 'discovered-link'})
+              for script in soup.select('script[src]'):
+                  target = urljoin(page, script['src'])
+                  if disclosures.official_publication_url(target, 'SBI') and re.search(r'fact|portfolio|download|common|custom|main|bundle', target, re.I):
+                      if target not in scripts:
+                          scripts.append(target)
+          for i, url in enumerate(scripts[:12]):
+              fetch(url, f'script-{i}.js')
+          try:
+              candidates = list(amc_discovery.discover('SBI'))
+              records.append({'status': 'discovery-result', 'candidates': candidates})
+              print('SBI_CANDIDATES', json.dumps(candidates))
+              for family, url, title in candidates[:3]:
+                  fetch(url, 'candidate.bin')
+          except Exception as exc:
+              records.append({'status': 'discovery-error', 'error': str(exc)})
+              traceback.print_exc()
+          (out/'sources.json').write_text(json.dumps(records, indent=2))
+          PY
+      - name: Retain investigation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbi-source-investigation
+          path: audit/
+          retention-days: 3
