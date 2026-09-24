@@ -706,6 +706,33 @@ Top 10 holdings Grand Total 100.00%'''
             'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
             'The Asset - August 2026'))
 
+    def test_pgim_discovery_uses_official_disclosure_api_for_latest_smallcap_workbook(self):
+        from tracker import amc_discovery
+        payload=json.dumps({'resultInfo':{'resultCodeId':'1'},'data':[{
+            'tabId':12,'content':[
+                {'disclosureSection':'SECTION_747960037','disclosureTab':12,
+                 'pdfPath':'https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA SMALL CAP FUND  Jul 2026.xlsx',
+                 'dateMonthYear':'31 July 2026','title':'PGIM INDIA SMALL CAP FUND  Jul 2026'},
+                {'disclosureSection':'SECTION_747960037','disclosureTab':12,
+                 'pdfPath':'https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA SMALL CAP FUND Aug 2026.xlsx',
+                 'dateMonthYear':'31 August 2026','title':'PGIM INDIA SMALL CAP FUND Aug 2026'},
+                {'disclosureSection':'SECTION_747960037','disclosureTab':12,
+                 'pdfPath':'https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx',
+                 'dateMonthYear':'31 August 2026','title':'PGIM INDIA MIDCAP FUND Aug 2026'},
+            ]}]}).encode()
+        def fake_read(url,body=None):
+            if 'published/disclosure' in url:
+                self.assertEqual(body,{'headerId':2,'sectionId':'SECTION_747960037'})
+                return payload,'api','application/json'
+            raise AssertionError('fallback should not be needed')
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(amc_discovery.discover('PGIM'))
+        self.assertEqual(rows,[(
+            'Pgim India Small Cap Fund',
+            'https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA SMALL CAP FUND Aug 2026.xlsx',
+            'PGIM INDIA SMALL CAP FUND Aug 2026')])
+
     def test_pgim_discovery_prefers_structured_monthly_portfolio(self):
         from tracker import amc_discovery
         monthly=b'''<html><body>
