@@ -89,7 +89,9 @@ def parse_sheet(rows,formats,family):
                     and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I))) or (
                     family=='Trustmf Small Cap Fund' and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
-                    and bool(re.fullmatch(r'TREPS\s+\d{2}-[A-Za-z]{3}-\d{4}',name,re.I)))
+                    and bool(re.fullmatch(r'TREPS\s+\d{2}-[A-Za-z]{3}-\d{4}',name,re.I))) or (
+                    family=='Jm Small Cap Fund' and not isin and asset=='Money market'
+                    and bool(re.fullmatch(r'CCIL',name,re.I)))
         if not valid_isin and not named_equity and not named_derivative and not named_repo:
             if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
             leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
