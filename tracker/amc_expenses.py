@@ -336,7 +336,7 @@ def parse_hsbc_workbook(content, today=None):
         day = max(matches)
         if len(matches[day]) != 1:
             raise ValueError(f"HSBC TER workbook has duplicate Small Cap rows for {day}")
-        row = matches[day]
+        row = matches[day][0]
 
         regular = {
             "base_expense_ratio": _hsbc_number(row[4], "Regular BER"),
