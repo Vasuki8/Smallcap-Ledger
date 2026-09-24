@@ -19,51 +19,42 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Trace Axis statutory portfolio API
+      - name: Query verified Axis statutory APIs
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json,re
+          import json
           from pathlib import Path
-          from urllib.parse import urljoin,urlparse
           import httpx
-          from bs4 import BeautifulSoup
           out=Path('audit')
-          client=httpx.Client(headers={
+          c=httpx.Client(headers={
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36',
-            'Accept':'text/html,application/xhtml+xml,application/json,text/plain,*/*',
+            'Accept':'application/json,text/plain,text/html,*/*',
+            'Content-Type':'application/json',
             'Referer':'https://www.axismf.com/statutory-disclosures'
           },timeout=20,follow_redirects=True)
-          page='https://www.axismf.com/statutory-disclosures'
-          r=client.get(page); r.raise_for_status()
-          (out/'page.html').write_bytes(r.content)
-          soup=BeautifulSoup(r.text,'html.parser')
-          scripts=[urljoin(page,x.get('src','')) for x in soup.select('script[src]')]
-          scripts=[u for u in scripts if (urlparse(u).hostname or '').lower().endswith('axismf.com')]
-          targets=[u for u in scripts if ('statutory-disclosures' in u or u in scripts[45:])]
-          rows=[]
-          for i,u in enumerate(targets):
+          tests=[
+            ('route','GET','https://www.axismf.com/statutory-disclosures/portfolios',None),
+            ('nested','POST','https://www.axismf.com/cms/get-nested-list',{'sdParentID':'sdPortfolios'}),
+            ('documents','POST','https://www.axismf.com/cms/get-scheme-documents',{'sdType':'nestedList','sdID':'sdPortfolios'}),
+            ('top','POST','https://www.axismf.com/cms/get-all-statutory-disclosure',{}),
+            ('subcategory','POST','https://www.axismf.com/cms/get-all-statutory-subcategory-disclosure',{'sdParentID':'sdPortfolios'})
+          ]
+          summary=[]
+          for name,method,url,body in tests:
             try:
-              s=client.get(u).text
-              (out/f'target-{i}.js').write_text(s,errors='replace')
-              found=[]
-              candidates=re.findall(r'https://www\\.axismf\\.com/[A-Za-z0-9_?=&.%:,@+~/-]{3,240}',s,re.I)
-              candidates+=re.findall(r'/[A-Za-z0-9_?=&.%:,@+~/-]{4,240}',s)
-              for x in candidates:
-                if re.search(r'api|portfolio|disclosure|statutory|document|download|nested',x,re.I) and x not in found:found.append(x)
-              rows.append({'index':i,'url':u,'urls':found[:300]})
-              print('TARGET',i,u)
-              for x in found[:120]: print('URL',x)
-              for term in ('sdPortfolios','nestedList','statutoryDisclosure','portfolio','disclosure'):
-                for m in list(re.finditer(term,s,re.I))[:12]:
-                  print('SNIP',term,s[max(0,m.start()-500):m.start()+1400].replace('\\n',' ')[:1900])
+              r=c.request(method,url,json=body if method=='POST' else None)
+              item={'name':name,'status':r.status_code,'url':str(r.url),'content_type':r.headers.get('content-type'),'bytes':len(r.content),'prefix':r.text[:500]}
+              summary.append(item)
+              (out/f'{name}.bin').write_bytes(r.content)
+              print(json.dumps(item,ensure_ascii=False))
             except Exception as e:
-              rows.append({'index':i,'url':u,'error':repr(e)})
-          (out/'targets.json').write_text(json.dumps(rows,indent=2))
+              print(name,repr(e)); summary.append({'name':name,'error':repr(e)})
+          (out/'summary.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: axis-source-trace
+          name: axis-api-query
           path: audit/
           retention-days: 3
