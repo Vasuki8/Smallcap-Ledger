@@ -11,10 +11,6 @@ jobs:
   investigate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      SMALLCAP_NO_SCHEDULER: '1'
-      SMALLCAP_DATA_DIR: /tmp/tata-investigation-data
-      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -23,75 +19,53 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect official Tata monthly portfolio and parser outcome
+      - name: Trace live Tata portfolio page API
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import hashlib,json,io
+          import json,re
           from pathlib import Path
-          import openpyxl,xlrd
-          from tracker import db,amc_discovery,amc_reports
-          from tracker.portfolio_parser import parse_sheet,owns_sheet
-          db.init()
+          from urllib.parse import urljoin,urlparse
+          import httpx
+          from bs4 import BeautifulSoup
           out=Path('audit')
-          candidates=list(amc_discovery.discover('Tata'))
-          print('CANDIDATES',json.dumps(candidates,ensure_ascii=False))
-          evidence=[]
-          for idx,(family,url,title) in enumerate(candidates):
-              try:
-                  body,h,typ=amc_discovery.read(url)
-                  (out/f'source-{idx}.bin').write_bytes(body)
-                  print('SOURCE',idx,url,title,len(body),typ,h,body[:8].hex())
-                  before=db.one("SELECT COUNT(*) n FROM portfolios WHERE family=?",(family,))['n']
-                  count=amc_reports.extract(body,family,url,h)
-                  after=db.one("SELECT COUNT(*) n FROM portfolios WHERE family=?",(family,))['n']
-                  snaps=db.rows("""SELECT p.id,p.as_of,p.complete,p.hash,p.source,
-                    COUNT(h.id) positions,SUM(h.weight) weight
-                    FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
-                    WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC""",(family,))
-                  print('EXTRACT',count,before,after,json.dumps(snaps,ensure_ascii=False))
-                  sheets=[]
-                  if body[:2]==b'PK':
-                      book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
-                      iterable=[]
-                      for ws in book.worksheets:
-                          rows=[[c.value for c in row] for row in ws.iter_rows()]
-                          formats=[[c.number_format or '' for c in row] for row in ws.iter_rows()]
-                          iterable.append((ws.title,rows,formats))
-                  elif body[:4]==b'\xd0\xcf\x11\xe0':
-                      book=xlrd.open_workbook(file_contents=body,formatting_info=True)
-                      iterable=[]
-                      for ws in book.sheets():
-                          rows=[ws.row_values(i) for i in range(ws.nrows)]
-                          formats=[[book.format_map[book.xf_list[ws.cell_xf_index(i,j)].format_key].format_str for j in range(ws.ncols)] for i in range(ws.nrows)]
-                          iterable.append((ws.name,rows,formats))
-                  else:
-                      iterable=[]
-                  for name,rows,formats in iterable:
-                      prefix=' '.join(str(v) for row in rows[:25] for v in row if v is not None)
-                      if 'small' not in (name+' '+prefix).lower():continue
-                      parsed=parse_sheet(rows,formats,family)
-                      item={'sheet':name,'prefix':prefix[:1200],'rows':len(rows),'parsed':None}
-                      if parsed:
-                          item['parsed']={'day':parsed['day'],'complete':parsed['complete'],'positions':len(parsed['positions']),'weight':sum(x['weight'] for x in parsed['positions']),'aum':parsed['aum']}
-                      # retain a bounded view of rows around headers/totals to diagnose only the target scheme
-                      excerpts=[]
-                      for ri,row in enumerate(rows):
-                          text=' | '.join(str(x) for x in row if x not in (None,''))
-                          if any(k in text.lower() for k in ('axis small','tata small','name of the instrument','grand total','net current','treps','cash','margin','derivative')):
-                              excerpts.append([ri+1,text[:1400]])
-                          if len(excerpts)>=80:break
-                      item['excerpts']=excerpts
-                      sheets.append(item)
-                      print('SHEET',json.dumps(item,ensure_ascii=False))
-                  evidence.append({'url':url,'title':title,'sha256':h,'bytes':len(body),'count':count,'snapshots':snaps,'sheets':sheets})
-              except Exception as exc:
-                  print('ERROR',url,repr(exc));evidence.append({'url':url,'error':repr(exc)})
-          (out/'evidence.json').write_text(json.dumps(evidence,indent=2,ensure_ascii=False))
+          page='https://www.tatamutualfund.com/schemes-related/portfolio'
+          c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/json,*/*','Referer':page},timeout=20,follow_redirects=True)
+          r=c.get(page);r.raise_for_status()
+          (out/'page.html').write_bytes(r.content)
+          soup=BeautifulSoup(r.text,'html.parser')
+          scripts=[urljoin(str(r.url),s.get('src','')) for s in soup.select('script[src]')]
+          scripts=[u for u in scripts if u.startswith('http')]
+          print('SCRIPTS',len(scripts))
+          rows=[]
+          terms=re.compile(r'portfolio|monthly|fortnight|weekly|download|scheme|document|api|ajax|year',re.I)
+          for i,u in enumerate(scripts[:80]):
+            try:
+              rr=c.get(u)
+              if rr.status_code!=200:continue
+              text=rr.text
+              if not terms.search(text):continue
+              name=f'script-{i}.js';(out/name).write_text(text,errors='replace')
+              snippets=[]
+              for m in list(terms.finditer(text))[:120]:
+                s=text[max(0,m.start()-350):m.start()+900].replace('\n',' ')
+                if s not in snippets:snippets.append(s)
+              urls=[]
+              for m in re.finditer(r'["\x27]([^"\x27]{3,300})["\x27]',text):
+                x=m.group(1)
+                if terms.search(x) and ('/' in x or 'api' in x.lower()) and x not in urls:urls.append(x)
+              row={'url':u,'file':name,'urls':urls[:150],'snippets':snippets[:80]}
+              rows.append(row)
+              print('BUNDLE',u)
+              for x in urls[:70]:print('URL',x)
+              for s in snippets[:12]:print('SNIP',s[:1200])
+            except Exception as e:
+              print('ERR',u,repr(e))
+          (out/'trace.json').write_text(json.dumps(rows,indent=2,ensure_ascii=False))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tata-portfolio-investigation
+          name: tata-api-trace
           path: audit/
           retention-days: 3
