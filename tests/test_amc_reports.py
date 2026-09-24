@@ -430,6 +430,53 @@ Month End AUM: Rs. 100 Cr''')
         discovery=(Path(__file__).resolve().parents[1]/'tracker'/'amc_discovery.py').read_text()
         self.assertIn("'ITI','Invesco','Mahindra'",discovery)
 
+    def test_bandhan_finance_api_selects_latest_two_closed_smallcap_workbooks(self):
+        from tracker.amc_discovery import discover
+        api_rows=[
+            {'id':3,'title':'Monthly and Half-Yearly - Bandhan Small Cap Fund 30 September 2026',
+             'acf_fields':{'funds_mapping':{'post_title':'Bandhan Small Cap Fund'},
+               'disclosure_files':[{'document_name':'Bandhan Small Cap Fund 30 September 2026',
+                 'document_link':{'url':'https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/10/sep.xlsx'}}]}},
+            {'id':2,'title':'Monthly and Half-Yearly - Bandhan Small Cap Fund 31 August 2026',
+             'acf_fields':{'funds_mapping':{'post_title':'Bandhan Small Cap Fund'},
+               'disclosure_files':[{'document_name':'Bandhan Small Cap Fund 31 August 2026',
+                 'document_link':{'url':'https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/aug.xlsx'}}]}},
+            {'id':1,'title':'Monthly and Half-Yearly - Bandhan Small Cap Fund 31 July 2026',
+             'acf_fields':{'funds_mapping':{'post_title':'Bandhan Small Cap Fund'},
+               'disclosure_files':[{'document_name':'Bandhan Small Cap Fund 31 July 2026',
+                 'document_link':{'url':'https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/08/jul.xlsx'}}]}},
+            {'id':4,'title':'Monthly and Half-Yearly - Bandhan Mid Cap Fund 31 August 2026',
+             'acf_fields':{'funds_mapping':{'post_title':'Bandhan Mid Cap Fund'},
+               'disclosure_files':[{'document_name':'Bandhan Mid Cap Fund 31 August 2026',
+                 'document_link':{'url':'https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/mid.xlsx'}}]}},
+        ]
+        with patch('tracker.amc_discovery.read',return_value=(json.dumps({'status':'200','data':api_rows}).encode(),'api','application/json')):
+            rows=list(discover('Bandhan'))
+        self.assertEqual([r[2] for r in rows],[
+            'Bandhan Small Cap Fund 31 August 2026',
+            'Bandhan Small Cap Fund 31 July 2026'])
+        self.assertTrue(all('/nonprod-static-assets-121to59kaawfgfi7bol/' in r[1] for r in rows))
+
+    def test_bandhan_storage_host_is_restricted_to_cms_bucket(self):
+        from tracker.disclosures import official_publication_url
+        good='https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/bandhan.xlsx'
+        bad='https://storage.googleapis.com/other-bucket/bandhan.xlsx'
+        self.assertTrue(official_publication_url(good,'Bandhan'))
+        self.assertFalse(official_publication_url(bad,'Bandhan'))
+
+    def test_v129_targets_only_bandhan_current_and_prior_partials(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v129'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Bandhan Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Jm Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Bandhan Small Cap Fund','https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/a.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v129'",source)
+        self.assertIn("amc_discovery.discover('Bandhan')",source)
+        self.assertIn("not latest['complete']",source)
+        self.assertIn("prior['positions']>=260",source)
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
