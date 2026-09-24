@@ -13,55 +13,43 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Test Bandhan UI filters on public disclosure API
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect latest public Bandhan equity-hybrid workbook
         run: |
-          python - <<'PY'
-          import urllib.request,urllib.parse,json,re
-          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          queries=[
-            {'posts_per_page':'2500','type':'SCHEME_PORTFOLIOS','bypass_pagination':'true'},
-            {'posts_per_page':'2500','subcategory':'monthly-and-half-yearly','bypass_pagination':'true'},
-            {'posts_per_page':'2500','type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','bypass_pagination':'true'},
-            {'posts_per_page':'2500','financial_year':'2026','subcategory':'monthly-and-half-yearly','bypass_pagination':'true'},
-            {'posts_per_page':'2500','acf_key':'disclosures_type','acf_value':'Monthly and Half-yearly Disclosures','financial_year':'2026','bypass_pagination':'true'},
-          ]
-          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
-          for params in queries:
-              url=base+'?'+urllib.parse.urlencode(params)
-              try:
-                  req=urllib.request.Request(url,headers=headers)
-                  with urllib.request.urlopen(req,timeout=40) as r:data=json.loads(r.read())
-                  rows=data.get('data') if isinstance(data,dict) else data
-                  rows=rows if isinstance(rows,list) else []
-                  print('QUERY',json.dumps(params,sort_keys=True),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows))
-                  matches=[]
-                  for item in rows:
-                      if not isinstance(item,dict):continue
-                      acf=item.get('acf_fields') or {}
-                      files=[]
-                      for entry in acf.get('disclosure_files') or []:
-                          link=(entry or {}).get('document_link') or {}
-                          name=str((entry or {}).get('document_name') or '').strip()
-                          fn=str(link.get('filename') or '').strip()
-                          target=str(link.get('url') or '').strip()
-                          fdate=str(link.get('date') or '').strip()
-                          blob=' '.join((name,fn,target))
-                          if re.search(r'(?:equity|hybrid|monthly).*portfolio|portfolio.*(?:equity|hybrid|monthly)',blob,re.I):
-                              files.append({'name':name,'filename':fn,'url':target,'file_date':fdate})
-                      title=str(item.get('title') or '')
-                      iblob=' '.join((title,str(acf.get('download_center_type') or ''),str(acf.get('disclosures_type') or ''),str(acf.get('financial_year') or '')))
-                      if files or re.search(r'portfolio',iblob,re.I):
-                          matches.append({'id':item.get('id'),'title':title,'date':item.get('date'),
-                                          'download_center_type':acf.get('download_center_type'),
-                                          'financial_year':acf.get('financial_year'),
-                                          'disclosures_type':acf.get('disclosures_type'),
-                                          'files':files})
-                  print('MATCH_COUNT',len(matches))
-                  for m in matches:
-                      recent=[x for x in m['files'] if re.search(r'2026|2025',json.dumps(x),re.I)]
-                      if recent or re.search(r'2026|2025',json.dumps(m),re.I):
-                          m['files']=recent
-                          print('MATCH',json.dumps(m,ensure_ascii=False))
-              except Exception as exc:
-                  print('ERROR',json.dumps(params,sort_keys=True),repr(exc))
+          uv run --frozen python - <<'PY'
+          import urllib.request,io,hashlib,json,re,openpyxl
+          from tracker.portfolio_parser import parse_sheet
+          url='https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2025/06/b100897c-bandhan-equity-hybrid-fund-portfolios-as-on-31-may-2025.xlsx'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=40) as r:
+              body=r.read()
+              print('SOURCE',r.status,r.headers.get('Content-Type'),len(body),hashlib.sha256(body).hexdigest())
+          assert body[:2]==b'PK'
+          book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+          for ws in book.worksheets:
+              cells=list(ws.iter_rows())
+              data=[[c.value for c in row] for row in cells]
+              formats=[[c.number_format or '' for c in row] for row in cells]
+              prefix=' '.join(str(v) for row in data[:35] for v in row if v not in (None,''))
+              if 'small cap' not in (ws.title+' '+prefix).lower():continue
+              parsed=parse_sheet(data,formats,'Bandhan Small Cap Fund')
+              print('SHEET',ws.title,'ROWS',len(data))
+              print('HEAD',prefix[:5000])
+              if parsed:
+                  print('PARSED',json.dumps({
+                    'day':parsed['day'],'complete':parsed['complete'],
+                    'positions':len(parsed['positions']),
+                    'weight':sum(x['weight'] for x in parsed['positions']),
+                    'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])
+                  },ensure_ascii=False))
+              for i,row in enumerate(data):
+                  txt=' | '.join(str(x) for x in row if x not in (None,''))
+                  if any(k in txt.lower() for k in ('company','total','net asset','treps','repo','cash','margin','derivative','small cap fund')):
+                      print('ROW',i+1,txt[:2200])
+          book.close()
           PY
