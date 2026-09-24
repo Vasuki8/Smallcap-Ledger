@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -461,6 +461,33 @@ def run():
         detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
         print(f'BAJAJ_V83_SNAPSHOT {detail}',flush=True)
         ok.append(False)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v84':
+        from tracker import amc_discovery
+        family='DSP Small Cap Fund';attempted=0
+        try:
+            for discovered_family,url,title in amc_discovery.discover('DSP'):
+                if discovered_family!=family:continue
+                attempted+=1
+                try:
+                    records=amc_discovery.store_report('DSP',family,url,title)
+                    print(f'DSP current month-end portfolio: {records} dated facts/holdings parsed from {url}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::DSP current month-end portfolio: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap and snap['as_of']>='2026-08-31' and snap['positions']>=20:break
+        except Exception as exc:
+            print(f"::warning::DSP month-end discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['positions']>=20)
+        if current:print(f'DSP current portfolio verified at {snap["as_of"]}: {snap["positions"]} positions, complete={snap["complete"]}',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::DSP current portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
