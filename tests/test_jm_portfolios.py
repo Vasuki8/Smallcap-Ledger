@@ -104,7 +104,7 @@ class JmPortfolioTests(unittest.TestCase):
         parsed = parse_sheet(rows, formats, 'Jm Small Cap Fund')
         self.assertIsNotNone(parsed)
         self.assertEqual(parsed['day'], '2026-08-31')
-        self.assertTrue(parsed['complete'])
+        self.assertTrue(parsed['complete'], parsed)
         self.assertEqual(len(parsed['positions']), 2)
         self.assertEqual(parsed['positions'][1]['name'], 'CCIL')
         self.assertEqual(parsed['positions'][1]['asset_type'], 'Money market')
