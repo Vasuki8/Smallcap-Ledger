@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-24T22:15:26+00:00
+Prepared: 2026-09-24T23:05:32+00:00
 
 **36 funds, 143 NAV series, 281,442 NAV observations. Latest included NAV: 2026-09-24.**
 
@@ -25,7 +25,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | HDFC Small Cap Fund | ₹ 42,099.32 · 2026-09-23 | 0.78% TER · 2026-09-22 | 87 positions · 2026-08-31 · complete · current | BSE 250 SmallCap Index (Total Returns Index) · 2026-09-24 | 17 |
 | HSBC Small Cap Fund | ₹ 19,210.59 · 2026-09-23 | 0.77% TER · 2026-09-23 | 115 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 3 |
 | Helios Small Cap Fund | ₹ 1,908.67 · 2026-09-23 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | Nifty Small Cap 250 Total Return Index (TRI) · 2026-09-23 | 165 |
-| ICICI Prudential Small Cap Fund | ₹ 9,922.53 · 2026-09-23 | 0.7% BER · 2026-08-31 | 83 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2026-08-31 | 1 |
+| ICICI Prudential Small Cap Fund | ₹ 9,922.53 · 2026-09-23 | 1.18% TER · 2026-09-23 | 83 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2026-08-31 | 1 |
 | Invesco India Small Cap Fund | ₹ 16,523.94 · 2026-09-23 | 0.4% BER · 2026-08-31 | 72 positions · 2026-08-31 · complete · current | BSE 250 Smallcap TRI · 2026-08-31 | 5 |
 | Iti Small Cap Fund | ₹ 3,756.09 · 2026-09-23 | 0.86% TER · 2026-09-24 | 87 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 9 |
 | Jm Small Cap Fund | ₹ 955.14 · 2026-09-23 | 0.59% BER · 2026-08-31 | 85 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-06-30 | 6 |
