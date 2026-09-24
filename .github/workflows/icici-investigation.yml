@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Query portfolio-related ICICI statutory files
+      - name: Query exact ICICI portfolio disclosure categories
         run: |
           python - <<'PY'
           import urllib.request,uuid,json,re
@@ -26,54 +26,57 @@ jobs:
               headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
               data=json.dumps(body).encode() if body is not None else None
               req=urllib.request.Request(url,data=data,headers=headers,method=method)
-              try:
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      b=r.read();print('FETCH',method,url,r.status,r.headers.get('Content-Type'),len(b))
-                      return json.loads(b.decode('utf-8','replace'))
-              except Exception as e:
-                  print('ERROR',method,url,repr(e))
-                  if getattr(e,'read',None):
-                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:30000])
-                      except:pass
-                  return {}
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  b=r.read();print('FETCH',method,url,r.status,len(b))
+                  return json.loads(b.decode('utf-8','replace'))
           trees=[]
           for disclosure in ('','STATUTORY_DISCLOSURES'):
               url=base+'/fds/v1/categories?userType=Investor'
               if disclosure:url+='&disclosureType='+disclosure
               data=request(url)
-              rows=((data.get('success') or {}).get('data') or [])
-              trees.extend(rows)
-          matches=[]
+              trees.extend(((data.get('success') or {}).get('data') or []))
+          candidates=[]
           for cat in trees:
-              catblob=json.dumps(cat,ensure_ascii=False)
               for sub in cat.get('subCategory') or []:
-                  blob=' '.join([
-                    str(cat.get('internalName') or ''),
-                    str((cat.get('title') or {}).get('text') or ''),
-                    str(sub.get('internalName') or ''),
-                    str((sub.get('title') or {}).get('text') or ''),
+                  text=' | '.join([
+                      str(cat.get('internalName') or ''),
+                      str((cat.get('title') or {}).get('text') or ''),
+                      str(sub.get('internalName') or ''),
+                      str((sub.get('title') or {}).get('text') or ''),
+                      str((sub.get('title') or {}).get('code') or ''),
                   ])
-                  if re.search(r'portfolio|monthly|scheme disclosure|holding',blob,re.I):
-                      row={'parent_id':cat.get('id'),'parent_title':cat.get('title'),
-                           'type':cat.get('type'),'sub':sub}
-                      if row not in matches:matches.append(row)
-          print('MATCHES',json.dumps(matches,ensure_ascii=False,indent=2)[:120000])
+                  if re.search(r'portfolio|holding|scheme.?wise|monthly',text,re.I):
+                      row={'parent':str((cat.get('title') or {}).get('text') or ''),
+                           'parent_id':cat.get('id'),'type':cat.get('type'),
+                           'sub_id':sub.get('id'),'sub_title':str((sub.get('title') or {}).get('text') or ''),
+                           'sub_code':str((sub.get('title') or {}).get('code') or ''),
+                           'internal':str(sub.get('internalName') or ''),
+                           'filters':sub.get('filter') or []}
+                      key=(row['sub_id'],row['type'])
+                      if key not in [(x['sub_id'],x['type']) for x in candidates]:candidates.append(row)
+          for row in candidates:
+              print('CANDIDATE',json.dumps(row,ensure_ascii=False,separators=(',',':')))
 
-          # Replay exact Financials controller payload for every plausible portfolio subcategory.
-          for row in matches:
-              sub=row['sub']; sid=sub.get('id')
-              title=str((sub.get('title') or {}).get('text') or '')
-              if not sid or not re.search(r'portfolio|holding',title+' '+str(sub.get('internalName') or ''),re.I):
-                  continue
+          for row in candidates:
+              title=' '.join([row['parent'],row['sub_title'],row['sub_code'],row['internal']])
+              if not re.search(r'portfolio|holding',title,re.I):continue
               filters=[]
-              for filt in sub.get('filter') or []:
+              for filt in row['filters']:
                   key=str((filt.get('key') or {}).get('code') or '')
-                  if key=='FINANCIAL_YEAR':
-                      vals=[v.get('code') for v in filt.get('value') or [] if v.get('code')=='2026-2027']
-                      if vals:filters.append({key:vals})
-              body={'categoryId':sid,'userType':'Investor','fileType':'All',
-                    'page':'1','size':'50','filter':filters,'search':''}
-              print('REQUEST',title,json.dumps(body,sort_keys=True))
+                  vals=[]
+                  for v in filt.get('value') or []:
+                      code=v.get('code')
+                      if key=='FINANCIAL_YEAR' and code=='2026-2027':vals.append(code)
+                      if key=='MONTH' and str(code).strip() in ('August','July'):vals.append(code)
+                  if vals:filters.append({key:vals})
+              body={'categoryId':row['sub_id'],'userType':'Investor','fileType':'All',
+                    'page':'1','size':'100','filter':filters,'search':''}
+              print('REQUEST',row['sub_title'],json.dumps(body,separators=(',',':')))
               out=request(base+'/fds/v1/files','POST',body)
-              print('FILES',title,json.dumps(out,ensure_ascii=False)[:100000])
+              data=((out.get('success') or {}).get('data') or [])
+              print('FILE_COUNT',row['sub_title'],len(data))
+              for item in data:
+                  blob=json.dumps(item,ensure_ascii=False)
+                  if re.search(r'small\s*cap|portfolio|august|july',blob,re.I):
+                      print('FILE_ITEM',row['sub_title'],json.dumps(item,ensure_ascii=False,separators=(',',':'))[:12000])
           PY
