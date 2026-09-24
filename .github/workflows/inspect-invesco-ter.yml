@@ -1,49 +1,38 @@
-name: Inspect Invesco TER disclosure
+name: Validate Invesco TER collector
 
 on:
   push:
     branches: [backend/invesco-ter-v132]
-    paths: [.github/workflows/inspect-invesco-ter.yml]
 
 permissions:
   contents: read
 
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - name: Verify Invesco TER API payload
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run --frozen python -m compileall -q tracker scripts tests
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Verify live Invesco Small Cap TER disclosure
         run: |
-          python - <<'PY'
-          import json,re,urllib.parse,urllib.request
-          base='https://www.invescomutualfund.com'
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Accept':'application/json, text/plain, */*','Referer':base+'/statutory-disclosures/ter-mutual-fund-since-2026/ter'}
-          def get(path):
-              url=base+path
-              req=urllib.request.Request(url,headers=UA)
-              with urllib.request.urlopen(req,timeout=45) as r:
-                  b=r.read(); print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl()); return b
-          plans=json.loads(get('/api/Common/GetAllPlans'))
-          print('PLANS_TYPE',type(plans).__name__,'COUNT',len(plans) if isinstance(plans,list) else None)
-          for x in plans if isinstance(plans,list) else []:
-              if 'small cap' in json.dumps(x).lower():
-                  print('SMALL_PLAN',json.dumps(x,ensure_ascii=False,sort_keys=True))
-          for month in [0,6,7,8,9]:
-              q=urllib.parse.urlencode({'title':'Invesco India Small Cap Fund','fincialYear':2026,'month':month})
-              try:data=json.loads(get('/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?'+q))
-              except Exception as e:
-                  print('API_ERROR',month,type(e).__name__,e);continue
-              print('MONTH',month,'TYPE',type(data).__name__,'COUNT',len(data) if isinstance(data,list) else None)
-              if isinstance(data,list):
-                  for row in data[-5:]:
-                      print('ROW',month,json.dumps(row,ensure_ascii=False,sort_keys=True))
-              else:
-                  print('DATA',month,json.dumps(data,ensure_ascii=False)[:2000])
-          # Extract month map from production bundle.
-          js=get('/_next/static/chunks/9240-6f2168c4a7a555d2.js').decode('utf-8','ignore')
-          anchor=js.find('function J(){')
-          pre=js[max(0,anchor-5000):anchor]
-          print('MONTH_MAP_CONTEXT',re.sub(r'\s+',' ',pre))
+          uv run --frozen python - <<'PY'
+          from datetime import date
+          from tracker import amc_expenses,db
+          db.init()
+          source,day,plans,content_hash=amc_expenses._invesco_disclosure(date.today())
+          assert source.startswith(amc_expenses.INVESCO_TER_API+'?')
+          assert set(plans)=={'Regular','Direct'}
+          assert 0 <= plans['Direct']['base_expense_ratio'] <= plans['Direct']['ter'] <= 5
+          assert 0 <= plans['Regular']['base_expense_ratio'] <= plans['Regular']['ter'] <= 5
+          print('INVESCO_VERIFIED',day,plans)
+          print('INVESCO_SOURCE',source)
+          print('INVESCO_HASH',content_hash)
           PY
