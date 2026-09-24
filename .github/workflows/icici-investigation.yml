@@ -13,23 +13,22 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Identify exact ICICI Downloads lazy chunk
+      - name: Resolve ICICI Downloads router component
         run: |
           python - <<'PY'
           import urllib.request,re
           req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
                                      headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
           with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
-          # RootRouter destructures NEWS_MEDIA_DOWNLOADS:Jr. Find the nearest Jr assignment.
-          for pat in (r'Jr=reactExports\.lazy\(\(\)=>__vitePreload\(\(\)=>import\("\.\/([^"]+\.js)"\)',
-                      r'Jr\s*=\s*reactExports\.lazy[^;]{0,500}import\("\.\/([^"]+\.js)"\)'):
+          for pat in (r'path:Jr',r'path:\s*Jr',r'Jr\}\)',r'Jr,'):
               ms=list(re.finditer(pat,js))
-              print('PAT',pat,'COUNT',len(ms))
-              for m in ms:
-                  print('CHUNK',m.group(1))
-                  print('ASSIGN',js[max(0,m.start()-1000):m.end()+2500])
-          # Also show all lazy assignments with symbol Jr-like context.
-          for m in re.finditer(r'([A-Za-z_$][A-Za-z0-9_$]*)=reactExports\.lazy\(\(\)=>__vitePreload\(\(\)=>import\("\.\/([^"]+\.js)"\)',js):
-              if m.group(1) in ('Jr','Zt','wr','ur'):
-                  print('LAZY',m.group(1),m.group(2))
+              print('PAT',pat,'COUNT',len(ms),'POS',[m.start() for m in ms[:20]])
+              for m in ms[:12]:
+                  i=m.start();print('CTX',re.sub(r'\s+',' ',js[max(0,i-3500):i+7000]))
+          # Search for the literal component label if retained.
+          for needle in ('DownloadsPage','DownloadsLazy','NewsMediaDownloads','DownloadPage'):
+              ms=list(re.finditer(needle,js,re.I))
+              print('NAME',needle,'COUNT',len(ms))
+              for m in ms[:8]:
+                  i=m.start();print('NAME_CTX',js[max(0,i-2500):i+5000])
           PY
