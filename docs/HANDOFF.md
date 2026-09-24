@@ -41,7 +41,7 @@ The tracker stores the API's explicit **Total TER** value. It does **not** calcu
 Production #467 logged:
 `Invesco India Small Cap Fund: official BER/TER as of 2026-09-23 (Direct 0.41%/0.63% BER/TER)`
 
-Status commit `e559c7b` records the published coverage state. Pages artifact **10838957887** is **230,728,637 bytes** with digest `sha256:2afd9b34e0e4a53f1ad2f60d645205644b2d58136ce3b78ab480b72680de3176`.
+Status commit `e559c7b4c8bd27fdd74b1cb708fea502bca6b77e` records the published coverage state. Pages artifact **10838957887** is **230,728,637 bytes** with digest `sha256:2afd9b34e0e4a53f1ad2f60d645205644b2d58136ce3b78ab480b72680de3176`.
 
 ### ICICI Prudential state catch-up
 
@@ -53,7 +53,7 @@ ICICI's production source is the exact TER workbook discovered through its first
 Retained workbook SHA-256:
 `d40c69429f907bd1f967a908884ab3feb330ecb7395d402f7a50c64976cd5488`
 
-Latest ICICI Prudential Small Cap observation is **2026-09-23**: Direct **BER 0.70% / Total TER 1.18%**. The collector discovers the workbook from ICICI's exact current TER category/subcategory metadata, parses the source OOXML rows conservatively, and stores only explicit published BER/Total TER values. Production #466 Pages artifact **10838356588** is **230,726,093 bytes** with digest `sha256:039a593f3bb605eeccfb53eabe0adbb41347cf0ef5045a678b2125aeb663008b`.
+Latest ICICI Prudential Small Cap observation is **2026-09-23**: Regular **BER 1.50% / Total TER 2.10%** and Direct **BER 0.70% / Total TER 1.18%**. The retained workbook is **238,073 bytes**. The collector discovers the workbook from ICICI's exact current TER category/subcategory metadata, parses the source OOXML rows conservatively, and stores only explicit published BER/Total TER values. Production #466 Pages artifact **10838356588** is **230,726,093 bytes** with digest `sha256:039a593f3bb605eeccfb53eabe0adbb41347cf0ef5045a678b2125aeb663008b`.
 
 ### Expense coverage after ICICI + Invesco
 
@@ -78,110 +78,6 @@ The four remaining funds without reported TER are **Axis, JM, Mahindra Manulife 
 After JM, continue with **Mahindra Manulife** and **Mirae Asset**. **Axis** remains special: its current fund page exposes only an unqualified Direct **Expense Ratio 0.71% as of 2026-09-23**. Keep that as `expense_ratio`; do not promote it to TER or BER without an explicitly labelled official source.
 
 No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in the ICICI/Invesco expense-recovery batches.
-
-## Latest completed batch: Invesco India Small Cap TER/BER recovery
-
-**Invesco India Small Cap Fund now has current, explicitly labelled BER and Total TER from Invesco Mutual Fund's own statutory-disclosure API.**
-
-PR #97 merged as commit `6c3fd457f2f15623d8d5066fad0398f950a22c38`. Isolated validation run **36073035236** passed compileall, all **235 tests**, and a live end-to-end check of Invesco's public plan selector plus TER API. Production workflow **#467**, run **36073145561**, then passed the one-time Invesco recovery, the same **235-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The production run completed successfully at **2026-09-24T23:32:42Z**.
-
-### Invesco source and retained observation
-
-Current statutory TER page:
-
-`https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter`
-
-The live page uses these first-party APIs:
-
-- plan selector: `https://www.invescomutualfund.com/api/Common/GetAllPlans`
-- TER data: `https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData`
-
-The tracker accepts only the exact plan-selector entry **Invesco India Small Cap Fund** and TER rows with exact NSDL scheme code **INVM/O/E/SCF/18/07/0030**. The live September request retained in production is:
-
-`https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Small+Cap+Fund&fincialYear=2026&month=9`
-
-Note that `fincialYear` is intentionally spelled that way because it is the parameter used by Invesco's live site. The collector checks the current month and can fall back to the immediately previous month during month-roll publication lag. It archives the exact first-party JSON response used for the retained observation.
-
-Latest exact row: **2026-09-23**
-
-| Plan | BER | Brokerage | Transaction cost | Statutory levies incl. GST | Total TER |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Regular | **1.44%** | 0.05% | 0.00% | 0.34% | **1.83%** |
-| Direct | **0.41%** | 0.05% | 0.00% | 0.17% | **0.63%** |
-
-The tracker stores the API's explicit **Total TER** value; component arithmetic is only a validation/rejection check. It rejects wrong scheme/NSDL identity, duplicate latest rows, future dates, missing/out-of-range values, Total TER below BER, and non-reconciling components.
-
-Production #467 logged:
-
-`Invesco India Small Cap Fund: official BER/TER as of 2026-09-23 (Direct 0.41%/0.63% BER/TER)`
-
-Production source-response hash:
-
-`4f2681e5a50ed4b7609537a226d56cab713dbcfc9763012179b70d4493bb0de7`
-
-`scripts/refresh_invesco_expenses.py` performed the idempotent push recovery and records `source_upgrade_invesco-ter-v1` only after recent Regular/Direct BER+TER observations exist with one exact Invesco API source and one non-empty source hash. Normal nightly collection remains active through `amc_expenses.update`.
-
-Status commit `e559c7b4c8bd27fdd74b1cb708fea502bca6b77e` records the published state. Pages artifact **10838957887** is **230,728,637 bytes** with digest `sha256:2afd9b34e0e4a53f1ad2f60d645205644b2d58136ce3b78ab480b72680de3176`.
-
-### Current coverage after Invesco
-
-Coverage generated at **2026-09-24T23:31:41Z** is:
-
-- reported TER: **32 / 36**
-- base expense ratio / BER: **33 / 36**
-- dated Direct fee fallback: **36 / 36**
-- AUM: **36 / 36**
-- benchmark identity: **36 / 36**
-- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
-
-Invesco's current Direct fee is now explicit **TER 0.63%**, with **BER 0.41%**, both dated **2026-09-23**. Its current AUM is **₹16,523.94 crore as of 2026-09-23** via AMFI. Its August portfolio remains complete at **72 positions as of 2026-08-31**.
-
-The four remaining funds without reported TER are **Axis, JM, Mahindra Manulife and Mirae Asset**. The three remaining BER gaps are **Axis, Groww and UTI**.
-
-### Next backend task
-
-**JM Small Cap Fund is the next preferred TER target.** The tracker already retains Direct BER **0.59% as of 2026-08-31** from JM Financial's official September factsheet:
-
-`https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20September%202026.pdf`
-
-JM's public first-party download API is already integrated for monthly portfolio recovery, so first inspect that same public ecosystem and JM's current statutory/expense disclosures for an explicitly labelled Total TER. Store Total TER only if JM publishes it directly; do not derive it from BER, GST, brokerage or any other components. Preserve exact date, source URL/document identity and hash.
-
-After JM, continue **Mahindra Manulife** and **Mirae Asset**. Axis remains special because its current live fund page exposes an unqualified **Expense Ratio** rather than an explicit TER/BER; keep `expense_ratio` distinct until an explicit labelled source is found.
-
-No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in this Invesco batch.
-
-## Completed batch immediately before Invesco: ICICI Prudential Small Cap TER/BER recovery
-
-**ICICI Prudential Small Cap Fund now has current, explicitly labelled BER and Total TER from its official Financials & Disclosures workbook.**
-
-PR #96 merged as commit `46eb738ee80f98c6d15517a48e7a618de70a21bc`. Isolated validation run **36070801500** passed compileall, all **230 tests**, and the live public Financials & Disclosures API -> workbook -> strict OOXML parser verification. Production workflow **#466**, run **36070920935**, passed the one-time ICICI recovery, the same **230-test** regression gate, site/download validation, cumulative-history publication and GitHub Pages deployment.
-
-ICICI's public Financials & Disclosures application identifies the enabled **Total Expense Ratio / TER Details** category through its first-party API and returns the current workbook rather than requiring the tracker to guess a filename. The retained September source is:
-
-`https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx`
-
-Exact workbook evidence:
-
-- bytes: **238,073**
-- SHA-256: `d40c69429f907bd1f967a908884ab3feb330ecb7395d402f7a50c64976cd5488`
-- latest exact Small Cap row: **2026-09-23**
-
-| Plan | BER | Total TER |
-| --- | ---: | ---: |
-| Regular | **1.50%** | **2.10%** |
-| Direct | **0.70%** | **1.18%** |
-
-The current ICICI XLSX contains valid inline-string worksheet rows but malformed worksheet dimension metadata that causes ordinary openpyxl row iteration to expose only the first row. The production parser therefore reads the standard OOXML worksheet cells directly and requires the exact TER title, Regular/Direct headings, BER/brokerage/transaction/statutory/Total TER columns, exact **ICICI Prudential Small Cap Fund** identity, a unique newest non-future row and component reconciliation. The workbook's explicit Total TER is stored directly; components are not used to manufacture TER.
-
-Production #466 logged:
-
-`ICICI Prudential Small Cap Fund: official BER/TER as of 2026-09-23 (Direct 0.70%/1.18% BER/TER)`
-
-and retained the exact source and hash above.
-
-Status commit `6aa4ae48c7828343726922ed22eedb8ac6694936` recorded the post-ICICI state, where reported TER coverage had risen to **31 / 36**. Pages artifact **10838356588** is **230,726,093 bytes** with digest `sha256:039a593f3bb605eeccfb53eabe0adbb41347cf0ef5045a678b2125aeb663008b`.
-
-ICICI's earlier portfolio ZIP/archive-DNS limitations remain a separate portfolio-source issue; they do not affect this verified TER source.
 
 ## Latest completed batch: HSBC Small Cap detailed TER/BER recovery
 
