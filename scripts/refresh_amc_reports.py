@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,36 +230,33 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v70':
-        from urllib.parse import urljoin
-        base='https://www.pgimindia.com/api/v1/'
-        details_url=base+'brochure/published/disclosure'
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v71':
+        from tracker import amc_discovery
+        family='Pgim India Small Cap Fund';attempted=0
         try:
-            payload={'headerId':2,'sectionId':'SECTION_747960037'}
-            providers.can_crawl(details_url)
-            body,_,mime=providers.fetch(details_url,body=payload,max_bytes=15*1024*1024)
-            detail=json.loads(body)
-            print(f'PGIM_V70_DETAIL mime={mime} bytes={len(body)} result={json.dumps(detail.get("resultInfo"),ensure_ascii=False)}',flush=True)
-            matches=[]
-            def walk(value,path='root'):
-                if isinstance(value,dict):
-                    blob=' '.join(str(v) for v in value.values() if isinstance(v,(str,int,float)))
-                    if re.search(r'PGIM INDIA SMALL CAP FUND|Small Cap Fund|August|Aug\s+2026|31[ /-]*08[ /-]*2026',blob,re.I):
-                        matches.append((path,value))
-                    for k,v in value.items():walk(v,path+'.'+str(k))
-                elif isinstance(value,list):
-                    for i,v in enumerate(value):walk(v,f'{path}[{i}]')
-            walk(detail)
-            for path,row in matches[:120]:
-                print('PGIM_V70_MATCH '+path+' '+json.dumps(row,ensure_ascii=False)[:7000],flush=True)
-            # Identify exact file-like strings from matched rows without guessing names.
-            for path,row in matches:
-                blob=json.dumps(row,ensure_ascii=False)
-                for m in re.finditer(r'https?://[^"\\\s]+|/[^"\\\s]+\.(?:xlsx?|xls|pdf)(?:\?[^"\\\s]*)?',blob,re.I):
-                    value=m.group(0).replace('\\/','/')
-                    print('PGIM_V70_FILE '+path+' '+value[:1800],flush=True)
+            for discovered_family,url,title in amc_discovery.discover('PGIM'):
+                if discovered_family!=family:continue
+                attempted+=1
+                try:
+                    records=amc_discovery.store_report('PGIM',family,url,title)
+                    print(f'PGIM current monthly portfolio: {records} dated facts/holdings parsed from {url}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::PGIM current monthly portfolio: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
         except Exception as exc:
-            print(f"::warning::PGIM v70 detail diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:500]}",flush=True)
+            print(f"::warning::PGIM monthly portfolio discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:print(f'PGIM current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::PGIM current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
