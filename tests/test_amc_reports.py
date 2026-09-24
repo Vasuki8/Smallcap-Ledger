@@ -741,6 +741,29 @@ Top 10 holdings Grand Total 100.00%'''
             'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf',
             'The Asset - August 2026'))
 
+    def test_mirae_discovery_uses_official_portfolio_service(self):
+        from tracker import amc_discovery
+        payload=json.dumps({'ReturnCode':'0','DataCount':3,'Data':[
+            {'Title':'Monthly Portfolio as on July 31, 2026',
+             'URL':'/docs/monthly-portfolio-july-2026.pdf','PublishDate':'/Date(1785456000000)/'},
+            {'Title':'Monthly Portfolio as on August 31, 2026',
+             'URL':'/docs/monthly-portfolio-august-2026.xlsx','PublishDate':'/Date(1788134400000)/'},
+            {'Title':'Monthly Portfolio as on August 31, 2026 PDF',
+             'URL':'/docs/monthly-portfolio-august-2026.pdf','PublishDate':'/Date(1788134400000)/'},
+        ]}).encode()
+        def fake_read(url,body=None):
+            self.assertEqual(url,'https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData')
+            self.assertEqual(body,{'request':{'modulename':'portfolio_tab1','pgno':1,'pgsize':50}})
+            return payload,'api','application/json'
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(amc_discovery.discover('Mirae'))
+        self.assertEqual(rows[0],(
+            'Mirae Asset Small Cap Fund',
+            'https://www.miraeassetmf.co.in/docs/monthly-portfolio-august-2026.xlsx',
+            'Monthly Portfolio as on August 31, 2026'))
+        self.assertEqual(len(rows),3)
+
     def test_pgim_discovery_uses_official_disclosure_api_for_latest_smallcap_workbook(self):
         from tracker import amc_discovery
         payload=json.dumps({'resultInfo':{'resultCodeId':'1'},'data':[{
