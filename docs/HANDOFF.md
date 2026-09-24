@@ -1,8 +1,37 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after Sundaram production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after Invesco production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
 
-## Latest completed task: Sundaram richer current portfolio with verified completeness blocker
+## Latest completed task: Invesco complete current + prior monthly portfolio recovery
+
+Merged PR #90 as commit `fb2548153b360612366006afe6c7a8a0f36f0970`. Production workflow **#460**, run **36019462111**, passed cumulative-history restore, parser v127 recovery, all **199 tests**, generated-site/download validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T15:20:56Z**, status was recorded at **2026-09-24T15:21:18Z**, and the workflow completed successfully at **2026-09-24T15:21:58Z**.
+
+Invesco's current Next.js site exposes the same first-party read-only API used by its Monthly Holdings page: `GET https://www.invescomutualfund.com/api/CompleteMonthlyHoldings?year=<YEAR>&classification=equity`. The API returns exact fund/month workbook URLs. Discovery now selects only the exact **Invesco India Small Cap Fund** row and only the newest two closed calendar months, including January/year rollover handling. Registered-host and workbook-extension checks remain mandatory.
+
+Official source evidence retained in production:
+
+| Reporting date | Positions | Complete | Weight | Quantities | Workbook AUM | SHA-256 |
+| --- | ---: | --- | ---: | ---: | ---: | --- |
+| 2026-08-31 | 72 | Yes | 100.00% | 70 | ₹15,744.4025 Cr | `f8c3405c0c83ed24502bb4b2f95bff7a0e1022d4dceaf7df3b414029716df83d` |
+| 2026-07-31 | 67 | Yes | 100.00% | 65 | ₹14,474.7868 Cr | `7d4924d152355a89a3359176857e5cb7d20d9df1071d3fd3387b5e2e6277fb00` |
+
+Exact official workbooks:
+- August: `https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/small-cap.xlsx?sfvrsn=7d249fc2_0`
+- July: `https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/smallcap1d1dfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=6f59fc2_0`
+
+No holdings-parser relaxation was required. The existing structured parser already reconciles the August workbook's **95.25% equity section + 5.19% Triparty Repo + other explicit rows to Grand Total 100%**, with no unknown rows. July also reconciles to 100%. The source-reported quantities are retained, so current/prior share-change comparisons can use 70 August and 65 July quantity-bearing positions where the holdings align.
+
+The website's latest displayed AUM remains the newer **₹16,369.99 crore as of 2026-09-22** observation; the August/July workbook AUM values remain separate historical evidence and are not promoted over a newer observation.
+
+`amc_discovery` now includes Invesco in the normal nightly collector. Parser v127's one-time push recovery is marked successful only after **both** the August current and July prior snapshots are complete and reconcile to 100%. Failed retrieval preserves prior data and leaves the upgrade retryable.
+
+Final isolated validation run **36019264349** passed **199 tests** and live API → workbook ingestion. It verified exact scheme identity, two closed months, January rollover, registered-host rejection, nightly integration, the verified Triparty Repo workbook layout, exact hashes/dates/position counts/AUM, and 70/65 source quantities. Production #460 independently logged: **Invesco current and prior complete portfolios verified: 2026-08-31, 72 positions, 100.00% weight, complete=1; prior 2026-07-31, 67 positions, 100.00% weight, complete=1**.
+
+Pages artifact **10815962825** was generated at **231,158,139 bytes** with digest `sha256:b584e3dad71a95cdf36b0bdd49079d33c4b3f9365110077d4bb4393a06802c32`. No UI, dependency, permission, schedule, paid-service or archive-retention changes were made.
+
+Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/90 ; validation https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36019264349 ; production https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36019462111 .
+
+## Previous completed task: Sundaram richer current portfolio with verified completeness blocker
 
 Merged PR #89 as commit `49a271401b12813465b69a4f9b8a64b294b29ff5`. Production workflow **#459**, run **36017028358**, passed cumulative-history restore, parser v126 recovery, all regression tests, generated-site/download validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T15:01:33Z**, status was recorded at **2026-09-24T15:01:56Z**, and the workflow completed successfully at **2026-09-24T15:03:15Z**.
 
@@ -115,19 +144,21 @@ Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/86 ; validation htt
 
 ## Verified coverage after this batch
 
-Coverage at **2026-09-24T15:01:33Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
+Coverage at **2026-09-24T15:20:56Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
 
-Portfolios remain **34/36 with holdings; 26 complete; 33 current; 26 current and complete; 8 partial**. The expected month-end is **2026-08-31**. This batch intentionally did **not** increase the complete count: Sundaram improved from 73 to 77 explicit numeric positions, but its AMC-published `# = less than 0.01%` holding prevents exact numeric reconciliation of every security.
+Portfolios: **34/36 with holdings; 27 complete; 33 current; 27 current and complete; 7 partial**. The expected month-end is **2026-08-31**. Invesco improved complete/current-complete coverage **26 -> 27** without changing the 33-fund freshness count because its prior 69-position factsheet snapshot was already current.
 
-The production status audit at **2026-09-24T15:01:56Z** records 109 retained portfolio snapshots, 1,485 archived document records, 1,929,141,711 archive bytes and 2,028,412,367 total retained bytes. The Pages publication budget remains unchanged at 250 MiB for saved publication files.
+The remaining collected partials are **Axis, Bajaj Finserv, Edelweiss, ICICI Prudential, JM, Sundaram and UTI**. Bajaj Finserv is the only stale collected portfolio; the other six partials are current under the August freshness target.
+
+The production status audit at **2026-09-24T15:21:18Z** records **111 retained portfolio snapshots, 1,487 archived document records, 1,929,413,449 archive bytes, 99,307,520 database bytes and 2,028,720,969 total retained bytes**. The Pages publication-file budget remains unchanged at 250 MiB.
 
 ## Next backend task and remaining blockers
 
-1. **Invesco India Small Cap Fund is the next preferred investigation target.** It is current at **69 positions dated 2026-08-31** but partial. Audit the official August factsheet/current disclosure routes for a complete monthly portfolio source; prefer an exact first-party structured workbook/API if exposed. Do not promote an aggregate or factsheet-only holdings view unless every published asset section reconciles.
-2. Other current partial portfolios are **Axis, Edelweiss, ICICI Prudential, JM, Sundaram and UTI**. Sundaram is now a documented data-model/source-precision blocker because one holding is disclosed only as `<0.01%`; do not retry it unless a future AMC source supplies the exact weight or the holdings schema is deliberately extended for censored values. UTI's existing exposure ZIP also abbreviates some small/short-term positions, so do not infer completeness from its current 108-row partial.
-3. **Axis** remains a documented first-party access/discovery blocker. **Edelweiss** and **JM** currently expose supported named/top-holdings views rather than proven complete tables.
-4. **Bajaj Finserv** remains the only stale collected portfolio: 13 partial positions dated 2026-07-31. Retry only with genuinely new first-party access evidence.
+1. **ICICI Prudential Small Cap Fund is the next preferred investigation target.** Current coverage is **83 named positions dated 2026-08-31, partial**. The supported factsheet parser intentionally stays partial because the factsheet separately reports an **"Equity less than 1% of corpus"** aggregate without naming those constituents. Investigate ICICI's first-party statutory/monthly portfolio disclosure route for a complete scheme workbook or structured file; do not turn the factsheet aggregate into invented holdings.
+2. **Sundaram** is a documented source-precision/data-model blocker: one written-off holding is disclosed only as `<0.01%`. **UTI** remains partial because its current exposure source abbreviates small/short-term positions. Do not infer exact weights for either.
+3. **Axis** remains a first-party access/discovery blocker. **Edelweiss** and **JM** currently expose supported top/named-holdings views rather than a proven complete portfolio source.
+4. **Bajaj Finserv** remains the only stale collected portfolio: **13 partial positions dated 2026-07-31**. Retry only with genuinely new first-party access evidence.
 5. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
-6. Temporary investigation branches are not production source of truth. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
+6. Quant, SBI, Tata, TRUSTMF and Invesco are completed structured recovery targets; do not rerun those batches unnecessarily. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
 
-Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never invent an exact number for a threshold/censored disclosure merely to improve completeness. Do not rerun completed Quant/SBI/Tata/TRUSTMF recovery work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
+Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never invent an exact number or unnamed constituent merely to improve completeness. Avoid broad historical reparses unless a source/parser change genuinely requires them. Update this handoff after the next completed batch.
