@@ -10,34 +10,88 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_DATA_DIR: /tmp/icici-investigation
+      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
-      - name: Trace ICICI portfolio ZIP redirect
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Fetch ICICI ZIP through verified-host DNS fallback
         run: |
-          python - <<'PY'
-          import urllib.request,urllib.parse
-          class NoRedirect(urllib.request.HTTPRedirectHandler):
-              def redirect_request(self, req, fp, code, msg, headers, newurl):
-                  return None
-          opener=urllib.request.build_opener(NoRedirect)
-          path='/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip'
+          rm -rf "$SMALLCAP_DATA_DIR"; mkdir -p "$SMALLCAP_DATA_DIR"
+          uv run --frozen python - <<'PY'
+          import json,subprocess,ipaddress,urllib.request,zipfile,io,hashlib,re
+          import openpyxl,xlrd
+          from tracker.portfolio_parser import parse_sheet
+
+          def doh(host):
+              url='https://dns.google/resolve?name='+host+'&type=A'
+              req=urllib.request.Request(url,headers={'User-Agent':'SmallcapLedger/1.0','Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=20) as r:data=json.load(r)
+              ips=[]
+              for ans in data.get('Answer') or []:
+                  value=str(ans.get('data') or '')
+                  try:
+                      ip=ipaddress.ip_address(value)
+                      if ip.version==4 and ip.is_global:ips.append(value)
+                  except ValueError:pass
+              if not ips:raise RuntimeError('No public A record from DNS-over-HTTPS for '+host)
+              return ips[0]
+
+          hosts=['archive.icicipruamc.com','www.archive.icicipruamc.com']
+          resolved={h:doh(h) for h in hosts}
+          print('RESOLVED',json.dumps(resolved))
           urls=[
-              'https://www.icicipruamc.com'+path,
-              'https://archive.icicipruamc.com'+path,
-              'https://apimf.icicipruamc.com'+path,
-              'https://www.beta.icicipruamc.com'+path,
+            ('2026-08-31','https://archive.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip'),
+            ('2026-07-31','https://archive.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip'),
           ]
-          for url in urls:
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
-              try:
-                  with opener.open(req,timeout=20) as r:
-                      body=r.read(256)
-                      print('RESULT',url,r.status,r.headers.get('Content-Type'),r.headers.get('Location'),len(body),body[:32].hex())
-              except urllib.error.HTTPError as e:
-                  print('HTTP',url,e.code,e.headers.get('Content-Type'),e.headers.get('Location'))
-                  try:print('HTTP_BODY',e.read(400).decode('utf-8','replace'))
-                  except:pass
-              except Exception as e:
-                  print('ERROR',url,repr(e))
+          for expected,url in urls:
+              cmd=['curl','--fail','--silent','--show-error','--location','--max-time','60']
+              for host,ip in resolved.items():cmd += ['--resolve',f'{host}:443:{ip}']
+              cmd += ['--output','/tmp/icici.zip',url]
+              cp=subprocess.run(cmd,check=False,capture_output=True,text=True)
+              print('CURL',expected,cp.returncode,cp.stderr[:2000])
+              if cp.returncode:continue
+              body=open('/tmp/icici.zip','rb').read()
+              print('ZIP',expected,len(body),hashlib.sha256(body).hexdigest(),body[:8].hex())
+              z=zipfile.ZipFile(io.BytesIO(body))
+              print('MEMBERS',expected,json.dumps(z.namelist(),ensure_ascii=False))
+              hits=[n for n in z.namelist() if re.search(r'small.?cap',n,re.I)]
+              print('HITS',expected,json.dumps(hits,ensure_ascii=False))
+              for name in hits:
+                  data=z.read(name);h=hashlib.sha256(data).hexdigest()
+                  print('MEMBER',expected,name,len(data),h,data[:8].hex())
+                  iterable=[]
+                  if data[:2]==b'PK':
+                      book=openpyxl.load_workbook(io.BytesIO(data),read_only=True,data_only=True)
+                      for ws in book.worksheets:
+                          cells=list(ws.iter_rows())
+                          rows0=[[c.value for c in rr] for rr in cells]
+                          formats=[[c.number_format or '' for c in rr] for rr in cells]
+                          iterable.append((ws.title,rows0,formats))
+                      book.close()
+                  elif data[:4]==b'\xd0\xcf\x11\xe0':
+                      book=xlrd.open_workbook(file_contents=data,formatting_info=True)
+                      for ws in book.sheets():
+                          rows0=[ws.row_values(i) for i in range(ws.nrows)]
+                          formats=[[book.format_map[book.xf_list[ws.cell_xf_index(i,j)].format_key].format_str for j in range(ws.ncols)] for i in range(ws.nrows)]
+                          iterable.append((ws.name,rows0,formats))
+                  for sheet,rows0,formats in iterable:
+                      prefix=' '.join(str(v) for rr in rows0[:40] for v in rr if v not in (None,''))
+                      if 'small cap' not in (sheet+' '+prefix).lower():continue
+                      parsed=parse_sheet(rows0,formats,'ICICI Prudential Small Cap Fund')
+                      info={'sheet':sheet,'rows':len(rows0),'prefix':prefix[:1700]}
+                      if parsed:
+                          info['parsed']={'day':parsed['day'],'complete':parsed['complete'],
+                              'positions':len(parsed['positions']),'weight':sum(x['weight'] for x in parsed['positions']),
+                              'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])[:100]}
+                      print('SHEET',expected,json.dumps(info,ensure_ascii=False))
+              z.close()
           PY
