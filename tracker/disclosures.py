@@ -19,6 +19,9 @@ def official_publication_url(url,amc_match):
     """Registered AMC domains, excluding known sections for another AMC's schemes."""
     if exclusion_reason(amc_match,url):return False
     host=(urlparse(url).hostname or '').lower()
+    path=urlparse(url).path
+    if amc_match.lower()=='bandhan' and host=='storage.googleapis.com' and not path.startswith('/nonprod-static-assets-121to59kaawfgfi7bol/'):
+        return False
     roots={urlparse(u).hostname.lower().removeprefix('www.') for amc,u,_ in json.loads((db.ROOT/'tracker'/'sources.json').read_text()) if amc.lower()==amc_match.lower()}
     # Custom source pages are explicit owner-provided AMC sources.
     roots.update((urlparse(r['url']).hostname or '').lower().removeprefix('www.') for r in db.rows('SELECT url FROM source_pages WHERE lower(amc_match)=lower(?)',(amc_match,)))
