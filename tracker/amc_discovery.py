@@ -424,6 +424,24 @@ def discover(amc):
                 name=calendar.month_name[month]
                 yield family,f'https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet - {name} {year}.pdf',f'Factsheet - {name} {year}'
 
+    elif amc=='DSP':
+        family='DSP Small Cap Fund'
+        page='https://www.dspim.com/mandatory-disclosures/portfolio-disclosures'
+        raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
+        rows=[]
+        for url,title in providers.candidate_links(soup,page).items():
+            combined=unquote(url+' '+str(title))
+            if not disclosures.official_publication_url(url,amc):continue
+            if not re.search(r'\.zip(?:[?#]|$)',url,re.I):continue
+            m=re.search(r'Portfolio\s+Details\s+as\s+on\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})',combined,re.I)
+            if not m:continue
+            try:day=datetime.strptime(re.sub(r'\s+',' ',m.group(1)).strip(),'%B %d, %Y').date()
+            except ValueError:continue
+            if day<=date.today():rows.append((day,url,str(title)))
+        if not rows:raise ValueError('DSP official portfolio disclosure page exposed no month-end ZIP')
+        newest=max(x[0] for x in rows)
+        day,url,title=max((x for x in rows if x[0]==newest),key=lambda x:x[1])
+        yield family,url,title or f'Portfolio Details as on {day.strftime("%B %d, %Y")}'
     elif amc=='Samco':
         family='Samco Small Cap Fund'
         page='https://www.samcomf.com/StatutoryDisclosure'
@@ -672,5 +690,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
