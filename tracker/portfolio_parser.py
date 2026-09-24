@@ -44,7 +44,7 @@ def parse_sheet(rows,formats,family):
     ic=col(lambda v:'isin' in v);nc=col(lambda v:'name' in v or 'instrument' in v or 'issuer' in v)
     if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
     wc=col(lambda v:'%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)))
-    vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'value',v))
+    vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'\b(?:value|val)\b',v))
     sc=col(lambda v:'industry' in v or 'rating' in v or 'sector' in v);qc=col(lambda v:'quantity' in v or bool(re.search(r'\bqty\b|no\.?\s*of\s*(?:shares|units)',v,re.I)))
     if None in (nc,wc,vc):return None
     divisor=100 if re.search(r'la(?:kh|c)s?\b',header[vc]) else 1 if re.search(r'crores?\b',header[vc]) else None
