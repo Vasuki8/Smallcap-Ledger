@@ -14,30 +14,46 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Extract ICICI TER app strings and endpoints
+      - name: Pinpoint ICICI TER component and endpoints
         run: |
           python - <<'PY'
           import re, urllib.request
           url='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
-          with urllib.request.urlopen(req,timeout=60) as r:
-              s=r.read().decode('utf-8','ignore')
-              print('FETCH',r.status,len(s),r.headers.get('content-type'),r.geturl())
-          strings=[]
-          for m in re.finditer(r'(["\'])(.{1,300}?)\1',s):
-              v=m.group(2)
-              if re.search(r'Expense Ratio|expense.?ratio|financial|disclosure|TER|api/|endpoint|scheme',v,re.I):
-                  strings.append(v)
-          print('MATCHED_STRINGS',len(strings))
-          for v in sorted(set(strings)):
-              if len(v)<=280:
-                  print('STR',repr(v))
-          for needle in ['Total Expense Ratio','financials-&-disclosures','currentTabFilter','expenseRatio','ExpenseRatio','TER','axios.create','baseURL','fetch(']:
-              print('NEEDLE',needle)
-              p=0;n=0
-              while True:
-                  p=s.lower().find(needle.lower(),p)
-                  if p<0 or n>=20:break
-                  print('CTX',re.sub(r'\s+',' ',s[max(0,p-1500):p+3000])[:4700])
-                  p+=len(needle);n+=1
+          with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
+          print('LEN',len(s))
+
+          # API base constants
+          for pat in [
+              r'REACT_APP_API_ENDPOINT:"([^"]*)"',
+              r'REACT_APP_API_ENDPOINT:\'([^\']*)\'',
+              r'HARDCODED_[A-Z_]*BASE_URL="([^"]+)"',
+          ]:
+              vals=sorted(set(re.findall(pat,s)))
+              print('PAT',pat,'VALUES',vals)
+
+          # Exact TER / disclosures contexts only.
+          for needle in ['Total Expense Ratio','TOTAL_EXPENSE_RATIO','totalExpenseRatio','TotalExpenseRatio',
+                         'financials-&-disclosures','Financials & Disclosures','FINANCIALS_AND_DISCLOSURES']:
+              positions=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
+              print('OCC',needle,len(positions))
+              for p in positions[:15]:
+                  block=s[max(0,p-3500):p+5000]
+                  quoted=re.findall(r'(["\'])(.{1,500}?)\1',block)
+                  useful=[]
+                  for _,v in quoted:
+                      if re.search(r'expense|financial|disclos|scheme|api|fund|download|report|document|filter|category',v,re.I):
+                          useful.append(v)
+                  print('AT',p)
+                  for v in sorted(set(useful)):
+                      print('Q',repr(v[:500]))
+
+          # Candidate endpoint strings.
+          endpoints=set()
+          for _,v in re.findall(r'(["\'])(.{1,350}?)\1',s):
+              if v.startswith('/') and re.search(r'expense|financial|disclos|document|report|download|scheme|fund',v,re.I):
+                  endpoints.add(v)
+          print('ENDPOINTS')
+          for v in sorted(endpoints):
+              print(v)
           PY
