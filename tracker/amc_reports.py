@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v109'
+PARSER_VERSION='amc-reports-2026-09-v110'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -97,6 +97,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v107':frozenset({'Mirae Asset Small Cap Fund'}),
     'amc-reports-2026-09-v108':frozenset({'Mirae Asset Small Cap Fund'}),
     'amc-reports-2026-09-v109':frozenset({'Mirae Asset Small Cap Fund'}),
+    'amc-reports-2026-09-v110':frozenset({'Mirae Asset Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
