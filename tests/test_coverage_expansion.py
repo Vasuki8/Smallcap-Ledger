@@ -1382,6 +1382,33 @@ Investment Objective'''
                           'unit':'Observed on official fund page'})
         self.assertEqual(parse_page(html.replace('Small Cap Fund','Mid Cap Fund'),f,u,'wrong'),0)
 
+    def test_invesco_complete_workbook_reconciles_triparty_repo(self):
+        from tracker.portfolio_parser import parse_sheet
+        rows=[
+            ['ISCF','INVESCO MUTUAL FUND','','','','',''],
+            ['', 'Monthly Portfolio Statement as on August 31, 2026','','','','',''],
+            ['', 'Invesco India Small cap Fund','','','','',''],
+            ['', '(An open ended equity scheme predominantly investing in small cap stocks)','','','','',''],
+            ['Name of the Instrument','ISIN','Industry*','Quantity','Market/Fair Value (Rs. in Lakhs)','% to Net Assets','YTM'],
+            ['Alpha Industries Limited','INE123456789','Industrial Products',100,94810,94.81,''],
+            ['Sub Total','','','',94810,94.81,''],
+            ['TREPS / Reverse Repo','','','','','',''],
+            ['Triparty Repo','','','',5190,5.19,4.96],
+            ['Sub Total','','','',5190,5.19,''],
+            ['GRAND TOTAL','','','',100000,100.0,''],
+        ]
+        formats=[['General']*7 for _ in rows]
+        parsed=parse_sheet(rows,formats,'Invesco India Small Cap Fund')
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],[])
+        self.assertEqual(len(parsed['positions']),2)
+        self.assertEqual(parsed['positions'][1]['name'],'Triparty Repo')
+        self.assertEqual(parsed['positions'][1]['asset_type'],'Money market')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100.0,places=6)
+        self.assertAlmostEqual(parsed['aum'],1000.0,places=6)
+
     def test_invesco_live_page_retains_dated_benchmark(self):
         from tracker.amc_metrics import parse_page
         f='Invesco India Small Cap Fund'

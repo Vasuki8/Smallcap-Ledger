@@ -368,6 +368,68 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn("snap['positions']>=77",source)
         self.assertIn("not snap['complete']",source)
 
+    def test_invesco_complete_monthly_api_selects_two_closed_smallcap_workbooks(self):
+        from tracker.amc_discovery import invesco_complete_monthly
+        calls=[]
+        rows=[{
+            'Name':'Invesco India Small Cap Fund',
+            'JulUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/july.xlsx?sfvrsn=1',
+            'AugUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/august.xlsx?sfvrsn=2',
+            'JulName':'07/26','AugName':'08/26',
+        },{
+            'Name':'Invesco India Mid Cap Fund',
+            'JulUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/wrong-july.xlsx',
+            'AugUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/wrong-august.xlsx',
+            'JulName':'07/26','AugName':'08/26',
+        }]
+        def fake_read(url,body=None):
+            calls.append(url)
+            self.assertIn('year=2026&classification=equity',url)
+            return (json.dumps(rows).encode(),'api','application/json')
+        found=list(invesco_complete_monthly(fake_read,date(2026,9,24)))
+        self.assertEqual(found,[
+            ('Invesco India Small Cap Fund',
+             'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/august.xlsx?sfvrsn=2',
+             'Complete monthly holdings 08/26'),
+            ('Invesco India Small Cap Fund',
+             'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/july.xlsx?sfvrsn=1',
+             'Complete monthly holdings 07/26'),
+        ])
+        self.assertEqual(len(calls),1)
+
+    def test_invesco_closed_month_discovery_handles_year_rollover_and_rejects_bad_host(self):
+        from tracker.amc_discovery import closed_month_ends,invesco_complete_monthly
+        self.assertEqual(list(closed_month_ends(date(2027,1,5),2)),
+                         [date(2026,12,31),date(2026,11,30)])
+        rows=[{
+            'Name':'Invesco India Small Cap Fund',
+            'NovUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/nov.xlsx',
+            'DecUrl':'https://example.com/dec.xlsx',
+            'NovName':'11/26','DecName':'12/26',
+        }]
+        def fake_read(url,body=None):
+            return (json.dumps(rows).encode(),'api','application/json')
+        found=list(invesco_complete_monthly(fake_read,date(2027,1,5)))
+        self.assertEqual(found,[(
+            'Invesco India Small Cap Fund',
+            'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/nov.xlsx',
+            'Complete monthly holdings 11/26')])
+
+    def test_v127_targets_invesco_complete_current_and_prior_portfolios(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v127'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Invesco India Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Sundaram Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Invesco India Small Cap Fund','https://www.invescomutualfund.com/portfolio.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v127'",source)
+        self.assertIn("amc_discovery.discover('Invesco')",source)
+        self.assertIn("'2026-08-31','2026-07-31'",source)
+        self.assertIn("ok.append(current and previous)",source)
+        discovery=(Path(__file__).resolve().parents[1]/'tracker'/'amc_discovery.py').read_text()
+        self.assertIn("'ITI','Invesco','Mahindra'",discovery)
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
