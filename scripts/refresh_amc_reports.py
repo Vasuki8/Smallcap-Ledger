@@ -230,6 +230,28 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v59':
+        # Temporary diagnostic against LIC MF's exact reviewed August factsheet.
+        try:
+            import io
+            from pypdf import PdfReader
+            url='https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf'
+            saved=db.one("""SELECT a.path,f.hash FROM fetches f JOIN archives a ON a.hash=f.hash
+              WHERE f.url=? AND f.status='ok' ORDER BY f.id DESC LIMIT 1""",(url,))
+            if saved:
+                body=(db.DATA/saved['path']).read_bytes()
+            else:
+                providers.can_crawl(url);body,_,_=providers.fetch(url)
+            reader=PdfReader(io.BytesIO(body))
+            print(f'LIC_LAYOUT_DIAG pages={len(reader.pages)} bytes={len(body)}',flush=True)
+            for idx,page in enumerate(reader.pages):
+                text=page.extract_text() or ''
+                if re.search(r'LIC\s*MF\s*Small\s*Cap|Small\s+Cap\s+Fund|First\s+Tier\s+Benchmark|PORTFOLIO\s+as\s+on',text,re.I):
+                    print(f'LIC_LAYOUT_DIAG_BEGIN page={idx+1}',flush=True)
+                    print(text[:26000],flush=True)
+                    print('LIC_LAYOUT_DIAG_END',flush=True)
+        except Exception as exc:
+            print(f"::warning::LIC layout diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
