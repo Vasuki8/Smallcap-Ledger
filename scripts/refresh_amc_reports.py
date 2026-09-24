@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,7 +230,7 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v66':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v67':
         from bs4 import BeautifulSoup
         from urllib.parse import urljoin
         page='https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio'
@@ -238,19 +238,28 @@ def run():
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=12*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
-            base=urljoin(page,(soup.find('base') or {}).get('href',''))
-            runtime=next((urljoin(base or page,t.get('src')) for t in soup.find_all('script')
-                          if t.get('src') and 'runtime.' in t.get('src')),None)
-            if not runtime:raise ValueError('PGIM runtime bundle not found')
-            providers.can_crawl(runtime)
-            body,_,mime=providers.fetch(runtime,max_bytes=2*1024*1024)
-            txt=body.decode('utf-8','ignore')
-            print(f'PGIM_V66_RUNTIME_URL {runtime} bytes={len(body)} mime={mime}',flush=True)
-            print('PGIM_V66_RUNTIME_BEGIN',flush=True)
-            print(txt[:12000],flush=True)
-            print('PGIM_V66_RUNTIME_END',flush=True)
+            base=urljoin(page,(soup.find('base') or {}).get('href','')) or 'https://www.pgimindia.com/mutual-funds/'
+            chunks=[
+                ('2468','2468.aa9d7e7aed81ced4.js'),
+                ('1480','1480.1925f56a9146b286.js'),
+                ('2076','common.7de4286326fe7b85.js'),
+                ('7556','7556.eab778d571f6d2be.js'),
+            ]
+            for cid,name in chunks:
+                u=urljoin(base,name)
+                providers.can_crawl(u)
+                body,_,mime=providers.fetch(u,max_bytes=20*1024*1024)
+                txt=body.decode('utf-8','ignore')
+                print(f'PGIM_V67_CHUNK {cid} {u} bytes={len(body)} mime={mime}',flush=True)
+                seen=set()
+                for m in re.finditer(r'.{0,260}(?:api/v1|portfolio|brochure|download|disclosure|fileUrl|fileName|document).{0,520}',txt,re.I|re.S):
+                    snip=re.sub(r'\s+',' ',m.group(0)).strip()
+                    if snip in seen:continue
+                    seen.add(snip)
+                    print(f'PGIM_V67_HIT_{cid} '+snip[:1800],flush=True)
+                    if len(seen)>=40:break
         except Exception as exc:
-            print(f"::warning::PGIM v66 runtime diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::PGIM v67 chunk diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
