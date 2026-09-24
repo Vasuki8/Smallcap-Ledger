@@ -8,33 +8,73 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 12
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
-      - name: Probe exact Bandhan finance API routes
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Validate exact Bandhan August and July workbooks
         run: |
-          python - <<'PY'
-          import urllib.request,json
+          uv run --frozen python - <<'PY'
+          import urllib.request,urllib.parse,json,re,io,hashlib
+          import openpyxl
+          from tracker.portfolio_parser import parse_sheet
           base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          urls=[
-            base+'/158853',
-            base+'?post=158853',
-            base+'?post_id=158853',
-            base+'?id=158853',
-          ]
           H={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
-          for u in urls:
-              try:
-                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=20) as r:
-                      body=r.read()
-                  print('FETCH',u,r.status,r.headers.get('Content-Type'),len(body),r.geturl())
-                  txt=body.decode('utf-8','replace')
-                  print('BODY',u,txt[:12000])
-              except Exception as e:
-                  print('ERROR',u,repr(e))
-                  if getattr(e,'read',None):
-                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:3000])
-                      except:pass
+          for post_id,expected_day in [(158853,'2026-08-31'),(155405,'2026-07-31')]:
+              meta_url=base+'?'+urllib.parse.urlencode({'id':post_id})
+              with urllib.request.urlopen(urllib.request.Request(meta_url,headers=H),timeout=35) as r:
+                  meta=json.loads(r.read())
+              rows=meta.get('data') or []
+              assert len(rows)==1 and rows[0].get('id')==post_id
+              row=rows[0];acf=row.get('acf_fields') or {}
+              print('META',post_id,json.dumps({
+                'title':row.get('title'),'category':row.get('category'),'sub_category':row.get('sub_category'),
+                'financial_year':acf.get('financial_year'),'disclosures_type':acf.get('disclosures_type'),
+                'fund':(acf.get('funds_mapping') or {}).get('post_title'),
+                'files':acf.get('disclosure_files')
+              },ensure_ascii=False)[:10000])
+              files=acf.get('disclosure_files') or []
+              assert len(files)==1
+              link=files[0].get('document_link') or {}
+              target=link.get('url');assert target
+              with urllib.request.urlopen(urllib.request.Request(target,headers={'User-Agent':'Mozilla/5.0','Referer':'https://bandhanmutual.com/'}),timeout=40) as r:
+                  body=r.read()
+              h=hashlib.sha256(body).hexdigest()
+              print('SOURCE',post_id,target,len(body),h,body[:8].hex())
+              assert body.startswith(b'PK')
+              wb=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+              found=[]
+              for ws in wb.worksheets:
+                  cells=list(ws.iter_rows())
+                  data=[[c.value for c in rr] for rr in cells]
+                  formats=[[c.number_format or '' for c in rr] for rr in cells]
+                  prefix=' '.join(str(v) for rr in data[:35] for v in rr if v not in (None,''))
+                  if not re.search(r'Bandhan\s+Small\s+Cap',ws.title+' '+prefix,re.I):continue
+                  parsed=parse_sheet(data,formats,'Bandhan Small Cap Fund')
+                  info={'sheet':ws.title,'prefix':prefix[:1800]}
+                  if parsed:
+                      info['parsed']={'day':parsed['day'],'positions':len(parsed['positions']),
+                                      'complete':parsed['complete'],
+                                      'weight':sum(x['weight'] for x in parsed['positions']),
+                                      'aum':parsed.get('aum'),'unknown_rows':parsed.get('unknown_rows',[])[:100]}
+                  found.append(info)
+                  print('SMALLCAP',post_id,json.dumps(info,ensure_ascii=False))
+                  if parsed:
+                      for ri,rr in enumerate(data):
+                          flat=' | '.join(str(x) for x in rr if x not in (None,''))
+                          if any(str(u) in flat for u in parsed.get('unknown_rows',[])) or re.search(r'grand total|net assets|treps|repo|cash|margin|derivative|total',flat,re.I):
+                              print('ROW',post_id,ri+1,flat[:2200])
+                      assert parsed['day']==expected_day
+              wb.close()
+              assert found
           PY
