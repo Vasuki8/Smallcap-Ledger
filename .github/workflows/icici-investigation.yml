@@ -10,38 +10,76 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_DATA_DIR: /tmp/icici-investigation
+      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
-      - name: Probe valid ICICI monthly portfolio request variants
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect ICICI August and July monthly portfolio ZIPs
         run: |
-          python - <<'PY'
-          import urllib.request,uuid,json,re
-          common={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
-                  'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
-                  'Referer':'https://www.icicipruamc.com/news-and-media/downloads',
-                  'env':'api','baggage':''}
-          url='https://apimf.icicipruamc.com/nms/v1/downloads/files'
-          sub='26a073d7-08d2-4a95-95fa-f83a4ee51e40'
-          variants=[
-              {'name':'sub-only','categoryId':sub,'filter':[]},
-              {'name':'sub-filter','categoryId':sub,'filter':[{'FINANCIAL_YEAR':['2026-2027']}]},
-              {'name':'year-sub-filter','categoryId':'2026-2027,'+sub,'filter':[{'FINANCIAL_YEAR':['2026-2027']}]},
-              {'name':'sub-year-filter','categoryId':sub+',2026-2027','filter':[{'FINANCIAL_YEAR':['2026-2027']}]},
-              {'name':'sub-year-no-filter','categoryId':sub+',2026-2027','filter':[]},
+          rm -rf "$SMALLCAP_DATA_DIR"
+          uv run --frozen python - <<'PY'
+          import io,zipfile,urllib.request,hashlib,json,re
+          import openpyxl,xlrd
+          from tracker.portfolio_parser import parse_sheet
+
+          urls=[
+            ('2026-08-31','https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip'),
+            ('2026-07-31','https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip'),
           ]
-          for v in variants:
-              body={'categoryId':v['categoryId'],'schemeCategory':'','userType':'Investor',
-                    'fileType':'All','page':'1','size':'100','filter':v['filter'],'categoryName':'OTHERS'}
-              headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
-              req=urllib.request.Request(url,data=json.dumps(body).encode(),headers=headers,method='POST')
-              try:
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      b=r.read();text=b.decode('utf-8','replace')
-                      print('VARIANT',v['name'],'STATUS',r.status,'BYTES',len(b),'BODY',text[:100000])
-              except Exception as e:
-                  print('ERROR',v['name'],repr(e))
-                  if getattr(e,'read',None):
-                      try:print('ERROR_BODY',v['name'],e.read().decode('utf-8','replace')[:30000])
-                      except:pass
+          headers={'User-Agent':'Mozilla/5.0'}
+          for expected,url in urls:
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  body=r.read();print('ZIP',expected,r.status,r.headers.get('Content-Type'),len(body),hashlib.sha256(body).hexdigest(),r.geturl())
+              z=zipfile.ZipFile(io.BytesIO(body))
+              print('MEMBERS',expected,json.dumps(z.namelist(),ensure_ascii=False))
+              hits=[n for n in z.namelist() if re.search(r'small.?cap',n,re.I)]
+              print('HITS',expected,json.dumps(hits,ensure_ascii=False))
+              for name in hits:
+                  data=z.read(name);h=hashlib.sha256(data).hexdigest()
+                  print('MEMBER',expected,name,len(data),h,data[:8].hex())
+                  iterable=[]
+                  if data[:2]==b'PK':
+                      book=openpyxl.load_workbook(io.BytesIO(data),read_only=True,data_only=True)
+                      for ws in book.worksheets:
+                          cells=list(ws.iter_rows())
+                          rows0=[[c.value for c in rr] for rr in cells]
+                          formats=[[c.number_format or '' for c in rr] for rr in cells]
+                          iterable.append((ws.title,rows0,formats))
+                      book.close()
+                  elif data[:4]==b'\xd0\xcf\x11\xe0':
+                      book=xlrd.open_workbook(file_contents=data,formatting_info=True)
+                      for ws in book.sheets():
+                          rows0=[ws.row_values(i) for i in range(ws.nrows)]
+                          formats=[[book.format_map[book.xf_list[ws.cell_xf_index(i,j)].format_key].format_str for j in range(ws.ncols)] for i in range(ws.nrows)]
+                          iterable.append((ws.name,rows0,formats))
+                  for sheet,rows0,formats in iterable:
+                      prefix=' '.join(str(v) for rr in rows0[:40] for v in rr if v not in (None,''))
+                      if 'small cap' not in (sheet+' '+prefix).lower():continue
+                      parsed=parse_sheet(rows0,formats,'ICICI Prudential Small Cap Fund')
+                      info={'sheet':sheet,'rows':len(rows0),'prefix':prefix[:1800]}
+                      if parsed:
+                          info['parsed']={'day':parsed['day'],'complete':parsed['complete'],'positions':len(parsed['positions']),
+                              'weight':sum(x['weight'] for x in parsed['positions']),'aum':parsed['aum'],
+                              'unknown_rows':parsed.get('unknown_rows',[])[:100]}
+                      excerpts=[]
+                      unknown=(parsed or {}).get('unknown_rows',[])
+                      for ri,rr in enumerate(rows0):
+                          txt=' | '.join(str(x) for x in rr if x not in (None,''))
+                          low=txt.lower()
+                          if any(k in low for k in ('small cap','name of','grand total','net assets','net current','treps','repo','cash','margin','derivative','total')) or any(str(u) in txt for u in unknown):
+                              excerpts.append([ri+1,txt[:2200]])
+                          if len(excerpts)>=180:break
+                      info['excerpts']=excerpts
+                      print('SHEET',expected,json.dumps(info,ensure_ascii=False))
+              z.close()
           PY
