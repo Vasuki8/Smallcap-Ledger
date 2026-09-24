@@ -10,34 +10,22 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
-      - name: Print Bandhan Small Cap portfolio taxonomy
+      - name: Trace Bandhan new SCHEME_PORTFOLIOS disclosure path
         run: |
           python - <<'PY'
-          import urllib.request,json,re
-          url='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?acf_key=download_center_type&acf_value=portfolio&bypass_pagination=true'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
-          with urllib.request.urlopen(req,timeout=35) as r:data=json.load(r)
-          rows=[]
-          for item in data.get('data') or []:
-              acf=item.get('acf_fields') or {}
-              files=[]
-              for entry in acf.get('disclosure_files') or []:
-                  link=entry.get('document_link') or {}
-                  files.append({'document_name':entry.get('document_name'),'month':entry.get('month'),
-                                'filename':link.get('filename'),'url':link.get('url'),'link':link.get('link'),
-                                'mime_type':link.get('mime_type'),'filesize':link.get('filesize')})
-              probe=json.dumps({'title':item.get('title'),'mapping':acf.get('funds_mapping'),'files':files},ensure_ascii=False)
-              if re.search(r'Bandhan\s+Small\s+Cap\s+Fund|Bandhan[-_ ]*Small[-_ ]*Cap',probe,re.I):
-                  rows.append({'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
-                               'download_center_type':acf.get('download_center_type'),
-                               'financial_year':acf.get('financial_year'),
-                               'disclosures_type':acf.get('disclosures_type'),
-                               'funds_mapping':acf.get('funds_mapping'),'files':files})
-          rows.sort(key=lambda x:(x.get('date') or '',x.get('id') or 0),reverse=True)
-          print('MATCH_COUNT',len(rows))
-          for row in rows[:80]:
-              print('ROW',json.dumps(row,ensure_ascii=False,separators=(',',':')))
+          import urllib.request,re
+          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
+          for needle in ('getNewAdditionalDisclosureApi','SCHEME_PORTFOLIOS','schemePortfolios','scheme-portfolios'):
+              pos=[];start=0
+              while len(pos)<40:
+                  i=js.find(needle,start)
+                  if i<0:break
+                  pos.append(i);start=i+len(needle)
+              print('POSITIONS',needle,pos)
+              for i in pos[:20]:
+                  print('CTX',needle,i,repr(js[max(0,i-3200):i+7000]))
           PY
