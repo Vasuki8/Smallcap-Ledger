@@ -1,17 +1,16 @@
-name: Inspect HSBC detailed TER workbook
+name: Validate HSBC detailed TER collector
 
 on:
   push:
     branches: [backend/hsbc-ter-v131]
-    paths: [.github/workflows/inspect-hsbc-ter.yml]
 
 permissions:
   contents: read
 
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -20,65 +19,20 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Reproduce public CAMS HSBC TER download
+      - run: uv run --frozen python -m compileall -q tracker scripts tests
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Verify live AMC-linked HSBC TER workbook
         run: |
           uv run --frozen python - <<'PY'
-          import base64, hashlib, io, json, subprocess, urllib.request
-          import openpyxl
-
-          ENDPOINT='https://digital.camsonline.com/api/v1/camsonline'
-          IV=b'globalaesvectors'
-          def key(secret):
-              return hashlib.sha256(secret.encode()).hexdigest()[:32].encode()
-          REQ_KEY=key('TkVJTEhobWFj')
-          RESP_KEY=key('UkRYTElobWFj')
-
-          def crypt(data,key_bytes,decrypt=False):
-              cmd=['openssl','enc','-aes-256-cbc','-K',key_bytes.hex(),'-iv',IV.hex(),'-nosalt']
-              if decrypt: cmd.append('-d')
-              p=subprocess.run(cmd,input=data,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True)
-              return p.stdout
-
-          payload={
-              'flag':'GET_UPD_MB_RESULT',
-              'jobday':'hsbc_ter_report.xlsx',
-              'browser':'Chrome',
-              'device_id':'153.0.0.0',
-              'os_id':'10',
-              'application':'CAMSONLINE',
-              'sub_application':'DIGITALADMIN',
-              'deviceid':'desktop',
-              'page_name':'/dnlresult/hsbc_ter_report.xlsx',
-          }
-          raw=json.dumps(payload,separators=(',',':')).encode()
-          enc=base64.b64encode(crypt(raw,REQ_KEY)).decode().replace('+','-').replace('/','_')
-          body=json.dumps({'data':enc},separators=(',',':')).encode()
-          req=urllib.request.Request(ENDPOINT,data=body,method='POST',headers={
-              'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
-              'Content-Type':'application/json',
-              'Accept':'application/json, text/plain, */*',
-              'Origin':'https://digital.camsonline.com',
-              'Referer':'https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx',
-          })
-          with urllib.request.urlopen(req,timeout=45) as r:
-              response=r.read()
-              print('API',r.status,len(response),r.headers.get('content-type'))
-          encrypted=response.decode().strip().strip('"').replace('-','+').replace('_','/')
-          decrypted=crypt(base64.b64decode(encrypted),RESP_KEY,decrypt=True)
-          data=json.loads(decrypted)
-          print('STATUS',data.get('status'))
-          print('DETAIL_KEYS',[sorted(x.keys()) for x in data.get('detail',[])[:2]])
-          result=data['detail'][0]['RESULT']
-          workbook=base64.b64decode(result)
-          print('WORKBOOK_BYTES',len(workbook),workbook[:8])
-          wb=openpyxl.load_workbook(io.BytesIO(workbook),data_only=True,read_only=True)
-          print('SHEETS',wb.sheetnames)
-          for ws in wb.worksheets:
-              print('SHEET',ws.title,ws.max_row,ws.max_column)
-              for i,row in enumerate(ws.iter_rows(values_only=True),1):
-                  vals=[None if x is None else str(x) for x in row]
-                  joined=' | '.join(x or '' for x in vals)
-                  if i<=12 or 'small cap' in joined.lower():
-                      print('ROW',i,json.dumps(vals,ensure_ascii=False))
-          wb.close()
+          import hashlib
+          from datetime import date
+          from tracker import amc_expenses
+          workbook=amc_expenses._hsbc_workbook()
+          day,plans=amc_expenses.parse_hsbc_workbook(workbook,date.today())
+          assert set(plans)=={'Regular','Direct'}
+          assert 0 <= plans['Direct']['base_expense_ratio'] <= plans['Direct']['ter'] <= 5
+          assert 0 <= plans['Regular']['base_expense_ratio'] <= plans['Regular']['ter'] <= 5
+          print('HSBC_VERIFIED',day,plans)
+          print('HSBC_WORKBOOK_BYTES',len(workbook))
+          print('HSBC_WORKBOOK_SHA256',hashlib.sha256(workbook).hexdigest())
           PY
