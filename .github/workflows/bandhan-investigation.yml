@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Extract Bandhan Small Cap monthly portfolio records
+      - name: Inspect all Bandhan Small Cap portfolio records
         run: |
           python - <<'PY'
           import urllib.request,json,re
@@ -23,16 +23,13 @@ jobs:
           rows=[]
           for item in data.get('data') or []:
               acf=item.get('acf_fields') or {}
-              mapping=acf.get('funds_mapping')
-              fund=(mapping or {}).get('post_title') if isinstance(mapping,dict) else ''
               dtype=str(acf.get('disclosures_type') or '')
-              if fund!='Bandhan Small Cap Fund' or 'Monthly and Half-yearly' not in dtype:
+              if 'Monthly and Half-yearly' not in dtype:
                   continue
-              row={'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
-                   'fund':fund,'type':dtype,'files':[]}
+              files=[]
               for entry in acf.get('disclosure_files') or []:
                   link=entry.get('document_link') or {}
-                  row['files'].append({
+                  files.append({
                     'document_name':entry.get('document_name'),
                     'month':entry.get('month'),
                     'filename':link.get('filename'),
@@ -40,11 +37,14 @@ jobs:
                     'link':link.get('link'),
                     'mime_type':link.get('mime_type'),
                     'filesize':link.get('filesize'),
-                    'date':link.get('date'),
                   })
-              rows.append(row)
+              blob=json.dumps({'title':item.get('title'),'mapping':acf.get('funds_mapping'),'files':files},ensure_ascii=False)
+              if not re.search(r'Bandhan\s+Small\s+Cap\s+Fund|Bandhan[-_ ]*Small[-_ ]*Cap',blob,re.I):
+                  continue
+              rows.append({'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
+                           'funds_mapping':acf.get('funds_mapping'),'type':dtype,'files':files})
           rows.sort(key=lambda x:(x.get('date') or '',x.get('id') or 0),reverse=True)
           print('MATCH_COUNT',len(rows))
-          for row in rows[:24]:
+          for row in rows[:40]:
               print('ROW',json.dumps(row,ensure_ascii=False,separators=(',',':')))
           PY
