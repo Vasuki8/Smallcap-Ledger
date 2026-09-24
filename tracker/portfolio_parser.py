@@ -82,6 +82,8 @@ def parse_sheet(rows,formats,family):
             leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
             if family=='Aditya Birla Sun Life Small Cap Fund' and re.fullmatch(r'Margin amount for Derivative positions\s*[*^#]?',label,re.I):
                 leaf=True
+            if family=='DSP Small Cap Fund' and re.fullmatch(r'(?:TREPS\s*/\s*Reverse Repo Investments|Cash Margin)\s*[*^#]?',label,re.I):
+                leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
                 elif re.search(r'treasury|government|debt',label,re.I):asset='Debt'
