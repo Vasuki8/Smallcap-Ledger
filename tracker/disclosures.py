@@ -174,6 +174,16 @@ def spreadsheet(content,family,url,h):
             if full['complete']:
                 portfolio(family,full['day'],full['positions'],True,url,h)
                 count+=len(full['positions']);continue
+            # Sundaram publishes one written-off illiquid holding with the
+            # literal weight marker "#" and defines it as less than 0.01% of NAV.
+            # Keep the exact numeric rows from the structured workbook as a
+            # richer partial snapshot, but never invent a numeric weight for
+            # the censored holding or promote the snapshot to complete.
+            if (family=='Sundaram Small Cap Fund'
+                and full.get('unknown_rows')==['Hindustan Dorr Oliver Ltd @']
+                and full['positions']):
+                portfolio(family,full['day'],full['positions'],False,url,h)
+                count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
