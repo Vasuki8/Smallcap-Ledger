@@ -13,22 +13,21 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve ICICI Downloads router component
+      - name: Inspect exact ICICI Downloads page controller
         run: |
           python - <<'PY'
           import urllib.request,re
-          req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
-                                     headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
-          with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
-          for pat in (r'path:Jr',r'path:\s*Jr',r'Jr\}\)',r'Jr,'):
-              ms=list(re.finditer(pat,js))
-              print('PAT',pat,'COUNT',len(ms),'POS',[m.start() for m in ms[:20]])
-              for m in ms[:12]:
-                  i=m.start();print('CTX',re.sub(r'\s+',' ',js[max(0,i-3500):i+7000]))
-          # Search for the literal component label if retained.
-          for needle in ('DownloadsPage','DownloadsLazy','NewsMediaDownloads','DownloadPage'):
-              ms=list(re.finditer(needle,js,re.I))
-              print('NAME',needle,'COUNT',len(ms))
-              for m in ms[:8]:
-                  i=m.start();print('NAME_CTX',js[max(0,i-2500):i+5000])
+          url='https://www.icicipruamc.com/static/js/index.Bo6S7uE-.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
+          with urllib.request.urlopen(req,timeout=20) as r:
+              js=r.read().decode('utf-8','replace')
+              print('FETCH',r.status,r.headers.get('Content-Type'),len(js))
+          print('IMPORT_HEAD',js[:5000])
+          for needle in ('fileType','categoryId','subCategory','filter','userType','page:','size:',
+                         'DOCUMENTS','downloadData','setAllData','financialYear','FINANCIAL_YEAR'):
+              ms=list(re.finditer(re.escape(needle),js,re.I))
+              print('NEEDLE',needle,'COUNT',len(ms))
+              for m in ms[:20]:
+                  i=m.start()
+                  print('CTX',needle,js[max(0,i-3000):i+6500])
           PY
