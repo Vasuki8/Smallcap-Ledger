@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -601,6 +601,41 @@ def run():
                     print(f'EDELWEISS_V97_CONTEXT term={term} idx={idx} '+ctx[:4400],flush=True)
         except Exception as exc:
             print(f"::warning::Edelweiss v97 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(False)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v98':
+        page='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
+        try:
+            from bs4 import BeautifulSoup
+            from urllib.parse import urljoin,urlparse
+            providers.can_crawl(page)
+            raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
+            soup=BeautifulSoup(raw,'html.parser')
+            main_url=None
+            for tag in soup.find_all('script'):
+                src=tag.get('src')
+                if not src:continue
+                u=urljoin(page,src)
+                if urlparse(u).netloc.endswith('edelweissmf.com') and re.search(r'/main\.[A-Za-z0-9]+\.js(?:[?#]|$)',u,re.I):
+                    main_url=u;break
+            if not main_url:raise ValueError('Edelweiss main bundle URL not found')
+            providers.can_crawl(main_url)
+            body,_,_=providers.fetch(main_url,max_bytes=12*1024*1024)
+            js=body.decode('utf-8','ignore')
+            print('EDELWEISS_V98_SCRIPT '+main_url,flush=True)
+            terms=(
+                'Portfolio of scheme(s)','Portfolio of schemes','Portfolio Of Schemes',
+                'innerDownloadTabs','otherDiscloserTab','downloadsSection',
+                'portfolio-of-schemes','financials-portfolios'
+            )
+            for term in terms:
+                matches=list(re.finditer(re.escape(term),js,re.I))
+                print(f'EDELWEISS_V98_TERM {term} count={len(matches)}',flush=True)
+                for idx,m in enumerate(matches[:6]):
+                    ctx=js[max(0,m.start()-5000):m.end()+7000]
+                    ctx=re.sub(r'\s+',' ',ctx).strip()
+                    print(f'EDELWEISS_V98_CONTEXT term={term} idx={idx} '+ctx[:12000],flush=True)
+        except Exception as exc:
+            print(f"::warning::Edelweiss v98 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
