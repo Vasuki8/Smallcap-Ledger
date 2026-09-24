@@ -19,42 +19,35 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Query verified Axis statutory APIs
+      - name: Inspect public Axis statutory routes
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json
+          import json,re
           from pathlib import Path
           import httpx
           out=Path('audit')
-          c=httpx.Client(headers={
-            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36',
-            'Accept':'application/json,text/plain,text/html,*/*',
-            'Content-Type':'application/json',
-            'Referer':'https://www.axismf.com/statutory-disclosures'
-          },timeout=20,follow_redirects=True)
-          tests=[
-            ('route','GET','https://www.axismf.com/statutory-disclosures/portfolios',None),
-            ('nested','POST','https://www.axismf.com/cms/get-nested-list',{'sdParentID':'sdPortfolios'}),
-            ('documents','POST','https://www.axismf.com/cms/get-scheme-documents',{'sdType':'nestedList','sdID':'sdPortfolios'}),
-            ('top','POST','https://www.axismf.com/cms/get-all-statutory-disclosure',{}),
-            ('subcategory','POST','https://www.axismf.com/cms/get-all-statutory-subcategory-disclosure',{'sdParentID':'sdPortfolios'})
-          ]
+          c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,*/*'},timeout=20,follow_redirects=True)
+          slugs=['sdPortfolios','portfolio','portfolios','portfolio-disclosures','monthly-portfolio','monthly-portfolios']
           summary=[]
-          for name,method,url,body in tests:
+          for slug in slugs:
+            url='https://www.axismf.com/statutory-disclosures/'+slug
             try:
-              r=c.request(method,url,json=body if method=='POST' else None)
-              item={'name':name,'status':r.status_code,'url':str(r.url),'content_type':r.headers.get('content-type'),'bytes':len(r.content),'prefix':r.text[:500]}
+              r=c.get(url)
+              text=r.text
+              m=re.search(r'statutoryDisclosureSubCategoryResponse.{0,12000}',text,re.I|re.S)
+              excerpt=m.group(0)[:12000] if m else ''
+              item={'slug':slug,'status':r.status_code,'bytes':len(r.content),'has_pdList':'pdList' in excerpt,'has_nested':'sdNestedList' in excerpt,'has_data_not_available':'Data not available' in excerpt,'excerpt':excerpt[:2500]}
               summary.append(item)
-              (out/f'{name}.bin').write_bytes(r.content)
+              (out/f'{slug}.html').write_bytes(r.content)
               print(json.dumps(item,ensure_ascii=False))
             except Exception as e:
-              print(name,repr(e)); summary.append({'name':name,'error':repr(e)})
+              print(slug,repr(e))
           (out/'summary.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: axis-api-query
+          name: axis-route-probe
           path: audit/
           retention-days: 3
