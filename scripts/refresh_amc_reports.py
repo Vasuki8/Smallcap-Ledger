@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -865,6 +865,34 @@ def run():
                         for hit in hits:print('QUANT_V112_HIT '+hit[:1600],flush=True)
         except Exception as exc:
             print(f"::warning::Quant v112 markup audit: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(True)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v113':
+        endpoint='https://quantmutual.com/statutorydisclosures.aspx/displaydisclouser1'
+        try:
+            providers.can_crawl(endpoint)
+            raw,_,mime=providers.fetch(endpoint,body={'id':'2026','cat':'MONTHLY PORTFOLIO - FUND - WISE'},max_bytes=5*1024*1024)
+            data=json.loads(raw)
+            html=str(data.get('d') or '')
+            print(f'QUANT_V113_LEVEL1 mime={mime} bytes={len(raw)} html={len(html)}',flush=True)
+            print('QUANT_V113_LEVEL1_HTML '+re.sub(r'\s+',' ',html)[:12000],flush=True)
+            # Trace any follow-up IDs/tabs emitted by the first endpoint.
+            pairs=[]
+            for m in re.finditer(r'submit_event2\(\s*["\']?([^,"\')]+)["\']?\s*,\s*["\']MONTHLY PORTFOLIO - FUND - WISE["\']\s*,\s*["\']([^"\']+)',html,re.I):
+                pair=(m.group(1).strip(),m.group(2).strip())
+                if pair not in pairs:pairs.append(pair)
+            print('QUANT_V113_LEVEL1_PAIRS '+json.dumps(pairs[:20]),flush=True)
+            endpoint2='https://quantmutual.com/statutorydisclosures.aspx/displaydisclouser2'
+            for idx,(ident,tab) in enumerate(pairs[:8],1):
+                try:
+                    providers.can_crawl(endpoint2)
+                    raw2,_,mime2=providers.fetch(endpoint2,body={'id':ident,'cat':'MONTHLY PORTFOLIO - FUND - WISE','tab':tab},max_bytes=5*1024*1024)
+                    data2=json.loads(raw2);html2=str(data2.get('d') or '')
+                    print(f'QUANT_V113_LEVEL2 {idx} id={ident} tab={tab} mime={mime2} html={len(html2)}',flush=True)
+                    print('QUANT_V113_LEVEL2_HTML '+re.sub(r'\s+',' ',html2)[:16000],flush=True)
+                except Exception as exc:
+                    print(f"::warning::Quant v113 level2 {idx}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        except Exception as exc:
+            print(f"::warning::Quant v113 endpoint audit: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
