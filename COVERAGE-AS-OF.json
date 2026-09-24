@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-24T06:23:35+00:00",
+  "built_at": "2026-09-24T06:36:16+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -255,7 +255,7 @@
           "title": "March 2025 performance table · Bandhan Small Cap Fund",
           "kind": "factsheet",
           "url": "https://assets.bandhanmutual.com/2025/04/59b0d496-bandhan-performance-table-march-2025.pdf",
-          "last_seen": "2026-09-24T06:23:29+00:00",
+          "last_seen": "2026-09-24T06:36:03+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1466,14 +1466,14 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=5&pageSize=1000"
       },
       "portfolio": {
-        "as_of": "2026-07-31",
-        "source": "https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-july-2026.pdf",
-        "complete": 0,
-        "positions": 68
+        "as_of": "2026-08-31",
+        "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-small-cap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=9c20b052_2",
+        "complete": 1,
+        "positions": 73
       },
-      "portfolio_complete": false,
-      "portfolio_fresh": false,
-      "official_publications": 3,
+      "portfolio_complete": true,
+      "portfolio_fresh": true,
+      "official_publications": 5,
       "portfolio_gap": null
     },
     {
@@ -1833,7 +1833,7 @@
           "title": "Union Small Cap Fund Scheme Information Document",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-24T06:23:29+00:00",
+          "last_seen": "2026-09-24T06:36:03+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1859,10 +1859,10 @@
     "ter": 28,
     "base_expense_ratio": 33,
     "portfolio": 34,
-    "portfolio_complete": 23,
-    "portfolio_fresh": 32,
-    "portfolio_fresh_complete": 23,
-    "portfolio_partial": 11,
+    "portfolio_complete": 24,
+    "portfolio_fresh": 33,
+    "portfolio_fresh_complete": 24,
+    "portfolio_partial": 10,
     "benchmark_identity": 36
   },
   "notes": [
