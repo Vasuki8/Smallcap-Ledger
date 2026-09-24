@@ -1,4 +1,4 @@
-name: Inspect ICICI TER disclosure API
+name: Inspect ICICI TER route chunk
 
 on:
   push:
@@ -14,26 +14,19 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Extract ICICI financial-disclosure identifiers
+      - name: Locate ICICI financials page lazy chunk
         run: |
           python - <<'PY'
           import re, urllib.request
           u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
           req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-          ids=sorted(set(re.findall(r'\b[A-Za-z_$][A-Za-z0-9_$]*(?:Financial|financial)[A-Za-z0-9_$]*\b',s)))
-          print('IDS',ids)
-          for ident in ids:
-              if any(k in ident.lower() for k in ['financials','financialdisclosure','financialdata','financialcategory']):
-                  pos=[m.start() for m in re.finditer(re.escape(ident),s)]
-                  print('\nIDENT',ident,'COUNT',len(pos))
-                  for p in pos[:20]:
-                      print('CTX',re.sub(r'\s+',' ',s[max(0,p-2500):p+4500])[:7200])
-          for needle in ['financialsCategoryData', 'financialsData']:
-              # Search for object property access patterns referencing the endpoint key.
-              for pat in [rf'\.{needle}\b', rf'\[{needle}\]', rf'["\']{needle}["\']']:
-                  ms=list(re.finditer(pat,s))
-                  print('PATTERN',pat,'COUNT',len(ms))
-                  for m in ms[:10]:
-                      print(re.sub(r'\s+',' ',s[max(0,m.start()-3500):m.start()+6500])[:10200])
+          needle='/about-us/financials-&-disclosures'
+          for p in [m.start() for m in re.finditer(re.escape(needle),s)]:
+              block=s[max(0,p-8000):p+8000]
+              print('POS',p)
+              print('JSFILES',sorted(set(re.findall(r'["\']([^"\']+\.js)["\']',block))))
+              print('IMPORTS',sorted(set(re.findall(r'import\(["\']([^"\']+)["\']\)',block))))
+              print('PRELOADS',sorted(set(re.findall(r'__vitePreload\(\(\)=>import\(["\']([^"\']+)["\']\)',block))))
+              print('CTX',re.sub(r'\s+',' ',block))
           PY
