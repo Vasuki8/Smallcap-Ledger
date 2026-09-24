@@ -1,0 +1,48 @@
+name: Inspect ICICI TER disclosure app
+
+on:
+  push:
+    branches: [backend/icici-ter-v132]
+    paths: [.github/workflows/inspect-icici-ter.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Trace ICICI TER disclosure page
+        run: |
+          python - <<'PY'
+          import re, urllib.parse, urllib.request
+          url='https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total+Expense+Ratio'
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Accept':'text/html,*/*'}
+          def fetch(u):
+              req=urllib.request.Request(u,headers=UA)
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return b,r.geturl()
+          body,final=fetch(url)
+          html=body.decode('utf-8','ignore')
+          print('HTML_HEAD',re.sub(r'\s+',' ',html[:6000]))
+          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I)
+          print('SCRIPTS',scripts)
+          for src in scripts:
+              full=urllib.parse.urljoin(final,src)
+              try:b,_=fetch(full)
+              except Exception as e:
+                  print('SCRIPT_ERROR',full,type(e).__name__,e);continue
+              s=b.decode('utf-8','ignore')
+              if not re.search(r'Expense Ratio|Total Expense|currentTabFilter|financial|disclosure|TER|api',s,re.I):
+                  continue
+              print('SCRIPT_MATCH',full,'LEN',len(s))
+              for needle in ['Total Expense Ratio','currentTabFilter','financials-&-disclosures','expense-ratio','expenseRatio','totalExpense','TER','api/']:
+                  p=0;n=0
+                  while True:
+                      p=s.lower().find(needle.lower(),p)
+                      if p<0 or n>=25:break
+                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1200):p+2600])[:4000])
+                      p+=len(needle);n+=1
+          PY
