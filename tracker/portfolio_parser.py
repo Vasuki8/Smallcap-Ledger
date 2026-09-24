@@ -105,6 +105,9 @@ def parse_sheet(rows,formats,family):
                 leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
+                elif (family=='Jm Small Cap Fund'
+                      and re.fullmatch(r'TREPS\s*/\s*Reverse Repo Investments\s*/\s*Corporate Debt Repo',label,re.I)):
+                    asset='Money market'
                 elif re.search(r'treasury|government|debt',label,re.I):asset='Debt'
                 elif re.search(r'money market|repo|treps',label,re.I):asset='Money market'
                 elif re.search(r'fund unit|exchange traded|mutual fund',label,re.I):asset='Fund units'
