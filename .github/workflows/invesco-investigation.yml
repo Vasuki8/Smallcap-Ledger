@@ -1,4 +1,4 @@
-name: Invesco portfolio investigation
+name: Invesco v127 validation
 
 on:
   push:
@@ -8,12 +8,11 @@ permissions:
   contents: read
 
 jobs:
-  investigate:
+  validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       SMALLCAP_NO_SCHEDULER: '1'
-      SMALLCAP_DATA_DIR: /tmp/invesco-investigation
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
@@ -23,27 +22,55 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect official Invesco current and prior workbooks
+      - name: Compile and run complete regression suite
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest discover -s tests -v
+      - name: Validate live Invesco API and two-month ingestion
+        env:
+          SMALLCAP_DATA_DIR: /tmp/invesco-v127-validation
         run: |
           rm -rf "$SMALLCAP_DATA_DIR"
           uv run --frozen python - <<'PY'
           import json
-          from tracker import providers,db,disclosures,amc_reports
+          from tracker import db,disclosures,amc_discovery
           db.init();disclosures.seed_sources()
-          root='https://www.invescomutualfund.com'
-          raw,api_hash,_=providers.fetch(root+'/api/CompleteMonthlyHoldings?year=2026&classification=equity',max_bytes=12*1024*1024)
-          row=next(x for x in json.loads(raw) if str(x.get('Name') or '').strip()=='Invesco India Small Cap Fund')
-          print('API_HASH',api_hash)
-          for label,key in [('AUG','AugUrl'),('JUL','JulUrl')]:
-              url=row[key]
-              body,h,typ=providers.fetch(url,max_bytes=25*1024*1024)
-              count=amc_reports.extract(body,'Invesco India Small Cap Fund',url,h)
-              snap=db.one("""SELECT p.as_of,p.complete,p.hash,p.source,COUNT(h.id) positions,SUM(h.weight) weight
-                FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
-                WHERE p.family='Invesco India Small Cap Fund' AND p.hash=?
-                GROUP BY p.id ORDER BY p.id DESC LIMIT 1""",(h,))
-              aum=db.one("""SELECT as_of,value,unit FROM metrics
-                WHERE family='Invesco India Small Cap Fund' AND metric='aum' AND hash=?
-                ORDER BY id DESC LIMIT 1""",(h,))
-              print(label,json.dumps({'url':url,'hash':h,'bytes':len(body),'type':typ,'records':count,'snapshot':snap,'aum':aum}))
+          rows=list(amc_discovery.discover('Invesco'))
+          print('DISCOVERY',json.dumps(rows))
+          assert rows==[
+            ('Invesco India Small Cap Fund',
+             'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/small-cap.xlsx?sfvrsn=7d249fc2_0',
+             'Complete monthly holdings 08/26'),
+            ('Invesco India Small Cap Fund',
+             'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/smallcap1d1dfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=6f59fc2_0',
+             'Complete monthly holdings 07/26'),
+          ]
+          counts=[]
+          for family,url,title in rows:
+              counts.append(amc_discovery.store_report('Invesco',family,url,title))
+          snaps=db.rows("""SELECT p.as_of,p.complete,p.hash,p.source,COUNT(h.id) positions,
+            SUM(h.weight) weight,SUM(CASE WHEN h.quantity IS NOT NULL THEN 1 ELSE 0 END) quantities
+            FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
+            WHERE p.family='Invesco India Small Cap Fund'
+            GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC""")
+          metrics=db.rows("""SELECT as_of,value,unit,hash FROM metrics
+            WHERE family='Invesco India Small Cap Fund' AND metric='aum'
+            ORDER BY as_of DESC,id DESC""")
+          print('COUNTS',json.dumps(counts))
+          print('SNAPSHOTS',json.dumps(snaps))
+          print('AUM',json.dumps(metrics))
+          assert counts==[73,68]
+          assert len(snaps)==2
+          aug,jul=snaps
+          assert aug['as_of']=='2026-08-31' and aug['complete']==1 and aug['positions']==72
+          assert abs(float(aug['weight'])-100.0)<0.00001
+          assert aug['hash']=='f8c3405c0c83ed24502bb4b2f95bff7a0e1022d4dceaf7df3b414029716df83d'
+          assert aug['quantities']>=60
+          assert jul['as_of']=='2026-07-31' and jul['complete']==1 and jul['positions']==67
+          assert abs(float(jul['weight'])-100.0)<0.00001
+          assert jul['hash']=='7d4924d152355a89a3359176857e5cb7d20d9df1071d3fd3387b5e2e6277fb00'
+          assert jul['quantities']>=60
+          by_day={m['as_of']:m for m in metrics}
+          assert abs(float(by_day['2026-08-31']['value'])-15744.4025)<0.0001
+          assert abs(float(by_day['2026-07-31']['value'])-14474.7868)<0.0001
           PY
