@@ -8,27 +8,43 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  decode:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Trace Bandhan public request encryption helpers
+      - name: Decode Bandhan portfolio browser constants
         run: |
           python - <<'PY'
-          import urllib.request,re
+          import urllib.request,subprocess,json
           req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',
                                      headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
-          for needle in ('_0x526877=', 'function _0x526877', '_0x3844f1=', 'function _0x3844f1',
-                         'REACT_APP_DATA_IN_TRANSIT_PUBLIC_KEY', 'REACT_APP_DATA_IN_TRANSIT',
-                         'WtUbdIoA2i54d3q0zdm2ZUGMxrTuh57kzxOSeAoTInObKvAV'):
-              pos=[];start=0
-              while len(pos)<20:
-                  i=js.find(needle,start)
-                  if i<0:break
-                  pos.append(i);start=i+len(needle)
-              print('POSITIONS',needle,pos)
-              for i in pos:
-                  print('CTX',needle,i,repr(js[max(0,i-7000):i+12000]))
+          with urllib.request.urlopen(req,timeout=35) as r:
+              js=r.read().decode('utf-8','replace')
+          end=js.find(',((()=>{')
+          prefix=js[:end]
+          values={
+            'apiOrigin':'0x21db',
+            'apiBase':'0x1bd4',
+            'cmsCallPrefix':'0xa6f',
+            'newDisclosureApi':'0x5959',
+            'apiKey':'0x3888',
+            'baseUrl':'0x551b',
+            'clientHeader':'0x2af2',
+            'contentType':'0x2a11',
+            'timestampHeader':'0x2df5',
+            'signatureHeader':'0x1bb9',
+            'publicKeyHeader':'0x541b',
+            'sessionKeyHeader':'0x6f9',
+            'hmacSalt':'0x994',
+          }
+          body=','.join(f"{json.dumps(k)}:a0_0x2580({v})" for k,v in values.items())
+          for suffix in (';',');','));'):
+              code=prefix+suffix+f"\nconsole.log(JSON.stringify({{{body}}}));\n"
+              open('/tmp/decoder.js','w').write(code)
+              cp=subprocess.run(['node','/tmp/decoder.js'],capture_output=True,text=True,timeout=20)
+              print('TRY',repr(suffix),'RC',cp.returncode)
+              print('OUT',cp.stdout.strip())
+              print('ERR',cp.stderr[:1000])
+              if cp.returncode==0:break
           PY
