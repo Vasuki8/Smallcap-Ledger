@@ -1,8 +1,37 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after Invesco production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after ICICI official-source audit. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
 
-## Latest completed task: Invesco complete current + prior monthly portfolio recovery
+## Latest completed task: ICICI complete-portfolio source audit — upstream archive DNS blocker
+
+No production data was promoted in this batch. The purpose was to determine whether **ICICI Prudential Small Cap Fund**, currently **83 named positions dated 2026-08-31 and partial**, has a first-party complete monthly portfolio route that can be collected without inventing the factsheet's separately disclosed **"Equity less than 1% of corpus"** aggregate.
+
+The current ICICI downloads application was traced end to end. Its public API base is `https://apimf.icicipruamc.com`. The live Downloads page uses:
+
+- categories: `GET /nms/v1/downloads/categories?userType=Investor`
+- files: `POST /nms/v1/downloads/files`
+- category: **Other Scheme Disclosures**
+- exact subcategory: **Monthly Portfolio Disclosures**
+- subcategory ID: `26a073d7-08d2-4a95-95fa-f83a4ee51e40`
+- category code passed by the live UI: `OTHERS`
+
+The API only returns the current monthly portfolio records when the exact Monthly Portfolio subcategory is requested without the broken financial-year filter. The first current records include:
+
+- **Monthly Portfolio Disclosure August 2026** -> `/downloads/Files/Monthly Portfolio Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip`
+- **Monthly Portfolio Disclosure July 2026** -> `/downloads/Files/Monthly Portfolio Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip`
+
+The live `www.icicipruamc.com` August ZIP URL responds **307** and redirects to the first-party archive host:
+`https://archive.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip`.
+
+That archive host is currently not publicly resolvable. The GitHub runner receives a DNS failure, and an independent public DNS-over-HTTPS check on 2026-09-24 returned **no A and no CNAME Answer** for both `archive.icicipruamc.com` and `www.archive.icicipruamc.com`; the authoritative response contains only the `icicipruamc.com` SOA. The historical `archive.icicipruamc.trafficmanager.net` alias also returns NXDOMAIN. Requesting the same archive path on `apimf.icicipruamc.com` returns the API wrapper's **404 Resource not found**. Therefore the tracker cannot currently obtain the ZIP bytes from a working first-party transport.
+
+Do **not** bypass this by assigning an old IP address, disabling TLS verification, using a third-party cached ZIP as source evidence, or turning the factsheet aggregate into fabricated holdings. ICICI remains **83 positions · 2026-08-31 · partial · current** until the AMC restores a resolvable archive host or exposes the portfolio archive through another working first-party endpoint.
+
+Temporary investigation workflow was removed from the working branch. No production code, parser rule, UI, dependency, permission, schedule, archive-retention policy or source-trust rule changed in this batch. The production state therefore remains the verified Invesco deployment below.
+
+Investigation evidence is in temporary branch Actions runs **36024082115** (exact download category), **36024181676** (valid request variants), **36024378270** (307 redirect target), and **36024773905** (public DNS verification). These runs are diagnostic evidence only; `main` remains the production source of truth.
+
+## Previous completed task: Invesco complete current + prior monthly portfolio recovery
 
 Merged PR #90 as commit `fb2548153b360612366006afe6c7a8a0f36f0970`. Production workflow **#460**, run **36019462111**, passed cumulative-history restore, parser v127 recovery, all **199 tests**, generated-site/download validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T15:20:56Z**, status was recorded at **2026-09-24T15:21:18Z**, and the workflow completed successfully at **2026-09-24T15:21:58Z**.
 
@@ -144,21 +173,20 @@ Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/86 ; validation htt
 
 ## Verified coverage after this batch
 
-Coverage at **2026-09-24T15:20:56Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
+Coverage remains the production state built at **2026-09-24T15:20:56Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. This ICICI audit intentionally made no production data change.
 
-Portfolios: **34/36 with holdings; 27 complete; 33 current; 27 current and complete; 7 partial**. The expected month-end is **2026-08-31**. Invesco improved complete/current-complete coverage **26 -> 27** without changing the 33-fund freshness count because its prior 69-position factsheet snapshot was already current.
+Portfolios remain **34/36 with holdings; 27 complete; 33 current; 27 current and complete; 7 partial**. The expected month-end is **2026-08-31**. The remaining collected partials are **Axis, Bajaj Finserv, Edelweiss, ICICI Prudential, JM, Sundaram and UTI**. Bajaj Finserv is the only stale collected portfolio; the other six partials are current under the August freshness target.
 
-The remaining collected partials are **Axis, Bajaj Finserv, Edelweiss, ICICI Prudential, JM, Sundaram and UTI**. Bajaj Finserv is the only stale collected portfolio; the other six partials are current under the August freshness target.
-
-The production status audit at **2026-09-24T15:21:18Z** records **111 retained portfolio snapshots, 1,487 archived document records, 1,929,413,449 archive bytes, 99,307,520 database bytes and 2,028,720,969 total retained bytes**. The Pages publication-file budget remains unchanged at 250 MiB.
+The latest production status audit remains **2026-09-24T15:21:18Z** with **111 retained portfolio snapshots, 1,487 archived document records, 1,929,413,449 archive bytes, 99,307,520 database bytes and 2,028,720,969 total retained bytes**. The Pages publication-file budget remains unchanged at 250 MiB.
 
 ## Next backend task and remaining blockers
 
-1. **ICICI Prudential Small Cap Fund is the next preferred investigation target.** Current coverage is **83 named positions dated 2026-08-31, partial**. The supported factsheet parser intentionally stays partial because the factsheet separately reports an **"Equity less than 1% of corpus"** aggregate without naming those constituents. Investigate ICICI's first-party statutory/monthly portfolio disclosure route for a complete scheme workbook or structured file; do not turn the factsheet aggregate into invented holdings.
-2. **Sundaram** is a documented source-precision/data-model blocker: one written-off holding is disclosed only as `<0.01%`. **UTI** remains partial because its current exposure source abbreviates small/short-term positions. Do not infer exact weights for either.
-3. **Axis** remains a first-party access/discovery blocker. **Edelweiss** and **JM** currently expose supported top/named-holdings views rather than a proven complete portfolio source.
-4. **Bajaj Finserv** remains the only stale collected portfolio: **13 partial positions dated 2026-07-31**. Retry only with genuinely new first-party access evidence.
-5. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
-6. Quant, SBI, Tata, TRUSTMF and Invesco are completed structured recovery targets; do not rerun those batches unnecessarily. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
+1. **JM Small Cap Fund is the next preferred completeness investigation.** Current coverage is **25 named positions dated 2026-08-31, partial**. The existing factsheet parser correctly treats the published Top-25 plus `Other Equity Stocks` aggregate as partial. Trace JM's first-party product/download APIs or statutory disclosures for the complete monthly portfolio; prefer a structured workbook/CSV/JSON and do not expand the aggregate into invented constituents.
+2. **ICICI Prudential** is now a documented first-party transport blocker: its live downloads API exposes the exact August/July monthly portfolio ZIPs, but both redirect to `archive.icicipruamc.com`, whose authoritative public DNS currently has no A/CNAME record. Retry only when that host resolves again or ICICI exposes another working official route.
+3. **Sundaram** remains a source-precision/data-model blocker because one written-off holding is disclosed only as `<0.01%`. **UTI** remains partial because its current exposure source abbreviates small/short-term positions. Do not infer exact weights.
+4. **Axis** remains a first-party access/discovery blocker. **Edelweiss** currently exposes supported top/named-holdings views rather than a proven complete portfolio source.
+5. **Bajaj Finserv** remains the only stale collected portfolio: **13 partial positions dated 2026-07-31**. Retry only with genuinely new first-party access evidence.
+6. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
+7. Quant, SBI, Tata, TRUSTMF and Invesco are completed structured recovery targets; do not rerun those batches unnecessarily. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
 
 Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never invent an exact number or unnamed constituent merely to improve completeness. Avoid broad historical reparses unless a source/parser change genuinely requires them. Update this handoff after the next completed batch.
