@@ -11,8 +11,6 @@ jobs:
   investigate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -21,7 +19,7 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect first-party Axis disclosure frontend
+      - name: Trace Axis statutory portfolio API
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
@@ -30,75 +28,42 @@ jobs:
           from urllib.parse import urljoin,urlparse
           import httpx
           from bs4 import BeautifulSoup
-
           out=Path('audit')
-          headers={
+          client=httpx.Client(headers={
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36',
             'Accept':'text/html,application/xhtml+xml,application/json,text/plain,*/*',
-            'Referer':'https://www.axismf.com/'
-          }
-          client=httpx.Client(headers=headers,timeout=20,follow_redirects=True)
-          pages=[
-            'https://www.axismf.com/statutory-disclosures',
-            'https://www.axismf.com/downloads',
-            'https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
-          ]
-          records=[]
-          scripts=[]
-          def first_party(url):
-            h=(urlparse(url).hostname or '').lower()
-            return h=='axismf.com' or h.endswith('.axismf.com')
-          for idx,page in enumerate(pages):
+            'Referer':'https://www.axismf.com/statutory-disclosures'
+          },timeout=20,follow_redirects=True)
+          page='https://www.axismf.com/statutory-disclosures'
+          r=client.get(page); r.raise_for_status()
+          (out/'page.html').write_bytes(r.content)
+          soup=BeautifulSoup(r.text,'html.parser')
+          scripts=[urljoin(page,x.get('src','')) for x in soup.select('script[src]')]
+          scripts=[u for u in scripts if (urlparse(u).hostname or '').lower().endswith('axismf.com')]
+          targets=[u for u in scripts if ('statutory-disclosures' in u or u in scripts[45:])]
+          rows=[]
+          q=re.compile(r'(?:https?:)?//[^"\\'\\\\\\s]+|/[A-Za-z0-9_?=&.%:,@+~/-]{3,260}')
+          for i,u in enumerate(targets):
             try:
-              r=client.get(page)
-              records.append({'type':'page','url':page,'status':r.status_code,'bytes':len(r.content),'content_type':r.headers.get('content-type')})
-              (out/f'page-{idx}.html').write_bytes(r.content)
-              soup=BeautifulSoup(r.text,'html.parser')
-              for tag in soup.select('script[src]'):
-                u=urljoin(str(r.url),tag.get('src',''))
-                if first_party(u) and u not in scripts:scripts.append(u)
+              s=client.get(u).text
+              (out/f'target-{i}.js').write_text(s,errors='replace')
+              found=[]
+              for m in q.finditer(s):
+                x=m.group(0)
+                if re.search(r'api|portfolio|disclosure|statutory|document|download|nested',x,re.I) and x not in found: found.append(x)
+              rows.append({'index':i,'url':u,'urls':found[:200]})
+              print('\\nTARGET',i,u)
+              for x in found[:100]: print('URL',x)
+              for term in ('sdPortfolios','nestedList','statutoryDisclosure','portfolio','disclosure'):
+                for m in list(re.finditer(term,s,re.I))[:8]:
+                  print('SNIP',term,s[max(0,m.start()-500):m.start()+1200].replace('\\n',' ')[:1700])
             except Exception as e:
-              records.append({'type':'page','url':page,'error':repr(e)})
-          terms=re.compile(r'portfolio|disclosure|statutory|download|document|cms|api|ajax|graphql|scheme',re.I)
-          urls=re.compile(r'''(?:"|')((?:https?:)?//[^"' ]+|/[^"' ]{3,220})(?:"|')''')
-          matches=[]
-          for i,u in enumerate(scripts[:45]):
-            try:
-              r=client.get(u)
-              if r.status_code!=200: continue
-              text=r.text
-              local=[]
-              for m in terms.finditer(text):
-                a=max(0,m.start()-260);b=min(len(text),m.end()+500)
-                s=text[a:b].replace('\n',' ')
-                if s not in local:local.append(s)
-                if len(local)>=80:break
-              found_urls=[]
-              for m in urls.finditer(text):
-                candidate=m.group(1)
-                if terms.search(candidate):
-                  absu=urljoin(u,candidate)
-                  if first_party(absu) and absu not in found_urls:found_urls.append(absu)
-              if local or found_urls:
-                name=f'script-{i}.js'
-                (out/name).write_text(text,errors='replace')
-                matches.append({'url':u,'file':name,'snippets':local[:80],'candidate_urls':found_urls[:100]})
-            except Exception as e:
-              records.append({'type':'script','url':u,'error':repr(e)})
-          (out/'records.json').write_text(json.dumps(records,indent=2))
-          (out/'scripts.json').write_text(json.dumps(scripts,indent=2))
-          (out/'matches.json').write_text(json.dumps(matches,indent=2))
-          print('pages',json.dumps(records,indent=2))
-          print('scripts',len(scripts),'matching bundles',len(matches))
-          for item in matches:
-            print('\nBUNDLE',item['url'])
-            for u in item['candidate_urls'][:40]:print('URL',u)
-            for s in item['snippets'][:8]:print('SNIP',s[:900])
+              rows.append({'index':i,'url':u,'error':repr(e)})
+          (out/'targets.json').write_text(json.dumps(rows,indent=2))
           PY
-      - name: Retain investigation artifacts
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: axis-source-investigation
+          name: axis-source-trace
           path: audit/
           retention-days: 3
