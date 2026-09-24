@@ -23,55 +23,32 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect official Invesco monthly-holdings source
+      - name: Query official Invesco holdings API
         run: |
           rm -rf "$SMALLCAP_DATA_DIR"
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json,re
-          from urllib.parse import urljoin
+          import json
           from pathlib import Path
-          from tracker import providers,disclosures,db,amc_reports
+          from tracker import providers,db,disclosures,amc_reports
           db.init();disclosures.seed_sources()
-          out=Path('audit')
-          pages=[
-            'https://www.invescomutualfund.com/literature-forms/monthly-holdings/equity',
-            'https://www.invescomutualfund.com/literature-and-form?tab=Complete',
-            'https://www.invescomutualfund.com/literature-forms/factsheets',
+          root='https://www.invescomutualfund.com'
+          endpoints=[
+            root+'/api/ClassificationCompleteMonthlyHoldings',
+            root+'/api/CompleteMonthlyHoldings?year=0',
+            root+'/api/CompleteMonthlyHoldings?year=2026&classification=equity',
+            root+'/api/CompleteMonthlyHoldings?year=2026&classification=Equity',
           ]
-          scripts=set();found=set()
-          for page in pages:
+          out=Path('audit')
+          for i,url in enumerate(endpoints):
               try:
-                  body,h,typ=providers.fetch(page,max_bytes=12*1024*1024)
-                  text=body.decode('utf-8','ignore')
-                  print('PAGE',page,len(body),typ,h)
-                  (out/(re.sub(r'[^a-z0-9]+','-',page.lower()).strip('-')+'.html')).write_bytes(body)
-                  for m in re.finditer(r'''(?:href|src)=["']([^"'#]+)["']''',text,re.I):
-                      u=urljoin(page,m.group(1))
-                      if u.endswith('.js') or '.js?' in u:scripts.add(u)
-                      if re.search(r'\.(?:xlsx?|xls|csv|zip|pdf)(?:\?|$)',u,re.I):found.add(u)
-                  for m in re.finditer(r'''https?://[^"'<>\s]+''',text):
-                      u=m.group(0).replace('\\/','/')
-                      if re.search(r'\.(?:xlsx?|xls|csv|zip|pdf)(?:\?|$)',u,re.I):found.add(u)
-                  for line in text.splitlines():
-                      if re.search(r'Invesco India Small Cap|monthly.?hold|api/|graphql|document|literature',line,re.I):
-                          print('PAGE_MATCH',line[:2200])
-              except Exception as e: print('PAGE_ERROR',page,repr(e))
-          print('STATIC_FILES',json.dumps(sorted(found),ensure_ascii=False))
-          print('SCRIPTS',json.dumps(sorted(scripts),ensure_ascii=False))
-          for i,u in enumerate(sorted(scripts)):
-              try:
-                  body,h,typ=providers.fetch(u,max_bytes=8*1024*1024)
-                  text=body.decode('utf-8','ignore')
-                  matches=[]
-                  for pattern in (r"[^\"']{0,120}monthly[^\"']{0,160}",r"[^\"']{0,120}literature[^\"']{0,160}",r"[^\"']{0,120}api[^\"']{0,160}",r"[^\"']{0,120}download[^\"']{0,160}"):
-                      matches += re.findall(pattern,text,re.I)
-                  useful=[x for x in matches if re.search(r'holding|literature|document|download|api',x,re.I)]
-                  if useful:
-                      print('JS',u,h)
-                      for x in useful[:120]:print('JS_MATCH',re.sub(r'\s+',' ',x)[:2000])
-                      (out/f'js-{i}.js').write_bytes(body)
-              except Exception as e:print('JS_ERROR',u,repr(e))
+                  body,h,typ=providers.fetch(url,max_bytes=12*1024*1024)
+                  print('API',url,len(body),typ,h)
+                  txt=body.decode('utf-8','ignore')
+                  print('BODY',txt[:30000])
+                  (out/f'api-{i}.json').write_bytes(body)
+              except Exception as e:
+                  print('API_ERROR',url,repr(e))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
