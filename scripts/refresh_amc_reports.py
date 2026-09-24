@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,55 +230,27 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v65':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v66':
         from bs4 import BeautifulSoup
-        from urllib.parse import urljoin,urlparse
+        from urllib.parse import urljoin
         page='https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio'
         try:
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=12*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
             base=urljoin(page,(soup.find('base') or {}).get('href',''))
-            runtime_url=None;main_url=None
-            for tag in soup.find_all('script'):
-                src=tag.get('src')
-                if not src:continue
-                u=urljoin(base or page,src)
-                if 'runtime.' in u:runtime_url=u
-                elif 'main.' in u:main_url=u
-            if not runtime_url or not main_url:raise ValueError('PGIM runtime/main bundle not found')
-            for label,u in (('runtime',runtime_url),('main',main_url)):
-                providers.can_crawl(u)
-                body,_,mime=providers.fetch(u,max_bytes=25*1024*1024)
-                txt=body.decode('utf-8','ignore')
-                print(f'PGIM_V65_BUNDLE {label} {u} bytes={len(body)} mime={mime}',flush=True)
-                if label=='runtime':
-                    for chunk in ('2468','1480','2076','7556'):
-                        for m in list(re.finditer(chunk,txt))[:8]:
-                            snip=re.sub(r'\s+',' ',txt[max(0,m.start()-900):m.end()+1400]).strip()
-                            print(f'PGIM_V65_RUNTIME_{chunk} '+snip[:3200],flush=True)
-                else:
-                    # Route declaration proves the four chunk ids; keep a bounded context.
-                    m=re.search(r'Promise\.all\(\[f\.e\(2468\),f\.e\(1480\),f\.e\(2076\),f\.e\(7556\)\]\).*?DISCLOSURES_ROUTES',txt,re.I)
-                    if m:print('PGIM_V65_ROUTE '+txt[max(0,m.start()-1000):m.end()+1000],flush=True)
-            # Derive candidate lazy chunk names from the runtime mapping text and fetch
-            # only URLs whose filename mentions one of the disclosure route chunk ids.
-            providers.can_crawl(runtime_url)
-            rbody,_,_=providers.fetch(runtime_url,max_bytes=4*1024*1024)
-            rtxt=rbody.decode('utf-8','ignore')
-            names=[]
-            for m in re.finditer(r'([0-9]{1,5})\s*:\s*["\']([a-f0-9]{6,})["\']',rtxt,re.I):
-                cid,h=m.groups()
-                if cid in ('2468','1480','2076','7556'):
-                    names.append((cid,h))
-            print('PGIM_V65_MAP '+json.dumps(names),flush=True)
-            # Also capture all string literals ending .js from runtime near those ids.
-            for m in re.finditer(r'["\']([^"\']+\.js)["\']',rtxt,re.I):
-                v=m.group(1)
-                if any(cid in v for cid in ('2468','1480','2076','7556')):
-                    print('PGIM_V65_JSSTRING '+v,flush=True)
+            runtime=next((urljoin(base or page,t.get('src')) for t in soup.find_all('script')
+                          if t.get('src') and 'runtime.' in t.get('src')),None)
+            if not runtime:raise ValueError('PGIM runtime bundle not found')
+            providers.can_crawl(runtime)
+            body,_,mime=providers.fetch(runtime,max_bytes=2*1024*1024)
+            txt=body.decode('utf-8','ignore')
+            print(f'PGIM_V66_RUNTIME_URL {runtime} bytes={len(body)} mime={mime}',flush=True)
+            print('PGIM_V66_RUNTIME_BEGIN',flush=True)
+            print(txt[:12000],flush=True)
+            print('PGIM_V66_RUNTIME_END',flush=True)
         except Exception as exc:
-            print(f"::warning::PGIM v65 lazy-chunk diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::PGIM v66 runtime diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
