@@ -1,4 +1,4 @@
-name: Inspect ICICI financials service
+name: Inspect ICICI financials calls
 
 on:
   push:
@@ -14,24 +14,27 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect exact financial disclosures chunks
+      - name: Extract exact financial page calls and API-base helper
         run: |
           python - <<'PY'
-          import re, urllib.request
-          base='https://www.icicipruamc.com/static/js/'
-          files=['financialsDisclosuresService.DfjThF0F.js','index.BicS6zQ2.js']
-          for name in files:
-              url=base+name
+          import re,urllib.request
+          def get(url):
               req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
-              with urllib.request.urlopen(req,timeout=60) as r:
-                  s=r.read().decode('utf-8','ignore')
-                  print('\nFILE',name,'STATUS',r.status,'LEN',len(s),r.headers.get('content-type'))
-              print('FULL',s)
-              for needle in ['/fds/v1/categories','/fds/v1/files','Total Expense Ratio','TOTAL_EXPENSE_RATIO',
-                             'financialsCategoryData','financialsData','axios','fetch','category','fileType','page']:
-                  pos=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
-                  if pos:
-                      print('NEEDLE',needle,'COUNT',len(pos))
-                      for p in pos[:20]:
-                          print('CTX',re.sub(r'\s+',' ',s[max(0,p-1200):p+2500])[:3800])
+              with urllib.request.urlopen(req,timeout=60) as r:return r.read().decode('utf-8','ignore')
+          page=get('https://www.icicipruamc.com/static/js/index.BicS6zQ2.js')
+          print('PAGE_LEN',len(page))
+          for needle in ['na(', 'da(', 'K=', 'const K', 'function K', 'PAGE_NUMBER','PAGE_SIZE','FILE_TYPE','TOTAL_EXPENSE_RATIO','currentTabFilter']:
+              print('\nNEEDLE',needle)
+              for p in [m.start() for m in re.finditer(re.escape(needle),page)][:30]:
+                  print('POS',p,'CTX',re.sub(r'\s+',' ',page[max(0,p-1600):p+3200]))
+          main=get('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js')
+          for needle in ['REACT_APP_API_ENDPOINT:"https://apimf.icicipruamc.com"', 'function getApi', 'API_ENDPOINT']:
+              print('\nMAIN_NEEDLE',needle)
+              for p in [m.start() for m in re.finditer(re.escape(needle),main)][:15]:
+                  print('POS',p,'CTX',re.sub(r'\s+',' ',main[max(0,p-3000):p+5000]))
+          # Find short functions returning API endpoint near env declaration.
+          env=main.find('REACT_APP_API_ENDPOINT:"https://apimf.icicipruamc.com"')
+          if env>=0:
+              block=main[env:env+25000]
+              print('ENV_BLOCK',re.sub(r'\s+',' ',block))
           PY
