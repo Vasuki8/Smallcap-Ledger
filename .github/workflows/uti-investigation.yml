@@ -40,7 +40,7 @@ jobs:
           print('ZIP',url,title,len(body),typ,h,hashlib.sha256(body).hexdigest())
           with zipfile.ZipFile(io.BytesIO(body)) as z:
               print('ENTRIES',json.dumps([(i.filename,i.file_size) for i in z.infolist()],ensure_ascii=False))
-              matches=[i for i in z.infolist() if re.fullmatch(r'Sebi Exposure as on .+_final\.xlsx',i.filename.rsplit('/',1)[-1],re.I)]
+              matches=[i for i in z.infolist() if re.fullmatch(r'Sebi Exposure as on .+_final(?:_REVISED)?\.xlsx',i.filename.rsplit('/',1)[-1],re.I)]
               assert len(matches)==1
               data=z.read(matches[0])
           book=openpyxl.load_workbook(io.BytesIO(data),data_only=True,read_only=True)
