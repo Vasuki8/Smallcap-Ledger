@@ -65,7 +65,11 @@ def report_date(text):
               r"(?:as\s*(?:on|of))\s*[:\-]?\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s*,?\s*(\d{4})"]
     for pattern in patterns:
         for m in re.finditer(pattern,text,re.I):
-            try: return iso(" ".join(m.groups()))
+            value=" ".join(m.groups())
+            if re.fullmatch(r'\d{1,2}[ /-]\d{1,2}[ /-]\d{2}',value):
+                try:return datetime.strptime(re.sub(r'[ /]', '-', value),'%d-%m-%y').date().isoformat()
+                except ValueError:pass
+            try: return iso(value)
             except ValueError: pass
     for m in re.finditer(r'(?:as\s*(?:on|of|at))\s*[:\-]?\s*([A-Za-z]+\s+\d{1,2},?\s*\d{4})',text,re.I):
         try:return iso(m.group(1).replace(',', ' '))
