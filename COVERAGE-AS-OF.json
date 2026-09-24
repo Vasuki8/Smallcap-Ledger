@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-24T06:36:16+00:00",
+  "built_at": "2026-09-24T07:20:42+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -255,7 +255,7 @@
           "title": "March 2025 performance table · Bandhan Small Cap Fund",
           "kind": "factsheet",
           "url": "https://assets.bandhanmutual.com/2025/04/59b0d496-bandhan-performance-table-march-2025.pdf",
-          "last_seen": "2026-09-24T06:36:03+00:00",
+          "last_seen": "2026-09-24T07:20:25+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1623,13 +1623,13 @@
       },
       "portfolio": {
         "as_of": "2026-08-31",
-        "source": "https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html",
-        "complete": 0,
-        "positions": 10
+        "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx",
+        "complete": 1,
+        "positions": 67
       },
-      "portfolio_complete": false,
+      "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 4,
+      "official_publications": 5,
       "portfolio_gap": null
     },
     {
@@ -1833,7 +1833,7 @@
           "title": "Union Small Cap Fund Scheme Information Document",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-24T06:36:03+00:00",
+          "last_seen": "2026-09-24T07:20:25+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1859,10 +1859,10 @@
     "ter": 28,
     "base_expense_ratio": 33,
     "portfolio": 34,
-    "portfolio_complete": 24,
+    "portfolio_complete": 25,
     "portfolio_fresh": 33,
-    "portfolio_fresh_complete": 24,
-    "portfolio_partial": 10,
+    "portfolio_fresh_complete": 25,
+    "portfolio_partial": 9,
     "benchmark_identity": 36
   },
   "notes": [
