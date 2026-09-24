@@ -601,16 +601,21 @@ Top 10 holdings Grand Total 100.00%'''
         with patch('tracker.amc_discovery.read',side_effect=fake_read), \
              patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
             rows=list(discover('Aditya Birla'))
-        self.assertEqual(rows,[(
-            'Aditya Birla Sun Life Small Cap Fund',
-            'https://abcscprod.azureedge.net/monthly-august.zip',
-            'Monthly Portfolios as on August 31, 2026')])
+        self.assertEqual(rows,[
+            ('Aditya Birla Sun Life Small Cap Fund',
+             'https://mutualfund.adityabirlacapital.com/monthly-august.zip',
+             'Monthly Portfolios as on August 31, 2026'),
+            ('Aditya Birla Sun Life Small Cap Fund',
+             'https://abcscprod.azureedge.net/monthly-august.zip',
+             'Monthly Portfolios as on August 31, 2026'),
+        ])
 
     def test_absl_monthly_zip_reuses_complete_spreadsheet_reconciliation(self):
         import zipfile
         import openpyxl
         from tracker import db
         from tracker.structured_reports import absl_zip
+        db.init()
         wb=openpyxl.Workbook();ws=wb.active;ws.title='Small Cap'
         rows=[
             ['Aditya Birla Sun Life Small Cap Fund',None,None,None,None,None],

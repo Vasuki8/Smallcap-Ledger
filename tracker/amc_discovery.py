@@ -90,7 +90,16 @@ def discover(amc):
                     if day<=date.today():rows.append((day,url,title))
             if rows:
                 day,url,title=max(rows,key=lambda r:r[0])
-                yield family,url,title or f'Monthly Portfolio as on {day.isoformat()}'
+                # ABSL's API currently returns its Sitecore media file through an
+                # AzureEdge distribution hostname. Prefer the identical media path
+                # on the registered AMC origin because some GitHub runners cannot
+                # resolve the CDN; retain the API URL as an explicit fallback.
+                parsed=urlparse(url)
+                origin=parsed._replace(scheme='https',netloc='mutualfund.adityabirlacapital.com').geturl()
+                if disclosures.official_publication_url(origin,amc):
+                    yield family,origin,title or f'Monthly Portfolio as on {day.isoformat()}'
+                if origin!=url:
+                    yield family,url,title or f'Monthly Portfolio as on {day.isoformat()}'
                 return
         except Exception:
             pass
