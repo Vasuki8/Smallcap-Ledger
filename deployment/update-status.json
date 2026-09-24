@@ -1,15 +1,15 @@
 {
-  "built_at": "2026-09-24T05:16:40+00:00",
+  "built_at": "2026-09-24T05:18:11+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
     "nav_points": 281300,
     "benchmark_points": 5328,
     "portfolios": 104,
-    "documents": 1480,
-    "archive_bytes": 1925367614,
-    "database_bytes": 99160064,
-    "total_storage_bytes": 2024527678,
+    "documents": 1481,
+    "archive_bytes": 1925751666,
+    "database_bytes": 99217408,
+    "total_storage_bytes": 2024969074,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-09-23"
@@ -48,7 +48,7 @@
     "cron": "30 18 * * *",
     "scheduled_time_is_not_guaranteed": true,
     "publication_file_budget_bytes": 262144000,
-    "publication_files_included": 164,
-    "publication_bytes_included": 262143635
+    "publication_files_included": 167,
+    "publication_bytes_included": 262143670
   }
 }
