@@ -51,6 +51,29 @@ jobs:
           print('COUNT',count)
           print('SNAPSHOT',json.dumps(snap))
           print('AUM',json.dumps(metric))
+          if not snap['complete']:
+              import io,openpyxl
+              from tracker import providers
+              from tracker.portfolio_parser import parse_sheet
+              body,_,_=providers.fetch(rows[0][1],max_bytes=10*1024*1024)
+              book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+              for ws in book.worksheets:
+                  cells=list(ws.iter_rows())
+                  data=[[c.value for c in row] for row in cells]
+                  formats=[[c.number_format or '' for c in row] for row in cells]
+                  parsed=parse_sheet(data,formats,'Tata Small Cap Fund')
+                  if parsed:
+                      print('PARSED',ws.title,json.dumps({
+                          'day':parsed['day'],'complete':parsed['complete'],
+                          'positions':len(parsed['positions']),
+                          'weight':sum(x['weight'] for x in parsed['positions']),
+                          'unknown_rows':parsed['unknown_rows'],
+                      },ensure_ascii=False))
+                      for ri,row in enumerate(data):
+                          flat=' | '.join(str(x) for x in row if x not in (None,''))
+                          if any(str(u) in flat for u in parsed['unknown_rows']):
+                              print('UNKNOWN_ROW',ri+1,flat[:1800])
+              book.close()
           assert snap['as_of']=='2026-08-31'
           assert snap['complete']==1
           assert snap['positions']==67
