@@ -1,6 +1,63 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after JM production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after Bandhan production recovery and the UTI/Axis/Union portfolio-source audit. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: Bandhan production recovery plus UTI/Axis/Union source audit
+
+Bandhan's recovery is now production-verified. PR #92 merged as commit `a8c630c5ff36c9cd7d790035f3cedd62845523d8`. Production workflow **#462**, run **36042284692**, passed the release gate and GitHub Pages deployment; Pages artifact **10826922439** is **231,213,983 bytes** with digest `sha256:b44b4a3f985820b8e3643d905d60c1a0563a268fd8a7839e138576b175faa138`. Status commit `540070cfedc193e1f4d0ce925eb47cb37e84d114` records the post-deployment collection state.
+
+Bandhan's public first-party finance disclosure path now resolves the exact Small Cap monthly workbooks through the exact scheme disclosure page and its own post ID. The tracker accepts only the Bandhan Google Cloud Storage bucket returned by that API. Retained official sources are:
+
+- August: `https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx` — SHA-256 `f793184232eb89f776bfab87cc6729dd203af3fce6d054ca23332d6667828975`
+- July: `https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/08/797467c3-bandhan-small-cap-fund_74dec064-fd93-4fe8-950a-e55f077e1a6d_31-july-2026.xlsx` — SHA-256 `4e5980ac2cbbe4231b73dabce6765003bc8766e68981fe82b213c50f5ec590b0`
+
+August retains **260 numeric positions**, July **263**, and both reconcile to **100.00% known numeric weight**. They intentionally remain **partial** because Bandhan publishes several tiny equities with the literal marker `$ = Less Than 0.01% of NAV`; those censored positions are not assigned fabricated numeric weights. August workbook AUM is **₹34,176.024349 crore** and July is **₹31,103.029413 crore**. The isolated validation run **36041997427** passed **214 tests** and verified exact URL/host identity, the censored-weight rule, explicit TREPS/cash leaves, idempotency and both month-end workbooks.
+
+### UTI completeness audit — verified disclosure-precision blocker
+
+Diagnostic run **36056204470** inspected the exact already-retained August UTI ZIP:
+`https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16`.
+
+The relevant first-party workbook is `Sebi Exposure as on 31 Aug 2026_final.xlsx`. The UTI Small Cap block confirms why the current snapshot must remain partial:
+
+- the tracker retains **108** equity rows with exact numeric weights;
+- `MTAR TECHNOLOGIES LTD` (ISIN `INE864I01014`, quantity **1**, market value **₹0.07 lakh**) has the literal NAV-weight marker **`*`**, not a number;
+- the workbook publishes a **SHORT TERM DEPOSITS** amount of **₹127 lakh** without an exact `% TO NAV` value;
+- Net Current Assets is separately published at **3.96%**;
+- total UTI Small Cap market value is **₹544,764.68 lakh**.
+
+Do not calculate the censored MTAR weight or a deposit weight from market value/AUM. Under the standing evidence rules, UTI remains **108 positions · 2026-08-31 · partial**.
+
+### Axis completeness audit — current official factsheet still aggregates undisclosed holdings
+
+The current Axis August e-factsheet route was recovered and verified in diagnostic runs **36058054003**, **36058173359**, **36058283743**, **36058525795** and **36058742161**.
+
+Exact first-party sources:
+
+- e-factsheet: `https://www.axismf.com/efactsheet/Aug-2026/Innerpage/SMALL-CAP.html`
+- full official PDF: `https://www.axismf.com/efactsheet/Aug-2026/Innerpage/Axis%20Fund%20Factsheet%20August%202026%20Final.pdf`
+
+The full PDF is reachable from GitHub Actions, **8,488,816 bytes**, **171 pages**, unencrypted. Its printed page 16 is the exact Axis Small Cap page, anchored by the mandate, **29 November 2013** allotment date, **Nifty Smallcap 250 TRI**, and **₹31,448.32 crore as of 2026-08-31**.
+
+The portfolio table itself is not a complete constituent disclosure. It publishes **Equity 92.37%**, named holdings down to 0.50%, then the explicit aggregate **Other Domestic Equity (Less than 0.50% of the corpus) 15.20%**, followed by **Debt, Cash & other current assets 7.63%** and **Grand Total 100.00%**. Therefore this source cannot establish the unnamed constituents inside the 15.20% aggregate or split the debt/cash aggregate. Do not mark it complete or turn either aggregate into invented securities. Axis's newer **10-position partial dated 2026-09-16** remains the latest retained snapshot.
+
+This supersedes the older statement that Axis's full factsheet route was inaccessible: the current August full PDF is reachable, but its disclosure format itself prevents a complete named portfolio.
+
+### Union source audit — runner transport still blocked
+
+Union's public Downloads page states that monthly portfolio statements are hosted under its Factsheets & Portfolios section, but the GitHub production network still cannot fetch the application. Diagnostic run **36058957582** requested the exact official page `https://www.unionmf.com/about-us/downloads` and received **`URLError: [Errno 111] Connection refused`** before any client-side API/script discovery could run.
+
+A bounded public-source search found indexed Union factsheets and older disclosure material but no concrete current August Small Cap monthly portfolio attachment that can replace the blocked live transport. No guessed URL, third-party copy, stale IP, TLS bypass or inferred holding was used. Union therefore remains the **only 0-position fund** and a transport/source-discovery blocker.
+
+### Production coverage and next backend target
+
+Post-Bandhan production coverage at **2026-09-24T18:36:27Z** is **36 funds; 35 with a portfolio; 28 complete; 34 current; 28 current+complete; 7 partial**. AUM, a dated Direct fee figure and benchmark identity remain **36/36**. The only zero-portfolio fund is **Union Small Cap Fund**. Current partials are Axis, Bandhan, Edelweiss, ICICI Prudential, Sundaram and UTI; Bajaj Finserv is the only stale partial.
+
+The portfolio backlog is now dominated by verified upstream disclosure/transport limitations rather than untried parser relaxations. Do not re-audit UTI or Axis unless their AMC disclosure format changes, and do not retry Union until a working first-party transport or exact attachment appears.
+
+**Next preferred backend task:** return to expense-metric precision/coverage. Current coverage has reported TER for **28/36** funds and base expense ratio for **33/36**. Missing reported TER: Axis, Canara Robeco, HSBC, ICICI Prudential, Invesco India, JM, Mahindra Manulife and Mirae Asset. Missing base expense ratio: Axis, Groww and UTI. Start with official AMFI revised-TER data and exact AMC disclosures; preserve TER and BER as distinct metrics and never relabel an unqualified expense ratio as TER.
+
+No production parser/data mutation was made by the UTI/Axis/Union audit. Temporary diagnostic workflows are removed before merge.
 
 ## Latest completed task: JM complete current + prior monthly portfolio recovery
 
