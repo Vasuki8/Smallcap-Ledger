@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -655,36 +655,24 @@ def run():
         current=bool(snap and snap['as_of']>='2026-08-31' and snap['positions']==10 and not snap['complete'])
         if snap:print(f'EDELWEISS_V99_SNAPSHOT {snap["as_of"]} complete={snap["complete"]} positions={snap["positions"]}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v101':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v102':
         family='Edelweiss Small Cap Fund'
         url='https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf'
         try:
-            import io
-            from pypdf import PdfReader
-            from tracker.report_parser import edelweiss_top10_portfolio,owns_page
             providers.can_crawl(url)
             body,h,mime=providers.fetch(url,max_bytes=50*1024*1024)
-            reader=PdfReader(io.BytesIO(body))
-            page14=reader.pages[14].extract_text() or ''
-            page15=reader.pages[15].extract_text() or ''
-            page16=reader.pages[16].extract_text() or ''
-            parsed=edelweiss_top10_portfolio(page14,page15+'\n'+page16)
-            print('EDELWEISS_V101_PARSE '+json.dumps({
-                'owned':owns_page(page14,family),
-                'parsed':None if parsed is None else {'day':parsed['day'],'positions':len(parsed['positions']),
-                                                      'sum':round(sum(x['weight'] for x in parsed['positions']),4)}
-            }),flush=True)
-            rawlines=[re.sub(r'\s+',' ',x).strip() for x in page14.splitlines()]
-            for i,x in enumerate(rawlines):
-                if re.search(r'Top\s*10\s*Holdings|City\s+Union|Karur\s+Vysya|Multi\s+Commodity|PNB\s+Housing|Avalon|Gabriel|KEI|Ajanta|Fortis|Radico|Past\s+Performance',x,re.I):
-                    print('EDELWEISS_V101_LINE '+json.dumps({'i':i,'text':x},ensure_ascii=False),flush=True)
-            extra=' '.join(re.sub(r'\s+',' ',x).strip() for x in (page15+'\n'+page16).splitlines())
-            for term in ('Total no. of equity stocks','Top 10 stocks','Data as on August 31, 2026'):
-                m=re.search(r'.{0,120}'+re.escape(term)+r'.{0,180}',extra,re.I)
-                if m:print('EDELWEISS_V101_EXTRA '+m.group(0),flush=True)
+            did=providers.save_document(family,'Edelweiss Factsheet September 2026',url,'factsheet','Fund',origin='AMC')
+            providers.doc_version(did,h)
+            count=amc_reports.extract(body,family,url,h)
+            print(f'EDELWEISS_V102_PARSED count={count} mime={mime}',flush=True)
         except Exception as exc:
-            print(f"::warning::Edelweiss v101 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
-        ok.append(False)
+            print(f"::warning::Edelweiss v102 factsheet: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['positions']==10 and not snap['complete'])
+        if snap:print(f'EDELWEISS_V102_SNAPSHOT {snap["as_of"]} complete={snap["complete"]} positions={snap["positions"]}',flush=True)
+        ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
