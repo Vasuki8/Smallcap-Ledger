@@ -8,38 +8,27 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  decode:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
-      - name: Decode Bandhan encryption headers and signature helper
+      - name: Decode Bandhan crypto primitive names
         run: |
           python - <<'PY'
           import urllib.request,subprocess
           req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
-
-          i=js.find('_0x3844f1=')
-          print('SIGNATURE_HELPER',repr(js[i:i+9000]))
-
-          end=js.find(',((()=>{')
-          prefix=js[:end]
+          end=js.find(',((()=>{');prefix=js[:end]
           for suffix in (';',');','));'):
               code=prefix+suffix+"""
               console.log(JSON.stringify({
-                publicKey:a0_0x2580(0x14de),
-                cipherAlgorithm:a0_0x2580(0x329d),
-                utf8:a0_0x2580(0x4317),
-                rsaScheme:a0_0x2580(0x2732),
-                clientSignatureHeader:a0_0x2580(0x541b),
-                bandhanSignatureHeader:a0_0x2580(0x1bb9),
-                internalProxyHeader:a0_0x2580(0x4290),
-                internalProxyValue:a0_0x2580(0x27c5),
-                platformHeader:a0_0x2580(0x2af2),
-                apiKey:a0_0x2580(0x3888),
-                signatureEnabled:a0_0x2580(0x17e),
-                alphabet:a0_0x2580(0x36a1)
+                p5602:a0_0x2580(0x5602), p0b9c:a0_0x2580(0xb9c),
+                p4cd3:a0_0x2580(0x4cd3), p5066:a0_0x2580(0x5066),
+                p1a2d:a0_0x2580(0x1a2d), p51b1:a0_0x2580(0x51b1),
+                p189e:a0_0x2580(0x189e), p30e8:a0_0x2580(0x30e8),
+                p42fa:a0_0x2580(0x42fa), p2ef9:a0_0x2580(0x2ef9),
+                p4070:a0_0x2580(0x4070)
               }));
               """
               open('/tmp/decoder.js','w').write(code)
