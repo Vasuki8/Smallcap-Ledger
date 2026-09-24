@@ -394,7 +394,11 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         rows=[
             ['PGIM INDIA SMALL CAP FUND'],['Monthly Portfolio as on 31 August 2026'],
             ['','Name of Instrument','ISIN','Industry/Rating','Quantity','Market/Fair Value (INR Lacs)','% to Net Assets'],
-            ['', 'Alpha Limited','INE123456789','Banks',100,174711.89,97.43],
+            ['', 'Alpha Limited','INE123456789','Banks',100,34800.00,19.40],
+            ['', 'Beta Limited','INE123456788','Banks',100,34800.00,19.40],
+            ['', 'Gamma Limited','INE123456787','Banks',100,34800.00,19.40],
+            ['', 'Delta Limited','INE123456786','Banks',100,34800.00,19.40],
+            ['', 'Epsilon Limited','INE123456785','Banks',100,35511.89,19.83],
             ['', 'Sub Total','','','',174711.89,97.43],
             ['', 'Money Market Instruments','','','','',''],
             ['', 'Clearing Corporation of India Ltd.','','','',6794.77,3.79],
@@ -404,7 +408,7 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         ]
         # Keep the synthetic market values internally reconciled to the published
         # percentage layout; the real workbook is additionally validated in production.
-        rows[-1][5]=sum(float(r[5]) for r in (rows[3],rows[6],rows[8]))
+        rows[-1][5]=179131.28
         fmt=[['General']*7 for _ in rows]
         parsed=parse_sheet(rows,fmt,'Pgim India Small Cap Fund')
         self.assertTrue(parsed['complete'])
