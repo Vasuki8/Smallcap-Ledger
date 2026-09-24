@@ -10,10 +10,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    env:
-      SMALLCAP_NO_SCHEDULER: '1'
-      PYTHONUNBUFFERED: '1'
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -22,59 +19,21 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Validate exact Bandhan August and July workbooks
+      - name: Inspect Bandhan August tail and footnotes
         run: |
           uv run --frozen python - <<'PY'
-          import urllib.request,urllib.parse,json,re,io,hashlib
+          import urllib.request,urllib.parse,json,io,re
           import openpyxl
-          from tracker.portfolio_parser import parse_sheet
-          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
+          api='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?id=158853'
           H={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
-          for post_id,expected_day in [(158853,'2026-08-31'),(155405,'2026-07-31')]:
-              meta_url=base+'?'+urllib.parse.urlencode({'id':post_id})
-              with urllib.request.urlopen(urllib.request.Request(meta_url,headers=H),timeout=35) as r:
-                  meta=json.loads(r.read())
-              rows=meta.get('data') or []
-              assert len(rows)==1 and rows[0].get('id')==post_id
-              row=rows[0];acf=row.get('acf_fields') or {}
-              print('META',post_id,json.dumps({
-                'title':row.get('title'),'category':row.get('category'),'sub_category':row.get('sub_category'),
-                'financial_year':acf.get('financial_year'),'disclosures_type':acf.get('disclosures_type'),
-                'fund':(acf.get('funds_mapping') or {}).get('post_title'),
-                'files':acf.get('disclosure_files')
-              },ensure_ascii=False)[:10000])
-              files=acf.get('disclosure_files') or []
-              assert len(files)==1
-              link=files[0].get('document_link') or {}
-              target=link.get('url');assert target
-              with urllib.request.urlopen(urllib.request.Request(target,headers={'User-Agent':'Mozilla/5.0','Referer':'https://bandhanmutual.com/'}),timeout=40) as r:
-                  body=r.read()
-              h=hashlib.sha256(body).hexdigest()
-              print('SOURCE',post_id,target,len(body),h,body[:8].hex())
-              assert body.startswith(b'PK')
-              wb=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
-              found=[]
-              for ws in wb.worksheets:
-                  cells=list(ws.iter_rows())
-                  data=[[c.value for c in rr] for rr in cells]
-                  formats=[[c.number_format or '' for c in rr] for rr in cells]
-                  prefix=' '.join(str(v) for rr in data[:35] for v in rr if v not in (None,''))
-                  if not re.search(r'Bandhan\s+Small\s+Cap',ws.title+' '+prefix,re.I):continue
-                  parsed=parse_sheet(data,formats,'Bandhan Small Cap Fund')
-                  info={'sheet':ws.title,'prefix':prefix[:1800]}
-                  if parsed:
-                      info['parsed']={'day':parsed['day'],'positions':len(parsed['positions']),
-                                      'complete':parsed['complete'],
-                                      'weight':sum(x['weight'] for x in parsed['positions']),
-                                      'aum':parsed.get('aum'),'unknown_rows':parsed.get('unknown_rows',[])[:100]}
-                  found.append(info)
-                  print('SMALLCAP',post_id,json.dumps(info,ensure_ascii=False))
-                  if parsed:
-                      for ri,rr in enumerate(data):
-                          flat=' | '.join(str(x) for x in rr if x not in (None,''))
-                          if any(str(u) in flat for u in parsed.get('unknown_rows',[])) or re.search(r'grand total|net assets|treps|repo|cash|margin|derivative|total',flat,re.I):
-                              print('ROW',post_id,ri+1,flat[:2200])
-                      assert parsed['day']==expected_day
-              wb.close()
-              assert found
+          with urllib.request.urlopen(urllib.request.Request(api,headers=H),timeout=30) as r:meta=json.loads(r.read())
+          target=meta['data'][0]['acf_fields']['disclosure_files'][0]['document_link']['url']
+          with urllib.request.urlopen(urllib.request.Request(target,headers={'User-Agent':'Mozilla/5.0','Referer':'https://bandhanmutual.com/'}),timeout=35) as r:body=r.read()
+          wb=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+          ws=next(x for x in wb.worksheets if x.title=='IDF271')
+          rows=[[c.value for c in rr] for rr in ws.iter_rows()]
+          for ri in range(250,min(len(rows),330)):
+              flat=' | '.join(str(x) for x in rows[ri] if x not in (None,''))
+              if flat:print('ROW',ri+1,flat[:3000])
+          wb.close()
           PY
