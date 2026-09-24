@@ -808,6 +808,9 @@ def discover(amc):
             yield family,target,title or 'TRUSTMF monthly portfolio'
     elif amc=='Invesco':
         yield from invesco_complete_monthly(read)
+    elif amc=='JM Financial':
+        from .jm_portfolios import discover as jm_discover
+        yield from jm_discover(read)
     elif amc=='Sundaram':
         raw,h,_=read('https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json')
         from .structured_reports import extract
@@ -855,5 +858,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Invesco','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','JM Financial','LIC','Union','UTI','Bandhan','ITI','Invesco','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
