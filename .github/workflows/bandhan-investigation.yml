@@ -13,38 +13,34 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect exact Bandhan Small Cap post attachments
+      - name: Inspect Bandhan Small Cap article body and metadata
         run: |
           python - <<'PY'
-          import re,urllib.request,urllib.parse,json
-          from html import unescape
+          import re,urllib.request,json
+          from bs4 import BeautifulSoup
           posts=[
             'https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/',
             'https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-july-2026/',
           ]
-          headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,*/*'}
           for post in posts:
-              req=urllib.request.Request(post,headers=headers)
-              with urllib.request.urlopen(req,timeout=30) as r:
-                  body=r.read();text=body.decode('utf-8','replace')
-                  print('FETCH',post,r.status,r.headers.get('Content-Type'),len(body),r.geturl())
-              print('TITLE_MATCH',re.findall(r'<title>(.*?)</title>',text,re.I|re.S)[:3])
-              refs=[]
-              pats=[
-                  r'(?:href|src|data-file|data-src|data-url|data-download|value)=["\']([^"\']+)["\']',
-                  r'https?://[^"\'<>\s]+',
-                  r'/wp-content/uploads/[^"\'<>\s]+',
-                  r'/[^"\'<>\s]+\.(?:xlsx?|xml|pdf|zip)(?:\?[^"\'<>\s]*)?',
-              ]
-              for pat in pats:
-                  for m in re.finditer(pat,text,re.I):
-                      value=unescape(m.group(1) if m.lastindex else m.group(0))
-                      value=urllib.parse.urljoin(post,value)
-                      if value not in refs:refs.append(value)
-              for value in refs:
-                  if re.search(r'portfolio|small|cap|upload|\.xlsx?|\.pdf|\.zip|\.xml',value,re.I):
-                      print('REF',value[:3000])
-              for needle in ('wp-content/uploads','portfolio','attachment','download','Small Cap Fund','iframe','embed'):
-                  m=re.search(needle,text,re.I)
-                  if m:print('CTX',needle,text[max(0,m.start()-2500):m.start()+6000])
+              req=urllib.request.Request(post,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,*/*'})
+              with urllib.request.urlopen(req,timeout=30) as r:text=r.read().decode('utf-8','replace')
+              soup=BeautifulSoup(text,'html.parser')
+              article=soup.find('article')
+              entry=soup.select_one('.entry-content')
+              print('POST',post)
+              print('ARTICLE',str(article)[:50000] if article else 'NONE')
+              print('ENTRY',str(entry)[:50000] if entry else 'NONE')
+              for meta in soup.find_all('meta'):
+                  key=' '.join(str(meta.get(x) or '') for x in ('name','property','itemprop'))
+                  val=str(meta.get('content') or '')
+                  if re.search(r'id|post|article|url|media|attachment|portfolio|small',key+' '+val,re.I):
+                      print('META',json.dumps({'key':key,'content':val},ensure_ascii=False))
+              for tag in soup.find_all(True):
+                  attrs={k:v for k,v in tag.attrs.items()
+                         if re.search(r'id|file|url|download|media|attachment|post',k,re.I)}
+                  if attrs:
+                      blob=json.dumps(attrs,ensure_ascii=False)
+                      if re.search(r'portfolio|small|cap|download|file|attachment|post',blob,re.I):
+                          print('ATTR',tag.name,blob[:6000])
           PY
