@@ -23,13 +23,14 @@ jobs:
       - name: Inspect exact current ICICI TER workbook
         run: |
           uv run --frozen python - <<'PY'
-          import hashlib,io,json,re,urllib.request
+          import hashlib,io,json,re,urllib.parse,urllib.request
           import openpyxl
 
           path='/financials-disclosures-files/Files/Total Expense Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx'
+          encoded=urllib.parse.quote(path,safe='/')
           urls=[
-            'https://app.beta.icicipruamc.com/blob'+path,
-            'https://www.icicipruamc.com/blob'+path,
+            'https://app.beta.icicipruamc.com/blob'+encoded,
+            'https://www.icicipruamc.com/blob'+encoded,
           ]
           body=None
           for url in urls:
@@ -49,7 +50,7 @@ jobs:
               for i,row in enumerate(ws.iter_rows(values_only=True),1):
                   vals=[None if v is None else str(v) for v in row]
                   joined=' | '.join(x or '' for x in vals)
-                  if i<=18 or re.search(r'ICICI\s+Prudential\s+Small\s+Cap|Small\s+Cap\s+Fund',joined,re.I):
+                  if i<=20 or re.search(r'ICICI\s+Prudential\s+Small\s+Cap|Small\s+Cap\s+Fund',joined,re.I):
                       print('ROW',i,json.dumps(vals,ensure_ascii=False))
           wb.close()
           PY
