@@ -11,41 +11,37 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
-      - name: Verify latest Invesco Small Cap TER row
+      - name: Extract Invesco TER component fetch logic
         run: |
           python - <<'PY'
-          import datetime,json,urllib.parse,urllib.request
-          base='https://www.invescomutualfund.com'
-          q=urllib.parse.urlencode({
-              'title':'Invesco India Small Cap Fund',
-              'fincialYear':2026,
-              'month':9,
-          })
-          url=base+'/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?'+q
-          req=urllib.request.Request(url,headers={
-              'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
-              'Referer':base+'/statutory-disclosures/ter-mutual-fund-since-2026/ter',
-              'Accept':'application/json',
-          })
-          with urllib.request.urlopen(req,timeout=45) as r:
-              body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
-          rows=json.loads(body)
-          exact=[]
-          for row in rows:
-              if row.get('Scheme Name')!='Invesco India Small Cap Fund': continue
-              if row.get('NSDL Scheme Code')!='INVM/O/E/SCF/18/07/0030': continue
-              day=datetime.datetime.strptime(row['TER Date(DD/MM/YYYY)'],'%d/%m/%Y').date()
-              if day<=datetime.date.today(): exact.append((day,row))
-          exact.sort(key=lambda x:x[0])
-          print('EXACT_ROWS',len(exact))
-          for day,row in exact[-5:]:
-              print('ROW',day.isoformat(),json.dumps(row,ensure_ascii=False,sort_keys=True))
-          if not exact: raise SystemExit('no exact rows')
-          day,row=exact[-1]
-          print('LATEST',day.isoformat())
-          print('REGULAR',row['Regular Plan - Base Expense Ratio (BER) (%)'],row['Regular Plan - Brokerage cost (%)'],row['Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)'],row['Regular Plan - Statutory Levies (including GST) (%)'],row['Regular Plan - Total TER (%)'])
-          print('DIRECT',row['Direct Plan - Base Expense Ratio (BER) (%)'],row['Direct Plan - Brokerage cost (%)'],row['Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)'],row['Direct Plan - Statutory Levies (including GST) (%)'],row['Direct Plan - Total TER (%)'])
+          import re,urllib.request
+          url='https://www.invescomutualfund.com/_next/static/chunks/9240-6f2168c4a7a555d2.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          with urllib.request.urlopen(req,timeout=45) as r:s=r.read().decode('utf-8','ignore')
+          anchor=s.find('Total Expense Ratio (TER) Since 1st April 2026')
+          print('ANCHOR',anchor)
+          # Print the nearest named function and all fetch calls between its start and title.
+          starts=[]
+          for m in re.finditer(r'function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(',s[:anchor]):
+              starts.append((m.start(),m.group(1)))
+          start,name=starts[-1]
+          print('FUNCTION',name,'START',start)
+          block=s[start:anchor+3000]
+          print('FETCHES')
+          for m in re.finditer(r'fetch\((.{0,500}?)\)',block):
+              print(re.sub(r'\s+',' ',m.group(0))[:800])
+          print('API_LITERALS')
+          for v in sorted(set(re.findall(r'["\x27](/api/[^"\x27]+)["\x27]',block))):
+              print(v)
+          print('KEY_STRINGS')
+          vals=sorted(set(re.findall(r'["\x27]([^"\x27]{1,180})["\x27]',block)))
+          for v in vals:
+              if any(k in v.lower() for k in ['ter','expense','fund','scheme','date','plan','from','to']):
+                  print(repr(v))
+          print('BLOCK_BEGIN')
+          print(re.sub(r'\s+',' ',block[:18000]))
+          print('BLOCK_END')
           PY
