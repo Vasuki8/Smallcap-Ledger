@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,62 +230,33 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v72':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v73':
         from tracker import amc_discovery
-        from tracker.portfolio_parser import parse_sheet
-        import io,openpyxl
-        family='Pgim India Small Cap Fund'
+        family='Pgim India Small Cap Fund';attempted=0
         try:
-            row=next((r for r in amc_discovery.discover('PGIM') if r[0]==family),None)
-            if not row:raise ValueError('PGIM monthly workbook not discovered')
-            _,url,title=row
-            providers.can_crawl(url)
-            body,_,mime=providers.fetch(url,archive=False,max_bytes=40*1024*1024)
-            print(f'PGIM_V72_FILE {url} bytes={len(body)} mime={mime}',flush=True)
-            book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
-            for sh in book.worksheets:
-                cells=list(sh.iter_rows())
-                rows0=[[c.value for c in r] for r in cells]
-                formats0=[[c.number_format or '' for c in r] for r in cells]
-                prefix=' '.join(str(v) for r in rows0[:35] for v in r if v is not None)
-                if not re.search(r'PGIM\s+INDIA\s+SMALL\s+CAP\s+FUND|SMALL\s+CAP\s+FUND',sh.title+' '+prefix,re.I):continue
-                parsed=parse_sheet(rows0,formats0,family)
-                summary=None if parsed is None else {
-                    'day':parsed['day'],'aum':parsed['aum'],'complete':parsed['complete'],
-                    'positions':len(parsed['positions']),'unknown_rows':parsed.get('unknown_rows',[])
-                }
-                print('PGIM_V72_SHEET '+json.dumps({'sheet':sh.title,'parsed':summary},ensure_ascii=False),flush=True)
-                header=None;hi=None
-                for i,r0 in enumerate(rows0[:35]):
-                    cc=[str(v or '').lower() for v in r0]
-                    if any('isin' in v for v in cc) and any('%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)) for v in cc):
-                        header=cc;hi=i;break
-                if header is None:continue
-                def col(pred):return next((i for i,v in enumerate(header) if pred(v)),None)
-                ic=col(lambda v:'isin' in v);nc=col(lambda v:'name' in v or 'instrument' in v or 'issuer' in v)
-                wc=col(lambda v:'%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)))
-                vc=col(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'value',v))
-                qc=col(lambda v:'quantity' in v or bool(re.search(r'\bqty\b|no\.?\s*of\s*(?:shares|units)',v,re.I)))
-                print('PGIM_V72_HEADER '+json.dumps({'sheet':sh.title,'hi':hi,'ic':ic,'nc':nc,'wc':wc,'vc':vc,'qc':qc,'header':header[:15]},ensure_ascii=False),flush=True)
-                if None in (nc,wc,vc):continue
-                interesting=[]
-                for ri,r0 in enumerate(rows0[hi+1:],hi+1):
-                    if max(nc,wc,vc)>=len(r0):continue
-                    name=str(r0[nc] or '').strip()
-                    isin=str(r0[ic] or '').strip() if ic is not None and ic<len(r0) else ''
-                    raww=r0[wc];rawv=r0[vc]
-                    if not name:continue
-                    valid=bool(re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',isin))
-                    if valid:continue
-                    if str(raww or '').strip() or str(rawv or '').strip():
-                        interesting.append({'row':ri+1,'name':name,'isin':isin,'weight':raww,'value':rawv,
-                                            'quantity':r0[qc] if qc is not None and qc<len(r0) else None,
-                                            'format':formats0[ri][wc] if wc<len(formats0[ri]) else ''})
-                for item in interesting[:80]:
-                    print('PGIM_V72_NONISIN '+json.dumps(item,default=str,ensure_ascii=False),flush=True)
-            book.close()
+            for discovered_family,url,title in amc_discovery.discover('PGIM'):
+                if discovered_family!=family:continue
+                attempted+=1
+                try:
+                    records=amc_discovery.store_report('PGIM',family,url,title)
+                    print(f'PGIM v73 monthly portfolio: {records} dated facts/holdings parsed from {url}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::PGIM v73 portfolio candidate: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
         except Exception as exc:
-            print(f"::warning::PGIM v72 workbook diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:500]}",flush=True)
+            print(f"::warning::PGIM v73 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:print(f'PGIM current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::PGIM current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
