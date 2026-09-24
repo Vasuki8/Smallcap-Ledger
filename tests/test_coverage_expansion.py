@@ -888,6 +888,55 @@ Edelweiss Small Cap Fund'''
         self.assertIsNone(edelweiss_top10_portfolio(first,extra.replace('23.00%','22.00%')))
         self.assertIsNone(edelweiss_top10_portfolio(first,extra.replace('August 31, 2026','July 31, 2026')))
 
+    def test_edelweiss_current_three_page_factsheet_saves_partial(self):
+        from tracker import disclosures
+        first='''Edelweiss Small Cap Fund
+Type of Scheme: An open ended equity scheme predominantly investing in small cap stocks
+NAV as on August 31, 2026
+AUM as on August 31, 2026 ` 7,259.07 Cr
+Benchmark Nifty Smallcap 250 TRI
+Portfolio Data
+Top 10 Holdings % to Net
+Assets
+1 City Union Bank Limited 3.17%
+2 Karur Vysya Bank Ltd 2.64%
+3 Multi Commodity Exchange Of India Ltd 2.64%
+4 PNB Housing Finance Ltd 2.34%
+5 Avalon Technologies Ltd. 2.27%
+6 Gabriel India Ltd 2.18%
+7 KEI Industries Ltd 2.06%
+8 Ajanta Pharma Ltd 1.94%
+9 Fortis Healthcare Ltd 1.92%
+10 Radico Khaitan Ltd 1.84%
+Past Performance is not an indicator or guarantee of future results
+Data as on August 31, 2026'''
+        middle='''Major Changes w.r.t previous month
+Data as on August 31, 2026
+Edelweiss Small Cap Fund'''
+        extra='''Additional Disclosure by AMC
+Quantitative Indicators
+Total no. of equity stocks : 95
+Top 10 stocks : 23.00%
+Data as on August 31, 2026
+Edelweiss Small Cap Fund'''
+        pages=[
+            SimpleNamespace(extract_text=lambda *args,**kwargs:first),
+            SimpleNamespace(extract_text=lambda *args,**kwargs:middle),
+            SimpleNamespace(extract_text=lambda *args,**kwargs:extra),
+        ]
+        reader=SimpleNamespace(is_encrypted=False,pages=pages)
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(
+                b'%PDF','Edelweiss Small Cap Fund',
+                'https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026.pdf',
+                'edel-current')
+        self.assertGreaterEqual(count,10)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family='Edelweiss Small Cap Fund' AND p.hash='edel-current'
+          GROUP BY p.id""")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':0,'positions':10})
+
     def test_edelweiss_top30_reconciles_published_top10_total(self):
         from tracker.report_parser import edelweiss_top30_portfolio
         text='''Edelweiss Small Cap Fund
