@@ -13,9 +13,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
       - name: Inspect Bandhan Small Cap article body and metadata
         run: |
-          python - <<'PY'
+          uv run --frozen python - <<'PY'
           import re,urllib.request,json
           from bs4 import BeautifulSoup
           posts=[
