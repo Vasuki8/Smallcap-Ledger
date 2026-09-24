@@ -13,27 +13,23 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Map ICICI downloads route to lazy chunk
+      - name: Identify exact ICICI Downloads lazy chunk
         run: |
           python - <<'PY'
           import urllib.request,re
           req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
                                      headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
           with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
-          for needle in ('/news-and-media/downloads','NEWS_MEDIA_DOWNLOADS'):
-              positions=[m.start() for m in re.finditer(re.escape(needle),js)]
-              print('NEEDLE',needle,'POSITIONS',positions)
-              for pos in positions:
-                  lo=max(0,pos-25000);hi=min(len(js),pos+25000);frag=js[lo:hi]
-                  imports=[]
-                  for m in re.finditer(r'import\(["\']\.\/([^"\']+\.js)["\']\)',frag):
-                      if m.group(1) not in imports:imports.append(m.group(1))
-                  tokens=[]
-                  for m in re.finditer(r'static/js/[A-Za-z0-9_.~%+@()\-]+\.js',frag):
-                      if m.group(0) not in tokens:tokens.append(m.group(0))
-                  print('ROUTE_IMPORTS',imports)
-                  print('ROUTE_TOKENS',tokens[-80:])
-                  # print concise local route code, whitespace collapsed
-                  local=re.sub(r'\s+',' ',js[max(0,pos-5000):pos+8000])
-                  print('LOCAL',local)
+          # RootRouter destructures NEWS_MEDIA_DOWNLOADS:Jr. Find the nearest Jr assignment.
+          for pat in (r'Jr=reactExports\.lazy\(\(\)=>__vitePreload\(\(\)=>import\("\.\/([^"]+\.js)"\)',
+                      r'Jr\s*=\s*reactExports\.lazy[^;]{0,500}import\("\.\/([^"]+\.js)"\)'):
+              ms=list(re.finditer(pat,js))
+              print('PAT',pat,'COUNT',len(ms))
+              for m in ms:
+                  print('CHUNK',m.group(1))
+                  print('ASSIGN',js[max(0,m.start()-1000):m.end()+2500])
+          # Also show all lazy assignments with symbol Jr-like context.
+          for m in re.finditer(r'([A-Za-z_$][A-Za-z0-9_$]*)=reactExports\.lazy\(\(\)=>__vitePreload\(\(\)=>import\("\.\/([^"]+\.js)"\)',js):
+              if m.group(1) in ('Jr','Zt','wr','ur'):
+                  print('LAZY',m.group(1),m.group(2))
           PY
