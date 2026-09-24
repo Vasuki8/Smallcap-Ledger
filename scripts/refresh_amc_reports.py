@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -366,6 +366,30 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::Franklin current complete portfolio not recovered; latest is {detail}',flush=True)
         ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v81':
+        from bs4 import BeautifulSoup
+        family='Franklin India Small Cap Fund'
+        url='https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'
+        try:
+            providers.can_crawl(url)
+            body,_,_=providers.fetch(url,max_bytes=12*1024*1024)
+            soup=BeautifulSoup(body,'html.parser')
+            matched=0
+            for ti,table in enumerate(soup.select('table')):
+                tx=re.sub(r'\\s+',' ',table.get_text(' ',strip=True))
+                if not (re.search(r'Company Name',tx,re.I) and re.search(r'Market Value',tx,re.I) and re.search(r'% of',tx,re.I)):
+                    continue
+                matched+=1
+                print(f'FRANKLIN_V81_TABLE index={ti} rows={len(table.select("tr"))} text={tx[:500]}',flush=True)
+                for ri,row in enumerate(table.select('tr')):
+                    cells=[c.get_text(' ',strip=True) for c in row.find_all(['td','th'],recursive=False)]
+                    joined=' | '.join(cells)
+                    if (ri<5 or len(cells)!=4 or re.search(r'Total|Company Name|Margin|cash|DTB|SOVEREIGN',joined,re.I)):
+                        print('FRANKLIN_V81_ROW '+json.dumps({'table':ti,'row':ri,'len':len(cells),'cells':cells},ensure_ascii=False)[:3000],flush=True)
+            print(f'FRANKLIN_V81_MATCHED {matched}',flush=True)
+        except Exception as exc:
+            print(f"::warning::Franklin v81 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
