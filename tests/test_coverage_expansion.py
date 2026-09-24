@@ -223,6 +223,31 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
             'Equity','Money market','Cash and net current assets'])
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
 
+    def test_quant_derivative_expiry_and_nca_rows_reconcile(self):
+        rows=[
+            ['Quant Small Cap Fund'],
+            ['Monthly Portfolio as on 31 August 2026'],
+            ['Code','Name of Instrument','ISIN','Industry','Quantity','Market Value (Rs. in Lakhs)','% to Net Assets'],
+            ['', 'Equity & Equity Related','','','','',''],
+            ['EQ1','Alpha Limited','INE123456789','Banks',100,9000,.90],
+            ['', 'Derivatives','','','','',''],
+            ['','KPIT Technologies Limited 29/09/2026','','Futures',10,500,.05],
+            ['', 'NCA-NET CURRENT ASSETS','','','',500,.05],
+            ['', 'Grand Total','','','',10000,1.0],
+        ]
+        fmt=[['General']*7 for _ in rows]
+        for i in (4,6,7,8):fmt[i][6]='0.00%'
+        parsed=parse_sheet(rows,fmt,'Quant Small Cap Fund')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],[])
+        deriv=next(x for x in parsed['positions'] if x['name'].startswith('KPIT Technologies'))
+        self.assertEqual(deriv['asset_type'],'Derivative')
+        cash=next(x for x in parsed['positions'] if x['name']=='NCA-NET CURRENT ASSETS')
+        self.assertEqual(cash['asset_type'],'Cash and net current assets')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        rows[6][1]='KPIT Technologies Limited'
+        self.assertFalse(parse_sheet(rows,fmt,'Quant Small Cap Fund')['complete'])
+
     def test_missing_grand_total_does_not_establish_aum(self):
         rows,fmt=self.sheet();r=parse_sheet(rows[:-1],fmt[:-1],'Test Small Cap Fund')
         self.assertIsNone(r['aum']);self.assertFalse(r['complete'])
