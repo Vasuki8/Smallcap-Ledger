@@ -1,0 +1,65 @@
+name: Inspect AMFI small-cap expense rows
+
+on:
+  push:
+    branches: [backend/amfi-expense-coverage-v130]
+    paths: [.github/workflows/inspect-amfi-expenses.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compare official AMFI expense rows with tracker families
+        run: |
+          python - <<'PY'
+          import json,re,urllib.parse,urllib.request
+          from difflib import SequenceMatcher
+
+          def norm(v):
+              return re.sub('[^a-z0-9]','',str(v).split('(')[0].lower())
+          with open('COVERAGE-AS-OF.json',encoding='utf-8') as f:
+              cov=json.load(f)
+          rows=cov.get('funds') or cov.get('rows') or []
+          families=[x['family'] for x in rows]
+          gaps=[x['family'] for x in rows if not x.get('ter')]
+          print('TER_GAPS',gaps)
+          fam_by_norm={norm(x):x for x in families}
+          amfi=[]
+          for page in range(1,8):
+              q=urllib.parse.urlencode({'MF_ID':'All','Month':'09-2026','strCat':'18','strType':'1','page':page,'pageSize':1000})
+              url='https://www.amfiindia.com/api/populate-te-rdata-revised?'+q
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json, text/plain, */*','Referer':'https://www.amfiindia.com/ter-of-mf-schemes'})
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  data=json.load(r)
+              recs=data.get('data',[]) if isinstance(data,dict) else data
+              print('PAGE',page,'ROWS',len(recs))
+              amfi.extend(recs)
+              meta=data.get('meta',{}) if isinstance(data,dict) else {}
+              pages=meta.get('totalPages') or meta.get('pageCount')
+              if not recs or (pages and page>=int(pages)) or len(recs)<int(meta.get('pageSize',1000)):
+                  break
+
+          small=[r for r in amfi if 'small' in str(r.get('SchemeCat_Desc','')).lower() and 'cap' in str(r.get('SchemeCat_Desc','')).lower()]
+          print('SMALL_ROWS',len(small))
+          for r in small:
+              name=str(r.get('Scheme_Name',''))
+              n=norm(name)
+              matched=fam_by_norm.get(n)
+              if matched or any(k in name.lower() for k in ['axis','canara','hsbc','icici','invesco','jm ','mahindra','mirae']):
+                  print('ROW',json.dumps({
+                    'Scheme_Name':name,'SchemeCat_Desc':r.get('SchemeCat_Desc'),'TER_Date':r.get('TER_Date'),
+                    'R_TER':r.get('R_TER'),'D_TER':r.get('D_TER'),'R_BER':r.get('R_BER'),'D_BER':r.get('D_BER'),
+                    'R_BaseTER':r.get('R_BaseTER'),'D_BaseTER':r.get('D_BaseTER'),'matched':matched
+                  },ensure_ascii=False))
+          print('NEAREST_FOR_GAPS')
+          names=sorted({str(r.get('Scheme_Name','')) for r in small})
+          for gap in gaps:
+              gn=norm(gap)
+              ranked=sorted(((SequenceMatcher(None,gn,norm(n)).ratio(),n) for n in names),reverse=True)[:5]
+              print(gap,ranked)
+          PY
