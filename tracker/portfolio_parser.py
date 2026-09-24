@@ -72,7 +72,7 @@ def parse_sheet(rows,formats,family):
                            and bool(name) and qc is not None and not empty(row[qc])
                            and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code))) or
                           (family=='Quant Small Cap Fund' and not valid_isin and asset=='Derivative'
-                           and bool(re.fullmatch(r'(?:N\.?A\.?|N/A|-)?',isin,re.I))
+                           and bool(re.fullmatch(r'[A-Z][A-Z0-9]{2,24}\d{6}',isin))
                            and bool(re.fullmatch(r'.+?\b(?:Ltd\.?|Limited)\s+\d{2}/\d{2}/\d{4}',name,re.I))
                            and qc is not None and not empty(row[qc])))
         named_repo=(family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)) or (
