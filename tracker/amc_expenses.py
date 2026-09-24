@@ -38,6 +38,28 @@ ICICI_TER_SUBCATEGORY_CODE = "TOTAL_EXPENSE_RATIO"
 ICICI_TER_TITLE = "Total Expense Ratio"
 ICICI_TER_SHOW = "TER Details"
 _ICICI_XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+INVESCO_FAMILY = "Invesco India Small Cap Fund"
+INVESCO_NSDL_CODE = "INVM/O/E/SCF/18/07/0030"
+INVESCO_TER_PAGE = "https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter"
+INVESCO_PLANS_API = "https://www.invescomutualfund.com/api/Common/GetAllPlans"
+INVESCO_TER_API = "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData"
+_INVESCO_FIELDS = {
+    "Regular": {
+        "base_expense_ratio": "Regular Plan - Base Expense Ratio (BER) (%)",
+        "brokerage": "Regular Plan - Brokerage cost (%)",
+        "transaction_cost": "Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+        "statutory_levies": "Regular Plan - Statutory Levies (including GST) (%)",
+        "ter": "Regular Plan - Total TER (%)",
+    },
+    "Direct": {
+        "base_expense_ratio": "Direct Plan - Base Expense Ratio (BER) (%)",
+        "brokerage": "Direct Plan - Brokerage cost (%)",
+        "transaction_cost": "Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+        "statutory_levies": "Direct Plan - Statutory Levies (including GST) (%)",
+        "ter": "Direct Plan - Total TER (%)",
+    },
+}
 _ICICI_TITLE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\d{2})$")
 _ICICI_FILE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\d{2})\.xlsx$", re.I)
 _ICICI_HEADER = {
@@ -767,10 +789,150 @@ def icici(progress=lambda _: None, today=None):
     )
 
 
+def _invesco_percent(value, label):
+    raw = str(value or "").strip()
+    if not raw or raw.upper() in ("NA", "N/A", "-"):
+        raise ValueError(f"Invesco TER API is missing {label}")
+    parsed = number(raw)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"Invesco TER API {label} is outside the accepted range")
+    return parsed
+
+
+def parse_invesco_records(records, today=None):
+    """Return the newest exact Small Cap BER and published Total TER pair."""
+    today = today or date.today()
+    if not isinstance(records, list):
+        raise ValueError("Invesco TER API response changed format")
+    matches = defaultdict(list)
+    for row in records:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("Scheme Name", "")).strip() != INVESCO_FAMILY:
+            continue
+        if str(row.get("NSDL Scheme Code", "")).strip() != INVESCO_NSDL_CODE:
+            continue
+        raw_day = str(row.get("TER Date(DD/MM/YYYY)", "")).strip()
+        try:
+            day = datetime.strptime(raw_day, "%d/%m/%Y").date()
+        except ValueError:
+            continue
+        if day <= today:
+            matches[day.isoformat()].append(row)
+    if not matches:
+        raise ValueError("Invesco TER API contains no dated Small Cap rows")
+    day = max(matches)
+    if len(matches[day]) != 1:
+        raise ValueError(f"Invesco TER API has duplicate Small Cap rows for {day}")
+    row = matches[day][0]
+    plans = {}
+    for plan, fields in _INVESCO_FIELDS.items():
+        values = {
+            metric: _invesco_percent(row.get(field), f"{plan} {metric}")
+            for metric, field in fields.items()
+        }
+        if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+            raise ValueError(f"Invesco {plan} Total TER is below BER on {day}")
+        component_total = (
+            values["base_expense_ratio"]
+            + values["brokerage"]
+            + values["transaction_cost"]
+            + values["statutory_levies"]
+        )
+        if abs(component_total - values["ter"]) > 0.02:
+            raise ValueError(f"Invesco {plan} TER components do not reconcile on {day}")
+        plans[plan] = values
+    return day, plans
+
+
+def _invesco_financial_year_start(day):
+    return day.year if day.month >= 4 else day.year - 1
+
+
+def _invesco_periods(today):
+    first = today.replace(day=1)
+    previous = (first - timedelta(days=1)).replace(day=1)
+    return (first, previous)
+
+
+def _invesco_json(raw, label):
+    try:
+        payload = json.loads(raw)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Invesco {label} API returned invalid JSON") from exc
+    return payload
+
+
+def _invesco_disclosure(today=None):
+    today = today or date.today()
+    plans_raw, _, _ = fetch(INVESCO_PLANS_API, archive=False, max_bytes=1024 * 1024)
+    plans = _invesco_json(plans_raw, "plans")
+    if not isinstance(plans, list) or plans.count(INVESCO_FAMILY) != 1:
+        raise ValueError("Invesco Small Cap is not uniquely present in the public TER selector")
+
+    selected_url = None
+    for period in _invesco_periods(today):
+        query = urlencode({
+            "title": INVESCO_FAMILY,
+            "fincialYear": _invesco_financial_year_start(period),
+            "month": period.month,
+        })
+        url = INVESCO_TER_API + "?" + query
+        raw, _, _ = fetch(url, archive=False, max_bytes=2 * 1024 * 1024)
+        records = _invesco_json(raw, "TER")
+        if not isinstance(records, list):
+            raise ValueError("Invesco TER API response changed format")
+        if not records:
+            continue
+        # A populated month for the exact title must contain the exact identity.
+        parse_invesco_records(records, today)
+        selected_url = url
+        break
+    if selected_url is None:
+        raise ValueError("Invesco TER API returned no current or previous-month Small Cap rows")
+
+    raw, content_hash, _ = fetch(selected_url, max_bytes=2 * 1024 * 1024)
+    records = _invesco_json(raw, "TER")
+    day, plans = parse_invesco_records(records, today)
+    return selected_url, day, plans, content_hash
+
+
+def invesco(progress=lambda _: None, today=None):
+    """Collect Invesco India Small Cap's explicit BER and Total TER JSON rows."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (INVESCO_FAMILY,)):
+        return "Invesco India Small Cap is not in the active universe"
+    progress("Invesco India Small Cap expense ratios · official TER disclosure API")
+    source, day, plans, content_hash = _invesco_disclosure(today)
+    for plan, values in plans.items():
+        for metric in (
+            "base_expense_ratio",
+            "brokerage",
+            "transaction_cost",
+            "statutory_levies",
+            "ter",
+        ):
+            db.metric(
+                INVESCO_FAMILY,
+                plan,
+                metric,
+                day,
+                values[metric],
+                "% p.a. · reported by AMC",
+                source,
+                content_hash,
+            )
+    return (
+        f"{INVESCO_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, hsbc, icici):
+    for collector in (canara, hsbc, icici, invesco):
         try:
             results.append(collector(progress))
         except Exception as exc:

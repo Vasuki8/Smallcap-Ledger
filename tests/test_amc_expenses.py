@@ -341,5 +341,95 @@ class IciciExpenseTests(unittest.TestCase):
         self.assertTrue(all(call.args[7] == "hash456" for call in mock_metric.call_args_list))
 
 
+class InvescoExpenseTests(unittest.TestCase):
+    def row(self, day="23/09/2026", *, scheme="Invesco India Small Cap Fund",
+            nsdl="INVM/O/E/SCF/18/07/0030", regular_ter="1.83%", direct_ter="0.63%"):
+        return {
+            "Sr.No.": 23,
+            "Scheme Name": scheme,
+            "NSDL Scheme Code": nsdl,
+            "TER Date(DD/MM/YYYY)": day,
+            "Regular Plan - Base Expense Ratio (BER) (%)": "1.44%",
+            "Regular Plan - Brokerage cost (%)": "0.05%",
+            "Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)": "0.00%",
+            "Regular Plan - Statutory Levies (including GST) (%)": "0.34%",
+            "Regular Plan - Total TER (%)": regular_ter,
+            "Direct Plan - Base Expense Ratio (BER) (%)": "0.41%",
+            "Direct Plan - Brokerage cost (%)": "0.05%",
+            "Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)": "0.00%",
+            "Direct Plan - Statutory Levies (including GST) (%)": "0.17%",
+            "Direct Plan - Total TER (%)": direct_ter,
+        }
+
+    def test_invesco_latest_exact_row_retains_published_ber_and_total_ter(self):
+        rows = [self.row("22/09/2026"), self.row("23/09/2026")]
+        day, plans = amc_expenses.parse_invesco_records(rows, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.44)
+        self.assertEqual(plans["Regular"]["ter"], 1.83)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.41)
+        self.assertEqual(plans["Direct"]["ter"], 0.63)
+
+    def test_invesco_future_wrong_identity_and_duplicate_are_rejected(self):
+        rows = [self.row("23/09/2026"), self.row("25/09/2026")]
+        day, plans = amc_expenses.parse_invesco_records(rows, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Direct"]["ter"], 0.63)
+
+        with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+            amc_expenses.parse_invesco_records(
+                [self.row(scheme="Invesco India Mid Cap Fund")], date(2026, 9, 24)
+            )
+        with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+            amc_expenses.parse_invesco_records(
+                [self.row(nsdl="INVM/O/E/OTHER")], date(2026, 9, 24)
+            )
+
+        row = self.row()
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_invesco_records([row, dict(row)], date(2026, 9, 24))
+
+    def test_invesco_component_reconciliation_is_strict(self):
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_invesco_records(
+                [self.row(direct_ter="0.70%")], date(2026, 9, 24)
+            )
+
+    def test_invesco_financial_year_and_month_fallback_roll_correctly(self):
+        self.assertEqual(amc_expenses._invesco_financial_year_start(date(2026, 4, 1)), 2026)
+        self.assertEqual(amc_expenses._invesco_financial_year_start(date(2026, 3, 31)), 2025)
+        periods = amc_expenses._invesco_periods(date(2026, 4, 1))
+        self.assertEqual(periods, (date(2026, 4, 1), date(2026, 3, 1)))
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "INVESCO"})
+    @patch("tracker.amc_expenses._invesco_disclosure")
+    def test_invesco_collector_stores_exact_source_hash_and_plan_metrics(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        source = (
+            "https://www.invescomutualfund.com/api/"
+            "TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData"
+            "?title=Invesco+India+Small+Cap+Fund&fincialYear=2026&month=9"
+        )
+        _, plans = amc_expenses.parse_invesco_records(
+            [self.row()], date(2026, 9, 24)
+        )
+        mock_disclosure.return_value = (source, "2026-09-23", plans, "hash789")
+        result = amc_expenses.invesco(today=date(2026, 9, 24))
+        self.assertIn("2026-09-23", result)
+        self.assertEqual(mock_metric.call_count, 10)
+        calls = {
+            (call.args[1], call.args[2]): call.args[4]
+            for call in mock_metric.call_args_list
+        }
+        self.assertEqual(calls[("Regular", "ter")], 1.83)
+        self.assertEqual(calls[("Direct", "ter")], 0.63)
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.41)
+        self.assertTrue(all(call.args[3] == "2026-09-23" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == source for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "hash789" for call in mock_metric.call_args_list))
+
+
 if __name__ == "__main__":
     unittest.main()
