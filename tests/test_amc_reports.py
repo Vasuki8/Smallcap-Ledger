@@ -385,6 +385,20 @@ Month End AUM: Rs. 100 Cr''')
                 'https://www.boimf.in/factsheet.pdf',
                 'archived'))
 
+    def test_v103_replays_only_exact_retained_edelweiss_september_pdf(self):
+        from tracker import amc_reports
+        exact='https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf'
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v103'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Edelweiss Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Mirae Asset Small Cap Fund'))
+            self.assertTrue(amc_reports.should_reprocess_existing('Edelweiss Small Cap Fund',exact,'archived'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Edelweiss Small Cap Fund',
+                'https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_August__2026_10082026160011.pdf',
+                'archived'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Bank Of India Small Cap Fund',exact,'archived'))
+
     def test_v26_quantity_reprocess_is_limited_to_retained_workbook_hashes(self):
         from tracker import amc_reports,db
         family='HDFC Small Cap Fund'
