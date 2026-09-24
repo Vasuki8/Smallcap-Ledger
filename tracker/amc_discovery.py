@@ -639,6 +639,33 @@ def discover(amc):
     elif amc=='Tata':
         family='Tata Small Cap Fund'
         page='https://www.tatamutualfund.com/schemes-related/portfolio'
+        # Tata's production portfolio page calls this public read-only CMS
+        # distribution endpoint. Prefer its dated workbook metadata instead of
+        # guessing client-rendered attachment filenames.
+        api='https://prod-dist-api.tatamfdev.com/cms-data/api/CMSDATA_portfolio?type=monthly'
+        try:
+            raw,_,_=read(api);data=json.loads(raw);api_rows=[]
+            for item in data if isinstance(data,list) else []:
+                if not isinstance(item,dict):continue
+                title=str(item.get('field_document_title') or '').strip()
+                target=str(item.get('field_media_document') or '').strip()
+                if not title or not target:continue
+                if str(item.get('field_section_flag') or 'On').strip().lower() not in ('on','1','true'):continue
+                if not disclosures.official_publication_url(target,amc):continue
+                if not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
+                m=re.fullmatch(r'Portfolio\s+as\s+on\s+(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+),?\s+(20\d{2})',title,re.I)
+                if not m:continue
+                day=None
+                for fmt in ('%d %B %Y','%d %b %Y'):
+                    try:day=datetime.strptime(f'{m.group(1)} {m.group(2)} {m.group(3)}',fmt).date();break
+                    except ValueError:pass
+                if day and day<=date.today():api_rows.append((day,target,title))
+            if api_rows:
+                _,url,title=max(api_rows,key=lambda x:x[0])
+                yield family,url,title
+                return
+        except Exception:
+            pass
         raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
         candidates={}
         # Tata's disclosure page can expose downloads through anchors, data-*
