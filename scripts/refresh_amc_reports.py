@@ -212,6 +212,46 @@ def run():
                 try:
                     records=amc_discovery.store_report('Aditya Birla',family,url,title)
                     print(f'ABSL current monthly portfolio: {records} dated facts/holdings parsed from {url}',flush=True)
+                    if attempted==1:
+                        # Temporary layout diagnostic against the exact archived ZIP.
+                        import io,zipfile,openpyxl,xlrd
+                        from pathlib import PurePosixPath
+                        from tracker.portfolio_parser import parse_sheet
+                        saved=db.one("""SELECT a.path FROM fetches f JOIN archives a ON a.hash=f.hash
+                          WHERE f.url=? AND f.status='ok' ORDER BY f.id DESC LIMIT 1""",(url,))
+                        if saved:
+                            package=(db.DATA/saved['path']).read_bytes()
+                            with zipfile.ZipFile(io.BytesIO(package)) as z:
+                                print('ABSL_ZIP_MEMBERS '+json.dumps([i.filename for i in z.infolist()][:120]),flush=True)
+                                for entry in z.infolist():
+                                    suffix=PurePosixPath(entry.filename).suffix.lower()
+                                    if suffix not in ('.xls','.xlsx'):continue
+                                    raw=z.read(entry)
+                                    if suffix=='.xlsx':
+                                        book=openpyxl.load_workbook(io.BytesIO(raw),read_only=True,data_only=True)
+                                        sheets=[]
+                                        for sh in book.worksheets:
+                                            cells=list(sh.iter_rows())
+                                            sheets.append((sh.title,[[x.value for x in row] for row in cells],
+                                                           [[x.number_format or '' for x in row] for row in cells]))
+                                        book.close()
+                                    else:
+                                        book=xlrd.open_workbook(file_contents=raw,formatting_info=True)
+                                        sheets=[(sh.name,[sh.row_values(i) for i in range(sh.nrows)],
+                                                 [[book.format_map[book.xf_list[sh.cell_xf_index(i,j)].format_key].format_str
+                                                   for j in range(sh.ncols)] for i in range(sh.nrows)])
+                                                for sh in book.sheets()]
+                                    for sheet,rows0,formats0 in sheets:
+                                        prefix=' '.join(str(v) for row in rows0[:30] for v in row if v is not None)
+                                        if not re.search(r'small\s*cap',sheet+' '+prefix,re.I):continue
+                                        parsed=parse_sheet(rows0,formats0,family)
+                                        summary=None if parsed is None else {
+                                            'day':parsed['day'],'aum':parsed['aum'],'complete':parsed['complete'],
+                                            'positions':len(parsed['positions']),
+                                            'unknown_rows':parsed.get('unknown_rows',[])[:30],
+                                        }
+                                        print('ABSL_ZIP_SHEET '+json.dumps({'member':entry.filename,'sheet':sheet,'parsed':summary},ensure_ascii=False),flush=True)
+                                        print('ABSL_ZIP_ROWS '+json.dumps(rows0[:18],default=str,ensure_ascii=False)[:12000],flush=True)
                 except Exception as exc:
                     print(f"::warning::ABSL current monthly portfolio: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
                 snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
