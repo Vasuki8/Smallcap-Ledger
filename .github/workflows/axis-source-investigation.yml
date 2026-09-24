@@ -42,21 +42,21 @@ jobs:
           scripts=[u for u in scripts if (urlparse(u).hostname or '').lower().endswith('axismf.com')]
           targets=[u for u in scripts if ('statutory-disclosures' in u or u in scripts[45:])]
           rows=[]
-          q=re.compile(r'(?:https?:)?//[^"\\'\\\\\\s]+|/[A-Za-z0-9_?=&.%:,@+~/-]{3,260}')
           for i,u in enumerate(targets):
             try:
               s=client.get(u).text
               (out/f'target-{i}.js').write_text(s,errors='replace')
               found=[]
-              for m in q.finditer(s):
-                x=m.group(0)
-                if re.search(r'api|portfolio|disclosure|statutory|document|download|nested',x,re.I) and x not in found: found.append(x)
-              rows.append({'index':i,'url':u,'urls':found[:200]})
-              print('\\nTARGET',i,u)
-              for x in found[:100]: print('URL',x)
+              candidates=re.findall(r'https://www\\.axismf\\.com/[A-Za-z0-9_?=&.%:,@+~/-]{3,240}',s,re.I)
+              candidates+=re.findall(r'/[A-Za-z0-9_?=&.%:,@+~/-]{4,240}',s)
+              for x in candidates:
+                if re.search(r'api|portfolio|disclosure|statutory|document|download|nested',x,re.I) and x not in found:found.append(x)
+              rows.append({'index':i,'url':u,'urls':found[:300]})
+              print('TARGET',i,u)
+              for x in found[:120]: print('URL',x)
               for term in ('sdPortfolios','nestedList','statutoryDisclosure','portfolio','disclosure'):
-                for m in list(re.finditer(term,s,re.I))[:8]:
-                  print('SNIP',term,s[max(0,m.start()-500):m.start()+1200].replace('\\n',' ')[:1700])
+                for m in list(re.finditer(term,s,re.I))[:12]:
+                  print('SNIP',term,s[max(0,m.start()-500):m.start()+1400].replace('\\n',' ')[:1900])
             except Exception as e:
               rows.append({'index':i,'url':u,'error':repr(e)})
           (out/'targets.json').write_text(json.dumps(rows,indent=2))
