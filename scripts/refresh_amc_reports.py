@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113','amc-reports-2026-09-v114','amc-reports-2026-09-v115','amc-reports-2026-09-v116','amc-reports-2026-09-v117','amc-reports-2026-09-v118','amc-reports-2026-09-v119','amc-reports-2026-09-v120','amc-reports-2026-09-v121','amc-reports-2026-09-v122','amc-reports-2026-09-v123','amc-reports-2026-09-v124','amc-reports-2026-09-v125','amc-reports-2026-09-v126','amc-reports-2026-09-v127'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113','amc-reports-2026-09-v114','amc-reports-2026-09-v115','amc-reports-2026-09-v116','amc-reports-2026-09-v117','amc-reports-2026-09-v118','amc-reports-2026-09-v119','amc-reports-2026-09-v120','amc-reports-2026-09-v121','amc-reports-2026-09-v122','amc-reports-2026-09-v123','amc-reports-2026-09-v124','amc-reports-2026-09-v125','amc-reports-2026-09-v126','amc-reports-2026-09-v127','amc-reports-2026-09-v128'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -1126,6 +1126,36 @@ def run():
                 print(f'::warning::Invesco complete portfolio recovery incomplete; latest={detail(latest)}; prior={detail(prior)}; attempted={attempted}',flush=True)
         except Exception as exc:
             print(f"::warning::Invesco v127 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(current and previous)
+
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v128':
+        family='Jm Small Cap Fund';attempted=0;current=False;previous=False
+        try:
+            from tracker import amc_discovery
+            for found_family,url,title in amc_discovery.discover('JM Financial'):
+                attempted+=1
+                try:
+                    amc_discovery.store_report('JM Financial',found_family,url,title)
+                except Exception as exc:
+                    print(f"::warning::JM current portfolio candidate: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            snapshots=db.rows("""SELECT p.as_of,p.complete,COUNT(h.id) positions,SUM(h.weight) weight
+              FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+              WHERE p.family=? AND p.as_of IN ('2026-08-31','2026-07-31')
+              GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC""",(family,))
+            by_day={}
+            for snap in snapshots:by_day.setdefault(snap['as_of'],snap)
+            latest=by_day.get('2026-08-31');prior=by_day.get('2026-07-31')
+            current=bool(latest and latest['complete'] and latest['positions']>=85
+                         and abs(float(latest['weight'] or 0)-100)<.02)
+            previous=bool(prior and prior['complete'] and prior['positions']>=83
+                          and abs(float(prior['weight'] or 0)-100)<.02)
+            detail=lambda x:'none' if not x else f'{x["as_of"]}, {x["positions"]} positions, {float(x["weight"] or 0):.6f}% weight, complete={x["complete"]}'
+            if current and previous:
+                print(f'JM current and prior complete portfolios verified: {detail(latest)}; prior {detail(prior)}',flush=True)
+            else:
+                print(f'::warning::JM complete portfolio recovery incomplete; latest={detail(latest)}; prior={detail(prior)}; attempted={attempted}',flush=True)
+        except Exception as exc:
+            print(f"::warning::JM v128 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(current and previous)
 
     # Dynamic AMC discovery is part of the immediately following daily
