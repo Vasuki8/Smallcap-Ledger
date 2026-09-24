@@ -56,12 +56,19 @@ jobs:
           assert aug['hash']=='f793184232eb89f776bfab87cc6729dd203af3fce6d054ca23332d6667828975'
           assert jul['hash']=='4e5980ac2cbbe4231b73dabce6765003bc8766e68981fe82b213c50f5ec590b0'
           assert '/'+MEDIA_BUCKET+'/' in aug['source']
-          censored=db.rows("""SELECT p.as_of,h.name FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
-            WHERE p.family=? AND h.name IN (
+          aug_censored=db.rows("""SELECT h.name FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
+            WHERE p.family=? AND p.as_of='2026-08-31' AND h.name IN (
               'Happiest Minds Technologies Limited','Kalpataru Projects International Limited',
               '^^GSPL Transmission Limited **','^^INOX Renewable Solutions Ltd **')""",(FAMILY,))
-          print('CENSORED_STORED',json.dumps(censored,ensure_ascii=False))
-          assert censored==[]
+          jul_censored=db.rows("""SELECT h.name FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
+            WHERE p.family=? AND p.as_of='2026-07-31' AND h.name IN (
+              '^^GSPL Transmission Limited **','^^INOX Renewable Solutions Ltd **')""",(FAMILY,))
+          jul_kalpataru=db.one("""SELECT h.weight FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
+            WHERE p.family=? AND p.as_of='2026-07-31' AND h.name='Kalpataru Projects International Limited'""",(FAMILY,))
+          print('CENSORED_STORED',json.dumps({'aug':aug_censored,'jul':jul_censored},ensure_ascii=False))
+          print('JUL_KALPATARU',json.dumps(jul_kalpataru))
+          assert aug_censored==[] and jul_censored==[]
+          assert jul_kalpataru and jul_kalpataru['weight']>0
           for day in ('2026-08-31','2026-07-31'):
               names={r['name']:r for r in db.rows("""SELECT h.name,h.asset_type,h.weight
                 FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
