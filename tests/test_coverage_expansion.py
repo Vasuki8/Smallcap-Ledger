@@ -225,27 +225,28 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
 
     def test_quant_derivative_expiry_and_nca_rows_reconcile(self):
         rows=[
-            ['Quant Small Cap Fund'],
-            ['Monthly Portfolio as on 31 August 2026'],
-            ['Code','Name of Instrument','ISIN','Industry','Quantity','Market Value (Rs. in Lakhs)','% to Net Assets'],
-            ['', 'Equity & Equity Related','','','','',''],
-            ['EQ1','Alpha Limited','INE123456789','Banks',100,9000,.90],
-            ['', 'Derivatives','','','','',''],
-            ['FUT1','KPIT Technologies Limited 29/09/2026','N.A.','IT - Software',-10,-50,-.005],
-            ['', 'NCA-NET CURRENT ASSETS','N.A.','N.A.','',1050,.105],
-            ['', 'Grand Total','','','',10000,1.0],
+            [None,None,'Quant Small Cap Fund',None,None,None,None,None],
+            [None,None,'Monthly Portfolio as on 31 August 2026',None,None,None,None,None],
+            ['SR','ISIN','NAME OF THE INSTRUMENT','RATING','INDUSTRY','QUANTITY','MARKET VALUE(Rs.in Lakhs)','% to NAV'],
+            [1,'INE123456789','Alpha Limited','N.A.','Banks',100,9000,.90],
+            [None,'','DERIVATIVES','','','','',''],
+            [None,'','(a) Index / Stock Futures','','','','',''],
+            [105,'KPITTECH290926','KPIT Technologies Limited 29/09/2026','N.A.','IT - Software',-10,-50,-.005],
+            [120,'','NCA-NET CURRENT ASSETS','N.A.','N.A.','',1050,.105],
+            [None,'','Grand Total','','','',10000,1.0],
         ]
-        fmt=[['General']*7 for _ in rows]
-        for i in (4,6,7,8):fmt[i][6]='0.00%'
+        fmt=[['General']*8 for _ in rows]
+        for i in (3,6,7,8):fmt[i][7]='0.00%'
         parsed=parse_sheet(rows,fmt,'Quant Small Cap Fund')
         self.assertTrue(parsed['complete'])
         self.assertEqual(parsed['unknown_rows'],[])
         deriv=next(x for x in parsed['positions'] if x['name'].startswith('KPIT Technologies'))
         self.assertEqual(deriv['asset_type'],'Derivative')
+        self.assertEqual(deriv['isin'],None)
         cash=next(x for x in parsed['positions'] if x['name']=='NCA-NET CURRENT ASSETS')
         self.assertEqual(cash['asset_type'],'Cash and net current assets')
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
-        rows[6][1]='KPIT Technologies Limited'
+        rows[6][1]='INE123456789'
         self.assertFalse(parse_sheet(rows,fmt,'Quant Small Cap Fund')['complete'])
 
     def test_missing_grand_total_does_not_establish_aum(self):
