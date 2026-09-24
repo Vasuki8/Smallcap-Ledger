@@ -1,0 +1,78 @@
+name: Bandhan v129 validation
+
+on:
+  push:
+    branches: [backend/bandhan-production-v129]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Compile and run complete regression suite
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest discover -s tests -v
+      - name: Validate live Bandhan API and workbooks
+        env:
+          SMALLCAP_DATA_DIR: /tmp/bandhan-v129-validation
+        run: |
+          rm -rf "$SMALLCAP_DATA_DIR"
+          uv run --frozen python - <<'PY'
+          import json
+          from tracker import db,disclosures,amc_discovery
+          db.init();disclosures.seed_sources()
+          rows=list(amc_discovery.discover('Bandhan'))
+          print('DISCOVERY',json.dumps(rows,ensure_ascii=False))
+          assert len(rows)==2
+          assert [r[2] for r in rows]==[
+            'Bandhan Small Cap Fund 31 August 2026',
+            'Bandhan Small Cap Fund 31 July 2026']
+          for row in rows:
+              count=amc_discovery.store_report('Bandhan',*row)
+              print('STORE',row[2],count)
+          snaps=db.rows("""SELECT p.id,p.as_of,p.complete,p.hash,p.source,
+            COUNT(h.id) positions,SUM(h.weight) weight
+            FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
+            WHERE p.family='Bandhan Small Cap Fund'
+            GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC""")
+          print('SNAPSHOTS',json.dumps(snaps))
+          by={x['as_of']:x for x in snaps}
+          assert set(by)=={'2026-08-31','2026-07-31'}
+          assert by['2026-08-31']['complete']==0 and by['2026-07-31']['complete']==0
+          assert by['2026-08-31']['positions']>=260 and by['2026-07-31']['positions']>=260
+          assert by['2026-08-31']['hash']=='f793184232eb89f776bfab87cc6729dd203af3fce6d054ca23332d6667828975'
+          assert by['2026-07-31']['hash']=='4e5980ac2cbbe4231b73dabce6765003bc8766e68981fe82b213c50f5ec590b0'
+          censored=db.rows("""SELECT p.as_of,h.name,h.weight FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
+            WHERE p.family='Bandhan Small Cap Fund'
+              AND h.name IN ('Happiest Minds Technologies Limited','Kalpataru Projects International Limited',
+                             '^^GSPL Transmission Limited **','^^INOX Renewable Solutions Ltd **')""")
+          print('CENSORED_STORED',json.dumps(censored))
+          assert not censored
+          leaves=db.rows("""SELECT p.as_of,h.name,h.asset_type,h.weight FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
+            WHERE p.family='Bandhan Small Cap Fund'
+              AND h.name IN ('Triparty Repo TRP_010926','Triparty Repo TRP_030826',
+                             'Cash Margin - Derivatives','Cash / Bank Balance','Net Receivables/Payables','Net Current Assets')
+            ORDER BY p.as_of DESC,h.name""")
+          print('LEAVES',json.dumps(leaves))
+          assert any(x['name']=='Triparty Repo TRP_010926' and x['asset_type']=='Money market' for x in leaves)
+          assert any(x['name']=='Cash / Bank Balance' and x['asset_type']=='Cash and net current assets' for x in leaves)
+          metrics=db.rows("""SELECT as_of,value,unit,hash FROM metrics
+            WHERE family='Bandhan Small Cap Fund' AND metric='aum' AND as_of IN ('2026-08-31','2026-07-31')
+            ORDER BY as_of DESC""")
+          print('AUM',json.dumps(metrics))
+          assert {x['as_of'] for x in metrics}=={'2026-08-31','2026-07-31'}
+          PY
