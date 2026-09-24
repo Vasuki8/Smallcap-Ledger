@@ -217,6 +217,29 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertTrue(parse_sheet(rows,fmt,'The Wealth Company Small Cap Fund')['complete'])
         self.assertIsNone(parse_sheet(rows,fmt,'Test Small Cap Fund'))
 
+    def test_franklin_august_five_column_debt_and_margin_reconciles(self):
+        from tracker.structured_reports import franklin_positions
+        table=BeautifulSoup('''<table>
+        <tr><td>Company Name</td><td>No. of shares</td><td>Market Value Rs Lakhs</td><td>% of assets</td></tr>
+        <tr><td>Banks</td><td></td><td></td><td></td></tr>
+        <tr><td>Alpha Limited</td><td>100</td><td>9696</td><td>96.96</td></tr>
+        <tr><td>Total Equity Holdings</td><td></td><td>9696</td><td>96.96</td></tr>
+        <tr><td>Company Name</td><td></td><td>Company Ratings</td><td>Market Value</td><td>% of Assets</td></tr>
+        <tr><td>182 DTB (19-NOV-2026)</td><td></td><td>SOVEREIGN</td><td>17</td><td>0.17</td></tr>
+        <tr><td>Total Debt Holdings</td><td></td><td></td><td>17</td><td>0.17</td></tr>
+        <tr><td>Total Holdings</td><td></td><td></td><td>9713</td><td>97.13</td></tr>
+        <tr><td>Margin on Derivatives</td><td></td><td></td><td>21</td><td>0.21</td></tr>
+        <tr><td>Call,cash and other current asset</td><td></td><td></td><td>266</td><td>2.66</td></tr>
+        <tr><td>Total Asset</td><td></td><td></td><td>10000</td><td>100.00</td></tr>
+        </table>''','html.parser').table
+        rows=franklin_positions(table)
+        self.assertEqual(len(rows),4)
+        self.assertEqual([x['asset_type'] for x in rows],[
+            'Equity','Debt','Cash and net current assets','Cash and net current assets'])
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),100,places=2)
+        broken=BeautifulSoup(str(table).replace('2.66','2.56'),'html.parser').table
+        self.assertEqual(franklin_positions(broken),[])
+
     def test_franklin_full_table_retains_company_named_motherson(self):
         html='<table><tr><td>Company Name</td><td>No. of shares</td><td>Market Value Rs Lakhs</td><td>% of assets</td></tr><tr><td>Banks</td><td></td><td></td><td></td></tr><tr><td>Motherson Sumi Wiring India Ltd</td><td>100</td><td>90</td><td>90</td></tr><tr><td>Total Equity Holdings</td><td></td><td>90</td><td>90</td></tr><tr><td>Call,cash and other current asset</td><td></td><td>10</td><td>10</td></tr><tr><td>Total Asset</td><td></td><td>100</td><td>100</td></tr></table>'
         rows=franklin_positions(BeautifulSoup(html,'html.parser').table)
