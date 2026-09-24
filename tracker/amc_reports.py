@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v95'
+PARSER_VERSION='amc-reports-2026-09-v96'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -83,6 +83,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v93':frozenset({'Edelweiss Small Cap Fund'}),
     'amc-reports-2026-09-v94':frozenset({'Edelweiss Small Cap Fund'}),
     'amc-reports-2026-09-v95':frozenset({'Edelweiss Small Cap Fund'}),
+    'amc-reports-2026-09-v96':frozenset({'Edelweiss Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -313,6 +314,9 @@ def should_reprocess_existing(family,url,h=None):
         return False
     if PARSER_VERSION=='amc-reports-2026-09-v95':
         # v95 narrows Edelweiss SPA tracing to URL/path-shaped service tokens.
+        return False
+    if PARSER_VERSION=='amc-reports-2026-09-v96':
+        # v96 audits the first-party financials/portfolios disclosure page.
         return False
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
