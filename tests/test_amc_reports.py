@@ -368,6 +368,68 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn("snap['positions']>=77",source)
         self.assertIn("not snap['complete']",source)
 
+    def test_invesco_monthly_holdings_api_uses_latest_two_closed_months(self):
+        from tracker.amc_discovery import discover
+        api_rows=[{
+            'Name':'Invesco India Small Cap Fund',
+            'JulUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/smallcap-jul.xlsx?sfvrsn=1',
+            'AugUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/smallcap-aug.xlsx?sfvrsn=2',
+            'SepUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/smallcap-sep.xlsx?sfvrsn=3',
+            'JulName':'07/26','AugName':'08/26','SepName':'09/26',
+        },{
+            'Name':'Invesco India Large Cap Fund',
+            'AugUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/large-aug.xlsx',
+            'AugName':'08/26',
+        }]
+        calls=[]
+        def fake_read(url,body=None):
+            calls.append(url)
+            return (json.dumps(api_rows).encode(),'api','application/json')
+        with patch('tracker.amc_discovery.read',side_effect=fake_read):
+            rows=list(discover('Invesco',today=date(2026,9,24)))
+        self.assertEqual([x[2] for x in rows],[
+            'Invesco India Small Cap Fund monthly holdings 2026-08-31',
+            'Invesco India Small Cap Fund monthly holdings 2026-07-31'])
+        self.assertTrue(rows[0][1].endswith('smallcap-aug.xlsx?sfvrsn=2'))
+        self.assertTrue(rows[1][1].endswith('smallcap-jul.xlsx?sfvrsn=1'))
+        self.assertFalse(any('sep.xlsx' in x[1] for x in rows))
+        self.assertEqual(calls,[
+            'https://www.invescomutualfund.com/api/CompleteMonthlyHoldings?year=2026&classification=equity'])
+
+    def test_invesco_monthly_holdings_discovery_rolls_year_boundary(self):
+        from tracker.amc_discovery import discover
+        def fake_read(url,body=None):
+            year=2027 if 'year=2027' in url else 2026
+            if year==2027:
+                rows=[{'Name':'Invesco India Small Cap Fund',
+                       'JanUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/jan27.xlsx',
+                       'JanName':'01/27'}]
+            else:
+                rows=[{'Name':'Invesco India Small Cap Fund',
+                       'DecUrl':'https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/dec26.xlsx',
+                       'DecName':'12/26'}]
+            return (json.dumps(rows).encode(),str(year),'application/json')
+        with patch('tracker.amc_discovery.read',side_effect=fake_read):
+            rows=list(discover('Invesco',today=date(2027,2,10)))
+        self.assertEqual([x[2] for x in rows],[
+            'Invesco India Small Cap Fund monthly holdings 2027-01-31',
+            'Invesco India Small Cap Fund monthly holdings 2026-12-31'])
+
+    def test_v127_targets_invesco_complete_pair_and_nightly_discovery(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v127'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Invesco India Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Sundaram Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Invesco India Small Cap Fund',
+                'https://www.invescomutualfund.com/portfolio.xlsx','hash'))
+        upgrade=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        discovery=(Path(__file__).resolve().parents[1]/'tracker'/'amc_discovery.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v127'",upgrade)
+        self.assertIn("amc_discovery.discover('Invesco')",upgrade)
+        self.assertIn("len(snaps)>=2",upgrade)
+        self.assertIn("'Invesco'",discovery.split('ThreadPoolExecutor',1)[-1])
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
