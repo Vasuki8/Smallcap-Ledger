@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,7 +230,7 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v63':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v64':
         from bs4 import BeautifulSoup
         from urllib.parse import urljoin,urlparse
         page='https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio'
@@ -238,11 +238,12 @@ def run():
             providers.can_crawl(page)
             raw,_,_=providers.fetch(page,max_bytes=12*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
+            base=urljoin(page,(soup.find('base') or {}).get('href',''))
             scripts=[]
             for tag in soup.find_all('script'):
                 src=tag.get('src')
                 if not src:continue
-                u=urljoin(page,src)
+                u=urljoin(base or page,src)
                 if (urlparse(u).hostname or '').endswith('pgimindia.com') and 'main.' in u:
                     scripts.append(u)
             if not scripts:raise ValueError('PGIM Angular main bundle not found')
@@ -250,7 +251,7 @@ def run():
                 providers.can_crawl(u)
                 body,_,mime=providers.fetch(u,max_bytes=25*1024*1024)
                 txt=body.decode('utf-8','ignore')
-                print(f'PGIM_V63_BUNDLE {u} bytes={len(body)} mime={mime}',flush=True)
+                print(f'PGIM_V64_BUNDLE {u} bytes={len(body)} mime={mime}',flush=True)
                 # Print unique API/path-like string literals only.
                 vals=[]
                 for m in re.finditer(r'["\']([^"\']{1,500})["\']',txt):
@@ -270,7 +271,7 @@ def run():
                         if len(seen)>=30:break
                     if len(seen)>=30:break
         except Exception as exc:
-            print(f"::warning::PGIM v63 bundle diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::PGIM v64 bundle diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
