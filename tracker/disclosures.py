@@ -193,6 +193,15 @@ def spreadsheet(content,family,url,h):
                 and full['positions']):
                 portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
                 count+=len(full['positions']);continue
+            if (family=='Bandhan Small Cap Fund'
+                and full.get('censored_rows')
+                and len(full.get('censored_rows') or [])==len(full.get('unknown_rows') or [])
+                and full['positions']):
+                # Bandhan's "$" rows are explicitly defined by the workbook as
+                # less than 0.01% of NAV. Preserve every exact numeric holding,
+                # but do not invent weights for the censored securities.
+                portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
+                count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
