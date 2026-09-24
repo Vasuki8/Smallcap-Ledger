@@ -10,64 +10,52 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Reproduce Bandhan public encrypted CMS request
+      - name: Filter Bandhan public disclosure records
         run: |
           python - <<'PY'
-          import urllib.request
-          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=35) as r:
-              js=r.read().decode('utf-8','replace')
-          end=js.find(',((()=>{')
-          assert end>0
-          prefix=js[:end]+');'
-          suffix=r'''
-          const payload={type:'SCHEME_PORTFOLIOS',data:{subcategory:'monthly-and-half-yearly',page:1,posts_per_page:10,financial_year:'2026'}};
-          const visitor='smallcap-ledger-public-reader';
-          const enc=_0x526877(payload);
-          const signKey=_0x526877(visitor);
-          const algorithm=a0_0x2580(0x994);
-          const encoding=a0_0x2580(0x2a12);
-          const signature=_0x5384e6(JSON.stringify(payload),algorithm,visitor,encoding);
-          console.log('CRYPTO_META',JSON.stringify({
-            algorithm,encoding,encKeys:Object.keys(enc),signKeyType:typeof signKey,
-            signKeyKeys:signKey&&typeof signKey==='object'?Object.keys(signKey):[],
-            encWithPublicKeyLen:String(enc.encWithPublicKey||'').length,
-            encryptedMessageLen:String(enc.encryptedMessage||'').length,
-            signKey:String(signKey),
-            signKeyEncLen:String((signKey||{}).encWithPublicKey||'').length,
-            signKeyMsgLen:String((signKey||{}).encryptedMessage||'').length
-          }));
-          const url='https://pnservices.bandhanmutual.com/internal/investorservices/encdec/investor/v1/dashboard/cms-call';
-          const baseHeaders={
-            'accept':'application/json,text/plain,*/*',
-            'content-type':'text/plain',
-            'origin':'https://bandhanmutual.com',
-            'referer':'https://bandhanmutual.com/',
-            'x-api-key':a0_0x2580(0x3888),
-            'dt-platform':'web',
-            'x-custom-timestamp':new Date().toISOString(),
-            'x-bandhan-signature':signature,
-            'x-client-signature':enc.encWithPublicKey
-          };
-          const variants=[
-            ['encWithPublicKey',signKey.encWithPublicKey],
-            ['encryptedMessage',signKey.encryptedMessage],
-            ['stringObject',String(signKey)]
-          ];
-          (async()=>{
-            for(const [kind,value] of variants){
-              const headers={...baseHeaders,'x-bandhan-sign-key':value};
-              try{
-                const res=await fetch(url,{method:'POST',headers,body:enc.encryptedMessage});
-                const text=await res.text();
-                console.log('RESPONSE',kind,res.status,res.headers.get('content-type'),text.slice(0,50000));
-              }catch(e){console.log('ERROR',kind,String(e));}
-            }
-          })().catch(e=>{console.error(e);process.exitCode=1;});
-          '''
-          open('/tmp/bandhan-probe.js','w').write(prefix+suffix)
+          import urllib.request,urllib.parse,json,re
+          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
+          queries=[
+            {'posts_per_page':'2500','acf_key':'download_center_type','acf_value':'portfolio','bypass_pagination':'true'},
+            {'posts_per_page':'2500','acf_key':'download_center_type','acf_value':'Portfolio','bypass_pagination':'true'},
+            {'posts_per_page':'2500','financial_year':'2026','bypass_pagination':'true'},
+            {'posts_per_page':'2500','year':'2026','bypass_pagination':'true'},
+          ]
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
+          for params in queries:
+              url=base+'?'+urllib.parse.urlencode(params)
+              try:
+                  req=urllib.request.Request(url,headers=headers)
+                  with urllib.request.urlopen(req,timeout=35) as r:
+                      data=json.loads(r.read())
+                  rows=data.get('data') if isinstance(data,dict) else data
+                  rows=rows if isinstance(rows,list) else []
+                  print('QUERY',params,'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows))
+                  for item in rows:
+                      if not isinstance(item,dict): continue
+                      acf=item.get('acf_fields') or {}
+                      mapping=acf.get('funds_mapping')
+                      fund=(mapping.get('post_title') or mapping.get('title') or mapping.get('post_name')) if isinstance(mapping,dict) else mapping
+                      files=[]
+                      for entry in acf.get('disclosure_files') or []:
+                          link=(entry or {}).get('document_link') or {}
+                          files.append({
+                            'name':(entry or {}).get('document_name'),
+                            'filename':link.get('filename'),'url':link.get('url'),
+                            'mime':link.get('mime_type'),'date':link.get('date')
+                          })
+                      blob=json.dumps({
+                        'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
+                        'download_center_type':acf.get('download_center_type'),
+                        'financial_year':acf.get('financial_year'),
+                        'disclosures_type':acf.get('disclosures_type'),
+                        'fund':fund,'files':files},ensure_ascii=False)
+                      if (re.search(r'Bandhan\s+Small\s+Cap',blob,re.I)
+                          or (re.search(r'portfolio',blob,re.I) and re.search(r'2026|Aug|July|Jul|June|Jun',blob,re.I))):
+                          print('MATCH',blob)
+              except Exception as e:
+                  print('ERROR',params,repr(e))
           PY
-          node /tmp/bandhan-probe.js
