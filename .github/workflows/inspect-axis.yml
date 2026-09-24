@@ -1,4 +1,4 @@
-name: Inspect Axis August portfolio source
+name: Inspect Union portfolio source
 
 on:
   push:
@@ -14,33 +14,48 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
-        with:
-          version: '0.11.33'
-          python-version: '3.12'
-          enable-cache: true
-      - run: uv sync --frozen
-      - name: Inspect Axis Small Cap factsheet candidate pages
+      - name: Inspect Union downloads application
         run: |
-          uv run --frozen python - <<'PY'
-          import io, re, urllib.request
-          from pypdf import PdfReader
-          url='https://www.axismf.com/efactsheet/Aug-2026/Innerpage/Axis%20Fund%20Factsheet%20August%202026%20Final.pdf'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
-          with urllib.request.urlopen(req,timeout=45) as r: body=r.read()
-          reader=PdfReader(io.BytesIO(body))
-          for idx in range(14,21):
-              text=reader.pages[idx].extract_text() or ''
-              print('CANDIDATE',idx+1,'LEN',len(text),
-                    'smallcap',bool(re.search(r'AXIS\s+SMALL\s+CAP\s+FUND',text,re.I)),
-                    'allot',bool(re.search(r'29\w*\s+November\s+2013',text,re.I)),
-                    'aum',('31,448.32' in text))
-              if (re.search(r'AXIS\s+SMALL\s+CAP\s+FUND',text,re.I)
-                  or re.search(r'29\w*\s+November\s+2013',text,re.I)
-                  or '31,448.32' in text):
-                  print('---DEFAULT---')
-                  print(text[:16000])
-                  layout=reader.pages[idx].extract_text(extraction_mode='layout') or ''
-                  print('---LAYOUT---')
-                  print(layout[:20000])
+          python - <<'PY'
+          import re, urllib.parse, urllib.request
+          from html.parser import HTMLParser
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
+          class P(HTMLParser):
+              def __init__(self): super().__init__(); self.scripts=[]; self.links=[]
+              def handle_starttag(self,tag,attrs):
+                  d=dict(attrs)
+                  if tag=='script' and d.get('src'): self.scripts.append(d['src'])
+                  if tag=='a' and d.get('href'): self.links.append(d['href'])
+          def fetch(url):
+              try:
+                  req=urllib.request.Request(url,headers=UA)
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      b=r.read(); print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl()); return b,r.geturl()
+              except Exception as e:
+                  print('ERROR',url,type(e).__name__,str(e)); return b'',url
+          page='https://www.unionmf.com/about-us/downloads'
+          body,final=fetch(page)
+          if not body: raise SystemExit(0)
+          html=body.decode('utf-8','ignore')
+          print('HTML_API_PATTERNS')
+          for pat in [r'https?://[^"\'<> ]+',r'/api/[^"\'<> ]+',r'[A-Za-z0-9_/.-]*(?:portfolio|download)[A-Za-z0-9_/?&=.-]*']:
+              vals=[]
+              for m in re.finditer(pat,html,re.I):
+                  v=m.group(0)
+                  if v not in vals: vals.append(v)
+              for v in vals[:80]: print(v)
+          p=P();p.feed(html)
+          print('SCRIPTS',len(p.scripts))
+          for src in p.scripts:
+              full=urllib.parse.urljoin(final,src); print('SCRIPT',full)
+              if not re.search(r'(jquery|bootstrap|gtm|google|captcha|analytics)',full,re.I):
+                  b,_=fetch(full)
+                  if not b: continue
+                  s=b.decode('utf-8','ignore')
+                  if re.search(r'portfolio|Monthly Portfolios|downloads|api',s,re.I):
+                      print('SCRIPT_MATCH',full)
+                      for m in re.finditer(r'.{0,220}(?:portfolio|monthlyportfolio|download|api).{0,350}',s,re.I|re.S):
+                          t=re.sub(r'\s+',' ',m.group(0))
+                          print(t[:700])
+                          if m.start()>1000000: break
           PY
