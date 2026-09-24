@@ -73,7 +73,7 @@ def report_date(text):
     return None
 
 
-def portfolio(family,day,positions,complete,source,h):
+def portfolio(family,day,positions,complete,source,h,*,replace_existing_partial=False):
     if not positions or not day: return None
     if any(not -100<=x["weight"]<=100 for x in positions): raise ValueError("Portfolio weights outside expected percentage units")
     if sum(x["weight"] for x in positions)>110: raise ValueError("Portfolio weight total suggests duplicated rows or wrong units")
@@ -82,6 +82,12 @@ def portfolio(family,day,positions,complete,source,h):
         c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
         sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
         existing=c.execute("SELECT id,isin,name,asset_type,quantity FROM holdings WHERE snapshot_id=?",(sid,)).fetchall()
+        if replace_existing_partial and not complete and existing:
+            # Parser upgrades may recover additional explicit rows from the same
+            # archived source hash. Replace only that exact retained partial
+            # snapshot; complete snapshots and other source hashes are untouched.
+            c.execute("DELETE FROM holdings WHERE snapshot_id=?",(sid,))
+            existing=[]
         if not existing:
             c.executemany("INSERT INTO holdings(snapshot_id,isin,name,sector,weight,quantity,asset_type) VALUES(?,?,?,?,?,?,?)",
                           [(sid,x.get("isin"),x["name"],x.get("sector"),x["weight"],x.get("quantity"),x.get("asset_type","Equity")) for x in positions])
@@ -182,7 +188,7 @@ def spreadsheet(content,family,url,h):
             if (family=='Sundaram Small Cap Fund'
                 and full.get('unknown_rows')==['Hindustan Dorr Oliver Ltd @']
                 and full['positions']):
-                portfolio(family,full['day'],full['positions'],False,url,h)
+                portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
                 count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
