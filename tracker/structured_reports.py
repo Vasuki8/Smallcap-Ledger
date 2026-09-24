@@ -181,8 +181,12 @@ def franklin_positions(table):
             break
         if name.lower().startswith('total '):continue
         if not any(cells[1:]):sector=name;continue
+        # Franklin's August debt/cash section has a blank spacer column between
+        # issuer and rating. Collapse only that verified empty spacer shape.
+        if len(cells)==5 and not cells[1].strip():cells=[cells[0]]+cells[2:]
         if len(cells) not in (3,4):return []
-        if re.fullmatch(r'Call,\s*cash and other current asset',name,re.I):asset='Cash and net current assets';sector=None
+        if re.fullmatch(r'(?:Call,\s*cash and other current asset|Margin on Derivatives)',name,re.I):
+            asset='Cash and net current assets';sector=None
         elif len(cells)==3:return []
         try:value=number(cells[-2]);weight=number(cells[-1])
         except ValueError:return []
