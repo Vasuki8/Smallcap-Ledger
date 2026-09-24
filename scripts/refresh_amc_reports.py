@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -826,6 +826,46 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::Quant current portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v112':
+        from bs4 import BeautifulSoup
+        pages=(
+            'https://quantmutual.com/statutory-disclosures',
+            'https://www.quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio',
+        )
+        try:
+            for page in pages:
+                providers.can_crawl(page)
+                raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
+                html=raw.decode('utf-8','ignore');soup=BeautifulSoup(raw,'html.parser')
+                print(f'QUANT_V112_PAGE {page} bytes={len(raw)}',flush=True)
+                for m in list(re.finditer(r'.{0,1800}(?:August\s+31,?\s+2026|31[./-]08[./-]2026|Monthly\s+Portfolio).{0,3500}',html,re.I|re.S))[:16]:
+                    print('QUANT_V112_HTML '+re.sub(r'\s+',' ',m.group(0)).strip()[:5200],flush=True)
+                scripts=[]
+                for tag in soup.find_all('script'):
+                    src=tag.get('src')
+                    if src:
+                        u=urljoin(page,src)
+                        if (urlparse(u).hostname or '').endswith('quantmutual.com'):scripts.append(u)
+                    else:
+                        body=tag.string or tag.get_text(' ',strip=True)
+                        if re.search(r'portfolio|download|archive|ajax|August',body,re.I):
+                            print('QUANT_V112_INLINE '+re.sub(r'\s+',' ',body)[:4500],flush=True)
+                for u in list(dict.fromkeys(scripts)):
+                    try:
+                        providers.can_crawl(u);body,_,_=providers.fetch(u,max_bytes=5*1024*1024)
+                        js=body.decode('utf-8','ignore')
+                    except Exception:continue
+                    hits=[]
+                    for m in re.finditer(r'.{0,300}(?:portfolio|download|archive|ajax|\.xlsx?|\.xls).{0,900}',js,re.I|re.S):
+                        hit=re.sub(r'\s+',' ',m.group(0)).strip()
+                        if hit not in hits:hits.append(hit)
+                        if len(hits)>=10:break
+                    if hits:
+                        print('QUANT_V112_SCRIPT '+u,flush=True)
+                        for hit in hits:print('QUANT_V112_HIT '+hit[:1600],flush=True)
+        except Exception as exc:
+            print(f"::warning::Quant v112 markup audit: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
