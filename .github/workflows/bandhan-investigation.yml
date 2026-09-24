@@ -8,31 +8,66 @@ permissions:
   contents: read
 
 jobs:
-  decode:
+  probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Decode Bandhan crypto primitive names
+      - name: Reproduce Bandhan public encrypted CMS request
         run: |
           python - <<'PY'
-          import urllib.request,subprocess
+          import urllib.request
           req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
-          end=js.find(',((()=>{');prefix=js[:end]
-          for suffix in (';',');','));'):
-              code=prefix+suffix+"""
-              console.log(JSON.stringify({
-                p5602:a0_0x2580(0x5602), p0b9c:a0_0x2580(0xb9c),
-                p4cd3:a0_0x2580(0x4cd3), p5066:a0_0x2580(0x5066),
-                p1a2d:a0_0x2580(0x1a2d), p51b1:a0_0x2580(0x51b1),
-                p189e:a0_0x2580(0x189e), p30e8:a0_0x2580(0x30e8),
-                p42fa:a0_0x2580(0x42fa), p2ef9:a0_0x2580(0x2ef9),
-                p4070:a0_0x2580(0x4070)
-              }));
-              """
-              open('/tmp/decoder.js','w').write(code)
-              cp=subprocess.run(['node','/tmp/decoder.js'],capture_output=True,text=True,timeout=20)
-              print('DECODE',repr(suffix),cp.returncode,cp.stdout.strip(),cp.stderr[:300])
-              if cp.returncode==0:break
+          with urllib.request.urlopen(req,timeout=35) as r:
+              js=r.read().decode('utf-8','replace')
+          end=js.find(',((()=>{')
+          assert end>0
+          prefix=js[:end]+');'
+          suffix=r'''
+          const payload={type:'SCHEME_PORTFOLIOS',data:{subcategory:'monthly-and-half-yearly',page:1,posts_per_page:10,financial_year:'2026'}};
+          const visitor='smallcap-ledger-public-reader';
+          const enc=_0x526877(payload);
+          const signKey=_0x526877(visitor);
+          const algorithm=a0_0x2580(0x994);
+          const encoding=a0_0x2580(0x2a12);
+          const signature=_0x5384e6(JSON.stringify(payload),algorithm,visitor,encoding);
+          console.log('CRYPTO_META',JSON.stringify({
+            algorithm,encoding,encKeys:Object.keys(enc),signKeyType:typeof signKey,
+            signKeyKeys:signKey&&typeof signKey==='object'?Object.keys(signKey):[],
+            encWithPublicKeyLen:String(enc.encWithPublicKey||'').length,
+            encryptedMessageLen:String(enc.encryptedMessage||'').length,
+            signKey:String(signKey),
+            signKeyEncLen:String((signKey||{}).encWithPublicKey||'').length,
+            signKeyMsgLen:String((signKey||{}).encryptedMessage||'').length
+          }));
+          const url='https://pnservices.bandhanmutual.com/internal/investorservices/encdec/investor/v1/dashboard/cms-call';
+          const baseHeaders={
+            'accept':'application/json,text/plain,*/*',
+            'content-type':'text/plain',
+            'origin':'https://bandhanmutual.com',
+            'referer':'https://bandhanmutual.com/',
+            'x-api-key':a0_0x2580(0x3888),
+            'dt-platform':'web',
+            'x-custom-timestamp':new Date().toISOString(),
+            'x-bandhan-signature':signature,
+            'x-client-signature':enc.encWithPublicKey
+          };
+          const variants=[
+            ['encWithPublicKey',signKey.encWithPublicKey],
+            ['encryptedMessage',signKey.encryptedMessage],
+            ['stringObject',String(signKey)]
+          ];
+          (async()=>{
+            for(const [kind,value] of variants){
+              const headers={...baseHeaders,'x-bandhan-sign-key':value};
+              try{
+                const res=await fetch(url,{method:'POST',headers,body:enc.encryptedMessage});
+                const text=await res.text();
+                console.log('RESPONSE',kind,res.status,res.headers.get('content-type'),text.slice(0,50000));
+              }catch(e){console.log('ERROR',kind,String(e));}
+            }
+          })().catch(e=>{console.error(e);process.exitCode=1;});
+          '''
+          open('/tmp/bandhan-probe.js','w').write(prefix+suffix)
           PY
+          node /tmp/bandhan-probe.js
