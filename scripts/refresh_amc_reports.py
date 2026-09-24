@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -411,6 +411,56 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::Franklin current complete portfolio not recovered; latest is {detail}',flush=True)
         ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v83':
+        from bs4 import BeautifulSoup
+        from urllib.parse import urljoin
+        family='Bajaj Finserv Small Cap Fund'
+        pages=(
+            'https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund',
+            'https://www.bajajamc.com/downloads?factsheet',
+            'https://www.bajajamc.com/downloads',
+        )
+        for page in pages:
+            try:
+                providers.can_crawl(page)
+                raw,_,mime=providers.fetch(page,max_bytes=12*1024*1024)
+                print(f'BAJAJ_V83_PAGE {page} bytes={len(raw)} mime={mime}',flush=True)
+                soup=BeautifulSoup(raw,'html.parser')
+                links=providers.candidate_links(soup,page)
+                for url,title in links.items():
+                    joined=(url+' '+str(title))
+                    if re.search(r'small\s*cap|factsheet|portfolio|monthly|2026|pdf|xlsx?',joined,re.I):
+                        print('BAJAJ_V83_LINK '+url+' :: '+str(title)[:700],flush=True)
+                for tag in soup.find_all('script'):
+                    src=tag.get('src')
+                    body=(tag.string or tag.get_text('',strip=False) or '')
+                    if src:
+                        u=urljoin(page,src)
+                        if 'bajajamc.com' in u:print('BAJAJ_V83_SCRIPT '+u,flush=True)
+                    elif body and re.search(r'factsheet|portfolio|download|small.?cap|api',body,re.I):
+                        snippet=re.sub(r'\s+',' ',body).strip()
+                        print('BAJAJ_V83_INLINE '+snippet[:3500],flush=True)
+            except Exception as exc:
+                print(f"::warning::Bajaj v83 page {page}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        # Audit only the same first-party media naming family already retained;
+        # do not store guessed URLs unless they return a genuine PDF.
+        for month in ('September','Sep'):
+            url=f'https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_{month}-2026.pdf'
+            try:
+                providers.can_crawl(url)
+                body,h,mime=providers.fetch(url,max_bytes=40*1024*1024)
+                print(f'BAJAJ_V83_MEDIA {url} bytes={len(body)} mime={mime} sig={body[:16].hex()}',flush=True)
+                if body.startswith(b'%PDF'):
+                    count=amc_reports.extract(body,family,url,h)
+                    print(f'BAJAJ_V83_MEDIA_PARSED {count}',flush=True)
+            except Exception as exc:
+                print(f"::warning::Bajaj v83 media {month}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+        print(f'BAJAJ_V83_SNAPSHOT {detail}',flush=True)
+        ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
