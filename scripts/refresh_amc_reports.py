@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -257,49 +257,34 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::PGIM current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v77':
-        from bs4 import BeautifulSoup
-        from urllib.parse import urljoin,urlparse
-        page='https://www.abakkusmf.com/statutory-disclosures.html'
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v78':
+        from tracker import amc_discovery
+        family='Abakkus Small Cap Fund';attempted=0
         try:
-            providers.can_crawl(page)
-            raw,_,mime=providers.fetch(page,max_bytes=10*1024*1024)
-            txt=raw.decode('utf-8','ignore')
-            print(f'ABAKKUS_V77_PAGE bytes={len(raw)} mime={mime}',flush=True)
-            for needle in ('mpdYear','mpdMonth','Monthly Portfolio Disclosure'):
-                for m in list(re.finditer(re.escape(needle),txt,re.I))[:8]:
-                    snippet=re.sub(r'\s+',' ',txt[max(0,m.start()-1200):m.end()+2600]).strip()
-                    print('ABAKKUS_V77_PAGE_HIT '+needle+' :: '+snippet[:5000],flush=True)
-            soup=BeautifulSoup(raw,'html.parser')
-            scripts=[]
-            for tag in soup.find_all('script'):
-                src=tag.get('src')
-                if src:
-                    u=urljoin(page,src)
-                    if urlparse(u).netloc.endswith('abakkusmf.com'):scripts.append(u)
-                else:
-                    body=tag.string or tag.get_text(' ',strip=True)
-                    if re.search(r'mpdYear|mpdMonth|monthly\s+portfolio|portfolio.*disclosure|ajax|fetch\s*\(',body,re.I):
-                        print('ABAKKUS_V77_INLINE '+re.sub(r'\s+',' ',body).strip()[:8000],flush=True)
-            for u in list(dict.fromkeys(scripts)):
+            for discovered_family,url,title in amc_discovery.discover('Abakkus'):
+                if discovered_family!=family:continue
+                attempted+=1
                 try:
-                    providers.can_crawl(u)
-                    body,_,smime=providers.fetch(u,max_bytes=6*1024*1024)
-                    js=body.decode('utf-8','ignore')
+                    records=amc_discovery.store_report('Abakkus',family,url,title)
+                    print(f'Abakkus current monthly portfolio: {records} dated facts/holdings parsed from {url}',flush=True)
                 except Exception as exc:
-                    print(f'ABAKKUS_V77_SCRIPT_ERROR {u} :: {(str(exc) or type(exc).__name__)[:200]}',flush=True)
-                    continue
-                hits=[]
-                for m in re.finditer(r'.{0,900}(?:mpdYear|mpdMonth|monthly\s+portfolio|portfolio.*disclosure|fetch\s*\(|ajax|/api/).{0,2200}',js,re.I|re.S):
-                    snippet=re.sub(r'\s+',' ',m.group(0)).strip()
-                    if snippet not in hits:hits.append(snippet)
-                    if len(hits)>=12:break
-                if hits:
-                    print(f'ABAKKUS_V77_SCRIPT {u} bytes={len(body)} mime={smime}',flush=True)
-                    for hit in hits:print('ABAKKUS_V77_JS_HIT '+hit[:4500],flush=True)
+                    print(f"::warning::Abakkus current monthly portfolio: {(str(exc) or type(exc).__name__).splitlines()[0][:240]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
+                if attempted>=3:break
         except Exception as exc:
-            print(f"::warning::Abakkus v77 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
-        ok.append(False)
+            print(f"::warning::Abakkus v78 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:260]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:print(f'Abakkus current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::Abakkus current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
