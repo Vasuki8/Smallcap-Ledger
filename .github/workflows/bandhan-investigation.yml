@@ -13,40 +13,32 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect exact Bandhan Small Cap disclosure page
+      - name: Resolve indexed Bandhan August post slug and attachments
         run: |
           python - <<'PY'
-          import urllib.request,re,json,html
-          base='https://cmsnew.bandhanmutual.com'
-          slugs=[
+          import urllib.request,re,json,urllib.parse
+          base='https://cmsnew.bandhanmutual.com/'
+          headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/xhtml+xml'}
+          roots=[
             'monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
             'monthly-and-half-yearly-bandhan-small-cap-fund-31-july-2026',
-            'monthly-and-half-yearly-bandhan-small-cap-fund-30-june-2026',
           ]
-          H={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/xhtml+xml'}
-          for slug in slugs:
-              u=f'{base}/{slug}/'
-              try:
-                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=35) as r:
-                      body=r.read().decode('utf-8','replace')
-                  print('PAGE',slug,'BYTES',len(body),'FINAL',r.geturl())
-                  for pat in (
-                    r'postid-(\d+)',r'\?p=(\d+)',r'"postId"\s*:\s*(\d+)',
-                    r'"post_id"\s*:\s*(\d+)',r'wp-json[^"\']+',
-                    r'https?://[^"\'<> ]+\.(?:xlsx?|xls|pdf)(?:\?[^"\'<> ]*)?'
-                  ):
-                      vals=[]
-                      for m in re.finditer(pat,body,re.I):
-                          vals.append(m.group(1) if m.lastindex else html.unescape(m.group(0)))
-                      if vals:print('PAGE_MATCH',slug,pat,json.dumps(list(dict.fromkeys(vals))[:80]))
-                  # Show short contexts around attachment/media/storage clues.
-                  for needle in ('storage.googleapis.com','wp-content/uploads','document_link','attachment','portfolio'):
-                      positions=[];start=0
-                      while len(positions)<12:
-                          i=body.lower().find(needle.lower(),start)
-                          if i<0:break
-                          positions.append(i);start=i+len(needle)
-                      for i in positions[:5]:
-                          print('CTX',slug,needle,repr(body[max(0,i-800):i+2200]))
-              except Exception as e:print('PAGE_ERROR',slug,repr(e))
+          for root in roots:
+              for suffix in ['']+[f'-{i}' for i in range(2,9)]:
+                  url=base+root+suffix+'/'
+                  try:
+                      req=urllib.request.Request(url,headers=headers)
+                      with urllib.request.urlopen(req,timeout=20) as r:
+                          body=r.read().decode('utf-8','replace')
+                      title=re.search(r'<h1[^>]*>(.*?)</h1>',body,re.I|re.S)
+                      clean=re.sub(r'<[^>]+>',' ',title.group(1)).strip() if title else ''
+                      if 'Bandhan Small Cap Fund' not in clean:continue
+                      print('POST',url,'TITLE',clean,'LEN',len(body))
+                      for m in re.finditer(r'https?://[^"\'<>\s]+|(?:href|src|data-[\w-]+)=["\']([^"\']+)["\']',body,re.I):
+                          val=m.group(1) or m.group(0)
+                          val=urllib.parse.unquote(val.replace('&amp;','&'))
+                          if re.search(r'\.xlsx?|\.xls|portfolio|download|media|storage\.googleapis',val,re.I):
+                              print('TOKEN',val[:3000])
+                  except Exception as e:
+                      print('MISS',url,type(e).__name__,getattr(e,'code',''))
           PY
