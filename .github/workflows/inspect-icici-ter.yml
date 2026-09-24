@@ -1,4 +1,4 @@
-name: Inspect ICICI API config
+name: Inspect ICICI TER public API
 
 on:
   push:
@@ -11,21 +11,44 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Extract getApiEndpoint and generateConfig
+      - name: Reproduce ICICI public financial disclosure calls
         run: |
           python - <<'PY'
-          import re,urllib.request
-          u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
-          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-          for needle in ['getApiEndpoint=', 'function getApiEndpoint', 'generateConfig=', 'function generateConfig',
-                         'REACT_APP_ENV:', 'REACT_APP_DISABLE_ENCRYPTION:', 'publicEndPoints', 'isPublicEndPoint']:
-              print('\nNEEDLE',needle)
-              positions=[m.start() for m in re.finditer(re.escape(needle),s)]
-              print('COUNT',len(positions))
-              for p in positions[:20]:
-                  print('POS',p,'CTX',re.sub(r'\s+',' ',s[max(0,p-5000):p+8500])[:13800])
+          import json,uuid,urllib.error,urllib.request
+          API='https://apimf.icicipruamc.com'
+          headers={
+            'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
+            'Accept':'application/json, text/plain, */*',
+            'Content-Type':'application/json',
+            'Origin':'https://www.icicipruamc.com',
+            'Referer':'https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total%20Expense%20Ratio',
+            'env':'api',
+            'baggage':'',
+            'requestAPIId':str(uuid.uuid4()),
+          }
+          def request(path,body=None):
+              h=dict(headers);h['requestAPIId']=str(uuid.uuid4())
+              data=None if body is None else json.dumps(body,separators=(',',':')).encode()
+              req=urllib.request.Request(API+path,data=data,method='GET' if data is None else 'POST',headers=h)
+              print('\nREQUEST',req.method,req.full_url,'BODY',body)
+              try:
+                  with urllib.request.urlopen(req,timeout=60) as r:
+                      b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());print('BODY_TEXT',b[:30000].decode('utf-8','ignore'));return b
+              except urllib.error.HTTPError as e:
+                  b=e.read();print('HTTP_ERROR',e.code,len(b),e.headers.get('content-type'));print('ERRBODY',b[:12000].decode('utf-8','ignore'));return None
+          raw=request('/fds/v1/categories?userType=investor')
+          if raw:
+              try:
+                  data=json.loads(raw)
+                  print('JSON_KEYS',data.keys() if isinstance(data,dict) else type(data).__name__)
+                  print('JSON',json.dumps(data,ensure_ascii=False)[:50000])
+                  cats=((data.get('success') or {}).get('data') or []) if isinstance(data,dict) else []
+                  for cat in cats:
+                      title=cat.get('title') or {}
+                      text=title.get('text') if isinstance(title,dict) else title
+                      print('CATEGORY',cat.get('id'),cat.get('categoryCode'),text,cat.get('subCategory'))
+              except Exception as e: print('JSON_ERROR',type(e).__name__,e)
           PY
