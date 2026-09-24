@@ -330,7 +330,7 @@ Portfolio holdings are now intentionally **non-historical** in the structured da
 
 Where an AMC portfolio workbook or page explicitly publishes security quantity, the holding stores that quantity. The current portfolio API/site compares it with the immediately previous month and exposes **previous quantity, change in shares/units, previous weight, and weight change**. Missing quantities remain null and are never estimated. The Portfolio tab no longer offers historical snapshot browsing; the prior month exists only to calculate changes.
 
-### Backend handoff — 2026-09-23
+### Backend handoff — 2026-09-24
 
 Treat the repository, `COVERAGE-AS-OF.json`, `deployment/update-status.json`, the `tracker-history` release, and the newest GitHub Actions run as the source of truth before continuing. Do not restart from older counts elsewhere in this README.
 
@@ -344,7 +344,7 @@ Current production-verified coverage:
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
 | Complete portfolio | **21 / 36** |
-| Current portfolio | **29 / 36** |
+| Current portfolio | **30 / 36** |
 | Current + complete | **21 / 36** |
 | Partial latest portfolio | **13 / 36** |
 
@@ -424,6 +424,19 @@ Production coverage after these recoveries is **28 / 36 current portfolios** and
 - Production now stores DSP at **2026-08-31, 86 positions, complete=1, current=true**.
 - Coverage moved to **29 / 36 current**, **21 / 36 complete**, and **21 / 36 current+complete**; partial latest portfolios fell to **13 / 36**.
 
+### Latest completed backend batch — Edelweiss August partial freshness recovery
+
+**Edelweiss Small Cap Fund is now current through August 31, 2026, while remaining explicitly partial.**
+
+- The official September 2026 factsheet is the current first-party evidence: `https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf`.
+- The real PDF uses a three-page Small Cap sequence. The scheme page publishes exactly 10 named holdings; its Additional Disclosure page publishes **Total no. of equity stocks: 95** and **Top 10 stocks: 23.00%**, all dated **August 31, 2026**.
+- The 10 visible holdings reconcile exactly to the published **23.00%** Top-10 aggregate. Because the remaining 85 stocks are not individually disclosed on that factsheet page, the tracker intentionally stores this as a **partial** snapshot and does not invent or infer the missing constituents.
+- The live PDF intermittently returns **403 Forbidden** to GitHub Actions. Parser versions v103/v104 therefore replay only the exact retained September PDF bytes already preserved in cumulative history; no third-party or guessed source is substituted.
+- Relevant recovery commits include the Top-10 parser `2c3b94e0e0ad7f788fa5a716b7b7100a343982ba`, split-header support `aa2fb421df5a075ca86fcb51d3a4546833d8323c`, cross-page regression `31dbeb37f0b30a8227c194dc27aa3a7be5debd43`, three-page ingestion regression `9f6866c51471d461faec070f573d163c7be05287`, exact archived-source replay `49c72e33b0866c3fa3c05e92c7acd64769867e40` / `8df949072e6215d7d2d68f2338e467b8616a8841`, and replay-scope regression fix `bedefd8598d263b1ae23dadf04f2fb6c4eb51834`.
+- Production recovery was recorded in status commit `8719acde33dc660374f96f8d5ab8d9b48fbf990a`. Final current-code verification run **#406** passed syntax, **177 tests**, site generation/validation, cumulative archive publication, status recording and Pages deployment; latest status refresh is `a1b09282a6ba998f33bfd14f5b0862be0ca06edb`.
+- Production now stores Edelweiss at **2026-08-31, 10 positions, complete=0, current=true**.
+- Coverage is now **30 / 36 current**, **21 / 36 complete**, and **21 / 36 current+complete**. Partial latest portfolios remain **13 / 36** because Edelweiss moved from a stale partial snapshot to a current partial snapshot.
+
 ### Source-access blocker — Bajaj Finserv
 
 - Parser/source audit v83 confirmed the GitHub runner receives **403 Forbidden** from Bajaj's official fund page, downloads page, and current first-party media paths.
@@ -454,8 +467,7 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 **Stale complete**: none.
 
 **Stale partial**:
-- Bajaj Finserv — 2026-07-31, 13 positions.
-- Edelweiss — 2026-07-31, 30 positions.
+- Bajaj Finserv — 2026-07-31, 13 positions · confirmed official-source access blocker.
 - Mirae Asset — 2026-07-31, 10 positions.
 - Quant — 2026-07-31, 11 positions.
 - SBI — 2026-07-31, 68 positions.
@@ -465,11 +477,12 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **Stale partial portfolios remain the main freshness backlog.** DSP is now recovered and Bajaj is a confirmed source-access blocker. Continue with **Edelweiss, Mirae Asset, Quant and SBI** one at a time from concrete current official evidence.
-2. Prefer structured official monthly portfolios when available. First try exact AMC disclosure/workbook/API discovery; only use a factsheet partial when the AMC does not expose the full holdings. Never promote a partial snapshot to complete without 100% reconciliation.
-3. **Bandhan and Union remain the only zero-portfolio gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
-4. After stale partial freshness is improved, revisit the **fresh partial** funds (Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI) for complete structured sources where available.
-5. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
+1. **Mirae Asset Small Cap Fund next.** Parser v105 has already started the first-party source audit. The official portfolio page loads `DownloadPortfolio.js`, which calls `AjaxService.GetDownloadsDataAsync` with module `portfolio_tab1`; continue by resolving that exact first-party API/request shape and selecting the newest dated official monthly portfolio file. Do not repeat the broad page/script crawl.
+2. Then handle **Quant / SBI** one at a time from concrete current official evidence. Bajaj remains a confirmed official-source access blocker and should not be retried without a genuinely new first-party route.
+3. Prefer structured official monthly portfolios when available. First try exact AMC disclosure/workbook/API discovery; only use a factsheet partial when the AMC does not expose the full holdings. Never promote a partial snapshot to complete without 100% reconciliation.
+4. **Bandhan and Union remain the only zero-portfolio gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
+5. After stale partial freshness is improved, revisit the **fresh partial** funds (Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI) for complete structured sources where available.
+6. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
 
