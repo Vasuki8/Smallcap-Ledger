@@ -400,6 +400,9 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
             ['', 'Delta Limited','INE123456786','Banks',100,34800.00,19.40],
             ['', 'Epsilon Limited','INE123456785','Banks',100,35511.89,19.83],
             ['', 'Sub Total','','','',174711.89,97.43],
+            ['', 'Government Securities','','','','',''],
+            ['', '91 Days Tbill','IN002026X123','SOVEREIGN',100,247.97,0.14],
+            ['', 'Sub Total','','','',247.97,0.14],
             ['', 'Money Market Instruments','','','','',''],
             ['', 'Clearing Corporation of India Ltd.','','','',6794.77,3.79],
             ['', 'Sub Total','','','',6794.77,3.79],
@@ -408,7 +411,7 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         ]
         # Keep the synthetic market values internally reconciled to the published
         # percentage layout; the real workbook is additionally validated in production.
-        rows[-1][5]=179131.28
+        rows[-1][5]=179379.25
         fmt=[['General']*7 for _ in rows]
         parsed=parse_sheet(rows,fmt,'Pgim India Small Cap Fund')
         self.assertTrue(parsed['complete'])
