@@ -450,14 +450,17 @@ def init():
           PRIMARY KEY(family,hash,parser_version))''')
 
 
-def extract(content,family,url,h):
+def extract(content,family,url,h,*,parser_version=None):
     """Cache only successful parsing, including an explicit unrecognized-layout result."""
     from . import disclosures
     from .publications import exclusion_reason
     if exclusion_reason(family,url):return 0
     init()
+    # A source-specific repair can retain earlier extraction evidence without
+    # replaying unrelated families or changing their upgrade completion state.
+    version=parser_version or PARSER_VERSION
     old=db.one('SELECT * FROM document_extractions WHERE family=? AND hash=? AND parser_version=?',
-               (family,h,PARSER_VERSION))
+               (family,h,version))
     if old and old['status']!='error':return old['records']
     try:
         path=urlparse(url).path.lower()
@@ -496,7 +499,7 @@ def extract(content,family,url,h):
         status='error';count=0;detail=f'{type(e).__name__}: {str(e)[:250]}'
     with db.connect() as c:
         c.execute('INSERT OR REPLACE INTO document_extractions VALUES(?,?,?,?,?,?,?,?)',
-                  (family,h,PARSER_VERSION,url,status,count,detail,db.now()))
+                  (family,h,version,url,status,count,detail,db.now()))
     if status=='error':raise ValueError(detail)
     return count
 
