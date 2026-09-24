@@ -61,7 +61,7 @@ def parse_sheet(rows,formats,family):
     for ri,row in enumerate(rows[hi+1:],hi+1):
         if max(ic,nc,wc,vc)>=len(row):continue
         name=str(row[nc] or '').strip();label=name or ' '.join(str(x or '') for x in row[:max(nc,ic)+1]).strip()
-        if re.fullmatch(r'grand\s+total(?:\s*\(aum\))?|total\s+net\s+assets?',label,re.I):
+        if re.fullmatch(r'grand\s+total(?:\s*\(aum\))?|total\s+net\s+assets?|net\s+assets?',label,re.I):
             try:grand=(numeric(row[vc]),weight(ri,row))
             except ValueError:pass
             break
@@ -89,6 +89,8 @@ def parse_sheet(rows,formats,family):
             if family=='DSP Small Cap Fund' and re.fullmatch(r'(?:TREPS\s*/\s*Reverse Repo Investments|Cash Margin)\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='Quant Small Cap Fund' and re.fullmatch(r'NCA\s*-\s*NET CURRENT ASSETS\s*[*^#]?',label,re.I):
+                leaf=True
+            if family=='Tata Small Cap Fund' and re.fullmatch(r'(?:[A-Z]\)\s*REPO|CASH\s*/\s*NET CURRENT ASSET)',label,re.I):
                 leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
