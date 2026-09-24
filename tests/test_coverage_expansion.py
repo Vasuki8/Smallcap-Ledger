@@ -246,7 +246,7 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         cash=next(x for x in parsed['positions'] if x['name']=='NCA-NET CURRENT ASSETS')
         self.assertEqual(cash['asset_type'],'Cash and net current assets')
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
-        rows[6][1]='INE123456789'
+        rows[6][1]='KPITTECH'
         self.assertFalse(parse_sheet(rows,fmt,'Quant Small Cap Fund')['complete'])
 
     def test_missing_grand_total_does_not_establish_aum(self):
