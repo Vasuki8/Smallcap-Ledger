@@ -1,12 +1,9 @@
 name: SBI source investigation (read-only)
-
 on:
   push:
     branches: [work/sbi-portfolio-20260924]
-
 permissions:
   contents: read
-
 jobs:
   investigate:
     runs-on: ubuntu-latest
@@ -22,73 +19,52 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Preserve exact source revision
-        run: |
-          mkdir -p audit
-          git rev-parse HEAD > audit/source-commit.txt
-          git archive --format=zip --output=audit/source.zip HEAD tracker scripts tests dist docs README.md pyproject.toml requirements.txt uv.lock .github .python-version COVERAGE-AS-OF.json COVERAGE-AS-OF.md
-      - name: Check Python and regression suite
+      - name: Verify code
         run: |
           uv run --frozen python -m compileall -q tracker scripts tests
           uv run --frozen python -m unittest discover -s tests -v
-      - name: Read public portfolio listing without publishing
+      - name: Inspect monthly disclosures without publishing
         run: |
+          mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json, re, shutil
+          import json,re,traceback
           from pathlib import Path
-          from urllib.parse import urljoin, urlparse, unquote
+          from urllib.parse import urljoin,urlparse
           from bs4 import BeautifulSoup
-          from tracker import db, providers, disclosures, amc_reports
-          import xlrd
-          db.init()
-          out=Path('audit');records=[];seen=set()
-          shutil.copytree(Path(xlrd.__file__).parent,out/'xlrd',ignore=shutil.ignore_patterns('__pycache__'))
-          def fetch(url,label,payload=None):
-              key=(url,json.dumps(payload))
-              if key in seen:return None
-              seen.add(key)
-              if not disclosures.official_publication_url(url,'SBI'):return None
+          from tracker import db,providers,disclosures,amc_reports
+          db.init();out=Path('audit');records=[];seen=set()
+          endpoint='https://www.sbimf.com/ajaxcall/CMS/GetSchemePortfolioSheets'
+          for month in ('August','July'):
+              payload={'FundId':0,'PSYear':'2026','PSMonth':month,'PSFrequency':'Monthly'}
               try:
-                  providers.can_crawl(url)
-                  body,h,typ=providers.fetch(url,body=payload,max_bytes=60*1024*1024)
-                  filename=f'{len(records):02d}-{label}'
-                  (out/filename).write_bytes(body)
-                  records.append({'url':url,'payload':payload,'sha256':h,'bytes':len(body),'file':filename,'status':'ok'})
-                  print(json.dumps(records[-1]),flush=True)
-                  return body,h
-              except Exception as exc:
-                  records.append({'url':url,'payload':payload,'status':'error','error':str(exc)})
-                  print(json.dumps(records[-1]),flush=True)
-                  return None
-          page='https://www.sbimf.com/portfolios'
-          result=fetch(page,'page.html')
-          if result:
-              soup=BeautifulSoup(result[0],'html.parser')
-              for s in soup.select('script[src]'):
-                  url=urljoin(page,s['src'])
-                  if re.search('portfolio',url,re.I):fetch(url,'portfolio.js')
-          for endpoint in ('GetRecentPortfolios','GetRecentFactSheets'):
-              url='https://www.sbimf.com/ajaxcall/CMS/'+endpoint
-              result=fetch(url,endpoint+'.html',{})
-              if not result:continue
-              soup=BeautifulSoup(result[0],'html.parser')
-              for tr in soup.select('tr'):
-                  text=tr.get_text(' ',strip=True)
-                  if not re.search(r'small\s*cap',text,re.I):continue
-                  print('SBI_SMALLCAP_ROW',str(tr),flush=True)
-                  for a in tr.select('a[href]'):
-                      target=urljoin(url,a['href'])
-                      if not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
-                      result2=fetch(target,'portfolio'+Path(urlparse(target).path).suffix)
-                      if result2:
-                          body,h=result2
+                  providers.can_crawl(endpoint)
+                  body,h,_=providers.fetch(endpoint,body=payload,max_bytes=12*1024*1024)
+                  filename=month+'-listing.html';(out/filename).write_bytes(body)
+                  records.append({'url':endpoint,'payload':payload,'file':filename,'sha256':h,'bytes':len(body)})
+                  soup=BeautifulSoup(body,'html.parser')
+                  for tr in soup.select('tr'):
+                      text=tr.get_text(' ',strip=True)
+                      if not re.search(r'small\s*cap',text,re.I):continue
+                      print('SBI_SMALLCAP_ROW',str(tr))
+                      for a in tr.select('a[href]'):
+                          url=urljoin(endpoint,a['href'])
+                          if url in seen or not disclosures.official_publication_url(url,'SBI'):continue
+                          if not re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):continue
+                          seen.add(url);providers.can_crawl(url)
+                          data,digest,_=providers.fetch(url,max_bytes=60*1024*1024)
+                          name=month+'-portfolio'+Path(urlparse(url).path).suffix
+                          (out/name).write_bytes(data)
+                          records.append({'url':url,'file':name,'sha256':digest,'bytes':len(data)})
                           try:
-                              n=amc_reports.extract(body,'SBI Small Cap Fund',target,h)
-                              print('SBI_PARSE',n,db.rows('SELECT family,as_of,complete,source,hash FROM portfolios'),flush=True)
-                          except Exception as exc:print('SBI_PARSE_ERROR',str(exc),flush=True)
+                              n=amc_reports.extract(data,'SBI Small Cap Fund',url,digest)
+                              print('SBI_PARSE',n,db.rows('SELECT family,as_of,complete,source,hash FROM portfolios'))
+                          except Exception:traceback.print_exc()
+              except Exception as exc:
+                  records.append({'url':endpoint,'payload':payload,'error':str(exc)})
+                  traceback.print_exc()
           (out/'sources.json').write_text(json.dumps(records,indent=2))
           PY
-      - name: Retain investigation artifacts
+      - name: Retain evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
