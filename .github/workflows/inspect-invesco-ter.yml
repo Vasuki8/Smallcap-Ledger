@@ -11,38 +11,41 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Isolate Invesco TER component
+      - name: Verify latest Invesco Small Cap TER row
         run: |
           python - <<'PY'
-          import re,urllib.parse,urllib.request
-          page='https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter'
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
-          def fetch(url):
-              req=urllib.request.Request(url,headers=UA)
-              with urllib.request.urlopen(req,timeout=45) as r:return r.read(),r.geturl()
-          html,final=fetch(page);html=html.decode('utf-8','ignore')
-          scripts=[urllib.parse.urljoin(final,x) for x in re.findall(r'<script[^>]+src=["\x27]([^"\x27]+)',html,re.I)]
-          terms=[
-            'Total Expense Ratio (TER) Since 1st April 2026',
-            'Total Expense Ratio Of Mutual Fund Scheme - Till March 31, 2026',
-            'Regular Plan - Total TER',
-            'Direct Plan - Total TER',
-            'Base Expense Ratio (BER)',
-            'Brokerage cost',
-          ]
-          for full in scripts:
-              try:b,_=fetch(full)
-              except Exception:continue
-              s=b.decode('utf-8','ignore')
-              for term in terms:
-                  p=s.find(term)
-                  if p<0:continue
-                  print('FOUND',full,term,'AT',p)
-                  ctx=s[max(0,p-9000):p+14000]
-                  print('CONTEXT_BEGIN')
-                  print(re.sub(r'\s+',' ',ctx))
-                  print('CONTEXT_END')
+          import datetime,json,urllib.parse,urllib.request
+          base='https://www.invescomutualfund.com'
+          q=urllib.parse.urlencode({
+              'title':'Invesco India Small Cap Fund',
+              'fincialYear':2026,
+              'month':9,
+          })
+          url=base+'/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?'+q
+          req=urllib.request.Request(url,headers={
+              'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
+              'Referer':base+'/statutory-disclosures/ter-mutual-fund-since-2026/ter',
+              'Accept':'application/json',
+          })
+          with urllib.request.urlopen(req,timeout=45) as r:
+              body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
+          rows=json.loads(body)
+          exact=[]
+          for row in rows:
+              if row.get('Scheme Name')!='Invesco India Small Cap Fund': continue
+              if row.get('NSDL Scheme Code')!='INVM/O/E/SCF/18/07/0030': continue
+              day=datetime.datetime.strptime(row['TER Date(DD/MM/YYYY)'],'%d/%m/%Y').date()
+              if day<=datetime.date.today(): exact.append((day,row))
+          exact.sort(key=lambda x:x[0])
+          print('EXACT_ROWS',len(exact))
+          for day,row in exact[-5:]:
+              print('ROW',day.isoformat(),json.dumps(row,ensure_ascii=False,sort_keys=True))
+          if not exact: raise SystemExit('no exact rows')
+          day,row=exact[-1]
+          print('LATEST',day.isoformat())
+          print('REGULAR',row['Regular Plan - Base Expense Ratio (BER) (%)'],row['Regular Plan - Brokerage cost (%)'],row['Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)'],row['Regular Plan - Statutory Levies (including GST) (%)'],row['Regular Plan - Total TER (%)'])
+          print('DIRECT',row['Direct Plan - Base Expense Ratio (BER) (%)'],row['Direct Plan - Brokerage cost (%)'],row['Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)'],row['Direct Plan - Statutory Levies (including GST) (%)'],row['Direct Plan - Total TER (%)'])
           PY
