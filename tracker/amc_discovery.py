@@ -357,29 +357,37 @@ def discover(amc):
     elif amc=='Mirae':
         family='Mirae Asset Small Cap Fund'
         endpoint='https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData'
-        payload={'request':{'modulename':'portfolio_tab1','pgno':1,'pgsize':50}}
-        raw,_,_=read(endpoint,payload)
-        data=json.loads(raw)
-        if str(data.get('ReturnCode'))!='0' or not isinstance(data.get('Data'),list):
-            raise ValueError('Mirae official portfolio service returned no monthly portfolio list')
         candidates=[]
-        for row in data['Data']:
-            if not isinstance(row,dict):continue
-            target=urljoin('https://www.miraeassetmf.co.in/',str(row.get('URL') or '').strip())
-            title=str(row.get('Title') or '').strip()
-            if not target or not disclosures.official_publication_url(target,amc):continue
-            ext=re.search(r'\.(xlsx?|pdf)(?:[?#]|$)',target,re.I)
-            if not ext:continue
-            publish=str(row.get('PublishDate') or '')
-            pm=re.search(r'/Date\((\d{10,13})',publish)
-            published=int(pm.group(1)) if pm else 0
-            explicit=disclosures.report_date(title)
-            explicit_rank=int(explicit.replace('-','')) if explicit else 0
-            kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
-            candidates.append((explicit_rank,published,priority,target,title))
-        if not candidates:raise ValueError('Mirae official portfolio service exposed no supported monthly portfolio file')
-        # The API returns publication timestamps, while downstream parsing proves
-        # the actual portfolio reporting date from the document itself.
+        # The service is globally paginated across Mirae schemes. Walk only a
+        # bounded number of newest pages until the exact Small Cap scheme appears.
+        for pgno in range(1,6):
+            payload={'request':{'modulename':'portfolio_tab1','pgno':pgno,'pgsize':100}}
+            raw,_,_=read(endpoint,payload)
+            data=json.loads(raw)
+            rows=data.get('Data')
+            if str(data.get('ReturnCode'))!='0' or not isinstance(rows,list):
+                if pgno==1:raise ValueError('Mirae official portfolio service returned no monthly portfolio list')
+                break
+            for row in rows:
+                if not isinstance(row,dict):continue
+                title=str(row.get('Title') or '').strip()
+                if not re.search(r'\bMirae\s+Asset\s+Small\s*Cap\s+Fund\b',title,re.I):continue
+                target=urljoin('https://www.miraeassetmf.co.in/',str(row.get('URL') or '').strip())
+                if not target or not disclosures.official_publication_url(target,amc):continue
+                ext=re.search(r'\.(xlsx?|pdf)(?:[?#]|$)',target,re.I)
+                if not ext:continue
+                publish=str(row.get('PublishDate') or '')
+                pm=re.search(r'/Date\((\d{10,13})',publish)
+                published=int(pm.group(1)) if pm else 0
+                explicit=disclosures.report_date(title)
+                explicit_rank=int(explicit.replace('-','')) if explicit else 0
+                kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
+                candidates.append((explicit_rank,published,priority,target,title))
+            if candidates:break
+            if not rows:break
+        if not candidates:raise ValueError('Mirae official portfolio service exposed no Small Cap monthly portfolio file')
+        # The API's publication timestamp is used only to choose which official
+        # document to try first; the document parser proves the reporting date.
         for _,_,_,target,title in sorted(candidates,key=lambda r:(r[0],r[1],r[2]),reverse=True)[:3]:
             yield family,target,title or 'Mirae monthly portfolio'
     elif amc=='PGIM':
