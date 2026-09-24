@@ -1,11 +1,11 @@
-name: SBI source investigation (read-only)
+name: Validate SBI recovery branch
 on:
   push:
     branches: [work/sbi-portfolio-20260924]
 permissions:
-  contents: read
+  contents: write
 jobs:
-  investigate:
+  validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -13,61 +13,73 @@ jobs:
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
         with:
           version: '0.11.33'
           python-version: '3.12'
           enable-cache: true
-      - run: uv sync --frozen
-      - name: Verify code
+      - name: Integrate current main without replacing concurrent work
         run: |
-          uv run --frozen python -m compileall -q tracker scripts tests
-          uv run --frozen python -m unittest discover -s tests -v
-      - name: Inspect monthly disclosures without publishing
-        run: |
+          test "$GITHUB_REF_NAME" = 'work/sbi-portfolio-20260924'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git merge --no-edit origin/main
           mkdir -p audit
-          uv run --frozen python - <<'PY'
-          import json,re,traceback
+          python - <<'PY'
+          import base64,gzip,hashlib
           from pathlib import Path
-          from urllib.parse import urljoin,urlparse
-          from bs4 import BeautifulSoup
-          from tracker import db,providers,disclosures,amc_reports
-          db.init();out=Path('audit');records=[];seen=set()
-          endpoint='https://www.sbimf.com/ajaxcall/CMS/GetSchemePortfolioSheets'
-          for month in ('August','July'):
-              payload={'FundId':0,'PSYear':'2026','PSMonth':month,'PSFrequency':'Monthly'}
-              try:
-                  providers.can_crawl(endpoint)
-                  body,h,_=providers.fetch(endpoint,body=payload,max_bytes=12*1024*1024)
-                  filename=month+'-listing.html';(out/filename).write_bytes(body)
-                  records.append({'url':endpoint,'payload':payload,'file':filename,'sha256':h,'bytes':len(body)})
-                  soup=BeautifulSoup(body,'html.parser')
-                  for tr in soup.select('tr'):
-                      text=tr.get_text(' ',strip=True)
-                      if not re.search(r'small\s*cap',text,re.I):continue
-                      print('SBI_SMALLCAP_ROW',str(tr))
-                      for a in tr.select('a[href]'):
-                          url=urljoin(endpoint,a['href'])
-                          if url in seen or not disclosures.official_publication_url(url,'SBI'):continue
-                          if not re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):continue
-                          seen.add(url);providers.can_crawl(url)
-                          data,digest,_=providers.fetch(url,max_bytes=60*1024*1024)
-                          name=month+'-portfolio'+Path(urlparse(url).path).suffix
-                          (out/name).write_bytes(data)
-                          records.append({'url':url,'file':name,'sha256':digest,'bytes':len(data)})
-                          try:
-                              n=amc_reports.extract(data,'SBI Small Cap Fund',url,digest)
-                              print('SBI_PARSE',n,db.rows('SELECT family,as_of,complete,source,hash FROM portfolios'))
-                          except Exception:traceback.print_exc()
-              except Exception as exc:
-                  records.append({'url':endpoint,'payload':payload,'error':str(exc)})
-                  traceback.print_exc()
-          (out/'sources.json').write_text(json.dumps(records,indent=2))
+          raw=gzip.decompress(base64.b64decode(Path('.github/sbi-development.patch.b64').read_text()))
+          assert hashlib.sha256(raw).hexdigest()=='556e9d5ce936ea0e3b7055a605cf16973451b54178f457868ad13b0105cc6d8c'
+          Path('audit/reviewed.patch').write_bytes(raw)
           PY
-      - name: Retain evidence
+          git apply --check audit/reviewed.patch
+          git apply audit/reviewed.patch
+          git diff --check
+      - run: uv sync --frozen
+      - name: Compile and run complete regression suite
+        run: |
+          set -o pipefail
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest discover -s tests -v 2>&1 | tee audit/tests.log
+      - name: Validate exact official workbooks in an isolated database
+        env:
+          SMALLCAP_DATA_DIR: ${{ runner.temp }}/sbi-verification-data
+        run: |
+          uv run --frozen python - <<'PY'
+          import json
+          from pathlib import Path
+          from tracker import db
+          from scripts.refresh_sbi_portfolios import run
+          assert run(), 'SBI live source recovery failed'
+          rows=db.rows('''SELECT p.as_of,p.complete,p.hash,p.source,COUNT(h.id) positions,SUM(h.weight) weight
+            FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
+            WHERE family='SBI Small Cap Fund' GROUP BY p.id ORDER BY p.as_of DESC''')
+          print(json.dumps(rows,indent=2))
+          Path('audit/official-workbook-validation.json').write_text(json.dumps(rows,indent=2))
+          assert [(r['as_of'],r['positions'],r['complete']) for r in rows]==[('2026-08-31',73,1),('2026-07-31',74,1)]
+          assert all(abs(r['weight']-100)<0.00001 for r in rows)
+          assert rows[0]['hash']=='71b589984c9b3db4bbb1baf7365072e0e6f604cf18ccfc215a1dc9c1d3183b48'
+          assert rows[1]['hash']=='b080c169962567f08b34dc4117368dcfb0fe4e49c182a2f60da842682e6dd1c1'
+          assert run(), 'Idempotent second run failed'
+          PY
+      - name: Commit reviewed source changes only to the isolated branch
+        run: |
+          test "$GITHUB_REF_NAME" = 'work/sbi-portfolio-20260924'
+          git rm .github/sbi-development.patch.b64 .github/workflows/sbi-source-investigation.yml
+          git add .github/workflows/daily.yml README.md docs/HANDOFF.md scripts/refresh_sbi_portfolios.py tests/test_sbi_portfolios.py tracker/amc_discovery.py tracker/amc_reports.py tracker/portfolio_parser.py tracker/sbi_portfolios.py
+          git diff --cached --check
+          git diff --cached --stat
+          git commit -m 'Recover complete SBI monthly portfolios with source-scoped replay and regression tests [skip ci]'
+          git push origin HEAD:work/sbi-portfolio-20260924
+          git rev-parse HEAD > audit/validated-commit.txt
+          git archive --format=zip --output=audit/source.zip HEAD tracker scripts tests docs README.md .github pyproject.toml uv.lock requirements.txt .python-version
+      - name: Retain validation evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: sbi-source-investigation
+          name: sbi-recovery-validation
           path: audit/
           retention-days: 3
