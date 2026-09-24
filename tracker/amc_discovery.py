@@ -75,11 +75,44 @@ def store_report(amc,family,url,title='Official report'):
         return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
     return amc_reports.extract(body,family,url,h)
 
-def discover(amc):
+def discover(amc,today=None):
     """Yield (family, URL, label); parsers independently verify scheme ownership."""
     if amc=='SBI':
         from .sbi_portfolios import discover as sbi_discover
         yield from sbi_discover(read)
+    elif amc=='Invesco':
+        family='Invesco India Small Cap Fund'
+        today=today or date.today()
+        current_month=date(today.year,today.month,1)
+        targets=[]
+        for year,month,_ in months(today,count=5):
+            day=date(year,month,calendar.monthrange(year,month)[1])
+            if day<current_month:
+                targets.append(day)
+            if len(targets)>=2:break
+        candidates=[]
+        for year in sorted({day.year for day in targets},reverse=True):
+            endpoint=f'https://www.invescomutualfund.com/api/CompleteMonthlyHoldings?year={year}&classification=equity'
+            raw,_,_=read(endpoint)
+            data=json.loads(raw)
+            if not isinstance(data,list):continue
+            row=next((item for item in data if isinstance(item,dict)
+                      and str(item.get('Name') or '').strip()==family),None)
+            if row is None:continue
+            for day in targets:
+                if day.year!=year:continue
+                abbr=calendar.month_abbr[day.month]
+                target=str(row.get(abbr+'Url') or '').strip()
+                name=str(row.get(abbr+'Name') or '').strip()
+                if not target or not disclosures.official_publication_url(target,amc):continue
+                if not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
+                expected=f'{day.month:02d}/{day.year%100:02d}'
+                if name!=expected:continue
+                candidates.append((day,target,f'{family} monthly holdings {day.isoformat()}'))
+        if not candidates:
+            raise ValueError('Invesco official monthly-holdings API exposed no closed-month Small Cap workbook')
+        for day,url,title in sorted(candidates,reverse=True):
+            yield family,url,title
     elif amc=='Baroda':
         family='Baroda Bnp Paribas Small Cap Fund'
         page='https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme'
@@ -811,5 +844,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','Invesco','LIC','Union','UTI','Bandhan','ITI','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
