@@ -75,6 +75,51 @@ class CoverageExpansionTests(unittest.TestCase):
         row['GROUP_NAME']='Sundaram Mid Cap Fund'
         self.assertEqual(extract(json.dumps([row]),f,u,'bad'),0)
 
+    def test_sundaram_censored_weight_stays_partial_but_keeps_all_numeric_rows(self):
+        import io,openpyxl
+        from tracker import disclosures
+        wb=openpyxl.Workbook();ws=wb.active;ws.title='SMILE'
+        rows=[
+            ['SUNDARAM MUTUAL FUND','','','','','',''],
+            ['','Sundaram Small Cap Fund','','','','',''],
+            ['','Monthly Portfolio Statement for the month ended 31 August 2026','','','','',''],
+            ['SL No','ISIN Code','Name of the instrument','Rating / Industry','Quantity','Mkt Value Rs. in Lacs','% of Net Asset'],
+            [1,'INE123456789','Alpha Industries Ltd','Industrial Products',100,95000,95.0],
+            [None,None,'(c) Privately Placed / Unlisted',None,None,None,None],
+            [1,'INE551A01022','Hindustan Dorr Oliver Ltd @','Engineering Services',375961,0.000001,'#'],
+            [None,None,'(d) ReverseRepo / TREPS',None,None,None,None],
+            [1,None,'TREPS',None,None,5000,5.0],
+            [None,None,'Margin Money For Derivatives',None,None,10,0.01],
+            [None,None,'Cash and Other Net Current Assets',None,None,-10,-0.01],
+            [None,None,'Grand Total',None,None,100000,100.0],
+            [None,None,'# percentage to NAV of security is less than 0.01% - Wherever applicable',None,None,None,None],
+            [None,None,'@ The Equity shares of Hindustan Dorr-Oliver Limited were delisted and written off.',None,None,None,None],
+        ]
+        for row in rows:ws.append(row)
+        bio=io.BytesIO();wb.save(bio);wb.close()
+        source='https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx'
+        # Simulate the previously retained equity-only partial using the exact
+        # same source hash; v126 must enrich it in place rather than duplicate it.
+        disclosures.portfolio('Sundaram Small Cap Fund','2026-08-31',[
+            {'name':'Alpha Industries Ltd','isin':'INE123456789','sector':'Industrial Products',
+             'weight':95.0,'quantity':100,'asset_type':'Equity'}],
+            False,source,'sundaram-censored')
+        count=disclosures.spreadsheet(
+            bio.getvalue(),'Sundaram Small Cap Fund',source,'sundaram-censored')
+        self.assertEqual(count,4)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions,SUM(h.weight) weight
+          FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family='Sundaram Small Cap Fund' GROUP BY p.id""")
+        self.assertEqual(snap['as_of'],'2026-08-31')
+        self.assertEqual(snap['complete'],0)
+        self.assertEqual(snap['positions'],4)
+        self.assertAlmostEqual(snap['weight'],100.0,places=6)
+        self.assertIsNone(db.one("""SELECT h.id FROM holdings h JOIN portfolios p ON p.id=h.snapshot_id
+          WHERE p.family='Sundaram Small Cap Fund' AND h.name='Hindustan Dorr Oliver Ltd @'"""))
+        metric=db.one("""SELECT value,as_of FROM metrics
+          WHERE family='Sundaram Small Cap Fund' AND metric='aum'""")
+        self.assertEqual(metric,{'value':'1000.0','as_of':'2026-08-31'})
+
     def test_pgim_pdf_allows_reconciled_page_when_generic_owner_order_is_reversed(self):
         from tracker import disclosures
         page=SimpleNamespace(extract_text=lambda *args,**kwargs:'PGIM reversed-title fixture')
