@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -572,7 +572,7 @@ def run():
         except Exception as exc:
             print(f"::warning::Edelweiss v90 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v91':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v92':
         family='Edelweiss Small Cap Fund'
         url='https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf'
         try:
@@ -583,22 +583,25 @@ def run():
             reader=PdfReader(io.BytesIO(body))
             for pageno in (14,15,16):
                 page=reader.pages[pageno]
-                annots=page.get('/Annots') or []
-                print(f'EDELWEISS_V91_PAGE {pageno+1} annots={len(annots)}',flush=True)
+                annots=page.get('/Annots')
+                if annots is not None and hasattr(annots,'get_object'): annots=annots.get_object()
+                annots=annots or []
+                print(f'EDELWEISS_V92_PAGE {pageno+1} annots={len(annots)}',flush=True)
                 for idx,ref in enumerate(annots):
                     try:
-                        obj=ref.get_object()
+                        obj=ref.get_object() if hasattr(ref,'get_object') else ref
                         action=obj.get('/A') or {}
-                        uri=action.get('/URI')
+                        if hasattr(action,'get_object'): action=action.get_object()
+                        uri=action.get('/URI') if hasattr(action,'get') else None
                         dest=obj.get('/Dest')
                         subtype=obj.get('/Subtype')
                         rect=obj.get('/Rect')
                         if uri or dest:
-                            print(f'EDELWEISS_V91_LINK page={pageno+1} idx={idx} subtype={subtype} uri={uri} dest={dest} rect={rect}',flush=True)
+                            print(f'EDELWEISS_V92_LINK page={pageno+1} idx={idx} subtype={subtype} uri={uri} dest={dest} rect={rect}',flush=True)
                     except Exception as exc:
-                        print(f'EDELWEISS_V91_LINKERR page={pageno+1} idx={idx} {type(exc).__name__}: {str(exc)[:180]}',flush=True)
+                        print(f'EDELWEISS_V92_LINKERR page={pageno+1} idx={idx} {type(exc).__name__}: {str(exc)[:180]}',flush=True)
         except Exception as exc:
-            print(f"::warning::Edelweiss v91 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::Edelweiss v92 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
