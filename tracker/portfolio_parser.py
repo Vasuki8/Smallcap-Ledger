@@ -61,6 +61,10 @@ def parse_sheet(rows,formats,family):
     for ri,row in enumerate(rows[hi+1:],hi+1):
         if max(ic,nc,wc,vc)>=len(row):continue
         name=str(row[nc] or '').strip();label=name or ' '.join(str(x or '') for x in row[:max(nc,ic)+1]).strip()
+        # Some all-scheme workbooks repeat the column header before a new asset
+        # section. It is structural metadata, never a portfolio position.
+        repeated=[str(v or '').lower() for v in row]
+        if any('isin' in v for v in repeated) and any('%' in v and (re.search(r'nav|aum',v) or ('net' in v and 'asset' in v)) for v in repeated):continue
         grand_label=bool(re.fullmatch(r'grand\s+total(?:\s*\(aum\))?|total\s+net\s+assets?',label,re.I))
         if family=='Tata Small Cap Fund' and re.fullmatch(r'NET\s+ASSETS?',label,re.I):grand_label=True
         if grand_label:
