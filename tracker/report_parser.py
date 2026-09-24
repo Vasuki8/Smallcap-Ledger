@@ -1050,8 +1050,13 @@ def edelweiss_top10_portfolio(text,additional_text=''):
     if not day:return None
 
     lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines() if x.strip()]
-    start=next((i for i,x in enumerate(lines)
-                if re.fullmatch(r'Top\s+10\s+Holdings\s+%\s+to\s+Net\s+Assets',x,re.I)),None)
+    start=None
+    for i,x in enumerate(lines):
+        if re.fullmatch(r'Top\s+10\s+Holdings\s+%\s+to\s+Net\s+Assets',x,re.I):
+            start=i;break
+        if (re.fullmatch(r'Top\s+10\s+Holdings\s+%\s+to\s+Net',x,re.I)
+            and i+1<len(lines) and re.fullmatch(r'Assets',lines[i+1],re.I)):
+            start=i+1;break
     if start is None:return None
     positions=[]
     for line in lines[start+1:]:
