@@ -8,26 +8,40 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  decode:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
-      - name: Trace Bandhan scheme portfolio request helper
+      - name: Decode Bandhan scheme portfolio request constants
         run: |
           python - <<'PY'
-          import urllib.request,re
-          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',
-                                     headers={'User-Agent':'Mozilla/5.0'})
+          import urllib.request,subprocess
+          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
-          for needle in ('_0x453e5e=', 'function _0x453e5e', '_0x27541e=', 'function _0x27541e',
-                         'getNewAdditionalDisclosureApi', 'posts_per_page=2500'):
-              pos=[];start=0
-              while len(pos)<20:
-                  i=js.find(needle,start)
-                  if i<0:break
-                  pos.append(i);start=i+len(needle)
-              print('POSITIONS',needle,pos)
-              for i in pos:
-                  print('CTX',needle,i,repr(js[max(0,i-9000):i+15000]))
+          end=js.find(',((()=>{')
+          prefix=js[:end]
+          for suffix in (';',');','));'):
+              code=prefix+suffix+"""
+              console.log(JSON.stringify({
+                apiOrigin:a0_0x2580(0x21db),
+                apiBase:a0_0x2580(0x1bd4),
+                cmsCallPrefix:a0_0x2580(0xa6f),
+                monthKey:a0_0x2580(0xbdd),
+                yearKey:a0_0x2580(0x955),
+                schemeKey:a0_0x2580(0x46b5),
+                categoryKey:a0_0x2580(0xb72),
+                acfKeyPrefix:a0_0x2580(0x1c95),
+                pageSizeKey:a0_0x2580(0x3a60),
+                selectedYearKey:a0_0x2580(0x55c),
+                selectedMonthKey:a0_0x2580(0x18e4),
+                schemeTitlesKey:a0_0x2580(0x770),
+                schemeListKey:a0_0x2580(0x1492),
+                categoryListKey:a0_0x2580(0x57b8)
+              }));
+              """
+              open('/tmp/decoder.js','w').write(code)
+              cp=subprocess.run(['node','/tmp/decoder.js'],capture_output=True,text=True,timeout=20)
+              print('TRY',repr(suffix),'RC',cp.returncode,'OUT',cp.stdout.strip(),'ERR',cp.stderr[:500])
+              if cp.returncode==0:break
           PY
