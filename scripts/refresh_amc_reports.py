@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -572,36 +572,52 @@ def run():
         except Exception as exc:
             print(f"::warning::Edelweiss v90 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v92':
-        family='Edelweiss Small Cap Fund'
-        url='https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf'
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v93':
+        page='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
         try:
-            import io
-            from pypdf import PdfReader
-            providers.can_crawl(url)
-            body,_,_=providers.fetch(url,max_bytes=50*1024*1024)
-            reader=PdfReader(io.BytesIO(body))
-            for pageno in (14,15,16):
-                page=reader.pages[pageno]
-                annots=page.get('/Annots')
-                if annots is not None and hasattr(annots,'get_object'): annots=annots.get_object()
-                annots=annots or []
-                print(f'EDELWEISS_V92_PAGE {pageno+1} annots={len(annots)}',flush=True)
-                for idx,ref in enumerate(annots):
-                    try:
-                        obj=ref.get_object() if hasattr(ref,'get_object') else ref
-                        action=obj.get('/A') or {}
-                        if hasattr(action,'get_object'): action=action.get_object()
-                        uri=action.get('/URI') if hasattr(action,'get') else None
-                        dest=obj.get('/Dest')
-                        subtype=obj.get('/Subtype')
-                        rect=obj.get('/Rect')
-                        if uri or dest:
-                            print(f'EDELWEISS_V92_LINK page={pageno+1} idx={idx} subtype={subtype} uri={uri} dest={dest} rect={rect}',flush=True)
-                    except Exception as exc:
-                        print(f'EDELWEISS_V92_LINKERR page={pageno+1} idx={idx} {type(exc).__name__}: {str(exc)[:180]}',flush=True)
+            from bs4 import BeautifulSoup
+            from urllib.parse import urljoin,urlparse
+            providers.can_crawl(page)
+            raw,_,_=providers.fetch(page,max_bytes=10*1024*1024)
+            soup=BeautifulSoup(raw,'html.parser')
+            txt=raw.decode('utf-8','ignore')
+            print(f'EDELWEISS_V93_PAGE bytes={len(raw)}',flush=True)
+            for tag in soup.find_all(['script','input','select','option','div','a','button']):
+                attrs=[]
+                for k,v in tag.attrs.items():
+                    value=' '.join(v) if isinstance(v,list) else str(v)
+                    if re.search(r'portfolio|scheme|download|api|ajax|document|file',value,re.I):
+                        attrs.append(f'{k}={value}')
+                if attrs:
+                    print('EDELWEISS_V93_ATTR '+tag.name+' '+' '.join(attrs)[:1200],flush=True)
+            scripts=[]
+            for tag in soup.find_all('script'):
+                src=tag.get('src')
+                if src:
+                    u=urljoin(page,src)
+                    if urlparse(u).netloc.endswith('edelweissmf.com'):scripts.append(u)
+                else:
+                    body=tag.string or tag.get_text(' ',strip=True)
+                    if re.search(r'portfolio|ajax|api|download',body,re.I):
+                        print('EDELWEISS_V93_INLINE '+re.sub(r'\s+',' ',body)[:5000],flush=True)
+            for u in list(dict.fromkeys(scripts)):
+                try:
+                    providers.can_crawl(u)
+                    body,_,_=providers.fetch(u,max_bytes=6*1024*1024)
+                    js=body.decode('utf-8','ignore')
+                except Exception as exc:
+                    print(f'EDELWEISS_V93_JSERR {u} :: {(str(exc) or type(exc).__name__)[:180]}',flush=True)
+                    continue
+                hits=[]
+                for m in re.finditer(r'.{0,260}(?:portfolio-of-schemes|portfolio|download|api/|ajax|xlsx?|\.xls).{0,650}',js,re.I|re.S):
+                    snippet=re.sub(r'\s+',' ',m.group(0)).strip()
+                    if snippet not in hits:hits.append(snippet)
+                    if len(hits)>=12:break
+                if hits:
+                    print('EDELWEISS_V93_SCRIPT '+u,flush=True)
+                    for hit in hits:print('EDELWEISS_V93_HIT '+hit[:1800],flush=True)
         except Exception as exc:
-            print(f"::warning::Edelweiss v92 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::Edelweiss v93 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
