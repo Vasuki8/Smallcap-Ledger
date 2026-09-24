@@ -1,8 +1,30 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after Tata production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after TRUSTMF production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
 
-## Latest completed task: Tata complete monthly portfolio recovery
+## Latest completed task: TRUSTMF complete monthly portfolio recovery
+
+Merged PR #88 as commit `e9a085165dca5354a533757087222874d348074d`. Production workflow **#458**, run **36013433301**, passed cumulative-history restore, parser v125 recovery, all regression tests, static-site generation/validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T14:32:07Z**, status was recorded at **2026-09-24T14:32:29Z**, and the workflow completed successfully at **2026-09-24T14:34:04Z**.
+
+Before this batch, **TRUSTMF Small Cap Fund** had a current **70-position partial** snapshot dated 2026-08-31. The existing first-party disclosure discovery already exposed the exact monthly workbook through TRUSTMF's read-only API:
+
+- title: **TRUSTMF Monthly Portfolio Report as on 31.08.2026**
+- URL: `https://trustmf.com/Content/2026/9/Monthly%20Port_20260909123835.xlsx`
+- SHA-256: `834f1709a30b972b5fb5f6322b3dd5687262daaadf32d38ded33df4c6b5ae102`
+- parsed portfolio: **73 positions, complete=1, 100.00% weight, as_of=2026-08-31**
+- workbook month-end AUM: **₹3,438.9023 crore as of 2026-08-31**
+
+The workbook already reconciled **95.50%** through named securities. The only blocking row was the explicitly published money-market position `TRP_010926 · TREPS 01-Sep-2026` at **4.50%**. Parser v125 recognizes that exact TRUSTMF row only when it appears in the workbook's money-market section. No cash residual, balancing holding or inferred weight is created. Existing scheme-identity, unknown-row, duplicate, market-value, weight and grand-total checks still gate completeness.
+
+The website's latest AUM remains the newer AMFI observation, **₹3,861.35 crore as of 2026-09-22**; the workbook's August AUM is retained separately as dated source evidence.
+
+Final isolated validation run **36013257862** passed **193 tests** and live end-to-end ingestion of the exact official workbook. It produced 73 positions at exactly 100.00%, retained the TREPS row as `Money market`, and retained the workbook AUM/hash/date above. Production run #458 independently verified **TRUSTMF current complete portfolio: 2026-08-31, 73 positions, 100.00% weight, complete=1**, then passed the full site-validation and deployment path.
+
+Pages artifact **10813342822** was generated at **231,252,779 bytes** with digest `sha256:8e9c3f96f5c3ee00f00a7913a2bb1207a04f00120e2db6ad2b2ebea09ed1a299`. The normal nightly `amc_discovery` path already includes TRUSTMF's first-party monthly-disclosure API, so future monthly workbooks remain automatically discoverable after the one-time v125 upgrade. No UI, dependency, permission, schedule, paid-service or archive-retention changes were made.
+
+Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/88 ; validation https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36013257862 ; production https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36013433301 .
+
+## Previous completed task: Tata complete monthly portfolio recovery
 
 Merged PR #87 as commit `9e503300fd917c6d98e7b4c991322ab6a682c5a5`. Production workflow **#457**, run **35969060794**, passed the full build, archive, static-site validation and GitHub Pages deployment. The published coverage was built at **2026-09-24T07:20:42Z** and the status audit at **2026-09-24T07:20:59Z**.
 
@@ -67,18 +89,18 @@ Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/86 ; validation htt
 
 ## Verified coverage after this batch
 
-Coverage at **2026-09-24T07:20:42Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
+Coverage at **2026-09-24T14:32:07Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
 
-Portfolios: **34/36 with holdings; 25 complete; 33 current; 25 current and complete; 9 partial**. The expected month-end is **2026-08-31**. Tata improved complete/current-complete coverage **24 -> 25** without changing the 33-fund freshness count because its previous top-10 snapshot was already current. Quant and SBI are already complete/current from their prior batches; do not repeat those recoveries.
+Portfolios: **34/36 with holdings; 26 complete; 33 current; 26 current and complete; 8 partial**. The expected month-end is **2026-08-31**. TRUSTMF improved complete/current-complete coverage **25 -> 26** without changing the 33-fund freshness count because its previous partial snapshot was already current. Quant, SBI, Tata and TRUSTMF are completed recovery targets; do not rerun those batches unnecessarily.
 
-The production status audit at **2026-09-24T07:20:59Z** records 108 retained portfolio snapshots, 1,485 archived document records, 1,929,010,014 archive bytes and 2,028,272,478 total retained bytes. The Pages publication budget remains unchanged at 250 MiB for saved publication files.
+The production status audit at **2026-09-24T14:32:29Z** records 109 retained portfolio snapshots, 1,485 archived document records, 1,929,010,014 archive bytes and 2,028,264,286 total retained bytes. The Pages publication budget remains unchanged at 250 MiB for saved publication files.
 
 ## Next backend task and remaining blockers
 
-1. **TRUSTMF Small Cap Fund is the next preferred completeness target.** It is current at 70 positions but partial, and the tracker already has a reusable first-party monthly-disclosure API/workbook route. Inspect the exact August structured workbook for explicit cash/repo/debt/aggregate rows and promote it only if all published values and weights reconcile to the workbook grand total.
-2. Other current partial portfolios are **Axis, Edelweiss, ICICI Prudential, Invesco India, JM, Sundaram and UTI**. Prefer structured official monthly sources over factsheet top-holdings views. Axis is now a documented access blocker rather than the immediate retry target.
+1. **Sundaram Small Cap Fund is the next preferred completeness target.** It is current at **73 positions dated 2026-08-31** but partial. Its first-party `Fund_Card_data.json` already supplies the scheme's official `PORTFOLIO_PATH`; inspect that exact August source and determine whether all explicit repo/cash/debt/aggregate rows can be reconciled to a published total before changing completeness.
+2. Other current partial portfolios are **Axis, Edelweiss, ICICI Prudential, Invesco India, JM and UTI**. Prefer reusable first-party monthly portfolio sources over top-holdings factsheet views. Axis remains a documented access blocker rather than the immediate retry target.
 3. **Bajaj Finserv** remains the only stale collected portfolio: 13 partial positions dated 2026-07-31. Its established official-source access blocker remains. Retry only with a genuinely new first-party route or changed access evidence.
 4. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
-5. Temporary investigation branches such as `work/axis-portfolio-20260924` are not production source of truth. Re-read `main`, this handoff, coverage and current Actions before continuing.
+5. Temporary investigation branches are not production source of truth. Re-read `main`, this handoff, current coverage and the latest Actions/deployment state before continuing.
 
-Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never mark partial holdings complete to improve counts. Do not rerun completed Quant/SBI/Tata repair work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
+Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never mark partial holdings complete to improve counts. Do not rerun completed Quant/SBI/Tata/TRUSTMF repair work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
