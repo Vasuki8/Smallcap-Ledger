@@ -165,6 +165,22 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         rows[0]=['Test Nifty Smallcap 250 Index Fund']
         self.assertIsNone(parse_sheet(rows,fmt,'Test Small Cap Fund'))
 
+    def test_absl_derivative_margin_row_is_reconciled_as_cash_asset(self):
+        rows,fmt=self.sheet()
+        rows[0]=['Aditya Birla Sun Life Small Cap Fund']
+        rows[3]=['INE123456789','Alpha Ltd','Banks',100,9500,.95]
+        rows[5]=['','TREPS','','',200,.02]
+        rows.insert(6,['','Margin amount for Derivative positions','','',200,.02]);fmt.insert(6,['General']*6)
+        fmt[6][5]='0.00%'
+        rows[7]=['','Net Current Assets','','',100,.01]
+        rows[8]=['','Grand Total','','',10000,1]
+        parsed=parse_sheet(rows,fmt,'Aditya Birla Sun Life Small Cap Fund')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],[])
+        margin=next(x for x in parsed['positions'] if x['name']=='Margin amount for Derivative positions')
+        self.assertEqual(margin['asset_type'],'Cash and net current assets')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+
     def test_missing_grand_total_does_not_establish_aum(self):
         rows,fmt=self.sheet();r=parse_sheet(rows[:-1],fmt[:-1],'Test Small Cap Fund')
         self.assertIsNone(r['aum']);self.assertFalse(r['complete'])
