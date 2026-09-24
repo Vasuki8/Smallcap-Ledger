@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,51 +230,47 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v62':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v63':
         from bs4 import BeautifulSoup
         from urllib.parse import urljoin,urlparse
         page='https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio'
         try:
             providers.can_crawl(page)
-            raw,source,mime=providers.fetch(page,max_bytes=12*1024*1024)
-            txt=raw.decode('utf-8','ignore')
+            raw,_,_=providers.fetch(page,max_bytes=12*1024*1024)
             soup=BeautifulSoup(raw,'html.parser')
-            print(f'PGIM_V62_PAGE bytes={len(raw)} mime={mime} source={source}',flush=True)
-            # Dump only the exact August Small Cap listing context and its DOM attributes.
-            nodes=[tag for tag in soup.find_all(True)
-                   if re.search(r'PGIM\s+INDIA\s+SMALL\s+CAP\s+FUND',tag.get_text(' ',strip=True),re.I)]
-            for n,tag in enumerate(nodes[:8],1):
-                attrs={k:(' '.join(v) if isinstance(v,list) else str(v)) for k,v in tag.attrs.items()}
-                print('PGIM_V62_NODE '+json.dumps({'n':n,'tag':tag.name,'text':tag.get_text(' ',strip=True)[:500],
-                                                   'attrs':attrs},ensure_ascii=False)[:2500],flush=True)
-                parent=tag.parent
-                if parent:
-                    print('PGIM_V62_PARENT '+re.sub(r'\s+',' ',str(parent))[:5000],flush=True)
-            # Search raw markup for relevant endpoint/file references near August 2026.
-            seen=set()
-            for pattern in (r'.{0,1500}PGIM\s+INDIA\s+SMALL\s+CAP\s+FUND.{0,3000}',
-                            r'.{0,1200}Aug(?:ust)?\s+2026.{0,2200}',
-                            r'.{0,1000}(?:api/v1|brochure|Monthly-Portfolio|portfolio).{0,1800}'):
-                for m in re.finditer(pattern,txt,re.I|re.S):
-                    snip=re.sub(r'\s+',' ',m.group(0)).strip()
-                    if snip in seen:continue
-                    seen.add(snip)
-                    print('PGIM_V62_SNIP '+snip[:5000],flush=True)
-                    if len(seen)>=16:break
-                if len(seen)>=16:break
-            # Inspect first-party JavaScript references; later run can fetch only the relevant bundle.
+            scripts=[]
             for tag in soup.find_all('script'):
                 src=tag.get('src')
-                if src:
-                    u=urljoin(page,src)
-                    if (urlparse(u).hostname or '').endswith('pgimindia.com'):
-                        print('PGIM_V62_SCRIPT '+u,flush=True)
-                else:
-                    body=tag.string or tag.get_text(' ',strip=True)
-                    if re.search(r'portfolio|brochure|api/v1|download',body,re.I):
-                        print('PGIM_V62_INLINE '+re.sub(r'\s+',' ',body)[:5000],flush=True)
+                if not src:continue
+                u=urljoin(page,src)
+                if (urlparse(u).hostname or '').endswith('pgimindia.com') and 'main.' in u:
+                    scripts.append(u)
+            if not scripts:raise ValueError('PGIM Angular main bundle not found')
+            for u in scripts:
+                providers.can_crawl(u)
+                body,_,mime=providers.fetch(u,max_bytes=25*1024*1024)
+                txt=body.decode('utf-8','ignore')
+                print(f'PGIM_V63_BUNDLE {u} bytes={len(body)} mime={mime}',flush=True)
+                # Print unique API/path-like string literals only.
+                vals=[]
+                for m in re.finditer(r'["\']([^"\']{1,500})["\']',txt):
+                    v=m.group(1)
+                    if not re.search(r'api/v1|portfolio|brochure|disclosure|download|file(?:url|path|name)',v,re.I):continue
+                    if v not in vals:vals.append(v)
+                for v in vals[:180]:
+                    print('PGIM_V63_STRING '+v[:1000],flush=True)
+                # Keep contextual snippets around endpoint construction and download handlers.
+                seen=set()
+                for keyword in ('api/v1','downloadFile','download','brochure','disclosure','portfolio'):
+                    for m in re.finditer(keyword,txt,re.I):
+                        snip=re.sub(r'\s+',' ',txt[max(0,m.start()-700):m.end()+1300]).strip()
+                        if snip in seen:continue
+                        seen.add(snip)
+                        print('PGIM_V63_CONTEXT '+snip[:2600],flush=True)
+                        if len(seen)>=30:break
+                    if len(seen)>=30:break
         except Exception as exc:
-            print(f"::warning::PGIM v62 listing diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+            print(f"::warning::PGIM v63 bundle diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
