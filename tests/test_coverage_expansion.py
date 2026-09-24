@@ -390,6 +390,31 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
         self.assertEqual(parsed['positions'][1]['name'],'Clearing Corporation of India Ltd')
         self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100)
 
+    def test_pgim_ccil_money_market_row_reconciles_complete_workbook(self):
+        rows=[
+            ['PGIM INDIA SMALL CAP FUND'],['Monthly Portfolio as on 31 August 2026'],
+            ['','Name of Instrument','ISIN','Industry/Rating','Quantity','Market/Fair Value (INR Lacs)','% to Net Assets'],
+            ['', 'Alpha Limited','INE123456789','Banks',100,174711.89,97.43],
+            ['', 'Sub Total','','','',174711.89,97.43],
+            ['', 'Money Market Instruments','','','','',''],
+            ['', 'Clearing Corporation of India Ltd.','','','',6794.77,3.79],
+            ['', 'Sub Total','','','',6794.77,3.79],
+            ['', 'Net Receivables / (Payables)','','','',-2375.38,-1.36],
+            ['', 'GRAND TOTAL','','','',179131.28,100.0],
+        ]
+        # Keep the synthetic market values internally reconciled to the published
+        # percentage layout; the real workbook is additionally validated in production.
+        rows[-1][5]=sum(float(r[5]) for r in (rows[3],rows[6],rows[8]))
+        fmt=[['General']*7 for _ in rows]
+        parsed=parse_sheet(rows,fmt,'Pgim India Small Cap Fund')
+        self.assertTrue(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],[])
+        repo=next(x for x in parsed['positions'] if x['name']=='Clearing Corporation of India Ltd.')
+        self.assertEqual(repo['asset_type'],'Money market')
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        rows[0]=['Test Small Cap Fund']
+        self.assertFalse(parse_sheet(rows,fmt,'Test Small Cap Fund')['complete'])
+
     def test_named_repo_is_limited_to_its_verified_scheme_layout(self):
         rows,fmt=self.sheet();rows[0]=['Motilal Oswal Small Cap Fund']
         rows[5]=['CBLO','TRP_030826','','',600,.06]
