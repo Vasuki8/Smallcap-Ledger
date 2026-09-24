@@ -13,21 +13,41 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect exact ICICI Downloads page controller
+      - name: Replay exact ICICI Monthly Portfolio request
         run: |
           python - <<'PY'
-          import urllib.request,re
-          url='https://www.icicipruamc.com/static/js/index.Bo6S7uE-.js'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
-          with urllib.request.urlopen(req,timeout=20) as r:
-              js=r.read().decode('utf-8','replace')
-              print('FETCH',r.status,r.headers.get('Content-Type'),len(js))
-          print('IMPORT_HEAD',js[:5000])
-          for needle in ('fileType','categoryId','subCategory','filter','userType','page:','size:',
-                         'DOCUMENTS','downloadData','setAllData','financialYear','FINANCIAL_YEAR'):
-              ms=list(re.finditer(re.escape(needle),js,re.I))
-              print('NEEDLE',needle,'COUNT',len(ms))
-              for m in ms[:20]:
-                  i=m.start()
-                  print('CTX',needle,js[max(0,i-3000):i+6500])
+          import urllib.request,uuid,json,re
+          url='https://apimf.icicipruamc.com/nms/v1/downloads/files'
+          body={
+            'categoryId':'2026-2027,26a073d7-08d2-4a95-95fa-f83a4ee51e40',
+            'schemeCategory':'',
+            'userType':'Investor',
+            'fileType':'All',
+            'page':'1',
+            'size':'20',
+            'filter':[{'FINANCIAL_YEAR':['2026-2027']}],
+            'categoryName':'OTHERS',
+          }
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+                   'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
+                   'Referer':'https://www.icicipruamc.com/news-and-media/downloads',
+                   'env':'api','baggage':'','requestAPIId':str(uuid.uuid4())}
+          req=urllib.request.Request(url,data=json.dumps(body).encode(),headers=headers,method='POST')
+          print('REQUEST',json.dumps(body,sort_keys=True))
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  b=r.read();print('FETCH',r.status,r.headers.get('Content-Type'),len(b))
+                  text=b.decode('utf-8','replace');print('BODY',text[:120000])
+                  data=json.loads(text)
+                  files=((data.get('success') or {}).get('data') or {}).get('files') or []
+                  print('FILE_COUNT',len(files))
+                  for x in files:
+                      blob=json.dumps(x,ensure_ascii=False)
+                      if re.search(r'portfolio|august|aug|2026',blob,re.I):
+                          print('FILE',blob[:12000])
+          except Exception as e:
+              print('ERROR',repr(e))
+              if getattr(e,'read',None):
+                  try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:50000])
+                  except:pass
           PY
