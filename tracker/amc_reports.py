@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v68'
+PARSER_VERSION='amc-reports-2026-09-v69'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -56,6 +56,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v66':frozenset({'Pgim India Small Cap Fund'}),
     'amc-reports-2026-09-v67':frozenset({'Pgim India Small Cap Fund'}),
     'amc-reports-2026-09-v68':frozenset({'Pgim India Small Cap Fund'}),
+    'amc-reports-2026-09-v69':frozenset({'Pgim India Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -208,6 +209,9 @@ def should_reprocess_existing(family,url,h=None):
         return False
     if PARSER_VERSION=='amc-reports-2026-09-v68':
         # v68 resolves PGIM disclosure API constant values from verified bundles.
+        return False
+    if PARSER_VERSION=='amc-reports-2026-09-v69':
+        # v69 validates PGIM's disclosure APIs and monthly-portfolio payload.
         return False
     if path.endswith(REPROCESS_EXISTING_EXTENSIONS):return True
     if family=='Bank Of India Small Cap Fund' and path.endswith('.pdf'):return True
