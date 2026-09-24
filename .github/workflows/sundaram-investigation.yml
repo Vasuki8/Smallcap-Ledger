@@ -81,8 +81,10 @@ jobs:
                           if 'small cap' not in (fws.title+' '+head).lower():continue
                           for rr in range(82,89):
                               vals=[]
-                              for c in next(fws.iter_rows(min_row=rr,max_row=rr)):
-                                  vals.append({'coord':c.coordinate,'value':c.value,'data_type':c.data_type,'format':c.number_format})
+                              for ci,c in enumerate(next(fws.iter_rows(min_row=rr,max_row=rr)),1):
+                                  vals.append({'col':ci,'value':getattr(c,'value',None),
+                                               'data_type':getattr(c,'data_type',None),
+                                               'format':getattr(c,'number_format',None)})
                               print('FORMULA_ROW',rr,json.dumps(vals,default=str,ensure_ascii=False))
                       formula_book.close()
 
