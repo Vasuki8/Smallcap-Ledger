@@ -13,18 +13,33 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Extract Bandhan scheme-portfolio component call sites
+      - name: Extract Bandhan CMS request helpers
         run: |
           python - <<'PY'
           import urllib.request,re
           url='https://bandhanmutual.com/static/js/main.ce5a3574.js'
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=40) as r:text=r.read().decode('utf-8','ignore')
-          for needle in ['_0x5559e2','_0x304086']:
-              pos=[m.start() for m in re.finditer(re.escape(needle),text)]
-              print('POSITIONS',needle,pos)
-              for n,p in enumerate(pos):
-                  ctx=text[max(0,p-3500):p+8000]
+
+          needles=[
+            '_0x453e5e=', 'function _0x453e5e', '_0x27541e=', 'function _0x27541e',
+            '_0x3ad76b=', 'cmsTypes', 'monthly-half-yearly', 'monthly-and-half-yearly',
+            'SCHEME_PORTFOLIO', 'SCHEME_PORTFOLIOS', 'SCHEME_PORTFOLIO_DISCLOSURE'
+          ]
+          for needle in needles:
+              pos=[m.start() for m in re.finditer(re.escape(needle),text,re.I)]
+              print('NEEDLE',needle,'COUNT',len(pos),'POSITIONS',pos[:40])
+              for n,p in enumerate(pos[:12]):
+                  ctx=text[max(0,p-6000):p+12000]
                   ctx=re.sub(r'data:image/[^,]+,[A-Za-z0-9+/=]{100,}','[DATA_URI]',ctx)
-                  print('CALLSITE',needle,n,ctx.replace('\n',' ')[:11500])
+                  print('CTX',needle,n,ctx.replace('\n',' ')[:18000])
+
+          # Also show string literals containing portfolio / disclosures / cms endpoint vocabulary.
+          lits=re.findall(r'["\']([^"\']{1,180})["\']',text)
+          chosen=[]
+          for x in lits:
+              if re.search(r'portfolio|disclos|cms|finance-api|wp-json',x,re.I):
+                  if x not in chosen:chosen.append(x)
+          print('LITERALS')
+          for x in chosen[:1000]:print(repr(x))
           PY
