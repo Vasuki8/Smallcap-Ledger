@@ -288,7 +288,7 @@ def run():
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v79':
         from tracker import amc_discovery
         from bs4 import BeautifulSoup
-        from urllib.parse import urljoin,urlparse
+        from urllib.parse import urljoin
         family='Franklin India Small Cap Fund';attempted=0
         try:
             for discovered_family,url,title in amc_discovery.discover('Franklin'):
