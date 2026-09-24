@@ -862,7 +862,8 @@ Total Assets 100.00'''
 Type of Scheme: An open ended equity scheme predominantly investing in small cap stocks
 NAV as on August 31, 2026
 Portfolio Data
-Top 10 Holdings % to Net Assets
+Top 10 Holdings % to Net
+Assets
 1 City Union Bank Limited 3.17%
 2 Karur Vysya Bank Ltd 2.64%
 3 Multi Commodity Exchange Of India Ltd 2.64%
