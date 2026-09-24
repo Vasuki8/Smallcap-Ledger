@@ -61,7 +61,7 @@ def report_date(text):
         if re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):
             if value<=date.today().isoformat():return value
         elif dated(value):return dated(value)
-    patterns=[r"(?:as\s*(?:on|of)|portfolio\s*(?:for)?)\s*[:\-]?\s*(\d{1,2}[ /-](?:[A-Za-z]+|\d{1,2})[ /-]\d{2,4})",
+    patterns=[r"(?:as\s*(?:on|of)|portfolio\s+as\s*(?:on|of)|portfolio\s*(?:for)?)\s*[:\-]?\s*(\d{1,2}[ /-](?:[A-Za-z]+|\d{1,2})[ /-]\d{2,4})",
               r"(?:as\s*(?:on|of))\s*[:\-]?\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s*,?\s*(\d{4})"]
     for pattern in patterns:
         for m in re.finditer(pattern,text,re.I):
