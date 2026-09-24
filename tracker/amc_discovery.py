@@ -64,13 +64,23 @@ def store_report(amc,family,url,title='Official report'):
     url=quote(url,safe=':/?&=%#+')
     if not disclosures.official_publication_url(url,amc):raise ValueError('Unregistered AMC report host')
     body,h,_=read(url)
+    sbi_workbook=(amc=='SBI' and family=='SBI Small Cap Fund'
+                  and urlparse(url).path.lower().endswith(('.xls','.xlsx')))
+    if sbi_workbook and not body.startswith((b'PK',b'\xd0\xcf')):
+        raise ValueError('SBI monthly workbook returned non-spreadsheet content')
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
+    if sbi_workbook:
+        from .sbi_portfolios import PARSER_VERSION
+        return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
     return amc_reports.extract(body,family,url,h)
 
 def discover(amc):
     """Yield (family, URL, label); parsers independently verify scheme ownership."""
-    if amc=='Baroda':
+    if amc=='SBI':
+        from .sbi_portfolios import discover as sbi_discover
+        yield from sbi_discover(read)
+    elif amc=='Baroda':
         family='Baroda Bnp Paribas Small Cap Fund'
         page='https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme'
         raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
@@ -774,5 +784,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','Mirae','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)

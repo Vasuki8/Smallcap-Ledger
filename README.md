@@ -1,5 +1,7 @@
 # Smallcap Ledger
 
+**Latest backend handoff: [docs/HANDOFF.md](docs/HANDOFF.md).** Read it alongside the current coverage, deployment audit and Actions runs before continuing development.
+
 Indian small-cap mutual fund tracker for **GitHub Pages**, with a daily GitHub Actions updater and a cumulative historical archive. The included Windows edition uses the same data and calculations.
 
 Start with **[GITHUB-SETUP.md](GITHUB-SETUP.md)** to put it online. No cloud database, paid feed, API key, or open browser is needed for the daily workflow. Hosting and updating become active after you upload the project to a public GitHub repository, enable Pages, and complete the first successful workflow run.
