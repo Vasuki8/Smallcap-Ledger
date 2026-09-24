@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 from . import db,providers,disclosures,amc_reports
 
 
-def read(url,body=None):
+def read(url,body=None,archive=True):
     providers.can_crawl(url)
-    return providers.fetch(url,body=body,max_bytes=60*1024*1024)
+    return providers.fetch(url,body=body,archive=archive,max_bytes=60*1024*1024)
 
 
 def months(today=None,count=3):
