@@ -19,10 +19,10 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect Bandhan inline download configuration
+      - name: Extract Bandhan download script localization
         run: |
           uv run --frozen python - <<'PY'
-          import re,urllib.request
+          import urllib.request,re,json
           from bs4 import BeautifulSoup
           posts=[
             'https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/',
@@ -34,14 +34,21 @@ jobs:
               soup=BeautifulSoup(text,'html.parser')
               article=soup.find('article')
               print('POST',post,'ID',article.get('id') if article else None)
-              if article:
-                  print('ARTICLE_TEXT',' | '.join(article.stripped_strings)[:20000])
-                  print('ARTICLE_HTML',str(article)[:30000])
-              for needle in ('custom-excel-download-js','customExcel','excelDownload','ajaxurl','admin-ajax.php','nonce','download_excel','downloadExcel','post_id','postId'):
-                  start=0;count=0
-                  while count<12:
-                      i=text.lower().find(needle.lower(),start)
-                      if i<0:break
-                      print('CTX',needle,text[max(0,i-4500):i+9000])
-                      start=i+len(needle);count+=1
+              for script in soup.find_all('script'):
+                  sid=str(script.get('id') or '')
+                  src=str(script.get('src') or '')
+                  body=script.string or script.get_text() or ''
+                  blob=sid+' '+src+' '+body
+                  if re.search(r'excel|download|ajax|postId|post_id|nonce|custom',blob,re.I):
+                      print('SCRIPT',json.dumps({'id':sid,'src':src,'body':body[:30000]},ensure_ascii=False))
+              # Look for exact JS assignment-like tokens outside script parsing too.
+              for pat in (
+                  r'(?:var|const|let)\s+[A-Za-z_$][\w$]*\s*=\s*\{[^;]{0,20000}\};',
+                  r'wp_localize_script[^<]{0,20000}',
+                  r'admin-ajax\.php[^"\'<>\s]{0,1000}',
+              ):
+                  for m in re.finditer(pat,text,re.I|re.S):
+                      value=m.group(0)
+                      if re.search(r'excel|download|ajax|post|nonce',value,re.I):
+                          print('RAW',value[:30000])
           PY
