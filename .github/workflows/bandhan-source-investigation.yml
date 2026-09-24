@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect Bandhan disclosure API exact August and July files
+      - name: Inspect Bandhan current disclosure records
         run: |
           python - <<'PY'
           import urllib.request,urllib.parse,json,re
@@ -21,27 +21,19 @@ jobs:
           params={'posts_per_page':'2500','financial_year':'2026','bypass_pagination':'true'}
           url=base+'?'+urllib.parse.urlencode(params)
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
-          with urllib.request.urlopen(req,timeout=45) as r:
-              data=json.loads(r.read())
+          with urllib.request.urlopen(req,timeout=45) as r:data=json.loads(r.read())
           rows=data.get('data') if isinstance(data,dict) else data
           rows=rows if isinstance(rows,list) else []
-          print('API_STATUS',data.get('status') if isinstance(data,dict) else None,'POSTS',len(rows),'URL',url)
-
-          matches=[]
-          post_summaries=[]
+          targets={111046,14892,15587,6148,3888,3837}
           for item in rows:
-              if not isinstance(item,dict):continue
+              if not isinstance(item,dict) or item.get('id') not in targets:continue
               acf=item.get('acf_fields') or {}
-              files=acf.get('disclosure_files') or []
-              if files:
-                  post_summaries.append((item.get('id'),item.get('title'),acf.get('financial_year'),len(files)))
-              for entry in files:
-                  if not isinstance(entry,dict):continue
-                  link=entry.get('document_link') or {}
+              print('POST',item.get('id'),item.get('title'),'FY',acf.get('financial_year'))
+              for i,entry in enumerate(acf.get('disclosure_files') or []):
+                  link=(entry or {}).get('document_link') or {}
                   rec={
-                    'post_id':item.get('id'),'post_title':item.get('title'),
-                    'financial_year':acf.get('financial_year'),
-                    'document_name':str(entry.get('document_name') or '').strip(),
+                    'index':i,
+                    'name':str((entry or {}).get('document_name') or '').strip(),
                     'filename':str(link.get('filename') or '').strip(),
                     'url':str(link.get('url') or '').strip(),
                     'mime':str(link.get('mime_type') or '').strip(),
@@ -49,19 +41,6 @@ jobs:
                     'filesize':link.get('filesize'),
                   }
                   blob=' '.join(str(v) for v in rec.values())
-                  if re.search(r'(?:31[-./ ]?0?8[-./ ]?2026|31[-./ ]?0?7[-./ ]?2026|aug(?:ust)?[- _]?2026|jul(?:y)?[- _]?2026)',blob,re.I):
-                      matches.append(rec)
-
-          print('POST_SUMMARIES',json.dumps(post_summaries[:200],ensure_ascii=False,default=str))
-          print('DATED_MATCHES',len(matches))
-          for rec in matches:
-              print('DATED_FILE',json.dumps(rec,ensure_ascii=False,default=str))
-
-          bandhan=[]
-          for rec in matches:
-              blob=' '.join((rec['post_title'] or '',rec['document_name'],rec['filename'],rec['url']))
-              if re.search(r'bandhan',blob,re.I) and re.search(r'portfolio',blob,re.I):
-                  bandhan.append(rec)
-          print('BANDHAN_PORTFOLIO_MATCHES',len(bandhan))
-          for rec in bandhan:print('BANDHAN_FILE',json.dumps(rec,ensure_ascii=False,default=str))
+                  if item.get('id')==14892 or re.search(r'portfolio|small.?cap|equity.?&.?hybrid|monthly',blob,re.I):
+                      print('FILE',json.dumps(rec,ensure_ascii=False,default=str))
           PY
