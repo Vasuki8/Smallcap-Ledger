@@ -64,7 +64,7 @@ jobs:
                   body,h,typ=providers.fetch(u,max_bytes=8*1024*1024)
                   text=body.decode('utf-8','ignore')
                   matches=[]
-                  for pattern in (r'[^"'\']{0,120}monthly[^"'\']{0,160}',r'[^"'\']{0,120}literature[^"'\']{0,160}',r'[^"'\']{0,120}api[^"'\']{0,160}',r'[^"'\']{0,120}download[^"'\']{0,160}'):
+                  for pattern in (r"[^\"']{0,120}monthly[^\"']{0,160}",r"[^\"']{0,120}literature[^\"']{0,160}",r"[^\"']{0,120}api[^\"']{0,160}",r"[^\"']{0,120}download[^\"']{0,160}"):
                       matches += re.findall(pattern,text,re.I)
                   useful=[x for x in matches if re.search(r'holding|literature|document|download|api',x,re.I)]
                   if useful:
