@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -488,6 +488,51 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::DSP current portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v87':
+        from tracker import amc_discovery
+        family='DSP Small Cap Fund'
+        try:
+            import io,zipfile,openpyxl,xlrd
+            from pathlib import PurePosixPath
+            from tracker.portfolio_parser import parse_sheet
+            candidate=next((row for row in amc_discovery.discover('DSP') if row[0]==family),None)
+            if candidate is None:raise ValueError('No DSP month-end ZIP candidate discovered')
+            _,url,title=candidate
+            providers.can_crawl(url)
+            body,h,_=providers.fetch(url,max_bytes=80*1024*1024)
+            print(f'DSP_V87_SOURCE {url} :: {title}',flush=True)
+            with zipfile.ZipFile(io.BytesIO(body)) as z:
+                for entry in z.infolist():
+                    suffix=PurePosixPath(entry.filename).suffix.lower()
+                    if suffix not in ('.xls','.xlsx'):continue
+                    raw=z.read(entry)
+                    if suffix=='.xlsx':
+                        book=openpyxl.load_workbook(io.BytesIO(raw),read_only=True,data_only=True)
+                        sheets=[]
+                        for sh in book.worksheets:
+                            cells=list(sh.iter_rows())
+                            sheets.append((sh.title,[[x.value for x in row] for row in cells],
+                                           [[x.number_format or '' for x in row] for row in cells]))
+                        book.close()
+                    else:
+                        book=xlrd.open_workbook(file_contents=raw,formatting_info=True)
+                        sheets=[(sh.name,[sh.row_values(i) for i in range(sh.nrows)],
+                                 [[book.format_map[book.xf_list[sh.cell_xf_index(i,j)].format_key].format_str
+                                   for j in range(sh.ncols)] for i in range(sh.nrows)])
+                                for sh in book.sheets()]
+                    for sheet,rows0,formats0 in sheets:
+                        prefix=' '.join(str(v) for row in rows0[:25] for v in row if v is not None)
+                        if not re.search(r'DSP\s+Small\s+Cap\s+Fund',sheet+' '+prefix,re.I):continue
+                        parsed=parse_sheet(rows0,formats0,family)
+                        summary=None if parsed is None else {
+                            'day':parsed['day'],'aum':parsed['aum'],'complete':parsed['complete'],
+                            'positions':len(parsed['positions']),'unknown_rows':parsed.get('unknown_rows',[])[:40],
+                            'weight_sum':round(sum(x['weight'] for x in parsed['positions']),6),
+                        }
+                        print('DSP_V87_SHEET '+json.dumps({'member':entry.filename,'sheet':sheet,'parsed':summary},ensure_ascii=False),flush=True)
+        except Exception as exc:
+            print(f"::warning::DSP v87 diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(False)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
