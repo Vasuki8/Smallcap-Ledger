@@ -542,12 +542,62 @@ def discover(amc):
     elif amc=='quant Mutual':
         family='Quant Small Cap Fund'
         page='https://quantmutual.com/statutory-disclosures'
+        category='MONTHLY PORTFOLIO - FUND - WISE'
+        endpoint1=urljoin(page,'/statutorydisclosures.aspx/displaydisclouser1')
+        endpoint2=urljoin(page,'/statutorydisclosures.aspx/displaydisclouser2')
+        # Quant's statutory-disclosure page renders month/file lists through two
+        # first-party JSON endpoints. Query a bounded current/prior-year window,
+        # newest month first, and require the exact Small Cap workbook title/path.
+        api_rows=[]
+        for year in (date.today().year,date.today().year-1):
+            try:
+                raw,_,_=read(endpoint1,{'id':str(year),'cat':category})
+                data=json.loads(raw);html=str(data.get('d') or '')
+                soup=BeautifulSoup(html,'html.parser')
+            except Exception:
+                continue
+            months_available=[]
+            for li in soup.select('li[id]'):
+                label=li.get_text(' ',strip=True)
+                ident=str(li.get('id') or '').strip()
+                if not ident.isdigit():continue
+                month_num=int(ident)
+                if not 1<=month_num<=12:continue
+                # The label is month text; the numeric id is the month used by
+                # Quant's own submit_event2 JavaScript.
+                if not re.search(calendar.month_name[month_num]+'|'+calendar.month_abbr[month_num],label,re.I):continue
+                try:day=date(year,month_num,calendar.monthrange(year,month_num)[1])
+                except ValueError:continue
+                if day<=date.today():months_available.append((day,ident))
+            for day,ident in sorted(months_available,reverse=True)[:3]:
+                try:
+                    raw2,_,_=read(endpoint2,{'id':ident,'cat':category,'tab':str(year)})
+                    data2=json.loads(raw2);html2=str(data2.get('d') or '')
+                    soup2=BeautifulSoup(html2,'html.parser')
+                except Exception:
+                    continue
+                for a in soup2.select('a[href]'):
+                    title=re.sub(r'\s+',' ',a.get_text(' ',strip=True)).strip()
+                    url=urljoin(page,a.get('href',''))
+                    if not disclosures.official_publication_url(url,amc):continue
+                    if not re.search(r'\.xlsx?(?:[?#]|$)',url,re.I):continue
+                    combined=unquote(url+' '+title)
+                    if not re.search(r'quant[\s_\-]*Small[\s_\-]*Cap[\s_\-]*Fund',combined,re.I):continue
+                    api_rows.append((day,url,title or f'quant Small Cap Fund portfolio {day.isoformat()}'))
+                if api_rows:
+                    break
+            if api_rows:
+                break
+        if api_rows:
+            newest=max(x[0] for x in api_rows)
+            for _,url,title in [x for x in api_rows if x[0]==newest][:2]:
+                yield family,url,title
+            return
+
+        # Conservative fallback for static/alternate page rendering. Downstream
+        # parsing still has to prove exact scheme ownership and reporting date.
         raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
         candidates={}
-        # Quant exposes portfolio archives through a mix of ordinary links,
-        # data attributes and JavaScript-backed disclosure rows. Retain nearby
-        # row/list context; the downstream spreadsheet/PDF parser still has to
-        # prove exact scheme ownership before saving any holdings.
         for tag in soup.find_all(True):
             container=tag.find_parent(['tr','li','div']) or tag.parent
             context=(container.get_text(' ',strip=True) if container else tag.get_text(' ',strip=True))[:1600]
@@ -573,9 +623,7 @@ def discover(amc):
             year=max(years,default=0)
             month=max((i for i in range(1,13) if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
             rows.append((year,month,url,title))
-        if not rows:raise ValueError('No downloadable Quant monthly portfolio file was exposed by the statutory disclosure page')
-        # A small bounded set covers the latest structured layouts and lets the
-        # parser verify whether an all-funds file actually contains Small Cap.
+        if not rows:raise ValueError('No downloadable Quant monthly portfolio file was exposed by the statutory disclosure page or API')
         for _,_,url,title in sorted(rows,reverse=True)[:4]:
             yield family,url,title or 'Quant monthly portfolio'
     elif amc=='Tata':
