@@ -367,6 +367,43 @@ Month End AUM: Rs. 100 Cr''')
         self.assertEqual(rows[0][1],
             'https://www.tatamutualfund.com/system/files/2026-09/Tata_Monthly_Portfolio_August_2026.xlsx')
 
+    def test_tata_api_discovery_prefers_latest_official_workbook(self):
+        from tracker.amc_discovery import discover
+        api_rows=[
+            {'field_document_title':'Portfolio as on 31st July, 2026',
+             'field_media_document':'https://betacms.tatamutualfund.com/system/files/2026-08/Monthly-Portfolio-July-2026.xlsx',
+             'field_section_flag':'On'},
+            {'field_document_title':'Portfolio as on 31st August, 2026',
+             'field_media_document':'https://betacms.tatamutualfund.com/system/files/2026-09/Monthly-Portfolio-August-2026.xlsx',
+             'field_section_flag':'On'},
+            {'field_document_title':'Portfolio as on 30th September, 2026',
+             'field_media_document':'https://betacms.tatamutualfund.com/system/files/2026-10/Monthly-Portfolio-September-2026.xlsx',
+             'field_section_flag':'On'},
+            {'field_document_title':'Portfolio as on 31st August, 2026',
+             'field_media_document':'https://example.com/not-tata.xlsx',
+             'field_section_flag':'On'},
+        ]
+        def fake_read(url,body=None):
+            self.assertIn('CMSDATA_portfolio?type=monthly',url)
+            return (json.dumps(api_rows).encode(),'api-hash','application/json')
+        with patch('tracker.amc_discovery.read',side_effect=fake_read):
+            rows=list(discover('Tata'))
+        self.assertEqual(rows,[(
+            'Tata Small Cap Fund',
+            'https://betacms.tatamutualfund.com/system/files/2026-09/Monthly-Portfolio-August-2026.xlsx',
+            'Portfolio as on 31st August, 2026')])
+
+    def test_v124_targets_only_tata_current_structured_portfolio(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v124'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Tata Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Axis Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Tata Small Cap Fund','https://betacms.tatamutualfund.com/portfolio.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v124'",source)
+        self.assertIn("amc_discovery.discover('Tata')",source)
+
     def test_v27_replays_only_edelweiss_pdfs(self):
         from tracker import amc_reports
         with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v27'):
