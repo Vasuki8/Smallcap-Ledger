@@ -344,8 +344,8 @@ Current production-verified coverage:
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
 | Complete portfolio | **20 / 36** |
-| Current portfolio | **25 / 36** |
-| Current + complete | **17 / 36** |
+| Current portfolio | **28 / 36** |
+| Current + complete | **20 / 36** |
 | Partial latest portfolio | **14 / 36** |
 
 ### Latest completed backend batch — Groww August portfolio recovery
@@ -400,15 +400,15 @@ This moved production from **19 → 20 complete portfolios**, **21 → 22 curren
 - Status commit `7872de813475d4b03d765c5ea1943a15072f3935` records LIC MF at **2026-08-31**, **57 positions**, **complete=1**, **current=true**; the reported benchmark also advanced to **2026-08-31**.
 - Production portfolio freshness is now **25 / 36 current** and **17 / 36 current+complete**. Complete coverage remains **20 / 36** because LIC MF was already complete at July.
 
-### Stale-complete freshness audit — v50 outcome
+### Latest completed backend batches — PGIM, Abakkus and Franklin August recovery
 
-The remaining three stale complete funds are still at **2026-07-31**. HSBC, ABSL, and LIC MF have now been repaired separately. Do not repeat the broad v50 batch; further work must be source/layout-specific.
+**All previously stale complete portfolios are now current through the expected August 31, 2026 month-end.**
 
-- **Abakkus Small Cap Fund** — 68 positions. Current official material can be reached, but the latest discovered documents did not produce a reconciled August-or-newer complete snapshot.
-- **Franklin India Small Cap Fund** — 91 positions. The reviewed current fund page did not expose a usable monthly portfolio download to the GitHub collector; current document parsing did not advance the portfolio.
-- **PGIM India Small Cap Fund** — 70 positions. The original guessed August API PDF route returned non-PDF content. Later exact-source discovery was added, but production still did not obtain a complete August snapshot.
+- **PGIM India Small Cap Fund** — the guessed August PDF route was not the real source. The official PGIM disclosure API exposed the structured workbook `PGIM INDIA SMALL CAP FUND Aug 2026.xlsx`. Its verified August layout includes 97.43% equity, 0.14% Treasury Bill/debt and the remaining cash/money-market rows. Production now stores **2026-08-31, 73 positions, complete=1**. Final recovery was verified by production run **#321**.
+- **Abakkus Small Cap Fund** — the public disclosure page embeds server-rendered monthly-portfolio JSON. Discovery now reads that first-party data and chooses the newest month-end structured file rather than guessing filenames. Production source is `https://www.abakkusmf.com/uploads/Portfolio_Aug31_Monthly_a00d994a66.xls`, stored as **2026-08-31, 68 positions, complete=1**. Parser/recovery version **v78** and production runs **#333/#334** verified the fix.
+- **Franklin India Small Cap Fund** — the official static factsheet already contained the complete August portfolio; no separate monthly download was required. The August HTML uses two five-cell row modes inside one table: equity rows carry an optional supplementary derivatives-exposure cell, while debt/cash rows insert a blank spacer before Rating. It also publishes `Margin on Derivatives` as an explicit asset row. Parser **v82** normalizes only those verified shapes and retains full market-value/weight/100% reconciliation. Production now stores **2026-08-31, 93 positions, complete=1** from the official Franklin static factsheet. Status commit `00d770ca8771870dbe0c55bc84b74c7d3deba6c3` records the recovery; final run **#347** passed the full release gate and Pages deployment.
 
-Relevant exact-source/freshness commits include `ae4007a8017905cb2ece77071a335fd02ddefd6b`, `2ad4629782f93b0cbe053d5ef6a389907918a99f`, `3608f780c560108fc7fec8869948483bf924471b`, and `b6e2903e72297344a0d7bcffd346b8921050d8a6`. The latest v50 retry passed the release gate but correctly left coverage unchanged because none of the six passed the August+complete acceptance condition.
+Production coverage after these recoveries is **28 / 36 current portfolios** and **20 / 36 current + complete**. Complete coverage remains **20 / 36** because these funds were already complete at their older July snapshots. **There are no stale-complete funds remaining.**
 
 ### Daily-update reliability fix
 
@@ -432,10 +432,7 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 
 ### Current portfolio freshness backlog
 
-**Stale complete**:
-- Abakkus — 2026-07-31, 68 positions.
-- Franklin India — 2026-07-31, 91 positions.
-- PGIM India — 2026-07-31, 70 positions.
+**Stale complete**: none.
 
 **Stale partial**:
 - Bajaj Finserv — 2026-07-31, 13 positions.
@@ -450,10 +447,10 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **PGIM India next.** Its July complete snapshot is retained and exact-source discovery already exists; inspect the current official August source/transport result and recover a complete snapshot only from concrete first-party evidence.
-2. Then handle **Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
-3. For stale partials, prefer structured official monthly portfolios when available. Groww is the model: exact source discovery + scheme identity + reporting date + reconciliation before changing completeness.
-4. Keep Union and Bandhan on source-discovery watch rather than repeating already-exhausted parser/CMS work.
+1. **Stale partial portfolios are now the main freshness backlog.** Work one fund at a time from concrete current official evidence. The current stale partials are **Bajaj Finserv, DSP, Edelweiss, Mirae Asset, Quant and SBI**.
+2. Prefer structured official monthly portfolios when available. First try exact AMC disclosure/workbook/API discovery; only use a factsheet partial when the AMC does not expose the full holdings. Never promote a partial snapshot to complete without 100% reconciliation.
+3. **Bandhan and Union remain the only zero-portfolio gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
+4. After stale partial freshness is improved, revisit the **fresh partial** funds (Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI) for complete structured sources where available.
 5. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
