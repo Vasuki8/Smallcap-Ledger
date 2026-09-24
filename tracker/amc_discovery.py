@@ -354,6 +354,34 @@ def discover(amc):
                 year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
                 name=calendar.month_name[month].lower()
                 yield family,f'https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-{name}-{year}.pdf',f'The Asset - {calendar.month_name[month]} {year}'
+    elif amc=='Mirae':
+        family='Mirae Asset Small Cap Fund'
+        endpoint='https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData'
+        payload={'request':{'modulename':'portfolio_tab1','pgno':1,'pgsize':50}}
+        raw,_,_=read(endpoint,payload)
+        data=json.loads(raw)
+        if str(data.get('ReturnCode'))!='0' or not isinstance(data.get('Data'),list):
+            raise ValueError('Mirae official portfolio service returned no monthly portfolio list')
+        candidates=[]
+        for row in data['Data']:
+            if not isinstance(row,dict):continue
+            target=urljoin('https://www.miraeassetmf.co.in/',str(row.get('URL') or '').strip())
+            title=str(row.get('Title') or '').strip()
+            if not target or not disclosures.official_publication_url(target,amc):continue
+            ext=re.search(r'\.(xlsx?|pdf)(?:[?#]|$)',target,re.I)
+            if not ext:continue
+            publish=str(row.get('PublishDate') or '')
+            pm=re.search(r'/Date\((\d{10,13})',publish)
+            published=int(pm.group(1)) if pm else 0
+            explicit=disclosures.report_date(title)
+            explicit_rank=int(explicit.replace('-','')) if explicit else 0
+            kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
+            candidates.append((explicit_rank,published,priority,target,title))
+        if not candidates:raise ValueError('Mirae official portfolio service exposed no supported monthly portfolio file')
+        # The API returns publication timestamps, while downstream parsing proves
+        # the actual portfolio reporting date from the document itself.
+        for _,_,_,target,title in sorted(candidates,key=lambda r:(r[0],r[1],r[2]),reverse=True)[:3]:
+            yield family,target,title or 'Mirae monthly portfolio'
     elif amc=='PGIM':
         family='Pgim India Small Cap Fund'
         # The disclosure page is an Angular shell; its own public API exposes the
@@ -690,5 +718,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','LIC','Union','UTI','Bandhan','ITI','Mahindra','Mirae','PGIM','Samco','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
