@@ -21,6 +21,45 @@ def months(today=None,count=3):
         yield y,m+1,calendar.month_name[m+1]
 
 
+def _abakkus_embedded_monthly_portfolios(raw,page,amc):
+    """Read Abakkus' server-rendered disclosure JSON without executing page JavaScript."""
+    soup=BeautifulSoup(raw,'html.parser');candidates=[]
+    for script in soup.find_all('script'):
+        body=(script.string or script.get_text('',strip=False) or '').strip()
+        if not body or body[0] not in '[{':continue
+        try:data=json.loads(body)
+        except (json.JSONDecodeError,TypeError):continue
+        roots=data if isinstance(data,list) else [data]
+        for vertical in roots:
+            if not isinstance(vertical,dict):continue
+            if str(vertical.get('title') or '').strip() not in ('Monthly Portfolio Disclosures','Monthly Portfolio Disclosure'):continue
+            for section in vertical.get('sections') or []:
+                if not isinstance(section,dict):continue
+                groups=list(section.get('subSections') or [])
+                if section.get('items'):groups.append({'items':section.get('items')})
+                for group in groups:
+                    if not isinstance(group,dict):continue
+                    for item in group.get('items') or []:
+                        if not isinstance(item,dict):continue
+                        title=str(item.get('title') or '').strip()
+                        target=str(item.get('downloadUrl') or ((item.get('downloadMedia') or {}).get('url') if isinstance(item.get('downloadMedia'),dict) else '') or '').strip()
+                        if not title or not target:continue
+                        day=None
+                        for fmt in ('%B %d, %Y','%b %d, %Y','%d %B %Y','%d %b %Y'):
+                            try:day=datetime.strptime(re.sub(r'(?<=\d)(?:st|nd|rd|th)\b','',title,flags=re.I),fmt).date();break
+                            except ValueError:pass
+                        if not day or day>date.today() or day.day!=calendar.monthrange(day.year,day.month)[1]:continue
+                        url=urljoin(page,target)
+                        if not disclosures.official_publication_url(url,amc):continue
+                        ext=re.search(r'\.(xlsx?|pdf)(?:[?#]|$)',url,re.I)
+                        if not ext:continue
+                        kind=ext.group(1).lower();priority=2 if kind in ('xls','xlsx') else 1
+                        candidates.append((day,priority,url,title))
+    if not candidates:return []
+    newest=max(x[0] for x in candidates)
+    return sorted((x for x in candidates if x[0]==newest),key=lambda x:x[1],reverse=True)
+
+
 def store_report(amc,family,url,title='Official report'):
     url=quote(url,safe=':/?&=%#+')
     if not disclosures.official_publication_url(url,amc):raise ValueError('Unregistered AMC report host')
@@ -596,7 +635,13 @@ def discover(amc):
     elif amc in ('Abakkus','The Wealth'):
         family='Abakkus Small Cap Fund' if amc=='Abakkus' else 'The Wealth Company Small Cap Fund'
         page='https://www.abakkusmf.com/statutory-disclosures.html' if amc=='Abakkus' else 'https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/monthly/'
-        raw,_,_=read(page);links=providers.candidate_links(BeautifulSoup(raw,'html.parser'),page)
+        raw,_,_=read(page)
+        if amc=='Abakkus':
+            embedded=_abakkus_embedded_monthly_portfolios(raw,page,amc)
+            if embedded:
+                for _,_,url,title in embedded:yield family,url,title
+                return
+        links=providers.candidate_links(BeautifulSoup(raw,'html.parser'),page)
         rows=[]
         for url,title in links.items():
             text=url+' '+title
