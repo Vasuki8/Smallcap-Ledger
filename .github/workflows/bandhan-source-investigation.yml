@@ -13,60 +13,55 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - name: Trace Bandhan source-map portfolio service
+      - name: Inspect Bandhan disclosure API exact August and July files
         run: |
           python - <<'PY'
-          import json,re,urllib.request,ssl
+          import urllib.request,urllib.parse,json,re
+          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
+          params={'posts_per_page':'2500','financial_year':'2026','bypass_pagination':'true'}
+          url=base+'?'+urllib.parse.urlencode(params)
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
+          with urllib.request.urlopen(req,timeout=45) as r:
+              data=json.loads(r.read())
+          rows=data.get('data') if isinstance(data,dict) else data
+          rows=rows if isinstance(rows,list) else []
+          print('API_STATUS',data.get('status') if isinstance(data,dict) else None,'POSTS',len(rows),'URL',url)
 
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger source audit'}
-          def get(url,max_bytes=80_000_000):
-              req=urllib.request.Request(url,headers=UA)
-              with urllib.request.urlopen(req,timeout=45,context=ssl.create_default_context()) as r:
-                  return r.geturl(),r.headers.get('content-type',''),r.read(max_bytes)
+          matches=[]
+          post_summaries=[]
+          for item in rows:
+              if not isinstance(item,dict):continue
+              acf=item.get('acf_fields') or {}
+              files=acf.get('disclosure_files') or []
+              if files:
+                  post_summaries.append((item.get('id'),item.get('title'),acf.get('financial_year'),len(files)))
+              for entry in files:
+                  if not isinstance(entry,dict):continue
+                  link=entry.get('document_link') or {}
+                  rec={
+                    'post_id':item.get('id'),'post_title':item.get('title'),
+                    'financial_year':acf.get('financial_year'),
+                    'document_name':str(entry.get('document_name') or '').strip(),
+                    'filename':str(link.get('filename') or '').strip(),
+                    'url':str(link.get('url') or '').strip(),
+                    'mime':str(link.get('mime_type') or '').strip(),
+                    'date':str(link.get('date') or '').strip(),
+                    'filesize':link.get('filesize'),
+                  }
+                  blob=' '.join(str(v) for v in rec.values())
+                  if re.search(r'(?:31[-./ ]?0?8[-./ ]?2026|31[-./ ]?0?7[-./ ]?2026|aug(?:ust)?[- _]?2026|jul(?:y)?[- _]?2026)',blob,re.I):
+                      matches.append(rec)
 
-          js='https://bandhanmutual.com/static/js/main.ce5a3574.js'
-          try:
-              final,typ,raw=get(js,15_000_000)
-              text=raw.decode('utf-8','ignore')
-              tail=text[-1200:]
-              print('JS',len(raw),tail)
-              maps=re.findall(r'sourceMappingURL=([^\s*]+)',tail)
-              print('MAP_REF',json.dumps(maps))
-          except Exception as e:
-              print('JS_ERROR',repr(e));maps=[]
+          print('POST_SUMMARIES',json.dumps(post_summaries[:200],ensure_ascii=False,default=str))
+          print('DATED_MATCHES',len(matches))
+          for rec in matches:
+              print('DATED_FILE',json.dumps(rec,ensure_ascii=False,default=str))
 
-          candidates=[]
-          for m in maps or ['main.ce5a3574.js.map']:
-              candidates.append('https://bandhanmutual.com/static/js/'+m.rsplit('/',1)[-1])
-          for url in candidates:
-              try:
-                  final,typ,raw=get(url)
-                  print('MAP',url,'FINAL',final,'TYPE',typ,'BYTES',len(raw))
-                  obj=json.loads(raw)
-                  sources=obj.get('sources') or []
-                  contents=obj.get('sourcesContent') or []
-                  print('SOURCE_COUNT',len(sources),len(contents))
-                  needles=[
-                    'scheme-portfolios','portfolio-index-etf-disclosures','Latest Portfolio',
-                    'latest portfolio','monthly-and-half-yearly','wp-json','cmsnew.bandhanmutual.com',
-                    'schemePortfolio','portfolioDisclosure','portfolio'
-                  ]
-                  seen=0
-                  for idx,src in enumerate(sources):
-                      body=contents[idx] if idx<len(contents) and contents[idx] else ''
-                      if not body:continue
-                      hits=[n for n in needles if n.lower() in body.lower()]
-                      if not hits:continue
-                      print('SOURCE_HIT',idx,src,json.dumps(hits))
-                      for n in hits:
-                          pos=body.lower().find(n.lower())
-                          if pos>=0:
-                              print('SOURCE_CONTEXT',n,body[max(0,pos-2500):pos+8000].replace('\n',' ')[:10500])
-                      urls=sorted(set(re.findall(r'https?://[^"\'\s<>]+|/[A-Za-z0-9_?&=.%/{}/:-]{4,}',body)))
-                      urls=[x for x in urls if re.search(r'api|portfolio|download|cms|scheme|document',x,re.I)]
-                      if urls:print('SOURCE_URLS',json.dumps(urls[:300],ensure_ascii=False))
-                      seen+=1
-                      if seen>=40:break
-              except Exception as e:
-                  print('MAP_ERROR',url,repr(e))
+          bandhan=[]
+          for rec in matches:
+              blob=' '.join((rec['post_title'] or '',rec['document_name'],rec['filename'],rec['url']))
+              if re.search(r'bandhan',blob,re.I) and re.search(r'portfolio',blob,re.I):
+                  bandhan.append(rec)
+          print('BANDHAN_PORTFOLIO_MATCHES',len(bandhan))
+          for rec in bandhan:print('BANDHAN_FILE',json.dumps(rec,ensure_ascii=False,default=str))
           PY
