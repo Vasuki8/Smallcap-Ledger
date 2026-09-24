@@ -13,25 +13,15 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Extract ICICI HTTP wrapper
+      - name: Extract ICICI request interceptor precisely
         run: |
           python - <<'PY'
-          import re,urllib.request
+          import urllib.request,re
           req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
                                      headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
           with urllib.request.urlopen(req,timeout=20) as r: js=r.read().decode('utf-8','replace')
-          for pat in (
-              r'const\s+http\s*=',
-              r'var\s+http\s*=',
-              r'http=',
-              r'http\.get',
-              r'axios\.create',
-              r'axios.create',
-              r'interceptors\.request',
-              r'headers\s*:',
-          ):
-              ms=list(re.finditer(pat,js))
-              print('PATTERN',pat,'COUNT',len(ms))
-              for m in ms[:20]:
-                  i=m.start(); print('CTX',js[max(0,i-3500):i+7000])
+          needle='axios.interceptors.request.use'
+          i=js.find(needle)
+          print('INDEX',i)
+          print(js[max(0,i-12000):i+18000])
           PY
