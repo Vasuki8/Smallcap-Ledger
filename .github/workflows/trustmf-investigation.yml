@@ -1,0 +1,101 @@
+name: TRUSTMF portfolio investigation
+
+on:
+  push:
+    branches: [backend/trustmf-complete-portfolio-v125]
+
+permissions:
+  contents: read
+
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_DATA_DIR: /tmp/trustmf-investigation
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect official TRUSTMF monthly workbook
+        run: |
+          rm -rf "$SMALLCAP_DATA_DIR"
+          mkdir -p audit
+          uv run --frozen python - <<'PY'
+          import io,json,hashlib
+          from pathlib import Path
+          import openpyxl,xlrd
+          from tracker import db,disclosures,amc_discovery,amc_reports
+          from tracker.portfolio_parser import parse_sheet
+          db.init();disclosures.seed_sources()
+          out=Path('audit')
+          rows=list(amc_discovery.discover('TRUST'))
+          print('DISCOVERY',json.dumps(rows,ensure_ascii=False))
+          evidence=[]
+          for idx,(family,url,title) in enumerate(rows):
+              if not url.lower().split('?',1)[0].endswith(('.xls','.xlsx')):continue
+              try:
+                  body,h,typ=amc_discovery.read(url)
+                  (out/f'source-{idx}.bin').write_bytes(body)
+                  print('SOURCE',idx,url,title,len(body),typ,h,body[:8].hex())
+                  count=amc_reports.extract(body,family,url,h)
+                  snaps=db.rows("""SELECT p.id,p.as_of,p.complete,p.hash,p.source,
+                    COUNT(h.id) positions,SUM(h.weight) weight
+                    FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                    WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC""",(family,))
+                  print('EXTRACT',count,json.dumps(snaps,ensure_ascii=False))
+                  if body[:2]==b'PK':
+                      book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+                      iterable=[]
+                      for ws in book.worksheets:
+                          cells=list(ws.iter_rows())
+                          data=[[c.value for c in row] for row in cells]
+                          formats=[[c.number_format or '' for c in row] for row in cells]
+                          iterable.append((ws.title,data,formats))
+                      book.close()
+                  elif body[:4]==b'\xd0\xcf\x11\xe0':
+                      book=xlrd.open_workbook(file_contents=body,formatting_info=True)
+                      iterable=[]
+                      for ws in book.sheets():
+                          data=[ws.row_values(i) for i in range(ws.nrows)]
+                          formats=[[book.format_map[book.xf_list[ws.cell_xf_index(i,j)].format_key].format_str for j in range(ws.ncols)] for i in range(ws.nrows)]
+                          iterable.append((ws.name,data,formats))
+                  else:
+                      iterable=[]
+                  sheets=[]
+                  for name,data,formats in iterable:
+                      prefix=' '.join(str(v) for row in data[:35] for v in row if v not in (None,''))
+                      if 'small cap' not in (name+' '+prefix).lower():continue
+                      parsed=parse_sheet(data,formats,family)
+                      info={'sheet':name,'rows':len(data),'prefix':prefix[:1600]}
+                      if parsed:
+                          info['parsed']={'day':parsed['day'],'complete':parsed['complete'],'positions':len(parsed['positions']),
+                                          'weight':sum(x['weight'] for x in parsed['positions']),
+                                          'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])[:80]}
+                      excerpts=[]
+                      for ri,row in enumerate(data):
+                          txt=' | '.join(str(x) for x in row if x not in (None,''))
+                          if any(k in txt.lower() for k in ('trustmf small cap','name of the instrument','grand total','net assets','net current','treps','repo','cash','margin','derivative','total')) or (parsed and any(str(u) in txt for u in parsed.get('unknown_rows',[]))):
+                              excerpts.append([ri+1,txt[:1800]])
+                          if len(excerpts)>=140:break
+                      info['excerpts']=excerpts
+                      sheets.append(info)
+                      print('SHEET',json.dumps(info,ensure_ascii=False))
+                  evidence.append({'url':url,'title':title,'sha256':h,'bytes':len(body),'count':count,'snapshots':snaps,'sheets':sheets})
+              except Exception as exc:
+                  print('ERROR',url,repr(exc))
+                  evidence.append({'url':url,'error':repr(exc)})
+          (out/'evidence.json').write_text(json.dumps(evidence,indent=2,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trustmf-portfolio-investigation
+          path: audit/
+          retention-days: 3
