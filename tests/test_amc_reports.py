@@ -396,8 +396,7 @@ Month End AUM: Rs. 100 Cr''')
                 'Edelweiss Small Cap Fund',
                 'https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_August__2026_10082026160011.pdf',
                 'archived'))
-            self.assertFalse(amc_reports.should_reprocess_existing(
-                'Bank Of India Small Cap Fund',exact,'archived'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Bank Of India Small Cap Fund'))
 
     def test_v26_quantity_reprocess_is_limited_to_retained_workbook_hashes(self):
         from tracker import amc_reports,db
