@@ -1,4 +1,4 @@
-name: Inspect ICICI category config
+name: Inspect ICICI TER files
 
 on:
   push:
@@ -11,24 +11,39 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve getConstants categoryConst
+      - name: Query exact ICICI TER browser contract
         run: |
           python - <<'PY'
-          import re,urllib.request
-          urls=[
-            'https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
-            'https://www.icicipruamc.com/static/js/index.BicS6zQ2.js',
-          ]
-          for u in urls:
-              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
-              with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-              print('\nFILE',u)
-              for needle in ['function getConstants', 'getConstants=', '"categoryConst"', "'categoryConst'", 'categoryConst:', 'FILE_TYPE:"', 'PAGE_SIZE:', 'PAGE_NUMBER:']:
-                  ps=[m.start() for m in re.finditer(re.escape(needle),s)]
-                  print('NEEDLE',needle,'COUNT',len(ps))
-                  for p in ps[:30]:
-                      print('POS',p,'CTX',re.sub(r'\s+',' ',s[max(0,p-2500):p+4500])[:7200])
+          import json,uuid,urllib.error,urllib.request
+          API='https://apimf.icicipruamc.com'
+          TER_ID='51a24ac7-9026-0817-da5c-53e7c7ec2b5e'
+          H={
+            'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
+            'Accept':'application/json, text/plain, */*',
+            'Content-Type':'application/json',
+            'Origin':'https://www.icicipruamc.com',
+            'Referer':'https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total%20Expense%20Ratio',
+            'env':'api','baggage':''
+          }
+          def post(filt):
+              payload={'categoryId':TER_ID,'userType':'Investor','fileType':'All','page':'1','size':'20','filter':filt,'search':''}
+              h=dict(H);h['requestAPIId']=str(uuid.uuid4())
+              req=urllib.request.Request(API+'/fds/v1/files',data=json.dumps(payload,separators=(',',':')).encode(),method='POST',headers=h)
+              print('\nPAYLOAD',json.dumps(payload))
+              try:
+                  with urllib.request.urlopen(req,timeout=60) as r:
+                      b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'));print('JSON',b[:100000].decode('utf-8','ignore'))
+              except urllib.error.HTTPError as e:
+                  b=e.read();print('HTTP_ERROR',e.code,len(b));print('ERR',b[:30000].decode('utf-8','ignore'))
+          for filt in [
+              [],
+              [{'SHOW':['TER Details']}],
+              [{'FINANCIAL_YEAR':['2026-2027']}],
+              [{'SHOW':['TER Details']},{'FINANCIAL_YEAR':['2026-2027']}],
+              [{'SHOW':['EXCEL']},{'FINANCIAL_YEAR':['2026-2027']}],
+              [{'SHOW':['PDF']},{'FINANCIAL_YEAR':['2026-2027']}],
+          ]: post(filt)
           PY
