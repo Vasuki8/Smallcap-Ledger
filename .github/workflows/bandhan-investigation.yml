@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect all Bandhan Small Cap portfolio records
+      - name: Print Bandhan Small Cap portfolio taxonomy
         run: |
           python - <<'PY'
           import urllib.request,json,re
@@ -23,28 +23,21 @@ jobs:
           rows=[]
           for item in data.get('data') or []:
               acf=item.get('acf_fields') or {}
-              dtype=str(acf.get('disclosures_type') or '')
-              if 'Monthly and Half-yearly' not in dtype:
-                  continue
               files=[]
               for entry in acf.get('disclosure_files') or []:
                   link=entry.get('document_link') or {}
-                  files.append({
-                    'document_name':entry.get('document_name'),
-                    'month':entry.get('month'),
-                    'filename':link.get('filename'),
-                    'url':link.get('url'),
-                    'link':link.get('link'),
-                    'mime_type':link.get('mime_type'),
-                    'filesize':link.get('filesize'),
-                  })
-              blob=json.dumps({'title':item.get('title'),'mapping':acf.get('funds_mapping'),'files':files},ensure_ascii=False)
-              if not re.search(r'Bandhan\s+Small\s+Cap\s+Fund|Bandhan[-_ ]*Small[-_ ]*Cap',blob,re.I):
-                  continue
-              rows.append({'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
-                           'funds_mapping':acf.get('funds_mapping'),'type':dtype,'files':files})
+                  files.append({'document_name':entry.get('document_name'),'month':entry.get('month'),
+                                'filename':link.get('filename'),'url':link.get('url'),'link':link.get('link'),
+                                'mime_type':link.get('mime_type'),'filesize':link.get('filesize')})
+              probe=json.dumps({'title':item.get('title'),'mapping':acf.get('funds_mapping'),'files':files},ensure_ascii=False)
+              if re.search(r'Bandhan\s+Small\s+Cap\s+Fund|Bandhan[-_ ]*Small[-_ ]*Cap',probe,re.I):
+                  rows.append({'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
+                               'download_center_type':acf.get('download_center_type'),
+                               'financial_year':acf.get('financial_year'),
+                               'disclosures_type':acf.get('disclosures_type'),
+                               'funds_mapping':acf.get('funds_mapping'),'files':files})
           rows.sort(key=lambda x:(x.get('date') or '',x.get('id') or 0),reverse=True)
           print('MATCH_COUNT',len(rows))
-          for row in rows[:40]:
+          for row in rows[:80]:
               print('ROW',json.dumps(row,ensure_ascii=False,separators=(',',':')))
           PY
