@@ -20,7 +20,7 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect official Axis August full factsheet PDF
+      - name: Inspect Axis Small Cap page in official full factsheet PDF
         run: |
           uv run --frozen python - <<'PY'
           import io, re, urllib.request
@@ -29,15 +29,19 @@ jobs:
           url='https://www.axismf.com/efactsheet/Aug-2026/Innerpage/Axis%20Fund%20Factsheet%20August%202026%20Final.pdf'
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
           with urllib.request.urlopen(req,timeout=45) as r:
-              body=r.read(); print('PDF',r.status,len(body),r.headers.get('content-type'),r.geturl())
+              body=r.read(); print('PDF',r.status,len(body),r.headers.get('content-type'))
           reader=PdfReader(io.BytesIO(body))
-          print('PAGES',len(reader.pages),'ENCRYPTED',reader.is_encrypted)
           for i,page in enumerate(reader.pages):
               text=page.extract_text() or ''
-              if re.search(r'AXIS\s+SMALL\s+CAP\s+FUND|SMALL\s+CAP\s+FUND',text,re.I):
-                  print('PAGE',i+1,'DEFAULT_LEN',len(text))
-                  print(text[:14000])
+              if ('31,448.32' in text and
+                  re.search(r'29th\s+November\s+2013',text,re.I) and
+                  re.search(r'Nifty\s+Smallcap\s+250\s+TRI',text,re.I)):
+                  print('TARGET_PAGE',i+1,'DEFAULT_LEN',len(text))
+                  print(text)
                   layout=page.extract_text(extraction_mode='layout') or ''
-                  print('LAYOUT_LEN',len(layout))
-                  print(layout[:18000])
+                  print('TARGET_LAYOUT_LEN',len(layout))
+                  print(layout)
+                  break
+          else:
+              print('TARGET_PAGE_NOT_FOUND')
           PY
