@@ -1,4 +1,4 @@
-name: Inspect ICICI TER files
+name: Inspect ICICI September TER workbook
 
 on:
   push:
@@ -14,36 +14,42 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query exact ICICI TER browser contract
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect exact current ICICI TER workbook
         run: |
-          python - <<'PY'
-          import json,uuid,urllib.error,urllib.request
-          API='https://apimf.icicipruamc.com'
-          TER_ID='51a24ac7-9026-0817-da5c-53e7c7ec2b5e'
-          H={
-            'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
-            'Accept':'application/json, text/plain, */*',
-            'Content-Type':'application/json',
-            'Origin':'https://www.icicipruamc.com',
-            'Referer':'https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total%20Expense%20Ratio',
-            'env':'api','baggage':''
-          }
-          def post(filt):
-              payload={'categoryId':TER_ID,'userType':'Investor','fileType':'All','page':'1','size':'20','filter':filt,'search':''}
-              h=dict(H);h['requestAPIId']=str(uuid.uuid4())
-              req=urllib.request.Request(API+'/fds/v1/files',data=json.dumps(payload,separators=(',',':')).encode(),method='POST',headers=h)
-              print('\nPAYLOAD',json.dumps(payload))
+          uv run --frozen python - <<'PY'
+          import hashlib,io,json,re,urllib.request
+          import openpyxl
+
+          path='/financials-disclosures-files/Files/Total Expense Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx'
+          urls=[
+            'https://app.beta.icicipruamc.com/blob'+path,
+            'https://www.icicipruamc.com/blob'+path,
+          ]
+          body=None
+          for url in urls:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.icicipruamc.com/'})
               try:
                   with urllib.request.urlopen(req,timeout=60) as r:
-                      b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'));print('JSON',b[:100000].decode('utf-8','ignore'))
-              except urllib.error.HTTPError as e:
-                  b=e.read();print('HTTP_ERROR',e.code,len(b));print('ERR',b[:30000].decode('utf-8','ignore'))
-          for filt in [
-              [],
-              [{'SHOW':['TER Details']}],
-              [{'FINANCIAL_YEAR':['2026-2027']}],
-              [{'SHOW':['TER Details']},{'FINANCIAL_YEAR':['2026-2027']}],
-              [{'SHOW':['EXCEL']},{'FINANCIAL_YEAR':['2026-2027']}],
-              [{'SHOW':['PDF']},{'FINANCIAL_YEAR':['2026-2027']}],
-          ]: post(filt)
+                      b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl(),'MAGIC',b[:8])
+                  if b.startswith(b'PK'):
+                      body=b;print('SELECTED_URL',url);break
+              except Exception as e: print('FETCH_ERROR',url,type(e).__name__,e)
+          if body is None: raise SystemExit('No XLSX source returned')
+          print('SHA256',hashlib.sha256(body).hexdigest())
+          wb=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
+          print('SHEETS',wb.sheetnames)
+          for ws in wb.worksheets:
+              print('SHEET',ws.title,ws.max_row,ws.max_column)
+              for i,row in enumerate(ws.iter_rows(values_only=True),1):
+                  vals=[None if v is None else str(v) for v in row]
+                  joined=' | '.join(x or '' for x in vals)
+                  if i<=18 or re.search(r'ICICI\s+Prudential\s+Small\s+Cap|Small\s+Cap\s+Fund',joined,re.I):
+                      print('ROW',i,json.dumps(vals,ensure_ascii=False))
+          wb.close()
           PY
