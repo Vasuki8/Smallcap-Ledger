@@ -344,8 +344,8 @@ Current production-verified coverage:
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
 | Complete portfolio | **20 / 36** |
-| Current portfolio | **23 / 36** |
-| Current + complete | **15 / 36** |
+| Current portfolio | **24 / 36** |
+| Current + complete | **16 / 36** |
 | Partial latest portfolio | **14 / 36** |
 
 ### Latest completed backend batch — Groww August portfolio recovery
@@ -375,12 +375,24 @@ This moved production from **19 → 20 complete portfolios**, **21 → 22 curren
 - Status commit `7b615a9420fe816e7c34f66b53244ac76e9b3735` records HSBC at **2026-08-31**, **115 positions**, **complete=1**, **current=true**.
 - Production portfolio freshness improved **22 → 23 current** and **14 → 15 current+complete**. Complete coverage remains **20 / 36** because HSBC was already complete at July.
 
+### Latest completed backend batch — ABSL August portfolio recovery
+
+**Aditya Birla Sun Life Small Cap Fund is now current and complete.**
+
+- The ABSL factsheet archive was not the correct freshness source: the August factsheet legitimately contained July 31 holdings, and the guessed September factsheet path returned 404.
+- The official **Monthly Portfolio** page exposes a first-party accordion API. Discovery now resolves that endpoint and selects the newest dated official portfolio ZIP. The recovered source is `https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip`.
+- Parser v57 added safe ZIP handling and reused the existing spreadsheet ownership/date/value reconciliation. The real Small Cap sheet (`BSLTA1`) initially produced a current partial snapshot because one explicit row, **Margin amount for Derivative positions**, was conservatively left unknown.
+- Parser v58 classifies only that exact ABSL margin label as a cash/margin leaf asset. No balancing row is invented: completeness still requires the workbook's actual grand total, market values and portfolio weights to reconcile.
+- Relevant v58 commits are `898dbd1a4058d6d10662b82f99686e1633e153fe`, `5a7a2655157e1db259b0bbaf0d53f1499e3ae085`, `2522ff2024ffb979fd44f98eaf2453fbebef9a5b`, and regression commit `04596cfa4eacee39d78b72fd3167016dc023a140`.
+- Final production run **#283** passed syntax, the full regression suite, site generation/validation, cumulative archive publication, status recording, and Pages deployment.
+- Production now stores ABSL at **2026-08-31**, **89 positions**, **complete=1**, **current=true**. Status commit `92b16407607580d0da9f3e70fe52e83527a0f1a6` records the completeness recovery; `f6d8f2bf07d910ca61b5406cf1d05b78c2a4da96` is the final run's latest status refresh.
+- Production portfolio freshness is now **24 / 36 current** and **16 / 36 current+complete**; complete coverage is **20 / 36**.
+
 ### Stale-complete freshness audit — v50 outcome
 
-The remaining five stale complete funds are still at **2026-07-31**. HSBC has now been repaired separately under v55. Do not repeat the broad v50 batch; further work must be source/layout-specific.
+The remaining four stale complete funds are still at **2026-07-31**. HSBC and ABSL have now been repaired separately. Do not repeat the broad v50 batch; further work must be source/layout-specific.
 
 - **Abakkus Small Cap Fund** — 68 positions. Current official material can be reached, but the latest discovered documents did not produce a reconciled August-or-newer complete snapshot.
-- **Aditya Birla Sun Life Small Cap Fund** — 89 positions. Current official factsheet material was fetched, but the existing complete parser did not produce an August-or-newer complete snapshot from the current layout.
 - **Franklin India Small Cap Fund** — 91 positions. The reviewed current fund page did not expose a usable monthly portfolio download to the GitHub collector; current document parsing did not advance the portfolio.
 - **LIC MF Small Cap Fund** — 58 positions. Current official factsheet evidence was collected, but the portfolio parser did not advance beyond July.
 - **PGIM India Small Cap Fund** — 70 positions. The original guessed August API PDF route returned non-PDF content. Later exact-source discovery was added, but production still did not obtain a complete August snapshot.
@@ -411,7 +423,6 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 
 **Stale complete**:
 - Abakkus — 2026-07-31, 68 positions.
-- Aditya Birla Sun Life — 2026-07-31, 89 positions.
 - Franklin India — 2026-07-31, 91 positions.
 - LIC MF — 2026-07-31, 58 positions.
 - PGIM India — 2026-07-31, 70 positions.
@@ -429,8 +440,8 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **Aditya Birla Sun Life next.** Its current official factsheet material is already reachable; inspect the concrete August layout and make the smallest fully reconciled parser correction.
-2. Then handle **LIC / PGIM / Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
+1. **LIC MF next.** Its current official factsheet evidence is already reachable; inspect the concrete August layout and recover a complete snapshot only if the source reconciles fully.
+2. Then handle **PGIM / Abakkus / Franklin** one at a time using concrete current-source evidence. Do not rerun the broad v50 migration.
 3. For stale partials, prefer structured official monthly portfolios when available. Groww is the model: exact source discovery + scheme identity + reporting date + reconciliation before changing completeness.
 4. Keep Union and Bandhan on source-discovery watch rather than repeating already-exhausted parser/CMS work.
 5. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
