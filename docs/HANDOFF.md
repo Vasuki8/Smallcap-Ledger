@@ -1,6 +1,83 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after HSBC Small Cap detailed TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after ICICI Prudential and Invesco India TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: Invesco India Small Cap current TER/BER recovery
+
+**Invesco India Small Cap Fund now has current, explicitly labelled BER and Total TER from Invesco Mutual Fund's own statutory-disclosure API.**
+
+PR #97 merged as commit `6c3fd457f2f15623d8d5066fad0398f950a22c38`. Isolated validation run **36073035236** passed compileall, all **235 tests**, and a live read of the exact current Invesco TER endpoint. Production workflow **#467**, run **36073145561**, then passed the one-time Invesco recovery, the same **235-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The run completed successfully at **2026-09-24T23:32:42Z**.
+
+### Invesco source and exact observations
+
+Current first-party TER page:
+`https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter`
+
+The production browser component uses the public plan list at:
+`https://www.invescomutualfund.com/api/Common/GetAllPlans`
+
+and loads TER rows from:
+`https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=<scheme>&fincialYear=<start-year>&month=<month-number>`
+
+The collector requires the exact scheme name **Invesco India Small Cap Fund** and exact NSDL scheme code **INVM/O/E/SCF/18/07/0030**. It checks the current month first and the immediately preceding month as a bounded fallback, including the April/March financial-year boundary.
+
+Production source for the latest retained observation:
+`https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Small+Cap+Fund&fincialYear=2026&month=9`
+
+The source response retained in production has SHA-256:
+`4f2681e5a50ed4b7609537a226d56cab713dbcfc9763012179b70d4493bb0de7`
+
+Newest exact row: **2026-09-23**
+
+| Plan | BER | Brokerage | Transaction cost | Statutory levies incl. GST | Total TER |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Regular | **1.44%** | 0.05% | 0.00% | 0.34% | **1.83%** |
+| Direct | **0.41%** | 0.05% | 0.00% | 0.17% | **0.63%** |
+
+The tracker stores the API's explicit **Total TER** value. It does **not** calculate TER from BER or components. Component reconciliation is only a rejection check. The parser rejects a changed response shape, wrong scheme or NSDL identity, future dates, duplicate latest rows, missing/out-of-range values, Total TER below BER, and component totals that do not reconcile within rounding tolerance.
+
+`scripts/refresh_invesco_expenses.py` performs the idempotent push recovery and records `source_upgrade_invesco-ter-v1` only after recent Regular/Direct BER+TER observations exist on one date from one exact Invesco TER API source with one non-empty source hash. Normal nightly collection remains active in `amc_expenses.update`.
+
+Production #467 logged:
+`Invesco India Small Cap Fund: official BER/TER as of 2026-09-23 (Direct 0.41%/0.63% BER/TER)`
+
+Status commit `e559c7b` records the published coverage state. Pages artifact **10838957887** is **230,728,637 bytes** with digest `sha256:2afd9b34e0e4a53f1ad2f60d645205644b2d58136ce3b78ab480b72680de3176`.
+
+### ICICI Prudential state catch-up
+
+The prior handoff still named ICICI Prudential as the next target, but that recovery completed before the Invesco batch began. PR #96 merged as commit `46eb738ee80f98c6d15517a48e7a618de70a21bc`; production workflow **#466**, run **36070920935**, completed successfully at **2026-09-24T23:06:35Z** and passed **230 tests**.
+
+ICICI's production source is the exact TER workbook discovered through its first-party Financials & Disclosures API:
+`https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx`
+
+Retained workbook SHA-256:
+`d40c69429f907bd1f967a908884ab3feb330ecb7395d402f7a50c64976cd5488`
+
+Latest ICICI Prudential Small Cap observation is **2026-09-23**: Direct **BER 0.70% / Total TER 1.18%**. The collector discovers the workbook from ICICI's exact current TER category/subcategory metadata, parses the source OOXML rows conservatively, and stores only explicit published BER/Total TER values. Production #466 Pages artifact **10838356588** is **230,726,093 bytes** with digest `sha256:039a593f3bb605eeccfb53eabe0adbb41347cf0ef5045a678b2125aeb663008b`.
+
+### Expense coverage after ICICI + Invesco
+
+Coverage generated at **2026-09-24T23:31:41Z** is:
+
+- reported TER: **32 / 36** (up from 30 / 36 at the last handoff)
+- base expense ratio / BER: **33 / 36**
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
+- latest NAV date in deployment status: **2026-09-24**
+
+Invesco's published Direct fee is now **TER 0.63% as of 2026-09-23**, replacing the older BER fallback. Its current AUM observation is **₹16,523.94 crore as of 2026-09-23** from AMFI.
+
+The four remaining funds without reported TER are **Axis, JM, Mahindra Manulife and Mirae Asset**. The three remaining BER gaps remain **Axis, Groww and UTI**.
+
+### Next backend task
+
+**JM Small Cap Fund is the next preferred TER target.** The tracker already retains Direct BER **0.59% as of 2026-08-31** from JM Financial Mutual Fund's official September 2026 factsheet, and the project already has a validated read-only JM public-API transport for monthly portfolio disclosures. Trace JM's first-party expense/TER disclosure route for an explicitly labelled Total TER and exact reporting date. Reuse public browser/API mechanics only when the AMC itself exposes them; do not derive Total TER from BER, GST, brokerage or transaction-cost components.
+
+After JM, continue with **Mahindra Manulife** and **Mirae Asset**. **Axis** remains special: its current fund page exposes only an unqualified Direct **Expense Ratio 0.71% as of 2026-09-23**. Keep that as `expense_ratio`; do not promote it to TER or BER without an explicitly labelled official source.
+
+No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in the ICICI/Invesco expense-recovery batches.
 
 ## Latest completed batch: HSBC Small Cap detailed TER/BER recovery
 
