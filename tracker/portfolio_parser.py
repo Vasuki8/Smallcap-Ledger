@@ -68,9 +68,12 @@ def parse_sheet(rows,formats,family):
         isin=str(row[ic] or '').strip();valid_isin=bool(re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',isin))
         code=str(row[0] or '').strip()
         named_equity=not isin and asset=='Equity' and re.search(r'\b(?:Ltd\.?|Limited)\s*[*^@#]?$',name,re.I) and qc is not None and not empty(row[qc])
-        named_derivative=(family=='Samco Small Cap Fund' and not isin and asset=='Derivative'
-                          and bool(name) and qc is not None and not empty(row[qc])
-                          and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code)))
+        named_derivative=((family=='Samco Small Cap Fund' and not isin and asset=='Derivative'
+                           and bool(name) and qc is not None and not empty(row[qc])
+                           and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code))) or
+                          (family=='Quant Small Cap Fund' and not isin and asset=='Derivative'
+                           and bool(re.fullmatch(r'.+?\b(?:Ltd\.?|Limited)\s+\d{2}/\d{2}/\d{4}',name,re.I))
+                           and qc is not None and not empty(row[qc])))
         named_repo=(family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)) or (
                     family in ('Samco Small Cap Fund','Baroda Bnp Paribas Small Cap Fund') and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
@@ -83,6 +86,8 @@ def parse_sheet(rows,formats,family):
             if family=='Aditya Birla Sun Life Small Cap Fund' and re.fullmatch(r'Margin amount for Derivative positions\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='DSP Small Cap Fund' and re.fullmatch(r'(?:TREPS\s*/\s*Reverse Repo Investments|Cash Margin)\s*[*^#]?',label,re.I):
+                leaf=True
+            if family=='Quant Small Cap Fund' and re.fullmatch(r'NCA\s*-\s*NET CURRENT ASSETS\s*[*^#]?',label,re.I):
                 leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
