@@ -4,7 +4,7 @@ import threading
 import traceback
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import datetime,timezone,timedelta
-from . import db,providers,disclosures,amfi_metrics,amc_metrics
+from . import db,providers,disclosures,amfi_metrics,amc_metrics,amc_expenses
 
 def nav_history_recovery_since(previous_good,now=None):
     """Return the last good NAV-run time only when a real scheduler gap exists."""
@@ -72,7 +72,7 @@ class Updater:
             elif kind=="metrics":
                 from . import amc_discovery
                 results=[]
-                for operation in (amfi_metrics.daily_aum,amfi_metrics.fees,amc_metrics.update,amc_discovery.update):
+                for operation in (amfi_metrics.daily_aum,amfi_metrics.fees,amc_expenses.update,amc_metrics.update,amc_discovery.update):
                     try:results.append(operation(lambda msg:self.progress(kind,msg)))
                     except Exception as e:errors.append(str(e)[:250])
                 detail='; '.join(results)
