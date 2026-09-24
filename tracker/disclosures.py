@@ -18,7 +18,13 @@ def clean(v):
 def official_publication_url(url,amc_match):
     """Registered AMC domains, excluding known sections for another AMC's schemes."""
     if exclusion_reason(amc_match,url):return False
-    host=(urlparse(url).hostname or '').lower()
+    parsed=urlparse(url);host=(parsed.hostname or '').lower()
+    # Bandhan's public finance API returns its disclosure binaries from one
+    # fixed Google Cloud Storage bucket. Accept only that exact bucket path;
+    # never trust arbitrary storage.googleapis.com objects.
+    if (str(amc_match).lower()=='bandhan' and host=='storage.googleapis.com'
+        and parsed.path.startswith('/nonprod-static-assets-121to59kaawfgfi7bol/')):
+        return True
     roots={urlparse(u).hostname.lower().removeprefix('www.') for amc,u,_ in json.loads((db.ROOT/'tracker'/'sources.json').read_text()) if amc.lower()==amc_match.lower()}
     # Custom source pages are explicit owner-provided AMC sources.
     roots.update((urlparse(r['url']).hostname or '').lower().removeprefix('www.') for r in db.rows('SELECT url FROM source_pages WHERE lower(amc_match)=lower(?)',(amc_match,)))
@@ -190,6 +196,273 @@ def spreadsheet(content,family,url,h):
                 and full['positions']):
                 portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
                 count+=len(full['positions']);continue
+            if family=='Bandhan Small Cap Fund' and full.get('unknown_rows') and full['positions']:
+                # Bandhan marks sub-0.01% holdings with a literal "$". Retain
+                # every exact numeric row, but only when *all* parser-unknown
+                # holdings are proven by this sheet to be those censored rows.
+                header_index=None;header=None
+                for j,r in enumerate(rows[:35]):
+                    cells=[str(v or '').lower() for v in r]
+                    if any('isin' in v for v in cells) and any('%' in v and re.search(r'nav|aum',v) for v in cells):
+                        header_index=j;header=cells;break
+                censored=set()
+                if header is not None:
+                    ic=next((j for j,v in enumerate(header) if 'isin' in v),None)
+                    nc=next((j for j,v in enumerate(header) if 'name' in v or 'instrument' in v or 'issuer' in v),None)
+                    wc=next((j for j,v in enumerate(header) if '%' in v and re.search(r'nav|aum',v)),None)
+                    if None not in (ic,nc,wc):
+                        for r in rows[header_index+1:]:
+                            if max(ic,nc,wc)>=len(r):continue
+                            if str(r[wc] or '').strip()!='        prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
+        if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
+        day=report_date(prefix)
+        if not day or day>date.today().isoformat(): continue
+        header=None;header_index=0
+        for i,row in enumerate(rows[:35]):
+            cells=[str(v or '').lower() for v in row]
+            if any('isin' in v for v in cells) and any('nav' in v or 'aum' in v or ('net' in v and 'asset' in v) for v in cells):
+                header=cells;header_index=i;break
+        if header is None: continue
+        if not owns_sheet(rows,header_index,family):continue
+        def col(pred): return next((i for i,v in enumerate(header) if pred(v)),None)
+        ic=col(lambda x:'isin' in x)
+        nc=col(lambda x:'name' in x or 'instrument' in x or 'issuer' in x)
+        if family=='Samco Small Cap Fund' and nc==0 and len(header)>2 and not header[1] and ic==2:nc=1
+        wc=col(lambda x:('nav' in x or 'aum' in x or ('net' in x and 'asset' in x)) and ('%' in x or 'percent' in x))
+        sc=col(lambda x:'industry' in x or 'sector' in x)
+        qc=col(lambda x:'quantity' in x or bool(re.search(r'\bqty\b|no\.?\s*of\s*(?:shares|units)',x,re.I)))
+        if nc is None or wc is None: continue
+        positions=[];asset_type='Unclassified'
+        for ri,row in enumerate(rows[header_index+1:],header_index+1):
+            if max(nc,ic,wc)>=len(row): continue
+            isin=str(row[ic] or '').strip()
+            if not re.fullmatch(r"[A-Z]{2}[A-Z0-9]{10}",isin):
+                label=' '.join(str(x or '') for x in row).lower()
+                if 'equity' in label:asset_type='Equity'
+                elif 'money market' in label:asset_type='Money market'
+                elif 'debt' in label:asset_type='Debt'
+                elif 'mutual fund' in label or 'exchange traded fund' in label:asset_type='Fund units'
+                elif 'derivative' in label:asset_type='Derivative'
+                continue
+            try: weight=number(row[wc])
+            except ValueError: continue
+            # Excel stores a formatted 1.89% cell as 0.0189. Use the actual
+            # number format, not a guess from the sum or the size of a holding.
+            fmt=re.sub(r'"[^"\n]*"|\\.', '',formats[ri][wc])
+            if isinstance(row[wc],(int,float)) and '%' in fmt:weight*=100
+            quantity=None
+            if qc is not None and qc<len(row) and asset_type in ('Equity','Fund units') and str(row[qc] or '').strip():
+                try:
+                    candidate=number(row[qc])
+                    if 0<=candidate<1e15:quantity=candidate
+                except ValueError:pass
+            positions.append({"name":str(row[nc]),"isin":isin,"weight":weight,"sector":str(row[sc] or '') if sc is not None else None,
+                              'quantity':quantity,'asset_type':asset_type})
+        # This extractor deliberately stores an ISIN-only view. Cash/derivatives may be omitted.
+        if positions:
+            portfolio(family,day,positions,False,url,h);count+=len(positions)
+    return count
+
+
+def factsheet_pdf(content,family,url,h):
+    """Extract only explicitly labelled, dated facts; never estimate or OCR a number."""
+    from pypdf import PdfReader
+    reader=PdfReader(io.BytesIO(content))
+    if reader.is_encrypted or len(reader.pages)>400:return 0
+    from .report_parser import page_facts,owns_page,equity_positions
+    count=0
+    for page_index,page in enumerate(reader.pages):
+        text=page.extract_text() or ''
+        owned=owns_page(text,family)
+        full=None;partial=None
+        if family=='Aditya Birla Sun Life Small Cap Fund':
+            from .report_parser import absl_complete_portfolio
+            full=absl_complete_portfolio(text)
+        if family=='ICICI Prudential Small Cap Fund' and re.search(r'(?:Date\s+of\s+inception|Inception/Allotment\s+date)\s*:\s*18-Oct-(?:07|2007)',text,re.I):
+            from .report_parser import icici_named_portfolio
+            if page_index+1<len(reader.pages):
+                next_text=reader.pages[page_index+1].extract_text() or ''
+                partial=icici_named_portfolio(text,next_text)
+        if family=='Jm Small Cap Fund':
+            from .report_parser import jm_top25_portfolio
+            partial=jm_top25_portfolio(text)
+            if not partial:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:partial=jm_top25_portfolio(layout_text)
+        if family=='Edelweiss Small Cap Fund':
+            from .report_parser import edelweiss_top30_portfolio,edelweiss_top10_portfolio
+            partial=edelweiss_top30_portfolio(text)
+            if not partial and page_index+2<len(reader.pages):
+                next_two='\n'.join((reader.pages[page_index+1].extract_text() or '',
+                                     reader.pages[page_index+2].extract_text() or ''))
+                partial=edelweiss_top10_portfolio(text,next_two)
+        if family=='Pgim India Small Cap Fund':
+            from .report_parser import pgim_complete_portfolio
+            full=pgim_complete_portfolio(text)
+        if family=='LIC Mf Small Cap Fund':
+            from .report_parser import lic_complete_portfolio
+            full=lic_complete_portfolio(text)
+        if family=='HSBC Small Cap Fund':
+            from .report_parser import hsbc_complete_portfolio
+            full=hsbc_complete_portfolio(text)
+        if family=='Groww Small Cap Fund':
+            from .report_parser import groww_reconciled_portfolio
+            partial=groww_reconciled_portfolio(text)
+        if family=='Quant Small Cap Fund':
+            from .report_parser import quant_top10_portfolio
+            partial=quant_top10_portfolio(text)
+            if not partial:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:partial=quant_top10_portfolio(layout_text)
+        if family=='Trustmf Small Cap Fund':
+            from .report_parser import trustmf_named_portfolio
+            partial=trustmf_named_portfolio(text)
+            if not partial:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:partial=trustmf_named_portfolio(layout_text)
+        if family=='Union Small Cap Fund':
+            from .report_parser import union_complete_portfolio
+            full=union_complete_portfolio(text)
+            if not full:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:full=union_complete_portfolio(layout_text)
+        if family=='Bajaj Finserv Small Cap Fund':
+            from .report_parser import bajaj_complete_portfolio,bajaj_top10_portfolio
+            full=bajaj_complete_portfolio(text)
+            if not full and page_index+1<len(reader.pages):
+                next_text=reader.pages[page_index+1].extract_text() or ''
+                partial=bajaj_top10_portfolio(text,next_text)
+        if family=='Bank Of India Small Cap Fund':
+            from .report_parser import boi_multicolumn_complete_portfolio,boi_complete_portfolio
+            full=boi_multicolumn_complete_portfolio(text) or boi_complete_portfolio(text)
+            if not full:
+                layout_text=page.extract_text(extraction_mode='layout') or ''
+                if layout_text!=text:full=boi_complete_portfolio(layout_text)
+        if not owned and not full and not partial:continue
+        facts=page_facts(text,family) if owned else []
+        if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
+            from .report_parser import layout_aum
+            facts.extend(layout_aum(page.extract_text(extraction_mode='layout'),family,report_date(text)))
+        for fact in facts:
+            db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
+        count+=len(facts)
+        parsed=full or partial
+        if parsed and parsed.get('benchmark') and not any(fact['metric']=='benchmark' for fact in facts):
+            db.metric(family,'All','benchmark',parsed['day'],parsed['benchmark'],
+                      parsed.get('benchmark_unit','Reported'),url,h)
+            count+=1
+        if full:
+            portfolio(family,full['day'],full['positions'],True,url,h);count+=len(full['positions'])
+            continue
+        if partial:
+            portfolio(family,partial['day'],partial['positions'],False,url,h);count+=len(partial['positions'])
+            continue
+        positions=equity_positions(text,family)
+        if positions and facts:
+            portfolio(family,facts[0]['as_of'],positions,False,url,h);count+=len(positions)
+            continue
+        # Holdings require a supported table layout. A generic trailing-number
+        # parser can mix sector totals and performance rows into the portfolio.
+    return count
+
+
+def ingest_source(source):
+    url=source["url"]
+    reason=exclusion_reason(source['amc_match'],url,source['label'])
+    if reason:return 'Excluded: '+reason
+    families=db.rows("SELECT DISTINCT family FROM schemes WHERE instr(lower(amc),lower(?))>0",(source["amc_match"],))
+    if not families: return "No matching small-cap fund yet"
+    can_crawl(url)
+    direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
+    content,h,_=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
+    direct=direct or content.startswith(b'%PDF')
+    if direct:
+        from .amc_reports import extract
+        n=0
+        for f in families:
+            did=save_document(f['family'],source['label'],url,classify(source['label'],url),'AMC',origin='AMC')
+            doc_version(did,h);n+=extract(content,f['family'],url,h)
+        gaps=0 if n or classify(source['label'],url)=='scheme document' else 1
+        return f'{n} extracted facts/holdings; 1 document archived; {gaps} download/parser gaps'
+    soup=BeautifulSoup(content,"html.parser")
+    links=candidate_links(soup,url)
+    nlinks=0;narchive=0;errors=0;attempted=0;parsed=0;unrecognized=0
+    last_attempt={r['url']:r['last'] for r in db.rows('SELECT url,MAX(fetched_at) last FROM fetches GROUP BY url')}
+    for f in families:
+        family=f["family"]
+        # The source page itself is versioned, so changed facts can always be audited.
+        page_id=save_document(family,source["label"],url,"source page","AMC",origin="AMC")
+        doc_version(page_id,h)
+        if "hdfcfund.com/explore/" in url: hdfc(soup,family,url,h)
+        from .amc_metrics import parse_page
+        parse_page(content,family,url,h)
+        for target,title in sorted(links.items(),key=lambda item:last_attempt.get(item[0],'')):
+            if target==url or not target.startswith(("http://","https://")): continue
+            if not official_publication_url(target,source['amc_match']):continue
+            if exclusion_reason(source['amc_match'],target,title):continue
+            combined=unquote(title+' '+target)
+            if re.search(r'small[\s_\-]*cap',combined,re.I) and re.search(r'\b(?:ETF|index[\s_\-]*fund)\b',combined,re.I):continue
+            specific=bool(re.search(r"small[\s_\-]*cap",combined,re.I)) and not re.search(r"mid[\s_\-]*small",combined,re.I)
+            # A scheme-specific page can label a UUID download simply "Latest
+            # Monthly Portfolio". Keep it as a candidate; parser verifies ownership.
+            if re.search(r'small[\s_\-]*cap',url,re.I) and re.search(r'latest.*(?:portfolio|factsheet)',title,re.I):specific=True
+            commentary=bool(re.search(r"newsletter|letter.*unitholder|unitholder.*letter|market[\s_\-]*(?:outlook|update|view)|equity[\s_\-]*outlook|cio[\s_\-]*(?:letter|view)",combined,re.I))
+            download=bool(re.search(r"\.(?:pdf|xlsx?|xml)(?:\?|$)",target,re.I))
+            omnibus=download and bool(re.search(r'factsheet|fact.sheet|fund.spectrum|fund.watch|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
+            directory=not download and bool(re.search(r'factsheet|fact.sheet|portfolio|disclosure|scheme.summary|newsletter|market.outlook|market.update',combined,re.I))
+            if directory and urlparse(target).hostname==urlparse(url).hostname:
+                with db.connect() as c:
+                    if c.execute("SELECT COUNT(*) FROM source_pages WHERE amc_match=?",(source['amc_match'],)).fetchone()[0]<10:
+                        c.execute("INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)",(source['amc_match'],target,title[:150]))
+            if not (specific or commentary or omnibus): continue
+            if not download and not commentary:
+                # Add useful directories for the next scheduled pass; do not crawl recursively.
+                if re.search(r"fund|disclosure|portfolio|factsheet",combined,re.I) and urlparse(target).hostname==urlparse(url).hostname:
+                    with db.connect() as c:
+                        if c.execute("SELECT COUNT(*) FROM source_pages WHERE amc_match=?",(source["amc_match"],)).fetchone()[0]<8:
+                            c.execute("INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)",(source["amc_match"],target,title[:150]))
+                continue
+            if not download and len(title)<16: continue
+            did=save_document(family,title,target,classify(title,target),"Fund" if specific else "AMC",origin="AMC")
+            nlinks+=1
+            # Bound each page pass; remaining original links stay available, with archive status visible.
+            if attempted>=12: continue
+            attempted+=1
+            try:
+                can_crawl(target)
+                body,ch,typ=fetch(target)
+                doc_version(did,ch);narchive+=1
+                ext=urlparse(target).path.lower()
+                if ext.endswith(('.xml','.xls','.xlsx','.pdf')):
+                    from .amc_reports import extract
+                    count=extract(body,family,target,ch);parsed+=count
+                    if not count:
+                        unrecognized+=1
+                        if classify(title,target) in ('factsheet','portfolio'):errors+=1
+            except Exception:
+                errors+=1
+    return f"{nlinks} relevant links; {narchive} documents archived; {parsed} facts/holdings; {unrecognized} documents without extracted tables; {errors} download/parser gaps" if nlinks else "Page archived; no automatically readable fund documents found"
+
+
+def seed_sources():
+    entries=json.loads((db.ROOT/'tracker'/'sources.json').read_text())
+    from .amc_reports import monthly_sources
+    entries.extend(monthly_sources())
+    with db.connect() as c:
+        c.executemany("INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)",entries)
+        # Retain the old source and archive for audit, but stop following a
+        # discovered section that belongs to another AMC's schemes.
+        for row in c.execute('SELECT id,amc_match,url,label FROM source_pages WHERE enabled=1').fetchall():
+            reason=exclusion_reason(row['amc_match'],row['url'],row['label'])
+            if (urlparse(row['url']).hostname or '').removeprefix('www.') in ('abakkusmutualfund.com','pgimindiamf.com','thewealthcompany.com'):
+                reason='Superseded AMC domain; current official report pages are registered separately'
+            if reason:c.execute("UPDATE source_pages SET enabled=0,status='Excluded',detail=? WHERE id=?",(reason,row['id']))
+:continue
+                            if not re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',str(r[ic] or '').strip()):continue
+                            censored.add(str(r[nc] or '').strip())
+                if censored and set(full['unknown_rows'])==censored:
+                    portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
+                    count+=len(full['positions']);continue
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
