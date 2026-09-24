@@ -78,13 +78,17 @@ def _monthly_subcategory(raw):
     rows = _decrypt(raw)
     if not isinstance(rows, list):
         raise ValueError('JM portfolio category response is not a list')
-    matches = {
-        int(row.get('DownloadSubCategoryID'))
-        for row in rows if isinstance(row, dict)
-        and int(row.get('DownloadCategoryID') or -1) == CATEGORY_ID
-        and str(row.get('SubCategoryName') or '').strip() == MONTHLY_NAME
-        and str(row.get('DownloadSubCategoryID') or '').isdigit()
-    }
+    matches = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        try:
+            category = int(row.get('DownloadCategoryID'))
+            subcategory = int(row.get('DownloadSubCategoryID'))
+        except (TypeError, ValueError):
+            continue
+        if category == CATEGORY_ID and str(row.get('SubCategoryName') or '').strip() == MONTHLY_NAME:
+            matches.add(subcategory)
     if len(matches) != 1:
         raise ValueError('JM monthly portfolio subcategory was not uniquely identified')
     return matches.pop()
@@ -144,13 +148,13 @@ def listing_candidates(raw, subcategory_id, today=None):
 
 def discover(read, today=None):
     """Use JM's public SPA API; fail closed if either rolling month is absent."""
-    drop_raw, _, _ = read(DROP_ENDPOINT, body={'IICategoryID': str(CATEGORY_ID)})
+    drop_raw, _, _ = read(DROP_ENDPOINT, body={'IICategoryID': str(CATEGORY_ID)}, archive=False)
     subcategory = _monthly_subcategory(drop_raw)
     listing_raw, _, _ = read(FILES_ENDPOINT, body={
         'IICategoryID': str(CATEGORY_ID),
         'IISubCategoryID': str(subcategory),
         'IVsearch': '',
-    })
+    }, archive=False)
     rows = listing_candidates(listing_raw, subcategory, today=today)
     if len(rows) != 2:
         raise ValueError('JM official monthly portfolio API did not expose both closed-month Small Cap workbooks')
