@@ -584,6 +584,28 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(rows[0][:2],('Baroda Bnp Paribas Small Cap Fund','https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls'))
 
 
+    def test_abakkus_embedded_discovery_prefers_latest_month_end_workbook(self):
+        from tracker.amc_discovery import _abakkus_embedded_monthly_portfolios
+        payload=[{
+            'title':'Monthly Portfolio Disclosures',
+            'sections':[{
+                'subSections':[{'items':[
+                    {'title':'July 31, 2026','downloadUrl':'/uploads/july.pdf'},
+                    {'title':'August 31, 2026','downloadUrl':'/uploads/august.pdf'},
+                    {'title':'August 31, 2026','downloadUrl':'/uploads/august.xlsx'},
+                    {'title':'September 15, 2026','downloadUrl':'/uploads/midmonth.xlsx'},
+                ]}]
+            }]
+        }]
+        html=('<html><body><script type="application/json">'+json.dumps(payload)+'</script></body></html>').encode()
+        with patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=_abakkus_embedded_monthly_portfolios(
+                html,'https://www.abakkusmf.com/statutory-disclosures.html','Abakkus')
+        self.assertEqual(rows,[
+            (__import__('datetime').date(2026,8,31),2,'https://www.abakkusmf.com/uploads/august.xlsx','August 31, 2026'),
+            (__import__('datetime').date(2026,8,31),1,'https://www.abakkusmf.com/uploads/august.pdf','August 31, 2026'),
+        ])
+
     def test_absl_discovery_prefers_latest_official_monthly_portfolio_zip(self):
         from tracker.amc_discovery import discover
         page=b'''<html><body><ul class="tabInject">
