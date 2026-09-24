@@ -32,6 +32,37 @@ def closed_month_ends(today=None,count=2):
         cursor=date(y,m,1)
 
 
+def invesco_complete_monthly(read_fn,today=None):
+    """Yield Invesco Small Cap's newest two closed monthly workbooks."""
+    family='Invesco India Small Cap Fund'
+    root='https://www.invescomutualfund.com'
+    wanted=list(closed_month_ends(today,count=2))
+    rows_by_year={}
+    for year in sorted({d.year for d in wanted},reverse=True):
+        raw,_,_=read_fn(f'{root}/api/CompleteMonthlyHoldings?year={year}&classification=equity')
+        data=json.loads(raw)
+        if not isinstance(data,list):
+            raise ValueError('Invesco complete-monthly-holdings API returned an unexpected payload')
+        scheme=next((r for r in data if isinstance(r,dict)
+                     and str(r.get('Name') or '').strip()==family),None)
+        if scheme is not None:rows_by_year[year]=scheme
+    found=[]
+    for day in wanted:
+        scheme=rows_by_year.get(day.year)
+        if not scheme:continue
+        prefix=calendar.month_abbr[day.month]
+        target=str(scheme.get(prefix+'Url') or '').strip()
+        label=str(scheme.get(prefix+'Name') or '').strip()
+        if label and label!=f'{day.month:02d}/{day.year%100:02d}':continue
+        if not target or not disclosures.official_publication_url(target,'Invesco'):continue
+        if not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
+        found.append((day,target,f'Complete monthly holdings {label or day.strftime("%m/%y")}'))
+    if not found:
+        raise ValueError('Invesco official API exposed no current Small Cap complete monthly workbook')
+    for _,target,title in sorted(found,reverse=True):
+        yield family,target,title
+
+
 def _abakkus_embedded_monthly_portfolios(raw,page,amc):
     """Read Abakkus' server-rendered disclosure JSON without executing page JavaScript."""
     soup=BeautifulSoup(raw,'html.parser');candidates=[]
@@ -776,33 +807,7 @@ def discover(amc):
         for _,_,target,title in sorted(pool,key=lambda x:x[1],reverse=True)[:2]:
             yield family,target,title or 'TRUSTMF monthly portfolio'
     elif amc=='Invesco':
-        family='Invesco India Small Cap Fund'
-        root='https://www.invescomutualfund.com'
-        wanted=list(closed_month_ends(count=2))
-        rows_by_year={}
-        for year in sorted({d.year for d in wanted},reverse=True):
-            raw,_,_=read(f'{root}/api/CompleteMonthlyHoldings?year={year}&classification=equity')
-            data=json.loads(raw)
-            if not isinstance(data,list):
-                raise ValueError('Invesco complete-monthly-holdings API returned an unexpected payload')
-            scheme=next((r for r in data if isinstance(r,dict)
-                         and str(r.get('Name') or '').strip()==family),None)
-            if scheme is not None:rows_by_year[year]=scheme
-        found=[]
-        for day in wanted:
-            scheme=rows_by_year.get(day.year)
-            if not scheme:continue
-            prefix=calendar.month_abbr[day.month]
-            target=str(scheme.get(prefix+'Url') or '').strip()
-            label=str(scheme.get(prefix+'Name') or '').strip()
-            if label and label!=f'{day.month:02d}/{day.year%100:02d}':continue
-            if not target or not disclosures.official_publication_url(target,amc):continue
-            if not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
-            found.append((day,target,f'Complete monthly holdings {label or day.strftime("%m/%y")}'))
-        if not found:
-            raise ValueError('Invesco official API exposed no current Small Cap complete monthly workbook')
-        for _,target,title in sorted(found,reverse=True):
-            yield family,target,title
+        yield from invesco_complete_monthly(read)
     elif amc=='Sundaram':
         raw,h,_=read('https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json')
         from .structured_reports import extract
