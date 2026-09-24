@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -716,7 +716,7 @@ def run():
         except Exception as exc:
             print(f"::warning::Mirae v105 source audit: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(True)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v106':
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v106','amc-reports-2026-09-v107'):
         # Trace Mirae's ASP.NET AJAX proxy used by DownloadPortfolio.js.
         try:
             from bs4 import BeautifulSoup
