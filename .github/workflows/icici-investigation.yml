@@ -13,37 +13,26 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query ICICI monthly portfolio files
+      - name: Locate ICICI downloads page chunks and payload
         run: |
           python - <<'PY'
-          import urllib.request,uuid,json
-          base='https://apimf.icicipruamc.com/nms/v1/downloads/files'
-          common={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
-                  'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
-                  'Referer':'https://www.icicipruamc.com/','env':'api','baggage':''}
-          parent='60f45132-1a30-7412-f061-d71efe3e3653'
-          monthly='26a073d7-08d2-4a95-95fa-f83a4ee51e40'
-          basebody={'userType':'Investor','fileType':'DOCUMENTS','page':'1','size':'100'}
-          variants=[
-            basebody,
-            {**basebody,'categoryId':parent},
-            {**basebody,'categoryId':monthly},
-            {**basebody,'categoryId':monthly,'financialYear':'2026-2027'},
-            {**basebody,'categoryId':monthly,'filter':{'FINANCIAL_YEAR':'2026-2027'}},
-            {**basebody,'categoryId':monthly,'filter':{'key':'FINANCIAL_YEAR','value':'2026-2027'}},
-          ]
-          for body in variants:
-              headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
-              req=urllib.request.Request(base,data=json.dumps(body).encode(),headers=headers,method='POST')
-              print('REQUEST',json.dumps(body,sort_keys=True))
-              try:
-                  with urllib.request.urlopen(req,timeout=25) as r:
-                      b=r.read();print('FETCH',r.status,r.headers.get('Content-Type'),len(b))
-                      text=b.decode('utf-8','replace')
-                      print('BODY',text[:80000])
-              except Exception as e:
-                  print('ERROR',repr(e))
-                  if getattr(e,'read',None):
-                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:40000])
-                      except:pass
+          import urllib.request,re
+          req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
+                                     headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
+          with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
+          for needle in ('downloadsFormsTypes.9ulBNFmg.js','financialsDisclosuresService.DfjThF0F.js',
+                         'news-and-media/downloads','Monthly Portfolio Disclosures'):
+              start=0;count=0
+              while count<15:
+                  i=js.find(needle,start)
+                  if i<0:break
+                  print('AROUND',needle,js[max(0,i-12000):i+18000])
+                  start=i+len(needle);count+=1
+          # List download/disclosure-related JS chunk names appearing in the app manifest.
+          names=[]
+          for m in re.finditer(r'static/js/[A-Za-z0-9_.~%+@()\-]+\.js',js):
+              v=m.group(0)
+              if any(x in v.lower() for x in ('download','disclos','financial','news','media','literature')):
+                  if v not in names:names.append(v)
+          print('CHUNKS',names)
           PY
