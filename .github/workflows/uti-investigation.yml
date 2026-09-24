@@ -27,9 +27,10 @@ jobs:
           uv run --frozen python - <<'PY'
           import io,json,re,hashlib,zipfile
           import openpyxl
-          from tracker import amc_discovery
+          from tracker import amc_discovery,db,disclosures
           from tracker.structured_reports import uti_rows
 
+          db.init();disclosures.seed_sources()
           rows=list(amc_discovery.discover('UTI'))
           print('DISCOVERY',json.dumps(rows,ensure_ascii=False))
           zips=[x for x in rows if x[1].lower().split('?',1)[0].endswith('.zip')]
