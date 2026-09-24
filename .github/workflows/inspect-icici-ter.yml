@@ -1,4 +1,4 @@
-name: Inspect ICICI API helper
+name: Inspect ICICI API config
 
 on:
   push:
@@ -14,27 +14,18 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve financial service import aliases
+      - name: Extract getApiEndpoint and generateConfig
         run: |
           python - <<'PY'
           import re,urllib.request
           u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
           req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-          tail=s[-45000:]
-          print('TAIL_EXPORTS')
-          for needle in [' as fg',' as h,',' as A,','fg:', 'export{']:
-              pos=[m.start() for m in re.finditer(re.escape(needle),tail)]
-              print('NEEDLE',needle,'COUNT',len(pos))
-              for p in pos[-10:]:
-                  print('CTX',tail[max(0,p-1800):p+2600])
-          # Find likely getApi/base-url helpers around the env constant by exact API hostname use.
-          for p in [m.start() for m in re.finditer('apimf.icicipruamc.com',s)]:
-              print('\nAPI_HOST_POS',p)
-              print(re.sub(r'\s+',' ',s[max(0,p-7000):p+9000]))
-          # Find .get/.post wrapper definitions near axios imports / interceptors.
-          for needle in ['async get(', 'get(e,V', 'post(e,V', 'axios.create(', 'interceptors.request']:
-              print('\nWRAP',needle)
-              for p in [m.start() for m in re.finditer(re.escape(needle),s)][:20]:
-                  print('POS',p,re.sub(r'\s+',' ',s[max(0,p-3500):p+6500])[:10200])
+          for needle in ['getApiEndpoint=', 'function getApiEndpoint', 'generateConfig=', 'function generateConfig',
+                         'REACT_APP_ENV:', 'REACT_APP_DISABLE_ENCRYPTION:', 'publicEndPoints', 'isPublicEndPoint']:
+              print('\nNEEDLE',needle)
+              positions=[m.start() for m in re.finditer(re.escape(needle),s)]
+              print('COUNT',len(positions))
+              for p in positions[:20]:
+                  print('POS',p,'CTX',re.sub(r'\s+',' ',s[max(0,p-5000):p+8500])[:13800])
           PY
