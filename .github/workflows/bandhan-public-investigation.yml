@@ -13,54 +13,55 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect current official Bandhan monthly portfolio files
+      - name: Test Bandhan UI filters on public disclosure API
         run: |
           python - <<'PY'
           import urllib.request,urllib.parse,json,re
           base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          params={'posts_per_page':'2500','financial_year':'2026','bypass_pagination':'true'}
-          url=base+'?'+urllib.parse.urlencode(params)
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
-          with urllib.request.urlopen(req,timeout=40) as r:
-              data=json.loads(r.read())
-          rows=data.get('data') if isinstance(data,dict) else data
-          rows=rows if isinstance(rows,list) else []
-          print('API',data.get('status') if isinstance(data,dict) else None,len(rows))
-          selected=[]
-          for item in rows:
-              if not isinstance(item,dict):continue
-              acf=item.get('acf_fields') or {}
-              for entry in acf.get('disclosure_files') or []:
-                  if not isinstance(entry,dict):continue
-                  link=entry.get('document_link') or {}
-                  name=str(entry.get('document_name') or '').strip()
-                  filename=str(link.get('filename') or '').strip()
-                  target=str(link.get('url') or '').strip()
-                  mime=str(link.get('mime_type') or '').strip()
-                  fdate=str(link.get('date') or '').strip()
-                  blob=' '.join((name,filename,target))
-                  monthly=bool(re.search(r'(?:monthly|equity\s*&?\s*hybrid).*portfolio|portfolio.*(?:monthly|equity\s*&?\s*hybrid)',blob,re.I))
-                  current=bool(re.search(r'(?:31[-./ ]?0?8[-./ ]?2026|aug(?:ust)?[- _]?2026|31[-./ ]?0?7[-./ ]?2026|jul(?:y)?[- _]?2026)',blob,re.I))
-                  if monthly and current:
-                      selected.append({
-                        'post_id':item.get('id'),'post_title':item.get('title'),
-                        'financial_year':acf.get('financial_year'),'name':name,
-                        'filename':filename,'url':target,'mime':mime,'file_date':fdate})
-          print('SELECTED_COUNT',len(selected))
-          for row in selected[:100]:print('FILE',json.dumps(row,ensure_ascii=False))
-          if not selected:
-              # Diagnostic: show only recent portfolio-like entries, never the full huge record.
-              diag=[]
-              for item in rows:
-                  acf=item.get('acf_fields') or {}
-                  for entry in acf.get('disclosure_files') or []:
-                      link=(entry or {}).get('document_link') or {}
-                      name=str((entry or {}).get('document_name') or '')
-                      fn=str(link.get('filename') or '')
-                      target=str(link.get('url') or '')
-                      blob=' '.join((name,fn,target))
-                      if re.search(r'portfolio',blob,re.I) and re.search(r'2026',blob,re.I):
-                          diag.append((name,fn,target))
-              print('DIAG_COUNT',len(diag))
-              for row in diag[:100]:print('DIAG',json.dumps(row,ensure_ascii=False))
+          queries=[
+            {'posts_per_page':'2500','type':'SCHEME_PORTFOLIOS','bypass_pagination':'true'},
+            {'posts_per_page':'2500','subcategory':'monthly-and-half-yearly','bypass_pagination':'true'},
+            {'posts_per_page':'2500','type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','bypass_pagination':'true'},
+            {'posts_per_page':'2500','financial_year':'2026','subcategory':'monthly-and-half-yearly','bypass_pagination':'true'},
+            {'posts_per_page':'2500','acf_key':'disclosures_type','acf_value':'Monthly and Half-yearly Disclosures','financial_year':'2026','bypass_pagination':'true'},
+          ]
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
+          for params in queries:
+              url=base+'?'+urllib.parse.urlencode(params)
+              try:
+                  req=urllib.request.Request(url,headers=headers)
+                  with urllib.request.urlopen(req,timeout=40) as r:data=json.loads(r.read())
+                  rows=data.get('data') if isinstance(data,dict) else data
+                  rows=rows if isinstance(rows,list) else []
+                  print('QUERY',json.dumps(params,sort_keys=True),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows))
+                  matches=[]
+                  for item in rows:
+                      if not isinstance(item,dict):continue
+                      acf=item.get('acf_fields') or {}
+                      files=[]
+                      for entry in acf.get('disclosure_files') or []:
+                          link=(entry or {}).get('document_link') or {}
+                          name=str((entry or {}).get('document_name') or '').strip()
+                          fn=str(link.get('filename') or '').strip()
+                          target=str(link.get('url') or '').strip()
+                          fdate=str(link.get('date') or '').strip()
+                          blob=' '.join((name,fn,target))
+                          if re.search(r'(?:equity|hybrid|monthly).*portfolio|portfolio.*(?:equity|hybrid|monthly)',blob,re.I):
+                              files.append({'name':name,'filename':fn,'url':target,'file_date':fdate})
+                      title=str(item.get('title') or '')
+                      iblob=' '.join((title,str(acf.get('download_center_type') or ''),str(acf.get('disclosures_type') or ''),str(acf.get('financial_year') or '')))
+                      if files or re.search(r'portfolio',iblob,re.I):
+                          matches.append({'id':item.get('id'),'title':title,'date':item.get('date'),
+                                          'download_center_type':acf.get('download_center_type'),
+                                          'financial_year':acf.get('financial_year'),
+                                          'disclosures_type':acf.get('disclosures_type'),
+                                          'files':files})
+                  print('MATCH_COUNT',len(matches))
+                  for m in matches:
+                      recent=[x for x in m['files'] if re.search(r'2026|2025',json.dumps(x),re.I)]
+                      if recent or re.search(r'2026|2025',json.dumps(m),re.I):
+                          m['files']=recent
+                          print('MATCH',json.dumps(m,ensure_ascii=False))
+              except Exception as exc:
+                  print('ERROR',json.dumps(params,sort_keys=True),repr(exc))
           PY
