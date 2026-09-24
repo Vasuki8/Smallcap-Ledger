@@ -13,22 +13,23 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve ICICI API base prefix
+      - name: Extract ICICI getApiEndpoint implementation
         run: |
           python - <<'PY'
           import re,urllib.request
-          headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'}
-          req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',headers=headers)
+          req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
+                                     headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
           with urllib.request.urlopen(req,timeout=20) as r: js=r.read().decode('utf-8','replace')
-          for needle in ('https://apimf.icicipruamc.com','apimf.icicipruamc.com','API_BASE','BASE_URL','baseURL','apiBase'):
-              start=0;count=0
-              while count<24:
-                  i=js.find(needle,start)
-                  if i<0:break
-                  print('CTX',needle,js[max(0,i-6000):i+10000])
-                  start=i+len(needle);count+=1
-          # Locate export aliases around functions imported as h/A/fg/fh in the service module.
-          for m in re.finditer(r'fg[:=]|fh[:=]|\bfg\b|\bfh\b',js):
-              i=m.start()
-              print('EXPORT_CTX',js[max(0,i-4000):i+7000])
+          for pat in (
+              r'getApiEndpoint\s*=',
+              r'function\s+getApiEndpoint\b',
+              r'getApiEndpoint\b',
+              r'REACT_APP_API_ENDPOINT',
+              r'REACT_APP_.*API.*ENDPOINT',
+          ):
+              matches=list(re.finditer(pat,js))
+              print('PATTERN',pat,'COUNT',len(matches))
+              for m in matches[:12]:
+                  i=m.start()
+                  print('CTX',js[max(0,i-2200):i+5000])
           PY
