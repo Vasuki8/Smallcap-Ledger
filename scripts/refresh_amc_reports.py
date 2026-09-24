@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -230,54 +230,36 @@ def run():
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v69':
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v70':
+        from urllib.parse import urljoin
         base='https://www.pgimindia.com/api/v1/'
+        details_url=base+'brochure/published/disclosure'
         try:
-            sections_url=base+'brochure/disclosure/section'
-            providers.can_crawl(sections_url)
-            raw,_,mime=providers.fetch(sections_url,max_bytes=8*1024*1024)
-            data=json.loads(raw)
-            print(f'PGIM_V69_SECTIONS mime={mime} bytes={len(raw)}',flush=True)
+            payload={'headerId':2,'sectionId':'SECTION_747960037'}
+            providers.can_crawl(details_url)
+            body,_,mime=providers.fetch(details_url,body=payload,max_bytes=15*1024*1024)
+            detail=json.loads(body)
+            print(f'PGIM_V70_DETAIL mime={mime} bytes={len(body)} result={json.dumps(detail.get("resultInfo"),ensure_ascii=False)}',flush=True)
             matches=[]
             def walk(value,path='root'):
                 if isinstance(value,dict):
                     blob=' '.join(str(v) for v in value.values() if isinstance(v,(str,int,float)))
-                    if re.search(r'portfolio|monthly',blob,re.I):
+                    if re.search(r'PGIM INDIA SMALL CAP FUND|Small Cap Fund|August|Aug\s+2026|31[ /-]*08[ /-]*2026',blob,re.I):
                         matches.append((path,value))
                     for k,v in value.items():walk(v,path+'.'+str(k))
                 elif isinstance(value,list):
                     for i,v in enumerate(value):walk(v,f'{path}[{i}]')
-            walk(data)
-            for path,row in matches[:80]:
-                print('PGIM_V69_SECTION_MATCH '+path+' '+json.dumps(row,ensure_ascii=False)[:5000],flush=True)
-            candidates=[]
-            for _,row in matches:
-                hid=row.get('HeaderId') or row.get('headerId') or row.get('customHeaderId')
-                sid=row.get('SectionId') or row.get('sectionId')
-                if hid is not None and sid is not None:candidates.append((str(hid),str(sid)))
-            candidates=list(dict.fromkeys(candidates))
-            print('PGIM_V69_IDS '+json.dumps(candidates),flush=True)
-            details_url=base+'brochure/published/disclosure'
-            for hid,sid in candidates[:12]:
-                payload=json.dumps({'headerId':hid,'sectionId':sid}).encode()
-                providers.can_crawl(details_url)
-                body,_,dmime=providers.fetch(details_url,body=payload,max_bytes=12*1024*1024)
-                detail=json.loads(body)
-                print(f'PGIM_V69_DETAIL {hid}/{sid} mime={dmime} bytes={len(body)}',flush=True)
-                found=[]
-                def walk_detail(value,path='root'):
-                    if isinstance(value,dict):
-                        blob=' '.join(str(v) for v in value.values() if isinstance(v,(str,int,float)))
-                        if re.search(r'PGIM INDIA SMALL CAP FUND|Aug(?:ust)?\s+2026|31[ /-]*08[ /-]*2026|\.xlsx?|\.xls|\.pdf',blob,re.I):
-                            found.append((path,value))
-                        for k,v in value.items():walk_detail(v,path+'.'+str(k))
-                    elif isinstance(value,list):
-                        for i,v in enumerate(value):walk_detail(v,f'{path}[{i}]')
-                walk_detail(detail)
-                for path,row in found[:80]:
-                    print('PGIM_V69_DETAIL_MATCH '+path+' '+json.dumps(row,ensure_ascii=False)[:6000],flush=True)
+            walk(detail)
+            for path,row in matches[:120]:
+                print('PGIM_V70_MATCH '+path+' '+json.dumps(row,ensure_ascii=False)[:7000],flush=True)
+            # Identify exact file-like strings from matched rows without guessing names.
+            for path,row in matches:
+                blob=json.dumps(row,ensure_ascii=False)
+                for m in re.finditer(r'https?://[^"\\\s]+|/[^"\\\s]+\.(?:xlsx?|xls|pdf)(?:\?[^"\\\s]*)?',blob,re.I):
+                    value=m.group(0).replace('\\/','/')
+                    print('PGIM_V70_FILE '+path+' '+value[:1800],flush=True)
         except Exception as exc:
-            print(f"::warning::PGIM v69 API diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:400]}",flush=True)
+            print(f"::warning::PGIM v70 detail diagnostic: {(str(exc) or type(exc).__name__).splitlines()[0][:500]}",flush=True)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
