@@ -2,18 +2,52 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+import base64
+import hashlib
+import io
 import json
+import shutil
+import subprocess
 from urllib.parse import urlencode
 
+import httpx
+import openpyxl
+
 from . import db
-from .providers import fetch, number
+from .providers import fetch, number, public_url
 
 CANARA_FAMILY = "Canara Robeco Small Cap Fund"
 CANARA_SCHEME_CODE = "SC"
 CANARA_PAGE = "https://www.canararobeco.com/expense-ratio"
 CANARA_API = "https://www.canararobeco.com/wp-json/ter/v1/records"
 CANARA_PLANS = {"Regular Plan": "Regular", "Direct Plan": "Direct"}
+
+HSBC_FAMILY = "HSBC Small Cap Fund"
+HSBC_SCHEME_CODE = "HEMIDF"
+HSBC_NSDL_CODE = "LTMF/O/E/SCF/14/02/0023"
+HSBC_TER_LINK = "https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx"
+HSBC_CAMS_API = "https://digital.camsonline.com/api/v1/camsonline"
+_HSBC_IV = b"globalaesvectors"
+_HSBC_REQUEST_SECRET = "TkVJTEhobWFj"
+_HSBC_RESPONSE_SECRET = "UkRYTElobWFj"
+_HSBC_XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+_HSBC_HEADER = (
+    "Scheme Code",
+    "NSDL Scheme Code",
+    "Scheme Name",
+    "TER Date",
+    "Regular Plan - Base Expense Ratio (BER) (%)",
+    "Regular Plan - Brokerage cost (%)",
+    "Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+    "Regular Plan - Statutory Levies (including GST) (%)",
+    "Regular Plan - Total TER (%)",
+    "Direct Plan - Base Expense Ratio (BER) (%)",
+    "Direct Plan - Brokerage cost (%)",
+    "Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+    "Direct Plan - Statutory Levies (including GST) (%)",
+    "Direct Plan - Total TER (%)",
+)
 
 
 def _value(row, field):
@@ -128,5 +162,269 @@ def canara(progress=lambda _: None, today=None, lookback_days=7):
     )
 
 
+def _hsbc_key(secret):
+    # CAMS' public browser bundle hashes these presentation-layer constants and
+    # uses the first 32 hex characters as the UTF-8 AES-256 key bytes.
+    return hashlib.sha256(secret.encode("utf-8")).hexdigest()[:32].encode("ascii")
+
+
+def _hsbc_aes(data, secret, *, decrypt=False):
+    openssl = shutil.which("openssl")
+    if not openssl:
+        raise ValueError("OpenSSL is required to decode the public HSBC TER download")
+    command = [
+        openssl,
+        "enc",
+        "-aes-256-cbc",
+        "-K",
+        _hsbc_key(secret).hex(),
+        "-iv",
+        _HSBC_IV.hex(),
+        "-nosalt",
+    ]
+    if decrypt:
+        command.append("-d")
+    result = subprocess.run(
+        command,
+        input=data,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=15,
+        check=False,
+    )
+    if result.returncode:
+        raise ValueError("CAMS public HSBC TER transport could not be decoded")
+    return result.stdout
+
+
+def _hsbc_request_payload():
+    payload = {
+        "flag": "GET_UPD_MB_RESULT",
+        "jobday": "hsbc_ter_report.xlsx",
+        "browser": "Chrome",
+        "device_id": "153.0.0.0",
+        "os_id": "10",
+        "application": "CAMSONLINE",
+        "sub_application": "DIGITALADMIN",
+        "deviceid": "desktop",
+        "page_name": "/dnlresult/hsbc_ter_report.xlsx",
+    }
+    raw = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+    ciphertext = _hsbc_aes(raw, _HSBC_REQUEST_SECRET)
+    return base64.b64encode(ciphertext).decode("ascii").replace("+", "-").replace("/", "_")
+
+
+def _hsbc_decode_response(raw):
+    if len(raw) > 16 * 1024 * 1024:
+        raise ValueError("CAMS HSBC TER response is unexpectedly large")
+    try:
+        outer = json.loads(raw)
+        if not isinstance(outer, str) or not outer:
+            raise ValueError
+        ciphertext = base64.b64decode(
+            outer.replace("-", "+").replace("_", "/"), validate=True
+        )
+    except (json.JSONDecodeError, ValueError, TypeError) as exc:
+        raise ValueError("CAMS HSBC TER response has an invalid encrypted envelope") from exc
+    plain = _hsbc_aes(ciphertext, _HSBC_RESPONSE_SECRET, decrypt=True)
+    try:
+        payload = json.loads(plain.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("CAMS HSBC TER response decrypted to invalid JSON") from exc
+    status = payload.get("status")
+    details = payload.get("detail")
+    if (
+        not isinstance(status, dict)
+        or bool(status.get("errorflag"))
+        or not isinstance(details, list)
+        or len(details) != 1
+        or not isinstance(details[0], dict)
+    ):
+        raise ValueError("CAMS HSBC TER service did not return one successful workbook")
+    result = details[0].get("RESULT")
+    if not isinstance(result, str) or not result:
+        raise ValueError("CAMS HSBC TER response did not include workbook bytes")
+    try:
+        workbook = base64.b64decode(result, validate=True)
+    except ValueError as exc:
+        raise ValueError("CAMS HSBC TER workbook payload is invalid base64") from exc
+    if not workbook.startswith(b"PK") or not 10_000 < len(workbook) <= 12 * 1024 * 1024:
+        raise ValueError("CAMS HSBC TER payload is not a plausible XLSX workbook")
+    return workbook
+
+
+def _hsbc_workbook():
+    public_url(HSBC_CAMS_API)
+    encoded = _hsbc_request_payload()
+    headers = {
+        "User-Agent": "SmallcapLedger/1.0 (public AMC disclosure collection)",
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Origin": "https://digital.camsonline.com",
+        "Referer": HSBC_TER_LINK,
+    }
+    try:
+        with httpx.Client(timeout=60, headers=headers, follow_redirects=False) as client:
+            response = client.post(HSBC_CAMS_API, json={"data": encoded})
+            response.raise_for_status()
+            raw = response.content
+    except httpx.HTTPError as exc:
+        raise ValueError("CAMS HSBC TER service is unavailable") from exc
+    return _hsbc_decode_response(raw)
+
+
+def _hsbc_day(value):
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).date()
+    except ValueError:
+        return None
+
+
+def _hsbc_number(value, label):
+    if value is None or str(value).strip() in ("", "-", "NA", "N/A"):
+        raise ValueError(f"HSBC TER workbook is missing {label}")
+    parsed = number(value)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"HSBC TER workbook {label} is outside the accepted range")
+    return parsed
+
+
+def parse_hsbc_workbook(content, today=None):
+    """Return HSBC Small Cap's newest explicit BER and Total TER plan pair."""
+    today = today or date.today()
+    try:
+        book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
+    except Exception as exc:
+        raise ValueError("HSBC TER disclosure is not a readable XLSX workbook") from exc
+    try:
+        if "TER" not in book.sheetnames:
+            raise ValueError("HSBC TER workbook no longer contains the TER sheet")
+        sheet = book["TER"]
+        rows = sheet.iter_rows(values_only=True)
+        next(rows, None)
+        title = next(rows, None)
+        header = next(rows, None)
+        if not title or str(title[0] or "").strip() != "Total Expense Ratio (TER) for HSBC Mutual Fund":
+            raise ValueError("HSBC TER workbook title changed")
+        if not header or tuple(str(x or "").strip() for x in header[:14]) != _HSBC_HEADER:
+            raise ValueError("HSBC TER workbook columns changed")
+
+        matches = defaultdict(list)
+        for row in rows:
+            if len(row) < 14:
+                continue
+            if str(row[0] or "").strip() != HSBC_SCHEME_CODE:
+                continue
+            if str(row[1] or "").strip() != HSBC_NSDL_CODE:
+                continue
+            if str(row[2] or "").strip() != HSBC_FAMILY:
+                continue
+            day = _hsbc_day(row[3])
+            if day is None or day > today:
+                continue
+            matches[day.isoformat()].append(row)
+
+        if not matches:
+            raise ValueError("HSBC TER workbook contains no dated Small Cap rows")
+        day = max(matches)
+        if len(matches[day]) != 1:
+            raise ValueError(f"HSBC TER workbook has duplicate Small Cap rows for {day}")
+        row = matches[day][0]
+
+        regular = {
+            "base_expense_ratio": _hsbc_number(row[4], "Regular BER"),
+            "brokerage": _hsbc_number(row[5], "Regular brokerage"),
+            "transaction_cost": _hsbc_number(row[6], "Regular transaction cost"),
+            "statutory_levies": _hsbc_number(row[7], "Regular statutory levies"),
+            "ter": _hsbc_number(row[8], "Regular Total TER"),
+        }
+        direct = {
+            "base_expense_ratio": _hsbc_number(row[9], "Direct BER"),
+            "brokerage": _hsbc_number(row[10], "Direct brokerage"),
+            "transaction_cost": _hsbc_number(row[11], "Direct transaction cost"),
+            "statutory_levies": _hsbc_number(row[12], "Direct statutory levies"),
+            "ter": _hsbc_number(row[13], "Direct Total TER"),
+        }
+        for plan, values in (("Regular", regular), ("Direct", direct)):
+            if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+                raise ValueError(f"HSBC {plan} Total TER is below BER on {day}")
+            component_total = (
+                values["base_expense_ratio"]
+                + values["brokerage"]
+                + values["transaction_cost"]
+                + values["statutory_levies"]
+            )
+            if abs(component_total - values["ter"]) > 0.02:
+                raise ValueError(f"HSBC {plan} TER components do not reconcile on {day}")
+        return day, {"Regular": regular, "Direct": direct}
+    finally:
+        book.close()
+
+
+def hsbc(progress=lambda _: None, today=None):
+    """Collect HSBC Small Cap's detailed TER workbook linked by its AMC factsheet."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (HSBC_FAMILY,)):
+        return "HSBC Small Cap is not in the active universe"
+
+    progress("HSBC Small Cap expense ratios · AMC-linked detailed TER workbook")
+    try:
+        workbook = _hsbc_workbook()
+        content_hash = db.archive(workbook, _HSBC_XLSX_MIME)
+        with db.connect() as connection:
+            connection.execute(
+                "INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",
+                (HSBC_TER_LINK, db.now(), "ok", content_hash),
+            )
+        day, plans = parse_hsbc_workbook(workbook, today)
+        for plan, values in plans.items():
+            for metric in (
+                "base_expense_ratio",
+                "brokerage",
+                "transaction_cost",
+                "statutory_levies",
+                "ter",
+            ):
+                db.metric(
+                    HSBC_FAMILY,
+                    plan,
+                    metric,
+                    day,
+                    values[metric],
+                    "% p.a. · reported by AMC via AMC-linked CAMS workbook",
+                    HSBC_TER_LINK,
+                    content_hash,
+                )
+    except Exception as exc:
+        with db.connect() as connection:
+            connection.execute(
+                "INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)",
+                (HSBC_TER_LINK, db.now(), "error", str(exc)[:400]),
+            )
+        raise
+
+    return (
+        f"{HSBC_FAMILY}: official detailed BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
-    return canara(progress)
+    results = []
+    errors = []
+    for collector in (canara, hsbc):
+        try:
+            results.append(collector(progress))
+        except Exception as exc:
+            errors.append(f"{collector.__name__}: {str(exc)[:220]}")
+    if errors:
+        raise ValueError("; ".join(results + errors))
+    return "; ".join(results)

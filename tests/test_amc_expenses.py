@@ -1,5 +1,8 @@
+import io
 import json
 import unittest
+
+import openpyxl
 from datetime import date
 from unittest.mock import patch
 
@@ -99,6 +102,81 @@ class CanaraExpenseTests(unittest.TestCase):
         self.assertEqual(calls[("Direct", "ter")], 0.68)
         self.assertTrue(all(call.args[3] == "2026-09-24" for call in mock_metric.call_args_list))
         self.assertTrue(all(call.args[7] == "hash123" for call in mock_metric.call_args_list))
+
+
+class HsbcExpenseTests(unittest.TestCase):
+    def workbook(self, rows):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "TER"
+        ws.append([None] * 14)
+        ws.append(["Total Expense Ratio (TER) for HSBC Mutual Fund"] + [None] * 13)
+        ws.append(list(amc_expenses._HSBC_HEADER))
+        for row in rows:
+            ws.append(row)
+        out = io.BytesIO()
+        wb.save(out)
+        wb.close()
+        return out.getvalue()
+
+    def row(self, day="2026-09-23", *, scheme="HSBC Small Cap Fund", code="HEMIDF",
+            nsdl="LTMF/O/E/SCF/14/02/0023", regular_ter=1.78, direct_ter=0.77):
+        return [
+            code, nsdl, scheme, day,
+            1.42, 0.03, 0.00, 0.33, regular_ter,
+            0.56, 0.03, 0.00, 0.18, direct_ter,
+        ]
+
+    def test_latest_exact_hsbc_row_retains_published_ber_and_total_ter(self):
+        book = self.workbook([self.row("2026-09-22"), self.row("2026-09-23")])
+        day, plans = amc_expenses.parse_hsbc_workbook(book, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.42)
+        self.assertEqual(plans["Regular"]["ter"], 1.78)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.56)
+        self.assertEqual(plans["Direct"]["ter"], 0.77)
+
+    def test_hsbc_future_row_is_ignored(self):
+        book = self.workbook([self.row("2026-09-23"), self.row("2026-09-25")])
+        day, plans = amc_expenses.parse_hsbc_workbook(book, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Direct"]["ter"], 0.77)
+
+    def test_hsbc_identity_is_exact(self):
+        for kwargs in (
+            {"scheme": "HSBC Midcap Fund"},
+            {"code": "OTHER"},
+            {"nsdl": "LTMF/O/E/OTHER"},
+        ):
+            book = self.workbook([self.row(**kwargs)])
+            with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+                amc_expenses.parse_hsbc_workbook(book, date(2026, 9, 24))
+
+    def test_hsbc_duplicate_or_unreconciled_total_is_rejected(self):
+        row = self.row()
+        book = self.workbook([row, list(row)])
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_hsbc_workbook(book, date(2026, 9, 24))
+
+        book = self.workbook([self.row(direct_ter=0.80)])
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_hsbc_workbook(book, date(2026, 9, 24))
+
+    def test_hsbc_workbook_header_is_strict(self):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "TER"
+        ws.append([None] * 14)
+        ws.append(["Total Expense Ratio (TER) for HSBC Mutual Fund"] + [None] * 13)
+        wrong = list(amc_expenses._HSBC_HEADER)
+        wrong[8] = "Calculated TER"
+        ws.append(wrong)
+        ws.append(self.row())
+        out = io.BytesIO()
+        wb.save(out)
+        wb.close()
+        with self.assertRaisesRegex(ValueError, "columns changed"):
+            amc_expenses.parse_hsbc_workbook(out.getvalue(), date(2026, 9, 24))
 
 
 if __name__ == "__main__":
