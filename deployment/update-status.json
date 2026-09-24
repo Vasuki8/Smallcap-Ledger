@@ -1,20 +1,26 @@
 {
-  "built_at": "2026-09-24T16:37:33+00:00",
+  "built_at": "2026-09-24T18:36:27+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
     "nav_points": 281300,
     "benchmark_points": 5328,
-    "portfolios": 113,
-    "documents": 1489,
-    "archive_bytes": 1929550764,
-    "database_bytes": 99340288,
-    "total_storage_bytes": 2028891052,
+    "portfolios": 115,
+    "documents": 1491,
+    "archive_bytes": 1929740512,
+    "database_bytes": 99414016,
+    "total_storage_bytes": 2029154528,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-09-23"
   },
   "recent_jobs": [
+    {
+      "kind": "amc-reports",
+      "started_at": "2026-09-24T18:35:40+00:00",
+      "finished_at": "2026-09-24T18:35:51+00:00",
+      "status": "ok"
+    },
     {
       "kind": "amc-reports",
       "started_at": "2026-09-24T06:36:03+00:00",
@@ -32,12 +38,6 @@
       "started_at": "2026-09-23T21:54:26+00:00",
       "finished_at": "2026-09-23T21:54:26+00:00",
       "status": "ok"
-    },
-    {
-      "kind": "amc-reports",
-      "started_at": "2026-09-23T21:54:25+00:00",
-      "finished_at": "2026-09-23T21:54:25+00:00",
-      "status": "ok"
     }
   ],
   "schedule": {
@@ -49,6 +49,6 @@
     "scheduled_time_is_not_guaranteed": true,
     "publication_file_budget_bytes": 262144000,
     "publication_files_included": 172,
-    "publication_bytes_included": 262142697
+    "publication_bytes_included": 262143659
   }
 }

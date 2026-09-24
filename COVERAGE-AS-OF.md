@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-09-24T16:37:11+00:00
+Prepared: 2026-09-24T18:35:58+00:00
 
 **36 funds, 143 NAV series, 281,300 NAV observations. Latest included NAV: 2026-09-23.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **34 / 36 any**, **28 complete**, **33 current**, **28 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **36 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **35 / 36 any**, **28 complete**, **34 current**, **28 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **36 / 36 funds**.
 
 Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
@@ -14,7 +14,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Aditya Birla Sun Life Small Cap Fund | ₹ 6,209.89 · 2026-09-22 | 1.07% TER · 2026-09-22 | 89 positions · 2026-08-31 · complete · current | BSE 250 Small Cap Index TRI · 2026-07-31 | 5 |
 | Axis Small Cap Fund | ₹ 31,406.83 · 2026-09-22 | 0.71% Expense ratio · type not specified · 2026-09-22 | 10 positions · 2026-09-16 · partial · current | Nifty Smallcap 250 TRI · 2026-09-23 | 6 |
 | Bajaj Finserv Small Cap Fund | ₹ 2,744.61 · 2026-09-22 | 0.96% TER · 2026-09-23 | 13 positions · 2026-07-31 · partial · older | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
-| Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-22 | 0.61% TER · 2026-09-22 | Gap | BSE 250 SmallCap TRI · 2025-03-31 | 1 |
+| Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-22 | 0.61% TER · 2026-09-22 | 260 positions · 2026-08-31 · partial · current | BSE 250 SmallCap TRI · 2025-03-31 | 3 |
 | Bank Of India Small Cap Fund | ₹ 3,571.84 · 2026-09-22 | 0.73% TER · 2026-09-23 | 103 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-06-30 | 7 |
 | Baroda Bnp Paribas Small Cap Fund | ₹ 1,300.41 · 2026-09-22 | 1.21% TER · 2026-09-23 | 63 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-07-31 | 6 |
 | Canara Robeco Small Cap Fund | ₹ 14,398.90 · 2026-09-22 | 0.45% BER · 2026-08-31 | 91 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 Index TRI · 2026-08-31 | 6 |
@@ -51,7 +51,6 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 
 | Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
 | --- | --- | --- | --- | --- |
-| Bandhan Small Cap Fund | Document known but not archived | factsheet: March 2025 performance table · Bandhan Small Cap Fund | Gap | Limited · 2026-09-23 · Page archived; no automatically readable fund documents found |
 | Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Gap · 2026-09-23 · [Errno 111] Connection refused |
 
 ## Notes
