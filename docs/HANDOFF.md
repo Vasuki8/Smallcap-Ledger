@@ -1,8 +1,36 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes the older Quant/SBI backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after Tata production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
 
-## Latest completed task: SBI monthly portfolio recovery
+## Latest completed task: Tata complete monthly portfolio recovery
+
+Merged PR #87 as commit `9e503300fd917c6d98e7b4c991322ab6a682c5a5`. Production workflow **#457**, run **35969060794**, passed the full build, archive, static-site validation and GitHub Pages deployment. The published coverage was built at **2026-09-24T07:20:42Z** and the status audit at **2026-09-24T07:20:59Z**.
+
+Before this batch, **Tata Small Cap Fund** exposed only the official top-10 view in the tracker and was stored as a current partial portfolio. Tata's live portfolio page is client-rendered, but its production frontend calls the public read-only endpoint `https://prod-dist-api.tatamfdev.com/cms-data/api/CMSDATA_portfolio?type=monthly`. Discovery now uses that exact endpoint and accepts only dated workbook URLs on Tata's registered publication domain.
+
+The official August workbook is:
+
+- title: **Portfolio as on 31st August, 2026**
+- URL: `https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx`
+- SHA-256: `40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37`
+- parsed portfolio: **67 positions, complete=1, 100.00% weight, as_of=2026-08-31**
+- workbook month-end AUM: **₹13,093.88375 crore as of 2026-08-31**
+
+The workbook's 67 positions are the explicitly published securities plus its explicit `I) REPO` and `CASH / NET CURRENT ASSET` rows. Completeness uses the workbook's own `NET ASSETS` value/weight total. No balancing position is inferred. The current AMFI daily AUM observation remains separate and newer; the website therefore still prefers **₹13,471.89 crore as of 2026-09-22** for its latest-AUM display while retaining the August workbook AUM as historical source evidence.
+
+Parser v124 adds only verified structured-layout support: numeric `31-08-26` report dates, the `MKT VAL` header abbreviation, repeated asset-section headers, Tata's explicit repo/cash leaves and Tata's `NET ASSETS` grand total. Existing unknown-row, duplicate, market-value, weight and scheme-identity checks still gate completeness.
+
+Final isolated validation run **35968914879** passed **191 tests** and live end-to-end ingestion of the exact official workbook. Production run #457 independently recovered Tata as **67 complete positions**, then passed the same regression suite, site generation, `validate_site.py`, cumulative-history publication, status recording and Pages deployment. Pages artifact **10795242635** was generated at 231,260,634 bytes with digest `sha256:b383479fa3c1da9787ed1cf142caafbeb60d68cc0e929aad4edd7e2b8eccb5c7`.
+
+Normal nightly `amc_discovery` already includes Tata, so future monthly workbooks use the API-first route automatically. The previous conservative HTML/file-link discovery remains as a fallback if Tata changes frontend transport.
+
+### Axis investigation completed without a data promotion
+
+Axis was investigated first because it was the previous handoff priority. Its official statutory-disclosure area confirms a portfolio section, but the complete download list is client-rendered. The nested first-party CMS route returned access failures from the GitHub runner, alternate static disclosure routes did not expose workbook bytes, and bounded current-month filename probes returned 404. No third-party source, guessed value or weakened source check was used.
+
+**Axis therefore remains a valid 10-position partial snapshot dated 2026-09-16.** Treat the complete Axis portfolio as a verified source-access/discovery blocker until a genuinely reachable first-party workbook/API path appears. Do not repeatedly probe guessed filenames.
+
+## Previous completed task: SBI monthly portfolio recovery
 
 Merged PR #86 as commit `12307fefd86bce92f34b5c56d6f47302acd5cc03`. Production workflow **#456**, run **35965260621**, successfully built, validated, saved cumulative history and deployed GitHub Pages. Deployment completed **2026-09-24T06:37:13Z**. The published coverage was built at **2026-09-24T06:36:16Z**.
 
@@ -39,15 +67,18 @@ Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/86 ; validation htt
 
 ## Verified coverage after this batch
 
-Coverage at 2026-09-24T06:36:16Z: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
+Coverage at **2026-09-24T07:20:42Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
 
-Portfolios: **34/36 with holdings; 24 complete; 33 current; 24 current and complete; 10 partial**. The expected month-end is **2026-08-31**. SBI alone improved complete portfolios **23 -> 24** and current portfolios **32 -> 33** relative to the immediately preceding published build. Quant had already been repaired by the separate workstream to **120 complete positions dated 2026-08-31**; do not repeat or attribute that repair to this SBI batch.
+Portfolios: **34/36 with holdings; 25 complete; 33 current; 25 current and complete; 9 partial**. The expected month-end is **2026-08-31**. Tata improved complete/current-complete coverage **24 -> 25** without changing the 33-fund freshness count because its previous top-10 snapshot was already current. Quant and SBI are already complete/current from their prior batches; do not repeat those recoveries.
+
+The production status audit at **2026-09-24T07:20:59Z** records 108 retained portfolio snapshots, 1,485 archived document records, 1,929,010,014 archive bytes and 2,028,272,478 total retained bytes. The Pages publication budget remains unchanged at 250 MiB for saved publication files.
 
 ## Next backend task and remaining blockers
 
-1. **Axis Small Cap Fund: investigate its official complete monthly workbook/disclosure source next.** Current coverage is only 10 positions, dated 2026-09-16 and explicitly partial. Recover a full, explicitly dated and reconciled portfolio rather than promoting the top-holdings list. Re-read source state before work; do not infer a month-end from an observation date.
-2. Other current partial portfolios remain **Edelweiss, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI**, all currently dated 2026-08-31. Prefer reusable exact first-party structured discovery over one-off filename guesses.
-3. **Bajaj Finserv** is now the only stale portfolio: 13 partial positions dated 2026-07-31. Its established official-source access blocker remains. Retry only with a genuinely new first-party route or changed access evidence.
+1. **TRUSTMF Small Cap Fund is the next preferred completeness target.** It is current at 70 positions but partial, and the tracker already has a reusable first-party monthly-disclosure API/workbook route. Inspect the exact August structured workbook for explicit cash/repo/debt/aggregate rows and promote it only if all published values and weights reconcile to the workbook grand total.
+2. Other current partial portfolios are **Axis, Edelweiss, ICICI Prudential, Invesco India, JM, Sundaram and UTI**. Prefer structured official monthly sources over factsheet top-holdings views. Axis is now a documented access blocker rather than the immediate retry target.
+3. **Bajaj Finserv** remains the only stale collected portfolio: 13 partial positions dated 2026-07-31. Its established official-source access blocker remains. Retry only with a genuinely new first-party route or changed access evidence.
 4. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
+5. Temporary investigation branches such as `work/axis-portfolio-20260924` are not production source of truth. Re-read `main`, this handoff, coverage and current Actions before continuing.
 
-Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never mark partial holdings complete to improve counts. Do not rerun completed SBI/Quant repair work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
+Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never mark partial holdings complete to improve counts. Do not rerun completed Quant/SBI/Tata repair work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
