@@ -10,47 +10,71 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_DATA_DIR: /tmp/jm-investigation
+      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
-      - name: Decode JM Portfolio Disclosure API
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect exact JM Small Cap monthly workbooks
         run: |
-          python - <<'PY'
-          import urllib.request,json,subprocess,base64,re
-          base='https://jmmfapi.jmfinancialmf.com/api/'
-          key=b'6fa979f20126cb08aa645a8f495f6d85'
-          iv=b'I8zyA4lVhMCaJ5Kg'
-          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
-                   'Content-Type':'application/json','Origin':'https://www.jmfinancialmf.com',
-                   'Referer':'https://www.jmfinancialmf.com/downloads/Portfolio-Disclosure'}
-          def decrypt(value):
-              raw=base64.b64decode(value)
-              cp=subprocess.run(['openssl','enc','-d','-aes-256-cbc','-K',key.hex(),'-iv',iv.hex()],
-                                input=raw,capture_output=True,check=True)
-              return cp.stdout.decode('utf-8')
-          def call(path,payload):
-              req=urllib.request.Request(base+path,data=json.dumps(payload).encode(),headers=headers,method='POST')
+          rm -rf "$SMALLCAP_DATA_DIR"
+          uv run --frozen python - <<'PY'
+          import io,json,hashlib,urllib.request,urllib.parse
+          import openpyxl,xlrd
+          from tracker.portfolio_parser import parse_sheet
+          base='https://www.jmfinancialmf.com/'
+          items=[
+            ('2026-08-31','CMS/downloads/Portfolio Disclosure/Monthly Portfolio of Schemes/Monthly Portfolio - JM Small Cap Fund - Aug 31, 2026.xlsx'),
+            ('2026-07-31','CMS/downloads/Portfolio Disclosure/Monthly Portfolio of Schemes/Monthly Portfolio - JM Small Cap Fund - July 31, 2026.xlsx'),
+          ]
+          headers={'User-Agent':'SmallcapLedger/1.0','Accept':'*/*'}
+          for expected,path in items:
+              url=base+urllib.parse.quote(path,safe='/,:')
+              req=urllib.request.Request(url,headers=headers)
               with urllib.request.urlopen(req,timeout=30) as r:
-                  outer=json.loads(r.read().decode())
-              plain=decrypt(outer['data']) if outer.get('data') else ''
-              print('PLAIN',path,plain[:120000])
-              try:return json.loads(plain)
-              except:return plain
-          drops=call('GetDownloadDrop',{'IICategoryID':'2'})
-          print('DROPS_JSON',json.dumps(drops,ensure_ascii=False))
-          candidates=[]
-          for item in drops if isinstance(drops,list) else []:
-              blob=json.dumps(item,ensure_ascii=False)
-              if re.search(r'portfolio|monthly|scheme',blob,re.I):
-                  candidates.append(item)
-          print('CANDIDATES',json.dumps(candidates,ensure_ascii=False))
-          ids=[]
-          for item in drops if isinstance(drops,list) else []:
-              sid=item.get('DownloadSubCategoryID') or item.get('SubCategoryID') or item.get('ID') or item.get('Value')
-              if sid is not None:ids.append(str(sid))
-          for sid in dict.fromkeys(['0','37']+ids):
-              try:
-                  rows=call('GetDownloadNew',{'IICategoryID':'2','IISubCategoryID':sid,'IVsearch':''})
-                  print('ROWS',sid,json.dumps(rows,ensure_ascii=False)[:120000])
-              except Exception as e:print('ROW_ERROR',sid,repr(e))
+                  body=r.read()
+                  print('FETCH',expected,url,r.status,r.headers.get('Content-Type'),len(body),hashlib.sha256(body).hexdigest(),r.geturl(),body[:8].hex())
+              iterable=[]
+              if body[:2]==b'PK':
+                  book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+                  for ws in book.worksheets:
+                      cells=list(ws.iter_rows())
+                      rows=[[c.value for c in rr] for rr in cells]
+                      formats=[[c.number_format or '' for c in rr] for rr in cells]
+                      iterable.append((ws.title,rows,formats))
+                  book.close()
+              elif body[:4]==b'\xd0\xcf\x11\xe0':
+                  book=xlrd.open_workbook(file_contents=body,formatting_info=True)
+                  for ws in book.sheets():
+                      rows=[ws.row_values(i) for i in range(ws.nrows)]
+                      formats=[[book.format_map[book.xf_list[ws.cell_xf_index(i,j)].format_key].format_str for j in range(ws.ncols)] for i in range(ws.nrows)]
+                      iterable.append((ws.name,rows,formats))
+              for name,rows,formats in iterable:
+                  prefix=' '.join(str(v) for rr in rows[:40] for v in rr if v not in (None,''))
+                  parsed=parse_sheet(rows,formats,'Jm Small Cap Fund')
+                  info={'sheet':name,'rows':len(rows),'prefix':prefix[:1800]}
+                  if parsed:
+                      info['parsed']={'day':parsed['day'],'complete':parsed['complete'],
+                          'positions':len(parsed['positions']),
+                          'weight':sum(x['weight'] for x in parsed['positions']),
+                          'aum':parsed['aum'],'unknown_rows':parsed.get('unknown_rows',[])[:100],
+                          'quantities':sum(x.get('quantity') is not None for x in parsed['positions'])}
+                  excerpts=[]
+                  unknown=(parsed or {}).get('unknown_rows',[])
+                  for ri,rr in enumerate(rows):
+                      txt=' | '.join(str(x) for x in rr if x not in (None,''))
+                      low=txt.lower()
+                      if any(k in low for k in ('small cap','name of','grand total','net assets','net current','treps','repo','cash','margin','derivative','total')) or any(str(u) in txt for u in unknown):
+                          excerpts.append([ri+1,txt[:2200]])
+                      if len(excerpts)>=160:break
+                  info['excerpts']=excerpts
+                  print('SHEET',expected,json.dumps(info,ensure_ascii=False))
           PY
