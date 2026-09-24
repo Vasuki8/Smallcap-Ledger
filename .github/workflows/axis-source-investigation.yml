@@ -35,7 +35,8 @@ jobs:
           from tracker.portfolio_parser import parse_sheet
           db.init()
           out=Path('audit')
-          root='https://www.tatamutualfund.com'\n          api_root='https://prod-dist-api.tatamfdev.com'
+          root='https://www.tatamutualfund.com'
+          api_root='https://prod-dist-api.tatamfdev.com'
           api=api_root+'/cms-data/api/CMSDATA_portfolio?type=monthly'
           c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*','Referer':root+'/schemes-related/portfolio'},timeout=30,follow_redirects=True)
           r=c.get(api);r.raise_for_status()
