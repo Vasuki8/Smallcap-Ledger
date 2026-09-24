@@ -13,41 +13,17 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query ICICI downloads API exact contract
+      - name: Extract ICICI downloads service calls
         run: |
           python - <<'PY'
-          import urllib.request,uuid,json,re
-          common={
-            'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
-            'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
-            'Referer':'https://www.icicipruamc.com/','env':'api','baggage':'',
-          }
-          def req(url,method='GET',body=None,timeout=20):
-              headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
-              data=json.dumps(body).encode() if body is not None else None
-              r=urllib.request.Request(url,data=data,headers=headers,method=method)
-              with urllib.request.urlopen(r,timeout=timeout) as resp:
-                  b=resp.read()
-                  print('FETCH',method,url,resp.status,resp.headers.get('Content-Type'),len(b))
-                  print('BODY',b.decode('utf-8','replace')[:50000])
-                  return b
-          base='https://apimf.icicipruamc.com'
-          try:req(base+'/nms/v1/downloads/categories?userType=Investor')
-          except Exception as e:
-              print('ERROR categories',repr(e))
-              if getattr(e,'read',None):
-                  try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:30000])
-                  except:pass
-
-          # Exact frontend source context for downloads category/files request payload.
-          r=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
-                                   headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
-          with urllib.request.urlopen(r,timeout=20) as resp:js=resp.read().decode('utf-8','replace')
-          for needle in ('downloadCategoryData','downloadData','/nms/v1/downloads/files','downloads/categories'):
-              start=0;count=0
-              while count<20:
-                  i=js.find(needle,start)
-                  if i<0:break
-                  print('CTX',needle,js[max(0,i-5000):i+10000])
-                  start=i+len(needle);count+=1
+          import re,urllib.request
+          req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
+                                     headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
+          with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
+          needles=['APIUrl.downloadData','APIUrl.downloadCategoryData','/nms/v1/downloads/files']
+          for needle in needles:
+              ms=list(re.finditer(re.escape(needle),js))
+              print('NEEDLE',needle,'COUNT',len(ms))
+              for m in ms[:20]:
+                  i=m.start(); print('CTX',js[max(0,i-5000):i+10000])
           PY
