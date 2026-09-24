@@ -1033,6 +1033,53 @@ def edelweiss_top30_portfolio(text):
 
 
 
+def edelweiss_top10_portfolio(text,additional_text=''):
+    """Reconcile Edelweiss Small Cap's current factsheet Top-10 as partial only.
+
+    The scheme page publishes ten named holdings while a nearby Additional
+    Disclosure page independently publishes the Top-10 aggregate. Both pages
+    must carry the same explicit reporting date before rows are retained.
+    """
+    normalized=normalize(text)
+    family='Edelweiss Small Cap Fund'
+    if not owns_page(normalized,family):return None
+    dm=(re.search(r'NAV\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+        or re.search(r'AUM\s+as\s+on\s+('+DATE+r')',normalized,re.I)
+        or re.search(r'Data\s+as\s+on\s+('+DATE+r')',normalized,re.I))
+    day=dated(dm.group(1)) if dm else None
+    if not day:return None
+
+    lines=[re.sub(r'\s+',' ',x).strip() for x in normalized.splitlines() if x.strip()]
+    start=next((i for i,x in enumerate(lines)
+                if re.fullmatch(r'Top\s+10\s+Holdings\s+%\s+to\s+Net\s+Assets',x,re.I)),None)
+    if start is None:return None
+    positions=[]
+    for line in lines[start+1:]:
+        if re.search(r'Past\s+Performance|Performance\s+as\s+on|Data\s+as\s+on',line,re.I):break
+        m=re.fullmatch(r'(?:\d{1,2}\s+)?(.+?)\s+(\d+(?:\.\d+)?)%',line)
+        if not m:continue
+        name=re.sub(r'^\d{1,2}\s+','',m.group(1)).strip()
+        weight=float(m.group(2))
+        if not name or not 0<weight<10:return None
+        positions.append({'name':name,'isin':None,'sector':None,'weight':weight,'asset_type':'Equity'})
+        if len(positions)==10:break
+    if len(positions)!=10 or len({x['name'].lower() for x in positions})!=10:return None
+
+    extra=normalize(additional_text)
+    extra_day=None
+    em=re.search(r'Data\s+as\s+on\s+('+DATE+r')',extra,re.I)
+    if em:extra_day=dated(em.group(1))
+    if extra_day!=day:return None
+    total_match=re.search(r'Top\s+10\s+stocks\s*:\s*'+NUMBER+r'\s*%',extra,re.I)
+    if not total_match:return None
+    published=float(total_match.group(1).replace(',',''))
+    if not 5<=published<=60:return None
+    if abs(sum(x['weight'] for x in positions)-published)>.04:return None
+    stock_count=re.search(r'Total\s+no\.\s+of\s+equity\s+stocks\s*:\s*(\d+)',extra,re.I)
+    if not stock_count or int(stock_count.group(1))<=10:return None
+    return {'day':day,'positions':positions}
+
+
 def boi_multicolumn_complete_portfolio(text):
     """Reconstruct BOI Small Cap's four-column factsheet portfolio.
 
