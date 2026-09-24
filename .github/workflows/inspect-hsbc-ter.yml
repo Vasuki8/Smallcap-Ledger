@@ -14,28 +14,24 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Trace CAMS download application root scripts
+      - name: Locate CAMS service endpoint
         run: |
           python - <<'PY'
           import re,urllib.request
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.assetmanagement.hsbc.co.in/'}
-          scripts=[
-            'https://digital.camsonline.com/runtime.ee043c88a67d0a03.js',
-            'https://digital.camsonline.com/polyfills.3200f7145c64adcf.js',
-            'https://digital.camsonline.com/main.d08d2e9edfe7391e.js',
-          ]
-          for full in scripts:
-              req=urllib.request.Request(full,headers=UA)
-              with urllib.request.urlopen(req,timeout=45) as r:
-                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl())
-              s=b.decode('utf-8','ignore')
-              if len(s)<5000:continue
-              print('SCRIPT',full,'LEN',len(s))
-              for needle in ['dnlresult','xlsx','download','fileName','filename','api/','downloadfile','filedownload','result']:
-                  p=0;n=0
-                  while True:
-                      p=s.lower().find(needle.lower(),p)
-                      if p<0 or n>=25:break
-                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1200):p+2200])[:3600])
-                      p+=len(needle);n+=1
+          url='https://digital.camsonline.com/main.d08d2e9edfe7391e.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          with urllib.request.urlopen(req,timeout=45) as r:s=r.read().decode('utf-8','ignore')
+          for needle in ['getservicedata(', 'GET_UPD_MB_RESULT', '/api/', 'api/v1', 'serviceurl', 'baseUrl', 'baseurl']:
+              print('NEEDLE',needle)
+              p=0;n=0
+              while True:
+                  p=s.find(needle,p)
+                  if p<0 or n>=35:break
+                  print(re.sub(r'\s+',' ',s[max(0,p-1800):p+2600])[:4600])
+                  p+=len(needle);n+=1
+          print('URL_STRINGS')
+          vals=set(re.findall(r'https?://[^"\'\\ ]+',s))
+          for v in sorted(vals):
+              if 'cams' in v.lower() or 'api' in v.lower():
+                  print(v[:500])
           PY
