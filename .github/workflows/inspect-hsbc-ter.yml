@@ -14,30 +14,28 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Trace CAMS download application
+      - name: Trace CAMS download application root scripts
         run: |
           python - <<'PY'
-          import re, urllib.parse, urllib.request
+          import re,urllib.request
           UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.assetmanagement.hsbc.co.in/'}
-          base='https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx'
-          def fetch(url):
-              req=urllib.request.Request(url,headers=UA)
+          scripts=[
+            'https://digital.camsonline.com/runtime.ee043c88a67d0a03.js',
+            'https://digital.camsonline.com/polyfills.3200f7145c64adcf.js',
+            'https://digital.camsonline.com/main.d08d2e9edfe7391e.js',
+          ]
+          for full in scripts:
+              req=urllib.request.Request(full,headers=UA)
               with urllib.request.urlopen(req,timeout=45) as r:
-                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return b,r.geturl()
-          html,final=fetch(base)
-          text=html.decode('utf-8','ignore')
-          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',text,re.I)
-          print('SCRIPTS',scripts)
-          for src in scripts:
-              full=urllib.parse.urljoin(final,src)
-              b,_=fetch(full);s=b.decode('utf-8','ignore')
-              if not re.search(r'dnlresult|download|xlsx|result|fileName|filename|api',s,re.I):continue
-              print('SCRIPT_MATCH',full,'LEN',len(s))
-              for needle in ['dnlresult','hsbc_ter_report','xlsx','download','fileName','filename','api/']:
+                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl())
+              s=b.decode('utf-8','ignore')
+              if len(s)<5000:continue
+              print('SCRIPT',full,'LEN',len(s))
+              for needle in ['dnlresult','xlsx','download','fileName','filename','api/','downloadfile','filedownload','result']:
                   p=0;n=0
                   while True:
                       p=s.lower().find(needle.lower(),p)
-                      if p<0 or n>=20:break
-                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1000):p+1800])[:3000])
+                      if p<0 or n>=25:break
+                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1200):p+2200])[:3600])
                       p+=len(needle);n+=1
           PY
