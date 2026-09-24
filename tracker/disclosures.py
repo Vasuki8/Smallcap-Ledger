@@ -251,8 +251,12 @@ def factsheet_pdf(content,family,url,h):
                 layout_text=page.extract_text(extraction_mode='layout') or ''
                 if layout_text!=text:partial=jm_top25_portfolio(layout_text)
         if family=='Edelweiss Small Cap Fund':
-            from .report_parser import edelweiss_top30_portfolio
+            from .report_parser import edelweiss_top30_portfolio,edelweiss_top10_portfolio
             partial=edelweiss_top30_portfolio(text)
+            if not partial and page_index+2<len(reader.pages):
+                next_two='\n'.join((reader.pages[page_index+1].extract_text() or '',
+                                     reader.pages[page_index+2].extract_text() or ''))
+                partial=edelweiss_top10_portfolio(text,next_two)
         if family=='Pgim India Small Cap Fund':
             from .report_parser import pgim_complete_portfolio
             full=pgim_complete_portfolio(text)
