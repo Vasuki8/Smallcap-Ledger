@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import io,json,hashlib
+          import io,json,hashlib,re
           from pathlib import Path
           from urllib.parse import urljoin
           import httpx,openpyxl,xlrd
@@ -89,6 +89,24 @@ jobs:
                   prefix=' '.join(str(v) for row in rows[:30] for v in row if v is not None)
                   if 'tata small cap' not in (name+' '+prefix).lower():continue
                   parsed=parse_sheet(rows,formats,'Tata Small Cap Fund')
+                  # Diagnose only the generic parser preconditions for this verified Tata sheet.
+                  from tracker.disclosures import report_date
+                  from tracker.portfolio_parser import owns_sheet
+                  header=None; hi=None
+                  for ii,rrr in enumerate(rows[:35]):
+                      cc=[str(v or '').lower() for v in rrr]
+                      if any('isin' in v for v in cc) and any('%' in v and ('nav' in v or 'aum' in v or ('net' in v and 'asset' in v)) for v in cc):
+                          header=cc;hi=ii;break
+                  diag={'hi':hi,'owned':owns_sheet(rows,hi,'Tata Small Cap Fund') if hi is not None else None,
+                        'report_date':report_date(' '.join(str(v) for row3 in rows[:hi] for v in row3 if v is not None)) if hi is not None else None,
+                        'header':header}
+                  if header:
+                      def ccol(pred): return next((jj for jj,v in enumerate(header) if pred(v)),None)
+                      diag['ic']=ccol(lambda v:'isin' in v)
+                      diag['nc']=ccol(lambda v:'name' in v or 'instrument' in v or 'issuer' in v)
+                      diag['wc']=ccol(lambda v:'%' in v and ('nav' in v or 'aum' in v or ('net' in v and 'asset' in v)))
+                      diag['vc']=ccol(lambda v:re.search(r'market|mkt|fair',v) and re.search(r'\\b(?:value|val)\\b',v))
+                  print('DIAG',json.dumps(diag,ensure_ascii=False))
                   info={'sheet':name,'rows':len(rows),'prefix':prefix[:1400]}
                   if parsed:
                       info['parsed']={'day':parsed['day'],'complete':parsed['complete'],'positions':len(parsed['positions']),'weight':sum(x['weight'] for x in parsed['positions']),'aum':parsed['aum']}
