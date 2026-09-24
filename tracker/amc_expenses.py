@@ -38,8 +38,8 @@ ICICI_TER_SUBCATEGORY_CODE = "TOTAL_EXPENSE_RATIO"
 ICICI_TER_TITLE = "Total Expense Ratio"
 ICICI_TER_SHOW = "TER Details"
 _ICICI_XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-_ICICI_TITLE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\\d{2})$")
-_ICICI_FILE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\\d{2})\\.xlsx$", re.I)
+_ICICI_TITLE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\d{2})$")
+_ICICI_FILE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\d{2})\.xlsx$", re.I)
 _ICICI_HEADER = {
     "A": "Scheme Name",
     "B": "Date (DD/MM/YYYY)",
@@ -601,7 +601,7 @@ def _icici_inline_strings(content):
     try:
         sheets = [
             name for name in archive.namelist()
-            if re.fullmatch(r"xl/worksheets/sheet\\d+\\.xml", name)
+            if re.fullmatch(r"xl/worksheets/sheet\d+\.xml", name)
         ]
         if len(sheets) != 1:
             raise ValueError("ICICI TER workbook must contain exactly one worksheet")
