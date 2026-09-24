@@ -13,22 +13,18 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Extract JM download endpoints
+      - name: Extract exact JM download API calls
         run: |
           python - <<'PY'
-          import urllib.request,re,json
-          url='https://www.jmfinancialmf.com/static/js/main.d8e32c01.js'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          import urllib.request,re
+          req=urllib.request.Request('https://www.jmfinancialmf.com/static/js/main.d8e32c01.js',headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=30) as r: js=r.read().decode('utf-8','replace')
-          gets=sorted(set(re.findall(r'["\'](Get[A-Za-z0-9_/?=&.-]{2,80})["\']',js)))
-          for x in gets:
-              if re.search(r'download|portfolio|fact|form|misc|scheme|document|financial',x,re.I):
-                  print('GET_STRING',x)
-          for needle in ('Portfolio Disclosure','PortfolioDisclosure','portfolio disclosure','Getportfolio','GetPortfolio','GetDownload','downloads/Forms'):
+          for needle in ('GetDownloadNewSub','GetDownloadNew','GetDownloadDrop'):
               start=0;count=0
-              while count<20:
+              while count<12:
                   i=js.find(needle,start)
                   if i<0:break
-                  print('CONTEXT',needle,js[max(0,i-2500):i+4500])
+                  frag=js[max(0,i-1800):i+3500]
+                  print('CALL',needle,frag)
                   start=i+len(needle);count+=1
           PY
