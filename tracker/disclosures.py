@@ -213,7 +213,13 @@ def spreadsheet(content,family,url,h):
                     if None not in (ic,nc,wc):
                         for r in rows[header_index+1:]:
                             if max(ic,nc,wc)>=len(r):continue
-                            if str(r[wc] or '').strip()!='        prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
+                            if str(r[wc] or '').strip() != chr(36):continue
+                            if not re.fullmatch(r'[A-Z]{2}[A-Z0-9]{10}',str(r[ic] or '').strip()):continue
+                            censored.add(str(r[nc] or '').strip())
+                if censored and set(full['unknown_rows'])==censored:
+                    portfolio(family,full['day'],full['positions'],False,url,h,replace_existing_partial=True)
+                    count+=len(full['positions']);continue
+        prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
         if not day or day>date.today().isoformat(): continue
