@@ -584,6 +584,59 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(rows[0][:2],('Baroda Bnp Paribas Small Cap Fund','https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls'))
 
 
+    def test_absl_discovery_prefers_latest_official_monthly_portfolio_zip(self):
+        from tracker.amc_discovery import discover
+        page=b'''<html><body><ul class="tabInject">
+        <li data-accordian-api="/postlogin/CustomApi/Resources/FactsheetAccordionById?id=abc&amp;ctype=individual">
+        <button><span>Monthly Portfolio</span></button></li></ul></body></html>'''
+        payload=json.dumps({'ReturnCode':'1','AccordionList':[
+            {'ResourceLink':'Monthly Portfolios as on July 31, 2026',
+             'pdfUrl':'https://abcscprod.azureedge.net/monthly-july.zip'},
+            {'ResourceLink':'Monthly Portfolios as on August 31, 2026',
+             'pdfUrl':'https://abcscprod.azureedge.net/monthly-august.zip'},
+        ]}).encode()
+        def fake_read(url,body=None):
+            if 'FactsheetAccordionById' in url:return payload,'api','application/json'
+            return page,'page','text/html'
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('Aditya Birla'))
+        self.assertEqual(rows,[(
+            'Aditya Birla Sun Life Small Cap Fund',
+            'https://abcscprod.azureedge.net/monthly-august.zip',
+            'Monthly Portfolios as on August 31, 2026')])
+
+    def test_absl_monthly_zip_reuses_complete_spreadsheet_reconciliation(self):
+        import zipfile
+        import openpyxl
+        from tracker import db
+        from tracker.structured_reports import absl_zip
+        wb=openpyxl.Workbook();ws=wb.active;ws.title='Small Cap'
+        rows=[
+            ['Aditya Birla Sun Life Small Cap Fund',None,None,None,None,None],
+            ['Monthly Portfolio Statement as on August 31, 2026',None,None,None,None,None],
+            ['Name of the Instrument','ISIN','Industry / Rating','Quantity','Market/Fair Value (Rs. in Lakhs)','% to NAV'],
+            ['Equity & Equity related',None,None,None,None,None],
+            ['Alpha Industries Limited','INE000A01010','Industrial Products',1000,6000,60.0],
+            ['Beta Bank Limited','INE000B01018','Banks',1000,3500,35.0],
+            ['Net Current Assets',None,None,None,500,5.0],
+            ['GRAND TOTAL',None,None,None,10000,100.0],
+        ]
+        for row in rows:ws.append(row)
+        xlsx=io.BytesIO();wb.save(xlsx);wb.close()
+        archive=io.BytesIO()
+        with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+            z.writestr('ABSL_Small_Cap_Aug_2026.xlsx',xlsx.getvalue())
+            z.writestr('readme.txt',b'official monthly portfolio package')
+        saved=absl_zip(archive.getvalue(),'Aditya Birla Sun Life Small Cap Fund',
+                       'https://abcscprod.azureedge.net/monthly-august.zip','absl-zip')
+        self.assertGreaterEqual(saved,3)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family='Aditya Birla Sun Life Small Cap Fund' AND p.hash='absl-zip'
+          GROUP BY p.id""")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1,'positions':3})
+
     def test_absl_discovery_prefers_latest_official_factsheet(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>

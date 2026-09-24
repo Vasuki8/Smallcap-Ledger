@@ -25,6 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v57':rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -201,31 +202,34 @@ def run():
         except Exception as exc:
             print(f"::warning::TRUSTMF API recovery: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
             ok.append(False)
-    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v56':
-        # Temporary ABSL endpoint validation using the exact GET parameters
-        # used by the AMC's own public resourceAccordianAjax JavaScript.
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v57':
+        from tracker import amc_discovery
+        family='Aditya Birla Sun Life Small Cap Fund';attempted=0
         try:
-            from bs4 import BeautifulSoup
-            from urllib.parse import urljoin
-            page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
-            raw,_,_=providers.fetch(page,max_bytes=8*1024*1024)
-            soup=BeautifulSoup(raw,'html.parser')
-            item=next((li for li in soup.select('li[data-accordian-api]')
-                       if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
-            if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
-            endpoint=urljoin(page,item.get('data-accordian-api',''))+'&month=%20&year=0'
-            payload,source,mime=providers.fetch(endpoint,max_bytes=8*1024*1024)
-            data=json.loads(payload)
-            print(f'ABSL_ENDPOINT_OK source={source} mime={mime} return={data.get("ReturnCode")} rows={len(data.get("AccordionList") or [])}',flush=True)
-            for row in (data.get('AccordionList') or [])[:40]:
-                print('ABSL_ENDPOINT_ROW '+json.dumps({
-                    'ResourceLink':row.get('ResourceLink'),
-                    'pdfUrl':row.get('pdfUrl'),
-                    'shareTitle':row.get('shareTitle'),
-                    'ResourceName':row.get('ResourceName'),
-                },ensure_ascii=False)[:1500],flush=True)
+            for discovered_family,url,title in amc_discovery.discover('Aditya Birla'):
+                if discovered_family!=family or not re.search(r'\.zip(?:[?#]|$)',url,re.I):continue
+                attempted+=1
+                try:
+                    records=amc_discovery.store_report('Aditya Birla',family,url,title)
+                    print(f'ABSL current monthly portfolio: {records} dated facts/holdings parsed from {url}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::ABSL current monthly portfolio: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
         except Exception as exc:
-            print(f"::warning::ABSL endpoint validation: {(str(exc) or type(exc).__name__).splitlines()[0][:250]}",flush=True)
+            print(f"::warning::ABSL monthly portfolio discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:220]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:
+            print(f'ABSL current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.

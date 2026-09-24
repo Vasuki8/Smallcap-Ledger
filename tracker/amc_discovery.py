@@ -67,6 +67,36 @@ def discover(amc):
         yield family,url,title or f'Monthly Portfolio - all funds as on {day.isoformat()}'
     elif amc=='Aditya Birla':
         family='Aditya Birla Sun Life Small Cap Fund'
+        portfolio_page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio'
+        try:
+            raw,_,_=read(portfolio_page);soup=BeautifulSoup(raw,'html.parser')
+            item=next((li for li in soup.select('li[data-accordian-api]')
+                       if re.search(r'Monthly\s+Portfolio',li.get_text(' ',strip=True),re.I)),None)
+            if item is None:raise ValueError('Monthly Portfolio accordion endpoint not found')
+            endpoint=urljoin(portfolio_page,item.get('data-accordian-api',''))+'&month=%20&year=0'
+            payload,_,_=read(endpoint)
+            data=json.loads(payload)
+            rows=[]
+            if str(data.get('ReturnCode'))=='1':
+                for row in data.get('AccordionList') or []:
+                    title=str(row.get('ResourceLink') or row.get('shareTitle') or '').strip()
+                    url=str(row.get('pdfUrl') or '').strip()
+                    if not url or not disclosures.official_publication_url(url,amc):continue
+                    if not re.search(r'\.zip(?:[?#]|$)',url,re.I):continue
+                    m=re.search(r'Monthly\s+Portfolios?\s+as\s+on\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})',title,re.I)
+                    if not m:continue
+                    try:day=datetime.strptime(m.group(1).replace('  ',' '),'%B %d, %Y').date()
+                    except ValueError:continue
+                    if day<=date.today():rows.append((day,url,title))
+            if rows:
+                day,url,title=max(rows,key=lambda r:r[0])
+                yield family,url,title or f'Monthly Portfolio as on {day.isoformat()}'
+                return
+        except Exception:
+            pass
+        # Fallback to the latest official factsheet if the portfolio API is
+        # temporarily unavailable. A factsheet does not make an older holding
+        # snapshot appear current.
         page='https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets'
         raw,_,_=read(page);soup=BeautifulSoup(raw,'html.parser')
         rows=[]
@@ -80,7 +110,7 @@ def discover(amc):
             month=max((i for i in range(1,13)
                        if re.search(calendar.month_name[i]+'|'+calendar.month_abbr[i],combined,re.I)),default=0)
             if year:rows.append((year,month,url,title))
-        if not rows:raise ValueError('No official ABSL factsheet PDF was exposed by the factsheet archive')
+        if not rows:raise ValueError('No official ABSL monthly portfolio or factsheet was exposed')
         newest=max((y,m) for y,m,_,_ in rows)
         for _,_,url,title in [r for r in rows if (r[0],r[1])==newest][:2]:
             yield family,url,title or 'Latest ABSL factsheet'
