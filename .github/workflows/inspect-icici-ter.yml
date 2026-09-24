@@ -11,38 +11,33 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Trace ICICI TER disclosure page
+      - name: Extract ICICI TER app strings and endpoints
         run: |
           python - <<'PY'
-          import re, urllib.parse, urllib.request
-          url='https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total+Expense+Ratio'
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Accept':'text/html,*/*'}
-          def fetch(u):
-              req=urllib.request.Request(u,headers=UA)
-              with urllib.request.urlopen(req,timeout=60) as r:
-                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return b,r.geturl()
-          body,final=fetch(url)
-          html=body.decode('utf-8','ignore')
-          print('HTML_HEAD',re.sub(r'\s+',' ',html[:6000]))
-          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I)
-          print('SCRIPTS',scripts)
-          for src in scripts:
-              full=urllib.parse.urljoin(final,src)
-              try:b,_=fetch(full)
-              except Exception as e:
-                  print('SCRIPT_ERROR',full,type(e).__name__,e);continue
-              s=b.decode('utf-8','ignore')
-              if not re.search(r'Expense Ratio|Total Expense|currentTabFilter|financial|disclosure|TER|api',s,re.I):
-                  continue
-              print('SCRIPT_MATCH',full,'LEN',len(s))
-              for needle in ['Total Expense Ratio','currentTabFilter','financials-&-disclosures','expense-ratio','expenseRatio','totalExpense','TER','api/']:
-                  p=0;n=0
-                  while True:
-                      p=s.lower().find(needle.lower(),p)
-                      if p<0 or n>=25:break
-                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1200):p+2600])[:4000])
-                      p+=len(needle);n+=1
+          import re, urllib.request
+          url='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          with urllib.request.urlopen(req,timeout=60) as r:
+              s=r.read().decode('utf-8','ignore')
+              print('FETCH',r.status,len(s),r.headers.get('content-type'),r.geturl())
+          strings=[]
+          for m in re.finditer(r'(["\'])(.{1,300}?)\1',s):
+              v=m.group(2)
+              if re.search(r'Expense Ratio|expense.?ratio|financial|disclosure|TER|api/|endpoint|scheme',v,re.I):
+                  strings.append(v)
+          print('MATCHED_STRINGS',len(strings))
+          for v in sorted(set(strings)):
+              if len(v)<=280:
+                  print('STR',repr(v))
+          for needle in ['Total Expense Ratio','financials-&-disclosures','currentTabFilter','expenseRatio','ExpenseRatio','TER','axios.create','baseURL','fetch(']:
+              print('NEEDLE',needle)
+              p=0;n=0
+              while True:
+                  p=s.lower().find(needle.lower(),p)
+                  if p<0 or n>=20:break
+                  print('CTX',re.sub(r'\s+',' ',s[max(0,p-1500):p+3000])[:4700])
+                  p+=len(needle);n+=1
           PY
