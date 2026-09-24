@@ -13,42 +13,35 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect ICICI news-media downloads chunk
+      - name: Find ICICI downloads payload in route chunks
         run: |
           python - <<'PY'
-          import urllib.request,re,urllib.parse
+          import urllib.request,re
           base='https://www.icicipruamc.com/'
-          seeds=[
-            'static/js/newsMedia.Be07XGbb.js',
-            'static/js/downloadsFormsTypes.9ulBNFmg.js',
+          paths=[
+            'static/js/index.CK6gFMMX.js','static/js/index.CWTGqtsW.js',
+            'static/js/index.CfmbVgFz.js','static/js/index.DkziuyJ0.js',
+            'static/js/index.TMb0r7kK.js','static/js/index.ga12eJF9.js',
+            'static/js/index.kFumjklZ.js','static/js/newsMedia.Be07XGbb.js',
             'static/js/SmallDownload.CCReaEC6.js',
           ]
           headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'}
-          seen=set()
-          def get(path):
-              url=urllib.parse.urljoin(base,path)
-              req=urllib.request.Request(url,headers=headers)
-              with urllib.request.urlopen(req,timeout=20) as r:
-                  text=r.read().decode('utf-8','replace')
-                  print('FILE',path,len(text))
-                  return text
-          queue=list(seeds)
-          while queue and len(seen)<12:
-              path=queue.pop(0)
-              if path in seen:continue
-              seen.add(path)
-              try:js=get(path)
-              except Exception as e:print('ERROR',path,repr(e));continue
-              if re.search(r'downloadData|downloads/files|fileType|categoryId|Monthly Portfolio|financialYear|filter',js,re.I):
-                  for needle in ('downloadData','downloads/files','fileType','categoryId','financialYear','filter'):
-                      start=0;count=0
-                      while count<20:
-                          i=js.find(needle,start)
-                          if i<0:break
-                          print('CTX',path,needle,js[max(0,i-3500):i+7000])
-                          start=i+len(needle);count+=1
-              for m in re.finditer(r'\.\/([A-Za-z0-9_.~%+@()\-]+\.js)',js):
-                  dep='static/js/'+m.group(1)
-                  if dep not in seen and dep not in queue:queue.append(dep)
-          print('SEEN',sorted(seen))
+          for path in paths:
+              try:
+                  req=urllib.request.Request(base+path,headers=headers)
+                  with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
+              except Exception as e:
+                  print('ERROR',path,repr(e));continue
+              print('FILE',path,len(js))
+              score=sum(bool(re.search(p,js,re.I)) for p in [
+                  r'fileType',r'categoryId',r'subCategory',r'financial.?year',
+                  r'downloadData',r'download.*files',r'FORMS_SHARE'])
+              print('SCORE',score)
+              if score<2:continue
+              for pat in [r'fileType',r'categoryId',r'subCategory',r'financial.?year',
+                          r'pageSize',r'userType',r'FORMS_SHARE']:
+                  for n,m in enumerate(re.finditer(pat,js,re.I)):
+                      if n>=12:break
+                      i=m.start()
+                      print('HIT',path,pat,js[max(0,i-1800):i+3500])
           PY
