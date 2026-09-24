@@ -1,6 +1,57 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after Bandhan production recovery and the UTI/Axis/Union portfolio-source audit. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after Canara Robeco TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: Canara Robeco current TER/BER recovery
+
+**Canara Robeco Small Cap Fund now has current, explicitly labelled AMC-published TER and BER.**
+
+PR #94 merged as commit `886de8b4eeaaf223d41dc3eb2609a5c6f6a0427b`. Production workflow **#463**, run **36062579037**, passed cumulative-history restore, the one-time Canara recovery, all **219 tests**, site generation/validation, cumulative-history publication, status recording and GitHub Pages deployment. The run completed successfully at **2026-09-24T21:38:17Z**.
+
+Canara's current Expense Ratio app is client-rendered. Its production browser bundle calls the first-party read-only endpoint:
+
+`https://www.canararobeco.com/wp-json/ter/v1/records?from_date=<YYYY-MM-DD>&to_date=<YYYY-MM-DD>`
+
+The public JSON identifies the scheme by exact name **Canara Robeco Small Cap Fund** and scheme code **SC**, and publishes separate rows for `Regular Plan` and `Direct Plan`. The tracker now requires exactly one row for each plan on the newest complete non-future date. It stores only the AMC-published `base_ter` as **base expense ratio / BER** and `total_ter` as **TER**. It does **not** recompute TER from brokerage, transaction-cost or statutory-levy components.
+
+Production source:
+`https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-18&to_date=2026-09-24`
+
+Published observations retained for **2026-09-24**:
+
+| Plan | BER | Total TER |
+| --- | ---: | ---: |
+| Regular | **1.46%** | **1.84%** |
+| Direct | **0.46%** | **0.68%** |
+
+The collector rejects wrong scheme names/codes, incomplete plan pairs, duplicate plan rows, future dates, missing/non-numeric values, out-of-range values, and a Total TER below BER. Failure retains the previous observations. `tracker/amc_expenses.py` runs inside the normal nightly metrics job, while `scripts/refresh_canara_expenses.py` performed a one-time push backfill and records `source_upgrade_canara-expense-v1` only after all four recent metrics are present from the exact API.
+
+Isolated validation run **36062414901** passed compileall, all **219 tests**, and a live API check that returned the same 2026-09-24 Regular/Direct values above. Production #463 independently passed the same **219-test** regression gate. Status commit `05f2bd2f9fbe1740275ed3a551ac9bc0830caa48` records the published state.
+
+Pages artifact **10835206674** is **231,215,086 bytes** with digest `sha256:593cbe84c1914ef4f5128821b6919aae00cb69128b3f27836fa1340d1e303ded`.
+
+### Expense coverage after this batch
+
+Coverage generated at **2026-09-24T21:37:12Z** is:
+
+- reported TER: **29 / 36** (up from 28 / 36)
+- base expense ratio / BER: **33 / 36**
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**
+
+The seven remaining funds without a reported TER are **Axis, HSBC, ICICI Prudential, Invesco India, JM, Mahindra Manulife and Mirae Asset**. The three remaining BER gaps are **Axis, Groww and UTI**.
+
+The source audit before implementation is important: diagnostic run **36061083795** showed that AMFI's current September Small Cap TER query returns **572 daily records** covering the 28 tracker families that already matched, while the eight then-missing TER families were absent rather than merely misspelled. Diagnostic run **36061192992** traced AMFI's live TER page bundle and confirmed the browser uses the same `populate-te-rdata-revised` endpoint/filter structure. Do not add fuzzy aliases merely to force absent AMFI rows to match. Canara was recovered from its own exact first-party disclosure API instead.
+
+### Next backend task
+
+**HSBC Small Cap Fund is the next preferred TER target.** The retained official August source already provides Direct BER **0.56% as of 2026-08-31** from `https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf`, but no TER is currently stored. Inspect the same/current HSBC first-party factsheet or TER disclosure path for an explicitly labelled total TER for Regular and/or Direct plan. Store it only if the AMC publishes the value directly; do not derive Total TER from BER or expense components.
+
+After HSBC, continue through ICICI Prudential, Invesco India, JM, Mahindra Manulife and Mirae Asset using exact AMC/AMFI disclosures. Axis remains special: its live fund page currently exposes only an unqualified **Expense Ratio** observation, so keep that metric distinct unless an explicit TER/BER source is found.
+
+No UI, permission, paid-service, archive-retention or schedule-cadence change was made in this batch.
 
 ## Latest completed batch: Bandhan production recovery plus UTI/Axis/Union source audit
 
