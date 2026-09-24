@@ -355,6 +355,19 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn("amc_discovery.discover('TRUST')",source)
         self.assertIn("path.lower().endswith(('.xls','.xlsx'))",source)
 
+    def test_v126_targets_only_sundaram_richer_partial(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v126'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Sundaram Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Trustmf Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Sundaram Small Cap Fund','https://www.sundarammutual.com/portfolio.xlsx','hash'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v126'",source)
+        self.assertIn("amc_discovery.discover('Sundaram')",source)
+        self.assertIn("snap['positions']>=77",source)
+        self.assertIn("not snap['complete']",source)
+
     def test_tata_portfolio_discovery_prefers_latest_monthly_excel(self):
         from tracker.amc_discovery import discover
         html=b'''<html><body>
