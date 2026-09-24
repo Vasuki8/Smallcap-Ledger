@@ -13,54 +13,40 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Query Bandhan SCHEME_PORTFOLIOS API variants
+      - name: Query Bandhan scheme-portfolio filters
         run: |
           python - <<'PY'
           import urllib.request,urllib.parse,json,re
-          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?posts_per_page=2500'
-          variants=[
-            {'acf_key':'download_center_type','acf_value':'SCHEME_PORTFOLIOS','bypass_pagination':'true'},
-            {'acf_key':'download_center_type','acf_value':'Scheme Portfolios','bypass_pagination':'true'},
-            {'acf_key':'download_center_type','acf_value':'scheme-portfolios','bypass_pagination':'true'},
-            {'type':'SCHEME_PORTFOLIOS','bypass_pagination':'true'},
-          ]
+          endpoint='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?posts_per_page=2500'
           headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
+          variants=[
+            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1'},
+            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026'},
+            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','month':'August'},
+            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','month':'Aug'},
+            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','scheme':'Bandhan Small Cap Fund'},
+            {'type':'SCHEME_PORTFOLIOS','subcategory':'monthly-and-half-yearly','page':'1','year':'2026','month':'August','scheme':'Bandhan Small Cap Fund'},
+          ]
           for q in variants:
-              url=base+'&'+urllib.parse.urlencode(q)
+              url=endpoint+'&'+urllib.parse.urlencode(q)
               try:
                   req=urllib.request.Request(url,headers=headers)
                   with urllib.request.urlopen(req,timeout=35) as r:data=json.load(r)
                   rows=data.get('data') if isinstance(data,dict) else data
-                  print('VARIANT',json.dumps(q),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows or []))
-                  hits=[]
-                  for item in rows or []:
-                      blob=json.dumps(item,ensure_ascii=False)
-                      if re.search(r'Bandhan\s+Small\s+Cap\s+Fund|Bandhan[-_ ]*Small[-_ ]*Cap',blob,re.I):
-                          acf=item.get('acf_fields') or {}
-                          files=[]
-                          for entry in acf.get('disclosure_files') or []:
-                              link=entry.get('document_link') or {}
-                              files.append({
-                                'document_name':entry.get('document_name'),
-                                'month':entry.get('month'),
-                                'filename':link.get('filename'),
-                                'url':link.get('url'),
-                                'link':link.get('link'),
-                                'mime_type':link.get('mime_type'),
-                                'filesize':link.get('filesize'),
-                                'date':link.get('date'),
-                              })
-                          hits.append({
-                            'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
-                            'download_center_type':acf.get('download_center_type'),
-                            'financial_year':acf.get('financial_year'),
-                            'disclosures_type':acf.get('disclosures_type'),
-                            'funds_mapping':acf.get('funds_mapping'),
-                            'files':files,
-                          })
-                  print('HITS',len(hits))
-                  for row in hits[:40]:
-                      print('ROW',json.dumps(row,ensure_ascii=False,separators=(',',':')))
-              except Exception as e:
-                  print('ERROR',json.dumps(q),repr(e))
+                  print('VARIANT',json.dumps(q,separators=(',',':')),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows or []),'PAGES',data.get('totalPages') if isinstance(data,dict) else None)
+                  for item in (rows or [])[:8]:
+                      acf=item.get('acf_fields') or {}
+                      print('ITEM',json.dumps({
+                        'id':item.get('id'),'title':item.get('title'),'date':item.get('date'),
+                        'download_center_type':acf.get('download_center_type'),
+                        'financial_year':acf.get('financial_year'),
+                        'disclosures_type':acf.get('disclosures_type'),
+                        'fund':(acf.get('funds_mapping') or {}).get('post_title') if isinstance(acf.get('funds_mapping'),dict) else acf.get('funds_mapping'),
+                        'files':[{
+                          'document_name':x.get('document_name'),'month':x.get('month'),
+                          'url':(x.get('document_link') or {}).get('url'),
+                          'filename':(x.get('document_link') or {}).get('filename'),
+                        } for x in acf.get('disclosure_files') or []],
+                      },ensure_ascii=False,separators=(',',':')))
+              except Exception as e:print('ERROR',json.dumps(q),repr(e))
           PY
