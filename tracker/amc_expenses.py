@@ -7,9 +7,13 @@ import base64
 import hashlib
 import io
 import json
+import re
 import shutil
 import subprocess
-from urllib.parse import urlencode
+import uuid
+import zipfile
+import xml.etree.ElementTree as ET
+from urllib.parse import quote, urlencode
 
 import httpx
 import openpyxl
@@ -22,6 +26,34 @@ CANARA_SCHEME_CODE = "SC"
 CANARA_PAGE = "https://www.canararobeco.com/expense-ratio"
 CANARA_API = "https://www.canararobeco.com/wp-json/ter/v1/records"
 CANARA_PLANS = {"Regular Plan": "Regular", "Direct Plan": "Direct"}
+
+ICICI_FAMILY = "ICICI Prudential Small Cap Fund"
+ICICI_TER_PAGE = "https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total%20Expense%20Ratio"
+ICICI_API_BASE = "https://apimf.icicipruamc.com"
+ICICI_CATEGORIES_API = ICICI_API_BASE + "/fds/v1/categories"
+ICICI_FILES_API = ICICI_API_BASE + "/fds/v1/files"
+ICICI_FILE_BASE = "https://app.beta.icicipruamc.com/blob"
+ICICI_TER_CATEGORY_CODE = "TOTAL_EXPENSE_RATIO"
+ICICI_TER_SUBCATEGORY_CODE = "TOTAL_EXPENSE_RATIO"
+ICICI_TER_TITLE = "Total Expense Ratio"
+ICICI_TER_SHOW = "TER Details"
+_ICICI_XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+_ICICI_TITLE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\\d{2})$")
+_ICICI_FILE = re.compile(r"^TotalExpenseRatio([A-Za-z]+)(20\\d{2})\\.xlsx$", re.I)
+_ICICI_HEADER = {
+    "A": "Scheme Name",
+    "B": "Date (DD/MM/YYYY)",
+    "C": "Base Expense Ratio (BER) (%)",
+    "D": "Brokerage cost (%)",
+    "E": "Transaction Cost incurred for the purpose of execution of trade (%)",
+    "F": "Statutory Levies (including GST) (%)",
+    "G": "Total TER (%)",
+    "H": "Base Expense Ratio (BER) (%)",
+    "I": "Brokerage cost (%)",
+    "J": "Transaction Cost incurred for the purpose of execution of trade (%)",
+    "K": "Statutory Levies (including GST) (%)",
+    "L": "Total TER (%)",
+}
 
 HSBC_FAMILY = "HSBC Small Cap Fund"
 HSBC_SCHEME_CODE = "HEMIDF"
@@ -417,10 +449,328 @@ def hsbc(progress=lambda _: None, today=None):
     )
 
 
+
+def _icici_headers():
+    return {
+        "User-Agent": "SmallcapLedger/1.0 (public AMC disclosure collection)",
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+        "Origin": "https://www.icicipruamc.com",
+        "Referer": ICICI_TER_PAGE,
+        "env": "api",
+        "baggage": "",
+        "requestAPIId": str(uuid.uuid4()),
+    }
+
+
+def _icici_api(url, *, body=None):
+    """Call the same unauthenticated financial-disclosure API as ICICI's SPA."""
+    public_url(url)
+    try:
+        with httpx.Client(
+            timeout=httpx.Timeout(60, connect=15),
+            headers=_icici_headers(),
+            follow_redirects=False,
+        ) as client:
+            response = client.post(url, json=body) if body is not None else client.get(url)
+            response.raise_for_status()
+            payload = response.json()
+    except (httpx.HTTPError, json.JSONDecodeError, ValueError) as exc:
+        raise ValueError("ICICI financial disclosure API is unavailable or invalid") from exc
+    if not isinstance(payload, dict) or not isinstance(payload.get("success"), dict):
+        raise ValueError("ICICI financial disclosure API response changed format")
+    if payload.get("error"):
+        raise ValueError("ICICI financial disclosure API returned an error")
+    return payload["success"].get("data")
+
+
+def _icici_financial_year(today):
+    start = today.year if today.month >= 4 else today.year - 1
+    return f"{start}-{start + 1}"
+
+
+def _icici_category_ids(categories, today=None):
+    today = today or date.today()
+    if not isinstance(categories, list):
+        raise ValueError("ICICI financial categories response is not a list")
+    top = [
+        row for row in categories
+        if isinstance(row, dict)
+        and row.get("isEnabled") is True
+        and str((row.get("title") or {}).get("code", "")).strip() == ICICI_TER_CATEGORY_CODE
+        and str((row.get("title") or {}).get("text", "")).strip() == ICICI_TER_TITLE
+        and str(row.get("internalName", "")).strip() == "total-expense-ratio"
+    ]
+    if len(top) != 1:
+        raise ValueError("ICICI Total Expense Ratio category is not uniquely identified")
+    parent = top[0]
+    sub = [
+        row for row in (parent.get("subCategory") or [])
+        if isinstance(row, dict)
+        and row.get("isEnabled") is True
+        and str((row.get("title") or {}).get("code", "")).strip() == ICICI_TER_SUBCATEGORY_CODE
+        and str((row.get("title") or {}).get("text", "")).strip() == ICICI_TER_TITLE
+        and str(row.get("internalName", "")).strip() == "Total Expense Ratio"
+    ]
+    if len(sub) != 1:
+        raise ValueError("ICICI Total Expense Ratio subcategory is not uniquely identified")
+    child = sub[0]
+    filters = {
+        str((item.get("key") or {}).get("code", "")).strip():
+        {str(value.get("code", "")).strip() for value in (item.get("value") or []) if isinstance(value, dict)}
+        for item in (child.get("filter") or [])
+        if isinstance(item, dict)
+    }
+    if ICICI_TER_SHOW not in filters.get("SHOW", set()):
+        raise ValueError("ICICI TER Details filter is no longer published")
+    financial_year = _icici_financial_year(today)
+    if financial_year not in filters.get("FINANCIAL_YEAR", set()):
+        raise ValueError("ICICI current financial year is absent from TER filters")
+    return str(parent.get("id")), str(child.get("id")), financial_year
+
+
+def _icici_month(value):
+    token = str(value or "").strip()
+    for fmt in ("%B%Y", "%b%Y"):
+        try:
+            parsed = datetime.strptime(token, fmt).date()
+            return parsed.year, parsed.month
+        except ValueError:
+            pass
+    return None
+
+
+def _icici_select_file(files, parent_id, child_id, financial_year, today=None):
+    today = today or date.today()
+    if not isinstance(files, list):
+        raise ValueError("ICICI TER file response is not a list")
+    found = defaultdict(list)
+    for row in files:
+        if not isinstance(row, dict):
+            continue
+        title = row.get("title") or {}
+        title_text = str(title.get("text", "") if isinstance(title, dict) else "").strip()
+        match = _ICICI_TITLE.fullmatch(title_text)
+        path = str(row.get("url", "")).strip()
+        file_name = path.rsplit("/", 1)[-1]
+        file_match = _ICICI_FILE.fullmatch(file_name)
+        if not match or not file_match:
+            continue
+        title_month = _icici_month(match.group(1) + match.group(2))
+        file_month = _icici_month(file_match.group(1) + file_match.group(2))
+        if title_month is None or file_month is None or title_month != file_month:
+            continue
+        year, month = title_month
+        if (year, month) > (today.year, today.month):
+            continue
+        if (
+            row.get("isEnabled") is not True
+            or str(row.get("category", "")).strip() != ICICI_TER_CATEGORY_CODE
+            or str(row.get("categoryName", "")).strip() != ICICI_TER_TITLE
+            or str(row.get("level1Id", "")).strip() != parent_id
+            or str(row.get("level2Id", "")).strip() != child_id
+            or ICICI_TER_SHOW not in (row.get("SHOW") or [])
+            or financial_year not in (row.get("FINANCIAL_YEAR") or [])
+            or not path.startswith("/financials-disclosures-files/Files/Total Expense Ratio/")
+            or not path.lower().endswith(".xlsx")
+        ):
+            continue
+        found[(year, month)].append(row)
+    if not found:
+        raise ValueError("ICICI TER API returned no current TER Details workbook")
+    key = max(found)
+    if len(found[key]) != 1:
+        raise ValueError("ICICI TER API returned duplicate workbooks for the latest month")
+    row = found[key][0]
+    source = ICICI_FILE_BASE + quote(str(row["url"]), safe="/")
+    public_url(source)
+    return source
+
+
+def _icici_inline_strings(content):
+    """Read rows from ICICI's XLSX sheet XML.
+
+    The current workbook has valid inline-string rows but malformed worksheet
+    dimension metadata, so ordinary openpyxl iteration exposes only row 1.
+    Parsing the standard OOXML sheet cells retains the source exactly.
+    """
+    try:
+        archive = zipfile.ZipFile(io.BytesIO(content))
+    except zipfile.BadZipFile as exc:
+        raise ValueError("ICICI TER disclosure is not a valid XLSX package") from exc
+    try:
+        sheets = [
+            name for name in archive.namelist()
+            if re.fullmatch(r"xl/worksheets/sheet\\d+\\.xml", name)
+        ]
+        if len(sheets) != 1:
+            raise ValueError("ICICI TER workbook must contain exactly one worksheet")
+        raw = archive.read(sheets[0])
+        if len(raw) > 12 * 1024 * 1024:
+            raise ValueError("ICICI TER worksheet XML is unexpectedly large")
+        root = ET.fromstring(raw)
+    except (KeyError, ET.ParseError) as exc:
+        raise ValueError("ICICI TER worksheet XML is invalid") from exc
+    finally:
+        archive.close()
+    ns = {"x": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+    rows = []
+    for row in root.findall(".//x:sheetData/x:row", ns):
+        values = {}
+        for cell in row.findall("x:c", ns):
+            ref = str(cell.attrib.get("r", ""))
+            column = re.match(r"[A-Z]+", ref)
+            if not column:
+                continue
+            parts = [node.text or "" for node in cell.findall(".//x:t", ns)]
+            if parts:
+                value = "".join(parts)
+            else:
+                node = cell.find("x:v", ns)
+                value = "" if node is None else (node.text or "")
+            values[column.group(0)] = value
+        rows.append(values)
+    return rows
+
+
+def _icici_percent(value, label):
+    raw = str(value or "").strip()
+    if not raw or raw.upper() in ("NA", "N/A", "-"):
+        raise ValueError(f"ICICI TER workbook is missing {label}")
+    parsed = number(raw)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"ICICI TER workbook {label} is outside the accepted range")
+    return parsed
+
+
+def parse_icici_workbook(content, today=None):
+    """Return the newest exact Small Cap BER and published Total TER pair."""
+    today = today or date.today()
+    rows = _icici_inline_strings(content)
+    if len(rows) < 4:
+        raise ValueError("ICICI TER workbook contains no usable rows")
+    if rows[0].get("A", "").strip() != "Total Expense Ratio (TER) for Mutual Fund Schemes":
+        raise ValueError("ICICI TER workbook title changed")
+    if rows[1].get("C", "").strip() != "Regular Plan" or rows[1].get("H", "").strip() != "Direct Plan":
+        raise ValueError("ICICI TER plan headings changed")
+    for column, expected in _ICICI_HEADER.items():
+        if rows[2].get(column, "").strip() != expected:
+            raise ValueError(f"ICICI TER column {column} changed")
+
+    matches = defaultdict(list)
+    for row in rows[3:]:
+        if row.get("A", "").strip() != ICICI_FAMILY:
+            continue
+        try:
+            day = datetime.strptime(row.get("B", "").strip(), "%d/%m/%Y").date()
+        except ValueError:
+            continue
+        if day <= today:
+            matches[day.isoformat()].append(row)
+    if not matches:
+        raise ValueError("ICICI TER workbook contains no dated Small Cap rows")
+    day = max(matches)
+    if len(matches[day]) != 1:
+        raise ValueError(f"ICICI TER workbook has duplicate Small Cap rows for {day}")
+    row = matches[day][0]
+
+    regular = {
+        "base_expense_ratio": _icici_percent(row.get("C"), "Regular BER"),
+        "brokerage": _icici_percent(row.get("D"), "Regular brokerage"),
+        "transaction_cost": _icici_percent(row.get("E"), "Regular transaction cost"),
+        "statutory_levies": _icici_percent(row.get("F"), "Regular statutory levies"),
+        "ter": _icici_percent(row.get("G"), "Regular Total TER"),
+    }
+    direct = {
+        "base_expense_ratio": _icici_percent(row.get("H"), "Direct BER"),
+        "brokerage": _icici_percent(row.get("I"), "Direct brokerage"),
+        "transaction_cost": _icici_percent(row.get("J"), "Direct transaction cost"),
+        "statutory_levies": _icici_percent(row.get("K"), "Direct statutory levies"),
+        "ter": _icici_percent(row.get("L"), "Direct Total TER"),
+    }
+    for plan, values in (("Regular", regular), ("Direct", direct)):
+        if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+            raise ValueError(f"ICICI {plan} Total TER is below BER on {day}")
+        component_total = (
+            values["base_expense_ratio"]
+            + values["brokerage"]
+            + values["transaction_cost"]
+            + values["statutory_levies"]
+        )
+        if abs(component_total - values["ter"]) > 0.02:
+            raise ValueError(f"ICICI {plan} TER components do not reconcile on {day}")
+    return day, {"Regular": regular, "Direct": direct}
+
+
+def _icici_disclosure(today=None):
+    today = today or date.today()
+    categories = _icici_api(ICICI_CATEGORIES_API + "?userType=Investor")
+    parent_id, child_id, financial_year = _icici_category_ids(categories, today)
+    payload = {
+        "categoryId": child_id,
+        "userType": "Investor",
+        "fileType": "All",
+        "page": "1",
+        "size": "20",
+        "filter": [
+            {"SHOW": [ICICI_TER_SHOW]},
+            {"FINANCIAL_YEAR": [financial_year]},
+        ],
+        "search": "",
+    }
+    data = _icici_api(ICICI_FILES_API, body=payload)
+    if not isinstance(data, dict):
+        raise ValueError("ICICI TER file-list response changed format")
+    source = _icici_select_file(
+        data.get("files"),
+        parent_id,
+        child_id,
+        financial_year,
+        today,
+    )
+    workbook, content_hash, _ = fetch(source, max_bytes=5 * 1024 * 1024)
+    if not workbook.startswith(b"PK"):
+        raise ValueError("ICICI TER file is not an XLSX workbook")
+    return source, workbook, content_hash
+
+
+def icici(progress=lambda _: None, today=None):
+    """Collect ICICI Prudential Small Cap's explicit BER/Total TER workbook."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (ICICI_FAMILY,)):
+        return "ICICI Prudential Small Cap is not in the active universe"
+    progress("ICICI Prudential Small Cap expense ratios · official TER Details workbook")
+    source, workbook, content_hash = _icici_disclosure(today)
+    day, plans = parse_icici_workbook(workbook, today)
+    for plan, values in plans.items():
+        for metric in (
+            "base_expense_ratio",
+            "brokerage",
+            "transaction_cost",
+            "statutory_levies",
+            "ter",
+        ):
+            db.metric(
+                ICICI_FAMILY,
+                plan,
+                metric,
+                day,
+                values[metric],
+                "% p.a. · reported by AMC",
+                source,
+                content_hash,
+            )
+    return (
+        f"{ICICI_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, hsbc):
+    for collector in (canara, hsbc, icici):
         try:
             results.append(collector(progress))
         except Exception as exc:
