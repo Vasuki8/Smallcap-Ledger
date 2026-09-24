@@ -13,34 +13,29 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect Bandhan current disclosure records
+      - name: Enumerate current Bandhan 2026 disclosure files
         run: |
           python - <<'PY'
-          import urllib.request,urllib.parse,json,re
+          import urllib.request,urllib.parse,json
           base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
           params={'posts_per_page':'2500','financial_year':'2026','bypass_pagination':'true'}
           url=base+'?'+urllib.parse.urlencode(params)
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
           with urllib.request.urlopen(req,timeout=45) as r:data=json.loads(r.read())
           rows=data.get('data') if isinstance(data,dict) else data
-          rows=rows if isinstance(rows,list) else []
-          targets={111046,14892,15587,6148,3888,3837}
-          for item in rows:
-              if not isinstance(item,dict) or item.get('id') not in targets:continue
-              acf=item.get('acf_fields') or {}
-              print('POST',item.get('id'),item.get('title'),'FY',acf.get('financial_year'))
-              for i,entry in enumerate(acf.get('disclosure_files') or []):
-                  link=(entry or {}).get('document_link') or {}
-                  rec={
-                    'index':i,
-                    'name':str((entry or {}).get('document_name') or '').strip(),
-                    'filename':str(link.get('filename') or '').strip(),
-                    'url':str(link.get('url') or '').strip(),
-                    'mime':str(link.get('mime_type') or '').strip(),
-                    'date':str(link.get('date') or '').strip(),
-                    'filesize':link.get('filesize'),
-                  }
-                  blob=' '.join(str(v) for v in rec.values())
-                  if item.get('id')==14892 or re.search(r'portfolio|small.?cap|equity.?&.?hybrid|monthly',blob,re.I):
-                      print('FILE',json.dumps(rec,ensure_ascii=False,default=str))
+          item=next(x for x in rows if isinstance(x,dict) and x.get('id')==111046)
+          files=((item.get('acf_fields') or {}).get('disclosure_files') or [])
+          print('COUNT',len(files))
+          for i,entry in enumerate(files):
+              link=(entry or {}).get('document_link') or {}
+              rec={
+                'index':i,
+                'name':str((entry or {}).get('document_name') or '').strip(),
+                'filename':str(link.get('filename') or '').strip(),
+                'url':str(link.get('url') or '').strip(),
+                'mime':str(link.get('mime_type') or '').strip(),
+                'date':str(link.get('date') or '').strip(),
+                'filesize':link.get('filesize'),
+              }
+              print('FILE',json.dumps(rec,ensure_ascii=False,default=str))
           PY
