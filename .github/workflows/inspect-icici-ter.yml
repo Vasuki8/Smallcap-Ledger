@@ -14,46 +14,28 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Pinpoint ICICI TER component and endpoints
+      - name: Inspect ICICI disclosure request wiring
         run: |
           python - <<'PY'
           import re, urllib.request
-          url='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
+          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
           with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-          print('LEN',len(s))
-
-          # API base constants
-          for pat in [
-              r'REACT_APP_API_ENDPOINT:"([^"]*)"',
-              r'REACT_APP_API_ENDPOINT:\'([^\']*)\'',
-              r'HARDCODED_[A-Z_]*BASE_URL="([^"]+)"',
+          for needle in [
+              '/nms/v1/downloads/categories',
+              '/nms/v1/downloads/files',
+              'TOTAL_EXPENSE_RATIO',
+              'currentTabFilter',
+              'financialsDisclosures',
+              'Total Expense Ratio',
           ]:
-              vals=sorted(set(re.findall(pat,s)))
-              print('PAT',pat,'VALUES',vals)
-
-          # Exact TER / disclosures contexts only.
-          for needle in ['Total Expense Ratio','TOTAL_EXPENSE_RATIO','totalExpenseRatio','TotalExpenseRatio',
-                         'financials-&-disclosures','Financials & Disclosures','FINANCIALS_AND_DISCLOSURES']:
-              positions=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
-              print('OCC',needle,len(positions))
-              for p in positions[:15]:
-                  block=s[max(0,p-3500):p+5000]
-                  quoted=re.findall(r'(["\'])(.{1,500}?)\1',block)
-                  useful=[]
-                  for _,v in quoted:
-                      if re.search(r'expense|financial|disclos|scheme|api|fund|download|report|document|filter|category',v,re.I):
-                          useful.append(v)
-                  print('AT',p)
-                  for v in sorted(set(useful)):
-                      print('Q',repr(v[:500]))
-
-          # Candidate endpoint strings.
-          endpoints=set()
-          for _,v in re.findall(r'(["\'])(.{1,350}?)\1',s):
-              if v.startswith('/') and re.search(r'expense|financial|disclos|document|report|download|scheme|fund',v,re.I):
-                  endpoints.add(v)
-          print('ENDPOINTS')
-          for v in sorted(endpoints):
-              print(v)
+              print('\nNEEDLE',needle)
+              pos=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
+              print('COUNT',len(pos))
+              for p in pos[:20]:
+                  block=re.sub(r'\s+',' ',s[max(0,p-5000):p+6500])
+                  print('POS',p,'CTX',block[:11800])
+          print('\nNMS_STRINGS')
+          vals=sorted(set(v for _,v in re.findall(r'(["\'])(.{1,250}?)\1',s) if v.startswith('/nms/')))
+          for v in vals: print(v)
           PY
