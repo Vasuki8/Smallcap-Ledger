@@ -1492,13 +1492,14 @@ Investment Objective'''
 
     def test_bandhan_censored_dollar_rows_keep_numeric_portfolio_partial(self):
         from tracker.portfolio_parser import parse_sheet
+        marker=chr(36)
         rows=[
             ['IDF271','','','','','','',''],
             ['','Portfolio Statement as on August 31,2026','','','','','',''],
             ['','Bandhan Small Cap Fund','','','','','',''],
             ['Code','Name of the Instrument','ISIN','Industry / Rating','Quantity','Market/Fair Value ( Rs. in Lacs)','% to NAV','YTM'],
             ['AAA01','Alpha Limited','INE123456789','Banks',100,8600,86.0,''],
-            ['HMTP01','Happiest Minds Technologies Limited','INE419U01012','IT - Software',10,0.2,'$',''],
+            ['HMTP01','Happiest Minds Technologies Limited','INE419U01012','IT - Software',10,0.2,marker,''],
             ['', 'TREPS / Reverse Repo Instrument','','','','','',''],
             ['TRP_010926','Triparty Repo TRP_010926','','','',1300,13.0,5.0],
             ['', 'Cash Margin - CCIL','','','',20,0.2,''],
@@ -1507,7 +1508,7 @@ Investment Objective'''
             ['', 'Net Receivables/Payables','','','',-40,-0.4,''],
             ['', 'Net Current Assets','','','',10,0.1,''],
             ['', 'GRAND TOTAL','','','',10000,100.0,''],
-            ['', '$  Less Than 0.01% of NAV','','','','','',''],
+            ['', marker+'  Less Than 0.01% of NAV','','','','','',''],
         ]
         formats=[['General']*8 for _ in rows]
         parsed=parse_sheet(rows,formats,'Bandhan Small Cap Fund')
@@ -1515,7 +1516,7 @@ Investment Objective'''
         self.assertEqual(parsed['day'],'2026-08-31')
         self.assertFalse(parsed['complete'])
         self.assertEqual(parsed['unknown_rows'],['Happiest Minds Technologies Limited'])
-        self.assertEqual(parsed['censored_rows'][0]['marker'],'$')
+        self.assertEqual(parsed['censored_rows'][0]['marker'],marker)
         self.assertEqual(parsed['censored_rows'][0]['meaning'],'Less Than 0.01% of NAV')
         self.assertFalse(any(x['name']=='Happiest Minds Technologies Limited' for x in parsed['positions']))
         by_name={x['name']:x for x in parsed['positions']}
