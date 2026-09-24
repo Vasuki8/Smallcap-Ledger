@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v103'
+PARSER_VERSION='amc-reports-2026-09-v104'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -91,6 +91,7 @@ PARSER_UPGRADE_FAMILIES={
     'amc-reports-2026-09-v101':frozenset({'Edelweiss Small Cap Fund'}),
     'amc-reports-2026-09-v102':frozenset({'Edelweiss Small Cap Fund'}),
     'amc-reports-2026-09-v103':frozenset({'Edelweiss Small Cap Fund'}),
+    'amc-reports-2026-09-v104':frozenset({'Edelweiss Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -347,8 +348,8 @@ def should_reprocess_existing(family,url,h=None):
     if PARSER_VERSION=='amc-reports-2026-09-v102':
         # v102 replays the verified September factsheet through normal ingestion.
         return False
-    if PARSER_VERSION=='amc-reports-2026-09-v103':
-        # v103 replays only the retained September 2026 Edelweiss factsheet.
+    if PARSER_VERSION in ('amc-reports-2026-09-v103','amc-reports-2026-09-v104'):
+        # v103/v104 replay only the retained September 2026 Edelweiss factsheet.
         # The live file can return 403 from GitHub Actions, so use archived bytes.
         return (family=='Edelweiss Small Cap Fund'
                 and path.endswith('/edelweiss_factsheet_september_2026_15092026193426.pdf'))
