@@ -10,89 +10,30 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    env:
-      SMALLCAP_NO_SCHEDULER: '1'
-      SMALLCAP_DATA_DIR: /tmp/bandhan-investigation
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
-        with:
-          version: '0.11.33'
-          python-version: '3.12'
-          enable-cache: true
-      - run: uv sync --frozen
-      - name: Locate and inspect Bandhan August monthly portfolio workbook
+      - name: Query exact Bandhan public WordPress posts
         run: |
-          rm -rf "$SMALLCAP_DATA_DIR"
-          uv run --frozen python - <<'PY'
-          import urllib.request,urllib.parse,json,re,io,hashlib
-          import openpyxl
-          from tracker.portfolio_parser import parse_sheet
-
-          endpoint='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          params={'posts_per_page':'2500','financial_year':'2026','bypass_pagination':'true'}
-          url=endpoint+'?'+urllib.parse.urlencode(params)
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
-          with urllib.request.urlopen(req,timeout=40) as r:
-              data=json.loads(r.read())
-          rows=data.get('data',[])
-          candidates=[]
-          for item in rows:
-              acf=(item or {}).get('acf_fields') or {}
-              for entry in acf.get('disclosure_files') or []:
-                  if not isinstance(entry,dict):continue
-                  link=entry.get('document_link') or {}
-                  name=str(entry.get('document_name') or link.get('title') or '')
-                  target=str(link.get('url') or '')
-                  blob=(name+' '+str(link.get('filename') or '')).lower()
-                  if not target or not re.search(r'\.xlsx?(?:[?#]|$)',target,re.I):continue
-                  if 'portfolio' not in blob:continue
-                  if re.search(r'debt\s+fund|stress\s*test|stress-test|liquid|credit\s+risk|quants?',blob,re.I):continue
-                  # Keep monthly / month-end style portfolio files around Aug/Jul 2026.
-                  if not (re.search(r'monthly',blob,re.I) or re.search(r'31[- ._/]*(?:08|aug)|31[- ._/]*(?:07|jul)',blob,re.I)):continue
-                  candidates.append({
-                    'post_id':item.get('id'),'post_title':item.get('title'),
-                    'post_date':item.get('date'),'financial_year':acf.get('financial_year'),
-                    'disclosures_type':acf.get('disclosures_type'),
-                    'name':name,'filename':link.get('filename'),'url':target,
-                    'mime':link.get('mime_type'),'file_date':link.get('date'),
-                  })
-          print('CANDIDATES',json.dumps(candidates,ensure_ascii=False,indent=2))
-          for c in candidates[:12]:
-              target=c['url']
+          python - <<'PY'
+          import urllib.request,urllib.parse,json,re
+          base='https://cmsnew.bandhanmutual.com'
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
+          queries=[
+            '/wp-json/wp/v2/search?'+urllib.parse.urlencode({'search':'Bandhan Small Cap Fund 31 August 2026','per_page':100}),
+            '/wp-json/wp/v2/posts?'+urllib.parse.urlencode({'search':'Bandhan Small Cap Fund 31 August 2026','per_page':100,'_embed':'1'}),
+            '/wp-json/wp/v2/search?'+urllib.parse.urlencode({'search':'Bandhan Small Cap Fund 31 July 2026','per_page':100}),
+            '/wp-json/wp/v2/posts?'+urllib.parse.urlencode({'search':'Bandhan Small Cap Fund 31 July 2026','per_page':100,'_embed':'1'}),
+            '/wp-json/wp/v2/categories?'+urllib.parse.urlencode({'slug':'scheme-portfolios','per_page':100}),
+          ]
+          for path in queries:
+              url=base+path
               try:
-                  req=urllib.request.Request(target,headers={'User-Agent':'Mozilla/5.0','Referer':'https://bandhanmutual.com/'})
-                  with urllib.request.urlopen(req,timeout=40) as r:
-                      body=r.read()
-                  h=hashlib.sha256(body).hexdigest()
-                  print('FETCH',c['name'],target,len(body),h,body[:8].hex())
-                  if not body.startswith(b'PK'):continue
-                  wb=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
-                  print('SHEETS',c['name'],wb.sheetnames)
-                  for ws in wb.worksheets:
-                      cells=list(ws.iter_rows())
-                      rows0=[[x.value for x in row] for row in cells]
-                      formats=[[x.number_format or '' for x in row] for row in cells]
-                      head=' '.join(str(v) for row in rows0[:35] for v in row if v not in (None,''))
-                      if re.search(r'Bandhan\s+Small\s+Cap',ws.title+' '+head,re.I):
-                          parsed=parse_sheet(rows0,formats,'Bandhan Small Cap Fund')
-                          print('SMALLCAP_SHEET',json.dumps({
-                            'candidate':c,'sheet':ws.title,'head':head[:2200],
-                            'parsed':None if not parsed else {
-                              'day':parsed['day'],'positions':len(parsed['positions']),
-                              'complete':parsed['complete'],
-                              'weight':sum(x['weight'] for x in parsed['positions']),
-                              'aum':parsed.get('aum'),
-                              'unknown_rows':parsed.get('unknown_rows',[])[:80],
-                            }
-                          },ensure_ascii=False,default=str))
-                          if parsed:
-                              for ri,row in enumerate(rows0):
-                                  flat=' | '.join(str(x) for x in row if x not in (None,''))
-                                  if any(str(u) in flat for u in parsed.get('unknown_rows',[])) or re.search(r'grand total|net assets|treps|repo|cash|margin|derivative|total',flat,re.I):
-                                      print('ROW',ri+1,flat[:2200])
-                  wb.close()
+                  req=urllib.request.Request(url,headers=headers)
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      body=r.read(); print('FETCH',url,r.status,r.headers.get('Content-Type'),len(body))
+                  data=json.loads(body)
+                  print('DATA',path,json.dumps(data,ensure_ascii=False)[:60000])
               except Exception as e:
-                  print('FETCH_ERROR',c['name'],target,repr(e))
+                  print('ERROR',url,repr(e))
           PY
