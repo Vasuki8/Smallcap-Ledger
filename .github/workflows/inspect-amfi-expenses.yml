@@ -1,4 +1,4 @@
-name: Inspect Canara expense table
+name: Inspect Canara expense API
 
 on:
   push:
@@ -14,30 +14,25 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
-        with:
-          version: '0.11.33'
-          python-version: '3.12'
-          enable-cache: true
-      - run: uv sync --frozen
-      - name: Inspect live Canara expense table
+      - name: Trace Canara expense page scripts
         run: |
-          uv run --frozen python - <<'PY'
-          import re,urllib.request
-          from bs4 import BeautifulSoup
-          url='https://www.canararobeco.com/expense-ratio'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
-          with urllib.request.urlopen(req,timeout=45) as r:
-              body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
-          soup=BeautifulSoup(body,'html.parser')
-          print('TITLE',soup.title.get_text(' ',strip=True) if soup.title else None)
-          for i,table in enumerate(soup.find_all('table')):
-              text=' '.join(table.stripped_strings)
-              if 'Canara Robeco Small Cap Fund' in text:
-                  print('TABLE_INDEX',i,'LEN',len(text))
-                  rows=table.find_all('tr')
-                  for j,tr in enumerate(rows):
-                      cells=[re.sub(r'\s+',' ',x.get_text(' ',strip=True)) for x in tr.find_all(['th','td'],recursive=False)]
-                      if any('Small Cap Fund' in x for x in cells) or j<5:
-                          print('ROW',j,cells)
+          python - <<'PY'
+          import re,urllib.parse,urllib.request
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
+          def fetch(url):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl());return body,r.geturl()
+          body,final=fetch('https://www.canararobeco.com/expense-ratio')
+          html=body.decode('utf-8','ignore')
+          print('HTML',html)
+          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I)
+          for src in scripts:
+              full=urllib.parse.urljoin(final,src);print('SCRIPT',full)
+              try:s=fetch(full)[0].decode('utf-8','ignore')
+              except Exception as e:print('SCRIPT_ERROR',e);continue
+              if re.search(r'expense|ratio|ter|brokerage|statutory|api',s,re.I):
+                  print('SCRIPT_MATCH',full)
+                  for m in re.finditer(r'.{0,280}(?:expense|ratio|brokerage|statutory|api).{0,500}',s,re.I|re.S):
+                      print(re.sub(r'\s+',' ',m.group(0))[:900])
           PY
