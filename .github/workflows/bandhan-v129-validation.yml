@@ -36,29 +36,25 @@ jobs:
           from tracker import db,disclosures,amc_discovery
           db.init();disclosures.seed_sources()
           import urllib.request,urllib.parse
-          api='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          probes=[
-            {'category':'Disclosure of Detailed Scheme Portfolios'},
-            {'sub_category':'Monthly and Half Yearly'},
-            {'category':'Disclosure of Detailed Scheme Portfolios','sub_category':'Monthly and Half Yearly'},
-            {'acf_key':'funds_mapping','acf_value':'1140','bypass_pagination':'true','posts_per_page':'2500'},
-            {'acf_key':'funds_mapping','acf_value':'Bandhan Small Cap Fund','bypass_pagination':'true','posts_per_page':'2500'},
-            {'acf_key':'financial_year','acf_value':'2026','bypass_pagination':'true','posts_per_page':'2500'},
-            {'acf_key':'disclosures_type','acf_value':'Monthly and Half-yearly Disclosures','page':'1','posts_per_page':'100'},
-            {'acf_key':'disclosures_type','acf_value':'Monthly and Half-yearly Disclosures','page':'2','posts_per_page':'100'},
-          ]
-          for params in probes:
+          import urllib.request,urllib.parse
+          root='https://cmsnew.bandhanmutual.com/wp-json/'
+          with urllib.request.urlopen(urllib.request.Request(root,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}),timeout=30) as r:
+              index=json.loads(r.read())
+          routes=sorted(k for k in (index.get('routes') or {}) if 'disclos' in k.lower() or 'portfolio' in k.lower())
+          print('WP_ROUTES',json.dumps(routes,ensure_ascii=False)[:20000])
+          for endpoint in (
+              '/wp-json/wp/v2/types',
+              '/wp-json/wp/v2/disclosures?slug=monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
+              '/wp-json/wp/v2/disclosure?slug=monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
+              '/wp-json/wp/v2/scheme_portfolios?slug=monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
+              '/wp-json/wp/v2/scheme-portfolio?slug=monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
+          ):
               try:
-                  url=api+'?'+urllib.parse.urlencode(params)
-                  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}),timeout=30) as r:
-                      obj=json.loads(r.read())
-                  data=obj.get('data') if isinstance(obj,dict) else []
-                  data=data if isinstance(data,list) else []
-                  exact=[x for x in data if isinstance(x,dict) and 'Small Cap Fund 31 August 2026' in str(x.get('title') or '')]
-                  print('API_PROBE',json.dumps(params),'STATUS',obj.get('status') if isinstance(obj,dict) else None,
-                        'COUNT',len(data),'EXACT',json.dumps(exact[:3],ensure_ascii=False)[:6000])
+                  with urllib.request.urlopen(urllib.request.Request('https://cmsnew.bandhanmutual.com'+endpoint,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'}),timeout=30) as r:
+                      body=r.read().decode('utf-8','ignore')
+                  print('WP_PROBE',endpoint,'STATUS',r.status,'BODY',body[:12000])
               except Exception as exc:
-                  print('API_PROBE_ERROR',json.dumps(params),repr(exc))
+                  print('WP_PROBE_ERROR',endpoint,repr(exc))
           rows=list(amc_discovery.discover('Bandhan'))
           print('DISCOVERY',json.dumps(rows,ensure_ascii=False))
           assert len(rows)==2
