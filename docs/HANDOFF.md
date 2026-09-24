@@ -1,8 +1,34 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after TRUSTMF production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after Sundaram production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
 
-## Latest completed task: TRUSTMF complete monthly portfolio recovery
+## Latest completed task: Sundaram richer current portfolio with verified completeness blocker
+
+Merged PR #89 as commit `49a271401b12813465b69a4f9b8a64b294b29ff5`. Production workflow **#459**, run **36017028358**, passed cumulative-history restore, parser v126 recovery, all regression tests, generated-site/download validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T15:01:33Z**, status was recorded at **2026-09-24T15:01:56Z**, and the workflow completed successfully at **2026-09-24T15:03:15Z**.
+
+Sundaram's existing first-party `Fund_Card_data.json` points directly to the official August workbook:
+
+- URL: `https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx`
+- SHA-256: `663e7170e2810e7f8e89cef9422cb6c4b653b098591eb6530ff61b4d582cb031`
+- reporting date: **2026-08-31**
+- workbook month-end AUM: **₹4,155.352174 crore**
+- retained exact numeric rows: **77 positions**
+- known numeric weight sum: **100.000005%**
+- completeness: **partial by design**
+
+Before this batch the retained snapshot had **73 positions / 96.560709%** because the generic fallback kept mainly numeric ISIN rows and omitted several explicit non-equity rows. V126 now retains the richer exact-source partial, including **TREPS 5.145861%**, **Margin Money For Derivatives 0.006016%**, and **Cash and Other Net Current Assets -1.761188%**.
+
+The one remaining holding cannot be assigned an exact numeric weight without fabrication. The official workbook gives **Hindustan Dorr Oliver Ltd @**, ISIN `INE551A01022`, quantity 375,961, with the literal percentage cell **`#`**. Sundaram's own footnote defines `#` as **"percentage to NAV of security is less than 0.01%"** and states that the security was delisted on 18 July 2018 and written off in FY 2018-19. The cell is a literal string, not a formula or hidden numeric value. Therefore do **not** convert it to zero, derive an exact ratio, or mark this snapshot complete under the current numeric-weight schema.
+
+The same-source partial-refresh path added in `disclosures.portfolio(..., replace_existing_partial=True)` is deliberately narrow: it can replace holdings only for the exact retained **partial** snapshot with the same source hash. Complete snapshots and different source hashes are untouched.
+
+Final isolated validation run **36016841718** passed **195 tests**. Live ingestion produced **77 positions, complete=0, 100.000005% known numeric weight**, retained the exact source hash/AUM/date above, and confirmed the censored holding was not stored with a fabricated weight. Production #459 independently logged: **Sundaram richer partial portfolio verified: 2026-08-31, 77 positions, 100.000005% known weight, complete=0**, then passed the full site and deployment path.
+
+Pages artifact **10814549515** was generated at **231,253,234 bytes** with digest `sha256:59cd39c0ad8f0c72d575d20c37682638934cd802732b55e22a29e10f76bb02db`. Sundaram's normal nightly discovery remains active through the existing first-party JSON `PORTFOLIO_PATH`. No UI, dependency, permission, schedule, paid-service or archive-retention changes were made.
+
+Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/89 ; validation https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36016841718 ; production https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36017028358 .
+
+## Previous completed task: TRUSTMF complete monthly portfolio recovery
 
 Merged PR #88 as commit `e9a085165dca5354a533757087222874d348074d`. Production workflow **#458**, run **36013433301**, passed cumulative-history restore, parser v125 recovery, all regression tests, static-site generation/validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T14:32:07Z**, status was recorded at **2026-09-24T14:32:29Z**, and the workflow completed successfully at **2026-09-24T14:34:04Z**.
 
@@ -89,18 +115,19 @@ Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/86 ; validation htt
 
 ## Verified coverage after this batch
 
-Coverage at **2026-09-24T14:32:07Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
+Coverage at **2026-09-24T15:01:33Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. These are coverage counts, not a claim that every metric has the latest reporting date or that every fee is TER.
 
-Portfolios: **34/36 with holdings; 26 complete; 33 current; 26 current and complete; 8 partial**. The expected month-end is **2026-08-31**. TRUSTMF improved complete/current-complete coverage **25 -> 26** without changing the 33-fund freshness count because its previous partial snapshot was already current. Quant, SBI, Tata and TRUSTMF are completed recovery targets; do not rerun those batches unnecessarily.
+Portfolios remain **34/36 with holdings; 26 complete; 33 current; 26 current and complete; 8 partial**. The expected month-end is **2026-08-31**. This batch intentionally did **not** increase the complete count: Sundaram improved from 73 to 77 explicit numeric positions, but its AMC-published `# = less than 0.01%` holding prevents exact numeric reconciliation of every security.
 
-The production status audit at **2026-09-24T14:32:29Z** records 109 retained portfolio snapshots, 1,485 archived document records, 1,929,010,014 archive bytes and 2,028,264,286 total retained bytes. The Pages publication budget remains unchanged at 250 MiB for saved publication files.
+The production status audit at **2026-09-24T15:01:56Z** records 109 retained portfolio snapshots, 1,485 archived document records, 1,929,141,711 archive bytes and 2,028,412,367 total retained bytes. The Pages publication budget remains unchanged at 250 MiB for saved publication files.
 
 ## Next backend task and remaining blockers
 
-1. **Sundaram Small Cap Fund is the next preferred completeness target.** It is current at **73 positions dated 2026-08-31** but partial. Its first-party `Fund_Card_data.json` already supplies the scheme's official `PORTFOLIO_PATH`; inspect that exact August source and determine whether all explicit repo/cash/debt/aggregate rows can be reconciled to a published total before changing completeness.
-2. Other current partial portfolios are **Axis, Edelweiss, ICICI Prudential, Invesco India, JM and UTI**. Prefer reusable first-party monthly portfolio sources over top-holdings factsheet views. Axis remains a documented access blocker rather than the immediate retry target.
-3. **Bajaj Finserv** remains the only stale collected portfolio: 13 partial positions dated 2026-07-31. Its established official-source access blocker remains. Retry only with a genuinely new first-party route or changed access evidence.
-4. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
-5. Temporary investigation branches are not production source of truth. Re-read `main`, this handoff, current coverage and the latest Actions/deployment state before continuing.
+1. **Invesco India Small Cap Fund is the next preferred investigation target.** It is current at **69 positions dated 2026-08-31** but partial. Audit the official August factsheet/current disclosure routes for a complete monthly portfolio source; prefer an exact first-party structured workbook/API if exposed. Do not promote an aggregate or factsheet-only holdings view unless every published asset section reconciles.
+2. Other current partial portfolios are **Axis, Edelweiss, ICICI Prudential, JM, Sundaram and UTI**. Sundaram is now a documented data-model/source-precision blocker because one holding is disclosed only as `<0.01%`; do not retry it unless a future AMC source supplies the exact weight or the holdings schema is deliberately extended for censored values. UTI's existing exposure ZIP also abbreviates some small/short-term positions, so do not infer completeness from its current 108-row partial.
+3. **Axis** remains a documented first-party access/discovery blocker. **Edelweiss** and **JM** currently expose supported named/top-holdings views rather than proven complete tables.
+4. **Bajaj Finserv** remains the only stale collected portfolio: 13 partial positions dated 2026-07-31. Retry only with genuinely new first-party access evidence.
+5. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
+6. Temporary investigation branches are not production source of truth. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
 
-Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never mark partial holdings complete to improve counts. Do not rerun completed Quant/SBI/Tata/TRUSTMF repair work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
+Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never invent an exact number for a threshold/censored disclosure merely to improve completeness. Do not rerun completed Quant/SBI/Tata/TRUSTMF recovery work or a broad historical reparse unnecessarily. Update this handoff after the next completed batch.
