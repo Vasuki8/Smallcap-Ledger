@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -284,6 +284,66 @@ def run():
         else:
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::Abakkus current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v79':
+        from tracker import amc_discovery
+        from bs4 import BeautifulSoup
+        from urllib.parse import urljoin,urlparse
+        family='Franklin India Small Cap Fund';attempted=0
+        try:
+            for discovered_family,url,title in amc_discovery.discover('Franklin'):
+                if discovered_family!=family:continue
+                attempted+=1
+                print(f'FRANKLIN_V79_CANDIDATE {attempted} {url} :: {title}',flush=True)
+                try:
+                    providers.can_crawl(url)
+                    body,h,mime=providers.fetch(url,max_bytes=70*1024*1024)
+                    print(f'FRANKLIN_V79_FETCH {attempted} bytes={len(body)} mime={mime} sig={body[:16].hex()}',flush=True)
+                    count=amc_reports.extract(body,family,url,h)
+                    print(f'FRANKLIN_V79_PARSED {attempted} count={count}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::Franklin v79 candidate {attempted}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        except Exception as exc:
+            print(f"::warning::Franklin v79 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+
+        for page in (
+            'https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund',
+            'https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html',
+        ):
+            try:
+                providers.can_crawl(page)
+                raw,_,mime=providers.fetch(page,max_bytes=12*1024*1024)
+                txt=raw.decode('utf-8','ignore')
+                print(f'FRANKLIN_V79_PAGE {page} bytes={len(raw)} mime={mime}',flush=True)
+                soup=BeautifulSoup(raw,'html.parser')
+                links=providers.candidate_links(soup,page)
+                for u,title in list(links.items()):
+                    joined=(u+' '+str(title))
+                    if re.search(r'portfolio|monthly|holding|xlsx?|xls|download|factsheet|as.on',joined,re.I):
+                        print('FRANKLIN_V79_LINK '+u+' :: '+str(title)[:500],flush=True)
+                flat=re.sub(r'\\s+',' ',soup.get_text(' ',strip=True))
+                for pat in (r'As on[^<]{0,80}',r'Company Name[^<]{0,120}',r'Portfolio[^<]{0,160}',r'August[^<]{0,100}',r'July[^<]{0,100}'):
+                    for hit in re.findall(pat,flat,re.I)[:12]:
+                        print('FRANKLIN_V79_TEXT '+str(hit)[:700],flush=True)
+                for tag in soup.find_all('script'):
+                    src=tag.get('src')
+                    body=(tag.string or tag.get_text('',strip=False) or '')
+                    if src and urlparse(urljoin(page,src)).netloc.endswith('franklintempletonindia.com'):
+                        print('FRANKLIN_V79_SCRIPT '+urljoin(page,src),flush=True)
+                    elif body and re.search(r'portfolio|holding|download|factsheet|fund-overview|api',body,re.I):
+                        snippet=re.sub(r'\\s+',' ',body).strip()
+                        print('FRANKLIN_V79_INLINE '+snippet[:3000],flush=True)
+            except Exception as exc:
+                print(f"::warning::Franklin v79 page audit: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:print(f'Franklin current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::Franklin current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
