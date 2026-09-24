@@ -13,32 +13,31 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve indexed Bandhan August post slug and attachments
+      - name: Resolve exact Bandhan portfolio post metadata
         run: |
           python - <<'PY'
-          import urllib.request,re,json,urllib.parse
-          base='https://cmsnew.bandhanmutual.com/'
-          headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/xhtml+xml'}
-          roots=[
-            'monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026',
-            'monthly-and-half-yearly-bandhan-small-cap-fund-31-july-2026',
+          import urllib.request,urllib.parse,json,re
+          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
+          variants=[
+            {'include':'158853','posts_per_page':'100'},
+            {'post_id':'158853','posts_per_page':'100'},
+            {'id':'158853','posts_per_page':'100'},
+            {'p':'158853','posts_per_page':'100'},
+            {'search':'Bandhan Small Cap Fund 31 August 2026','posts_per_page':'100'},
+            {'posts_per_page':'2500','bypass_pagination':'true'},
           ]
-          for root in roots:
-              for suffix in ['']+[f'-{i}' for i in range(2,9)]:
-                  url=base+root+suffix+'/'
-                  try:
-                      req=urllib.request.Request(url,headers=headers)
-                      with urllib.request.urlopen(req,timeout=20) as r:
-                          body=r.read().decode('utf-8','replace')
-                      title=re.search(r'<h1[^>]*>(.*?)</h1>',body,re.I|re.S)
-                      clean=re.sub(r'<[^>]+>',' ',title.group(1)).strip() if title else ''
-                      if 'Bandhan Small Cap Fund' not in clean:continue
-                      print('POST',url,'TITLE',clean,'LEN',len(body))
-                      for m in re.finditer(r'https?://[^"\'<>\s]+|(?:href|src|data-[\w-]+)=["\']([^"\']+)["\']',body,re.I):
-                          val=m.group(1) or m.group(0)
-                          val=urllib.parse.unquote(val.replace('&amp;','&'))
-                          if re.search(r'\.xlsx?|\.xls|portfolio|download|media|storage\.googleapis',val,re.I):
-                              print('TOKEN',val[:3000])
-                  except Exception as e:
-                      print('MISS',url,type(e).__name__,getattr(e,'code',''))
+          H={'User-Agent':'Mozilla/5.0','Accept':'application/json'}
+          wanted={158853,155405,153274}
+          for p in variants:
+              u=base+'?'+urllib.parse.urlencode(p)
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=40) as r:
+                      data=json.loads(r.read())
+                  rows=data.get('data') if isinstance(data,dict) else data
+                  rows=rows if isinstance(rows,list) else []
+                  exact=[x for x in rows if isinstance(x,dict) and (x.get('id') in wanted or re.search(r'Bandhan\s+Small\s+Cap\s+Fund.*(?:31\s+August|31\s+July|30\s+June)\s+2026',json.dumps(x),re.I))]
+                  print('QUERY',json.dumps(p),'STATUS',data.get('status') if isinstance(data,dict) else None,'COUNT',len(rows),'EXACT',len(exact))
+                  for x in exact:
+                      print('EXACT_ROW',json.dumps(x,ensure_ascii=False)[:60000])
+              except Exception as e:print('ERROR',json.dumps(p),repr(e))
           PY
