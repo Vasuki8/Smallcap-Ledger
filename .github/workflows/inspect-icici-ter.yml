@@ -14,41 +14,47 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Reproduce ICICI public financial disclosure calls
+      - name: Resolve ICICI TER category and files
         run: |
           python - <<'PY'
           import json,uuid,urllib.error,urllib.request
           API='https://apimf.icicipruamc.com'
-          headers={
+          BASE_HEADERS={
             'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
             'Accept':'application/json, text/plain, */*',
             'Content-Type':'application/json',
             'Origin':'https://www.icicipruamc.com',
             'Referer':'https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total%20Expense%20Ratio',
-            'env':'api',
-            'baggage':'',
-            'requestAPIId':str(uuid.uuid4()),
+            'env':'api','baggage':''
           }
-          def request(path,body=None):
-              h=dict(headers);h['requestAPIId']=str(uuid.uuid4())
+          def req(path,body=None):
+              h=dict(BASE_HEADERS);h['requestAPIId']=str(uuid.uuid4())
               data=None if body is None else json.dumps(body,separators=(',',':')).encode()
-              req=urllib.request.Request(API+path,data=data,method='GET' if data is None else 'POST',headers=h)
-              print('\nREQUEST',req.method,req.full_url,'BODY',body)
+              r=urllib.request.Request(API+path,data=data,method='GET' if data is None else 'POST',headers=h)
+              print('\nREQUEST',r.method,r.full_url,'PAYLOAD',body)
               try:
-                  with urllib.request.urlopen(req,timeout=60) as r:
-                      b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());print('BODY_TEXT',b[:30000].decode('utf-8','ignore'));return b
+                  with urllib.request.urlopen(r,timeout=60) as x:
+                      b=x.read();print('FETCH',x.status,len(b),x.headers.get('content-type'));print('TEXT',b[:40000].decode('utf-8','ignore'));return json.loads(b)
               except urllib.error.HTTPError as e:
-                  b=e.read();print('HTTP_ERROR',e.code,len(b),e.headers.get('content-type'));print('ERRBODY',b[:12000].decode('utf-8','ignore'));return None
-          raw=request('/fds/v1/categories?userType=investor')
-          if raw:
-              try:
-                  data=json.loads(raw)
-                  print('JSON_KEYS',data.keys() if isinstance(data,dict) else type(data).__name__)
-                  print('JSON',json.dumps(data,ensure_ascii=False)[:50000])
-                  cats=((data.get('success') or {}).get('data') or []) if isinstance(data,dict) else []
-                  for cat in cats:
-                      title=cat.get('title') or {}
-                      text=title.get('text') if isinstance(title,dict) else title
-                      print('CATEGORY',cat.get('id'),cat.get('categoryCode'),text,cat.get('subCategory'))
-              except Exception as e: print('JSON_ERROR',type(e).__name__,e)
+                  b=e.read();print('HTTP_ERROR',e.code,len(b),e.headers.get('content-type'));print('ERR',b[:16000].decode('utf-8','ignore'));return None
+          cats=req('/fds/v1/categories?userType=Investor')
+          if not cats: raise SystemExit()
+          data=((cats.get('success') or {}).get('data') or [])
+          print('\nCATEGORY_COUNT',len(data))
+          for i,cat in enumerate(data):
+              print('CATEGORY',i,json.dumps(cat,ensure_ascii=False))
+          # Request every top-level category with the exact page contract so we
+          # can identify which category owns the Total Expense Ratio subcategory.
+          for cat in data:
+              title=cat.get('title') or {}
+              text=title.get('text') if isinstance(title,dict) else title
+              sub=cat.get('subCategory') or []
+              if any('expense ratio' in str((x.get('title') or {}).get('text') if isinstance(x.get('title'),dict) else x.get('title')).lower() for x in sub if isinstance(x,dict)) or 'expense ratio' in str(text).lower():
+                  print('TER_CATEGORY',json.dumps(cat,ensure_ascii=False))
+              # first-page list can reveal files even for categories without subfilters
+              if cat.get('id'):
+                  payload={'categoryId':cat.get('id'),'userType':'Investor','fileType':'ALL','page':'1','size':'20','filter':[],'search':''}
+                  files=req('/fds/v1/files',payload)
+                  if files:
+                      print('FILES_FOR',cat.get('id'),str(text),json.dumps(files,ensure_ascii=False)[:50000])
           PY
