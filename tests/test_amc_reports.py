@@ -787,6 +787,48 @@ Top 10 holdings Grand Total 100.00%'''
             'Factsheet - August 2026'))
 
 
+    def test_dsp_discovery_prefers_latest_month_end_zip(self):
+        from tracker.amc_discovery import discover
+        html=b'''<html><body>
+        <a href="/media/pages/mandatory-disclosures/portfolio-disclosures/july/dsp-monthend-portfolio-as-on-31-jul-2026.zip">Portfolio Details as on July 31, 2026</a>
+        <a href="/media/pages/mandatory-disclosures/portfolio-disclosures/aug/dsp-monthend-portfolio-as-on-31-aug-2026.zip">Portfolio Details as on August 31, 2026</a>
+        <a href="/media/pages/mandatory-disclosures/portfolio-disclosures/aug/dsp-fortnightly-portfolio-as-on-31-aug-2026.zip">Fortnightly Portfolios as on August 31, 2026</a>
+        </body></html>'''
+        with patch('tracker.amc_discovery.read',return_value=(html,'page','text/html')), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('DSP'))
+        self.assertEqual(rows,[(
+            'DSP Small Cap Fund',
+            'https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/aug/dsp-monthend-portfolio-as-on-31-aug-2026.zip',
+            'Portfolio Details as on August 31, 2026')])
+
+    def test_dsp_month_end_zip_reuses_spreadsheet_reconciliation(self):
+        import io,zipfile,openpyxl
+        from tracker import db
+        from tracker.structured_reports import dsp_zip
+        wb=openpyxl.Workbook();ws=wb.active;ws.title='DSP Small Cap Fund'
+        rows=[
+            ['DSP Small Cap Fund',None,None,None,None,None],
+            ['Monthly Portfolio Statement as on August 31, 2026',None,None,None,None,None],
+            ['Name of Instrument','ISIN','Industry','Quantity','Market Value (Rs. in Lakhs)','% to Net Assets'],
+            ['Alpha Limited','INE123456789','Banks',100,9500,95.0],
+            ['TREPS',None,None,None,400,4.0],
+            ['Net Receivables / Payables',None,None,None,100,1.0],
+            ['Grand Total',None,None,None,10000,100.0],
+        ]
+        for row in rows:ws.append(row)
+        xlsx=io.BytesIO();wb.save(xlsx);wb.close()
+        archive=io.BytesIO()
+        with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+            z.writestr('DSP_Small_Cap_Aug_2026.xlsx',xlsx.getvalue())
+        saved=dsp_zip(archive.getvalue(),'DSP Small Cap Fund',
+                      'https://www.dspim.com/dsp-monthend-portfolio-as-on-31-aug-2026.zip','dsp-zip')
+        self.assertGreaterEqual(saved,3)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family='DSP Small Cap Fund' AND p.hash='dsp-zip' GROUP BY p.id""")
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1,'positions':3})
+
     def test_samco_discovery_prefers_latest_smallcap_excel(self):
         from tracker import amc_discovery,db
         db.init()
