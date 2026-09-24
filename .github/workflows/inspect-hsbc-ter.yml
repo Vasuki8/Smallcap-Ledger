@@ -14,26 +14,30 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect CAMS HSBC TER intermediary
+      - name: Trace CAMS download application
         run: |
           python - <<'PY'
           import re, urllib.parse, urllib.request
-          url='https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.assetmanagement.hsbc.co.in/'})
-          with urllib.request.urlopen(req,timeout=45) as r:
-              body=r.read(); final=r.geturl()
-              print('FETCH',r.status,len(body),r.headers.get('content-type'),final)
-              print('HEADERS',dict(r.headers))
-          html=body.decode('utf-8','ignore')
-          print('HTML_BEGIN')
-          print(html)
-          print('HTML_END')
-          for pat in [
-              r'https?://[^"\'<> ]+',
-              r'[^"\'<> ]+\.xlsx(?:\?[^"\'<> ]*)?',
-              r'(?:href|src|url|action)\s*[:=]\s*["\']([^"\']+)'
-          ]:
-              print('PATTERN',pat)
-              for m in re.finditer(pat,html,re.I):
-                  print(m.group(0))
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.assetmanagement.hsbc.co.in/'}
+          base='https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx'
+          def fetch(url):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return b,r.geturl()
+          html,final=fetch(base)
+          text=html.decode('utf-8','ignore')
+          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',text,re.I)
+          print('SCRIPTS',scripts)
+          for src in scripts:
+              full=urllib.parse.urljoin(final,src)
+              b,_=fetch(full);s=b.decode('utf-8','ignore')
+              if not re.search(r'dnlresult|download|xlsx|result|fileName|filename|api',s,re.I):continue
+              print('SCRIPT_MATCH',full,'LEN',len(s))
+              for needle in ['dnlresult','hsbc_ter_report','xlsx','download','fileName','filename','api/']:
+                  p=0;n=0
+                  while True:
+                      p=s.lower().find(needle.lower(),p)
+                      if p<0 or n>=20:break
+                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1000):p+1800])[:3000])
+                      p+=len(needle);n+=1
           PY
