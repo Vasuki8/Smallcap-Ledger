@@ -1490,6 +1490,597 @@ Investment Objective'''
         self.assertFalse(parse_sheet(bad_total,formats,'Tata Small Cap Fund')['complete'])
 
 
+    def test_bandhan_censored_dollar_rows_keep_numeric_portfolio_partial(self):
+        from tracker.portfolio_parser import parse_sheet
+        rows=[
+            ['IDF271','','','','','','',''],
+            ['','Portfolio Statement as on August 31,2026','','','','','',''],
+            ['','Bandhan Small Cap Fund','','','','','',''],
+            ['Code','Name of the Instrument','ISIN','Industry / Rating','Quantity','Market/Fair Value ( Rs. in Lacs)','% to NAV','YTM'],
+            ['AAA01','Alpha Limited','INE123456789','Banks',100,8600,86.0,''],
+            ['HMTP01','Happiest Minds Technologies Limited','INE419U01012','IT - Software',10,0.2,'
+        from tracker.report_parser import boi_complete_portfolio
+        text='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026 (Unless indicated otherwise)
+Portfolio Holdings % to Net
+Industry/ Rating Assets
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+TREPS / Reverse Repo Investments 0.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 1.20
+Canara Bank (CRISIL A1+) 0.80
+Total 2.00
+GRAND TOTAL 100.00
+PORTFOLIO DETAILS
+EQUITY HOLDINGS
+INVESTMENT OBJECTIVE'''
+        result=boi_complete_portfolio(text)
+        self.assertIsNotNone(result)
+        self.assertEqual(result['day'],'2026-03-31')
+        self.assertAlmostEqual(sum(x['weight'] for x in result['positions']),100,places=2)
+        self.assertEqual([x['asset_type'] for x in result['positions'][-4:]],[
+            'Debt','Money market','Money market','Cash and net current assets'])
+        bad=text.replace('OTHERS 92.00','OTHERS 91.00')
+        self.assertIsNone(boi_complete_portfolio(bad))
+        self.assertIsNone(boi_complete_portfolio(text.replace('Bank of India Small Cap Fund','Bank of India Mid Cap Fund',1)))
+
+    def test_boi_pdf_falls_back_to_layout_text_for_complete_portfolio(self):
+        from tracker import disclosures
+        standard='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+LATEST AUM'''
+        layout='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+Portfolio Holdings
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 2.00
+Total 2.00
+GRAND TOTAL 100.00
+INVESTMENT OBJECTIVE'''
+        class Page:
+            def extract_text(self,*args,**kwargs):
+                return layout if kwargs.get('extraction_mode')=='layout' else standard
+        reader=SimpleNamespace(is_encrypted=False,pages=[Page()])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bank Of India Small Cap Fund',
+                                            'https://www.boimf.in/factsheet.pdf','boi-layout')
+        self.assertGreater(count,0)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund' AND hash='boi-layout'")
+        self.assertEqual(snap,{'as_of':'2026-03-31','complete':1})
+
+    def test_boi_factsheet_pdf_saves_complete_snapshot(self):
+        from tracker import disclosures
+        page_text='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+Portfolio Holdings % to Net
+Industry/ Rating Assets
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 2.00
+Total 2.00
+GRAND TOTAL 100.00
+INVESTMENT OBJECTIVE'''
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:page_text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bank Of India Small Cap Fund','https://www.boimf.in/factsheet.pdf','boi')
+        self.assertGreater(count,0)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund'")
+        self.assertEqual(snap,{'as_of':'2026-03-31','complete':1})
+
+    def test_hsbc_complete_portfolio_reconciles_sector_and_cash_totals(self):
+        from tracker.report_parser import hsbc_complete_portfolio
+        text='''HSBC Small Cap Fund
+Small Cap Fund - An open ended equity scheme predominantly investing in small cap stocks.
+Investment Objective: To generate long term capital growth.
+Fund Details
+Date of Allotment 12-May-14
+Benchmark: NIFTY Small Cap 250 TRI
+Issuer Market Cap/
+Ratings % to Net Assets
+Industrial Products 60.00%
+Alpha Limited Small Cap 20.00%
+Beta Limited Mid Cap 20.00%
+Gamma Limited Small Cap 20.00%
+Banks 38.00%
+Delta Bank Limited Small Cap 19.00%
+Epsilon Bank Limited Mid Cap 19.00%
+Cash Equivalent 2.00%
+TREPS* 1.20%
+Net Current Assets: 0.80%
+Total Net Assets as on 31-July-2026 100.00%
+*TREPS : Tri-Party Repo fully collateralized by G-Sec'''
+        result=hsbc_complete_portfolio(text)
+        self.assertEqual(result['day'],'2026-07-31')
+        self.assertEqual(len(result['positions']),7)
+        self.assertAlmostEqual(sum(x['weight'] for x in result['positions']),100,places=2)
+        self.assertEqual(result['positions'][-2]['asset_type'],'Money market')
+        self.assertEqual(result['positions'][-1]['asset_type'],'Cash and net current assets')
+        bad=text.replace('Banks 38.00%','Banks 39.00%')
+        self.assertIsNone(hsbc_complete_portfolio(bad))
+
+
+    def test_hsbc_august_joined_market_cap_label_still_reconciles(self):
+        from tracker.report_parser import hsbc_complete_portfolio
+        text='''Additional Disclosure
+Past Performance is not an indicator or guarantee of future results
+HSBC Small Cap Fund
+Portfolio
+Issuer Market Cap/
+Ratings % to Net Assets
+Aerospace & Defense 0.86%
+PARAS DEFENCE AND SPACE TECHNOLOGIES LTDSmall Cap 0.59%
+Data Patterns (India) Limited Small Cap 0.27%
+Industrial Products 98.12%
+Alpha Industrial Limited Small Cap 19.624%
+Beta Industrial Limited Small Cap 19.624%
+Gamma Industrial Limited Small Cap 19.624%
+Delta Industrial Limited Small Cap 19.624%
+Epsilon Industrial Limited Small Cap 19.624%
+Cash Equivalent 1.02%
+TREPS* 1.09%
+Net Current Assets: -0.07%
+Total Net Assets as on 31-August-2026 100.00%
+*TREPS : Tri-Party Repo fully collateralized by G-Sec'''
+        parsed=hsbc_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(parsed['positions'][0]['name'],'PARAS DEFENCE AND SPACE TECHNOLOGIES LTD')
+        self.assertFalse(__import__('tracker.report_parser',fromlist=['owns_page']).owns_page(text,'HSBC Small Cap Fund'))
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertIsNone(hsbc_complete_portfolio(text.replace('Aerospace & Defense 0.86%','Aerospace & Defense 0.92%')))
+
+    def test_axis_top_holdings_are_partial_and_reconcile_to_stated_total(self):
+        from tracker.amc_metrics import parse_page
+        f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
+        html='''<html><h1>Axis Small Cap Fund</h1>
+        <p>AUM (In Cr.) ₹ 31,448.32 As On Aug 31, 2026</p>
+        <p>Expense Ratio 0.71% As On Sep 21, 2026</p>
+        <p>Top 10 Stocks (%) 18.52 Top 5 Stocks (%) 10.79 Top 3 Stocks (%) 7.13</p>
+        <table><tr><th>Stocks</th><th>% of holdings</th></tr>
+        <tr><td>A Limited</td><td>2.43</td></tr><tr><td>B Limited</td><td>2.39</td></tr>
+        <tr><td>C Limited</td><td>2.31</td></tr><tr><td>D Limited</td><td>1.91</td></tr>
+        <tr><td>E Limited</td><td>1.75</td></tr><tr><td>F Limited</td><td>1.71</td></tr>
+        <tr><td>G Limited</td><td>1.66</td></tr><tr><td>H Limited</td><td>1.52</td></tr>
+        <tr><td>I Limited</td><td>1.44</td></tr><tr><td>J Limited</td><td>1.40</td></tr></table>
+        <p>Updated as on: September 16, 2026</p></html>'''
+        self.assertEqual(parse_page(html,f,u,'axis'),11)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-09-16','complete':0})
+        rows=db.rows('SELECT name,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual(len(rows),10);self.assertTrue(all(x['asset_type']=='Equity' for x in rows))
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),18.52,places=2)
+
+
+    def test_kotak_monthly_factsheet_reconciles_complete_portfolio(self):
+        from tracker.amc_metrics import parse_page
+        f='Kotak Small Cap Fund';u='https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html'
+        html='''<html><title>Kotak Small Cap Fund Factsheet - August 2026</title><h2>KOTAK SMALL CAP FUND</h2>
+        <table><tr><th>Issuer/Instrument</th><th></th><th>% to Net Assets</th></tr>
+        <tr><td>Equity &amp; Equity related</td><td></td><td></td></tr>
+        <tr><td>Healthcare Services</td><td></td><td>60.00</td></tr>
+        <tr><td>Alpha Health Limited</td><td></td><td>40.00</td></tr>
+        <tr><td>Beta Diagnostics Ltd.</td><td></td><td>20.00</td></tr>
+        <tr><td>Finance</td><td></td><td>39.05</td></tr>
+        <tr><td>Gamma Finance Limited</td><td></td><td>39.05</td></tr>
+        <tr><td>Equity &amp; Equity related - Total</td><td></td><td>99.05</td></tr>
+        <tr><td>Triparty Repo</td><td></td><td>1.05</td></tr>
+        <tr><td>Net Current Assets/(Liabilities)</td><td></td><td>-0.10</td></tr>
+        <tr><td>Grand Total</td><td></td><td>100.00</td></tr></table>
+        <p>Net Asset Value (NAV) (as on August 31, 2026)</p><p>AUM Rs 19,678.75 crs</p>
+        <p>Benchmark NIFTY Smallcap 250 TRI</p><p>Data as on 31st August, 2026 unless otherwise specified.</p></html>'''
+        # A responsive duplicate that has the same headings but cannot reconcile
+        # must not prevent a later valid table on the same official page.
+        broken='''<table><tr><th>Issuer/Instrument</th><th>% to Net Assets</th></tr>
+        <tr><td>Healthcare Services</td><td>14.27</td></tr>
+        <tr><td>Equity &amp; Equity related - Total</td><td>99.05</td></tr>
+        <tr><td>Triparty Repo</td><td>1.05</td></tr>
+        <tr><td>Net Current Assets/(Liabilities)</td><td>-0.10</td></tr>
+        <tr><td>Grand Total</td><td>100.00</td></tr></table>'''
+        html=html.replace('<table>',broken+'<table>',1)
+        self.assertEqual(parse_page(html,f,u,'kotak'),5)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
+        rows=db.rows('SELECT name,sector,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual([x['asset_type'] for x in rows],['Equity','Equity','Equity','Money market','Cash and net current assets'])
+        self.assertEqual(rows[0]['sector'],'Healthcare Services')
+        self.assertEqual(rows[2]['sector'],'Finance')
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),100,places=2)
+        self.assertEqual(float(db.one("SELECT value FROM metrics WHERE metric='aum'")['value']),19678.75)
+
+    def test_portfolio_gap_audit_distinguishes_facts_only_from_source_gap(self):
+        from tracker import coverage,amc_reports
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (101,'Gap Small Cap Fund','Gap Small Cap Fund','Gap Mutual Fund','Direct','Growth','test'))
+            c.execute("""INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
+              VALUES(?,?,?,?,?,?,?,?,?)""",('Gap Small Cap Fund','August factsheet','factsheet','Fund',
+              'https://gap.example/factsheet.pdf','2026-08-31',db.now(),db.now(),'AMC'))
+            did=c.execute("SELECT id FROM documents WHERE family='Gap Small Cap Fund'").fetchone()[0]
+        h=db.archive(b'gap factsheet fixture','application/pdf')
+        with db.connect() as c:
+            c.execute('INSERT INTO document_versions(document_id,hash,observed_at) VALUES(?,?,?)',(did,h,db.now()))
+            c.execute("INSERT INTO source_pages(amc_match,url,label,last_checked,status,detail) VALUES(?,?,?,?,?,?)",
+                      ('Gap','https://gap.example/downloads','Downloads',db.now(),'Checked','Page checked'))
+        amc_reports.init()
+        with db.connect() as c:
+            c.execute('INSERT INTO document_extractions VALUES(?,?,?,?,?,?,?,?)',
+                      ('Gap Small Cap Fund',h,amc_reports.PARSER_VERSION,'https://gap.example/factsheet.pdf',
+                       'parsed',5,'5 dated facts; 0 holdings',db.now()))
+        row=next(x for x in coverage.report()['funds'] if x['family']=='Gap Small Cap Fund')
+        self.assertEqual(row['portfolio_gap']['reason'],'facts_only_no_portfolio')
+        self.assertEqual(row['portfolio_gap']['document']['kind'],'factsheet')
+        self.assertEqual(row['portfolio_gap']['extraction']['records'],5)
+
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (102,'Unavailable Small Cap Fund','Unavailable Small Cap Fund','Unavailable Mutual Fund','Direct','Growth','test'))
+            c.execute("INSERT INTO source_pages(amc_match,url,label,last_checked,status,detail) VALUES(?,?,?,?,?,?)",
+                      ('Unavailable','https://unavailable.example/downloads','Downloads',db.now(),'Gap','Timed out'))
+        row=next(x for x in coverage.report()['funds'] if x['family']=='Unavailable Small Cap Fund')
+        self.assertEqual(row['portfolio_gap']['reason'],'source_unavailable')
+        self.assertEqual(row['portfolio_gap']['source_page']['status'],'Gap')
+
+    def test_portfolio_freshness_target_has_new_month_grace(self):
+        from datetime import date
+        from tracker.coverage import expected_portfolio_as_of
+        self.assertEqual(expected_portfolio_as_of(date(2026,9,22)),'2026-08-31')
+        self.assertEqual(expected_portfolio_as_of(date(2026,9,5)),'2026-07-31')
+
+
+if __name__=='__main__':unittest.main()
+,''],
+            ['', 'TREPS / Reverse Repo Instrument','','','','','',''],
+            ['TRP_010926','Triparty Repo TRP_010926','','','',1300,13.0,5.0],
+            ['', 'Cash Margin - CCIL','','','',20,0.2,''],
+            ['', 'Cash Margin - Derivatives','','','',10,0.1,''],
+            ['', 'Cash / Bank Balance','','','',100,1.0,''],
+            ['', 'Net Receivables/Payables','','','',-40,-0.4,''],
+            ['', 'Net Current Assets','','','',10,0.1,''],
+            ['', 'GRAND TOTAL','','','',10000,100.0,''],
+            ['', '$  Less Than 0.01% of NAV','','','','','',''],
+        ]
+        formats=[['General']*8 for _ in rows]
+        parsed=parse_sheet(rows,formats,'Bandhan Small Cap Fund')
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertFalse(parsed['complete'])
+        self.assertEqual(parsed['unknown_rows'],['Happiest Minds Technologies Limited'])
+        self.assertEqual(parsed['censored_rows'][0]['marker'],'
+        from tracker.report_parser import boi_complete_portfolio
+        text='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026 (Unless indicated otherwise)
+Portfolio Holdings % to Net
+Industry/ Rating Assets
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+TREPS / Reverse Repo Investments 0.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 1.20
+Canara Bank (CRISIL A1+) 0.80
+Total 2.00
+GRAND TOTAL 100.00
+PORTFOLIO DETAILS
+EQUITY HOLDINGS
+INVESTMENT OBJECTIVE'''
+        result=boi_complete_portfolio(text)
+        self.assertIsNotNone(result)
+        self.assertEqual(result['day'],'2026-03-31')
+        self.assertAlmostEqual(sum(x['weight'] for x in result['positions']),100,places=2)
+        self.assertEqual([x['asset_type'] for x in result['positions'][-4:]],[
+            'Debt','Money market','Money market','Cash and net current assets'])
+        bad=text.replace('OTHERS 92.00','OTHERS 91.00')
+        self.assertIsNone(boi_complete_portfolio(bad))
+        self.assertIsNone(boi_complete_portfolio(text.replace('Bank of India Small Cap Fund','Bank of India Mid Cap Fund',1)))
+
+    def test_boi_pdf_falls_back_to_layout_text_for_complete_portfolio(self):
+        from tracker import disclosures
+        standard='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+LATEST AUM'''
+        layout='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+Portfolio Holdings
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 2.00
+Total 2.00
+GRAND TOTAL 100.00
+INVESTMENT OBJECTIVE'''
+        class Page:
+            def extract_text(self,*args,**kwargs):
+                return layout if kwargs.get('extraction_mode')=='layout' else standard
+        reader=SimpleNamespace(is_encrypted=False,pages=[Page()])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bank Of India Small Cap Fund',
+                                            'https://www.boimf.in/factsheet.pdf','boi-layout')
+        self.assertGreater(count,0)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund' AND hash='boi-layout'")
+        self.assertEqual(snap,{'as_of':'2026-03-31','complete':1})
+
+    def test_boi_factsheet_pdf_saves_complete_snapshot(self):
+        from tracker import disclosures
+        page_text='''Bank of India Small Cap Fund
+(An open ended equity scheme predominantly investing in small cap stocks)
+All data as on March 31, 2026
+Portfolio Holdings % to Net
+Industry/ Rating Assets
+FOOD PRODUCTS 3.00
+Alpha Foods Limited 2.00
+Beta Foods Limited 1.00
+OTHERS 92.00
+Gamma Industries Limited 50.00
+Delta Industries Limited 42.00
+Total 95.00
+CASH & CASH EQUIVALENT
+Net Receivables/Payables 2.00
+Total 2.00
+GOVERNMENT BOND AND
+TREASURY BILL
+364 Days Tbill (MD 07/01/2027) (SOV) 1.00
+Total 1.00
+MONEY MARKET INSTRUMENTS
+Certificate of Deposit
+Bank of Baroda (FITCH A1+) 2.00
+Total 2.00
+GRAND TOTAL 100.00
+INVESTMENT OBJECTIVE'''
+        page=SimpleNamespace(extract_text=lambda *args,**kwargs:page_text)
+        reader=SimpleNamespace(is_encrypted=False,pages=[page])
+        with patch('pypdf.PdfReader',return_value=reader):
+            count=disclosures.factsheet_pdf(b'%PDF','Bank Of India Small Cap Fund','https://www.boimf.in/factsheet.pdf','boi')
+        self.assertGreater(count,0)
+        snap=db.one("SELECT as_of,complete FROM portfolios WHERE family='Bank Of India Small Cap Fund'")
+        self.assertEqual(snap,{'as_of':'2026-03-31','complete':1})
+
+    def test_hsbc_complete_portfolio_reconciles_sector_and_cash_totals(self):
+        from tracker.report_parser import hsbc_complete_portfolio
+        text='''HSBC Small Cap Fund
+Small Cap Fund - An open ended equity scheme predominantly investing in small cap stocks.
+Investment Objective: To generate long term capital growth.
+Fund Details
+Date of Allotment 12-May-14
+Benchmark: NIFTY Small Cap 250 TRI
+Issuer Market Cap/
+Ratings % to Net Assets
+Industrial Products 60.00%
+Alpha Limited Small Cap 20.00%
+Beta Limited Mid Cap 20.00%
+Gamma Limited Small Cap 20.00%
+Banks 38.00%
+Delta Bank Limited Small Cap 19.00%
+Epsilon Bank Limited Mid Cap 19.00%
+Cash Equivalent 2.00%
+TREPS* 1.20%
+Net Current Assets: 0.80%
+Total Net Assets as on 31-July-2026 100.00%
+*TREPS : Tri-Party Repo fully collateralized by G-Sec'''
+        result=hsbc_complete_portfolio(text)
+        self.assertEqual(result['day'],'2026-07-31')
+        self.assertEqual(len(result['positions']),7)
+        self.assertAlmostEqual(sum(x['weight'] for x in result['positions']),100,places=2)
+        self.assertEqual(result['positions'][-2]['asset_type'],'Money market')
+        self.assertEqual(result['positions'][-1]['asset_type'],'Cash and net current assets')
+        bad=text.replace('Banks 38.00%','Banks 39.00%')
+        self.assertIsNone(hsbc_complete_portfolio(bad))
+
+
+    def test_hsbc_august_joined_market_cap_label_still_reconciles(self):
+        from tracker.report_parser import hsbc_complete_portfolio
+        text='''Additional Disclosure
+Past Performance is not an indicator or guarantee of future results
+HSBC Small Cap Fund
+Portfolio
+Issuer Market Cap/
+Ratings % to Net Assets
+Aerospace & Defense 0.86%
+PARAS DEFENCE AND SPACE TECHNOLOGIES LTDSmall Cap 0.59%
+Data Patterns (India) Limited Small Cap 0.27%
+Industrial Products 98.12%
+Alpha Industrial Limited Small Cap 19.624%
+Beta Industrial Limited Small Cap 19.624%
+Gamma Industrial Limited Small Cap 19.624%
+Delta Industrial Limited Small Cap 19.624%
+Epsilon Industrial Limited Small Cap 19.624%
+Cash Equivalent 1.02%
+TREPS* 1.09%
+Net Current Assets: -0.07%
+Total Net Assets as on 31-August-2026 100.00%
+*TREPS : Tri-Party Repo fully collateralized by G-Sec'''
+        parsed=hsbc_complete_portfolio(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed['day'],'2026-08-31')
+        self.assertEqual(parsed['positions'][0]['name'],'PARAS DEFENCE AND SPACE TECHNOLOGIES LTD')
+        self.assertFalse(__import__('tracker.report_parser',fromlist=['owns_page']).owns_page(text,'HSBC Small Cap Fund'))
+        self.assertAlmostEqual(sum(x['weight'] for x in parsed['positions']),100,places=2)
+        self.assertIsNone(hsbc_complete_portfolio(text.replace('Aerospace & Defense 0.86%','Aerospace & Defense 0.92%')))
+
+    def test_axis_top_holdings_are_partial_and_reconcile_to_stated_total(self):
+        from tracker.amc_metrics import parse_page
+        f='Axis Small Cap Fund';u='https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct'
+        html='''<html><h1>Axis Small Cap Fund</h1>
+        <p>AUM (In Cr.) ₹ 31,448.32 As On Aug 31, 2026</p>
+        <p>Expense Ratio 0.71% As On Sep 21, 2026</p>
+        <p>Top 10 Stocks (%) 18.52 Top 5 Stocks (%) 10.79 Top 3 Stocks (%) 7.13</p>
+        <table><tr><th>Stocks</th><th>% of holdings</th></tr>
+        <tr><td>A Limited</td><td>2.43</td></tr><tr><td>B Limited</td><td>2.39</td></tr>
+        <tr><td>C Limited</td><td>2.31</td></tr><tr><td>D Limited</td><td>1.91</td></tr>
+        <tr><td>E Limited</td><td>1.75</td></tr><tr><td>F Limited</td><td>1.71</td></tr>
+        <tr><td>G Limited</td><td>1.66</td></tr><tr><td>H Limited</td><td>1.52</td></tr>
+        <tr><td>I Limited</td><td>1.44</td></tr><tr><td>J Limited</td><td>1.40</td></tr></table>
+        <p>Updated as on: September 16, 2026</p></html>'''
+        self.assertEqual(parse_page(html,f,u,'axis'),11)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-09-16','complete':0})
+        rows=db.rows('SELECT name,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual(len(rows),10);self.assertTrue(all(x['asset_type']=='Equity' for x in rows))
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),18.52,places=2)
+
+
+    def test_kotak_monthly_factsheet_reconciles_complete_portfolio(self):
+        from tracker.amc_metrics import parse_page
+        f='Kotak Small Cap Fund';u='https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html'
+        html='''<html><title>Kotak Small Cap Fund Factsheet - August 2026</title><h2>KOTAK SMALL CAP FUND</h2>
+        <table><tr><th>Issuer/Instrument</th><th></th><th>% to Net Assets</th></tr>
+        <tr><td>Equity &amp; Equity related</td><td></td><td></td></tr>
+        <tr><td>Healthcare Services</td><td></td><td>60.00</td></tr>
+        <tr><td>Alpha Health Limited</td><td></td><td>40.00</td></tr>
+        <tr><td>Beta Diagnostics Ltd.</td><td></td><td>20.00</td></tr>
+        <tr><td>Finance</td><td></td><td>39.05</td></tr>
+        <tr><td>Gamma Finance Limited</td><td></td><td>39.05</td></tr>
+        <tr><td>Equity &amp; Equity related - Total</td><td></td><td>99.05</td></tr>
+        <tr><td>Triparty Repo</td><td></td><td>1.05</td></tr>
+        <tr><td>Net Current Assets/(Liabilities)</td><td></td><td>-0.10</td></tr>
+        <tr><td>Grand Total</td><td></td><td>100.00</td></tr></table>
+        <p>Net Asset Value (NAV) (as on August 31, 2026)</p><p>AUM Rs 19,678.75 crs</p>
+        <p>Benchmark NIFTY Smallcap 250 TRI</p><p>Data as on 31st August, 2026 unless otherwise specified.</p></html>'''
+        # A responsive duplicate that has the same headings but cannot reconcile
+        # must not prevent a later valid table on the same official page.
+        broken='''<table><tr><th>Issuer/Instrument</th><th>% to Net Assets</th></tr>
+        <tr><td>Healthcare Services</td><td>14.27</td></tr>
+        <tr><td>Equity &amp; Equity related - Total</td><td>99.05</td></tr>
+        <tr><td>Triparty Repo</td><td>1.05</td></tr>
+        <tr><td>Net Current Assets/(Liabilities)</td><td>-0.10</td></tr>
+        <tr><td>Grand Total</td><td>100.00</td></tr></table>'''
+        html=html.replace('<table>',broken+'<table>',1)
+        self.assertEqual(parse_page(html,f,u,'kotak'),5)
+        snap=db.one('SELECT as_of,complete FROM portfolios WHERE family=?',(f,))
+        self.assertEqual(snap,{'as_of':'2026-08-31','complete':1})
+        rows=db.rows('SELECT name,sector,weight,asset_type FROM holdings ORDER BY id')
+        self.assertEqual([x['asset_type'] for x in rows],['Equity','Equity','Equity','Money market','Cash and net current assets'])
+        self.assertEqual(rows[0]['sector'],'Healthcare Services')
+        self.assertEqual(rows[2]['sector'],'Finance')
+        self.assertAlmostEqual(sum(x['weight'] for x in rows),100,places=2)
+        self.assertEqual(float(db.one("SELECT value FROM metrics WHERE metric='aum'")['value']),19678.75)
+
+    def test_portfolio_gap_audit_distinguishes_facts_only_from_source_gap(self):
+        from tracker import coverage,amc_reports
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (101,'Gap Small Cap Fund','Gap Small Cap Fund','Gap Mutual Fund','Direct','Growth','test'))
+            c.execute("""INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
+              VALUES(?,?,?,?,?,?,?,?,?)""",('Gap Small Cap Fund','August factsheet','factsheet','Fund',
+              'https://gap.example/factsheet.pdf','2026-08-31',db.now(),db.now(),'AMC'))
+            did=c.execute("SELECT id FROM documents WHERE family='Gap Small Cap Fund'").fetchone()[0]
+        h=db.archive(b'gap factsheet fixture','application/pdf')
+        with db.connect() as c:
+            c.execute('INSERT INTO document_versions(document_id,hash,observed_at) VALUES(?,?,?)',(did,h,db.now()))
+            c.execute("INSERT INTO source_pages(amc_match,url,label,last_checked,status,detail) VALUES(?,?,?,?,?,?)",
+                      ('Gap','https://gap.example/downloads','Downloads',db.now(),'Checked','Page checked'))
+        amc_reports.init()
+        with db.connect() as c:
+            c.execute('INSERT INTO document_extractions VALUES(?,?,?,?,?,?,?,?)',
+                      ('Gap Small Cap Fund',h,amc_reports.PARSER_VERSION,'https://gap.example/factsheet.pdf',
+                       'parsed',5,'5 dated facts; 0 holdings',db.now()))
+        row=next(x for x in coverage.report()['funds'] if x['family']=='Gap Small Cap Fund')
+        self.assertEqual(row['portfolio_gap']['reason'],'facts_only_no_portfolio')
+        self.assertEqual(row['portfolio_gap']['document']['kind'],'factsheet')
+        self.assertEqual(row['portfolio_gap']['extraction']['records'],5)
+
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (102,'Unavailable Small Cap Fund','Unavailable Small Cap Fund','Unavailable Mutual Fund','Direct','Growth','test'))
+            c.execute("INSERT INTO source_pages(amc_match,url,label,last_checked,status,detail) VALUES(?,?,?,?,?,?)",
+                      ('Unavailable','https://unavailable.example/downloads','Downloads',db.now(),'Gap','Timed out'))
+        row=next(x for x in coverage.report()['funds'] if x['family']=='Unavailable Small Cap Fund')
+        self.assertEqual(row['portfolio_gap']['reason'],'source_unavailable')
+        self.assertEqual(row['portfolio_gap']['source_page']['status'],'Gap')
+
+    def test_portfolio_freshness_target_has_new_month_grace(self):
+        from datetime import date
+        from tracker.coverage import expected_portfolio_as_of
+        self.assertEqual(expected_portfolio_as_of(date(2026,9,22)),'2026-08-31')
+        self.assertEqual(expected_portfolio_as_of(date(2026,9,5)),'2026-07-31')
+
+
+if __name__=='__main__':unittest.main()
+)
+        self.assertEqual(parsed['censored_rows'][0]['meaning'],'Less Than 0.01% of NAV')
+        self.assertFalse(any(x['name']=='Happiest Minds Technologies Limited' for x in parsed['positions']))
+        by_name={x['name']:x for x in parsed['positions']}
+        self.assertEqual(by_name['Triparty Repo TRP_010926']['asset_type'],'Money market')
+        self.assertEqual(by_name['Cash Margin - Derivatives']['asset_type'],'Cash and net current assets')
+        self.assertEqual(by_name['Cash / Bank Balance']['asset_type'],'Cash and net current assets')
+        self.assertEqual(by_name['Net Receivables/Payables']['weight'],-0.4)
+        self.assertAlmostEqual(parsed['aum'],100.0,places=6)
+
     def test_boi_complete_portfolio_reconciles_all_asset_sections(self):
         from tracker.report_parser import boi_complete_portfolio
         text='''Bank of India Small Cap Fund
