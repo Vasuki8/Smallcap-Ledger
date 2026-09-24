@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -256,6 +256,68 @@ def run():
         else:
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::PGIM current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v74':
+        from tracker import amc_discovery
+        from bs4 import BeautifulSoup
+        from urllib.parse import urljoin,urlparse
+        family='Abakkus Small Cap Fund';attempted=0
+        page='https://www.abakkusmf.com/statutory-disclosures.html'
+        try:
+            providers.can_crawl(page)
+            raw,_,mime=providers.fetch(page,max_bytes=10*1024*1024)
+            print(f'ABAKKUS_V74_PAGE bytes={len(raw)} mime={mime}',flush=True)
+            soup=BeautifulSoup(raw,'html.parser')
+            for index,select in enumerate(soup.find_all('select')):
+                meta={k:(' '.join(v) if isinstance(v,list) else str(v)) for k,v in select.attrs.items()}
+                opts=[]
+                for option in select.find_all('option')[:40]:
+                    opts.append({'value':option.get('value'),'text':option.get_text(' ',strip=True)})
+                if any(re.search(r'portfolio|month|year|disclosure',str(x),re.I) for x in [meta,opts]):
+                    print('ABAKKUS_V74_SELECT '+json.dumps({'index':index,'attrs':meta,'options':opts},ensure_ascii=False)[:10000],flush=True)
+            txt=raw.decode('utf-8','ignore')
+            found=set()
+            for m in re.finditer(r'(?:https?://[^"'<>\s]+|/[^"'<>\s]+)\.(?:xlsx?|pdf)(?:\?[^"'<>\s]*)?',txt,re.I):
+                url=urljoin(page,m.group(0).replace('&amp;','&'))
+                ctx=re.sub(r'\s+',' ',txt[max(0,m.start()-260):m.end()+260]).strip()
+                if url in found:continue
+                found.add(url)
+                if re.search(r'portfolio|monthly|aug|31|small.?cap',ctx+' '+url,re.I):
+                    print('ABAKKUS_V74_EMBED '+url+' :: '+ctx[:1200],flush=True)
+            for tag in soup.find_all('script'):
+                src=tag.get('src')
+                if src:
+                    url=urljoin(page,src)
+                    if urlparse(url).netloc.endswith('abakkusmf.com'):
+                        print('ABAKKUS_V74_SCRIPT '+url,flush=True)
+            for discovered_family,url,title in amc_discovery.discover('Abakkus'):
+                if discovered_family!=family:continue
+                attempted+=1
+                print(f'ABAKKUS_V74_CANDIDATE {attempted} {url} :: {title}',flush=True)
+                try:
+                    providers.can_crawl(url)
+                    body,h,cmime=providers.fetch(url,max_bytes=70*1024*1024)
+                    print(f'ABAKKUS_V74_FETCH {attempted} bytes={len(body)} mime={cmime} sig={body[:16].hex()}',flush=True)
+                    count=amc_reports.extract(body,family,url,h)
+                    print(f'ABAKKUS_V74_PARSED {attempted} count={count}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::Abakkus v74 candidate {attempted}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap:
+                    print(f'ABAKKUS_V74_SNAPSHOT {snap["as_of"]} complete={snap["complete"]} positions={snap["positions"]}',flush=True)
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
+        except Exception as exc:
+            print(f"::warning::Abakkus v74 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:print(f'Abakkus current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::Abakkus current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
