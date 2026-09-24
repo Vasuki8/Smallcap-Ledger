@@ -112,6 +112,30 @@ def absl_zip(content,family,url,h):
             count+=disclosures.spreadsheet(body,family,url,h)
         return count
 
+def dsp_zip(content,family,url,h):
+    """Parse DSP's official month-end portfolio ZIP without extracting paths."""
+    import io,zipfile
+    from pathlib import PurePosixPath
+    from . import disclosures
+    with zipfile.ZipFile(io.BytesIO(content)) as z:
+        entries=z.infolist()
+        if len(entries)>250 or sum(i.file_size for i in entries)>150*1024*1024:
+            raise ValueError('Oversized DSP portfolio ZIP')
+        spreadsheets=[]
+        for i in entries:
+            p=PurePosixPath(i.filename)
+            if p.is_absolute() or '..' in p.parts or '\\' in i.filename or i.flag_bits&1:
+                raise ValueError('Unsupported DSP portfolio ZIP entry')
+            if p.suffix.lower() in ('.xls','.xlsx') and 0<i.file_size<=30*1024*1024:
+                spreadsheets.append(i)
+        if not spreadsheets or len(spreadsheets)>120:return 0
+        count=0
+        for entry in spreadsheets:
+            with z.open(entry) as f:body=f.read()
+            if not body.startswith((b'PK',b'\xd0\xcf')):continue
+            count+=disclosures.spreadsheet(body,family,url,h)
+        return count
+
 def uti_zip(content,family,url,h):
     """Read the named workbook in UTI's public monthly ZIP without extracting paths."""
     import io,zipfile,openpyxl
