@@ -343,10 +343,10 @@ Current production-verified coverage:
 | Direct fee | **36 / 36** |
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
-| Complete portfolio | **20 / 36** |
-| Current portfolio | **28 / 36** |
-| Current + complete | **20 / 36** |
-| Partial latest portfolio | **14 / 36** |
+| Complete portfolio | **21 / 36** |
+| Current portfolio | **29 / 36** |
+| Current + complete | **21 / 36** |
+| Partial latest portfolio | **13 / 36** |
 
 ### Latest completed backend batch — Groww August portfolio recovery
 
@@ -410,6 +410,25 @@ This moved production from **19 → 20 complete portfolios**, **21 → 22 curren
 
 Production coverage after these recoveries is **28 / 36 current portfolios** and **20 / 36 current + complete**. Complete coverage remains **20 / 36** because these funds were already complete at their older July snapshots. **There are no stale-complete funds remaining.**
 
+### Latest completed backend batch — DSP August structured portfolio recovery
+
+**DSP Small Cap Fund is now current and complete.**
+
+- DSP's official Portfolio Disclosures page exposes an exact month-end ZIP for **August 31, 2026**. The retained source is `https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/8a6dbe504f-1789452169/dsp-monthend-portfolio-as-on-31-aug-2026.zip`.
+- Discovery now selects the newest dated **Portfolio Details as on ...** ZIP and normal nightly AMC discovery includes DSP.
+- The ZIP is processed without extracting filesystem paths and each workbook is passed through the existing exact-scheme/date/value/weight reconciliation parser.
+- The real Small Cap workbook initially parsed **84 positions** but remained partial because two explicit leaf rows were conservatively unknown: `TREPS / Reverse Repo Investments` and `Cash Margin`. The parsed weight sum without those rows was 87.43%.
+- Parser v88 classifies only those two verified DSP labels as the published repo/cash assets. No balancing figure is invented; completeness still requires the workbook's own grand total, market-value sum and portfolio-weight sum to reconcile.
+- Relevant commits include `ac7b46a281a1ad435a0f791d28e36fb192630916`, `829bda19307a198fe83cb1d298f2bb3b58babe5c`, `febfb14b89a02991c697ccd9baebb6f3e5f2fe1f`, regression commit `849ed40736ba350efe8577d3af3049eb77e2c68c`, and v88 commits `1fdaf71f96d0fb1700b4d916b1605dfc26668dd9`, `2766391bb4d7b36ee002f39721470000dc384671`, `ab103156484ec65050cb5cb6f445491c089c3866`, `2fce4fba580b4dd7979b3feebcf7ba3201e908ce`.
+- Production run **#364** passed syntax, the full regression suite, site generation/validation, cumulative archive publication, status recording and Pages deployment.
+- Production now stores DSP at **2026-08-31, 86 positions, complete=1, current=true**.
+- Coverage moved to **29 / 36 current**, **21 / 36 complete**, and **21 / 36 current+complete**; partial latest portfolios fell to **13 / 36**.
+
+### Source-access blocker — Bajaj Finserv
+
+- Parser/source audit v83 confirmed the GitHub runner receives **403 Forbidden** from Bajaj's official fund page, downloads page, and current first-party media paths.
+- Keep the retained July 31 partial snapshot. Do not substitute third-party holdings or guessed URLs. Revisit Bajaj only when a genuinely reachable official portfolio/factsheet attachment or API path is available.
+
 ### Daily-update reliability fix
 
 The scheduled updater was spending roughly half an hour re-downloading every scheme's full MFAPI NAV history on ordinary daily runs even though the current AMFI NAV had already been collected.
@@ -436,7 +455,6 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 
 **Stale partial**:
 - Bajaj Finserv — 2026-07-31, 13 positions.
-- DSP — 2026-06-30, 80 positions.
 - Edelweiss — 2026-07-31, 30 positions.
 - Mirae Asset — 2026-07-31, 10 positions.
 - Quant — 2026-07-31, 11 positions.
@@ -447,7 +465,7 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **Stale partial portfolios are now the main freshness backlog.** Work one fund at a time from concrete current official evidence. The current stale partials are **Bajaj Finserv, DSP, Edelweiss, Mirae Asset, Quant and SBI**.
+1. **Stale partial portfolios remain the main freshness backlog.** DSP is now recovered and Bajaj is a confirmed source-access blocker. Continue with **Edelweiss, Mirae Asset, Quant and SBI** one at a time from concrete current official evidence.
 2. Prefer structured official monthly portfolios when available. First try exact AMC disclosure/workbook/API discovery; only use a factsheet partial when the AMC does not expose the full holdings. Never promote a partial snapshot to complete without 100% reconciliation.
 3. **Bandhan and Union remain the only zero-portfolio gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
 4. After stale partial freshness is improved, revisit the **fresh partial** funds (Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI) for complete structured sources where available.
