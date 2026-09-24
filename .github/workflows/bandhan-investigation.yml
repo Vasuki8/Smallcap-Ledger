@@ -8,40 +8,39 @@ permissions:
   contents: read
 
 jobs:
-  decode:
+  probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Decode Bandhan scheme portfolio request constants
+      - name: Replay Bandhan scheme portfolio browser payload
         run: |
           python - <<'PY'
-          import urllib.request,subprocess
-          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
-          end=js.find(',((()=>{')
-          prefix=js[:end]
-          for suffix in (';',');','));'):
-              code=prefix+suffix+"""
-              console.log(JSON.stringify({
-                apiOrigin:a0_0x2580(0x21db),
-                apiBase:a0_0x2580(0x1bd4),
-                cmsCallPrefix:a0_0x2580(0xa6f),
-                monthKey:a0_0x2580(0xbdd),
-                yearKey:a0_0x2580(0x955),
-                schemeKey:a0_0x2580(0x46b5),
-                categoryKey:a0_0x2580(0xb72),
-                acfKeyPrefix:a0_0x2580(0x1c95),
-                pageSizeKey:a0_0x2580(0x3a60),
-                selectedYearKey:a0_0x2580(0x55c),
-                selectedMonthKey:a0_0x2580(0x18e4),
-                schemeTitlesKey:a0_0x2580(0x770),
-                schemeListKey:a0_0x2580(0x1492),
-                categoryListKey:a0_0x2580(0x57b8)
-              }));
-              """
-              open('/tmp/decoder.js','w').write(code)
-              cp=subprocess.run(['node','/tmp/decoder.js'],capture_output=True,text=True,timeout=20)
-              print('TRY',repr(suffix),'RC',cp.returncode,'OUT',cp.stdout.strip(),'ERR',cp.stderr[:500])
-              if cp.returncode==0:break
+          import urllib.request,json
+          url='https://pnservices.bandhanmutual.com/internal/investorservices/encdec/investor/v1/dashboard/cms-call'
+          headers={
+            'User-Agent':'Mozilla/5.0',
+            'Accept':'application/json,text/plain,*/*',
+            'Content-Type':'application/json',
+            'Origin':'https://bandhanmutual.com',
+            'Referer':'https://bandhanmutual.com/',
+          }
+          payloads=[
+            {'type':'SCHEME_PORTFOLIOS','data':{'subcategory':'monthly-and-half-yearly','page':1,'posts_per_page':1}},
+            {'type':'SCHEME_PORTFOLIOS','data':{'subcategory':'monthly-and-half-yearly','page':1,'posts_per_page':10,'financial_year':'2026'}},
+          ]
+          for payload in payloads:
+              body=json.dumps(payload,separators=(',',':')).encode()
+              req=urllib.request.Request(url,data=body,headers=headers,method='POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=35) as r:
+                      out=r.read()
+                      print('STATUS',r.status,r.headers.get('Content-Type'),len(out),r.geturl())
+                      print('HEADERS',dict(r.headers))
+                      print('BODY',out.decode('utf-8','replace')[:60000])
+              except Exception as e:
+                  print('ERROR',repr(e))
+                  if hasattr(e,'read'):
+                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:10000])
+                      except Exception:pass
           PY
