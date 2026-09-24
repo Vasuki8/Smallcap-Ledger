@@ -122,7 +122,10 @@ def parse_sheet(rows,formats,family):
             if empty(row[wc]) and empty(row[vc]):continue
         try:w=weight(ri,row);v=numeric(row[vc])
         except ValueError:
-            if family=='Bandhan Small Cap Fund' and valid_isin and str(row[wc] or '').strip()=='
+            if family=='Bandhan Small Cap Fund' and valid_isin and str(row[wc] or '').strip()=='$':
+                censored.append({'name':name,'isin':isin,'quantity':None if qc is None or qc>=len(row) else row[qc],
+                                 'marker':'$','meaning':'Less Than 0.01% of NAV'})
+            unknown.append(label);continue
         if not -100<=w<=100:unknown.append(label);continue
         kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
         sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
