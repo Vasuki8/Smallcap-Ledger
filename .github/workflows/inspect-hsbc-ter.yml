@@ -14,25 +14,71 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect CAMS public config and crypto
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Reproduce public CAMS HSBC TER download
         run: |
-          python - <<'PY'
-          import re,urllib.request
-          def fetch(url):
-              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
-              with urllib.request.urlopen(req,timeout=45) as r:
-                  b=r.read();print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl());return b
-          cfg=fetch('https://digital.camsonline.com/assets/url.txt').decode('utf-8','ignore')
-          print('URL_CONFIG',cfg)
-          s=fetch('https://digital.camsonline.com/main.d08d2e9edfe7391e.js').decode('utf-8','ignore')
-          for needle in ['encryption(e,n)', 'encryption(', 'Decryption(', 'Encrypt', 'CryptoJS', 'AES.encrypt', 'AES.decrypt']:
-              print('NEEDLE',needle)
-              p=0;n=0
-              while True:
-                  p=s.find(needle,p)
-                  if p<0 or n>=20:break
-                  block=re.sub(r'\s+',' ',s[max(0,p-1800):p+3200])
-                  if any(x in block for x in ['AES','Crypto','encryption','Decryption']):
-                      print('CTX',block[:5200])
-                  p+=len(needle);n+=1
+          uv run --frozen python - <<'PY'
+          import base64, hashlib, io, json, subprocess, urllib.request
+          import openpyxl
+
+          ENDPOINT='https://digital.camsonline.com/api/v1/camsonline'
+          IV=b'globalaesvectors'
+          def key(secret):
+              return hashlib.sha256(secret.encode()).hexdigest()[:32].encode()
+          REQ_KEY=key('TkVJTEhobWFj')
+          RESP_KEY=key('UkRYTElobWFj')
+
+          def crypt(data,key_bytes,decrypt=False):
+              cmd=['openssl','enc','-aes-256-cbc','-K',key_bytes.hex(),'-iv',IV.hex(),'-nosalt']
+              if decrypt: cmd.append('-d')
+              p=subprocess.run(cmd,input=data,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True)
+              return p.stdout
+
+          payload={
+              'flag':'GET_UPD_MB_RESULT',
+              'jobday':'hsbc_ter_report.xlsx',
+              'browser':'Chrome',
+              'device_id':'153.0.0.0',
+              'os_id':'10',
+              'application':'CAMSONLINE',
+              'sub_application':'DIGITALADMIN',
+              'deviceid':'desktop',
+              'page_name':'/dnlresult/hsbc_ter_report.xlsx',
+          }
+          raw=json.dumps(payload,separators=(',',':')).encode()
+          enc=base64.b64encode(crypt(raw,REQ_KEY)).decode().replace('+','-').replace('/','_')
+          body=json.dumps({'data':enc},separators=(',',':')).encode()
+          req=urllib.request.Request(ENDPOINT,data=body,method='POST',headers={
+              'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
+              'Content-Type':'application/json',
+              'Accept':'application/json, text/plain, */*',
+              'Origin':'https://digital.camsonline.com',
+              'Referer':'https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx',
+          })
+          with urllib.request.urlopen(req,timeout=45) as r:
+              response=r.read()
+              print('API',r.status,len(response),r.headers.get('content-type'))
+          encrypted=response.decode().strip().strip('"').replace('-','+').replace('_','/')
+          decrypted=crypt(base64.b64decode(encrypted),RESP_KEY,decrypt=True)
+          data=json.loads(decrypted)
+          print('STATUS',data.get('status'))
+          print('DETAIL_KEYS',[sorted(x.keys()) for x in data.get('detail',[])[:2]])
+          result=data['detail'][0]['RESULT']
+          workbook=base64.b64decode(result)
+          print('WORKBOOK_BYTES',len(workbook),workbook[:8])
+          wb=openpyxl.load_workbook(io.BytesIO(workbook),data_only=True,read_only=True)
+          print('SHEETS',wb.sheetnames)
+          for ws in wb.worksheets:
+              print('SHEET',ws.title,ws.max_row,ws.max_column)
+              for i,row in enumerate(ws.iter_rows(values_only=True),1):
+                  vals=[None if x is None else str(x) for x in row]
+                  joined=' | '.join(x or '' for x in vals)
+                  if i<=12 or 'small cap' in joined.lower():
+                      print('ROW',i,json.dumps(vals,ensure_ascii=False))
+          wb.close()
           PY
