@@ -1,35 +1,41 @@
-name: Inspect Canara expense API
+name: Validate Canara expense collector
 
 on:
   push:
     branches: [backend/amfi-expense-coverage-v130]
-    paths: [.github/workflows/inspect-amfi-expenses.yml]
 
 permissions:
   contents: read
 
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - name: Fetch live Canara TER API
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run --frozen python -m compileall -q tracker scripts tests
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Verify current official Canara Small Cap BER/TER
         run: |
-          python - <<'PY'
-          import json, urllib.parse, urllib.request
-          base='https://www.canararobeco.com/wp-json/ter/v1/records'
-          q=urllib.parse.urlencode({'from_date':'2026-09-22','to_date':'2026-09-24'})
-          req=urllib.request.Request(base+'?'+q,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Accept':'application/json'})
-          with urllib.request.urlopen(req,timeout=45) as r:
-              body=r.read(); print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
-          data=json.loads(body)
-          print('TYPE',type(data).__name__)
-          if isinstance(data,dict): print('KEYS',sorted(data.keys()))
-          rows=data.get('data',data) if isinstance(data,dict) else data
-          print('ROWS',len(rows) if isinstance(rows,list) else 'not-list')
-          if isinstance(rows,list):
-              for row in rows:
-                  if 'small cap' in str(row.get('scheme_name','')).lower():
-                      print('SMALL_CAP',json.dumps(row,sort_keys=True))
+          uv run --frozen python - <<'PY'
+          import json
+          from datetime import date
+          from urllib.parse import urlencode
+          from tracker import amc_expenses
+          from tracker.providers import fetch
+          today=date.today()
+          start=today.replace(day=max(1,today.day-6))
+          url=amc_expenses.CANARA_API+'?'+urlencode({'from_date':start.isoformat(),'to_date':today.isoformat()})
+          body,_,_=fetch(url,archive=False,max_bytes=2*1024*1024)
+          day,plans=amc_expenses.parse_canara_records(json.loads(body),today)
+          assert set(plans)=={'Regular','Direct'}
+          assert 0 <= plans['Direct']['base_expense_ratio'] <= plans['Direct']['ter'] <= 5
+          assert 0 <= plans['Regular']['base_expense_ratio'] <= plans['Regular']['ter'] <= 5
+          print('CANARA_VERIFIED',day,plans)
           PY
