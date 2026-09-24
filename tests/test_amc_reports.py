@@ -444,6 +444,32 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn('https://quantmutual.com/Admin/Portfolio/Monthly_Portfolio_All_Schemes_August_2026.xlsx',urls)
         self.assertTrue(all(x[0]=='Quant Small Cap Fund' for x in rows))
 
+    def test_quant_api_discovery_prefers_latest_exact_small_cap_workbook(self):
+        from tracker.amc_discovery import discover
+        level1=json.dumps({'d':"""<ul>
+          <li class='yearurl active1' id='7'>Jul</li>
+          <li class='yearurl active1' id='8'>Aug</li>
+        </ul>"""}).encode()
+        level2=json.dumps({'d':"""<ul>
+          <li><a href='/Admin/disclouser/quant_Multi_Cap_Fund_31_Aug_2026.xlsx'>quant Multi Cap Fund</a></li>
+          <li><a href='/Admin/disclouser/quant_Small_Cap_Fund_31_Aug_2026.xlsx'>quant Small Cap Fund</a></li>
+        </ul>"""}).encode()
+        def fake_read(url,body=None):
+            if url.endswith('displaydisclouser1'):
+                self.assertEqual(body,{'id':'2026','cat':'MONTHLY PORTFOLIO - FUND - WISE'})
+                return level1,'api1','application/json'
+            if url.endswith('displaydisclouser2'):
+                self.assertEqual(body,{'id':'8','cat':'MONTHLY PORTFOLIO - FUND - WISE','tab':'2026'})
+                return level2,'api2','application/json'
+            raise AssertionError(url)
+        with patch('tracker.amc_discovery.read',side_effect=fake_read), \
+             patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
+            rows=list(discover('quant Mutual'))
+        self.assertEqual(rows,[(
+            'Quant Small Cap Fund',
+            'https://quantmutual.com/Admin/disclouser/quant_Small_Cap_Fund_31_Aug_2026.xlsx',
+            'quant Small Cap Fund')])
+
     def test_catalog_amc_resolver_handles_long_names_without_quantum_collision(self):
         from tracker.disclosures import resolve_registered_amc
         sources=[
