@@ -10,44 +10,48 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Replay exact ICICI Monthly Portfolio request
+      - name: Inspect ICICI statutory disclosure API
         run: |
           python - <<'PY'
           import urllib.request,uuid,json,re
-          url='https://apimf.icicipruamc.com/nms/v1/downloads/files'
-          body={
-            'categoryId':'2026-2027,26a073d7-08d2-4a95-95fa-f83a4ee51e40',
-            'schemeCategory':'',
-            'userType':'Investor',
-            'fileType':'All',
-            'page':'1',
-            'size':'20',
-            'filter':[{'FINANCIAL_YEAR':['2026-2027']}],
-            'categoryName':'OTHERS',
-          }
-          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
-                   'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
-                   'Referer':'https://www.icicipruamc.com/news-and-media/downloads',
-                   'env':'api','baggage':'','requestAPIId':str(uuid.uuid4())}
-          req=urllib.request.Request(url,data=json.dumps(body).encode(),headers=headers,method='POST')
-          print('REQUEST',json.dumps(body,sort_keys=True))
-          try:
-              with urllib.request.urlopen(req,timeout=30) as r:
-                  b=r.read();print('FETCH',r.status,r.headers.get('Content-Type'),len(b))
-                  text=b.decode('utf-8','replace');print('BODY',text[:120000])
-                  data=json.loads(text)
-                  files=((data.get('success') or {}).get('data') or {}).get('files') or []
-                  print('FILE_COUNT',len(files))
-                  for x in files:
-                      blob=json.dumps(x,ensure_ascii=False)
-                      if re.search(r'portfolio|august|aug|2026',blob,re.I):
-                          print('FILE',blob[:12000])
-          except Exception as e:
-              print('ERROR',repr(e))
-              if getattr(e,'read',None):
-                  try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:50000])
-                  except:pass
+          common={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+                  'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
+                  'Referer':'https://www.icicipruamc.com/about-us/statutory-disclosures',
+                  'env':'api','baggage':''}
+          base='https://apimf.icicipruamc.com'
+          def call(url,method='GET',body=None,timeout=30):
+              headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
+              data=json.dumps(body).encode() if body is not None else None
+              req=urllib.request.Request(url,data=data,headers=headers,method=method)
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as r:
+                      b=r.read();print('FETCH',method,url,r.status,r.headers.get('Content-Type'),len(b))
+                      text=b.decode('utf-8','replace');print('BODY',text[:100000]);return text
+              except Exception as e:
+                  print('ERROR',method,url,repr(e))
+                  if getattr(e,'read',None):
+                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:50000])
+                      except:pass
+                  return ''
+          for url in [
+              base+'/fds/v1/categories?userType=Investor',
+              base+'/fds/v1/categories?userType=Investor&disclosureType=STATUTORY_DISCLOSURES',
+              base+'/fds/v1/categories?userType=Investor&disclosureType=Statutory%20Disclosures',
+          ]:
+              call(url)
+
+          # Exact statutory/financials UI controller.
+          url='https://www.icicipruamc.com/static/js/index.BicS6zQ2.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
+          with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
+          print('CONTROLLER',len(js),js[:4000])
+          for needle in ('categoryId','fileType','userType','filter','disclosureType','financialsData',
+                         'STATUTORY_DISCLOSURES','page:','size:'):
+              ms=list(re.finditer(re.escape(needle),js,re.I))
+              print('NEEDLE',needle,'COUNT',len(ms))
+              for m in ms[:15]:
+                  i=m.start();print('CTX',needle,js[max(0,i-3000):i+6500])
           PY
