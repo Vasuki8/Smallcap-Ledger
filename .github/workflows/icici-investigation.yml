@@ -13,35 +13,27 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Find ICICI downloads payload in route chunks
+      - name: Map ICICI downloads route to lazy chunk
         run: |
           python - <<'PY'
           import urllib.request,re
-          base='https://www.icicipruamc.com/'
-          paths=[
-            'static/js/index.CK6gFMMX.js','static/js/index.CWTGqtsW.js',
-            'static/js/index.CfmbVgFz.js','static/js/index.DkziuyJ0.js',
-            'static/js/index.TMb0r7kK.js','static/js/index.ga12eJF9.js',
-            'static/js/index.kFumjklZ.js','static/js/newsMedia.Be07XGbb.js',
-            'static/js/SmallDownload.CCReaEC6.js',
-          ]
-          headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'}
-          for path in paths:
-              try:
-                  req=urllib.request.Request(base+path,headers=headers)
-                  with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
-              except Exception as e:
-                  print('ERROR',path,repr(e));continue
-              print('FILE',path,len(js))
-              score=sum(bool(re.search(p,js,re.I)) for p in [
-                  r'fileType',r'categoryId',r'subCategory',r'financial.?year',
-                  r'downloadData',r'download.*files',r'FORMS_SHARE'])
-              print('SCORE',score)
-              if score<2:continue
-              for pat in [r'fileType',r'categoryId',r'subCategory',r'financial.?year',
-                          r'pageSize',r'userType',r'FORMS_SHARE']:
-                  for n,m in enumerate(re.finditer(pat,js,re.I)):
-                      if n>=12:break
-                      i=m.start()
-                      print('HIT',path,pat,js[max(0,i-1800):i+3500])
+          req=urllib.request.Request('https://www.icicipruamc.com/static/js/index.1t6HhxO5.js',
+                                     headers={'User-Agent':'Mozilla/5.0','Accept':'*/*'})
+          with urllib.request.urlopen(req,timeout=20) as r:js=r.read().decode('utf-8','replace')
+          for needle in ('/news-and-media/downloads','NEWS_MEDIA_DOWNLOADS'):
+              positions=[m.start() for m in re.finditer(re.escape(needle),js)]
+              print('NEEDLE',needle,'POSITIONS',positions)
+              for pos in positions:
+                  lo=max(0,pos-25000);hi=min(len(js),pos+25000);frag=js[lo:hi]
+                  imports=[]
+                  for m in re.finditer(r'import\(["\']\.\/([^"\']+\.js)["\']\)',frag):
+                      if m.group(1) not in imports:imports.append(m.group(1))
+                  tokens=[]
+                  for m in re.finditer(r'static/js/[A-Za-z0-9_.~%+@()\-]+\.js',frag):
+                      if m.group(0) not in tokens:tokens.append(m.group(0))
+                  print('ROUTE_IMPORTS',imports)
+                  print('ROUTE_TOKENS',tokens[-80:])
+                  # print concise local route code, whitespace collapsed
+                  local=re.sub(r'\s+',' ',js[max(0,pos-5000):pos+8000])
+                  print('LOCAL',local)
           PY
