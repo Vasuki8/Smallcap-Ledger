@@ -743,17 +743,19 @@ Top 10 holdings Grand Total 100.00%'''
 
     def test_mirae_discovery_uses_official_portfolio_service(self):
         from tracker import amc_discovery
-        payload=json.dumps({'ReturnCode':'0','DataCount':3,'Data':[
-            {'Title':'Monthly Portfolio as on July 31, 2026',
+        payload=json.dumps({'ReturnCode':'0','DataCount':4,'Data':[
+            {'Title':'Portfolio Details as on 31st August 2026 for Mirae Asset Nifty Smallcap 250 ETF',
+             'URL':'/docs/smallcap-etf-august-2026.xlsx','PublishDate':'/Date(1788998400000)/'},
+            {'Title':'Portfolio Details as on 31st July 2026 for Mirae Asset Small Cap Fund',
              'URL':'/docs/monthly-portfolio-july-2026.pdf','PublishDate':'/Date(1785456000000)/'},
-            {'Title':'Monthly Portfolio as on August 31, 2026',
+            {'Title':'Portfolio Details as on 31st August 2026 for Mirae Asset Small Cap Fund',
              'URL':'/docs/monthly-portfolio-august-2026.xlsx','PublishDate':'/Date(1788134400000)/'},
-            {'Title':'Monthly Portfolio as on August 31, 2026 PDF',
+            {'Title':'Portfolio Details as on 31st August 2026 for Mirae Asset Small Cap Fund',
              'URL':'/docs/monthly-portfolio-august-2026.pdf','PublishDate':'/Date(1788134400000)/'},
         ]}).encode()
         def fake_read(url,body=None):
             self.assertEqual(url,'https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData')
-            self.assertEqual(body,{'request':{'modulename':'portfolio_tab1','pgno':1,'pgsize':50}})
+            self.assertEqual(body,{'request':{'modulename':'portfolio_tab1','pgno':1,'pgsize':100}})
             return payload,'api','application/json'
         with patch('tracker.amc_discovery.read',side_effect=fake_read), \
              patch('tracker.amc_discovery.disclosures.official_publication_url',return_value=True):
@@ -761,7 +763,7 @@ Top 10 holdings Grand Total 100.00%'''
         self.assertEqual(rows[0],(
             'Mirae Asset Small Cap Fund',
             'https://www.miraeassetmf.co.in/docs/monthly-portfolio-august-2026.xlsx',
-            'Monthly Portfolio as on August 31, 2026'))
+            'Portfolio Details as on 31st August 2026 for Mirae Asset Small Cap Fund'))
         self.assertEqual(len(rows),3)
 
     def test_pgim_discovery_uses_official_disclosure_api_for_latest_smallcap_workbook(self):
