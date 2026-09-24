@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-24T18:35:58+00:00
+Prepared: 2026-09-24T21:37:12+00:00
 
 **36 funds, 143 NAV series, 281,300 NAV observations. Latest included NAV: 2026-09-23.**
 
@@ -17,7 +17,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Bandhan Small Cap Fund | ₹ 35,153.11 · 2026-09-22 | 0.61% TER · 2026-09-22 | 260 positions · 2026-08-31 · partial · current | BSE 250 SmallCap TRI · 2025-03-31 | 3 |
 | Bank Of India Small Cap Fund | ₹ 3,571.84 · 2026-09-22 | 0.73% TER · 2026-09-23 | 103 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-06-30 | 7 |
 | Baroda Bnp Paribas Small Cap Fund | ₹ 1,300.41 · 2026-09-22 | 1.21% TER · 2026-09-23 | 63 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-07-31 | 6 |
-| Canara Robeco Small Cap Fund | ₹ 14,398.90 · 2026-09-22 | 0.45% BER · 2026-08-31 | 91 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 Index TRI · 2026-08-31 | 6 |
+| Canara Robeco Small Cap Fund | ₹ 14,398.90 · 2026-09-22 | 0.68% TER · 2026-09-24 | 91 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 Index TRI · 2026-08-31 | 6 |
 | DSP Small Cap Fund | ₹ 21,629.07 · 2026-09-22 | 0.81% TER · 2026-09-23 | 86 positions · 2026-08-31 · complete · current | BSE 250 Small Cap TRI · 2026-09-23 | 15 |
 | Edelweiss Small Cap Fund | ₹ 7,158.51 · 2026-09-22 | 0.65% TER · 2026-09-23 | 10 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 · 2026-08-31 | 2 |
 | Franklin India Small Cap Fund | ₹ 14,592.60 · 2026-09-22 | 1.07% TER · 2026-09-23 | 93 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 · 2026-08-31 | 2 |
