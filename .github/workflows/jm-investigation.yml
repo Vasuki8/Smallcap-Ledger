@@ -13,18 +13,28 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
-      - name: Extract exact JM download API calls
+      - name: Query JM Portfolio Disclosure API
         run: |
           python - <<'PY'
-          import urllib.request,re
-          req=urllib.request.Request('https://www.jmfinancialmf.com/static/js/main.d8e32c01.js',headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=30) as r: js=r.read().decode('utf-8','replace')
-          for needle in ('GetDownloadNewSub','GetDownloadNew','GetDownloadDrop'):
-              start=0;count=0
-              while count<12:
-                  i=js.find(needle,start)
-                  if i<0:break
-                  frag=js[max(0,i-1800):i+3500]
-                  print('CALL',needle,frag)
-                  start=i+len(needle);count+=1
+          import urllib.request,json
+          base='https://jmmfapi.jmfinancialmf.com/api/'
+          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
+                   'Content-Type':'application/json','Origin':'https://www.jmfinancialmf.com',
+                   'Referer':'https://www.jmfinancialmf.com/downloads/Portfolio-Disclosure'}
+          def call(path,payload):
+              req=urllib.request.Request(base+path,data=json.dumps(payload).encode(),headers=headers,method='POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      b=r.read()
+                      print('RESP',path,r.status,r.headers.get('Content-Type'),len(b),b.decode('utf-8','replace')[:50000])
+                      return b
+              except Exception as e:
+                  print('ERROR',path,repr(e))
+                  if getattr(e,'read',None):
+                      try:print('ERROR_BODY',e.read().decode('utf-8','replace')[:20000])
+                      except:pass
+          call('GetDownloadDrop',{'IICategoryID':'2'})
+          call('GetDownloadNew',{'IICategoryID':'2','IISubCategoryID':'0','IVsearch':''})
+          call('GetDownloadNew',{'IICategoryID':'2','IISubCategoryID':'37','IVsearch':''})
+          call('GetDownloadNewSub',{'IVSubCategoryName':'Monthly Portfolio'})
           PY
