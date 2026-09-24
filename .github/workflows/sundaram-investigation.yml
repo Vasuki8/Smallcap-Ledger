@@ -74,6 +74,18 @@ jobs:
                   else:
                       iterable=[]
 
+                  if body[:2]==b'PK':
+                      formula_book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=False)
+                      for fws in formula_book.worksheets:
+                          head=' '.join(str(c.value) for row in list(fws.iter_rows(max_row=20)) for c in row if c.value not in (None,''))
+                          if 'small cap' not in (fws.title+' '+head).lower():continue
+                          for rr in range(82,89):
+                              vals=[]
+                              for c in next(fws.iter_rows(min_row=rr,max_row=rr)):
+                                  vals.append({'coord':c.coordinate,'value':c.value,'data_type':c.data_type,'format':c.number_format})
+                              print('FORMULA_ROW',rr,json.dumps(vals,default=str,ensure_ascii=False))
+                      formula_book.close()
+
                   sheets=[]
                   for name,data,formats in iterable:
                       prefix=' '.join(str(v) for row in data[:40] for v in row if v not in (None,''))
