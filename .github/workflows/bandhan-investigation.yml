@@ -13,38 +13,44 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Probe Bandhan WordPress portfolio records
+      - name: Trace Bandhan public archive and sitemap links
         run: |
           python - <<'PY'
-          import json,re,urllib.request,urllib.parse
+          import re,urllib.request,urllib.parse,json
+          from html import unescape
           base='https://cmsnew.bandhanmutual.com'
-          headers={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/html,*/*'}
+          headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/xml,*/*'}
           def get(url):
               req=urllib.request.Request(url,headers=headers)
               with urllib.request.urlopen(req,timeout=30) as r:
                   b=r.read()
                   print('FETCH',url,r.status,r.headers.get('Content-Type'),len(b),r.geturl())
-                  return b
+                  return b.decode('utf-8','replace')
           urls=[
-            base+'/wp-json/',
-            base+'/wp-json/wp/v2/types',
-            base+'/wp-json/wp/v2/search?search='+urllib.parse.quote('Bandhan Small Cap Fund 31 August 2026')+'&per_page=100',
-            base+'/wp-json/wp/v2/posts?search='+urllib.parse.quote('Bandhan Small Cap Fund 31 August 2026')+'&per_page=100&_embed=1',
-            base+'/wp-json/wp/v2/pages?search='+urllib.parse.quote('Bandhan Small Cap Fund 31 August 2026')+'&per_page=100&_embed=1',
-            base+'/wp-json/wp/v2/media?search='+urllib.parse.quote('Bandhan Small Cap Fund')+'&per_page=100',
-            base+'/wp-json/wp/v2/media?search='+urllib.parse.quote('Small Cap')+'&after=2026-09-01T00:00:00&before=2026-09-20T23:59:59&per_page=100',
+              base+'/page/152/',
+              base+'/category/scheme-portfolios/',
+              base+'/category/scheme-portfolios/page/12/',
+              base+'/category/scheme-portfolios/page/13/',
+              base+'/wp-sitemap.xml',
+              base+'/sitemap_index.xml',
           ]
+          found=set()
           for url in urls:
-              try:
-                  body=get(url); text=body.decode('utf-8','replace')
-                  if '/wp-json/'==urllib.parse.urlparse(url).path:
-                      data=json.loads(text)
-                      routes=[k for k in data.get('routes',{}) if re.search(r'portfolio|scheme|download|media|attachment',k,re.I)]
-                      print('ROUTES',json.dumps(routes[:300]))
-                  else:
-                      try:data=json.loads(text)
-                      except: print('TEXT',text[:16000]); continue
-                      print('JSON',url,json.dumps(data,ensure_ascii=False)[:50000])
+              try:text=get(url)
               except Exception as e:
-                  print('ERROR',url,repr(e))
+                  print('ERROR',url,repr(e));continue
+              for m in re.finditer(r'href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',text,re.I|re.S):
+                  href=urllib.parse.urljoin(url,unescape(m.group(1)))
+                  label=re.sub(r'<[^>]+>',' ',m.group(2))
+                  label=' '.join(unescape(label).split())
+                  blob=href+' '+label
+                  if re.search(r'small.?cap|portfolio|sitemap',blob,re.I):
+                      print('LINK',href,'|',label[:800])
+                      if re.search(r'bandhan.*small.*cap|small.*cap',blob,re.I):found.add(href)
+              if 'sitemap' in url:
+                  for loc in re.findall(r'<loc>(.*?)</loc>',text,re.I|re.S):
+                      loc=unescape(loc.strip())
+                      if re.search(r'post|page|portfolio|scheme',loc,re.I):
+                          print('SITEMAP',loc)
+          print('FOUND',json.dumps(sorted(found),ensure_ascii=False))
           PY
