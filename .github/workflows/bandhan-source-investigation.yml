@@ -10,45 +10,35 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect Bandhan FY2027 current files
+      - name: Inspect exact Bandhan August post HTML
         run: |
           python - <<'PY'
-          import urllib.request,urllib.parse,json,re
-          base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          for fy in ('2027',):
-              params={'posts_per_page':'2500','bypass_pagination':'true'}
-              if fy:params['financial_year']=fy
-              url=base+'?'+urllib.parse.urlencode(params)
-              try:
-                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
-                  with urllib.request.urlopen(req,timeout=45) as r:data=json.loads(r.read())
-              except Exception as e:
-                  print('QUERY_ERROR',fy,repr(e));continue
-              rows=data.get('data') if isinstance(data,dict) else data
-              rows=rows if isinstance(rows,list) else []
-              print('QUERY',repr(fy),'POSTS',len(rows),'STATUS',data.get('status') if isinstance(data,dict) else None)
-              for item in rows:
-                  if not isinstance(item,dict):continue
-                  acf=item.get('acf_fields') or {}
-                  files=acf.get('disclosure_files') or []
-                  selected=[]
-                  for entry in files:
-                      link=(entry or {}).get('document_link') or {}
-                      rec={
-                        'name':str((entry or {}).get('document_name') or '').strip(),
-                        'filename':str(link.get('filename') or '').strip(),
-                        'url':str(link.get('url') or '').strip(),
-                        'mime':str(link.get('mime_type') or '').strip(),
-                        'date':str(link.get('date') or '').strip(),
-                        'filesize':link.get('filesize'),
-                      }
-                      blob=' '.join(str(v) for v in rec.values())
-                      if re.search(r'(?:2026[/_-](?:0?[6-9]|1[0-2])|(?:jun|jul|aug|sep)(?:ust|y|tember)?[^\n]{0,20}2026|31[-./ ]0?[78][-./ ]2026|30[-./ ]0?6[-./ ]2026)',blob,re.I):
-                          selected.append(rec)
-                  if selected:
-                      print('POST',item.get('id'),item.get('title'),'FY',acf.get('financial_year'),'FILES',len(files))
-                      for rec in selected:print('FILE',json.dumps(rec,ensure_ascii=False,default=str))
+          import urllib.request,re,json
+          from urllib.parse import urljoin
+          url='https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+          try:
+              with urllib.request.urlopen(req,timeout=40) as r:
+                  raw=r.read();final=r.geturl();typ=r.headers.get('content-type','')
+              print('PAGE',final,typ,len(raw))
+              text=raw.decode('utf-8','ignore')
+              print('TITLE',re.findall(r'<title[^>]*>(.*?)</title>',text,re.I|re.S)[:3])
+              attrs=[]
+              for tag in re.findall(r'<(?:a|button|iframe|embed|object|input|form)[^>]*>',text,re.I):
+                  if re.search(r'href|src|data-|action|download|file|url',tag,re.I):
+                      attrs.append(tag[:2500])
+              print('ATTR_COUNT',len(attrs))
+              for x in attrs:print('ATTR',x)
+              urls=sorted(set(re.findall(r'https?://[^"\'<>\s]+|/[^"\'<>\s]+',text)))
+              for x in urls:
+                  if re.search(r'xlsx?|xls|xml|pdf|portfolio|download|media|storage|wp-json|api',x,re.I):
+                      print('URL',x)
+              for needle in ['portfolio','attachment','download','file','document','acf','wp-json','storage.googleapis']:
+                  for m in list(re.finditer(needle,text,re.I))[:20]:
+                      print('CTX',needle,text[max(0,m.start()-1000):m.end()+2500].replace('\n',' ')[:3600])
+          except Exception as e:
+              print('ERROR',repr(e))
           PY
