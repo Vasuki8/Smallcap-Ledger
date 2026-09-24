@@ -66,6 +66,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/refresh_sbi_portfolios.py
+      - name: Apply Bandhan monthly portfolio discovery upgrade
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/refresh_bandhan_portfolios.py
       - name: Collect daily data
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
         timeout-minutes: 40
