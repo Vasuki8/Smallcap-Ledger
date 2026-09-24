@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 15
     env:
       SMALLCAP_NO_SCHEDULER: '1'
-      SMALLCAP_DATA_DIR: ${{ runner.temp }}/tata-investigation-data
+      SMALLCAP_DATA_DIR: /tmp/tata-investigation-data
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
