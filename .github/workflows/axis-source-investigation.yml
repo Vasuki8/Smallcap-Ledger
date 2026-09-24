@@ -19,35 +19,45 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect public Axis statutory routes
+      - name: Probe bounded official Axis monthly workbook convention
         run: |
           mkdir -p audit
           uv run --frozen python - <<'PY'
-          import json,re
+          import hashlib,json
           from pathlib import Path
+          from urllib.parse import quote
           import httpx
           out=Path('audit')
-          c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,*/*'},timeout=20,follow_redirects=True)
-          slugs=['sdPortfolios','portfolio','portfolios','portfolio-disclosures','monthly-portfolio','monthly-portfolios']
-          summary=[]
-          for slug in slugs:
-            url='https://www.axismf.com/statutory-disclosures/'+slug
+          base='https://www.axismf.com/cms/sites/default/files/Statutory/'
+          stems=[]
+          for day,month in [('31','08'),('31','07')]:
+            for year in ('26','2026'):
+              stems += [
+                f'Monthly Portfolio-{day} {month} {year}.xlsx',
+                f'Monthly Portfolio - {day} {month} {year}.xlsx',
+                f'Monthly Portfolio {day} {month} {year}.xlsx',
+                f'Monthly Portfolio-{day}-{month}-{year}.xlsx',
+              ]
+          c=httpx.Client(headers={'User-Agent':'Mozilla/5.0','Referer':'https://www.axismf.com/statutory-disclosures'},timeout=20,follow_redirects=True)
+          rows=[]
+          for stem in stems:
+            url=base+quote(stem)
             try:
               r=c.get(url)
-              text=r.text
-              m=re.search(r'statutoryDisclosureSubCategoryResponse.{0,12000}',text,re.I|re.S)
-              excerpt=m.group(0)[:12000] if m else ''
-              item={'slug':slug,'status':r.status_code,'bytes':len(r.content),'has_pdList':'pdList' in excerpt,'has_nested':'sdNestedList' in excerpt,'has_data_not_available':'Data not available' in excerpt,'excerpt':excerpt[:2500]}
-              summary.append(item)
-              (out/f'{slug}.html').write_bytes(r.content)
-              print(json.dumps(item,ensure_ascii=False))
+              sig=r.content[:4]
+              ok=r.status_code==200 and sig==b'PK\x03\x04'
+              row={'stem':stem,'url':str(r.url),'status':r.status_code,'bytes':len(r.content),'content_type':r.headers.get('content-type'),'xlsx':ok}
+              if ok:
+                digest=hashlib.sha256(r.content).hexdigest(); row['sha256']=digest
+                (out/stem.replace(' ','_').replace('/','_')).write_bytes(r.content)
+              rows.append(row); print(json.dumps(row))
             except Exception as e:
-              print(slug,repr(e))
-          (out/'summary.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False))
+              rows.append({'stem':stem,'error':repr(e)})
+          (out/'results.json').write_text(json.dumps(rows,indent=2))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: axis-route-probe
+          name: axis-workbook-probe
           path: audit/
           retention-days: 3
