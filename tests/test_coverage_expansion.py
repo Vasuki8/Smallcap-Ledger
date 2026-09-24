@@ -97,10 +97,15 @@ class CoverageExpansionTests(unittest.TestCase):
         ]
         for row in rows:ws.append(row)
         bio=io.BytesIO();wb.save(bio);wb.close()
+        source='https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx'
+        # Simulate the previously retained equity-only partial using the exact
+        # same source hash; v126 must enrich it in place rather than duplicate it.
+        disclosures.portfolio('Sundaram Small Cap Fund','2026-08-31',[
+            {'name':'Alpha Industries Ltd','isin':'INE123456789','sector':'Industrial Products',
+             'weight':95.0,'quantity':100,'asset_type':'Equity'}],
+            False,source,'sundaram-censored')
         count=disclosures.spreadsheet(
-            bio.getvalue(),'Sundaram Small Cap Fund',
-            'https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx',
-            'sundaram-censored')
+            bio.getvalue(),'Sundaram Small Cap Fund',source,'sundaram-censored')
         self.assertEqual(count,4)
         snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions,SUM(h.weight) weight
           FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
