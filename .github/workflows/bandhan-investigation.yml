@@ -10,32 +10,23 @@ permissions:
 jobs:
   investigate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve Bandhan CMS disclosure path literals
+      - name: Bounded scan for Bandhan disclosure API path
         run: |
           python - <<'PY'
-          import re,urllib.request
-          req=urllib.request.Request('https://bandhanmutual.com/static/js/main.ce5a3574.js',headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=40) as r:js=r.read().decode('utf-8','replace')
-          for pat in (
-              r'[^"\']{0,300}wp-json[^"\']{0,500}',
-              r'[^"\']{0,300}finance-api[^"\']{0,700}',
-              r'[^"\']{0,300}additional[^"\']{0,800}',
-              r'[^"\']{0,300}disclosure[^"\']{0,800}',
-          ):
-              vals=[]
-              for m in re.finditer(pat,js,re.I):
-                  v=m.group(0)
-                  if v not in vals:vals.append(v)
-              for v in vals[:250]: print('RAW',re.sub(r'\s+',' ',v)[:3000])
-          # Exact contexts where getAdditionalDisc is defined/called.
-          for needle in ('getAdditionalDisc',"'data':_0x3ad76b['getAdditionalDisc']",'getAdditionalDisclosureApi','getNewAdditionalDisclosureApi'):
-              start=0;count=0
-              while count<20:
+          import urllib.request
+          url='https://bandhanmutual.com/static/js/main.ce5a3574.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=35) as r:js=r.read().decode('utf-8','replace')
+          for needle in ('finance-api','wp-json','getAdditionalDisc','ADDITIONAL_DISCLOSOURES','SCHEME_PORTFOLIOS'):
+              positions=[];start=0
+              while len(positions)<100:
                   i=js.find(needle,start)
                   if i<0:break
-                  print('CTX',needle,re.sub(r'\s+',' ',js[max(0,i-7000):i+11000]))
-                  start=i+len(needle);count+=1
+                  positions.append(i);start=i+len(needle)
+              print('POSITIONS',needle,positions)
+              for i in positions[:25]:
+                  print('SLICE',needle,i,repr(js[max(0,i-900):i+1800]))
           PY
