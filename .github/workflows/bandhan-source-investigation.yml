@@ -18,7 +18,7 @@ jobs:
           python - <<'PY'
           import urllib.request,urllib.parse,json,re
           base='https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures'
-          for fy in ('2027','2026-27','2026-2027',''):
+          for fy in ('2027',):
               params={'posts_per_page':'2500','bypass_pagination':'true'}
               if fy:params['financial_year']=fy
               url=base+'?'+urllib.parse.urlencode(params)
