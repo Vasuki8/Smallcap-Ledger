@@ -1,8 +1,37 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after ICICI official-source audit. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-24, after JM production deployment. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
 
-## Latest completed task: ICICI complete-portfolio source audit — upstream archive DNS blocker
+## Latest completed task: JM complete current + prior monthly portfolio recovery
+
+Merged PR #91 as commit `c9f813dcdbe895ef28d051fda1a879ed3b5ddd7e`. Production workflow **#461**, run **36028576004**, passed cumulative-history restore, parser v128 recovery, all **206 tests**, generated-site/download validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T16:37:11Z**, status was recorded at **2026-09-24T16:37:33Z**, and the workflow completed successfully at **2026-09-24T16:38:18Z**.
+
+JM Financial's live Downloads SPA exposes the public first-party API `https://jmmfapi.jmfinancialmf.com/api/`. The browser uses **Portfolio Disclosure** category ID 2 and **Monthly Portfolio of Schemes** subcategory ID 4. Its API responses are AES-CBC encoded with key/IV constants embedded in JM's production browser bundle; these are public application constants, not account credentials. The tracker mirrors the browser-side decode using the system OpenSSL already available on the GitHub runner, with no new Python dependency.
+
+Discovery now reads the public category/listing endpoints, accepts only the exact **JM Small Cap Fund** title, registered JM publication host and XLS/XLSX file type, and selects only the newest two closed calendar month-ends. API listing responses are transient and are **not archived**; only the actual official workbooks and their hashes are retained.
+
+Official source evidence retained in production:
+
+| Reporting date | Positions | Complete | Weight | Quantities | Workbook AUM | SHA-256 |
+| --- | ---: | --- | ---: | ---: | ---: | --- |
+| 2026-08-31 | 85 | Yes | 100.00% | 83 | ₹929.496506 Cr | `a1060a5d303c8d94e96428afb67aff66e0d00291e184edbbd9341d76149ece24` |
+| 2026-07-31 | 83 | Yes | 100.00% | 81 | ₹868.317695 Cr | `17e9e333b30ebbe2b435d574ad0ed0be184945c94325fca089f1f43d14c2dfb5` |
+
+Exact official workbooks:
+- August: `https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Small%20Cap%20Fund%20-%20Aug%2031,%202026.xlsx`
+- July: `https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Small%20Cap%20Fund%20-%20July%2031,%202026.xlsx`
+
+The generic structured workbook parser already handled all named equities and explicit cash. The only completeness blocker was JM's exact section **`TREPS / Reverse Repo Investments / Corporate Debt Repo`**, whose leaf is **`CCIL`** without an ISIN. Because that heading contains the word "Debt", the generic section-order rule had classified it as Debt before the repo rule. V128 narrowly classifies that exact JM section as Money market and accepts the exact `CCIL` leaf. The retained CCIL weights are **1.1951124861% for August** and **1.0602825455% for July**. No residual/balancing holding is created; all identity, unknown-row, duplicate, market-value, weight and grand-total reconciliation checks remain active.
+
+The website's latest displayed AUM remains the newer **₹955.64 crore as of 2026-09-22** observation; workbook AUM remains separate historical evidence.
+
+Final isolated validation run **36028297259** passed **206 tests** and live API -> browser-compatible AES decode -> workbook ingestion for both months. It verified exact URLs, hashes, AUM, 85/83 position counts, 83/81 quantities, CCIL classification, 100% reconciliation, idempotent second ingestion and non-archival of transient API responses. Production #461 independently logged: **JM current and prior complete portfolios verified: 2026-08-31, 85 positions, 100.000000% weight, complete=1; prior 2026-07-31, 83 positions, 100.000000% weight, complete=1**.
+
+Pages artifact **10820293566** was generated at **231,175,257 bytes** with digest `sha256:2202eb39718fcf682151a23edc0fe7452aad2667ac8c6aac386292b74f40ca23`. JM is now included in normal nightly AMC discovery. No UI, schedule, paid-service, permission, archive-retention policy or Python dependency changes were made.
+
+Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/91 ; validation https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36028297259 ; production https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36028576004 .
+
+## Previous completed task: ICICI complete-portfolio source audit — upstream archive DNS blocker
 
 No production data was promoted in this batch. The purpose was to determine whether **ICICI Prudential Small Cap Fund**, currently **83 named positions dated 2026-08-31 and partial**, has a first-party complete monthly portfolio route that can be collected without inventing the factsheet's separately disclosed **"Equity less than 1% of corpus"** aggregate.
 
@@ -173,20 +202,22 @@ Evidence: PR https://github.com/Vasuki8/Smallcap-Ledger/pull/86 ; validation htt
 
 ## Verified coverage after this batch
 
-Coverage remains the production state built at **2026-09-24T15:20:56Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage. This ICICI audit intentionally made no production data change.
+Coverage at **2026-09-24T16:37:11Z**: **36 funds; 143 NAV series; 281,300 NAV observations; latest NAV 2026-09-23**. AUM, a dated Direct fee figure and reported benchmark identity each have **36/36** coverage.
 
-Portfolios remain **34/36 with holdings; 27 complete; 33 current; 27 current and complete; 7 partial**. The expected month-end is **2026-08-31**. The remaining collected partials are **Axis, Bajaj Finserv, Edelweiss, ICICI Prudential, JM, Sundaram and UTI**. Bajaj Finserv is the only stale collected portfolio; the other six partials are current under the August freshness target.
+Portfolios are now **34/36 with holdings; 28 complete; 33 current; 28 current and complete; 6 partial**. The expected month-end is **2026-08-31**. JM improved complete/current-complete coverage **27 -> 28** without changing the 33-fund freshness count because its Top-25 factsheet snapshot was already current.
 
-The latest production status audit remains **2026-09-24T15:21:18Z** with **111 retained portfolio snapshots, 1,487 archived document records, 1,929,413,449 archive bytes, 99,307,520 database bytes and 2,028,720,969 total retained bytes**. The Pages publication-file budget remains unchanged at 250 MiB.
+The remaining collected partials are **Axis, Bajaj Finserv, Edelweiss, ICICI Prudential, Sundaram and UTI**. Bajaj Finserv is the only stale collected portfolio; the other five partials are current under the August freshness target.
+
+The production status audit at **2026-09-24T16:37:33Z** records **113 retained portfolio snapshots, 1,489 archived document records, 1,929,550,764 archive bytes, 99,340,288 database bytes and 2,028,891,052 total retained bytes**. The Pages publication-file budget remains unchanged at 250 MiB.
 
 ## Next backend task and remaining blockers
 
-1. **JM Small Cap Fund is the next preferred completeness investigation.** Current coverage is **25 named positions dated 2026-08-31, partial**. The existing factsheet parser correctly treats the published Top-25 plus `Other Equity Stocks` aggregate as partial. Trace JM's first-party product/download APIs or statutory disclosures for the complete monthly portfolio; prefer a structured workbook/CSV/JSON and do not expand the aggregate into invented constituents.
-2. **ICICI Prudential** is now a documented first-party transport blocker: its live downloads API exposes the exact August/July monthly portfolio ZIPs, but both redirect to `archive.icicipruamc.com`, whose authoritative public DNS currently has no A/CNAME record. Retry only when that host resolves again or ICICI exposes another working official route.
-3. **Sundaram** remains a source-precision/data-model blocker because one written-off holding is disclosed only as `<0.01%`. **UTI** remains partial because its current exposure source abbreviates small/short-term positions. Do not infer exact weights.
-4. **Axis** remains a first-party access/discovery blocker. **Edelweiss** currently exposes supported top/named-holdings views rather than a proven complete portfolio source.
-5. **Bajaj Finserv** remains the only stale collected portfolio: **13 partial positions dated 2026-07-31**. Retry only with genuinely new first-party access evidence.
-6. **Bandhan and Union** remain the two zero-portfolio gaps (`document_not_archived`). Bandhan requires an obtainable official attachment/API route; Union remains an official-host transport blocker, not a reason to weaken its tested parser.
-7. Quant, SBI, Tata, TRUSTMF and Invesco are completed structured recovery targets; do not rerun those batches unnecessarily. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
+1. **Bandhan Small Cap Fund is the next preferred source-recovery target because it is one of only two funds with no retained portfolio at all.** Re-read the existing WordPress attachment/API discovery and prior failure evidence first. Recover holdings only from an obtainable first-party Bandhan portfolio workbook/PDF/structured attachment; do not promote top-holdings or inferred rows merely to close the zero gap.
+2. **Union Small Cap Fund** is the other zero-portfolio gap and remains an official-host transport blocker. Do not weaken source or robots checks.
+3. **ICICI Prudential** is a documented first-party transport blocker: its live API exposes exact August/July monthly portfolio ZIPs, but both redirect to `archive.icicipruamc.com`, whose authoritative public DNS had no A/CNAME record on 2026-09-24. Retry only if that official transport changes.
+4. **Sundaram** remains a source-precision/data-model blocker because one written-off holding is disclosed only as `<0.01%`. **UTI** remains partial because its current exposure source abbreviates small/short-term positions. Do not infer exact weights.
+5. **Axis** remains a first-party access/discovery blocker. **Edelweiss** remains a supported top/named-holdings partial; prior v89-v103 source tracing should be reviewed before any new attempt.
+6. **Bajaj Finserv** remains the only stale collected portfolio: **13 partial positions dated 2026-07-31**. Retry only with genuinely new first-party access evidence.
+7. Quant, SBI, Tata, TRUSTMF, Invesco and JM are completed structured recovery targets; do not rerun those batches unnecessarily. Re-read `main`, this handoff, current coverage and latest Actions/deployment state before continuing.
 
 Continue backend/data work only unless UI changes are explicitly requested. Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Retain the current plus immediately previous calendar-month holdings window and cumulative original evidence. Never invent an exact number or unnamed constituent merely to improve completeness. Avoid broad historical reparses unless a source/parser change genuinely requires them. Update this handoff after the next completed batch.
