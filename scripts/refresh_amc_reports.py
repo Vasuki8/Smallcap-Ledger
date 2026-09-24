@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -229,6 +229,40 @@ def run():
         else:
             detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
             print(f'::warning::ABSL current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
+        ok.append(current)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v61':
+        from tracker import amc_discovery
+        family='Pgim India Small Cap Fund';attempted=0
+        try:
+            for discovered_family,url,title in amc_discovery.discover('PGIM'):
+                if discovered_family!=family:continue
+                attempted+=1
+                print(f'PGIM_V61_CANDIDATE {attempted} {url} :: {title}',flush=True)
+                try:
+                    providers.can_crawl(url)
+                    body,h,mime=providers.fetch(url,max_bytes=70*1024*1024)
+                    sig=body[:16].hex()
+                    print(f'PGIM_V61_FETCH {attempted} bytes={len(body)} mime={mime} sig={sig}',flush=True)
+                    count=amc_reports.extract(body,family,url,h)
+                    print(f'PGIM_V61_PARSED {attempted} count={count}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::PGIM v61 candidate {attempted}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                if snap:
+                    print(f'PGIM_V61_SNAPSHOT {snap["as_of"]} complete={snap["complete"]} positions={snap["positions"]}',flush=True)
+                if snap and snap['as_of']>='2026-08-31' and snap['complete']:break
+        except Exception as exc:
+            print(f"::warning::PGIM v61 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
+          FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+          WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+        current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete'])
+        if current:print(f'PGIM current complete portfolio verified at {snap["as_of"]}: {snap["positions"]} positions',flush=True)
+        else:
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, complete={snap["complete"]}'
+            print(f'::warning::PGIM current complete portfolio not recovered; latest is {detail}; attempted={attempted}',flush=True)
         ok.append(current)
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
