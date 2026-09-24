@@ -13,53 +13,43 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Query exact ICICI portfolio disclosure categories
+      - name: Read ICICI downloads categories and monthly portfolio files
         run: |
           python - <<'PY'
           import urllib.request,uuid,json,re
           common={'User-Agent':'Mozilla/5.0','Accept':'application/json,text/plain,*/*',
                   'Content-Type':'application/json','Origin':'https://www.icicipruamc.com',
-                  'Referer':'https://www.icicipruamc.com/about-us/statutory-disclosures',
+                  'Referer':'https://www.icicipruamc.com/news-and-media/downloads',
                   'env':'api','baggage':''}
           base='https://apimf.icicipruamc.com'
-          def request(url,method='GET',body=None):
+          def request(path,method='GET',body=None):
               headers=dict(common);headers['requestAPIId']=str(uuid.uuid4())
               data=json.dumps(body).encode() if body is not None else None
-              req=urllib.request.Request(url,data=data,headers=headers,method=method)
+              req=urllib.request.Request(base+path,data=data,headers=headers,method=method)
               with urllib.request.urlopen(req,timeout=30) as r:
-                  b=r.read();print('FETCH',method,url,r.status,len(b))
+                  b=r.read();print('FETCH',method,path,r.status,len(b))
                   return json.loads(b.decode('utf-8','replace'))
-          trees=[]
-          for disclosure in ('','STATUTORY_DISCLOSURES'):
-              url=base+'/fds/v1/categories?userType=Investor'
-              if disclosure:url+='&disclosureType='+disclosure
-              data=request(url)
-              trees.extend(((data.get('success') or {}).get('data') or []))
-          candidates=[]
-          for cat in trees:
-              for sub in cat.get('subCategory') or []:
-                  text=' | '.join([
-                      str(cat.get('internalName') or ''),
-                      str((cat.get('title') or {}).get('text') or ''),
-                      str(sub.get('internalName') or ''),
-                      str((sub.get('title') or {}).get('text') or ''),
-                      str((sub.get('title') or {}).get('code') or ''),
-                  ])
-                  if re.search(r'portfolio|holding|scheme.?wise|monthly',text,re.I):
-                      row={'parent':str((cat.get('title') or {}).get('text') or ''),
-                           'parent_id':cat.get('id'),'type':cat.get('type'),
-                           'sub_id':sub.get('id'),'sub_title':str((sub.get('title') or {}).get('text') or ''),
-                           'sub_code':str((sub.get('title') or {}).get('code') or ''),
-                           'internal':str(sub.get('internalName') or ''),
-                           'filters':sub.get('filter') or []}
-                      key=(row['sub_id'],row['type'])
-                      if key not in [(x['sub_id'],x['type']) for x in candidates]:candidates.append(row)
-          for row in candidates:
-              print('CANDIDATE',json.dumps(row,ensure_ascii=False,separators=(',',':')))
 
+          cats=request('/nms/v1/downloads/categories?userType=Investor')
+          data=((cats.get('success') or {}).get('data') or [])
+          candidates=[]
+          for cat in data:
+              ctitle=str((cat.get('title') or {}).get('text') or '')
+              ccode=str((cat.get('title') or {}).get('code') or '')
+              for sub in cat.get('subCategory') or []:
+                  stitle=str((sub.get('title') or {}).get('text') or '')
+                  scode=str((sub.get('title') or {}).get('code') or '')
+                  internal=str(sub.get('internalName') or '')
+                  blob=' | '.join([ctitle,ccode,stitle,scode,internal])
+                  if re.search(r'portfolio|scheme disclosure|other scheme',blob,re.I):
+                      row={'category_id':cat.get('id'),'category_title':ctitle,'category_code':ccode,
+                           'sub_id':sub.get('id'),'sub_title':stitle,'sub_code':scode,'internal':internal,
+                           'filters':sub.get('filter') or []}
+                      candidates.append(row)
+                      print('CANDIDATE',json.dumps(row,ensure_ascii=False,separators=(',',':')))
           for row in candidates:
-              title=' '.join([row['parent'],row['sub_title'],row['sub_code'],row['internal']])
-              if not re.search(r'portfolio|holding',title,re.I):continue
+              if not re.search(r'monthly.*portfolio|portfolio.*monthly',row['sub_title']+' '+row['sub_code']+' '+row['internal'],re.I):
+                  continue
               filters=[]
               for filt in row['filters']:
                   key=str((filt.get('key') or {}).get('code') or '')
@@ -69,14 +59,15 @@ jobs:
                       if key=='FINANCIAL_YEAR' and code=='2026-2027':vals.append(code)
                       if key=='MONTH' and str(code).strip() in ('August','July'):vals.append(code)
                   if vals:filters.append({key:vals})
-              body={'categoryId':row['sub_id'],'userType':'Investor','fileType':'All',
-                    'page':'1','size':'100','filter':filters,'search':''}
-              print('REQUEST',row['sub_title'],json.dumps(body,separators=(',',':')))
-              out=request(base+'/fds/v1/files','POST',body)
-              data=((out.get('success') or {}).get('data') or [])
-              print('FILE_COUNT',row['sub_title'],len(data))
-              for item in data:
-                  blob=json.dumps(item,ensure_ascii=False)
-                  if re.search(r'small\s*cap|portfolio|august|july',blob,re.I):
-                      print('FILE_ITEM',row['sub_title'],json.dumps(item,ensure_ascii=False,separators=(',',':'))[:12000])
+              body={'categoryId':str(row['sub_id']),'schemeCategory':'','userType':'Investor',
+                    'fileType':'All','page':'1','size':'100','filter':filters,
+                    'categoryName':row['category_code']}
+              print('REQUEST',json.dumps(body,separators=(',',':')))
+              out=request('/nms/v1/downloads/files','POST',body)
+              payload=(out.get('success') or {}).get('data') or {}
+              files=payload.get('files') if isinstance(payload,dict) else payload
+              files=files or []
+              print('FILE_COUNT',len(files))
+              for item in files:
+                  print('FILE_ITEM',json.dumps(item,ensure_ascii=False,separators=(',',':'))[:16000])
           PY
