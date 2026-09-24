@@ -14,28 +14,18 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Inspect ICICI disclosure request wiring
+      - name: Inspect ICICI financial disclosure API usage
         run: |
           python - <<'PY'
           import re, urllib.request
           u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
           req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
           with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
-          for needle in [
-              '/nms/v1/downloads/categories',
-              '/nms/v1/downloads/files',
-              'TOTAL_EXPENSE_RATIO',
-              'currentTabFilter',
-              'financialsDisclosures',
-              'Total Expense Ratio',
-          ]:
+          for needle in ['financialsCategoryData','financialsData','/fds/v1/categories','/fds/v1/files']:
               print('\nNEEDLE',needle)
-              pos=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
+              pos=[m.start() for m in re.finditer(re.escape(needle),s)]
               print('COUNT',len(pos))
-              for p in pos[:20]:
-                  block=re.sub(r'\s+',' ',s[max(0,p-5000):p+6500])
-                  print('POS',p,'CTX',block[:11800])
-          print('\nNMS_STRINGS')
-          vals=sorted(set(v for _,v in re.findall(r'(["\'])(.{1,250}?)\1',s) if v.startswith('/nms/')))
-          for v in vals: print(v)
+              for p in pos[:12]:
+                  print('POS',p)
+                  print(re.sub(r'\s+',' ',s[max(0,p-6500):p+9500])[:16500])
           PY
