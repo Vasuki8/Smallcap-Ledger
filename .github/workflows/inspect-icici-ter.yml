@@ -14,27 +14,26 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Probe ICICI financial disclosure POST schema
+      - name: Extract ICICI financial-disclosure identifiers
         run: |
           python - <<'PY'
-          import json, urllib.request, urllib.error
-          base='https://apimf.icicipruamc.com'
-          headers={
-            'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
-            'Accept':'application/json, text/plain, */*',
-            'Content-Type':'application/json',
-            'Origin':'https://www.icicipruamc.com',
-            'Referer':'https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total+Expense+Ratio',
-          }
-          payloads=[{}, {'category':'Total Expense Ratio'}, {'categoryName':'Total Expense Ratio'}, {'currentTabFilter':'Total Expense Ratio'}]
-          for path in ['/fds/v1/categories','/fds/v1/files']:
-              for payload in payloads:
-                  print('\nURL',path,'PAYLOAD',payload)
-                  req=urllib.request.Request(base+path,data=json.dumps(payload).encode(),method='POST',headers=headers)
-                  try:
-                      with urllib.request.urlopen(req,timeout=45) as r:
-                          body=r.read();print('FETCH',r.status,len(body),r.headers.get('content-type'));print('BODY',body[:12000].decode('utf-8','ignore'))
-                  except urllib.error.HTTPError as e:
-                      body=e.read();print('HTTP_ERROR',e.code,len(body),e.headers.get('content-type'));print('BODY',body[:8000].decode('utf-8','ignore'))
-                  except Exception as e: print('ERROR',type(e).__name__,e)
+          import re, urllib.request
+          u='https://www.icicipruamc.com/static/js/index.1t6HhxO5.js'
+          req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=60) as r:s=r.read().decode('utf-8','ignore')
+          ids=sorted(set(re.findall(r'\b[A-Za-z_$][A-Za-z0-9_$]*(?:Financial|financial)[A-Za-z0-9_$]*\b',s)))
+          print('IDS',ids)
+          for ident in ids:
+              if any(k in ident.lower() for k in ['financials','financialdisclosure','financialdata','financialcategory']):
+                  pos=[m.start() for m in re.finditer(re.escape(ident),s)]
+                  print('\nIDENT',ident,'COUNT',len(pos))
+                  for p in pos[:20]:
+                      print('CTX',re.sub(r'\s+',' ',s[max(0,p-2500):p+4500])[:7200])
+          for needle in ['financialsCategoryData', 'financialsData']:
+              # Search for object property access patterns referencing the endpoint key.
+              for pat in [rf'\.{needle}\b', rf'\[{needle}\]', rf'["\']{needle}["\']']:
+                  ms=list(re.finditer(pat,s))
+                  print('PATTERN',pat,'COUNT',len(ms))
+                  for m in ms[:10]:
+                      print(re.sub(r'\s+',' ',s[max(0,m.start()-3500):m.start()+6500])[:10200])
           PY
