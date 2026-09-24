@@ -343,10 +343,10 @@ Current production-verified coverage:
 | Direct fee | **36 / 36** |
 | Benchmark identity | **36 / 36** |
 | Any parsed portfolio | **34 / 36** |
-| Complete portfolio | **21 / 36** |
-| Current portfolio | **30 / 36** |
-| Current + complete | **21 / 36** |
-| Partial latest portfolio | **13 / 36** |
+| Complete portfolio | **22 / 36** |
+| Current portfolio | **31 / 36** |
+| Current + complete | **22 / 36** |
+| Partial latest portfolio | **12 / 36** |
 
 ### Latest completed backend batch — Groww August portfolio recovery
 
@@ -437,6 +437,19 @@ Production coverage after these recoveries is **28 / 36 current portfolios** and
 - Production now stores Edelweiss at **2026-08-31, 10 positions, complete=0, current=true**.
 - Coverage is now **30 / 36 current**, **21 / 36 complete**, and **21 / 36 current+complete**. Partial latest portfolios remain **13 / 36** because Edelweiss moved from a stale partial snapshot to a current partial snapshot.
 
+### Latest completed backend batch — Mirae August complete portfolio recovery
+
+**Mirae Asset Small Cap Fund is now current and complete at August 31, 2026.**
+
+- The official portfolio page is client-rendered. Source audits v105-v109 proved that `DownloadPortfolio.js` calls Mirae's first-party JSON service at `https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData` with module `portfolio_tab1`.
+- The service exposes thousands of portfolio records across Mirae schemes. Permanent discovery therefore filters to the exact **Mirae Asset Small Cap Fund** title, paginates a bounded number of newest results, and deliberately ignores similarly named Smallcap ETFs/index products.
+- The exact August source recovered by v110 is `https://www.miraeassetmf.co.in/docs/default-source/portfolios/mascf_aug2026.xlsx`, titled **Portfolio Details as on 31st August 2026 for Mirae Asset Small Cap Fund**.
+- The existing structured spreadsheet parser fully reconciled the real workbook without any Mirae-specific balancing logic: **86 positions, complete=1, as_of=2026-08-31**.
+- Permanent discovery/recovery commits include `7181df72f8c8e7caf3287dba3f2e07d990746530` (official API discovery), `0d15155514a12b67cee45c30f931572ade2e6f5e` (exact Small Cap filtering/pagination), `f9a915bcfa42a5732520c19a5d72be2eb2e4b602` (discovery regression), `236512a71b83c21e747b2c443b5dfb93d760a11f` (v110 targeted recovery), and `42fbfbd7faad4a1caa536457a89aeb2e27a1f80c` (v110 parser-version replay).
+- Production run **#419** performed the recovery and Pages deployment successfully. Final current-code verification run **#420** passed syntax, **178 tests**, site generation/validation, archive/status steps, and Pages deployment.
+- Status commit `3fda1ab993bfb29761b88325964edbded2c7add3` records Mirae at **2026-08-31, 86 positions, complete=1, current=true**.
+- Coverage is now **31 / 36 current**, **22 / 36 complete**, and **22 / 36 current+complete**; partial latest portfolios fell to **12 / 36**.
+
 ### Source-access blocker — Bajaj Finserv
 
 - Parser/source audit v83 confirmed the GitHub runner receives **403 Forbidden** from Bajaj's official fund page, downloads page, and current first-party media paths.
@@ -468,7 +481,6 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 
 **Stale partial**:
 - Bajaj Finserv — 2026-07-31, 13 positions · confirmed official-source access blocker.
-- Mirae Asset — 2026-07-31, 10 positions.
 - Quant — 2026-07-31, 11 positions.
 - SBI — 2026-07-31, 68 positions.
 
@@ -477,8 +489,8 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
 ### Recommended next backend work
 
-1. **Mirae Asset Small Cap Fund next.** Parser v105 has already started the first-party source audit. The official portfolio page loads `DownloadPortfolio.js`, which calls `AjaxService.GetDownloadsDataAsync` with module `portfolio_tab1`; continue by resolving that exact first-party API/request shape and selecting the newest dated official monthly portfolio file. Do not repeat the broad page/script crawl.
-2. Then handle **Quant / SBI** one at a time from concrete current official evidence. Bajaj remains a confirmed official-source access blocker and should not be retried without a genuinely new first-party route.
+1. **Quant Small Cap Fund next.** It remains at the July 31 partial snapshot while the official September factsheet already provides August benchmark evidence. Inspect the current first-party portfolio/disclosure source and recover August holdings only from concrete official data.
+2. Then handle **SBI Small Cap Fund** as the next stale-partial target. Bajaj remains a confirmed official-source access blocker and should not be retried without a genuinely new first-party route.
 3. Prefer structured official monthly portfolios when available. First try exact AMC disclosure/workbook/API discovery; only use a factsheet partial when the AMC does not expose the full holdings. Never promote a partial snapshot to complete without 100% reconciliation.
 4. **Bandhan and Union remain the only zero-portfolio gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
 5. After stale partial freshness is improved, revisit the **fresh partial** funds (Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI) for complete structured sources where available.
