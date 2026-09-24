@@ -147,7 +147,7 @@ class BandhanPortfolioTests(unittest.TestCase):
         source=('https://storage.googleapis.com/'+bandhan.MEDIA_BUCKET+
                 '/2026/09/abc-bandhan-small-cap-fund-31-august-2026.xlsx')
         count=disclosures.spreadsheet(out.getvalue(),bandhan.FAMILY,source,'hash')
-        self.assertEqual(count,7)  # 1 AUM + 6 numeric positions
+        self.assertEqual(count,6)  # spreadsheet() returns holding rows; AUM is stored separately
         snap=db.one('''SELECT p.complete,COUNT(h.id) positions,SUM(h.weight) weight
           FROM portfolios p JOIN holdings h ON h.snapshot_id=p.id
           WHERE p.family=? GROUP BY p.id''',(bandhan.FAMILY,))
