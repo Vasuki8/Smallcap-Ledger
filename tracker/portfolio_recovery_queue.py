@@ -1,0 +1,318 @@
+"""Read-only recovery queue for incomplete Small Cap portfolios.
+
+The queue ranks work by source actionability, not by number of retained positions.
+It never fetches a source, changes a portfolio, or estimates a missing weight.
+"""
+from __future__ import annotations
+
+from datetime import date
+from urllib.parse import urlparse
+
+from . import coverage, db
+
+
+# Reviewed recovery policy for the currently verified source boundaries.
+# Exact URLs are evidence/watch points, not alternate download guesses.
+_POLICY = {
+    "Axis Small Cap Fund": {
+        "action": "search_fuller_first_party_disclosure",
+        "score": 90,
+        "actionable_now": True,
+        "retry_condition": (
+            "Search first-party Axis statutory/monthly portfolio disclosures for a "
+            "constituent-level source that identifies holdings hidden by the current aggregate."
+        ),
+    },
+    "Bajaj Finserv Small Cap Fund": {
+        "action": "retry_after_source_change",
+        "score": 40,
+        "actionable_now": False,
+        "recovery_url": "https://www.bajajamc.com/downloads",
+        "retry_condition": (
+            "Retry only when the AMC Downloads transport becomes usable from the production "
+            "runner or an exact current monthly Small Cap attachment URL is exposed first-party."
+        ),
+    },
+    "Edelweiss Small Cap Fund": {
+        "action": "retry_after_source_change",
+        "score": 40,
+        "actionable_now": False,
+        "recovery_url": "https://www.edelweissmf.com/statutory/portfolio-of-schemes",
+        "retry_condition": (
+            "Retry only when the statutory portfolio route/static application transport becomes "
+            "reachable again or it exposes an exact monthly portfolio attachment."
+        ),
+    },
+    "ICICI Prudential Small Cap Fund": {
+        "action": "retry_after_source_change",
+        "score": 40,
+        "actionable_now": False,
+        "recovery_url": (
+            "https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/"
+            "2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip"
+        ),
+        "retry_condition": (
+            "Retry only when the first-party monthly ZIP stops redirecting to an unresolved "
+            "archive host or ICICI exposes the same archive through another working first-party route."
+        ),
+    },
+    "Union Small Cap Fund": {
+        "action": "retry_after_source_change",
+        "score": 40,
+        "actionable_now": False,
+        "recovery_url": "https://www.unionmf.com/about-us/downloads/monthly-portfolio",
+        "retry_condition": (
+            "Retry only after Union's official Downloads/portfolio transport is reachable from "
+            "the production collection network or an exact first-party attachment is exposed."
+        ),
+    },
+    "Bandhan Small Cap Fund": {
+        "action": "requires_more_precise_amc_disclosure",
+        "score": 20,
+        "actionable_now": False,
+        "retry_condition": (
+            "Revisit only when the AMC publishes exact numeric NAV weights for positions currently "
+            "disclosed with a less-than-0.01% marker."
+        ),
+    },
+    "Sundaram Small Cap Fund": {
+        "action": "requires_more_precise_amc_disclosure",
+        "score": 20,
+        "actionable_now": False,
+        "retry_condition": (
+            "Revisit only when the AMC publishes an exact numeric weight for the written-off "
+            "holding currently disclosed only as less than 0.01%."
+        ),
+    },
+    "UTI Small Cap Fund": {
+        "action": "requires_more_precise_amc_disclosure",
+        "score": 20,
+        "actionable_now": False,
+        "retry_condition": (
+            "Revisit only when the AMC publishes exact numeric NAV weights for the censored tiny "
+            "security and short-term deposits."
+        ),
+    },
+}
+
+_ACTION_DEFAULTS = {
+    "partial_reason_unclassified": {
+        "action": "review_changed_partial_source",
+        "score": 100,
+        "actionable_now": True,
+        "retry_condition": (
+            "Review the changed first-party source and classify its exact disclosure boundary "
+            "before any further recovery work."
+        ),
+    },
+    "undisclosed_constituents": {
+        "action": "search_fuller_first_party_disclosure",
+        "score": 90,
+        "actionable_now": True,
+        "retry_condition": (
+            "Search first-party statutory/monthly disclosures for a fuller constituent-level source."
+        ),
+    },
+    "named_subset_only": {
+        "action": "search_fuller_first_party_disclosure",
+        "score": 85,
+        "actionable_now": True,
+        "retry_condition": (
+            "Search first-party statutory/monthly disclosures for a fuller constituent-level source."
+        ),
+    },
+    "non_numeric_source_weight": {
+        "action": "requires_more_precise_amc_disclosure",
+        "score": 20,
+        "actionable_now": False,
+        "retry_condition": (
+            "Revisit only when the AMC publishes the currently censored/non-numeric weights exactly."
+        ),
+    },
+    "upstream_source_unavailable": {
+        "action": "retry_after_source_change",
+        "score": 40,
+        "actionable_now": False,
+        "retry_condition": (
+            "Retry only after first-party source transport materially changes."
+        ),
+    },
+}
+
+
+def _amc_source_pages(amc):
+    return db.rows(
+        """SELECT url,label,status,last_checked,detail
+           FROM source_pages
+           WHERE enabled=1
+             AND (instr(lower(?),lower(amc_match))>0
+                  OR instr(lower(amc_match),lower(?))>0)
+           ORDER BY COALESCE(last_checked,'') DESC,id DESC""",
+        (amc, amc),
+    )
+
+
+def _host(url):
+    return (urlparse(str(url or "")).hostname or "").lower().removeprefix("www.")
+
+
+def _source_page_evidence(amc, watched_urls):
+    """Prefer an exact/same-host source page; fall back to the AMC's latest check."""
+    rows = _amc_source_pages(amc)
+    if not rows:
+        return None
+    watched = [u for u in watched_urls if u]
+    for row in rows:
+        if row["url"] in watched:
+            return {**row, "match": "exact_url"}
+    watched_hosts = {_host(u) for u in watched if _host(u)}
+    for row in rows:
+        h = _host(row["url"])
+        if h and h in watched_hosts:
+            return {**row, "match": "same_host"}
+    return {**rows[0], "match": "latest_amc_check"}
+
+
+def _latest_fetch(watched_urls):
+    """Return the newest retained exact-URL fetch among watched first-party URLs."""
+    best = None
+    for url in dict.fromkeys(u for u in watched_urls if u):
+        row = db.one(
+            """SELECT url,fetched_at,status,hash,detail
+               FROM fetches WHERE url=?
+               ORDER BY fetched_at DESC,id DESC LIMIT 1""",
+            (url,),
+        )
+        if row and (best is None or row["fetched_at"] > best["fetched_at"]):
+            best = row
+    return best
+
+
+def _latest_document(family, source_url):
+    if not source_url:
+        return None
+    return db.one(
+        """SELECT d.title,d.kind,d.url,d.last_seen,v.hash,v.observed_at
+           FROM documents d
+           LEFT JOIN document_versions v ON v.id=(
+             SELECT id FROM document_versions
+             WHERE document_id=d.id ORDER BY observed_at DESC,id DESC LIMIT 1)
+           WHERE d.family=? AND d.url=? ORDER BY d.id DESC LIMIT 1""",
+        (family, source_url),
+    )
+
+
+def _policy_for(family, limitation):
+    if family in _POLICY:
+        return dict(_POLICY[family])
+    code=(limitation or {}).get("code")
+    if code in _ACTION_DEFAULTS:
+        return dict(_ACTION_DEFAULTS[code])
+    return {
+        "action": "investigate_retained_source_evidence",
+        "score": 70,
+        "actionable_now": True,
+        "retry_condition": (
+            "Review retained first-party source/fetch evidence and define the exact recovery boundary."
+        ),
+    }
+
+
+def _rank_key(item):
+    # Actionability dominates. Staleness/missing state break ties; position count never does.
+    state_bonus = 2 if item["state"] == "missing" else 1 if item["stale"] else 0
+    return (-item["actionability_score"], -state_bonus, item["family"].lower())
+
+
+def report(today=None):
+    """Build the deterministic read-only queue from retained coverage/evidence."""
+    today = today or date.today()
+    expected = coverage.expected_portfolio_as_of(today)
+    current = coverage.report()
+    items = []
+    for row in current["funds"]:
+        portfolio = row.get("portfolio")
+        limitation = row.get("portfolio_limitation")
+        if portfolio and row.get("portfolio_complete"):
+            continue
+        if not portfolio and not limitation:
+            continue
+
+        stale = bool(portfolio and portfolio["as_of"] < expected)
+        state = "missing" if not portfolio else "partial_stale" if stale else "partial_current"
+        policy = _policy_for(row["family"], limitation)
+        recovery_url = policy.get("recovery_url")
+        source_url = (portfolio or {}).get("source") or recovery_url
+        if not source_url:
+            gap = row.get("portfolio_gap") or {}
+            source_url = ((gap.get("document") or {}).get("url")
+                          or (gap.get("source_page") or {}).get("url"))
+        watched = [source_url, recovery_url]
+        fetch = _latest_fetch(watched)
+        source_page = _source_page_evidence(row["amc"], watched)
+        document = _latest_document(row["family"], (portfolio or {}).get("source"))
+        latest_times = [
+            (portfolio or {}).get("observed_at"),
+            (fetch or {}).get("fetched_at"),
+            (source_page or {}).get("last_checked"),
+            (document or {}).get("observed_at"),
+            (document or {}).get("last_seen"),
+        ]
+        latest_evidence_at = max((x for x in latest_times if x), default=None)
+
+        items.append({
+            "family": row["family"],
+            "amc": row["amc"],
+            "state": state,
+            "stale": stale,
+            "reporting_date": (portfolio or {}).get("as_of"),
+            "positions": (portfolio or {}).get("positions"),
+            "source_url": source_url,
+            "recovery_url": recovery_url,
+            "limitation": limitation,
+            "action": policy["action"],
+            "actionable_now": bool(policy["actionable_now"]),
+            "actionability_score": int(policy["score"]),
+            "retry_condition": policy["retry_condition"],
+            "evidence": {
+                "latest_fetch": fetch,
+                "latest_source_page_check": source_page,
+                "latest_document": document,
+                "latest_evidence_at": latest_evidence_at,
+            },
+        })
+
+    items.sort(key=_rank_key)
+    for index,item in enumerate(items,1):
+        item["rank"] = index
+
+    next_item = next((x for x in items if x["actionable_now"]), None)
+    action_counts = {}
+    for item in items:
+        action_counts[item["action"]] = action_counts.get(item["action"],0)+1
+    return {
+        "built_at": db.now(),
+        "portfolio_expected_as_of": expected,
+        "summary": {
+            "items": len(items),
+            "actionable_now": sum(x["actionable_now"] for x in items),
+            "stale_partial": sum(x["state"]=="partial_stale" for x in items),
+            "missing": sum(x["state"]=="missing" for x in items),
+            "actions": action_counts,
+        },
+        "next_recovery_target": (
+            {
+                "family": next_item["family"],
+                "action": next_item["action"],
+                "retry_condition": next_item["retry_condition"],
+            } if next_item else None
+        ),
+        "items": items,
+        "notes": [
+            "Read-only prioritization: generating this queue never fetches sources or mutates portfolio data.",
+            "Actionability score determines rank before stale/missing tie-breakers; retained position count is never a ranking input.",
+            "retry_after_source_change entries should not be re-probed until new first-party transport/source evidence appears.",
+            "requires_more_precise_amc_disclosure entries cannot be completed by estimating censored weights.",
+            "A changed partial source that no longer matches a reviewed limitation is prioritized for explicit review.",
+        ],
+    }
