@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-25T16:14:33+00:00",
+  "built_at": "2026-09-25T16:27:56+00:00",
   "website_default_benchmark": "Nifty Smallcap 250 TRI",
   "benchmark_series": {
     "Nifty Smallcap 250 TRI": {
@@ -16,8 +16,8 @@
     "growth_plans": 72,
     "families": 36,
     "reported_benchmark_identity_families": 36,
-    "explicit_tri_growth_plans": 66,
-    "reported_tri_ready_growth_plans": 46,
+    "explicit_tri_growth_plans": 70,
+    "reported_tri_ready_growth_plans": 50,
     "website_default_mismatch_growth_plans": 20,
     "growth_return_eligibility": {
       "1Y": 62,
@@ -25,15 +25,15 @@
       "5Y": 44
     },
     "reported_benchmark_overlap_eligibility": {
-      "1Y": 38,
-      "3Y": 28,
-      "5Y": 26
+      "1Y": 40,
+      "3Y": 30,
+      "5Y": 28
     },
     "issue_counts": {
-      "benchmark_1y_overlap_unavailable": 8,
-      "benchmark_3y_overlap_unavailable": 18,
-      "benchmark_5y_overlap_unavailable": 20,
-      "benchmark_identity_not_explicit_tri": 12,
+      "benchmark_1y_overlap_unavailable": 10,
+      "benchmark_3y_overlap_unavailable": 20,
+      "benchmark_5y_overlap_unavailable": 22,
+      "benchmark_identity_not_explicit_tri": 4,
       "nav_1y_return_unavailable": 10,
       "nav_3y_return_unavailable": 24,
       "nav_5y_return_unavailable": 28,
@@ -67,11 +67,9 @@
       "code": "verify_non_tri_benchmark_identity",
       "actionable": true,
       "affected_funds": [
-        "Edelweiss Small Cap Fund",
-        "Franklin India Small Cap Fund",
-        "Groww Small Cap Fund"
+        "Franklin India Small Cap Fund"
       ],
-      "affected_growth_plans": 6,
+      "affected_growth_plans": 2,
       "reason": "Reported benchmark identity is present but does not explicitly establish a total-return series."
     },
     {
@@ -515,19 +513,17 @@
       "family": "Edelweiss Small Cap Fund",
       "amc": "Edelweiss Mutual Fund",
       "reported_benchmark": {
-        "reported": "Nifty Smallcap 250",
+        "reported": "Nifty Smallcap 250 TRI",
         "family": "Nifty Smallcap 250",
-        "explicit_total_return": false,
-        "canonical_tri_series": null,
+        "explicit_total_return": true,
+        "canonical_tri_series": "Nifty Smallcap 250 TRI",
         "as_of": "2026-08-31",
         "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
         "unit": "Reported"
       },
       "plan_count": 4,
       "growth_plan_count": 2,
-      "issue_codes": [
-        "benchmark_identity_not_explicit_tri"
-      ],
+      "issue_codes": [],
       "growth_horizons": {
         "1Y": {
           "eligible": 2,
@@ -544,16 +540,16 @@
       },
       "benchmark_horizons": {
         "1Y": {
-          "eligible": 0,
-          "ineligible": 2
+          "eligible": 2,
+          "ineligible": 0
         },
         "3Y": {
-          "eligible": 0,
-          "ineligible": 2
+          "eligible": 2,
+          "ineligible": 0
         },
         "5Y": {
-          "eligible": 0,
-          "ineligible": 2
+          "eligible": 2,
+          "ineligible": 0
         }
       }
     },
@@ -607,18 +603,20 @@
       "family": "Groww Small Cap Fund",
       "amc": "Groww Mutual Fund",
       "reported_benchmark": {
-        "reported": "Nifty Smallcap 250 Index",
+        "reported": "Nifty Smallcap 250 TRI",
         "family": "Nifty Smallcap 250",
-        "explicit_total_return": false,
-        "canonical_tri_series": null,
-        "as_of": "2026-05-31",
-        "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf",
+        "explicit_total_return": true,
+        "canonical_tri_series": "Nifty Smallcap 250 TRI",
+        "as_of": "2026-08-31",
+        "source": "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth",
         "unit": "Reported"
       },
       "plan_count": 4,
       "growth_plan_count": 2,
       "issue_codes": [
-        "benchmark_identity_not_explicit_tri",
+        "benchmark_1y_overlap_unavailable",
+        "benchmark_3y_overlap_unavailable",
+        "benchmark_5y_overlap_unavailable",
         "nav_1y_return_unavailable",
         "nav_3y_return_unavailable",
         "nav_5y_return_unavailable"
@@ -6655,54 +6653,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
           "as_of": "2026-08-31",
           "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2019-02-14",
+          "last": "2026-09-24",
+          "observations": 1871,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -6748,9 +6746,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 146197,
@@ -6795,54 +6791,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
           "as_of": "2026-08-31",
           "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2019-02-14",
+          "last": "2026-09-24",
+          "observations": 1871,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -6888,9 +6884,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 146193,
@@ -6935,54 +6929,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
           "as_of": "2026-08-31",
           "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2019-02-14",
+          "last": "2026-09-24",
+          "observations": 1871,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -7028,9 +7022,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 146194,
@@ -7075,54 +7067,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
           "as_of": "2026-08-31",
           "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2019-02-14",
+          "last": "2026-09-24",
+          "observations": 1871,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -7168,9 +7160,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 118525,
@@ -7775,52 +7765,52 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250 Index",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-05-31",
-          "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf",
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-08-31",
+          "source": "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2026-02-02",
+          "last": "2026-09-24",
+          "observations": 160,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2025-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "3Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2023-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "5Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2021-09-24",
             "anchor": null,
             "anchor_lag_days": null
           }
@@ -7872,7 +7862,9 @@
         "nav_1y_return_unavailable",
         "nav_3y_return_unavailable",
         "nav_5y_return_unavailable",
-        "benchmark_identity_not_explicit_tri"
+        "benchmark_1y_overlap_unavailable",
+        "benchmark_3y_overlap_unavailable",
+        "benchmark_5y_overlap_unavailable"
       ]
     },
     {
@@ -7918,52 +7910,52 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250 Index",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-05-31",
-          "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf",
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-08-31",
+          "source": "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2026-02-02",
+          "last": "2026-09-24",
+          "observations": 160,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2025-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "3Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2023-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "5Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2021-09-24",
             "anchor": null,
             "anchor_lag_days": null
           }
@@ -8011,9 +8003,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 154102,
@@ -8058,52 +8048,52 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250 Index",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-05-31",
-          "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf",
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-08-31",
+          "source": "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2026-02-02",
+          "last": "2026-09-24",
+          "observations": 160,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2025-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "3Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2023-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "5Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2021-09-24",
             "anchor": null,
             "anchor_lag_days": null
           }
@@ -8155,7 +8145,9 @@
         "nav_1y_return_unavailable",
         "nav_3y_return_unavailable",
         "nav_5y_return_unavailable",
-        "benchmark_identity_not_explicit_tri"
+        "benchmark_1y_overlap_unavailable",
+        "benchmark_3y_overlap_unavailable",
+        "benchmark_5y_overlap_unavailable"
       ]
     },
     {
@@ -8201,52 +8193,52 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250 Index",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-05-31",
-          "source": "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Fact%20Sheet/2026%20-%202027/Monthly%20Factsheet%20%20May-2026.pdf",
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-08-31",
+          "source": "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth",
           "unit": "Reported"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2026-02-02",
+          "last": "2026-09-24",
+          "observations": 160,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2025-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "3Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2023-09-24",
             "anchor": null,
             "anchor_lag_days": null
           },
           "5Y": {
             "eligible": false,
-            "reason": "no_series",
-            "target": null,
+            "reason": "history_starts_after_target",
+            "target": "2021-09-24",
             "anchor": null,
             "anchor_lag_days": null
           }
@@ -8294,9 +8286,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 130503,
