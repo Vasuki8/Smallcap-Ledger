@@ -316,3 +316,73 @@ def report(today=None):
             "A changed partial source that no longer matches a reviewed limitation is prioritized for explicit review.",
         ],
     }
+
+
+def markdown(queue):
+    """Render a compact operator handoff without changing the underlying queue."""
+    def esc(value):
+        return str(value or "").replace("|","\\|").replace("\n"," ")
+    def evidence_text(item):
+        evidence=item.get("evidence") or {}
+        fetch=evidence.get("latest_fetch")
+        page=evidence.get("latest_source_page_check")
+        parts=[]
+        if fetch:
+            parts.append(
+                f"fetch {esc(fetch.get('status'))} · {esc(fetch.get('fetched_at'))}"
+            )
+        if page:
+            parts.append(
+                f"source page {esc(page.get('status'))} · {esc(page.get('last_checked'))}"
+            )
+        if not parts and evidence.get("latest_evidence_at"):
+            parts.append("retained evidence · "+esc(evidence["latest_evidence_at"]))
+        return "; ".join(parts) if parts else "No retained timestamped check"
+
+    lines=[
+        "# Portfolio recovery queue",
+        "",
+        f"Prepared: {queue['built_at']}",
+        "",
+        "**Read-only:** this queue ranks retained evidence only. It does not fetch sources, "
+        "retry blocked hosts, estimate missing weights, or mutate portfolio data.",
+        "",
+    ]
+    target=queue.get("next_recovery_target")
+    if target:
+        lines.extend([
+            "## Next actionable recovery target",
+            "",
+            f"**{esc(target['family'])}** — `{esc(target['action'])}`",
+            "",
+            esc(target["retry_condition"]),
+            "",
+        ])
+    summary=queue["summary"]
+    lines.extend([
+        "## Queue",
+        "",
+        f"Items: **{summary['items']}** · actionable now: **{summary['actionable_now']}** · "
+        f"stale partial: **{summary['stale_partial']}** · missing: **{summary['missing']}**",
+        "",
+        "| Rank | Fund | State | Action | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |",
+        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ])
+    for item in queue["items"]:
+        source=item.get("recovery_url") or item.get("source_url") or "Gap"
+        limitation=(item.get("limitation") or {}).get("code") or "none"
+        lines.append("| "+" | ".join([
+            str(item["rank"]),
+            esc(item["family"]),
+            esc(item["state"]),
+            esc(item["action"]),
+            esc(item.get("reporting_date") or "Gap"),
+            esc(limitation),
+            esc(source),
+            evidence_text(item),
+            esc(item["retry_condition"]),
+        ])+" |")
+    lines.extend(["","## Notes",""])
+    for note in queue.get("notes",[]):lines.append("- "+esc(note))
+    lines.append("")
+    return "\n".join(lines)
