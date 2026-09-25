@@ -1165,8 +1165,6 @@ def run():
         # retained rather than rewritten.
         from tracker import amc_metrics
         targets=(
-            ('Franklin India Small Cap Fund',
-             'https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'),
             ('Groww Small Cap Fund',
              'https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth'),
         )
@@ -1191,13 +1189,21 @@ def run():
             'Franklin India Small Cap Fund':'/fund-details/fund-overview/4373/',
             'Groww Small Cap Fund':'/mutual-funds/groww-small-cap-fund-direct-growth',
         }
+        from tracker import reviewed_reports
+        reviewed_pairs={
+            (report['family'],report['source'],fact['value'])
+            for report in reviewed_reports.reports()
+            for fact in report['facts']
+            if fact['metric']=='benchmark'
+        }
         for family,source_fragment in expected_sources.items():
             row=db.one("""SELECT value,as_of,source,hash FROM metrics
               WHERE family=? AND metric='benchmark'
               ORDER BY as_of DESC,observed_at DESC,id DESC LIMIT 1""",(family,))
+            reviewed=bool(row and (family,row['source'],row['value']) in reviewed_pairs)
             valid=bool(row and row['value']=='Nifty Smallcap 250 TRI'
                        and source_fragment.lower() in row['source'].lower()
-                       and row['hash'])
+                       and (row['hash'] or reviewed))
             detail='none' if not row else f'{row["value"]} as of {row["as_of"]} · {row["source"]}'
             if valid:print(f'{family}: explicit TRI identity verified · {detail}',flush=True)
             else:print(f'::warning::{family}: explicit TRI identity not recovered; latest={detail}',flush=True)

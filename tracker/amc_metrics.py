@@ -20,7 +20,6 @@ PAGES=[
     ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
     ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
-    ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'),
     ('Groww','Groww Small Cap Fund','https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth'),
     ('Invesco','Invesco India Small Cap Fund','https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp'),
     ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
@@ -446,13 +445,6 @@ def parse_page(content,family,url,h):
         exact=exact or bool(
             actual.path.lower().startswith('/products/equity/jm-small-cap-fund/') and
             re.search(r'\bJM\s+Small\s+Cap\s+Fund\b',visible,re.I))
-    if family=='Franklin India Small Cap Fund':
-        visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
-        exact=exact or bool(
-            actual.path.rstrip('/').lower().startswith('/fund-details/fund-overview/4373/') and
-            re.search(r'\bFranklin\s+India\s+Small\s+Cap\s+Fund\b',visible,re.I) and
-            re.search(r'Benchmark\(s\)\s*:\s*Nifty\s+Small\s*cap\s+250\b',visible,re.I) and
-            re.search(r'Benchmark\s+returns\s+calculated\s+based\s+on\s+Total\s+Return\s+Index\s+Values',visible,re.I))
     if family=='Groww Small Cap Fund':
         visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
         exact=exact or bool(
@@ -482,18 +474,6 @@ def parse_page(content,family,url,h):
                             re.search(r'Equity\s*&\s*Equity\s+related\s*-\s*Total',visible,re.I))
     if not exact:return 0
     text=re.sub(r'\s+',' ',soup.get_text(' ',strip=True)).replace('Sept ','Sep ')
-    if family=='Franklin India Small Cap Fund' and actual.path.rstrip('/').lower().startswith('/fund-details/fund-overview/4373/'):
-        # The live scheme page labels the benchmark as Nifty Smallcap 250 and
-        # explicitly states that benchmark returns are calculated from Total
-        # Return Index values. Keep the static unqualified observation intact;
-        # this source contributes a separate, explicit TRI identity.
-        b=bool(re.search(r'Benchmark\(s\)\s*:\s*Nifty\s+Small\s*cap\s+250\b',text,re.I)
-               and re.search(r'Benchmark\s+returns\s+calculated\s+based\s+on\s+Total\s+Return\s+Index\s+Values',text,re.I))
-        if b:
-            db.metric(family,'All','benchmark',date.today().isoformat(),'Nifty Smallcap 250 TRI',
-                      'Observed on official fund page · Total Return Index',url,h)
-            return 1
-        return 0
     if family=='Groww Small Cap Fund':
         m=re.search(r'Scheme\s+Performance.*?as\s+on\s+(\d{1,2}\s+[A-Za-z]+\s+\d{4}).*?Scheme\s+Benchmark\s*-\s*Nifty\s+Small\s*cap\s+250\s+TRI\b',
                     text,re.I)
