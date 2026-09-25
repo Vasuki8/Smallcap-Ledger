@@ -1,0 +1,46 @@
+name: Validate Groww BER integration
+
+on:
+  push:
+    branches: [feature/groww-ber-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Compile
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Unit tests
+        run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Live Groww BER validation
+        run: |
+          uv run --frozen python - <<'PY'
+          from datetime import date, timedelta
+          from tracker import amc_expenses, db
+          db.init()
+          source, day, plans, content_hash, signed, effective = amc_expenses._groww_disclosure(date.today())
+          assert source.startswith(
+              "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/"
+              "Expense%20Ratio/Notice%20-%20Change%20in%20TER/"
+          )
+          assert day >= (date.today() - timedelta(days=7)).isoformat()
+          assert content_hash
+          assert "Direct" in plans
+          assert all(0 <= value <= 5 for value in plans.values())
+          assert effective >= signed >= day
+          print("GROWW_LIVE", source, day, plans, content_hash, signed, effective)
+          PY
