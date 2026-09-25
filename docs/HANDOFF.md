@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after final unresolved NAV-gap classification deployment.
+Updated: 2026-09-25, after non-destructive retention-aware storage plumbing deployment.
 
 
 
@@ -25,6 +25,104 @@ Updated: 2026-09-25, after final unresolved NAV-gap classification deployment.
 
 
 
+
+## Latest completed batch: non-destructive retention-aware storage plumbing
+
+**Retention-aware storage infrastructure is now deployed with every source binary still physically retained. No source file, source pack, rollback checkpoint or legacy ZIP was deleted.**
+
+Implementation PR **#146** merged as commit `c522c313fa03359590e2cdd8c9e9235773e19cde`.
+
+The batch introduced an `archive_retention` table keyed by source hash with:
+
+- monotonic classifications: `unclassified`, `link_only_candidate`, `retain_latest_or_review`, `retain_evidence`;
+- binary states: `retained` or `metadata_only`;
+- review/reason/update metadata;
+- hard guards preventing protected evidence from being downgraded or marked metadata-only.
+
+The reviewed source-retention inventory is loaded conservatively on each build. A current dependency scan is re-run and can only **strengthen** the historical classification. New hashes outside the old audit remain `unclassified + retained`. A previously reviewed candidate that is fetched again as current evidence is promoted to `retain_latest_or_review + retained`.
+
+### Retention-aware execution paths
+
+The following paths now honor logical binary state:
+
+- archive download endpoint;
+- fund-document saved-version listings;
+- AMC archived-document replay/reprocessing;
+- selective source-pack materialization;
+- complete restore verification;
+- split source-pack planning and validation;
+- GitHub Pages publication selection;
+- manual cumulative-archive import/superset validation.
+
+A metadata-only record can retain provenance while being absent from saved-copy/download/replay paths. Old checkpoints without the retention table remain backward compatible and are treated as fully retained.
+
+The source-pack publisher intentionally **refuses** a future metadata-only state if the active immutable packs still contain those hashes. A real reduction therefore requires an explicit atomic replacement-pack migration rather than silently changing the meaning of existing packs.
+
+### Production verification
+
+The first production attempt, workflow **#505 / run 36188792392**, passed schema migration, reviewed-classification loading, all source-upgrade steps, final retention validation and database compaction. The regression suite then found an ambiguous SQL `ORDER BY hash` in three test paths plus one overly specific error-message assertion. The workflow failed **before site generation/publication**, so no bad Pages/archive checkpoint was published.
+
+Fix PR **#147** merged as commit `742f84f4412e376ba5bb23d8ddb91c25905bb596`.
+
+Production workflow **#506 / run 36188946719** completed successfully at **2026-09-25T21:00:46Z**:
+
+- production database-only restore passed;
+- reviewed retention classifications loaded;
+- all normal source-upgrade steps passed;
+- final retention reconciliation/readiness validation passed;
+- database compaction passed;
+- **349 tests passed**;
+- generated-site/download validation passed;
+- cumulative split history publication passed;
+- build-status recording passed;
+- GitHub Pages deployment passed.
+
+Status commit: `a15eb4ed74bf015f31d532dc8ab322bd0f9d09b9`.
+
+Pages artifact **10887610870** is **230,661,791 bytes** with digest `sha256:87834a7776b15d50232dc37342c38d8f272d1c3a4593d4f1be820d50b5fd1860`.
+
+### Production retention-readiness result
+
+`deployment/retention-readiness.json` at **2026-09-25T20:59:23Z** reports:
+
+- archive hashes: **2,526**
+- historical reviewed hashes: **2,519**
+- historical link-only candidates: **700**
+- new unclassified hashes: **7**
+- binary retained: **2,526**
+- binary metadata-only: **0**
+- files actually deleted: **0**
+- bytes actually deleted: **0**
+- source-pack repack performed: **false**
+- rollback/legacy assets retired: **false**
+- protected archive metadata unchanged: **true**
+- all existing non-retention table fingerprints unchanged during migration: **true**
+- protected hashes covered by active source packs: **true**
+- all 700 historical candidates still covered by active source packs: **true**
+- deletion enabled: **false**
+- approved for binary deletion: **false**
+
+Current stored classes are **984 retain_evidence**, **835 retain_latest_or_review**, **700 link_only_candidate**, and **7 unclassified**; every one is still binary-retained.
+
+Current core data coverage remains **36/36 AUM, fee, TER, BER and benchmark identity**. Portfolio coverage remains **35/36**, and `docs/PORTFOLIO-RECOVERY-QUEUE.json` still reports **7 items / 0 actionable_now / 0 source changes detected**. The BSE 250 SmallCap TRI history remains explicitly non-actionable under the free first-party-source rule.
+
+### Next backend task
+
+**Build an isolated replacement-pack migration simulation for the 700 reviewed link-only candidates. Do not change production binary state and do not delete/upload/retire any source pack yet.**
+
+The next batch should:
+
+1. copy/restore the current production database and active source-pack manifest into an isolated migration workspace;
+2. mark exactly the reviewed 700 hashes as `metadata_only` **only in that isolated copy**;
+3. generate a proposed replacement source-pack plan containing every logically retained hash and excluding exactly those 700 candidates;
+4. validate proposed pack membership, per-member hashes/bytes, protected-evidence coverage, database/provenance equality, selective materialization behavior, AMC replay expectations, document-download behavior and full static-site generation against the simulated state;
+5. calculate exact proposed release-asset byte savings and distinguish raw source bytes from actual compressed pack savings;
+6. preserve the current active manifest/packs as rollback and produce an exact migration manifest + candidate-hash list for owner review;
+7. perform **no GitHub release upload, deletion, active-manifest switch, binary-state change or legacy-ZIP retirement**.
+
+Only after that simulation is independently green should an actual binary-reduction migration be proposed for explicit approval.
+
+If any portfolio source-change watch becomes positive first, pause this storage simulation and resume that newly actionable first-party data repair.
 
 ## Latest completed batch: final unresolved NAV-gap classification
 

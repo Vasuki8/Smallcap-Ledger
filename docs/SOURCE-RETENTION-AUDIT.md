@@ -1,5 +1,64 @@
 # Source-retention audit — proposal only
 
+## Retention-aware infrastructure deployed — still zero deletion
+
+The prerequisite retention-aware storage plumbing is now deployed, but **binary deletion is still disabled and not approved**.
+
+Implementation PR **#146** merged as commit `c522c313fa03359590e2cdd8c9e9235773e19cde`. Production workflow **#505 / 36188792392** safely reached the migration and regression stages, but failed before publication because three legacy test paths used an ambiguous joined `ORDER BY hash` plus one invariant expected a more specific error message. No Pages deployment or new archive checkpoint was published from that failed attempt.
+
+Follow-up PR **#147** merged as commit `742f84f4412e376ba5bb23d8ddb91c25905bb596`. Production workflow **#506 / 36188946719** then completed successfully at **2026-09-25T21:00:46Z** with **349 passing tests**, cumulative-history publication and GitHub Pages deployment.
+
+The authoritative readiness evidence is committed at:
+
+`deployment/retention-readiness.json`
+
+Production readiness snapshot at **2026-09-25T20:59:23Z**:
+
+- current archive hashes: **2,526**
+- reviewed historical inventory hashes: **2,519**
+- historical link-only candidates: **700**
+- new hashes not yet reviewed by the historical audit: **7**
+- binary state **retained: 2,526**
+- binary state **metadata_only: 0**
+- files actually deleted: **0**
+- bytes actually deleted: **0**
+- source-pack repack performed: **no**
+- legacy/rollback assets retired: **no**
+- protected archive metadata unchanged: **yes**
+- every non-retention table fingerprint unchanged during classification: **yes**
+- protected hashes covered by the active source-pack manifest: **yes**
+- all 700 historical link-only candidates still covered by the active source-pack manifest: **yes**
+- deletion enabled: **no**
+- approved for binary deletion: **no**
+
+Stored classifications after reconciliation with the current conservative dependency scan:
+
+| Stored classification | Binary state | Files | Raw bytes |
+| --- | --- | ---: | ---: |
+| retain_evidence | retained | 984 | 1,292,126,190 |
+| retain_latest_or_review | retained | 835 | 465,895,337 |
+| link_only_candidate | retained | 700 | 404,498,141 |
+| unclassified | retained | 7 | 1,920,223 |
+
+None of the 700 historical candidates was weakened or deleted. The current dependency scan strengthened **0** historical link-only candidates in this run. The 7 newer hashes remain **unclassified + retained** rather than inheriting an old deletion decision.
+
+### What is now retention-aware
+
+The database now carries monotonic per-hash retention metadata with explicit `classification` and `binary_state`. Protected evidence cannot be downgraded. Only a reviewed `link_only_candidate` can ever become `metadata_only`.
+
+Archive downloads, saved document-version links, AMC replay/reprocessing, selective source materialization, checkpoint verification, source-pack planning, Pages publication, and manual cumulative imports now understand binary-retention state. A metadata-only hash cannot appear as a saved downloadable copy or be silently materialized. If identical bytes are fetched again as current evidence, the hash is promoted back to **retain_latest_or_review + retained**.
+
+Old checkpoints without the new table remain backward compatible and are treated as fully retained.
+
+The active source-pack publisher deliberately refuses to publish when an active immutable pack contains a hash newly marked metadata-only. That forces any future reduction to use a separately reviewed **atomic replacement-pack migration** rather than silently orphaning provenance or leaving misleading pack contents.
+
+### Important: this is infrastructure readiness, not deletion authorization
+
+The original **700 candidate binaries / 404,498,141 raw bytes** remain physically retained in the current packs. The legacy cumulative ZIP, current rollback checkpoint and existing reusable source packs remain untouched.
+
+A future reduction still requires a separate approved migration with exact candidate hashes, an isolated replacement-pack dry run, restore/replay/site validation against that proposed manifest, rollback preservation, and explicit approval before any production binary state or release asset is changed.
+
+
 No archived file, source-pack asset, database row, production policy, schedule or website was changed.
 
 | Classification | Files | Uncompressed bytes | Compressed payload bytes |
