@@ -106,6 +106,114 @@ class CanaraExpenseTests(unittest.TestCase):
         self.assertTrue(all(call.args[7] == "hash123" for call in mock_metric.call_args_list))
 
 
+class GrowwExpenseTests(unittest.TestCase):
+    def notice_text(
+        self,
+        *,
+        as_of="September 23, 2026",
+        signed="September 24, 2026",
+        effective="September 30, 2026",
+        row="Groww Smallcap Fund 0.42 1.94 0.49 1.94 (No change)",
+        heading="Scheme(s) Name Current BER* Revised BER** Direct (%) Regular (%) Direct (%) Regular (%)",
+        notice=26,
+    ):
+        return f"""
+        Notice no. {notice}/2026 – 2027
+        Change in Base Expense Ratio (‘BER’) of the scheme(s) of Groww Mutual Fund:
+        NOTICE is hereby given that the BER shall be as follows with effect from {effective} (‘Effective date’):
+        * As on {as_of}.
+        ** Or such lower BER as may be applicable due to AUM on the Effective date.
+        Authorised Signatory Date: {signed}
+        {heading}
+        {row}
+        """
+
+    def test_groww_current_ber_is_stored_and_future_revised_ber_is_not_promoted(self):
+        day, plans, notice, signed, effective = amc_expenses.parse_groww_ber_text(
+            self.notice_text(), date(2026, 9, 25)
+        )
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans, {"Direct": 0.42, "Regular": 1.94})
+        self.assertEqual(notice, 26)
+        self.assertEqual(signed, "2026-09-24")
+        self.assertEqual(effective, "2026-09-30")
+        self.assertNotIn(0.49, plans.values())
+
+    def test_groww_na_regular_is_preserved_as_missing_not_inferred(self):
+        day, plans, notice, _, _ = amc_expenses.parse_groww_ber_text(
+            self.notice_text(
+                as_of="August 31, 2026",
+                signed="September 01, 2026",
+                effective="September 05, 2026",
+                row="Groww Smallcap Fund 0.45 NA 0.51 NA",
+                notice=24,
+            ),
+            date(2026, 9, 25),
+        )
+        self.assertEqual(day, "2026-08-31")
+        self.assertEqual(plans, {"Direct": 0.45})
+        self.assertEqual(notice, 24)
+
+    def test_groww_notice_identity_heading_and_dates_are_strict(self):
+        with self.assertRaisesRegex(ValueError, "table heading changed"):
+            amc_expenses.parse_groww_ber_text(
+                self.notice_text(heading="Scheme(s) Name Current TER Revised TER"),
+                date(2026, 9, 25),
+            )
+        with self.assertRaisesRegex(ValueError, "future observation"):
+            amc_expenses.parse_groww_ber_text(
+                self.notice_text(as_of="September 26, 2026"),
+                date(2026, 9, 25),
+            )
+        with self.assertRaisesRegex(ValueError, "one exact Smallcap row"):
+            amc_expenses.parse_groww_ber_text(
+                self.notice_text(row="Groww Midcap Fund 0.42 1.94 0.49 1.94"),
+                date(2026, 9, 25),
+            )
+
+    def test_groww_page_discovery_keeps_only_current_year_registered_ber_notices(self):
+        html = b"""
+        <a href="https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Expense%20Ratio/Notice%20-%20Change%20in%20TER/2026%20-%202027/26.%20Notice%20-%20Change%20in%20BER.pdf">26. Notice - Change in BER.pdf</a>
+        <a href="https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Expense%20Ratio/Notice%20-%20Change%20in%20TER/2026%20-%202027/24.%20Notice%20-%20Change%20in%20BER.pdf">24. Notice - Change in BER.pdf</a>
+        <a href="https://example.com/26.%20Notice%20-%20Change%20in%20BER.pdf">26. Notice - Change in BER.pdf</a>
+        <a href="https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Expense%20Ratio/Notice%20-%20Change%20in%20TER/2025%20-%202026/61.%20Notice%20-%20Change%20in%20BER.pdf">61. Notice - Change in BER.pdf</a>
+        """
+        links = amc_expenses._groww_ber_links(html, date(2026, 9, 25))
+        self.assertEqual([x[0] for x in links], [26, 24])
+        self.assertTrue(all("assets-netstorage.growwmf.in" in x[1] for x in links))
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "GROWW"})
+    @patch("tracker.amc_expenses._groww_disclosure")
+    def test_groww_collector_stores_only_current_ber_with_source_hash(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        source = (
+            "https://assets-netstorage.growwmf.in/compliance_docs/Downloads/"
+            "Expense%20Ratio/Notice%20-%20Change%20in%20TER/2026%20-%202027/"
+            "26.%20Notice%20-%20Change%20in%20BER.pdf"
+        )
+        mock_disclosure.return_value = (
+            source,
+            "2026-09-23",
+            {"Direct": 0.42, "Regular": 1.94},
+            "growwhash",
+            "2026-09-24",
+            "2026-09-30",
+        )
+        result = amc_expenses.groww(today=date(2026, 9, 25))
+        self.assertIn("2026-09-23", result)
+        self.assertIn("not promoted", result)
+        self.assertEqual(mock_metric.call_count, 2)
+        calls = {(call.args[1], call.args[2]): call.args[4] for call in mock_metric.call_args_list}
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.42)
+        self.assertEqual(calls[("Regular", "base_expense_ratio")], 1.94)
+        self.assertTrue(all(call.args[3] == "2026-09-23" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == source for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "growwhash" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[2] != "ter" for call in mock_metric.call_args_list))
+
+
 class HsbcExpenseTests(unittest.TestCase):
     def workbook(self, rows):
         wb = openpyxl.Workbook()
