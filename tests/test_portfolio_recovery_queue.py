@@ -79,6 +79,7 @@ class PortfolioRecoveryQueueTests(unittest.TestCase):
         self.assertEqual(queue["summary"]["actionable_now"],1)
         self.assertEqual(queue["summary"]["stale_partial"],1)
         self.assertEqual(queue["summary"]["missing"],1)
+        self.assertEqual(queue["summary"]["source_changes_detected"],0)
 
         items={x["family"]:x for x in queue["items"]}
         self.assertEqual(queue["next_recovery_target"]["family"],"Axis Small Cap Fund")
@@ -120,6 +121,85 @@ class PortfolioRecoveryQueueTests(unittest.TestCase):
         self.assertEqual(page["status"],"Gap")
         self.assertIn("Connection refused",page["detail"])
 
+    def test_union_transport_recovery_is_promoted_for_review_without_retrying(self):
+        with db.connect() as c:
+            c.execute(
+                """UPDATE source_pages
+                   SET last_checked=?,status=?,detail=?
+                   WHERE amc_match='Union'""",
+                ("2026-09-25T05:00:00+00:00","Checked",
+                 "Official downloads page reachable; review before retry"),
+            )
+        queue=report(today=date(2026,9,25))
+        union=next(x for x in queue["items"] if x["family"]=="Union Small Cap Fund")
+        self.assertTrue(union["source_change_watch"]["changed"])
+        self.assertEqual(
+            union["source_change_watch"]["change_reason"],
+            "recovery_url_source_check_recovered",
+        )
+        self.assertEqual(union["action"],"review_source_change")
+        self.assertTrue(union["actionable_now"])
+        self.assertEqual(union["actionability_score"],95)
+        self.assertEqual(queue["summary"]["source_changes_detected"],1)
+        self.assertEqual(queue["next_recovery_target"]["family"],"Union Small Cap Fund")
+
+    def test_exact_recovery_fetch_success_promotes_bajaj_for_review(self):
+        recovery="https://www.bajajamc.com/downloads"
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO fetches(url,fetched_at,status,hash,detail)
+                   VALUES(?,?,?,?,?)""",
+                (recovery,"2026-09-25T05:01:00+00:00","ok","new-bajaj-page",None),
+            )
+        queue=report(today=date(2026,9,25))
+        bajaj=next(
+            x for x in queue["items"] if x["family"]=="Bajaj Finserv Small Cap Fund"
+        )
+        watch=bajaj["source_change_watch"]
+        self.assertTrue(watch["changed"])
+        self.assertEqual(watch["change_reason"],"recovery_url_fetch_succeeded")
+        self.assertEqual(watch["exact_recovery_fetch"]["url"],recovery)
+        self.assertEqual(bajaj["action"],"review_source_change")
+        self.assertTrue(bajaj["actionable_now"])
+
+    def test_old_recovery_success_before_review_does_not_reopen_blocker(self):
+        recovery="https://www.bajajamc.com/downloads"
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO fetches(url,fetched_at,status,hash,detail)
+                   VALUES(?,?,?,?,?)""",
+                (recovery,"2026-09-25T03:00:00+00:00","ok","old-bajaj-page",None),
+            )
+        queue=report(today=date(2026,9,25))
+        bajaj=next(
+            x for x in queue["items"] if x["family"]=="Bajaj Finserv Small Cap Fund"
+        )
+        self.assertFalse(bajaj["source_change_watch"]["changed"])
+        self.assertEqual(bajaj["action"],"retry_after_source_change")
+        self.assertFalse(bajaj["actionable_now"])
+
+    def test_new_first_party_portfolio_document_after_review_triggers_review(self):
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO documents(
+                   family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
+                   VALUES(?,?,?,?,?,?,?,?,?)""",
+                ("Bajaj Finserv Small Cap Fund","September monthly portfolio","portfolio",
+                 "Scheme","https://www.bajajamc.com/new/axis-free-bajaj-portfolio.xlsx",
+                 "2026-09-30","2026-09-25T05:02:00+00:00",
+                 "2026-09-25T05:02:00+00:00","AMC"),
+            )
+        queue=report(today=date(2026,9,25))
+        bajaj=next(
+            x for x in queue["items"] if x["family"]=="Bajaj Finserv Small Cap Fund"
+        )
+        watch=bajaj["source_change_watch"]
+        self.assertTrue(watch["changed"])
+        self.assertEqual(watch["change_reason"],"new_first_party_portfolio_document")
+        self.assertEqual(
+            watch["new_portfolio_document"]["title"],"September monthly portfolio"
+        )
+
     def test_queue_is_read_only(self):
         before={
             table:db.one(f"SELECT COUNT(*) n FROM {table}")["n"]
@@ -159,6 +239,7 @@ class PortfolioRecoveryQueueTests(unittest.TestCase):
         self.assertIn("search_fuller_first_party_disclosure",rendered)
         self.assertIn("https://www.bajajamc.com/downloads",rendered)
         self.assertIn("retry_after_source_change",rendered)
+        self.assertIn("Source change",rendered)
         self.assertIn("Read-only",rendered)
 
 

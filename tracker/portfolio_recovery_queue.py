@@ -25,6 +25,8 @@ _POLICY = {
     },
     "Bajaj Finserv Small Cap Fund": {
         "action": "retry_after_source_change",
+        "reviewed_at": "2026-09-25T03:10:32+00:00",
+        "watch_mode": "exact_route",
         "score": 40,
         "actionable_now": False,
         "recovery_url": "https://www.bajajamc.com/downloads",
@@ -35,6 +37,8 @@ _POLICY = {
     },
     "Edelweiss Small Cap Fund": {
         "action": "retry_after_source_change",
+        "reviewed_at": "2026-09-25T03:24:35+00:00",
+        "watch_mode": "exact_route",
         "score": 40,
         "actionable_now": False,
         "recovery_url": "https://www.edelweissmf.com/statutory/portfolio-of-schemes",
@@ -45,6 +49,8 @@ _POLICY = {
     },
     "ICICI Prudential Small Cap Fund": {
         "action": "retry_after_source_change",
+        "reviewed_at": "2026-09-25T04:23:12+00:00",
+        "watch_mode": "exact_route",
         "score": 40,
         "actionable_now": False,
         "recovery_url": (
@@ -58,6 +64,8 @@ _POLICY = {
     },
     "Union Small Cap Fund": {
         "action": "retry_after_source_change",
+        "reviewed_at": "2026-09-25T03:10:32+00:00",
+        "watch_mode": "host_transport",
         "score": 40,
         "actionable_now": False,
         "recovery_url": "https://www.unionmf.com/about-us/downloads/monthly-portfolio",
@@ -188,6 +196,111 @@ def _latest_fetch(watched_urls):
     return best
 
 
+def _exact_source_page(url):
+    if not url:
+        return None
+    return db.one(
+        """SELECT url,label,status,last_checked,detail
+           FROM source_pages
+           WHERE enabled=1 AND url=?
+           ORDER BY COALESCE(last_checked,'') DESC,id DESC LIMIT 1""",
+        (url,),
+    )
+
+
+def _host_source_page(amc, url):
+    """Newest retained source-page check on the watched host."""
+    watched_host=_host(url)
+    if not watched_host:
+        return None
+    rows=_amc_source_pages(amc)
+    for row in rows:
+        if _host(row.get("url"))==watched_host:
+            return row
+    return None
+
+
+def _exact_fetch(url):
+    if not url:
+        return None
+    return db.one(
+        """SELECT url,fetched_at,status,hash,detail
+           FROM fetches WHERE url=?
+           ORDER BY fetched_at DESC,id DESC LIMIT 1""",
+        (url,),
+    )
+
+
+def _new_portfolio_document(family, reviewed_at, ignore_urls):
+    """Find a newly retained first-party portfolio document after blocker review."""
+    if not reviewed_at:
+        return None
+    ignored={u for u in ignore_urls if u}
+    rows=db.rows(
+        """SELECT d.title,d.kind,d.url,d.last_seen,v.hash,v.observed_at
+           FROM documents d
+           LEFT JOIN document_versions v ON v.id=(
+             SELECT id FROM document_versions
+             WHERE document_id=d.id ORDER BY observed_at DESC,id DESC LIMIT 1)
+           WHERE d.family=? AND d.origin='AMC' AND d.kind='portfolio'
+             AND COALESCE(v.observed_at,d.last_seen)>?
+           ORDER BY COALESCE(v.observed_at,d.last_seen) DESC,d.id DESC""",
+        (family,reviewed_at),
+    )
+    return next((row for row in rows if row.get("url") not in ignored),None)
+
+
+def _blocked_status(status):
+    value=str(status or "").strip().lower()
+    return value in {"gap","limited","partial","error","failed","blocked","unavailable"}
+
+
+def _source_change_watch(family, amc, policy, source_url, recovery_url):
+    """Detect retained evidence of a material source/transport change without fetching."""
+    reviewed_at=policy.get("reviewed_at")
+    mode=policy.get("watch_mode")
+    if policy.get("action")!="retry_after_source_change" or not reviewed_at or not recovery_url:
+        return None
+
+    exact_fetch=_exact_fetch(recovery_url)
+    exact_page=_exact_source_page(recovery_url)
+    host_page=_host_source_page(amc,recovery_url) if mode=="host_transport" else None
+    new_document=_new_portfolio_document(
+        family,reviewed_at,(source_url,recovery_url)
+    )
+    changed=False;reason=None
+
+    if exact_fetch and exact_fetch.get("fetched_at","")>reviewed_at and exact_fetch.get("status")=="ok":
+        changed=True;reason="recovery_url_fetch_succeeded"
+    elif exact_page and exact_page.get("last_checked","")>reviewed_at and not _blocked_status(exact_page.get("status")):
+        changed=True;reason="recovery_url_source_check_recovered"
+    elif (mode=="host_transport" and host_page
+          and host_page.get("last_checked","")>reviewed_at
+          and not _blocked_status(host_page.get("status"))):
+        changed=True;reason="watched_host_transport_recovered"
+    elif new_document:
+        changed=True;reason="new_first_party_portfolio_document"
+
+    evidence_times=[
+        (exact_fetch or {}).get("fetched_at"),
+        (exact_page or {}).get("last_checked"),
+        (host_page or {}).get("last_checked"),
+        (new_document or {}).get("observed_at"),
+        (new_document or {}).get("last_seen"),
+    ]
+    return {
+        "reviewed_at":reviewed_at,
+        "watch_mode":mode,
+        "changed":changed,
+        "change_reason":reason,
+        "exact_recovery_fetch":exact_fetch,
+        "exact_recovery_source_page":exact_page,
+        "watched_host_source_page":host_page,
+        "new_portfolio_document":new_document,
+        "latest_watch_evidence_at":max((x for x in evidence_times if x),default=None),
+    }
+
+
 def _latest_document(family, source_url):
     if not source_url:
         return None
@@ -251,6 +364,17 @@ def report(today=None):
         fetch = _latest_fetch(watched)
         source_page = _source_page_evidence(row["amc"], watched)
         document = _latest_document(row["family"], (portfolio or {}).get("source"))
+        watch = _source_change_watch(
+            row["family"],row["amc"],policy,source_url,recovery_url
+        )
+        if watch and watch["changed"]:
+            policy["action"]="review_source_change"
+            policy["actionable_now"]=True
+            policy["score"]=95
+            policy["retry_condition"]=(
+                "Review the newly retained first-party source/transport evidence before "
+                "retrying portfolio recovery; do not assume the prior blocker is resolved."
+            )
         latest_times = [
             (portfolio or {}).get("observed_at"),
             (fetch or {}).get("fetched_at"),
@@ -274,6 +398,7 @@ def report(today=None):
             "actionable_now": bool(policy["actionable_now"]),
             "actionability_score": int(policy["score"]),
             "retry_condition": policy["retry_condition"],
+            "source_change_watch": watch,
             "evidence": {
                 "latest_fetch": fetch,
                 "latest_source_page_check": source_page,
@@ -298,6 +423,9 @@ def report(today=None):
             "actionable_now": sum(x["actionable_now"] for x in items),
             "stale_partial": sum(x["state"]=="partial_stale" for x in items),
             "missing": sum(x["state"]=="missing" for x in items),
+            "source_changes_detected": sum(
+                bool((x.get("source_change_watch") or {}).get("changed")) for x in items
+            ),
             "actions": action_counts,
         },
         "next_recovery_target": (
@@ -311,7 +439,7 @@ def report(today=None):
         "notes": [
             "Read-only prioritization: generating this queue never fetches sources or mutates portfolio data.",
             "Actionability score determines rank before stale/missing tie-breakers; retained position count is never a ranking input.",
-            "retry_after_source_change entries should not be re-probed until new first-party transport/source evidence appears.",
+            "retry_after_source_change entries should not be re-probed until source_change_watch.changed becomes true from newly retained first-party evidence.",
             "requires_more_precise_amc_disclosure entries cannot be completed by estimating censored weights.",
             "A changed partial source that no longer matches a reviewed limitation is prioritized for explicit review.",
         ],
@@ -363,19 +491,23 @@ def markdown(queue):
         "## Queue",
         "",
         f"Items: **{summary['items']}** · actionable now: **{summary['actionable_now']}** · "
+        f"source changes: **{summary.get('source_changes_detected',0)}** · "
         f"stale partial: **{summary['stale_partial']}** · missing: **{summary['missing']}**",
         "",
-        "| Rank | Fund | State | Action | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |",
-        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Rank | Fund | State | Action | Source change | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |",
+        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ])
     for item in queue["items"]:
         source=item.get("recovery_url") or item.get("source_url") or "Gap"
         limitation=(item.get("limitation") or {}).get("code") or "none"
+        watch=item.get("source_change_watch") or {}
+        watch_text=(watch.get("change_reason") if watch.get("changed") else "none")
         lines.append("| "+" | ".join([
             str(item["rank"]),
             esc(item["family"]),
             esc(item["state"]),
             esc(item["action"]),
+            esc(watch_text),
             esc(item.get("reporting_date") or "Gap"),
             esc(limitation),
             esc(source),
