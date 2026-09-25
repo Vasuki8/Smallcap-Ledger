@@ -451,7 +451,8 @@ def parse_page(content,family,url,h):
         exact=exact or bool(
             actual.path.rstrip('/').lower().startswith('/fund-details/fund-overview/4373/') and
             re.search(r'\bFranklin\s+India\s+Small\s+Cap\s+Fund\b',visible,re.I) and
-            re.search(r'\bEquity\b.{0,80}\bSmall\s+Cap\b',visible,re.I))
+            re.search(r'Benchmark\(s\)\s*:\s*Nifty\s+Small\s*cap\s+250\b',visible,re.I) and
+            re.search(r'Benchmark\s+returns\s+calculated\s+based\s+on\s+Total\s+Return\s+Index\s+Values',visible,re.I))
     if family=='Groww Small Cap Fund':
         visible=re.sub(r'\s+',' ',soup.get_text(' ',strip=True))
         exact=exact or bool(
