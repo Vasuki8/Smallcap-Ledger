@@ -54,6 +54,15 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS archives(
           hash TEXT PRIMARY KEY, path TEXT NOT NULL, bytes INTEGER NOT NULL,
           media_type TEXT, first_seen TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS archive_retention(
+          hash TEXT PRIMARY KEY REFERENCES archives(hash),
+          classification TEXT NOT NULL DEFAULT 'unclassified'
+            CHECK(classification IN ('unclassified','retain_evidence','retain_latest_or_review','link_only_candidate')),
+          binary_state TEXT NOT NULL DEFAULT 'retained'
+            CHECK(binary_state IN ('retained','metadata_only')),
+          reason TEXT, reviewed_at TEXT, updated_at TEXT NOT NULL);
+        CREATE INDEX IF NOT EXISTS idx_archive_retention_state
+          ON archive_retention(binary_state,classification);
         CREATE TABLE IF NOT EXISTS fetches(
           id INTEGER PRIMARY KEY, url TEXT NOT NULL, fetched_at TEXT NOT NULL,
           status TEXT NOT NULL, hash TEXT, detail TEXT);
@@ -109,6 +118,9 @@ def init(recover=False):
         ''')
         defaults = {"nav_interval_minutes": "60", "disclosure_interval_hours": "12", "auto_update": "true"}
         c.executemany("INSERT OR IGNORE INTO settings VALUES (?,?)", defaults.items())
+        c.execute("""INSERT OR IGNORE INTO archive_retention(
+          hash,classification,binary_state,updated_at)
+          SELECT hash,'unclassified','retained',? FROM archives""",(now(),))
         c.execute("DELETE FROM document_versions WHERE document_id IN (SELECT id FROM documents WHERE kind='news')")
         c.execute("DELETE FROM documents WHERE kind='news'")
         c.execute("DELETE FROM settings WHERE key='news_interval_hours'")
@@ -205,16 +217,85 @@ def setting(key, default=None):
     return json.loads(r["value"]) if r else default
 
 
+RETENTION_CLASSIFICATIONS={
+    'unclassified','retain_evidence','retain_latest_or_review','link_only_candidate'
+}
+BINARY_STATES={'retained','metadata_only'}
+
+
+def archive_retention(content_hash):
+    return one("""SELECT a.hash,a.path,a.bytes,a.media_type,a.first_seen,
+      COALESCE(r.classification,'unclassified') classification,
+      COALESCE(r.binary_state,'retained') binary_state,
+      r.reason,r.reviewed_at,r.updated_at
+      FROM archives a LEFT JOIN archive_retention r ON r.hash=a.hash
+      WHERE a.hash=?""",(content_hash,))
+
+
+def set_archive_retention(content_hash, *, classification=None, binary_state=None,
+                          reason=None, reviewed_at=None):
+    """Update retention metadata only. This never deletes or creates source bytes."""
+    if classification is not None and classification not in RETENTION_CLASSIFICATIONS:
+        raise ValueError('Unknown archive retention classification')
+    if binary_state is not None and binary_state not in BINARY_STATES:
+        raise ValueError('Unknown archive binary state')
+    current=archive_retention(content_hash)
+    if not current:raise ValueError('Unknown archive hash')
+    next_class=classification or current['classification']
+    next_state=binary_state or current['binary_state']
+    if next_state=='metadata_only' and next_class!='link_only_candidate':
+        raise ValueError('Only reviewed link-only candidates may become metadata-only')
+    if next_class=='retain_evidence' and next_state!='retained':
+        raise ValueError('Protected evidence must retain its binary')
+    with connect() as c:
+        c.execute("""INSERT INTO archive_retention(
+          hash,classification,binary_state,reason,reviewed_at,updated_at)
+          VALUES(?,?,?,?,?,?)
+          ON CONFLICT(hash) DO UPDATE SET
+            classification=excluded.classification,
+            binary_state=excluded.binary_state,
+            reason=excluded.reason,
+            reviewed_at=excluded.reviewed_at,
+            updated_at=excluded.updated_at""",
+          (content_hash,next_class,next_state,
+           reason if reason is not None else current.get('reason'),
+           reviewed_at if reviewed_at is not None else current.get('reviewed_at'),now()))
+    return archive_retention(content_hash)
+
+
+def archive_binary_path(content_hash):
+    """Return a verified local binary path only when policy says bytes are retained."""
+    row=archive_retention(content_hash)
+    if not row or row['binary_state']!='retained':return None
+    path=(DATA/row['path']).resolve()
+    if not path.is_relative_to(DATA.resolve()) or not path.is_file():return None
+    if path.stat().st_size!=row['bytes']:return None
+    return path
+
+
 def archive(content: bytes, media_type: str = "application/octet-stream"):
     h = hashlib.sha256(content).hexdigest()
     target = DATA / "archive" / h[:2] / h
     target.parent.mkdir(parents=True, exist_ok=True)
+    previous=archive_retention(h)
     if not target.exists():
         tmp = target.with_suffix(".tmp")
         tmp.write_bytes(content)
         tmp.replace(target)
     with connect() as c:
-        c.execute("INSERT OR IGNORE INTO archives VALUES(?,?,?,?,?)", (h, str(target.relative_to(DATA)), len(content), media_type, now()))
+        c.execute("""INSERT OR IGNORE INTO archives(hash,path,bytes,media_type,first_seen)
+          VALUES(?,?,?,?,?)""", (h, str(target.relative_to(DATA)), len(content), media_type, now()))
+        c.execute("""INSERT OR IGNORE INTO archive_retention(
+          hash,classification,binary_state,updated_at) VALUES(?,?,?,?)""",
+          (h,'unclassified','retained',now()))
+        # If deliberately metadata-only bytes later reappear from a fresh source
+        # fetch/import, they are current again and must be re-reviewed rather than
+        # silently discarded or left as a broken current source.
+        if previous and previous['binary_state']=='metadata_only':
+            c.execute("""UPDATE archive_retention SET
+              classification='retain_latest_or_review',binary_state='retained',
+              reason='Rehydrated because identical bytes were fetched again as current source evidence',
+              updated_at=? WHERE hash=?""",(now(),h))
     return h
 
 
