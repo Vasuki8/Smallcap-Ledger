@@ -95,16 +95,18 @@ def export(output:Path,repository=''):
     # full private/local archive; archived web pages are served as inert text.
     missing_publications=[]
     for h in hashes:
-        a=db.one('SELECT path,bytes FROM archives WHERE hash=?',(h,))
-        original=(db.DATA/a['path']).resolve()
-        if not original.is_file() or original.stat().st_size!=a['bytes']:
+        a=db.archive_retention(h)
+        if not a or a['binary_state']!='retained':
+            raise RuntimeError('Publication points to a metadata-only or unknown source '+h)
+        original=db.archive_binary_path(h)
+        if not original:
             missing_publications.append(h)
     if missing_publications:
         from scripts.github_state import materialize_hashes
         materialize_hashes(missing_publications)
     for h in sorted(hashes):
-        a=db.one('SELECT * FROM archives WHERE hash=?',(h,));original=db.DATA/a['path'];typ=a['media_type'] or ''
-        if not original.is_file():raise RuntimeError('Missing original publication '+h)
+        a=db.archive_retention(h);original=db.archive_binary_path(h);typ=a['media_type'] or ''
+        if not original:raise RuntimeError('Missing retained original publication '+h)
         signature=original.read_bytes()[:8]
         ext='.pdf' if signature.startswith(b'%PDF-') else '.xlsx' if signature.startswith(b'PK') and ('sheet' in typ or 'excel' in typ or 'octet' in typ) else '.xls' if signature.startswith(b'\xd0\xcf') else '.xml' if 'xml' in typ and 'html' not in typ else '.csv' if 'csv' in typ else '.txt'
         dest=data/'files'/(h+ext);dest.parent.mkdir(exist_ok=True);shutil.copyfile(original,dest)
