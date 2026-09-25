@@ -48,6 +48,35 @@ ICICI_TER_TITLE = "Total Expense Ratio"
 ICICI_TER_SHOW = "TER Details"
 _ICICI_XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
+UTI_FAMILY = "UTI Small Cap Fund"
+UTI_PORTFOLIO_CODE = "751"
+UTI_NSDL_CODE = "UTIM/O/E/SCF/20/03/0094"
+UTI_YTD_META_API = "https://www.utimf.com/api/page/get-ytd-ter-disc-page-data"
+UTI_YTD_HOST = "d3ce1o48hc5oli.cloudfront.net"
+_UTI_YTD_TITLE = re.compile(r"^Daily TER YTD (\d{8})-(\d{8})$", re.I)
+_UTI_YTD_FILE = re.compile(
+    r"^daily_ter_ytd_(\d{8})_(\d{8})(?:_[A-Za-z0-9-]+)?\.xlsx$",
+    re.I,
+)
+_UTI_HEADER = (
+    "PORTFOLIO",
+    "NSDL_CODE",
+    "PORTFOLIO_NAME",
+    "TRANS_DATE",
+    "BER_REG",
+    "BRK_REG",
+    "TRAN_REG",
+    "STAT_REG",
+    "TOTALTER_REG",
+    "WTD_TER_REG",
+    "BER_DIR",
+    "BRK_DIR",
+    "TRAN_DIR",
+    "STAT_DIR",
+    "TOTALTER_DIR",
+    "WTD_TER_DIR",
+)
+
 INVESCO_FAMILY = "Invesco India Small Cap Fund"
 INVESCO_NSDL_CODE = "INVM/O/E/SCF/18/07/0030"
 INVESCO_TER_PAGE = "https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter"
@@ -1595,6 +1624,215 @@ def mirae(progress=lambda _: None, today=None):
     )
 
 
+def _uti_financial_year_start(today):
+    return today.year if today.month >= 4 else today.year - 1
+
+
+def _uti_parse_date(value):
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    token = str(value or "").strip()
+    for fmt in ("%d-%b-%Y", "%d-%B-%Y", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(token, fmt).date()
+        except ValueError:
+            pass
+    raise ValueError(f"UTI TER workbook has an invalid date: {token[:40]}")
+
+
+def _uti_percent(value, label):
+    if value is None or str(value).strip() in ("", "-", "NA", "N/A"):
+        raise ValueError(f"UTI TER workbook is missing {label}")
+    parsed = number(value)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"UTI TER workbook {label} is outside the accepted range")
+    return parsed
+
+
+def parse_uti_workbook(content, today=None):
+    """Return the newest exact UTI Small Cap BER and published Total TER pair."""
+    today = today or date.today()
+    try:
+        book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
+    except Exception as exc:
+        raise ValueError("UTI YTD TER disclosure is not a readable XLSX workbook") from exc
+
+    try:
+        if "YTD TER" not in book.sheetnames:
+            raise ValueError("UTI YTD TER workbook sheet layout changed")
+        sheet = book["YTD TER"]
+        rows = sheet.iter_rows(values_only=True)
+        header = next(rows, None)
+        clean = tuple("" if v is None else str(v).strip() for v in (header or ())[:16])
+        if clean != _UTI_HEADER or len(header or ()) != 16:
+            raise ValueError("UTI YTD TER workbook columns changed")
+
+        matches = defaultdict(list)
+        for row in rows:
+            if len(row) < 16:
+                continue
+            if str(row[0] or "").strip() != UTI_PORTFOLIO_CODE:
+                continue
+            if str(row[1] or "").strip() != UTI_NSDL_CODE:
+                continue
+            if str(row[2] or "").strip() != UTI_FAMILY:
+                continue
+            try:
+                day = _uti_parse_date(row[3])
+            except ValueError:
+                continue
+            if day <= today:
+                matches[day.isoformat()].append(row)
+
+        if not matches:
+            raise ValueError("UTI YTD TER workbook contains no dated Small Cap rows")
+        day = max(matches)
+        if len(matches[day]) != 1:
+            raise ValueError(f"UTI YTD TER workbook has duplicate Small Cap rows for {day}")
+        row = matches[day][0]
+
+        regular = {
+            "base_expense_ratio": _uti_percent(row[4], "Regular BER"),
+            "brokerage": _uti_percent(row[5], "Regular brokerage"),
+            "transaction_cost": _uti_percent(row[6], "Regular transaction cost"),
+            "statutory_levies": _uti_percent(row[7], "Regular statutory levies"),
+            "ter": _uti_percent(row[8], "Regular Total TER"),
+        }
+        direct = {
+            "base_expense_ratio": _uti_percent(row[10], "Direct BER"),
+            "brokerage": _uti_percent(row[11], "Direct brokerage"),
+            "transaction_cost": _uti_percent(row[12], "Direct transaction cost"),
+            "statutory_levies": _uti_percent(row[13], "Direct statutory levies"),
+            "ter": _uti_percent(row[14], "Direct Total TER"),
+        }
+        # WTD TER is an independently published trailing figure, not the daily
+        # Total TER field we store. Validate it only as part of the source schema.
+        _uti_percent(row[9], "Regular WTD TER")
+        _uti_percent(row[15], "Direct WTD TER")
+
+        for plan, values in (("Regular", regular), ("Direct", direct)):
+            if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+                raise ValueError(f"UTI {plan} Total TER is below BER on {day}")
+            component_total = (
+                values["base_expense_ratio"]
+                + values["brokerage"]
+                + values["transaction_cost"]
+                + values["statutory_levies"]
+            )
+            if abs(component_total - values["ter"]) > 0.02:
+                raise ValueError(f"UTI {plan} TER components do not reconcile on {day}")
+        return day, {"Regular": regular, "Direct": direct}
+    finally:
+        book.close()
+
+
+def _uti_ytd_file(payload, today=None):
+    """Select UTI's newest exact current-financial-year YTD TER workbook."""
+    today = today or date.today()
+    if not isinstance(payload, dict):
+        raise ValueError("UTI YTD TER metadata changed format")
+    components = payload.get("field_component")
+    if not isinstance(components, list):
+        raise ValueError("UTI YTD TER metadata has no file components")
+
+    fy_start = date(_uti_financial_year_start(today), 4, 1)
+    matches = defaultdict(set)
+    for item in components:
+        if not isinstance(item, dict) or item.get("component_type") != "generic_file_upload":
+            continue
+        data = item.get("data")
+        if not isinstance(data, dict):
+            continue
+        name = str(data.get("file_name") or "").strip()
+        title_match = _UTI_YTD_TITLE.fullmatch(name)
+        link = data.get("link")
+        url = str(link.get("url") or "").strip() if isinstance(link, dict) else ""
+        parsed = urlparse(url)
+        filename = unquote(parsed.path.rsplit("/", 1)[-1])
+        file_match = _UTI_YTD_FILE.fullmatch(filename)
+        if not title_match or not file_match:
+            continue
+        try:
+            title_start = datetime.strptime(title_match.group(1), "%d%m%Y").date()
+            title_end = datetime.strptime(title_match.group(2), "%d%m%Y").date()
+            file_start = datetime.strptime(file_match.group(1), "%d%m%Y").date()
+            file_end = datetime.strptime(file_match.group(2), "%d%m%Y").date()
+        except ValueError:
+            continue
+        if (
+            title_start != file_start
+            or title_end != file_end
+            or title_start != fy_start
+            or title_end > today
+            or title_end < title_start
+            or parsed.scheme != "https"
+            or parsed.hostname != UTI_YTD_HOST
+            or not parsed.path.lower().startswith("/s3fs-public/")
+        ):
+            continue
+        public_url(url)
+        matches[title_end.isoformat()].add(url)
+
+    if not matches:
+        raise ValueError("UTI YTD TER metadata contains no current-financial-year workbook")
+    latest = max(matches)
+    if len(matches[latest]) != 1:
+        raise ValueError(f"UTI YTD TER metadata has duplicate workbooks ending {latest}")
+    return latest, next(iter(matches[latest]))
+
+
+def _uti_disclosure(today=None):
+    today = today or date.today()
+    raw, _, _ = fetch(UTI_YTD_META_API, archive=False, max_bytes=2 * 1024 * 1024)
+    try:
+        payload = json.loads(raw)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise ValueError("UTI YTD TER metadata returned invalid JSON") from exc
+    metadata_end, source = _uti_ytd_file(payload, today)
+    workbook, content_hash, _ = fetch(source, max_bytes=8 * 1024 * 1024)
+    if not workbook.startswith(b"PK"):
+        raise ValueError("UTI YTD TER source is not an XLSX workbook")
+    day, plans = parse_uti_workbook(workbook, today)
+    if day > metadata_end:
+        raise ValueError("UTI YTD TER workbook contains data beyond its metadata end date")
+    return source, day, plans, content_hash, metadata_end
+
+
+def uti(progress=lambda _: None, today=None):
+    """Collect UTI Small Cap's explicit BER and Total TER from its public YTD workbook."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (UTI_FAMILY,)):
+        return "UTI Small Cap is not in the active universe"
+
+    progress("UTI Small Cap expense ratios · official YTD TER workbook")
+    source, day, plans, content_hash, metadata_end = _uti_disclosure(today)
+    for plan, values in plans.items():
+        for metric in (
+            "base_expense_ratio",
+            "brokerage",
+            "transaction_cost",
+            "statutory_levies",
+            "ter",
+        ):
+            db.metric(
+                UTI_FAMILY,
+                plan,
+                metric,
+                day,
+                values[metric],
+                "% p.a. · reported by AMC",
+                source,
+                content_hash,
+            )
+    return (
+        f"{UTI_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER; YTD file through {metadata_end})"
+    )
+
+
 def _mahindra_decrypt_downloads(raw):
     """Decode the public Downloads API exactly as Mahindra's browser client does."""
     try:
@@ -1832,7 +2070,7 @@ def mahindra(progress=lambda _: None, today=None):
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, groww, hsbc, icici, invesco, jm, mahindra, mirae):
+    for collector in (canara, groww, hsbc, icici, invesco, jm, mahindra, mirae, uti):
         try:
             results.append(collector(progress))
         except Exception as exc:
