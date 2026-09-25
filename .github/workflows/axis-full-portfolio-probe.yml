@@ -1,4 +1,4 @@
-name: Axis monthly workbook parser probe
+name: Axis workbook reconciliation probe
 
 on:
   push:
@@ -12,66 +12,34 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
         with:
           version: "0.11.33"
           python-version: "3.12"
-      - name: Install dependencies
-        run: uv sync --frozen
-      - name: Parse exact Axis Small Cap August monthly workbook
-        env:
-          SMALLCAP_NO_SCHEDULER: "1"
+      - run: uv sync --frozen
+      - name: Inspect Axis non-ISIN rows and totals
         run: |
           uv run --frozen python - <<'PY'
-          import hashlib,io,tempfile,urllib.request
-          from pathlib import Path
+          import io,re,urllib.request
           import openpyxl
-          from tracker import db,disclosures
-          from tracker.portfolio_parser import parse_sheet
-
-          db.DATA=Path(tempfile.mkdtemp(prefix="axis-portfolio-probe-"))
           URL="https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx"
-          FAMILY="Axis Small Cap Fund"
-          req=urllib.request.Request(URL,headers={
-              "User-Agent":"Mozilla/5.0",
-              "Accept":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,*/*",
-          })
-          with urllib.request.urlopen(req,timeout=45) as r:
-              raw=r.read(20_000_000)
-              print("FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
-          print("SHA256",hashlib.sha256(raw).hexdigest(),"SIGNATURE",raw[:8])
-
-          book=openpyxl.load_workbook(io.BytesIO(raw),read_only=True,data_only=True)
-          print("SHEETS",book.sheetnames)
-          for sheet in book.worksheets:
-              cells=list(sheet.iter_rows())
-              rows=[[c.value for c in row] for row in cells]
-              formats=[[c.number_format or "" for c in row] for row in cells]
-              print("SHEET",sheet.title,"ROWS",len(rows),"COLS",max((len(x) for x in rows),default=0))
-              for row in rows[:18]:print("ROW",row[:12])
-              parsed=parse_sheet(rows,formats,FAMILY)
-              if parsed:
-                  print("PARSED_DAY",parsed["day"])
-                  print("PARSED_AUM",parsed["aum"])
-                  print("PARSED_COMPLETE",parsed["complete"])
-                  print("POSITION_COUNT",len(parsed["positions"]))
-                  print("WEIGHT_SUM",round(sum(x["weight"] for x in parsed["positions"]),8))
-                  print("UNKNOWN_ROWS",parsed["unknown_rows"])
-                  kinds={}
-                  for x in parsed["positions"]:kinds[x["asset_type"]]=kinds.get(x["asset_type"],0)+1
-                  print("ASSET_COUNTS",kinds)
-                  print("FIRST_POSITIONS",parsed["positions"][:8])
-                  print("LAST_POSITIONS",parsed["positions"][-8:])
-          book.close()
-
-          db.init()
-          h=db.archive(raw,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-          count=disclosures.spreadsheet(raw,FAMILY,URL,h)
-          print("DISCLOSURE_COUNT",count)
-          for p in db.rows("SELECT * FROM portfolios WHERE family=? ORDER BY complete DESC,id",(FAMILY,)):
-              print("SNAPSHOT",p)
-              print("HOLDINGS",db.one("SELECT COUNT(*) n, SUM(weight) total FROM holdings WHERE snapshot_id=?",(p["id"],)))
+          req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0"})
+          with urllib.request.urlopen(req,timeout=40) as r:raw=r.read()
+          wb=openpyxl.load_workbook(io.BytesIO(raw),read_only=True,data_only=True)
+          ws=wb["AXISSCF"]
+          cells=list(ws.iter_rows())
+          rows=[[c.value for c in row] for row in cells]
+          fmts=[[c.number_format or "" for c in row] for row in cells]
+          terms=re.compile(r'NIFTY|Clearing Corporation|Grand Total|Total Net Assets|Total|TREPS|Repo|Derivative|Futures|Money Market|Cash|Receivables|Treasury|Tbill',re.I)
+          for i,row in enumerate(rows):
+              text=" | ".join(str(v or "") for v in row[:12])
+              if terms.search(text):
+                  print("MATCH_ROW",i+1,row[:12])
+                  print("FORMATS",fmts[i][:12])
+                  for j in range(max(0,i-2),min(len(rows),i+3)):
+                      print("CTX",j+1,rows[j][:12])
+          wb.close()
           PY
