@@ -97,6 +97,19 @@ def collect(connection, root=ROOT):
                  evidence_reasons=[], pending_extractions=[], latest_for_urls=[], fragile_urls=[],
                  latest_error_urls=[], latest_document_ids=[], extraction_statuses=Counter())
         items[a['hash']] = a
+    if 'archive_retention' in tables:
+        for r in connection.execute('SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention'):
+            row=dict(r);x=items.get(row['hash'])
+            if not x:continue
+            x['stored_classification']=row['classification']
+            x['binary_state']=row['binary_state']
+            x['retention_reason']=row.get('reason')
+            x['retention_reviewed_at']=row.get('reviewed_at')
+    for x in items.values():
+        x.setdefault('stored_classification','unclassified')
+        x.setdefault('binary_state','retained')
+        x.setdefault('retention_reason',None)
+        x.setdefault('retention_reviewed_at',None)
     by_url = defaultdict(dict)
     latest_fetch = {}
     missing_hashes = set()
@@ -235,6 +248,8 @@ def measure_packs(items, manifest, assets, repo):
                     if info.is_dir(): raise ValueError('Unexpected directory member')
                     h = info.filename.rsplit('/', 1)[-1]
                     if h not in items or info.filename != 'data/' + items[h]['path']: raise ValueError('Unknown ZIP member')
+                    if items[h].get('binary_state','retained')!='retained':
+                        raise ValueError('Active source pack contains a metadata-only hash')
                     if h in seen or h in found or info.file_size != items[h]['bytes']: raise ValueError('Duplicate or damaged member identity')
                     found.add(h)
                     items[h]['pack'] = name
@@ -245,7 +260,8 @@ def measure_packs(items, manifest, assets, repo):
             print('Verified pack', len(verified), '/', len(manifest['source_packs']), name, flush=True)
             # Remove only the disposable downloaded audit copy, never release or production files.
             path.unlink()
-    if seen != set(items): raise ValueError('Source pack inventory does not cover database')
+    expected={h for h,x in items.items() if x.get('binary_state','retained')=='retained'}
+    if seen != expected: raise ValueError('Source pack inventory does not cover retained binaries')
     return verified
 
 
@@ -259,6 +275,13 @@ def summarize(items, manifest, assets, database_bytes):
             group['compressed_payload_bytes'] = sum(x['compressed_payload_bytes'] for x in selected)
         groups[state] = group
     total = sum(x['bytes'] for x in rows)
+    binary_states={
+        state:{
+            'files':sum(x.get('binary_state','retained')==state for x in rows),
+            'raw_bytes':sum(x['bytes'] for x in rows if x.get('binary_state','retained')==state),
+        }
+        for state in ('retained','metadata_only')
+    }
     candidate = groups['link_only_candidate']['raw_bytes']
     active = reference_assets(manifest)
     previous = reference_assets(manifest.get('previous'))
@@ -269,7 +292,7 @@ def summarize(items, manifest, assets, database_bytes):
                           'candidate_files': sum(x['classification'] == 'link_only_candidate' for x in selected),
                           'candidate_raw_bytes': sum(x['bytes'] for x in selected if x['classification'] == 'link_only_candidate')})
     return {'archive_files': len(rows), 'archive_raw_bytes': total, 'database_bytes': database_bytes,
-            'groups': groups, 'candidate_percent_of_raw_archive': round(100 * candidate / total, 4) if total else 0,
+            'groups': groups, 'binary_states': binary_states, 'candidate_percent_of_raw_archive': round(100 * candidate / total, 4) if total else 0,
             'proposed_raw_archive_bytes': total - candidate,
             'proposed_database_plus_sources_bytes': database_bytes + total - candidate,
             'bytes_actually_deleted': 0, 'files_actually_deleted': 0,
@@ -297,7 +320,8 @@ def write_reports(output, report, items):
     output.mkdir(parents=True, exist_ok=True)
     (output / 'SOURCE-RETENTION-SUMMARY.json').write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n')
     (output / 'SOURCE-RETENTION-INVENTORY.json').write_text(json.dumps(list(items.values()), indent=2, ensure_ascii=False) + '\n')
-    fields = ['hash', 'classification', 'bytes', 'compressed_payload_bytes', 'kind', 'media_type', 'host',
+    fields = ['hash', 'classification', 'stored_classification', 'binary_state', 'retention_reason',
+              'retention_reviewed_at', 'bytes', 'compressed_payload_bytes', 'kind', 'media_type', 'host',
               'primary_url', 'first_seen', 'families', 'reporting_dates', 'titles', 'reasons', 'references',
               'urls', 'latest_for_urls', 'latest_document_ids', 'fragile_urls', 'latest_error_urls', 'pack']
     with (output / 'SOURCE-RETENTION-INVENTORY.csv').open('w', encoding='utf-8-sig', newline='') as f:
@@ -358,7 +382,9 @@ def main():
         table_counts = {r[0]: c.execute('SELECT COUNT(*) FROM ' + quote(r[0])).fetchone()[0]
                         for r in c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
     packed = [h for pack in manifest['source_packs'] for h in pack['hashes']]
-    if len(packed) != len(set(packed)) or set(packed) != set(items): raise ValueError('Manifest/database hash coverage mismatch')
+    expected_packed={h for h,x in items.items() if x.get('binary_state','retained')=='retained'}
+    if len(packed) != len(set(packed)) or set(packed) != expected_packed:
+        raise ValueError('Manifest/retained-binary hash coverage mismatch')
     if missing: raise ValueError('Unresolved nonempty source hashes: ' + str(missing[:10]))
     measured = []
     if args.measure_packs:
