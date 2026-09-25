@@ -1,4 +1,4 @@
-name: Edelweiss retained source audit
+name: Edelweiss archived statutory route probe
 
 on:
   push:
@@ -27,33 +27,34 @@ jobs:
         run: uv sync --frozen
       - name: Restore cumulative history
         run: uv run --frozen python scripts/github_state.py restore
-      - name: Audit retained Edelweiss portfolio source evidence
+      - name: Inspect archived portfolio-of-schemes HTML
         run: |
           uv run --frozen python - <<'PY'
+          import re, html
           from tracker import db
+          from scripts import github_state
 
-          print('DOCUMENTS')
-          for r in db.rows("""SELECT d.title,d.kind,d.url,d.last_seen,dv.hash,a.bytes,a.media_type
-              FROM documents d
-              LEFT JOIN document_versions dv ON dv.document_id=d.id
-              LEFT JOIN archives a ON a.hash=dv.hash
-              WHERE d.family='Edelweiss Small Cap Fund'
-                AND (lower(d.title) LIKE '%portfolio%' OR lower(d.url) LIKE '%portfolio%'
-                     OR lower(d.url) LIKE '%.xls%' OR lower(d.url) LIKE '%.csv%')
-              ORDER BY d.last_seen DESC,d.url,dv.observed_at DESC"""):
-              print(r)
-
-          print('SOURCE_PAGES')
-          for r in db.rows("""SELECT amc_match,url,label,kind,last_checked,status,detail
-              FROM source_pages WHERE lower(amc_match) LIKE '%edelweiss%'
-              ORDER BY last_checked DESC,url"""):
-              print(r)
-
-          print('FETCHES')
-          for r in db.rows("""SELECT url,fetched_at,status,hash,detail
-              FROM fetches
-              WHERE lower(url) LIKE '%edelweissmf.com%'
-                AND (lower(url) LIKE '%portfolio%' OR lower(url) LIKE '%.xls%')
-              ORDER BY fetched_at DESC LIMIT 100"""):
-              print(r)
+          row=db.one("""SELECT f.hash,a.path,a.bytes,a.media_type,f.fetched_at
+              FROM fetches f JOIN archives a ON a.hash=f.hash
+              WHERE f.url='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
+                AND f.status='ok' AND f.hash IS NOT NULL
+              ORDER BY f.fetched_at DESC LIMIT 1""")
+          assert row
+          github_state.materialize_hashes([row['hash']])
+          raw=(db.DATA/row['path']).read_bytes()
+          text=raw.decode('utf-8','replace')
+          print('HASH',row['hash'],'BYTES',len(raw),'FETCHED',row['fetched_at'],row['media_type'])
+          print('TERM_COUNTS', {k:len(re.findall(k,text,re.I)) for k in ['portfolio','monthly','xls','xlsx','api','ajax','scheme']})
+          print('LINKS')
+          for m in re.finditer(r'(?:href|src)=["\']([^"\']+)["\']',text,re.I):
+              u=html.unescape(m.group(1))
+              if re.search(r'portfolio|xls|api|ajax|scheme',u,re.I): print(u)
+          print('SNIPPETS')
+          for pat in ['portfolio of scheme','monthly portfolio','xlsx','xls','api/','ajax','portfolio']:
+              low=text.lower(); p=0; shown=0
+              while shown<15:
+                  i=low.find(pat.lower(),p)
+                  if i<0: break
+                  print('SNIP',pat,re.sub(r'\s+',' ',text[max(0,i-1000):min(len(text),i+2400)]))
+                  p=i+len(pat); shown+=1
           PY
