@@ -148,8 +148,32 @@ def fund(code:int):
     return s
 
 
+def reported_benchmark_identity(family):
+    """Resolve the latest fund-reported benchmark without substituting a comparator."""
+    from .performance_coverage import benchmark_identity
+    metric=db.one("""SELECT value,as_of,unit,source,observed_at
+      FROM metrics WHERE family=? AND metric='benchmark'
+      ORDER BY as_of DESC,observed_at DESC,id DESC LIMIT 1""",(family,))
+    identity=benchmark_identity(metric['value'] if metric else None)
+    canonical=identity['canonical_tri_series']
+    available=bool(canonical and db.one("SELECT 1 FROM benchmark WHERE name=? LIMIT 1",(canonical,)))
+    if not identity['reported']:status='identity_missing'
+    elif not identity['explicit_total_return']:status='identity_not_explicit_tri'
+    elif not canonical:status='identity_unmapped'
+    elif not available:status='series_missing'
+    else:status='available'
+    return {
+        **identity,
+        'as_of':metric['as_of'] if metric else None,
+        'source':metric['source'] if metric else None,
+        'unit':metric['unit'] if metric else None,
+        'series_available':available,
+        'status':status,
+    }
+
+
 @app.get('/api/funds/{code}/performance')
-def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str=providers.BENCHMARK,monthly:float=10000):
+def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str|None=None,monthly:float=10000):
     s=scheme(code)
     if not 100<=monthly<=100000000:raise HTTPException(400,"Monthly SIP must be between ₹100 and ₹10 crore")
     try:
@@ -171,19 +195,39 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str=pro
         method="NAV-only view. Bonus allotments or other unit adjustments are not yet mapped; adjusted total returns and SIP results are unavailable for this option."
     selected=[p for p in total_points if (not start or p[0]>=start) and (not end or p[0]<=end)]
     nav_selected=[p for p in nav if (not start or p[0]>=start) and (not end or p[0]<=end)]
-    bp=[[x['date'],x['value']] for x in db.rows("SELECT date,value FROM benchmark WHERE name=? ORDER BY date",(benchmark,))]
+    reported=reported_benchmark_identity(s['family'])
+    requested=(benchmark or '').strip() or None
+    comparison_name=requested or reported['canonical_tri_series']
+    comparison_role=None
+    if comparison_name:
+        comparison_role=('reported_benchmark'
+                         if comparison_name==reported['canonical_tri_series']
+                         else 'alternate_comparison')
+    bp=[[x['date'],x['value']] for x in db.rows(
+        "SELECT date,value FROM benchmark WHERE name=? ORDER BY date",(comparison_name,))] if comparison_name else []
+    benchmark_source=(db.one("""SELECT source,MAX(date) last,MIN(date) first,COUNT(*) points
+      FROM benchmark WHERE name=?""",(comparison_name,)) if comparison_name else None)
+    comparison_available=bool(bp)
+    if not comparison_name:comparison_status=reported['status']
+    elif comparison_available:comparison_status='available'
+    elif comparison_role=='reported_benchmark':comparison_status='reported_series_missing'
+    else:comparison_status='alternate_series_missing'
     aligned=analytics.aligned(selected,bp)
     full=analytics.performance(total_points)
     selected_stats=analytics.performance(selected)
     full_aligned=analytics.aligned([p for p in total_points if not end or p[0]<=end],bp)
     aligned_f=[[p[0],p[1]] for p in full_aligned];aligned_b=[[p[0],p[2]] for p in full_aligned]
     return {"nav":nav_selected,"total_return_series":selected,"method":method,"can_total_return":bool(selected),
-            "benchmark":benchmark,"comparison":aligned,"stats":full,"range_stats":selected_stats,
+            "reported_benchmark":reported,
+            "comparison_series":{"name":comparison_name,"role":comparison_role,
+                                 "status":comparison_status,"available":comparison_available,
+                                 "source":benchmark_source},
+            "benchmark":comparison_name,"comparison":aligned,"stats":full,"range_stats":selected_stats,
             "comparison_stats":{"fund":analytics.performance(aligned_f)['returns'],"benchmark":analytics.performance(aligned_b)['returns']},
             "sip":analytics.sip(selected,monthly) if selected else None,
             "latest_nav":nav[-1] if nav else None,
             "first_nav":nav[0][0] if nav else None,"last_nav":nav[-1][0] if nav else None,
-            "benchmark_source":db.one("SELECT source,MAX(date) last,MIN(date) first,COUNT(*) points FROM benchmark WHERE name=?",(benchmark,)),
+            "benchmark_source":benchmark_source,
             "distribution_coverage":coverage}
 
 
