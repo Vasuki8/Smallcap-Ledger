@@ -431,5 +431,88 @@ class InvescoExpenseTests(unittest.TestCase):
         self.assertTrue(all(call.args[7] == "hash789" for call in mock_metric.call_args_list))
 
 
+class JmExpenseTests(unittest.TestCase):
+    def row(self, day="2026-09-24T00:00:00", *, scheme="JM Small Cap Fund",
+            code="SC", nsdl="JMFI/O/E/SCF/23/11/0016",
+            regular_ter=2.54, direct_ter=0.97):
+        return {
+            "NsdlSchemeCode": nsdl,
+            "Scheme": scheme,
+            "Schemecode": code,
+            "TERDate": day,
+            "RegularBER": 1.94,
+            "RegularBrokCost": 0.09,
+            "RegularTransCost": 0.01,
+            "RegularStatLevGST": 0.50,
+            "RegularTotalTER": regular_ter,
+            "DirectBER": 0.59,
+            "DirectBrokCost": 0.09,
+            "DirectTransCost": 0.01,
+            "DirectStatLevGST": 0.28,
+            "DirectTotalTER": direct_ter,
+        }
+
+    def test_jm_latest_exact_row_retains_published_ber_and_total_ter(self):
+        rows = [self.row("2026-09-23T00:00:00"), self.row()]
+        day, plans = amc_expenses.parse_jm_ter_records(rows, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-24")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.94)
+        self.assertEqual(plans["Regular"]["ter"], 2.54)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.59)
+        self.assertEqual(plans["Direct"]["ter"], 0.97)
+
+    def test_jm_future_wrong_identity_and_duplicate_are_rejected(self):
+        rows = [self.row(), self.row("2026-09-25T00:00:00")]
+        day, plans = amc_expenses.parse_jm_ter_records(rows, date(2026, 9, 24))
+        self.assertEqual(day, "2026-09-24")
+        self.assertEqual(plans["Direct"]["ter"], 0.97)
+
+        for kwargs in (
+            {"scheme": "JM Midcap Fund"},
+            {"code": "OTHER"},
+            {"nsdl": "JMFI/O/E/OTHER"},
+        ):
+            with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+                amc_expenses.parse_jm_ter_records(
+                    [self.row(**kwargs)], date(2026, 9, 24)
+                )
+
+        row = self.row()
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_jm_ter_records(
+                [row, dict(row)], date(2026, 9, 24)
+            )
+
+    def test_jm_component_reconciliation_is_strict(self):
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_jm_ter_records(
+                [self.row(direct_ter=1.05)], date(2026, 9, 24)
+            )
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "JM"})
+    @patch("tracker.amc_expenses._jm_ter_disclosure")
+    def test_jm_collector_stores_exact_source_hash_and_plan_metrics(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        _, plans = amc_expenses.parse_jm_ter_records(
+            [self.row()], date(2026, 9, 24)
+        )
+        mock_disclosure.return_value = ("2026-09-24", plans, "jmhash")
+        result = amc_expenses.jm(today=date(2026, 9, 24))
+        self.assertIn("2026-09-24", result)
+        self.assertEqual(mock_metric.call_count, 10)
+        calls = {
+            (call.args[1], call.args[2]): call.args[4]
+            for call in mock_metric.call_args_list
+        }
+        self.assertEqual(calls[("Regular", "ter")], 2.54)
+        self.assertEqual(calls[("Direct", "ter")], 0.97)
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.59)
+        self.assertTrue(all(call.args[3] == "2026-09-24" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == amc_expenses.JM_TER_API for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "jmhash" for call in mock_metric.call_args_list))
+
+
 if __name__ == "__main__":
     unittest.main()
