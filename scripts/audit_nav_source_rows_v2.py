@@ -64,7 +64,7 @@ def probe_dsp():
     page,_,_=providers.fetch(DSP_PAGE,archive=False,max_bytes=5*1024*1024)
     html=page.decode("utf-8","ignore")
     compact=re.sub(r"\s+"," ",html)
-    candidates=["105989"]
+    candidates=["157"]
     patterns=(
       r'<option[^>]*value=["\']([^"\']+)["\'][^>]*>\s*DSP\s+Small\s+Cap\s+Fund[^<]*</option>',
       r'["\']([^"\']{1,80})["\']\s*:\s*["\']DSP\s+Small\s+Cap\s+Fund[^"\']*["\']',
@@ -77,7 +77,8 @@ def probe_dsp():
         print("AMC_NAV_DSP_SCHEME_MARKUP",m.group(0)[:1600],flush=True)
     print("AMC_NAV_DSP_CANDIDATES",json.dumps(candidates),flush=True)
     windows=(("08-AUG-2007","16-AUG-2007"),("27-AUG-2008","04-SEP-2008"),
-             ("17-MAR-2010","25-MAR-2010"),("07-APR-2010","15-APR-2010"))
+             ("17-MAR-2010","25-MAR-2010"),("07-APR-2010","15-APR-2010"),
+             ("01-SEP-2026","10-SEP-2026"))
     headers={"User-Agent":providers.USER_AGENT,"Referer":DSP_PAGE,"Accept":"application/json,text/javascript,*/*;q=0.01",
              "X-Requested-With":"XMLHttpRequest"}
     for scheme in candidates[:12]:
