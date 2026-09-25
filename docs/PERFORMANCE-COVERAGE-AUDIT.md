@@ -1,6 +1,6 @@
 # Historical performance and benchmark coverage audit
 
-Prepared: 2026-09-25T16:27:56+00:00
+Prepared: 2026-09-25T17:22:46+00:00
 
 **Read-only:** retained NAV/benchmark evidence only; no forward-fill, return fabrication, source fetch or UI change.
 
@@ -8,28 +8,26 @@ Prepared: 2026-09-25T16:27:56+00:00
 
 - Plans: **143**; Growth plans eligible for displayed returns: **72**.
 - Reported benchmark identity families: **36 / 36**.
-- Explicit reported TRI identities on Growth plans: **70**.
-- Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **50**.
+- Explicit reported TRI identities on Growth plans: **72**.
+- Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **52**.
 - Growth plans where the explicit reported TRI differs from the website's current default **Nifty Smallcap 250 TRI**: **20**.
 
 | Horizon | NAV return eligible Growth plans | Relevant benchmark overlap eligible Growth plans |
 | --- | ---: | ---: |
-| 1Y | 62 | 40 |
-| 3Y | 48 | 30 |
-| 5Y | 44 | 28 |
+| 1Y | 62 | 42 |
+| 3Y | 48 | 32 |
+| 5Y | 44 | 30 |
 
 ## Repair priorities
 
 | Priority | Repair | Affected funds | Affected Growth plans | Reason |
 | ---: | --- | ---: | ---: | --- |
 | 1 | collect_bse_250_smallcap_tri | 10 | 20 | Funds explicitly report BSE 250 SmallCap TRI, but no matching historical TRI series is retained. |
-| 2 | verify_non_tri_benchmark_identity | 1 | 2 | Reported benchmark identity is present but does not explicitly establish a total-return series. |
 | 3 | review_nav_history_gaps | 2 | 2 | Growth NAV histories contain one or more gaps longer than seven calendar days. |
 
 ### Affected funds
 
 - **collect_bse_250_smallcap_tri:** Aditya Birla Sun Life Small Cap Fund, Bajaj Finserv Small Cap Fund, Bandhan Small Cap Fund, DSP Small Cap Fund, HDFC Small Cap Fund, Invesco India Small Cap Fund, Mahindra Manulife Small Cap Fund, Quantum Small Cap Fund, SBI Small Cap Fund, Union Small Cap Fund
-- **verify_non_tri_benchmark_identity:** Franklin India Small Cap Fund
 - **review_nav_history_gaps:** Aditya Birla Sun Life Small Cap Fund, DSP Small Cap Fund
 
 ## Per-plan audit
@@ -74,10 +72,10 @@ Prepared: 2026-09-25T16:27:56+00:00
 | Edelweiss Small Cap Fund · Direct · IDCW · 146197 | 2019-02-14 → 2026-09-24 · 1876 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2019-02-14 → 2026-09-24 · 1871 | none |
 | Edelweiss Small Cap Fund · Regular · Growth · 146193 | 2019-02-14 → 2026-09-24 · 1876 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2019-02-14 → 2026-09-24 · 1871 | none |
 | Edelweiss Small Cap Fund · Regular · IDCW · 146194 | 2019-02-14 → 2026-09-24 · 1876 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2019-02-14 → 2026-09-24 · 1871 | none |
-| Franklin India Small Cap Fund · Direct · Growth · 118525 | 2013-01-01 → 2026-09-24 · 3380 | yes | yes | yes | Nifty Smallcap 250 | Not established | Gap → Gap · 0 | benchmark_identity_not_explicit_tri |
-| Franklin India Small Cap Fund · Direct · IDCW · 118524 | 2013-01-01 → 2026-09-24 · 3380 | n/a | n/a | n/a | Nifty Smallcap 250 | Not established | Gap → Gap · 0 | benchmark_identity_not_explicit_tri |
-| Franklin India Small Cap Fund · Regular · Growth · 103360 | 2006-04-03 → 2026-09-24 · 5042 | yes | yes | yes | Nifty Smallcap 250 | Not established | Gap → Gap · 0 | benchmark_identity_not_explicit_tri |
-| Franklin India Small Cap Fund · Regular · IDCW · 103361 | 2006-04-03 → 2026-09-24 · 5042 | n/a | n/a | n/a | Nifty Smallcap 250 | Not established | Gap → Gap · 0 | benchmark_identity_not_explicit_tri |
+| Franklin India Small Cap Fund · Direct · Growth · 118525 | 2013-01-01 → 2026-09-24 · 3380 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-01-01 → 2026-09-24 · 3377 | none |
+| Franklin India Small Cap Fund · Direct · IDCW · 118524 | 2013-01-01 → 2026-09-24 · 3380 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-01-01 → 2026-09-24 · 3377 | none |
+| Franklin India Small Cap Fund · Regular · Growth · 103360 | 2006-04-03 → 2026-09-24 · 5042 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2006-04-03 → 2026-09-24 · 5039 | none |
+| Franklin India Small Cap Fund · Regular · IDCW · 103361 | 2006-04-03 → 2026-09-24 · 5042 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2006-04-03 → 2026-09-24 · 5039 | none |
 | Groww Small Cap Fund · Direct · Growth · 154063 | 2026-02-02 → 2026-09-24 · 161 | no | no | no | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2026-02-02 → 2026-09-24 · 160 | nav_1y_return_unavailable, nav_3y_return_unavailable, nav_5y_return_unavailable, benchmark_1y_overlap_unavailable, benchmark_3y_overlap_unavailable, benchmark_5y_overlap_unavailable |
 | Groww Small Cap Fund · Direct · IDCW · 154104 | 2026-02-02 → 2026-09-24 · 161 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2026-02-02 → 2026-09-24 · 160 | none |
 | Groww Small Cap Fund · Regular · Growth · 154102 | 2026-02-02 → 2026-09-24 · 161 | no | no | no | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2026-02-02 → 2026-09-24 · 160 | nav_1y_return_unavailable, nav_3y_return_unavailable, nav_5y_return_unavailable, benchmark_1y_overlap_unavailable, benchmark_3y_overlap_unavailable, benchmark_5y_overlap_unavailable |

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-25T16:27:56+00:00",
+  "built_at": "2026-09-25T17:22:46+00:00",
   "website_default_benchmark": "Nifty Smallcap 250 TRI",
   "benchmark_series": {
     "Nifty Smallcap 250 TRI": {
@@ -16,8 +16,8 @@
     "growth_plans": 72,
     "families": 36,
     "reported_benchmark_identity_families": 36,
-    "explicit_tri_growth_plans": 70,
-    "reported_tri_ready_growth_plans": 50,
+    "explicit_tri_growth_plans": 72,
+    "reported_tri_ready_growth_plans": 52,
     "website_default_mismatch_growth_plans": 20,
     "growth_return_eligibility": {
       "1Y": 62,
@@ -25,15 +25,14 @@
       "5Y": 44
     },
     "reported_benchmark_overlap_eligibility": {
-      "1Y": 40,
-      "3Y": 30,
-      "5Y": 28
+      "1Y": 42,
+      "3Y": 32,
+      "5Y": 30
     },
     "issue_counts": {
       "benchmark_1y_overlap_unavailable": 10,
       "benchmark_3y_overlap_unavailable": 20,
       "benchmark_5y_overlap_unavailable": 22,
-      "benchmark_identity_not_explicit_tri": 4,
       "nav_1y_return_unavailable": 10,
       "nav_3y_return_unavailable": 24,
       "nav_5y_return_unavailable": 28,
@@ -61,16 +60,6 @@
       ],
       "affected_growth_plans": 20,
       "reason": "Funds explicitly report BSE 250 SmallCap TRI, but no matching historical TRI series is retained."
-    },
-    {
-      "priority": 2,
-      "code": "verify_non_tri_benchmark_identity",
-      "actionable": true,
-      "affected_funds": [
-        "Franklin India Small Cap Fund"
-      ],
-      "affected_growth_plans": 2,
-      "reason": "Reported benchmark identity is present but does not explicitly establish a total-return series."
     },
     {
       "priority": 3,
@@ -557,19 +546,17 @@
       "family": "Franklin India Small Cap Fund",
       "amc": "Franklin Templeton Mutual Fund",
       "reported_benchmark": {
-        "reported": "Nifty Smallcap 250",
+        "reported": "Nifty Smallcap 250 TRI",
         "family": "Nifty Smallcap 250",
-        "explicit_total_return": false,
-        "canonical_tri_series": null,
-        "as_of": "2026-08-31",
-        "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
-        "unit": "Reported"
+        "explicit_total_return": true,
+        "canonical_tri_series": "Nifty Smallcap 250 TRI",
+        "as_of": "2026-09-25",
+        "source": "https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund",
+        "unit": "Observed on official fund page · Total Return Index"
       },
       "plan_count": 4,
       "growth_plan_count": 2,
-      "issue_codes": [
-        "benchmark_identity_not_explicit_tri"
-      ],
+      "issue_codes": [],
       "growth_horizons": {
         "1Y": {
           "eligible": 2,
@@ -586,16 +573,16 @@
       },
       "benchmark_horizons": {
         "1Y": {
-          "eligible": 0,
-          "ineligible": 2
+          "eligible": 2,
+          "ineligible": 0
         },
         "3Y": {
-          "eligible": 0,
-          "ineligible": 2
+          "eligible": 2,
+          "ineligible": 0
         },
         "5Y": {
-          "eligible": 0,
-          "ineligible": 2
+          "eligible": 2,
+          "ineligible": 0
         }
       }
     },
@@ -7205,54 +7192,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-08-31",
-          "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
-          "unit": "Reported"
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-09-25",
+          "source": "https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund",
+          "unit": "Observed on official fund page · Total Return Index"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2013-01-01",
+          "last": "2026-09-24",
+          "observations": 3377,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -7298,9 +7285,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 118524,
@@ -7345,54 +7330,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-08-31",
-          "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
-          "unit": "Reported"
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-09-25",
+          "source": "https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund",
+          "unit": "Observed on official fund page · Total Return Index"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2013-01-01",
+          "last": "2026-09-24",
+          "observations": 3377,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -7438,9 +7423,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 103360,
@@ -7485,54 +7468,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-08-31",
-          "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
-          "unit": "Reported"
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-09-25",
+          "source": "https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund",
+          "unit": "Observed on official fund page · Total Return Index"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2006-04-03",
+          "last": "2026-09-24",
+          "observations": 5039,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -7578,9 +7561,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 103361,
@@ -7625,54 +7606,54 @@
       },
       "benchmark": {
         "reported_identity": {
-          "reported": "Nifty Smallcap 250",
+          "reported": "Nifty Smallcap 250 TRI",
           "family": "Nifty Smallcap 250",
-          "explicit_total_return": false,
-          "canonical_tri_series": null,
-          "as_of": "2026-08-31",
-          "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
-          "unit": "Reported"
+          "explicit_total_return": true,
+          "canonical_tri_series": "Nifty Smallcap 250 TRI",
+          "as_of": "2026-09-25",
+          "source": "https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund",
+          "unit": "Observed on official fund page · Total Return Index"
         },
-        "status": "benchmark_identity_not_explicit_tri",
+        "status": "reported_tri_ready",
         "required_series": {
-          "name": null,
-          "available": false,
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "name": "Nifty Smallcap 250 TRI",
+          "available": true,
+          "first": "2005-04-01",
+          "last": "2026-09-24",
+          "observations": 5329,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap": {
-          "first": null,
-          "last": null,
-          "observations": 0,
+          "first": "2006-04-03",
+          "last": "2026-09-24",
+          "observations": 5039,
           "gap_count_gt_7d": 0,
-          "max_gap_days": null,
+          "max_gap_days": 0,
           "largest_gaps": []
         },
         "overlap_horizons": {
           "1Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2025-09-24",
+            "anchor": "2025-09-24",
+            "anchor_lag_days": 0
           },
           "3Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2023-09-24",
+            "anchor": "2023-09-22",
+            "anchor_lag_days": 2
           },
           "5Y": {
-            "eligible": false,
-            "reason": "no_series",
-            "target": null,
-            "anchor": null,
-            "anchor_lag_days": null
+            "eligible": true,
+            "reason": null,
+            "target": "2021-09-24",
+            "anchor": "2021-09-24",
+            "anchor_lag_days": 0
           }
         },
         "website_default_series": {
@@ -7718,9 +7699,7 @@
         },
         "website_default_mismatch": false
       },
-      "issues": [
-        "benchmark_identity_not_explicit_tri"
-      ]
+      "issues": []
     },
     {
       "code": 154063,
