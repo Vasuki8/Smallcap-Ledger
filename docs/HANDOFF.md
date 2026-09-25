@@ -1,6 +1,85 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-24, after ICICI Prudential and Invesco India TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-25, after JM Small Cap TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: JM Small Cap current TER/BER recovery
+
+**JM Small Cap Fund now has current, explicitly labelled BER and Total TER from JM Financial Mutual Fund's own Scheme Expense Ratio API.**
+
+PR #98 merged as commit `65983a16fe8c34f0502e6cd2a3a1523158771727`. Isolated validation run **36077070883** passed compileall, all **239 tests**, and a live first-party JM TER API check. Production workflow **#468**, run **36077163847**, then passed the one-time JM recovery, the same **239-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The production run completed successfully at **2026-09-25T00:23:21Z**.
+
+### JM source and exact observations
+
+Current first-party Scheme Expense Ratio page:
+
+`https://www.jmfinancialmf.com/Scheme-Expense-Ratio`
+
+JM's live browser posts public JSON requests to the same first-party API host already used by the tracker for JM monthly portfolio discovery. The current TER table uses:
+
+`https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest`
+
+with the browser's unfiltered latest-table request:
+
+`{"IICategory":0,"IVFundCode":""}`
+
+The API wraps its response payload using the AES-CBC key/IV published in JM's production browser bundle. The tracker reuses the already-validated read-only JM browser transport; **no investor login, account credential, token or private secret is used**. For TER evidence, the tracker archives the decoded first-party financial JSON that the browser renders rather than treating the encrypted transport envelope as the source artifact.
+
+The collector accepts only the exact identity:
+
+- scheme name: **JM Small Cap Fund**
+- scheme code: **SC**
+- NSDL scheme code: **JMFI/O/E/SCF/23/11/0016**
+
+Newest exact row: **2026-09-24**
+
+| Plan | BER | Brokerage | Transaction cost | Statutory levies incl. GST | Total TER |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Regular | **1.94%** | 0.09% | 0.01% | 0.50% | **2.54%** |
+| Direct | **0.59%** | 0.09% | 0.01% | 0.28% | **0.97%** |
+
+The tracker stores JM's explicit **Total TER** fields. It does **not** calculate Total TER from BER or components. Component arithmetic is only a rejection check. The parser rejects a changed response shape, wrong scheme/code/NSDL identity, future dates, duplicate latest rows, missing or out-of-range values, Total TER below BER, and component totals that do not reconcile within rounding tolerance.
+
+Decoded production evidence SHA-256:
+
+`3b4e875ae00865fb9e36ecf7feb1d0e6f194198a8d9e7b7bf59b8692bfeb7dbd`
+
+`scripts/refresh_jm_expenses.py` performed the idempotent push recovery and records `source_upgrade_jm-ter-v1` only after recent Regular/Direct BER+TER observations exist on one date from the exact JM TER endpoint with one non-empty source hash. Normal nightly collection remains active through `amc_expenses.update`; a source failure preserves prior observations.
+
+Production #468 logged:
+
+`Jm Small Cap Fund: official BER/TER as of 2026-09-24 (Direct 0.59%/0.97% BER/TER)`
+
+with source `https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest` and the exact decoded-evidence hash above.
+
+Status commit `5378c91c43cf152943024dd5a7a9bcb9387501c3` records the published state. Pages artifact **10840805225** is **230,728,268 bytes** with digest `sha256:e9c7ee8d331b2d36408ff7a2f9fd075e4e39da9689fb0bf1e9d71ef37ab9694f`.
+
+### Expense coverage after JM
+
+Coverage generated at **2026-09-25T00:22:01Z** is:
+
+- reported TER: **33 / 36** (up from 32 / 36)
+- base expense ratio / BER: **33 / 36**
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
+- latest NAV date in deployment status: **2026-09-24**
+
+JM's published Direct fee is now **TER 0.97% with BER 0.59%, both as of 2026-09-24**, replacing the older August BER-only fallback. Its current AUM is **₹955.1431 crore as of 2026-09-23** via AMFI. Its August portfolio remains complete at **85 positions as of 2026-08-31**.
+
+The three remaining funds without reported TER are **Axis, Mahindra Manulife and Mirae Asset**. The three remaining BER gaps remain **Axis, Groww and UTI**.
+
+### Next backend task
+
+**Mahindra Manulife Small Cap Fund is the next preferred TER target.** The tracker already retains Direct BER **0.47% as of 2026-08-31** from the official August digital factsheet:
+
+`https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html`
+
+Trace Mahindra Manulife's current first-party statutory/expense disclosure route for an explicitly labelled Total TER and exact reporting date. Store Total TER only if the AMC publishes it directly; do not derive it from BER, GST, brokerage or transaction-cost components. Preserve exact source URL/document/API identity and source hash.
+
+After Mahindra Manulife, continue **Mirae Asset Small Cap Fund**. **Axis** remains special: its current official fund page publishes an unqualified Direct **Expense Ratio 0.71% as of 2026-09-23**, while BER is still absent. Keep that value as `expense_ratio`; do not promote it to TER or BER without an explicitly labelled official source.
+
+No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in this JM expense-recovery batch.
 
 ## Latest completed batch: Invesco India Small Cap current TER/BER recovery
 
