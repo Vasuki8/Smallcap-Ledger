@@ -1,0 +1,56 @@
+name: ICICI portfolio transport probe
+
+on:
+  push:
+    branches: [backend/icici-portfolio-transport-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe exact ICICI monthly portfolio transport
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, socket, ssl, urllib.request, urllib.error
+          HOST='archive.icicipruamc.com'
+          urls=[
+            'https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip',
+            'https://archive.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip',
+            'https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip',
+            'https://archive.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip',
+          ]
+          try:
+              print('GETADDRINFO',HOST,sorted({x[4][0] for x in socket.getaddrinfo(HOST,443,type=socket.SOCK_STREAM)}))
+          except Exception as e:
+              print('GETADDRINFO_ERROR',HOST,repr(e))
+          try:
+              req=urllib.request.Request('https://dns.google/resolve?name='+HOST+'&type=A',headers={'Accept':'application/dns-json','User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  print('DOH_A',r.status,r.read().decode()[:4000])
+              req=urllib.request.Request('https://dns.google/resolve?name='+HOST+'&type=CNAME',headers={'Accept':'application/dns-json','User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  print('DOH_CNAME',r.status,r.read().decode()[:4000])
+          except Exception as e:
+              print('DOH_ERROR',repr(e))
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+          opener=urllib.request.build_opener(NoRedirect)
+          for url in urls:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/zip,*/*','Range':'bytes=0-1023'})
+              try:
+                  with opener.open(req,timeout=30) as r:
+                      data=r.read(1024)
+                      print('FETCH',url,r.status,r.geturl(),r.headers.get('location'),r.headers.get('content-type'),r.headers.get('content-length'),data[:8])
+              except urllib.error.HTTPError as e:
+                  print('HTTP_ERROR',url,e.code,e.headers.get('location'),e.headers.get('content-type'),e.headers.get('content-length'))
+              except Exception as e:
+                  print('FETCH_ERROR',url,repr(e))
+          PY
