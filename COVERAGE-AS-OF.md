@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-25T03:45:48+00:00
+Prepared: 2026-09-25T04:35:03+00:00
 
 **36 funds, 143 NAV series, 281,442 NAV observations. Latest included NAV: 2026-09-24.**
 
@@ -60,7 +60,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 - The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.
 - Base expense ratio and total expense ratio are distinct.
 - A benchmark name does not establish availability of its historical TRI series.
-- Portfolio records may be partial; see each snapshot and source.
+- Portfolio records may be partial; portfolio_limitation gives the evidence-based reason without estimating undisclosed weights.
 - AUM now includes the official AMFI fund-performance feed when it provides a plausible category-wide daily response; the original dated response is retained as source evidence.
 - Fund communications remains restricted to AMC-origin publications. The public Pages site carries a bounded set of saved binaries; the cumulative tracker-history release retains full saved history.
 - Source URLs and structured per-fund records are available in COVERAGE-AS-OF.json and on the live fund pages.

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-25T03:45:48+00:00",
+  "built_at": "2026-09-25T04:35:03+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -47,12 +47,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.abakkusmf.com/uploads/Portfolio_Aug31_Monthly_a00d994a66.xls",
         "complete": 1,
-        "positions": 68
+        "positions": 68,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 29,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Aditya Birla Sun Life Small Cap Fund",
@@ -99,12 +101,14 @@
         "as_of": "2026-08-31",
         "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip",
         "complete": 1,
-        "positions": 89
+        "positions": 89,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 5,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Axis Small Cap Fund",
@@ -145,12 +149,28 @@
         "as_of": "2026-09-16",
         "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
         "complete": 0,
-        "positions": 10
+        "positions": 10,
+        "limitation": {
+          "code": "undisclosed_constituents",
+          "kind": "source_aggregate",
+          "basis": "related_first_party_disclosure",
+          "source_marker": "Other Domestic Equity (Less than 0.50% of the corpus)",
+          "detail": "The AMC disclosure aggregates undisclosed smaller equity constituents, so exact names and weights are not available.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
       "official_publications": 6,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "undisclosed_constituents",
+        "kind": "source_aggregate",
+        "basis": "related_first_party_disclosure",
+        "source_marker": "Other Domestic Equity (Less than 0.50% of the corpus)",
+        "detail": "The AMC disclosure aggregates undisclosed smaller equity constituents, so exact names and weights are not available.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Bajaj Finserv Small Cap Fund",
@@ -197,12 +217,28 @@
         "as_of": "2026-07-31",
         "source": "https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_August-2026.pdf",
         "complete": 0,
-        "positions": 13
+        "positions": 13,
+        "limitation": {
+          "code": "named_subset_only",
+          "kind": "source_subset",
+          "basis": "first_party_factsheet",
+          "source_marker": "Name (Top 10 Holdings) / Other Equities",
+          "detail": "The retained factsheet names only a subset of holdings and aggregates the remaining equities.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": false,
       "official_publications": 1,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "named_subset_only",
+        "kind": "source_subset",
+        "basis": "first_party_factsheet",
+        "source_marker": "Name (Top 10 Holdings) / Other Equities",
+        "detail": "The retained factsheet names only a subset of holdings and aggregates the remaining equities.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Bandhan Small Cap Fund",
@@ -249,12 +285,28 @@
         "as_of": "2026-08-31",
         "source": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx",
         "complete": 0,
-        "positions": 260
+        "positions": 260,
+        "limitation": {
+          "code": "non_numeric_source_weight",
+          "kind": "source_precision",
+          "basis": "first_party_workbook",
+          "source_marker": "$ = Less Than 0.01% of NAV",
+          "detail": "The AMC workbook publishes one or more security weights only as less than 0.01% of NAV; no numeric estimate is stored.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
       "official_publications": 3,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "non_numeric_source_weight",
+        "kind": "source_precision",
+        "basis": "first_party_workbook",
+        "source_marker": "$ = Less Than 0.01% of NAV",
+        "detail": "The AMC workbook publishes one or more security weights only as less than 0.01% of NAV; no numeric estimate is stored.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Bank Of India Small Cap Fund",
@@ -301,12 +353,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-august-2026.pdf?sfvrsn=73d1ef4f_5",
         "complete": 1,
-        "positions": 103
+        "positions": 103,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 7,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Baroda Bnp Paribas Small Cap Fund",
@@ -353,12 +407,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls",
         "complete": 1,
-        "positions": 63
+        "positions": 63,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 6,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Canara Robeco Small Cap Fund",
@@ -405,12 +461,14 @@
         "as_of": "2026-08-31",
         "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/SMALL-CAP.html",
         "complete": 1,
-        "positions": 91
+        "positions": 91,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 6,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "DSP Small Cap Fund",
@@ -457,12 +515,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/8a6dbe504f-1789452169/dsp-monthend-portfolio-as-on-31-aug-2026.zip",
         "complete": 1,
-        "positions": 86
+        "positions": 86,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 15,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Edelweiss Small Cap Fund",
@@ -509,12 +569,28 @@
         "as_of": "2026-08-31",
         "source": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
         "complete": 0,
-        "positions": 10
+        "positions": 10,
+        "limitation": {
+          "code": "named_subset_only",
+          "kind": "source_subset",
+          "basis": "first_party_factsheet",
+          "source_marker": "Top 10 Holdings / Top 10 stocks: 23.00%",
+          "detail": "The current AMC factsheet publishes only the Top 10 named holdings, not the full constituent portfolio.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
       "official_publications": 2,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "named_subset_only",
+        "kind": "source_subset",
+        "basis": "first_party_factsheet",
+        "source_marker": "Top 10 Holdings / Top 10 stocks: 23.00%",
+        "detail": "The current AMC factsheet publishes only the Top 10 named holdings, not the full constituent portfolio.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Franklin India Small Cap Fund",
@@ -561,12 +637,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
         "complete": 1,
-        "positions": 93
+        "positions": 93,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 2,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Groww Small Cap Fund",
@@ -613,12 +691,14 @@
         "as_of": "2026-08-31",
         "source": "https://assets-netstorage.growwmf.in/compliance_docs/Statutory%20Disclosure/Portfolio/2026%20-2027/Monthly%20Portfolio-%20Aug%2031%202026.xlsx",
         "complete": 1,
-        "positions": 62
+        "positions": 62,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 9,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "HDFC Small Cap Fund",
@@ -671,12 +751,14 @@
         "as_of": "2026-08-31",
         "source": "https://files.hdfcfund.com/s3fs-public/2026-09/Monthly%20HDFC%20Small%20Cap%20Fund%20-%2031%20August%202026.xlsx",
         "complete": 1,
-        "positions": 87
+        "positions": 87,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 17,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "HSBC Small Cap Fund",
@@ -723,12 +805,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf",
         "complete": 1,
-        "positions": 115
+        "positions": 115,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 3,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Helios Small Cap Fund",
@@ -775,12 +859,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.heliosmf.in/wp-content/uploads/2026/09/helios-small-cap-fund-monthly-portfolio-as-on-31st-august-2026.xlsx",
         "complete": 1,
-        "positions": 96
+        "positions": 96,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 165,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "ICICI Prudential Small Cap Fund",
@@ -827,12 +913,28 @@
         "as_of": "2026-08-31",
         "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
         "complete": 0,
-        "positions": 83
+        "positions": 83,
+        "limitation": {
+          "code": "undisclosed_constituents",
+          "kind": "source_aggregate",
+          "basis": "first_party_factsheet",
+          "source_marker": "Equity less than 1% of corpus",
+          "detail": "The AMC factsheet separately aggregates equity below 1% of corpus, so those constituent names and exact weights are undisclosed.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
       "official_publications": 1,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "undisclosed_constituents",
+        "kind": "source_aggregate",
+        "basis": "first_party_factsheet",
+        "source_marker": "Equity less than 1% of corpus",
+        "detail": "The AMC factsheet separately aggregates equity below 1% of corpus, so those constituent names and exact weights are undisclosed.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Invesco India Small Cap Fund",
@@ -879,12 +981,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/small-cap.xlsx?sfvrsn=7d249fc2_0",
         "complete": 1,
-        "positions": 72
+        "positions": 72,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 5,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Iti Small Cap Fund",
@@ -931,12 +1035,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Small-Cap.html",
         "complete": 1,
-        "positions": 87
+        "positions": 87,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 9,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Jm Small Cap Fund",
@@ -983,12 +1089,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Small%20Cap%20Fund%20-%20Aug%2031%2C%202026.xlsx",
         "complete": 1,
-        "positions": 85
+        "positions": 85,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 6,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Kotak Small Cap Fund",
@@ -1035,12 +1143,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html",
         "complete": 1,
-        "positions": 81
+        "positions": 81,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 8,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "LIC Mf Small Cap Fund",
@@ -1087,12 +1197,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf",
         "complete": 1,
-        "positions": 57
+        "positions": 57,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 27,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Mahindra Manulife Small Cap Fund",
@@ -1139,12 +1251,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html",
         "complete": 1,
-        "positions": 82
+        "positions": 82,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 11,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Mirae Asset Small Cap Fund",
@@ -1191,12 +1305,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mascf_aug2026.xlsx",
         "complete": 1,
-        "positions": 86
+        "positions": 86,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 6,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Motilal Oswal Small Cap Fund",
@@ -1243,12 +1359,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.motilaloswalmf.com/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO46.xlsx",
         "complete": 1,
-        "positions": 63
+        "positions": 63,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 7,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Nippon India Small Cap Fund",
@@ -1295,12 +1413,14 @@
         "as_of": "2026-08-31",
         "source": "https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-31-Aug-26.xls",
         "complete": 1,
-        "positions": 257
+        "positions": 257,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 653,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Pgim India Small Cap Fund",
@@ -1347,12 +1467,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM%20INDIA%20SMALL%20CAP%20FUND%20Aug%202026.xlsx",
         "complete": 1,
-        "positions": 73
+        "positions": 73,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 7,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Quant Small Cap Fund",
@@ -1399,12 +1521,14 @@
         "as_of": "2026-08-31",
         "source": "https://quantmutual.com/Admin/disclouser/quant_Small_Cap_Fund_31_Aug_2026.xlsx",
         "complete": 1,
-        "positions": 120
+        "positions": 120,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 15,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Quantum Small Cap Fund",
@@ -1451,12 +1575,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.quantumamc.com/FileCDN/FactSheet/6b9a8f19-bf15-475d-b52d-4336f995aefe.xlsx",
         "complete": 1,
-        "positions": 60
+        "positions": 60,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 75,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "SBI Small Cap Fund",
@@ -1503,12 +1629,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-small-cap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=9c20b052_2",
         "complete": 1,
-        "positions": 73
+        "positions": 73,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 5,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Samco Small Cap Fund",
@@ -1555,12 +1683,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_August_2026_Samco_Small_Cap_Fund_1788943664.xlsx",
         "complete": 1,
-        "positions": 78
+        "positions": 78,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 625,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Sundaram Small Cap Fund",
@@ -1607,12 +1737,28 @@
         "as_of": "2026-08-31",
         "source": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx",
         "complete": 0,
-        "positions": 77
+        "positions": 77,
+        "limitation": {
+          "code": "non_numeric_source_weight",
+          "kind": "source_precision",
+          "basis": "first_party_workbook",
+          "source_marker": "# percentage to NAV of security is less than 0.01%",
+          "detail": "The AMC workbook publishes a written-off holding with a less-than-0.01% marker rather than an exact numeric weight.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
       "official_publications": 7,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "non_numeric_source_weight",
+        "kind": "source_precision",
+        "basis": "first_party_workbook",
+        "source_marker": "# percentage to NAV of security is less than 0.01%",
+        "detail": "The AMC workbook publishes a written-off holding with a less-than-0.01% marker rather than an exact numeric weight.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Tata Small Cap Fund",
@@ -1659,12 +1805,14 @@
         "as_of": "2026-08-31",
         "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx",
         "complete": 1,
-        "positions": 67
+        "positions": 67,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 5,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "The Wealth Company Small Cap Fund",
@@ -1711,12 +1859,14 @@
         "as_of": "2026-08-31",
         "source": "https://www.wealthcompanyamc.in/uploads/Monthly_portfolio_Small_Cap_2683583497.xlsx",
         "complete": 1,
-        "positions": 59
+        "positions": 59,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 22,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "Trustmf Small Cap Fund",
@@ -1763,12 +1913,14 @@
         "as_of": "2026-08-31",
         "source": "https://trustmf.com/Content/2026/9/Monthly%20Port_20260909123835.xlsx",
         "complete": 1,
-        "positions": 73
+        "positions": 73,
+        "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
       "official_publications": 5,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": null
     },
     {
       "family": "UTI Small Cap Fund",
@@ -1815,12 +1967,28 @@
         "as_of": "2026-08-31",
         "source": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16",
         "complete": 0,
-        "positions": 108
+        "positions": 108,
+        "limitation": {
+          "code": "non_numeric_source_weight",
+          "kind": "source_precision",
+          "basis": "first_party_workbook",
+          "source_marker": "* / SHORT TERM DEPOSITS without exact % TO NAV",
+          "detail": "The AMC source censors at least one tiny security weight and omits an exact NAV percentage for short-term deposits.",
+          "scope": "partial_portfolio"
+        }
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
       "official_publications": 8,
-      "portfolio_gap": null
+      "portfolio_gap": null,
+      "portfolio_limitation": {
+        "code": "non_numeric_source_weight",
+        "kind": "source_precision",
+        "basis": "first_party_workbook",
+        "source_marker": "* / SHORT TERM DEPOSITS without exact % TO NAV",
+        "detail": "The AMC source censors at least one tiny security weight and omits an exact NAV percentage for short-term deposits.",
+        "scope": "partial_portfolio"
+      }
     },
     {
       "family": "Union Small Cap Fund",
@@ -1873,7 +2041,7 @@
           "title": "Union Small Cap Fund Scheme Information Document",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-25T03:45:30+00:00",
+          "last_seen": "2026-09-25T04:34:46+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -1886,11 +2054,25 @@
           "status": "Gap",
           "detail": "[Errno 111] Connection refused"
         }
+      },
+      "portfolio_limitation": {
+        "code": "upstream_source_unavailable",
+        "kind": "upstream_transport",
+        "basis": "first_party_transport",
+        "source_marker": "Official Downloads routes refuse the production runner connection",
+        "detail": "No retained portfolio exists because the AMC portfolio transport is unavailable from the production collection network.",
+        "scope": "missing_portfolio"
       }
     }
   ],
   "portfolio_gap_reasons": {
     "document_not_archived": 1
+  },
+  "portfolio_limitation_reasons": {
+    "undisclosed_constituents": 2,
+    "named_subset_only": 2,
+    "non_numeric_source_weight": 3,
+    "upstream_source_unavailable": 1
   },
   "counts": {
     "funds": 36,
@@ -1911,6 +2093,6 @@
     "The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.",
     "Base expense ratio and total expense ratio are distinct.",
     "A benchmark name does not establish availability of its historical TRI series.",
-    "Portfolio records may be partial; see each snapshot and source."
+    "Portfolio records may be partial; portfolio_limitation gives the evidence-based reason without estimating undisclosed weights."
   ]
 }
