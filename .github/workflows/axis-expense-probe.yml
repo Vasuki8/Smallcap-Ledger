@@ -21,38 +21,36 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Resolve Axis TER endpoint and scheme metadata
+      - name: Inspect Axis TER metadata and endpoint
         run: |
           uv run --frozen python - <<'PY'
-          import re,json
-          from bs4 import BeautifulSoup
+          import json,re
           from tracker import db
           from tracker.amc_discovery import read
 
           db.init()
-          chunk="https://www.axismf.com/_next/static/chunks/2949-d62ba4877ec805c0.js"
-          raw,_,_=read(chunk,archive=False)
-          text=raw.decode("utf-8","replace")
-          for pat in ("GET_EXPENSE_RATIO_DETAILS","SERVICE_URL","EXPENSE_RATIO:{",
-                      "EXPENSE_RATIO=","fetchExpenseRatioDetails"):
-              print("PATTERN",pat)
-              pos=0;shown=0
-              while shown<15:
-                  i=text.find(pat,pos)
-                  if i<0:break
-                  print("SNIP",text[max(0,i-7000):min(len(text),i+10000)])
-                  pos=i+len(pat);shown+=1
-
           page="https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
-          body,_,_=read(page)
-          html=body.decode("utf-8","replace")
-          for pat in ("schemeDetails","expenseRatioResponse","totalExpenseRatio",
-                      "Axis Small Cap Fund","schemeCode","planNames","types"):
-              print("HTML_PATTERN",pat)
-              low=html.lower();pos=0;shown=0
-              while shown<8:
-                  i=low.find(pat.lower(),pos)
-                  if i<0:break
-                  print("HTML_SNIP",html[max(0,i-5000):min(len(html),i+12000)])
-                  pos=i+len(pat);shown+=1
+          raw,_,_=read(page)
+          text=raw.decode("utf-8","replace")
+          for pat in ("expenseRatioResponse","schemeDetails","totalExpenseRatio"):
+              low=text.lower();i=low.find(pat.lower())
+              print("PAGE_PATTERN",pat,"POS",i)
+              if i>=0:
+                  snip=text[max(0,i-2500):min(len(text),i+12000)]
+                  # Collapse escape noise but preserve raw data keys/values.
+                  print("PAGE_SNIP",snip)
+
+          endpoint="https://www.axismf.com/cms/expense-ratio-details"
+          probes=[
+              {},
+              {"type":"","schemeCode":"ALL","fundType":"","planCode":"",
+               "fromDate":"01-09-2026","toDate":"25-09-2026"},
+          ]
+          for payload in probes:
+              try:
+                  body,h,typ=read(endpoint,body=payload)
+                  print("API_PROBE",json.dumps(payload),len(body),typ,h,
+                        body.decode("utf-8","replace")[:16000])
+              except Exception as e:
+                  print("API_ERROR",json.dumps(payload),repr(e))
           PY
