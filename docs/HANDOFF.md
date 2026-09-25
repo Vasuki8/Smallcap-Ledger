@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after hosted/static benchmark-aware performance deployment.
+Updated: 2026-09-25, after performance-audit benchmark semantics cleanup deployment.
 
 
 
@@ -25,6 +25,102 @@ Updated: 2026-09-25, after hosted/static benchmark-aware performance deployment.
 
 
 
+
+## Latest completed batch: performance-audit benchmark semantics cleanup
+
+**The read-only performance coverage audit now matches the deployed evidence-aware backend and hosted UI. All stale global-Nifty `website_default_*` fields and mismatch issues are gone.** PR **#141** merged as commit `7a2a2a777ea16890e0d0f0990bd153c44c49ad83`.
+
+### Audit contract
+
+Top-level policy is now explicit:
+
+- `default_role = reported_benchmark`;
+- `automatic_substitution = false`;
+- `alternate_comparisons = explicit_request_only`.
+
+Each plan's benchmark audit now exposes:
+
+- `reported_identity` — retained reported benchmark evidence;
+- `reported_series` — the canonical reported TRI series and whether it is retained;
+- `overlap` / `overlap_horizons` — exact-date overlap with that reported series only;
+- `alternate_comparisons` — retained non-reported TRI series that a user may choose explicitly, each labelled `alternate_comparison`.
+
+A retained alternate no longer creates an issue and is never described as a website default. `reported_tri_series_missing` remains the issue when the fund's actual reported TRI history is unavailable.
+
+The old fields/issues were removed completely:
+
+- `website_default_benchmark`;
+- `website_default_series`;
+- `website_default_overlap`;
+- `website_default_overlap_horizons`;
+- `website_default_mismatch`;
+- `website_default_mismatch_growth_plans`;
+- `website_default_benchmark_mismatch`.
+
+### Production result
+
+Production workflow **#500 / run 36182746080** completed successfully at **2026-09-25T19:58:22Z**:
+
+- production checkpoint restore and all normal source upgrades passed;
+- database compaction passed;
+- **340 tests passed**, including the updated evidence-aware audit tests;
+- static site generation and generated-data/download validation passed;
+- cumulative-history publication and status recording passed;
+- Pages deployment passed.
+
+Status commit: `acb5963d1543177af8290c72549f357076f54c2a`.
+
+Pages artifact **10884504202** is **230,661,269 bytes** with digest `sha256:0b8154c5923bd11fd97478b58dc1da861499b7c2521a21f4f935d31ab0ce34a8`.
+
+The production audit generated at **2026-09-25T19:57:44Z** now reports:
+
+- plans: **143**
+- Growth plans: **72**
+- reported benchmark identity families: **36 / 36**
+- explicit reported TRI identities on Growth plans: **72 / 72**
+- reported TRI series retained on Growth plans: **52 / 72**
+- reported TRI series missing on Growth plans: **20 / 72**
+- Growth plans with at least one retained explicit-only alternate comparison: **20 / 72**
+- reported-TRI-ready Growth plans with at least two exact overlapping dates: **52 / 72**
+
+For the 20 BSE-benchmarked Growth plans, `BSE 250 SmallCap TRI` remains the reported series and remains unavailable. The retained `Nifty Smallcap 250 TRI` appears only under `alternate_comparisons`; it is not a default, substitute or issue.
+
+The only performance repair priority left is `collect_bse_250_smallcap_tri`, and it remains **non-actionable** under the current free first-party-source rule because BSE distributes daily index-level history via subscription.
+
+### Remaining performance findings are structural, not missing-data repairs
+
+All current Growth-plan horizon failures are caused by `history_starts_after_target`:
+
+NAV return eligibility:
+- 1Y: **10** Growth plans
+- 3Y: **24**
+- 5Y: **28**
+
+Reported-benchmark overlap eligibility among plans whose reported TRI series is retained:
+- 1Y: **10**
+- 3Y: **20**
+- 5Y: **22**
+
+There are no current `no_observation_within_7d_before_target` Growth-plan failures. These are young-fund/history-length limits, not missing NAV or benchmark rows to invent or backfill.
+
+### Next backend task
+
+**Close the last unresolved NAV-history gap: Aditya Birla Sun Life Small Cap Fund · Regular IDCW · AMFI code 105805, 2010-05-31 → 2010-06-08.**
+
+This is the only plan still carrying `nav_large_gap` in the production audit. It is non-Growth and therefore did not enter the Growth performance repair queue, but it should be classified consistently with the already-reviewed ABSL Regular Growth code 105804 interval.
+
+The next batch should:
+
+- query the exact **105805 Regular IDCW** option and exact **2010-05-31 → 2010-06-08** window from authoritative history;
+- use an exact option-level first-party/AMFI source path rather than inferring from Growth code 105804;
+- if authoritative history still exposes only the two boundary observations, add a `verified_official_history_gap` evidence record for code 105805 and preserve the raw gap without inventing NAVs;
+- if an authoritative intermediate NAV exists, retain its exact date/value/source as a normal NAV observation instead;
+- rerun the audit and confirm `nav_large_gap` falls from **1 to 0** if the gap is verified upstream;
+- do not change Growth-return eligibility or reopen the blocked BSE TRI task.
+
+After that, the historical-performance audit should contain only structural young-fund limitations plus the explicitly non-actionable BSE TRI source gap.
+
+Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`; the **700 link-only retention candidates and legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: hosted/static benchmark-aware performance integration
 
