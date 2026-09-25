@@ -438,6 +438,9 @@ class TrackerTests(unittest.TestCase):
             check_superset(db.DATA,incoming)
             with sqlite3.connect(incoming/'ledger.sqlite3') as c:c.execute("DELETE FROM nav WHERE date='2024-05-01'")
             with self.assertRaisesRegex(ValueError,'historical nav'):check_superset(db.DATA,incoming)
+            incoming2=tmp/'incoming2';unpack(archive,incoming2)
+            with sqlite3.connect(incoming2/'ledger.sqlite3') as c:c.execute("DROP TABLE archive_retention")
+            with self.assertRaisesRegex(ValueError,'retention metadata'):check_superset(db.DATA,incoming2)
 
     def test_static_and_python_financial_calculations_agree(self):
         import json,math,subprocess
