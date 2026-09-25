@@ -21,10 +21,10 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Inspect Axis TER page and data transport
+      - name: Trace Axis TER browser API
         run: |
           uv run --frozen python - <<'PY'
-          import json,re,html
+          import re,html
           from urllib.parse import urljoin
           from bs4 import BeautifulSoup
           from tracker import db
@@ -32,33 +32,34 @@ jobs:
 
           db.init()
           page="https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
-          raw,h,typ=read(page)
-          text=raw.decode("utf-8","replace")
-          print("PAGE",len(raw),typ,h)
-          print("COUNTS",{
-              k:len(re.findall(k,text,re.I))
-              for k in ("Axis Small Cap Fund","Base Expense Ratio","Total Expense Ratio",
-                        "expenseRatio","TER","api","scheme")
-          })
-          soup=BeautifulSoup(text,"html.parser")
-          for tag in soup.find_all(True):
-              attrs=" ".join(f"{k}={v}" for k,v in tag.attrs.items())
-              body=tag.get_text(" ",strip=True)
-              joined=attrs+" "+body
-              if re.search(r"Axis Small Cap Fund|Base Expense Ratio|Total Expense Ratio|TER Date|expense ratio",joined,re.I):
-                  print("TAG",tag.name,attrs[:1200],body[:1500])
-
-          print("SCRIPT_SRCS")
+          raw,_,_=read(page)
+          soup=BeautifulSoup(raw,"html.parser")
+          scripts=[]
           for tag in soup.find_all("script",src=True):
-              print(urljoin(page,html.unescape(tag["src"])))
-
-          print("NEXT_SNIPS")
-          for script in soup.find_all("script"):
-              body=script.string or script.get_text("",strip=False) or ""
-              if re.search(r"Axis Small Cap Fund|Base Expense Ratio|Total Expense Ratio|expenseRatio|TER",body,re.I):
-                  clean=re.sub(r"\s+"," ",body)
-                  for pat in ("Axis Small Cap Fund","Base Expense Ratio","Total Expense Ratio","expenseRatio"):
-                      pos=clean.lower().find(pat.lower())
-                      if pos>=0:
-                          print("SNIP",pat,clean[max(0,pos-1500):pos+4000])
+              url=urljoin(page,html.unescape(tag["src"]))
+              if url not in scripts:scripts.append(url)
+          print("SCRIPT_COUNT",len(scripts))
+          needles=(
+              "totalexpenseratio","expenseRatio","expense-ratio","baseExpense",
+              "baseTer","totalTer","terData","downloadTer","getTer","/cms/",
+              "expense ratio","fromDate","toDate","planOption"
+          )
+          for url in scripts:
+              try:
+                  body,_,_=read(url,archive=False)
+              except Exception as e:
+                  print("SCRIPT_ERROR",url,repr(e));continue
+              text=body.decode("utf-8","replace")
+              low=text.lower()
+              matched=[n for n in needles if n.lower() in low]
+              if not matched:continue
+              print("MATCHED",url,matched,"BYTES",len(body))
+              for needle in matched:
+                  pos=0;shown=0
+                  while shown<10:
+                      i=low.find(needle.lower(),pos)
+                      if i<0:break
+                      snippet=re.sub(r"\s+"," ",text[max(0,i-1000):min(len(text),i+2500)])
+                      print("SNIP",needle,snippet)
+                      pos=i+len(needle);shown+=1
           PY
