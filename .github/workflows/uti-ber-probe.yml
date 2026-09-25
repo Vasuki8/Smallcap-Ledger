@@ -66,9 +66,13 @@ jobs:
 
           scripts=[]
           for url,text in pages:
-              if "text/html" not in "text/html": pass
+              base=url
+              bm=re.search(r"<base[^>]+href=[\"']([^\"']+)",text,re.I)
+              if bm:
+                  base=urllib.parse.urljoin(url,html.unescape(bm.group(1)))
+                  print("BASE_HREF",url,base)
               for m in re.finditer(r"<script[^>]+src=[\"']([^\"']+)",text,re.I):
-                  src=urllib.parse.urljoin(url,html.unescape(m.group(1)))
+                  src=urllib.parse.urljoin(base,html.unescape(m.group(1)))
                   if urllib.parse.urlparse(src).hostname in {"www.utimf.com","utimf.com"}:
                       scripts.append(src)
           scripts=list(dict.fromkeys(scripts))
