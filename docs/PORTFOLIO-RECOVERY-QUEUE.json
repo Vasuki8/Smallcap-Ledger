@@ -1,11 +1,12 @@
 {
-  "built_at": "2026-09-25T06:07:54+00:00",
+  "built_at": "2026-09-25T06:24:56+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "summary": {
     "items": 7,
     "actionable_now": 0,
     "stale_partial": 1,
     "missing": 1,
+    "source_changes_detected": 0,
     "actions": {
       "retry_after_source_change": 4,
       "requires_more_precise_amc_disclosure": 3
@@ -34,6 +35,23 @@
       "actionable_now": false,
       "actionability_score": 40,
       "retry_condition": "Retry only after Union's official Downloads/portfolio transport is reachable from the production collection network or an exact first-party attachment is exposed.",
+      "source_change_watch": {
+        "reviewed_at": "2026-09-25T03:10:32+00:00",
+        "watch_mode": "host_transport",
+        "changed": false,
+        "change_reason": null,
+        "exact_recovery_fetch": null,
+        "exact_recovery_source_page": null,
+        "watched_host_source_page": {
+          "url": "https://www.unionmf.com/",
+          "label": "Fund house",
+          "status": "Gap",
+          "last_checked": "2026-09-24T22:11:52+00:00",
+          "detail": "[Errno 111] Connection refused"
+        },
+        "new_portfolio_document": null,
+        "latest_watch_evidence_at": "2026-09-24T22:11:52+00:00"
+      },
       "evidence": {
         "latest_fetch": null,
         "latest_source_page_check": {
@@ -70,6 +88,23 @@
       "actionable_now": false,
       "actionability_score": 40,
       "retry_condition": "Retry only when the AMC Downloads transport becomes usable from the production runner or an exact current monthly Small Cap attachment URL is exposed first-party.",
+      "source_change_watch": {
+        "reviewed_at": "2026-09-25T03:10:32+00:00",
+        "watch_mode": "exact_route",
+        "changed": false,
+        "change_reason": null,
+        "exact_recovery_fetch": {
+          "url": "https://www.bajajamc.com/downloads",
+          "fetched_at": "2026-09-24T02:53:04+00:00",
+          "status": "error",
+          "hash": null,
+          "detail": "Client error '403 Forbidden' for url 'https://www.bajajamc.com/downloads'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+        },
+        "exact_recovery_source_page": null,
+        "watched_host_source_page": null,
+        "new_portfolio_document": null,
+        "latest_watch_evidence_at": "2026-09-24T02:53:04+00:00"
+      },
       "evidence": {
         "latest_fetch": {
           "url": "https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_August-2026.pdf",
@@ -119,6 +154,23 @@
       "actionable_now": false,
       "actionability_score": 40,
       "retry_condition": "Retry only when the statutory portfolio route/static application transport becomes reachable again or it exposes an exact monthly portfolio attachment.",
+      "source_change_watch": {
+        "reviewed_at": "2026-09-25T03:24:35+00:00",
+        "watch_mode": "exact_route",
+        "changed": false,
+        "change_reason": null,
+        "exact_recovery_fetch": {
+          "url": "https://www.edelweissmf.com/statutory/portfolio-of-schemes",
+          "fetched_at": "2026-09-24T04:43:04+00:00",
+          "status": "ok",
+          "hash": "c2978d8fc61804b4afad5e3c65d98131ed2d6f74c31c45980212518deea5ab6a",
+          "detail": null
+        },
+        "exact_recovery_source_page": null,
+        "watched_host_source_page": null,
+        "new_portfolio_document": null,
+        "latest_watch_evidence_at": "2026-09-24T04:43:04+00:00"
+      },
       "evidence": {
         "latest_fetch": {
           "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
@@ -168,6 +220,17 @@
       "actionable_now": false,
       "actionability_score": 40,
       "retry_condition": "Retry only when the first-party monthly ZIP stops redirecting to an unresolved archive host or ICICI exposes the same archive through another working first-party route.",
+      "source_change_watch": {
+        "reviewed_at": "2026-09-25T04:23:12+00:00",
+        "watch_mode": "exact_route",
+        "changed": false,
+        "change_reason": null,
+        "exact_recovery_fetch": null,
+        "exact_recovery_source_page": null,
+        "watched_host_source_page": null,
+        "new_portfolio_document": null,
+        "latest_watch_evidence_at": null
+      },
       "evidence": {
         "latest_fetch": {
           "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
@@ -217,6 +280,7 @@
       "actionable_now": false,
       "actionability_score": 20,
       "retry_condition": "Revisit only when the AMC publishes exact numeric NAV weights for positions currently disclosed with a less-than-0.01% marker.",
+      "source_change_watch": null,
       "evidence": {
         "latest_fetch": {
           "url": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx",
@@ -266,6 +330,7 @@
       "actionable_now": false,
       "actionability_score": 20,
       "retry_condition": "Revisit only when the AMC publishes an exact numeric weight for the written-off holding currently disclosed only as less than 0.01%.",
+      "source_change_watch": null,
       "evidence": {
         "latest_fetch": {
           "url": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx",
@@ -315,6 +380,7 @@
       "actionable_now": false,
       "actionability_score": 20,
       "retry_condition": "Revisit only when the AMC publishes exact numeric NAV weights for the censored tiny security and short-term deposits.",
+      "source_change_watch": null,
       "evidence": {
         "latest_fetch": {
           "url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16",
@@ -347,7 +413,7 @@
   "notes": [
     "Read-only prioritization: generating this queue never fetches sources or mutates portfolio data.",
     "Actionability score determines rank before stale/missing tie-breakers; retained position count is never a ranking input.",
-    "retry_after_source_change entries should not be re-probed until new first-party transport/source evidence appears.",
+    "retry_after_source_change entries should not be re-probed until source_change_watch.changed becomes true from newly retained first-party evidence.",
     "requires_more_precise_amc_disclosure entries cannot be completed by estimating censored weights.",
     "A changed partial source that no longer matches a reviewed limitation is prioritized for explicit review."
   ]
