@@ -74,6 +74,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/refresh_axis_portfolios.py
+      - name: Apply Axis explicit BER/TER disclosure upgrade
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/refresh_axis_expenses.py
       - name: Apply Canara expense disclosure upgrade
         if: github.event_name == 'push'
         timeout-minutes: 5
