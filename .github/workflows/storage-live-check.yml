@@ -32,6 +32,8 @@ jobs:
                   assert response.status==200
                   return response.read()
           expected=json.loads(gh('api',f'repos/{repo}/contents/deployment/update-status.json','-H','Accept: application/vnd.github.raw+json'))
+          migration=json.loads(gh('api',f'repos/{repo}/contents/deployment/storage-layout-v1.json','-H','Accept: application/vnd.github.raw+json'))
+          assert migration['all_logical_rows_unchanged'] and migration['rows_deleted']==0
           status=None
           for attempt in range(12):
               status=json.loads(get('data/status.json'))
@@ -70,8 +72,7 @@ jobs:
                   assert connection.execute('PRAGMA foreign_key_check').fetchall()==[]
                   from scripts.compact_database import table_fingerprints
                   fingerprints=table_fingerprints(connection)
-                  expected_fingerprints=json.loads(pathlib.Path('docs/STORAGE-VALIDATION.json').read_text())['preserved_tables']
-                  assert fingerprints==expected_fingerprints,'Published records differ from validated records'
+                  assert fingerprints==migration['preserved_tables'],'Published records differ from the verified production migration'
               legacy=json.loads(gh('api',f'repos/{repo}/releases/assets/582369546'))
               assert legacy['size']==1087514828 and legacy['name']=='state-35791406887-1.zip'
               result={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -81,7 +82,7 @@ jobs:
                 'live_counts':status['counts'],'live_coverage_counts':coverage['counts'],
                 'live_homepage_fund_nav_and_csv_verified':True,'sample_fund_code':code,
                 'database_checkpoint':asset,'database_bytes':path.stat().st_size,
-                'published_database_integrity':'ok','published_records_match_validated_fingerprints':True,
+                'published_database_integrity':'ok','published_records_match_production_migration':True,
                 'tables_preserved':len(fingerprints),'logical_rows_preserved':sum(x['rows'] for x in fingerprints.values()),
                 'rollback_database_checkpoint':manifest['previous']['database'],
                 'source_packs_retained':len(manifest['source_packs']),
