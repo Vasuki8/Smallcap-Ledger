@@ -24,7 +24,7 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
           enable-cache: true
-      - name: Prepare integration changes on maintenance branch
+      - name: Prepare code integration on maintenance branch
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -39,8 +39,8 @@ jobs:
           change('tracker/db.py','UNIQUE(code,date,value,source));','PRIMARY KEY(code,date,value,source)) WITHOUT ROWID;')
           change('tracker/db.py','PRIMARY KEY(name,date));','PRIMARY KEY(name,date)) WITHOUT ROWID;')
           change('tracker/db.py','UNIQUE(name,date,value,source));','PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;')
-          change('.github/workflows/daily.yml','      - name: Check archive and financial calculations\n','      - name: Compact redundant database indexing\n        run: uv run --frozen python scripts/compact_database.py --apply --report deployment/storage-layout-v1.json\n      - name: Check archive and financial calculations\n')
           change('scripts/record_build.py',"git('add','deployment/update-status.json','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md')","git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md')")
+          assert 'scripts/compact_database.py --apply --report deployment/storage-layout-v1.json' in Path('.github/workflows/daily.yml').read_text()
           PY
       - name: Install locked dependencies
         run: uv sync --frozen
@@ -55,7 +55,7 @@ jobs:
       - name: Verify production-copy compaction and checkpoint round trip
         run: |
           uv run --frozen python - <<'PY'
-          import json, sqlite3, pathlib, re
+          import json, sqlite3, pathlib, re, os
           from scripts import compact_database as cleanup, github_state as state
           from tracker import db
           before=state.pack_database(pathlib.Path('/tmp/storage-before.zip'))
@@ -74,6 +74,7 @@ jobs:
           report['checkpoint_after']=after
           report['checkpoint_roundtrip_verified']=True
           report['idempotence_verified']=True
+          report['validation_run_id']=os.environ['GITHUB_RUN_ID']
           report['tests_passed']=int(re.search(r'Ran (\d+) tests',pathlib.Path('/tmp/storage-tests.log').read_text()).group(1))
           pathlib.Path('docs/STORAGE-VALIDATION.json').write_text(json.dumps(report,indent=2)+'\n')
           print(json.dumps(report,indent=2))
@@ -91,17 +92,19 @@ jobs:
           coverage=json.loads(Path('site/data/coverage.json').read_text())
           r['site_validation_passed']=True;r['coverage_counts']=coverage['counts']
           p.write_text(json.dumps(r,indent=2)+'\n')
+          report=f'''# Smallcap Ledger storage cleanup\n\n## Validation status\n\nValidated on a restored production copy in GitHub Actions run {r['validation_run_id']}. Production publication is pending.\n\n- SQLite database: {r['before_bytes']:,} to {r['after_bytes']:,} bytes; saved {r['bytes_saved']:,} bytes.\n- Compressed database checkpoint: {r['checkpoint_before']['bytes']:,} to {r['checkpoint_after']['bytes']:,} bytes.\n- {r['tests_passed']} regression tests passed, including 14 new migration tests.\n- Every logical row in all {len(r['preserved_tables'])} tables remained identical, verified by sorted-content SHA-256 fingerprints.\n- Integrity, foreign-key checks, idempotence, checkpoint restore and generated-site/download checks passed.\n\n## Scope\n\nThe four NAV/benchmark current and observation tables use composite primary-key WITHOUT ROWID storage. Current values, alternate observations/corrections, reporting and observation dates, metrics, holdings, source hashes, original binaries and all fund plans remain. New databases use the same compact layout. Unknown schemas and dependencies fail closed. The daily pipeline applies this before tests/export/publication and retains its prior checkpoint for rollback. First production migration evidence is recorded in deployment/storage-layout-v1.json.\n\n## Unperformed archive retirement\n\nThe read-only audit identified unreferenced legacy release asset state-35791406887-1.zip, 1,087,514,828 bytes. It has NOT been deleted or replaced. The legacy-archive cleanup tool action was blocked; no space saving from it is claimed. Its exact database snapshot and every unique source must be preserved and verified before any retirement. No source-retention policy or fund-universe scope has changed.\n\nSee docs/STORAGE-AUDIT.json and docs/STORAGE-VALIDATION.json for the machine-readable evidence.\n'''
+          Path('docs/STORAGE-CLEANUP.md').write_text(report)
           handoff=Path('docs/HANDOFF.md');old=handoff.read_text()
           header='# Smallcap Ledger backend handoff\n'
           assert old.startswith(header)
-          section=f'''\n## Database cleanup: validated maintenance branch (2026-09-25 UTC)\n\nThe owner requested removal of unnecessary/redundant database storage. The maintenance branch has passed **{r['tests_passed']} tests**, all-table before/after content fingerprints, integrity and foreign-key validation, idempotence, checkpoint round-trip restore and generated-site/download validation. No production publication has occurred in this validation workflow.\n\nThe four NAV/benchmark current and observation tables now use composite primary-key `WITHOUT ROWID` storage. Every logical row, reporting/observation timestamp, correction, metric, portfolio, source hash and original binary remains unchanged. Fresh databases use the same layout. The daily workflow applies the migration before its regression/export/publish gates; `deployment/storage-layout-v1.json` retains first-application evidence. The publisher keeps the previous checkpoint for rollback.\n\nMeasured on a restored production copy: database **{r['before_bytes']:,} → {r['after_bytes']:,} bytes**; compacted checkpoint ZIP **{r['checkpoint_before']['bytes']:,} → {r['checkpoint_after']['bytes']:,} bytes**. See `docs/STORAGE-AUDIT.json` and `docs/STORAGE-VALIDATION.json`.\n\nThe audit separately found obsolete cumulative release asset `state-35791406887-1.zip` (**1,087,514,828 bytes**). **It has NOT been deleted or replaced.** Legacy release deletion was not performed in this batch. Do not claim this space has been reclaimed. Its database snapshot must be preserved and all originals independently verified in shared source packs before a separately authorized retirement. No original-source retention policy or fund-universe scope changed.\n\nBefore merge, remove the temporary storage validation workflow. After production succeeds, update this handoff with the PR, production run and live verification. Resume the portfolio source-recovery task below after storage work is closed.\n\n'''
+          section=f'''\n## Database cleanup (2026-09-25 UTC)\n\n**Read `docs/STORAGE-CLEANUP.md` for the current merge, production verification and cleanup status.** This is the storage batch's completion/handoff record; the validation evidence is in `docs/STORAGE-VALIDATION.json`.\n\nThe owner requested unnecessary/redundant database storage cleanup. The four NAV/benchmark tables were migrated to composite-primary-key `WITHOUT ROWID` storage on a production copy. All {r['tests_passed']} tests, all-table content equality, integrity/foreign-key checks, idempotence, checkpoint restore and generated-site validation passed. Measured database size: **{r['before_bytes']:,} to {r['after_bytes']:,} bytes**; checkpoint ZIP **{r['checkpoint_before']['bytes']:,} to {r['checkpoint_after']['bytes']:,} bytes**. No logical record or original source was removed.\n\nThe legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.\n\n'''
           handoff.write_text(header+section+old[len(header):])
           readme=Path('README.md');text=readme.read_text()
-          addition='''\n\n## Lossless database storage cleanup\n\nNAV and benchmark tables use composite primary-key storage without redundant rowid indexes. This removes physical duplication, not financial records: current values, alternate observations/corrections, dates and sources all remain. `python scripts/compact_database.py` reports a plan; `--apply` performs a transactional migration, checks fingerprints of every logical table, validates foreign keys/integrity and compacts free pages. Unknown schemas, dependent views, custom indexes/triggers and incoming foreign keys fail closed. The normal daily pipeline runs this before tests and publication, retaining its previous durable checkpoint. No source binary is deleted. The first production result is recorded in `deployment/storage-layout-v1.json`.\n'''
+          addition='''\n\n## Lossless database storage cleanup\n\nNAV and benchmark tables use composite primary-key storage without redundant rowid indexes. This removes physical duplication, not financial records: current values, alternate observations/corrections, dates and sources all remain. `python scripts/compact_database.py` reports a plan; `--apply` performs a transactional migration, checks fingerprints of every logical table, validates foreign keys/integrity and compacts free pages. Unknown schemas, dependent views, custom indexes/triggers and incoming foreign keys fail closed. The normal daily pipeline runs this before tests and publication, retaining its previous durable checkpoint. No source binary is deleted. The first production result is recorded in `deployment/storage-layout-v1.json`. See `docs/STORAGE-CLEANUP.md` for measured results and deployment status.\n'''
           if '## Lossless database storage cleanup' not in text:readme.write_text(text+addition)
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add tracker/db.py scripts/record_build.py .github/workflows/daily.yml docs/STORAGE-VALIDATION.json docs/HANDOFF.md README.md
+          git add tracker/db.py scripts/record_build.py docs/STORAGE-VALIDATION.json docs/STORAGE-CLEANUP.md docs/HANDOFF.md README.md
           git commit -m 'Integrate and record verified lossless database compaction'
           git push origin HEAD:maintenance/storage-cleanup-20260925
