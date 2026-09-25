@@ -376,6 +376,12 @@ def report():
             "website_default_mismatch_growth_plans":sum(
                 row["benchmark"]["website_default_mismatch"] for row in growth
             ),
+            "official_history_gap_growth_plans":sum(
+                bool(row["nav"].get("official_history_gap_count")) for row in growth
+            ),
+            "official_history_gap_intervals":sum(
+                row["nav"].get("official_history_gap_count",0) for row in growth
+            ),
             "growth_return_eligibility":{
                 f"{y}Y":sum(row["nav"]["horizons"][f"{y}Y"]["eligible"] for row in growth)
                 for y in HORIZONS
@@ -416,7 +422,8 @@ def markdown(audit):
         f"- Reported benchmark identity families: **{summary['reported_benchmark_identity_families']} / {summary['families']}**.",
         f"- Explicit reported TRI identities on Growth plans: **{summary['explicit_tri_growth_plans']}**.",
         f"- Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **{summary['reported_tri_ready_growth_plans']}**.",
-        f"- Growth plans where the explicit reported TRI differs from the website's current default **{esc(audit['website_default_benchmark'])}**: **{summary['website_default_mismatch_growth_plans']}**.","",
+        f"- Growth plans where the explicit reported TRI differs from the website's current default **{esc(audit['website_default_benchmark'])}**: **{summary['website_default_mismatch_growth_plans']}**.",
+        f"- Verified official-history NAV gaps: **{summary['official_history_gap_intervals']} intervals across {summary['official_history_gap_growth_plans']} Growth plans**; retained as evidence, not actionable missing-value repairs.","",
         "| Horizon | NAV return eligible Growth plans | Relevant benchmark overlap eligible Growth plans |",
         "| --- | ---: | ---: |",
     ]
@@ -436,6 +443,18 @@ def markdown(audit):
         lines.extend(["","### Affected funds",""])
         for p in audit["repair_priorities"]:
             lines.append(f"- **{esc(p['code'])}:** "+", ".join(esc(x) for x in p["affected_funds"]))
+
+    known_gap_plans=[row for row in audit["plans"] if row["nav"].get("official_history_gap_count")]
+    if known_gap_plans:
+        lines.extend(["","## Verified official-history NAV gaps","",
+                      "These raw date gaps remain visible, but current official histories do not supply intermediate NAV observations. No value is interpolated or inferred.",""])
+        for row in known_gap_plans:
+            for gap in row["nav"]["official_history_gaps"]:
+                lines.append(
+                    f"- **{esc(row['family'])} · {esc(row['plan'])} · {esc(row['option'])} · {row['code']}**: "
+                    f"{gap['from']} → {gap['to']} ({gap['days']} calendar days) · "
+                    f"{esc(gap['classification'])} · verified {esc(gap.get('verified_at'))}"
+                )
 
     lines.extend(["","## Per-plan audit","",
                   "| Fund / plan | NAV range / obs | 1Y | 3Y | 5Y | Reported benchmark | Required TRI series | Exact overlap | Issues |",
