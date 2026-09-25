@@ -1,4 +1,4 @@
-name: Edelweiss archived parser probe
+name: Edelweiss embedded portfolio-link probe
 
 on:
   push:
@@ -27,47 +27,43 @@ jobs:
         run: uv sync --frozen
       - name: Restore cumulative history
         run: uv run --frozen python scripts/github_state.py restore
-      - name: Inspect archived Edelweiss September factsheet
+      - name: Extract embedded Edelweiss portfolio hyperlinks
         run: |
           uv run --frozen python - <<'PY'
           import io
-          from pathlib import Path
           from pypdf import PdfReader
           from tracker import db
           from scripts import github_state
-          from tracker.report_parser import edelweiss_top30_portfolio, edelweiss_top10_portfolio
 
-          rows=db.rows("""SELECT d.url,d.title,dv.hash,a.path,a.bytes,a.media_type
-              FROM documents d
-              JOIN document_versions dv ON dv.document_id=d.id
+          row=db.one("""SELECT d.url,dv.hash,a.path
+              FROM documents d JOIN document_versions dv ON dv.document_id=d.id
               JOIN archives a ON a.hash=dv.hash
               WHERE d.family='Edelweiss Small Cap Fund'
-              ORDER BY dv.observed_at DESC""")
-          print("DOCS",rows[:20])
-          row=next((r for r in rows if 'September_2026' in r['url']),None)
-          assert row, "September Edelweiss factsheet archive not found"
-          github_state.materialize_hashes([row["hash"]])
-          path=db.DATA/row["path"]
-          raw=path.read_bytes()
-          print("SOURCE",row["url"])
-          print("HASH",row["hash"])
-          print("BYTES",len(raw),row["media_type"])
+                AND d.url LIKE '%Edelweiss_Factsheet_September_2026%'
+              ORDER BY dv.observed_at DESC LIMIT 1""")
+          assert row
+          github_state.materialize_hashes([row['hash']])
+          raw=(db.DATA/row['path']).read_bytes()
           reader=PdfReader(io.BytesIO(raw))
-          for i,p in enumerate(reader.pages):
-              text=p.extract_text() or ""
-              if "Edelweiss Small Cap Fund" not in text:
-                  continue
-              layout=p.extract_text(extraction_mode="layout") or ""
-              print("SMALLCAP_PAGE",i,"STD",len(text),"LAYOUT",len(layout))
-              print("STD_TOP30",edelweiss_top30_portfolio(text))
-              print("LAYOUT_TOP30",edelweiss_top30_portfolio(layout))
-              next_two="\n".join(
-                  reader.pages[j].extract_text() or ""
-                  for j in range(i+1,min(i+3,len(reader.pages)))
-              )
-              print("TOP10",edelweiss_top10_portfolio(text,next_two))
-              print("STD_TEXT")
-              print(text[:14000])
-              print("LAYOUT_TEXT")
-              print(layout[:17000])
+          page=reader.pages[14]
+          print('SOURCE',row['url'])
+          print('HASH',row['hash'])
+          annots=page.get('/Annots') or []
+          print('ANNOT_COUNT',len(annots))
+          urls=[]
+          for idx,ref in enumerate(annots):
+              obj=ref.get_object()
+              action=obj.get('/A')
+              uri=action.get('/URI') if action else None
+              dest=obj.get('/Dest')
+              rect=obj.get('/Rect')
+              if uri:
+                  uri=str(uri)
+                  urls.append(uri)
+                  print('ANNOT_URI',idx,rect,uri)
+              elif dest:
+                  print('ANNOT_DEST',idx,rect,dest)
+          print('UNIQUE_URLS')
+          for u in dict.fromkeys(urls):
+              print(u)
           PY
