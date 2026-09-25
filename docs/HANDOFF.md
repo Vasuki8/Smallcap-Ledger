@@ -17,9 +17,79 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after ICICI Prudential portfolio transport re-check.
+Updated: 2026-09-25, after machine-readable portfolio limitation deployment.
 
 
+
+
+
+## Latest completed batch: machine-readable portfolio limitation reasons
+
+**Partial and missing portfolio limitations are now first-class backend data without changing any holdings, weights, dates or completeness flags.**
+
+PR **#112** merged as commit `b3ff3e370e5b6fc478fa4fbedd303949b20c8359`. Isolated validation run **36094891651** passed compileall, all **304 tests**, restored the real production database and verified the exact current limitation classifications while preserving production portfolio counts.
+
+Production workflow **#474**, run **36095002670**, then passed the same **304-test** regression gate, generated-site validation, cumulative-history publication, collection-status recording and GitHub Pages deployment. The build and deploy jobs both completed successfully.
+
+### Backend contract
+
+New module `tracker/portfolio_limitations.py` provides stable evidence classifications for retained partial snapshots and missing portfolios. The classifier is deliberately source-anchored: if a future source changes, an old limitation is **not** silently inherited; it falls back to `partial_reason_unclassified` until reviewed.
+
+The API now exposes `portfolio_limitation` at fund level and `limitation` on portfolio snapshots, including prior snapshots returned by `/api/portfolios/{snapshot_id}`. `COVERAGE-AS-OF.json` exposes the same structured limitation both at fund level and inside the retained portfolio object, plus aggregate `portfolio_limitation_reasons` counts.
+
+Current production limitation codes generated at **2026-09-25T04:35:03Z**:
+
+| Code | Funds | Current examples |
+| --- | ---: | --- |
+| `undisclosed_constituents` | **2** | Axis, ICICI Prudential |
+| `named_subset_only` | **2** | Bajaj Finserv, Edelweiss |
+| `non_numeric_source_weight` | **3** | Bandhan, Sundaram, UTI |
+| `upstream_source_unavailable` | **1** | Union |
+
+The evidence payload also carries `kind`, `basis`, `source_marker`, `detail` and `scope`. Examples include:
+- Axis: AMC aggregate **Other Domestic Equity (Less than 0.50% of the corpus)**;
+- ICICI Prudential: **Equity less than 1% of corpus**;
+- Edelweiss: **Top 10 Holdings / Top 10 stocks: 23.00%**;
+- Bandhan: **Less Than 0.01% of NAV** marker;
+- Sundaram: exact **less than 0.01%** workbook footnote;
+- UTI: censored `*` weight plus short-term deposits without an exact NAV percentage;
+- Union: first-party portfolio transport unavailable from the production collection network.
+
+A changed/unrecognized partial source receives `partial_reason_unclassified` rather than a guessed old reason. Complete snapshots receive no limitation.
+
+### Production invariants after this batch
+
+Production coverage remains unchanged:
+- funds **36**
+- AUM **36/36**
+- dated Direct fee **36/36**
+- reported TER **35/36**
+- BER **35/36**
+- benchmark identity **36/36**
+- portfolios **35/36**
+- complete portfolios **28**
+- current portfolios **34**
+- current+complete **28**
+- partial portfolios **7**
+- latest NAV **2026-09-24**
+
+The production status written at **2026-09-25T04:35:23Z** records **143 plans**, **281,442 NAV observations**, **123 retained portfolio snapshots**, **1,782 document versions**, **73,322,496 database bytes**, and no change to the source-retention policy. The release saved checkpoint `database-36095002670-1.zip` with the existing **95 reusable source packs**.
+
+No censored source marker was converted into a numeric estimate. No portfolio was reclassified complete. No source file was deleted. The source-retention audit remains read-only; the **700 link-only candidates remain untouched** and the legacy cumulative ZIP has not been retired.
+
+### Next backend task
+
+**Build a read-only portfolio recovery queue from the new limitation codes and retained source evidence.** The goal is to stop repeatedly probing already-proven blockers while still surfacing genuinely actionable work.
+
+The queue should:
+- rank incomplete/missing portfolios by actionability rather than position count alone;
+- distinguish **retry only after source/transport change** from **search for a fuller first-party disclosure** and **cannot improve without more precise AMC disclosure**;
+- include the exact source URL, reporting date, limitation code, last relevant source-page check/fetch evidence and a concise retry condition;
+- keep stale-but-partial Bajaj visible separately from current partials;
+- avoid any new paid service, external communication, source deletion or UI work;
+- remain read-only and must not automatically retry or mutate portfolio data.
+
+Use this queue to choose the next source-recovery batch. Do not re-probe Union, ICICI, Edelweiss or Bajaj merely because they rank as incomplete unless the queue shows new first-party transport/source evidence.
 
 
 ## Latest completed batch: ICICI Prudential portfolio transport re-check
