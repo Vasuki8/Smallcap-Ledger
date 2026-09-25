@@ -13,7 +13,7 @@ import subprocess
 import uuid
 import zipfile
 import xml.etree.ElementTree as ET
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlparse
 
 import httpx
 import openpyxl
@@ -52,6 +52,46 @@ JM_NSDL_CODE = "JMFI/O/E/SCF/23/11/0016"
 JM_TER_PAGE = "https://www.jmfinancialmf.com/Scheme-Expense-Ratio"
 JM_TER_API = jm_portfolios.API_BASE + "GetTerPageLatest"
 JM_TER_REQUEST = {"IICategory": 0, "IVFundCode": ""}
+
+MAHINDRA_FAMILY = "Mahindra Manulife Small Cap Fund"
+MAHINDRA_NSDL_CODE = "MAHM/O/E/SCF/22/07/0020"
+MAHINDRA_DOWNLOADS_PAGE = "https://www.mahindramanulife.com/downloads"
+MAHINDRA_DOWNLOADS_API = "https://investorapi.mahindramanulife.com/api/v1/web/preLogin/downloads"
+_MAHINDRA_AES_KEY = b"mahindra2024mahindra2024mahindra"
+_MAHINDRA_AES_IV = b"hasnainsheikh202"
+_MAHINDRA_TOP_CATEGORY = "MANDATORY DISCLOSURES"
+_MAHINDRA_TER_CATEGORY = "Total Expense Ratio of Mutual Fund Schemes"
+_MAHINDRA_TER_SUBCATEGORY = "Total Expense Ratio"
+_MAHINDRA_HEADER_1 = (
+    "NSDL Scheme Code",
+    "Name of Scheme",
+    "Date (DD/MM/YYYY)",
+    "Regular",
+    "",
+    "",
+    "",
+    "",
+    "Direct",
+    "",
+    "",
+    "",
+    "",
+)
+_MAHINDRA_HEADER_2 = (
+    "",
+    "",
+    "",
+    "Base Expense Ratio (BER) (%)1",
+    "Brokerage cost (%)2",
+    "Transaction Cost incurred for the purpose of execution of trade (%)3",
+    "Statutory Levies (including GST) (%)4",
+    "Total TER (%)",
+    "Base Expense Ratio (BER) (%)1",
+    "Brokerage cost (%)2",
+    "Transaction Cost incurred for the purpose of execution of trade (%)3",
+    "Statutory Levies (including GST) (%)4",
+    "Total TER (%)",
+)
 _JM_FIELDS = {
     "Regular": {
         "base_expense_ratio": "RegularBER",
@@ -1084,10 +1124,244 @@ def jm(progress=lambda _: None, today=None):
     )
 
 
+def _mahindra_decrypt_downloads(raw):
+    """Decode the public Downloads API exactly as Mahindra's browser client does."""
+    try:
+        outer = json.loads(raw)
+        payload = outer.get("payload")
+        if not isinstance(payload, str) or not payload:
+            raise ValueError
+        ciphertext = base64.b64decode(payload, validate=True)
+    except (json.JSONDecodeError, ValueError, TypeError) as exc:
+        raise ValueError("Mahindra downloads API returned an invalid encrypted envelope") from exc
+
+    if len(ciphertext) > 4 * 1024 * 1024:
+        raise ValueError("Mahindra downloads API response is unexpectedly large")
+    openssl = shutil.which("openssl")
+    if not openssl:
+        raise ValueError("OpenSSL is required to decode Mahindra public browser API data")
+    result = subprocess.run(
+        [
+            openssl,
+            "enc",
+            "-d",
+            "-aes-256-cbc",
+            "-K",
+            _MAHINDRA_AES_KEY.hex(),
+            "-iv",
+            _MAHINDRA_AES_IV.hex(),
+        ],
+        input=ciphertext,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=15,
+        check=False,
+    )
+    if result.returncode:
+        raise ValueError("Mahindra public downloads payload could not be decoded")
+    try:
+        decoded = json.loads(result.stdout.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("Mahindra public downloads payload decrypted to invalid JSON") from exc
+    if (
+        not isinstance(decoded, dict)
+        or decoded.get("status") != 1
+        or not isinstance(decoded.get("data"), list)
+    ):
+        raise ValueError("Mahindra downloads API decoded response changed format")
+    return decoded["data"]
+
+
+def _mahindra_financial_year_title(today):
+    start = today.year if today.month >= 4 else today.year - 1
+    return f"TOTAL EXPENSE RATIO - {start}-{str(start + 1)[-2:]}"
+
+
+def _mahindra_exact_children(nodes, name):
+    return [
+        node
+        for node in (nodes or [])
+        if isinstance(node, dict)
+        and str(node.get("categoryName") or "").strip() == name
+    ]
+
+
+def _mahindra_select_ter_file(tree, today=None):
+    """Select the exact current-financial-year TER workbook from AMC metadata."""
+    today = today or date.today()
+    top = _mahindra_exact_children(tree, _MAHINDRA_TOP_CATEGORY)
+    if len(top) != 1:
+        raise ValueError("Mahindra Mandatory Disclosures category is not uniquely identified")
+    ter_group = _mahindra_exact_children(
+        top[0].get("subcategories"), _MAHINDRA_TER_CATEGORY
+    )
+    if len(ter_group) != 1:
+        raise ValueError("Mahindra TER disclosure group is not uniquely identified")
+    ter = _mahindra_exact_children(
+        ter_group[0].get("subcategories"), _MAHINDRA_TER_SUBCATEGORY
+    )
+    if len(ter) != 1:
+        raise ValueError("Mahindra Total Expense Ratio category is not uniquely identified")
+
+    wanted = _mahindra_financial_year_title(today)
+    matches = []
+    for row in ter[0].get("files") or []:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("title") or "").strip().upper() != wanted:
+            continue
+        url = str(row.get("fileUrl") or "").strip()
+        parsed = urlparse(url)
+        if (
+            parsed.scheme != "https"
+            or parsed.hostname not in ("www.mahindramanulife.com", "cms.mahindramanulife.com")
+            or not parsed.path.lower().endswith(".xlsx")
+            or "/uploads/download/" not in parsed.path.lower()
+        ):
+            continue
+        public_url(url)
+        matches.append(url)
+    if len(matches) != 1:
+        raise ValueError("Mahindra current financial-year TER workbook is not uniquely identified")
+    return matches[0]
+
+
+def _mahindra_percent(value, label):
+    if value is None or str(value).strip() in ("", "-", "NA", "N/A"):
+        raise ValueError(f"Mahindra TER workbook is missing {label}")
+    parsed = number(value)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"Mahindra TER workbook {label} is outside the accepted range")
+    return parsed
+
+
+def parse_mahindra_workbook(content, today=None):
+    """Return the newest exact Small Cap BER and AMC-published Total TER pair."""
+    today = today or date.today()
+    try:
+        book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
+    except Exception as exc:
+        raise ValueError("Mahindra TER disclosure is not a readable XLSX workbook") from exc
+
+    try:
+        if book.sheetnames != ["Sheet1"]:
+            raise ValueError("Mahindra TER workbook sheet layout changed")
+        sheet = book["Sheet1"]
+        rows = sheet.iter_rows(values_only=True)
+        header1 = next(rows, None)
+        header2 = next(rows, None)
+        clean1 = tuple("" if v is None else str(v).strip() for v in (header1 or ())[:13])
+        clean2 = tuple("" if v is None else str(v).strip() for v in (header2 or ())[:13])
+        if clean1 != _MAHINDRA_HEADER_1:
+            raise ValueError("Mahindra TER workbook top header changed")
+        if clean2 != _MAHINDRA_HEADER_2:
+            raise ValueError("Mahindra TER workbook metric columns changed")
+
+        matches = defaultdict(list)
+        for row in rows:
+            if len(row) < 13:
+                continue
+            if str(row[0] or "").strip() != MAHINDRA_NSDL_CODE:
+                continue
+            if str(row[1] or "").strip() != MAHINDRA_FAMILY:
+                continue
+            try:
+                day = datetime.strptime(str(row[2] or "").strip(), "%d-%b-%Y").date()
+            except ValueError:
+                continue
+            if day <= today:
+                matches[day.isoformat()].append(row)
+
+        if not matches:
+            raise ValueError("Mahindra TER workbook contains no dated Small Cap rows")
+        day = max(matches)
+        if len(matches[day]) != 1:
+            raise ValueError(f"Mahindra TER workbook has duplicate Small Cap rows for {day}")
+        row = matches[day][0]
+
+        regular = {
+            "base_expense_ratio": _mahindra_percent(row[3], "Regular BER"),
+            "brokerage": _mahindra_percent(row[4], "Regular brokerage"),
+            "transaction_cost": _mahindra_percent(row[5], "Regular transaction cost"),
+            "statutory_levies": _mahindra_percent(row[6], "Regular statutory levies"),
+            "ter": _mahindra_percent(row[7], "Regular Total TER"),
+        }
+        direct = {
+            "base_expense_ratio": _mahindra_percent(row[8], "Direct BER"),
+            "brokerage": _mahindra_percent(row[9], "Direct brokerage"),
+            "transaction_cost": _mahindra_percent(row[10], "Direct transaction cost"),
+            "statutory_levies": _mahindra_percent(row[11], "Direct statutory levies"),
+            "ter": _mahindra_percent(row[12], "Direct Total TER"),
+        }
+        for plan, values in (("Regular", regular), ("Direct", direct)):
+            if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+                raise ValueError(f"Mahindra {plan} Total TER is below BER on {day}")
+            component_total = (
+                values["base_expense_ratio"]
+                + values["brokerage"]
+                + values["transaction_cost"]
+                + values["statutory_levies"]
+            )
+            if abs(component_total - values["ter"]) > 0.02:
+                raise ValueError(f"Mahindra {plan} TER components do not reconcile on {day}")
+        return day, {"Regular": regular, "Direct": direct}
+    finally:
+        book.close()
+
+
+def _mahindra_disclosure(today=None):
+    today = today or date.today()
+    raw, _, _ = fetch(
+        MAHINDRA_DOWNLOADS_API,
+        archive=False,
+        max_bytes=4 * 1024 * 1024,
+    )
+    tree = _mahindra_decrypt_downloads(raw)
+    source = _mahindra_select_ter_file(tree, today)
+    workbook, content_hash, _ = fetch(source, max_bytes=5 * 1024 * 1024)
+    if not workbook.startswith(b"PK"):
+        raise ValueError("Mahindra TER source is not an XLSX workbook")
+    day, plans = parse_mahindra_workbook(workbook, today)
+    return source, day, plans, content_hash
+
+
+def mahindra(progress=lambda _: None, today=None):
+    """Collect Mahindra Manulife Small Cap's explicit BER and Total TER workbook."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (MAHINDRA_FAMILY,)):
+        return "Mahindra Manulife Small Cap is not in the active universe"
+
+    progress("Mahindra Manulife Small Cap expense ratios · official TER workbook")
+    source, day, plans, content_hash = _mahindra_disclosure(today)
+    for plan, values in plans.items():
+        for metric in (
+            "base_expense_ratio",
+            "brokerage",
+            "transaction_cost",
+            "statutory_levies",
+            "ter",
+        ):
+            db.metric(
+                MAHINDRA_FAMILY,
+                plan,
+                metric,
+                day,
+                values[metric],
+                "% p.a. · reported by AMC",
+                source,
+                content_hash,
+            )
+    return (
+        f"{MAHINDRA_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, hsbc, icici, invesco, jm):
+    for collector in (canara, hsbc, icici, invesco, jm, mahindra):
         try:
             results.append(collector(progress))
         except Exception as exc:

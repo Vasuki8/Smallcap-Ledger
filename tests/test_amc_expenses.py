@@ -514,5 +514,169 @@ class JmExpenseTests(unittest.TestCase):
         self.assertTrue(all(call.args[7] == "jmhash" for call in mock_metric.call_args_list))
 
 
+class MahindraExpenseTests(unittest.TestCase):
+    def workbook(self, rows, *, header_override=None):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Sheet1"
+        header1 = list(amc_expenses._MAHINDRA_HEADER_1)
+        header2 = list(amc_expenses._MAHINDRA_HEADER_2)
+        if header_override:
+            header2[header_override[0]] = header_override[1]
+        ws.append(header1)
+        ws.append(header2)
+        for row in rows:
+            ws.append(row)
+        out = io.BytesIO()
+        wb.save(out)
+        wb.close()
+        return out.getvalue()
+
+    def row(self, day="24-Sep-2026", *, scheme="Mahindra Manulife Small Cap Fund",
+            nsdl="MAHM/O/E/SCF/22/07/0020", regular_ter=2.20, direct_ter=0.92):
+        return [
+            nsdl, scheme, day,
+            1.59, 0.12, 0.01, 0.48, regular_ter,
+            0.47, 0.12, 0.01, 0.32, direct_ter, None,
+        ]
+
+    def tree(self, *, title="TOTAL EXPENSE RATIO - 2026-27",
+             url="https://www.mahindramanulife.com/uploads/download/current.xlsx"):
+        return [{
+            "categoryName": "MANDATORY DISCLOSURES",
+            "subcategories": [{
+                "categoryName": "Total Expense Ratio of Mutual Fund Schemes",
+                "subcategories": [{
+                    "categoryName": "Total Expense Ratio",
+                    "files": [{"title": title, "fileUrl": url}],
+                    "subcategories": [],
+                }],
+                "files": [],
+            }],
+            "files": [],
+        }]
+
+    def test_mahindra_current_financial_year_file_selection_is_exact(self):
+        source = amc_expenses._mahindra_select_ter_file(
+            self.tree(), date(2026, 9, 25)
+        )
+        self.assertEqual(
+            source,
+            "https://www.mahindramanulife.com/uploads/download/current.xlsx",
+        )
+        self.assertEqual(
+            amc_expenses._mahindra_financial_year_title(date(2026, 3, 31)),
+            "TOTAL EXPENSE RATIO - 2025-26",
+        )
+        self.assertEqual(
+            amc_expenses._mahindra_financial_year_title(date(2026, 4, 1)),
+            "TOTAL EXPENSE RATIO - 2026-27",
+        )
+
+    def test_mahindra_wrong_year_host_or_duplicate_file_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "not uniquely identified"):
+            amc_expenses._mahindra_select_ter_file(
+                self.tree(title="TOTAL EXPENSE RATIO - 2025-26"),
+                date(2026, 9, 25),
+            )
+        with self.assertRaisesRegex(ValueError, "not uniquely identified"):
+            amc_expenses._mahindra_select_ter_file(
+                self.tree(url="https://example.com/uploads/download/current.xlsx"),
+                date(2026, 9, 25),
+            )
+        tree = self.tree()
+        tree[0]["subcategories"][0]["subcategories"][0]["files"].append(
+            {
+                "title": "TOTAL EXPENSE RATIO - 2026-27",
+                "fileUrl": "https://www.mahindramanulife.com/uploads/download/other.xlsx",
+            }
+        )
+        with self.assertRaisesRegex(ValueError, "not uniquely identified"):
+            amc_expenses._mahindra_select_ter_file(tree, date(2026, 9, 25))
+
+    def test_mahindra_latest_exact_row_retains_published_ber_and_total_ter(self):
+        book = self.workbook([
+            self.row("23-Sep-2026"),
+            self.row("24-Sep-2026"),
+        ])
+        day, plans = amc_expenses.parse_mahindra_workbook(
+            book, date(2026, 9, 25)
+        )
+        self.assertEqual(day, "2026-09-24")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.59)
+        self.assertEqual(plans["Regular"]["ter"], 2.20)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.47)
+        self.assertEqual(plans["Direct"]["ter"], 0.92)
+
+    def test_mahindra_future_wrong_identity_and_duplicate_are_rejected(self):
+        book = self.workbook([
+            self.row("24-Sep-2026"),
+            self.row("26-Sep-2026"),
+        ])
+        day, plans = amc_expenses.parse_mahindra_workbook(
+            book, date(2026, 9, 25)
+        )
+        self.assertEqual(day, "2026-09-24")
+        self.assertEqual(plans["Direct"]["ter"], 0.92)
+
+        for kwargs in (
+            {"scheme": "Mahindra Manulife Mid Cap Fund"},
+            {"nsdl": "MAHM/O/E/OTHER"},
+        ):
+            bad = self.workbook([self.row(**kwargs)])
+            with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+                amc_expenses.parse_mahindra_workbook(
+                    bad, date(2026, 9, 25)
+                )
+
+        row = self.row()
+        duplicate = self.workbook([row, list(row)])
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_mahindra_workbook(
+                duplicate, date(2026, 9, 25)
+            )
+
+    def test_mahindra_header_and_component_reconciliation_are_strict(self):
+        changed = self.workbook(
+            [self.row()],
+            header_override=(7, "Calculated TER (%)"),
+        )
+        with self.assertRaisesRegex(ValueError, "metric columns changed"):
+            amc_expenses.parse_mahindra_workbook(
+                changed, date(2026, 9, 25)
+            )
+
+        bad_total = self.workbook([self.row(direct_ter=1.00)])
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_mahindra_workbook(
+                bad_total, date(2026, 9, 25)
+            )
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "MAHINDRA"})
+    @patch("tracker.amc_expenses._mahindra_disclosure")
+    def test_mahindra_collector_stores_exact_source_hash_and_plan_metrics(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        source = "https://www.mahindramanulife.com/uploads/download/current.xlsx"
+        _, plans = amc_expenses.parse_mahindra_workbook(
+            self.workbook([self.row()]), date(2026, 9, 25)
+        )
+        mock_disclosure.return_value = (source, "2026-09-24", plans, "mahhash")
+        result = amc_expenses.mahindra(today=date(2026, 9, 25))
+        self.assertIn("2026-09-24", result)
+        self.assertEqual(mock_metric.call_count, 10)
+        calls = {
+            (call.args[1], call.args[2]): call.args[4]
+            for call in mock_metric.call_args_list
+        }
+        self.assertEqual(calls[("Regular", "ter")], 2.20)
+        self.assertEqual(calls[("Direct", "ter")], 0.92)
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.47)
+        self.assertTrue(all(call.args[3] == "2026-09-24" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == source for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "mahhash" for call in mock_metric.call_args_list))
+
+
 if __name__ == "__main__":
     unittest.main()
