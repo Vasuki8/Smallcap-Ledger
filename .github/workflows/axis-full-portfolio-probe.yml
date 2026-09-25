@@ -1,4 +1,4 @@
-name: Axis authenticated public CMS probe
+name: Axis monthly portfolio CMS probe
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Replay Axis public CMS token flow
+      - name: Enumerate Axis monthly portfolio documents
         shell: bash
         run: |
           python - <<'PY'
@@ -26,40 +26,53 @@ jobs:
           jar=http.cookiejar.CookieJar()
           opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
 
-          def post(path,payload,extra=None):
+          def post(path,payload,token=None):
               raw=json.dumps(payload).encode()
               headers={"User-Agent":UA,"Accept":"application/json,text/plain,*/*",
                        "Content-Type":"application/json","Origin":ROOT,"Referer":PAGE}
-              if extra:headers.update(extra)
+              if token:headers["Authorization"]=token
               req=urllib.request.Request(ROOT+path,data=raw,method="POST",headers=headers)
               try:
                   with opener.open(req,timeout=30) as r:
-                      body=r.read(1_000_000)
-                      print("POST",path,"STATUS",r.status,"TYPE",r.headers.get("content-type"),
-                            "BODY_BYTES",len(body))
-                      return r.status,body
+                      body=r.read(2_000_000)
+                      print("POST",path,payload,"STATUS",r.status,"BYTES",len(body))
+                      print(body.decode("utf-8","replace")[:150000])
+                      return r.status,json.loads(body)
               except urllib.error.HTTPError as e:
-                  body=e.read(100000)
-                  print("POST_ERROR",path,e.code,body.decode("utf-8","replace")[:8000])
-                  return e.code,body
+                  body=e.read(50000)
+                  print("HTTP_ERROR",path,payload,e.code,body.decode("utf-8","replace"))
+                  return e.code,None
 
-          status,raw=post("/cms/token",{})
-          assert status==200
-          token=json.loads(raw)["data"]["token"]
-          print("TOKEN_RECEIVED",bool(token),"TOKEN_LENGTH",len(token),"COOKIES",len(jar))
+          _,tok=post("/cms/token",{})
+          token=tok["data"]["token"]
 
-          candidates=[
-              ("bearer",{"Authorization":"Bearer "+token}),
-              ("raw_authorization",{"Authorization":token}),
-              ("x_access_token",{"x-access-token":token}),
-              ("x_auth_token",{"x-auth-token":token}),
-              ("cms_token",{"cms-token":token}),
-          ]
-          for label,headers in candidates:
-              print("HEADER_MODE",label)
-              status,body=post("/cms/get-nested-list",{"sdParentID":"sdPortfolios"},headers)
-              if status==200:
-                  print("SUCCESS_MODE",label)
-                  print(body.decode("utf-8","replace")[:80000])
-                  break
+          base={"sdType":"yearMonthSchemeDocs","sdID":"sdMonthSchemePortfolio"}
+          print("BASE_DOCUMENT_REQUEST")
+          _,base_resp=post("/cms/get-scheme-documents",base,token)
+          print("SCHEME_TYPES_REQUEST")
+          post("/cms/get-scheme-types",{},token)
+
+          # The browser first requests available year/month/scheme values using the base payload.
+          # Probe exact 2026/Aug variants only if they are represented in the public response.
+          if base_resp and base_resp.get("data"):
+              data=base_resp["data"]
+              print("BASE_KEYS",sorted(data.keys()))
+              print("YEARS",data.get("years"))
+              print("MONTHS",data.get("months"))
+              print("SCHEMES",data.get("schemes") or data.get("schemeList") or data.get("schemeTypes"))
+              months=data.get("months") or []
+              years=data.get("years") or []
+              schemes=data.get("schemes") or data.get("schemeList") or []
+              target_year=next((x for x in years if "2026" in str(x)),None)
+              target_month=next((x for x in months if "aug" in str(x).lower()),None)
+              if target_year is not None and target_month is not None:
+                  variants=[
+                      {**base,"year":target_year,"month":target_month},
+                      {**base,"year":"2026","month":"August"},
+                      {**base,"year":2026,"month":"August"},
+                      {**base,"year":"2026","month":"Aug"},
+                  ]
+                  for payload in variants:
+                      print("DETAIL_VARIANT")
+                      post("/cms/get-scheme-documents",payload,token)
           PY
