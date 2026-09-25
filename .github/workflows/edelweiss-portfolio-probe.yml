@@ -48,7 +48,8 @@ jobs:
           page=reader.pages[14]
           print('SOURCE',row['url'])
           print('HASH',row['hash'])
-          annots=page.get('/Annots') or []
+          annots_obj=page.get('/Annots')
+          annots=annots_obj.get_object() if hasattr(annots_obj,'get_object') else (annots_obj or [])
           print('ANNOT_COUNT',len(annots))
           urls=[]
           for idx,ref in enumerate(annots):
