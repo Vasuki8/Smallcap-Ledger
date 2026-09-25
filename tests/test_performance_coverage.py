@@ -136,10 +136,13 @@ class PerformanceCoverageTests(unittest.TestCase):
             "Gap Test Small Cap Fund","All","benchmark","2026-01-20",
             "Nifty Smallcap 250 TRI","Reported","https://example.com/gap","gap-hash",
         )
-        row=next(x for x in report()["plans"] if x["code"]==9905)
+        audit=report()
+        row=next(x for x in audit["plans"] if x["code"]==9905)
         self.assertGreaterEqual(row["nav"]["gap_count_gt_7d"],1)
         self.assertGreaterEqual(row["nav"]["max_gap_days"],18)
         self.assertIn("nav_large_gap",row["issues"])
+        priority=next(x for x in audit["repair_priorities"] if x["code"]=="review_nav_history_gaps")
+        self.assertEqual(priority["affected_growth_plans"],1)
         self.assertEqual(len(db.rows("SELECT * FROM nav WHERE code=9905")),4)
 
     def test_audit_is_read_only_and_markdown_surfaces_mismatch(self):
