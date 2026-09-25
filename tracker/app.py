@@ -17,6 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 from . import db,analytics,providers,disclosures
 from .portfolio_limitations import portfolio_limitation
+from .coverage import expected_portfolio_as_of
 from .sync import updater
 
 
@@ -101,6 +102,7 @@ def dated_return(code,latest,years):
 @app.get('/api/funds')
 def funds():
     records=db.rows("SELECT * FROM schemes ORDER BY family,plan,option,code")
+    expected=expected_portfolio_as_of()
     for s in records:
         s['option_label']=option_label(s)
         latest=db.rows("SELECT date,value,source FROM nav WHERE code=? ORDER BY date DESC LIMIT 2",(s['code'],))
@@ -112,7 +114,9 @@ def funds():
         s['metrics']=metrics_for(s)
         s['available_expenses']=available_expenses(s)
         s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
-        s['portfolio']=db.one("SELECT id,as_of,complete,source FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
+        s['portfolio']=db.one("""SELECT id,as_of,complete,source FROM portfolios WHERE family=?
+          ORDER BY CASE WHEN complete=1 AND as_of>=? THEN 0 ELSE 1 END,
+                   as_of DESC,complete DESC,id DESC LIMIT 1""",(s['family'],expected))
         s['portfolio_limitation']=portfolio_limitation(s['family'],s['portfolio'])
         if s['portfolio'] is not None:s['portfolio']['limitation']=s['portfolio_limitation']
         s['stale_days']=(date.today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
@@ -122,6 +126,7 @@ def funds():
 @app.get('/api/funds/{code}')
 def fund(code:int):
     s=scheme(code);s['metrics']=metrics_for(s)
+    expected=expected_portfolio_as_of()
     s['available_expenses']=available_expenses(s)
     s['option_label']=option_label(s)
     s['nav_coverage']=db.one("SELECT MIN(date) first,MAX(date) last,COUNT(*) points FROM nav WHERE code=?",(code,))
@@ -131,9 +136,11 @@ def fund(code:int):
     s['portfolios']=db.rows("""SELECT p.*,COUNT(h.id) holding_count,SUM(h.weight) disclosed_weight,
       SUM(CASE WHEN h.quantity IS NOT NULL THEN 1 ELSE 0 END) quantity_count
       FROM portfolios p LEFT JOIN holdings h ON p.id=h.snapshot_id
-      WHERE p.family=? AND p.as_of=(SELECT MAX(as_of) FROM portfolios WHERE family=?)
-      GROUP BY p.id ORDER BY p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
-      (s['family'],s['family']))
+      WHERE p.family=?
+      GROUP BY p.id
+      ORDER BY CASE WHEN p.complete=1 AND p.as_of>=? THEN 0 ELSE 1 END,
+               p.as_of DESC,p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
+      (s['family'],expected))
     for p in s['portfolios']:p['limitation']=portfolio_limitation(s['family'],p)
     s['portfolio_limitation']=s['portfolios'][0]['limitation'] if s['portfolios'] else portfolio_limitation(s['family'])
     s['sources']=db.rows("SELECT * FROM source_pages WHERE instr(lower(?),lower(amc_match))>0 ORDER BY id",(s['amc'],))
