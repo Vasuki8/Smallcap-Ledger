@@ -21,10 +21,10 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Resolve Axis TER component chunk
+      - name: Locate Axis TER implementation module
         run: |
           uv run --frozen python - <<'PY'
-          import re,html
+          import html,re
           from urllib.parse import urljoin
           from bs4 import BeautifulSoup
           from tracker import db
@@ -35,25 +35,13 @@ jobs:
           raw,_,_=read(page)
           soup=BeautifulSoup(raw,"html.parser")
           scripts=[urljoin(page,html.unescape(t["src"])) for t in soup.find_all("script",src=True)]
-
           for url in scripts:
               body,_,_=read(url,archive=False)
               text=body.decode("utf-8","replace")
-              if "58988" in text:
-                  print("MODULE_58988_SCRIPT",url,"BYTES",len(body))
-                  p=text.find("58988")
-                  print("MODULE_58988_SNIP",text[max(0,p-3000):p+12000])
-
-          runtime=next((u for u in scripts if "/webpack-" in u),None)
-          print("RUNTIME",runtime)
-          if runtime:
-              body,_,_=read(runtime,archive=False)
-              text=body.decode("utf-8","replace")
-              for pat in ("1744","58988"):
-                  pos=0
-                  while True:
-                      i=text.find(pat,pos)
-                      if i<0:break
-                      print("RUNTIME_SNIP",pat,text[max(0,i-2500):i+5000])
-                      pos=i+len(pat)
+              for needle in ("36579:function","36579:","TotalExpenseRatioModule"):
+                  i=text.find(needle)
+                  if i>=0:
+                      print("FOUND",needle,url,"BYTES",len(body))
+                      print(text[max(0,i-8000):min(len(text),i+30000)])
+                      break
           PY
