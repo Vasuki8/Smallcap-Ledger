@@ -1,8 +1,12 @@
 """Axis Small Cap public monthly-portfolio discovery and parser checks."""
 import json
+import tempfile
 import unittest
 from datetime import date
+from pathlib import Path
+from unittest.mock import patch
 
+from tracker import db
 from tracker.axis_portfolios import (
     FAMILY, DOCUMENTS_ENDPOINT, NESTED_ENDPOINT, TOKEN_ENDPOINT,
     document_candidates, discover, validate_monthly_branch,
@@ -21,6 +25,16 @@ def _formats(rows):
 
 
 class AxisPortfolioTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory()
+        self.data_patch=patch.object(db,"DATA",Path(self.tmp.name))
+        self.data_patch.start()
+        db.init()
+
+    def tearDown(self):
+        self.data_patch.stop()
+        self.tmp.cleanup()
+
     def test_axis_complete_rows_reconcile_without_balancing_guess(self):
         rows=[
             ["AXISSCF",FAMILY,None,None,None,None,None],
