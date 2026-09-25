@@ -1,0 +1,70 @@
+name: Portfolio limitation validation
+
+on:
+  push:
+    branches: [backend/portfolio-limitations-20260925-v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_ARCHIVE_FORMAT: '2'
+      SMALLCAP_DATABASE_ONLY_RESTORE: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Compile
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Run regression suite
+        run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Restore cumulative production checkpoint
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Apply idempotent database migrations
+        run: uv run --frozen python -c "from tracker import db; db.init(recover=True); db.init(recover=True)"
+      - name: Verify production portfolio limitation classifications
+        run: |
+          uv run --frozen python - <<'PY'
+          from tracker.coverage import report
+          expected={
+              'Axis Small Cap Fund':'undisclosed_constituents',
+              'Bajaj Finserv Small Cap Fund':'named_holdings_only',
+              'Bandhan Small Cap Fund':'non_numeric_weight',
+              'Edelweiss Small Cap Fund':'named_holdings_only',
+              'ICICI Prudential Small Cap Fund':'undisclosed_constituents',
+              'Sundaram Small Cap Fund':'non_numeric_weight',
+              'UTI Small Cap Fund':'non_numeric_weight',
+          }
+          data=report()
+          rows={row['family']:row for row in data['funds']}
+          partials={row['family'] for row in data['funds']
+                    if row['portfolio'] and not row['portfolio_complete']}
+          assert partials==set(expected),(partials,set(expected))
+          for family,code in expected.items():
+              row=rows[family]
+              assert row['portfolio_limitation']['code']==code,(family,row['portfolio_limitation'])
+              assert row['portfolio']['limitation']['code']==code,(family,row['portfolio'])
+              assert row['portfolio']['limitation_detail']
+          union=rows['Union Small Cap Fund']
+          assert union['portfolio'] is None
+          assert union['portfolio_limitation']['code']=='upstream_transport_unavailable',union
+          print('PARTIAL_LIMITATIONS', {f:rows[f]['portfolio_limitation']['code'] for f in expected})
+          print('UNION_LIMITATION',union['portfolio_limitation'])
+          print('COUNTS',data['counts'])
+          PY
+      - name: Generate static site
+        run: uv run --frozen python scripts/export_site.py
+      - name: Validate generated site
+        run: uv run --frozen python scripts/validate_site.py site
