@@ -2247,7 +2247,9 @@ def parse_axis_workbook(content, today=None):
 
 
 def _axis_cms_token():
-    def token_read(url, body=None, headers=None):
+    def token_read(url, body=None, archive=True, headers=None):
+        # Axis's public token helper explicitly requests archive=False. Never
+        # persist short-lived CMS tokens even if a caller passes archive=True.
         return fetch(
             url,
             body=body,
