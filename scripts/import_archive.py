@@ -16,7 +16,15 @@ def check_superset(old,new):
         # Identifiers must remain stable because they join files and snapshots.
         # Daily collection may advance current NAVs, while these historical rows
         # are append-only and may never be lost by an import.
-        for table in ('nav_observations','benchmark_observations','archives','metrics','portfolios','holdings','documents','document_versions'):
+        main_tables={r[0] for r in c.execute("SELECT name FROM main.sqlite_master WHERE type='table'")}
+        incoming_tables={r[0] for r in c.execute("SELECT name FROM incoming.sqlite_master WHERE type='table'")}
+        protected_tables=['nav_observations','benchmark_observations','archives','metrics',
+                          'portfolios','holdings','documents','document_versions']
+        if 'archive_retention' in main_tables:
+            if 'archive_retention' not in incoming_tables:
+                raise ValueError('Import would lose archive retention metadata. Start again from the latest archive.')
+            protected_tables.append('archive_retention')
+        for table in protected_tables:
             columns=[r[1] for r in c.execute(f'PRAGMA main.table_info({table})') if r[1] not in ('last_seen',)]
             if table=='documents':columns=['id','family','url','first_seen']
             fields=','.join('"'+v+'"' for v in columns)
