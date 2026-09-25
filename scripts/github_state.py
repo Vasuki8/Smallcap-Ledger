@@ -56,14 +56,16 @@ def _has_retention_table(connection=None):
 
 def retained_archive_rows(order_by='hash'):
     """Return only hashes whose binary is logically retained; old DBs mean all."""
-    allowed={'hash','first_seen,hash'}
-    if order_by not in allowed:raise ValueError('Unsafe archive ordering')
+    ordering={'hash':('hash','a.hash'),
+              'first_seen,hash':('first_seen,hash','a.first_seen,a.hash')}
+    if order_by not in ordering:raise ValueError('Unsafe archive ordering')
+    legacy_order,joined_order=ordering[order_by]
     if not _has_retention_table():
-        return db.rows(f'SELECT hash,path,bytes,first_seen FROM archives ORDER BY {order_by}')
+        return db.rows(f'SELECT hash,path,bytes,first_seen FROM archives ORDER BY {legacy_order}')
     return db.rows(f'''SELECT a.hash,a.path,a.bytes,a.first_seen
       FROM archives a LEFT JOIN archive_retention r ON r.hash=a.hash
       WHERE COALESCE(r.binary_state,'retained')='retained'
-      ORDER BY {order_by}''')
+      ORDER BY {joined_order}''')
 
 
 def pack_database(target):
