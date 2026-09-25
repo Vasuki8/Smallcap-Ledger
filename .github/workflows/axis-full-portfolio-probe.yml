@@ -1,4 +1,4 @@
-name: Axis monthly portfolio CMS probe
+name: Axis monthly workbook parser probe
 
 on:
   push:
@@ -11,68 +11,61 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_DATA_DIR: ${{ runner.temp }}/axis-probe-data
     steps:
       - uses: actions/checkout@v6
-      - name: Enumerate Axis monthly portfolio documents
-        shell: bash
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Parse exact Axis Small Cap August monthly workbook
         run: |
-          python - <<'PY'
-          import json, urllib.request, urllib.error, http.cookiejar
+          uv run --frozen python - <<'PY'
+          import hashlib,io,urllib.request
+          import openpyxl
+          from tracker import db,disclosures
+          from tracker.portfolio_parser import parse_sheet
 
-          ROOT="https://www.axismf.com"
-          PAGE=ROOT+"/statutory-disclosures"
-          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
-          jar=http.cookiejar.CookieJar()
-          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+          URL="https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx"
+          FAMILY="Axis Small Cap Fund"
+          req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0","Accept":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,*/*"})
+          with urllib.request.urlopen(req,timeout=45) as r:
+              raw=r.read(20_000_000)
+              print("FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
+          print("SHA256",hashlib.sha256(raw).hexdigest(),"SIGNATURE",raw[:8])
 
-          def post(path,payload,token=None):
-              raw=json.dumps(payload).encode()
-              headers={"User-Agent":UA,"Accept":"application/json,text/plain,*/*",
-                       "Content-Type":"application/json","Origin":ROOT,"Referer":PAGE}
-              if token:headers["Authorization"]=token
-              req=urllib.request.Request(ROOT+path,data=raw,method="POST",headers=headers)
-              try:
-                  with opener.open(req,timeout=30) as r:
-                      body=r.read(2_000_000)
-                      print("POST",path,payload,"STATUS",r.status,"BYTES",len(body))
-                      print(body.decode("utf-8","replace")[:150000])
-                      return r.status,json.loads(body)
-              except urllib.error.HTTPError as e:
-                  body=e.read(50000)
-                  print("HTTP_ERROR",path,payload,e.code,body.decode("utf-8","replace"))
-                  return e.code,None
+          book=openpyxl.load_workbook(io.BytesIO(raw),read_only=True,data_only=True)
+          print("SHEETS",book.sheetnames)
+          for sheet in book.worksheets:
+              cells=list(sheet.iter_rows())
+              rows=[[c.value for c in row] for row in cells]
+              formats=[[c.number_format or "" for c in row] for row in cells]
+              print("SHEET",sheet.title,"ROWS",len(rows),"COLS",max((len(x) for x in rows),default=0))
+              for row in rows[:25]:print("ROW",row[:12])
+              parsed=parse_sheet(rows,formats,FAMILY)
+              if parsed:
+                  print("PARSED_DAY",parsed["day"])
+                  print("PARSED_AUM",parsed["aum"])
+                  print("PARSED_COMPLETE",parsed["complete"])
+                  print("POSITION_COUNT",len(parsed["positions"]))
+                  print("WEIGHT_SUM",sum(x["weight"] for x in parsed["positions"]))
+                  print("UNKNOWN_ROWS",parsed["unknown_rows"])
+                  kinds={}
+                  for x in parsed["positions"]:kinds[x["asset_type"]]=kinds.get(x["asset_type"],0)+1
+                  print("ASSET_COUNTS",kinds)
+                  print("FIRST_POSITIONS",parsed["positions"][:10])
+                  print("LAST_POSITIONS",parsed["positions"][-10:])
+          book.close()
 
-          _,tok=post("/cms/token",{})
-          token=tok["data"]["token"]
-
-          base={"sdType":"yearMonthSchemeDocs","sdID":"sdMonthSchemePortfolio"}
-          print("BASE_DOCUMENT_REQUEST")
-          _,base_resp=post("/cms/get-scheme-documents",base,token)
-          print("SCHEME_TYPES_REQUEST")
-          post("/cms/get-scheme-types",{},token)
-
-          # The browser first requests available year/month/scheme values using the base payload.
-          # Probe exact 2026/Aug variants only if they are represented in the public response.
-          if base_resp and base_resp.get("data"):
-              data=base_resp["data"]
-              print("BASE_KEYS",sorted(data.keys()))
-              print("YEARS",data.get("years"))
-              print("MONTHS",data.get("months"))
-              print("SCHEMES",data.get("schemes") or data.get("schemeList") or data.get("schemeTypes"))
-              months=data.get("months") or []
-              years=data.get("years") or []
-              schemes=data.get("schemes") or data.get("schemeList") or []
-              target_year=next((x for x in years if "2026" in str(x)),None)
-              target_month=next((x for x in months if "aug" in str(x).lower()),None)
-              if target_year is not None and target_month is not None:
-                  variants=[
-                      {**base,"year":target_year,"month":target_month},
-                      {**base,"year":"2026","month":"August"},
-                      {**base,"year":2026,"month":"August"},
-                      {**base,"year":"2026","month":"Aug"},
-                  ]
-                  for payload in variants:
-                      print("DETAIL_VARIANT")
-                      post("/cms/get-scheme-documents",payload,token)
+          db.init()
+          h=db.archive(raw,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+          count=disclosures.spreadsheet(raw,FAMILY,URL,h)
+          print("DISCLOSURE_COUNT",count)
+          for p in db.rows("SELECT * FROM portfolios WHERE family=? ORDER BY complete DESC,id",(FAMILY,)):
+              print("SNAPSHOT",p)
+              print("HOLDINGS",db.one("SELECT COUNT(*) n, SUM(weight) total FROM holdings WHERE snapshot_id=?",(p["id"],)))
           PY
