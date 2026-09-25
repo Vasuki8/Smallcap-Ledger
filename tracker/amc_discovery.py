@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 from . import db,providers,disclosures,amc_reports
 
 
-def read(url,body=None,archive=True):
+def read(url,body=None,archive=True,headers=None):
     providers.can_crawl(url)
-    return providers.fetch(url,body=body,archive=archive,max_bytes=60*1024*1024)
+    return providers.fetch(url,body=body,archive=archive,max_bytes=60*1024*1024,headers=headers)
 
 
 def months(today=None,count=3):
@@ -109,7 +109,8 @@ def store_report(amc,family,url,title='Official report'):
     workbook=urlparse(url).path.lower().endswith(('.xls','.xlsx'))
     sbi_workbook=(amc=='SBI' and family=='SBI Small Cap Fund' and workbook)
     bandhan_workbook=(amc=='Bandhan' and family=='Bandhan Small Cap Fund' and workbook)
-    if (sbi_workbook or bandhan_workbook) and not body.startswith((b'PK',b'\xd0\xcf')):
+    axis_workbook=(amc=='Axis' and family=='Axis Small Cap Fund' and workbook)
+    if (sbi_workbook or bandhan_workbook or axis_workbook) and not body.startswith((b'PK',b'\xd0\xcf')):
         raise ValueError(f'{amc} monthly workbook returned non-spreadsheet content')
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
@@ -119,6 +120,9 @@ def store_report(amc,family,url,title='Official report'):
     if bandhan_workbook:
         from .bandhan_portfolios import PARSER_VERSION
         return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
+    if axis_workbook:
+        from .axis_portfolios import PARSER_VERSION
+        return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
     return amc_reports.extract(body,family,url,h)
 
 def discover(amc):
@@ -126,6 +130,9 @@ def discover(amc):
     if amc=='SBI':
         from .sbi_portfolios import discover as sbi_discover
         yield from sbi_discover(read)
+    elif amc=='Axis':
+        from .axis_portfolios import discover as axis_discover
+        yield from axis_discover(read)
     elif amc=='Baroda':
         family='Baroda Bnp Paribas Small Cap Fund'
         page='https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme'
@@ -796,5 +803,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','JM Financial','LIC','Union','UTI','Bandhan','ITI','Invesco','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Axis','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','JM Financial','LIC','Union','UTI','Bandhan','ITI','Invesco','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)

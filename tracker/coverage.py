@@ -79,8 +79,14 @@ def report():
           WHERE family=? AND plan='Direct' AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio')
           ORDER BY CASE metric WHEN 'ter' THEN 0 WHEN 'ter_observed' THEN 1 WHEN 'base_expense_ratio' THEN 2 ELSE 3 END,
                    as_of DESC,observed_at DESC LIMIT 1""",(family,))
+        # Prefer a complete snapshot for the currently expected regulatory
+        # month-end over a later intramonth partial view. This keeps coverage
+        # completeness tied to the monthly disclosure requirement while the API
+        # can still expose newer partial snapshots separately.
         row['portfolio']=db.one('''SELECT p.as_of,p.source,p.complete,COUNT(h.id) positions FROM portfolios p
-          JOIN holdings h ON h.snapshot_id=p.id WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,COUNT(h.id) DESC LIMIT 1''',(family,))
+          JOIN holdings h ON h.snapshot_id=p.id WHERE p.family=? GROUP BY p.id
+          ORDER BY CASE WHEN p.complete=1 AND p.as_of>=? THEN 0 ELSE 1 END,
+                   p.as_of DESC,p.complete DESC,COUNT(h.id) DESC LIMIT 1''',(family,expected))
         row['portfolio_complete']=bool(row['portfolio'] and row['portfolio']['complete'])
         row['portfolio_fresh']=bool(row['portfolio'] and row['portfolio']['as_of']>=expected)
         row['official_publications']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND origin='AMC' AND kind!='source page'",(family,))['n']
@@ -111,4 +117,5 @@ def report():
                  'The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.',
                  'Base expense ratio and total expense ratio are distinct.',
                  'A benchmark name does not establish availability of its historical TRI series.',
+                 'Coverage prefers a complete snapshot for the expected regulatory month-end over a later intramonth partial view.',
                  'Portfolio records may be partial; portfolio_limitation gives the evidence-based reason without estimating undisclosed weights.']}

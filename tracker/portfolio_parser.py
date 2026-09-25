@@ -84,11 +84,18 @@ def parse_sheet(rows,formats,family):
         named_derivative=((family=='Samco Small Cap Fund' and not isin and asset=='Derivative'
                            and bool(name) and qc is not None and not empty(row[qc])
                            and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code))) or
+                          (family=='Axis Small Cap Fund' and not isin and asset=='Derivative'
+                           and bool(re.fullmatch(r'[A-Z0-9]{4,20}',code))
+                           and bool(re.fullmatch(r'[A-Z0-9 ]+\s+[A-Za-z]+\s+20\d{2}\s+Future',name,re.I))
+                           and qc is not None and not empty(row[qc])) or
                           (family=='Quant Small Cap Fund' and not valid_isin and asset=='Derivative'
                            and bool(re.fullmatch(r'[A-Z][A-Z0-9]{2,24}\d{6}',isin))
                            and bool(re.fullmatch(r'.+?\b(?:Ltd\.?|Limited)\s+\d{2}/\d{2}/\d{4}',name,re.I))
                            and qc is not None and not empty(row[qc])))
         named_repo=(family=='Motilal Oswal Small Cap Fund' and asset=='Money market' and isin=='CBLO' and re.fullmatch(r'TRP_\d{6}',name)) or (
+                    family=='Axis Small Cap Fund' and not isin and asset=='Money market'
+                    and bool(re.fullmatch(r'TRP_\d{6}(?:_VAL)?',code))
+                    and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I))) or (
                     family in ('Samco Small Cap Fund','Baroda Bnp Paribas Small Cap Fund') and not isin and asset=='Money market'
                     and bool(re.fullmatch(r'TRP_\d{6}',code))
                     and bool(re.fullmatch(r'Clearing Corporation of India Ltd\.?',name,re.I))) or (
@@ -133,12 +140,20 @@ def parse_sheet(rows,formats,family):
         kind=asset if valid_isin or named_equity or named_derivative or named_repo else ('Money market' if re.search(r'repo|treps',label,re.I) else 'Cash and net current assets')
         sector=str(row[sc] or '') if sc is not None and (valid_isin or named_derivative) else None
         quantity=None
-        if qc is not None and qc<len(row) and kind in ('Equity','Fund units') and not empty(row[qc]):
+        if qc is not None and qc<len(row) and (
+            kind in ('Equity','Fund units') or (family=='Axis Small Cap Fund' and kind=='Derivative')
+        ) and not empty(row[qc]):
             try:
                 candidate=numeric(row[qc])
                 if 0<=candidate<1e15:quantity=candidate
             except ValueError:pass
-        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
+        position_name=name or label
+        if family=='Axis Small Cap Fund' and named_repo:
+            # Axis publishes multiple distinct TREPS transactions with the same
+            # issuer name but different explicit transaction codes. Preserve
+            # the source code instead of aggregating those rows.
+            position_name=f'{name} · {code}'
+        positions.append({'name':position_name,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
                           'quantity':quantity,'asset_type':kind});values.append(v)
     aum=None
     if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)
