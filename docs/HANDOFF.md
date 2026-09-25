@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after performance-audit benchmark semantics cleanup deployment.
+Updated: 2026-09-25, after final unresolved NAV-gap classification deployment.
 
 
 
@@ -25,6 +25,113 @@ Updated: 2026-09-25, after performance-audit benchmark semantics cleanup deploym
 
 
 
+
+## Latest completed batch: final unresolved NAV-gap classification
+
+**The last unresolved `nav_large_gap` is now closed with exact option-level AMFI evidence. No NAV observation was added, estimated, interpolated or forward-filled.**
+
+Diagnostic PR **#143** merged as commit `3d8522d5bc5fb9e8e5f0b0eccbb4fa13346b6477` and ran the one-time exact AMFI check in workflow **#502 / run 36185438441**.
+
+The query was:
+
+`https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=3&frmdt=31-May-2010&todt=08-Jun-2010`
+
+The diagnostic filtered the official response specifically to **AMFI scheme code 105805 — Aditya Birla Sun Life Small Cap Fund · Regular · IDCW**.
+
+Exact result:
+
+- response bytes: **171,465**
+- MIME: **text/plain**
+- SHA-256: `4b0ab23045b78f1e8b143ea8509f3da3f2dc5aa4d138e668f2a9645fd75db5fb`
+- exact code-105805 rows: **2**
+- **2010-05-31 — NAV 11.5499**
+- **2010-06-08 — NAV 11.4193**
+- payout ISIN: **INF209K01EO0**
+- reinvestment ISIN: **INF209K01EP7**
+
+No intermediate code-105805 NAV row exists in the authoritative AMFI history for that exact interval.
+
+PR **#144** merged as commit `11cdd6bc017ab23d484ef639a09e978f7c306dbb` and converted that diagnostic evidence into the durable audit classification:
+
+- added a dedicated `verified_official_history_gap` record for scheme **105805** in `tracker/nav_gap_evidence.json`;
+- retained the raw 8-calendar-day interval in the audit evidence;
+- removed the actionable `nav_large_gap` classification;
+- updated `docs/NAV-GAP-AUDIT.md`;
+- removed the one-time diagnostic script and workflow step;
+- added an exact option-level regression test that checks the scheme code, both ISINs, both boundary observations and the absence of `nav_large_gap`.
+
+### Production verification
+
+Production workflow **#503 / run 36185896041** completed successfully at **2026-09-25T20:29:09Z**:
+
+- production checkpoint restore and all normal source upgrades passed;
+- database compaction passed;
+- **341 tests passed**, including `test_absl_regular_idcw_gap_is_verified_at_exact_option_level`;
+- generated site and download validation passed;
+- cumulative-history publication and build-status recording passed;
+- Pages deployment passed.
+
+Status commit: `41696a7b21722717d45a1dfbf68728f98ffeb053`.
+
+Pages artifact **10886078886** is **230,661,250 bytes** with digest `sha256:f533aa1c1c5238904d1d2d18e63a2b7bffb24898e209b792b8ef7961c83824c3`.
+
+The production performance audit generated at **2026-09-25T20:28:37Z** now shows for code **105805**:
+
+- raw gap count >7d: **1**
+- verified official-history gaps: **1**
+- unresolved/actionable gaps: **0**
+- `nav_large_gap`: **absent**
+
+The global `issue_counts` no longer contains `nav_large_gap`. Historical performance now contains only:
+- structural `history_starts_after_target` young-fund limitations;
+- the explicitly non-actionable BSE 250 SmallCap TRI source gap.
+
+### Current data-coverage state after this closeout
+
+Current `COVERAGE-AS-OF.json` reports:
+
+- funds: **36**
+- AUM: **36 / 36**
+- fee: **36 / 36**
+- TER: **36 / 36**
+- base expense ratio / BER: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolio present: **35 / 36**
+- complete portfolios: **29**
+- fresh portfolios: **34**
+- fresh + complete portfolios: **29**
+- partial portfolios: **6**
+
+`docs/PORTFOLIO-RECOVERY-QUEUE.json` currently has **7 items and 0 actionable-now items**. Union remains missing behind first-party transport failure; Bajaj Finserv is stale partial; Edelweiss and ICICI are source-access/subset blockers; Bandhan, Sundaram and UTI require more precise AMC disclosure. No source-change watch is currently positive.
+
+The historical BSE TRI source remains non-actionable under the current free first-party-source rule.
+
+### Next backend task
+
+**Build the non-destructive retention-aware storage plumbing required before any link-only source-file reduction is allowed. Do not delete any candidate files yet.**
+
+The source-retention audit already identified **700 `link_only_candidate` responses / 404,498,141 raw bytes / 34,253,903 compressed payload bytes**, but explicitly prohibits deletion until restore/replay/publication behavior understands binary-retention state.
+
+The next batch should implement only the safe infrastructure prerequisite:
+
+1. add explicit retained-binary state/metadata for archived hashes while preserving every provenance row, URL, observed time and classification;
+2. make archive serving, replay/reprocessing, restore verification, source-pack validation and Pages publication selection distinguish:
+   - binary retained,
+   - metadata-only/link-only candidate,
+   - protected evidence;
+3. ensure a metadata-only source never appears as a downloadable saved copy and never causes a broken restore/replay path;
+4. prevent ordinary collection from immediately re-archiving a deliberately metadata-only superseded discovery response unless it becomes current/protected evidence;
+5. add migration/dry-run validation on a production copy, with **zero deletion** and exact row/content equality for all protected evidence;
+6. keep current source packs, rollback checkpoint, legacy cumulative ZIP and all 700 candidate binaries untouched until a later separately approved migration;
+7. update `docs/SOURCE-RETENTION-AUDIT.md` / storage validation evidence with the new readiness state, but do not report any reclaimed bytes yet.
+
+This work is now the preferred active backend task because:
+- core numeric coverage is **36/36** for AUM/TER/BER/benchmark identity;
+- historical NAV-gap repair is closed;
+- BSE TRI is non-actionable;
+- the portfolio recovery queue has **0 actionable-now** entries.
+
+Portfolio/source recovery should resume immediately if a queue source-change watch becomes positive before or during this storage-plumbing work.
 
 ## Latest completed batch: performance-audit benchmark semantics cleanup
 
