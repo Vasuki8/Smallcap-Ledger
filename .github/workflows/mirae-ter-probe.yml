@@ -3,6 +3,8 @@ name: Mirae TER public-source probe
 on:
   push:
     branches: [investigate/mirae-ter-20260925]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
