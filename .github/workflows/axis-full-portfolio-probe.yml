@@ -1,4 +1,4 @@
-name: Axis statutory nested portfolio probe
+name: Axis authenticated public CMS probe
 
 on:
   push:
@@ -14,58 +14,52 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Call Axis portfolio nested API exactly like browser
+      - name: Replay Axis public CMS token flow
         shell: bash
         run: |
           python - <<'PY'
-          import json,re,urllib.request,urllib.error
+          import json, urllib.request, urllib.error, http.cookiejar
 
           ROOT="https://www.axismf.com"
           PAGE=ROOT+"/statutory-disclosures"
           UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
+          jar=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
 
-          def call(method,path,payload=None,headers=None):
-              body=None if payload is None else json.dumps(payload).encode()
-              h={"User-Agent":UA,"Accept":"application/json,text/plain,*/*",
-                 "Referer":PAGE,"Origin":ROOT}
-              if body is not None:h["Content-Type"]="application/json"
-              if headers:h.update(headers)
-              req=urllib.request.Request(ROOT+path,data=body,method=method,headers=h)
+          def post(path,payload,extra=None):
+              raw=json.dumps(payload).encode()
+              headers={"User-Agent":UA,"Accept":"application/json,text/plain,*/*",
+                       "Content-Type":"application/json","Origin":ROOT,"Referer":PAGE}
+              if extra:headers.update(extra)
+              req=urllib.request.Request(ROOT+path,data=raw,method="POST",headers=headers)
               try:
-                  with urllib.request.urlopen(req,timeout=30) as r:
-                      raw=r.read(1_000_000)
-                      print("CALL",method,path,payload,"STATUS",r.status,
-                            "TYPE",r.headers.get("content-type"),
-                            "AUTH",r.headers.get("authorization"))
-                      print(raw.decode("utf-8","replace")[:80000])
-                      return r.status,raw,r.headers
+                  with opener.open(req,timeout=30) as r:
+                      body=r.read(1_000_000)
+                      print("POST",path,"STATUS",r.status,"TYPE",r.headers.get("content-type"),
+                            "BODY_BYTES",len(body))
+                      return r.status,body
               except urllib.error.HTTPError as e:
-                  raw=e.read(100000)
-                  print("HTTP_ERROR",method,path,payload,e.code,
-                        e.headers.get("content-type"),raw.decode("utf-8","replace")[:50000])
-                  return e.code,raw,e.headers
-              except Exception as e:
-                  print("CALL_ERROR",method,path,payload,repr(e))
-                  return None,b"",{}
+                  body=e.read(100000)
+                  print("POST_ERROR",path,e.code,body.decode("utf-8","replace")[:8000])
+                  return e.code,body
 
-          # Correct browser payload: StatutoryNestedList -> {sdParentID:e.parentID}
-          call("POST","/cms/get-nested-list",{"sdParentID":"sdPortfolios"})
+          status,raw=post("/cms/token",{})
+          assert status==200
+          token=json.loads(raw)["data"]["token"]
+          print("TOKEN_RECEIVED",bool(token),"TOKEN_LENGTH",len(token),"COOKIES",len(jar))
 
-          # Trace public CMS token bootstrap if the nested request is forbidden.
-          for method,payload in (("GET",None),("POST",{}),("POST",None)):
-              call(method,"/cms/token",payload)
-
-          # Inspect implementation around public CMS token/header setup.
-          bundle=ROOT+"/_next/static/chunks/2949-d62ba4877ec805c0.js"
-          req=urllib.request.Request(bundle,headers={"User-Agent":UA})
-          with urllib.request.urlopen(req,timeout=30) as r:js=r.read().decode("utf-8","replace")
-          for term in ("/cms/token","GETCMSTOKEN","getApiServiceHeaders","getBearerToken",
-                       "checkAndUpdateHeaders","prepareHeaders"):
-              print("TERM",term)
-              low=js.lower();q=term.lower();p=0;shown=0
-              while shown<8:
-                  i=low.find(q,p)
-                  if i<0:break
-                  print(js[max(0,i-2500):min(len(js),i+7000)])
-                  p=i+len(q);shown+=1
+          candidates=[
+              ("bearer",{"Authorization":"Bearer "+token}),
+              ("raw_authorization",{"Authorization":token}),
+              ("x_access_token",{"x-access-token":token}),
+              ("x_auth_token",{"x-auth-token":token}),
+              ("cms_token",{"cms-token":token}),
+          ]
+          for label,headers in candidates:
+              print("HEADER_MODE",label)
+              status,body=post("/cms/get-nested-list",{"sdParentID":"sdPortfolios"},headers)
+              if status==200:
+                  print("SUCCESS_MODE",label)
+                  print(body.decode("utf-8","replace")[:80000])
+                  break
           PY
