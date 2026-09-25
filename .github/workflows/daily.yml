@@ -58,6 +58,10 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
+      - name: Audit ABSL Regular IDCW NAV gap
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/audit_absl_idcw_gap.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
