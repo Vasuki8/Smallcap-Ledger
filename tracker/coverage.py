@@ -1,6 +1,7 @@
 """Auditable per-fund coverage, regenerated from the cumulative archive."""
 from datetime import date,timedelta
 from . import db
+from .portfolio_limits import missing_limitation
 
 FEE_METRICS=('ter','ter_observed','base_expense_ratio','expense_ratio')
 
@@ -78,12 +79,20 @@ def report():
           WHERE family=? AND plan='Direct' AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio')
           ORDER BY CASE metric WHEN 'ter' THEN 0 WHEN 'ter_observed' THEN 1 WHEN 'base_expense_ratio' THEN 2 ELSE 3 END,
                    as_of DESC,observed_at DESC LIMIT 1""",(family,))
-        row['portfolio']=db.one('''SELECT p.as_of,p.source,p.complete,COUNT(h.id) positions FROM portfolios p
-          JOIN holdings h ON h.snapshot_id=p.id WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,COUNT(h.id) DESC LIMIT 1''',(family,))
+        row['portfolio']=db.one('''SELECT p.as_of,p.source,p.complete,p.limitation_code,p.limitation_detail,
+          COUNT(h.id) positions FROM portfolios p
+          JOIN holdings h ON h.snapshot_id=p.id WHERE p.family=? GROUP BY p.id
+          ORDER BY p.as_of DESC,COUNT(h.id) DESC LIMIT 1''',(family,))
+        if row['portfolio']:
+            row['portfolio']['limitation']=(
+                {'code':row['portfolio']['limitation_code'],'detail':row['portfolio']['limitation_detail']}
+                if row['portfolio'].get('limitation_code') else None)
         row['portfolio_complete']=bool(row['portfolio'] and row['portfolio']['complete'])
         row['portfolio_fresh']=bool(row['portfolio'] and row['portfolio']['as_of']>=expected)
         row['official_publications']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND origin='AMC' AND kind!='source page'",(family,))['n']
         row['portfolio_gap']=None if row['portfolio'] else _portfolio_gap_audit(family,scheme['amc'],row['official_publications'])
+        row['portfolio_limitation']=(row['portfolio'].get('limitation') if row['portfolio']
+                                     else missing_limitation(row['portfolio_gap']))
         rows.append(row)
     gap_reasons={}
     for row in rows:
@@ -104,4 +113,4 @@ def report():
                  'The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.',
                  'Base expense ratio and total expense ratio are distinct.',
                  'A benchmark name does not establish availability of its historical TRI series.',
-                 'Portfolio records may be partial; see each snapshot and source.']}
+                 'Portfolio records may be partial; portfolio_limitation provides a canonical reason without estimating missing weights.']}
