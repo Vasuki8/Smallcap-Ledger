@@ -147,7 +147,13 @@ def parse_sheet(rows,formats,family):
                 candidate=numeric(row[qc])
                 if 0<=candidate<1e15:quantity=candidate
             except ValueError:pass
-        positions.append({'name':name or label,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
+        position_name=name or label
+        if family=='Axis Small Cap Fund' and named_repo:
+            # Axis publishes multiple distinct TREPS transactions with the same
+            # issuer name but different explicit transaction codes. Preserve
+            # the source code instead of aggregating those rows.
+            position_name=f'{name} · {code}'
+        positions.append({'name':position_name,'isin':isin if valid_isin else None,'sector':sector,'weight':w,
                           'quantity':quantity,'asset_type':kind});values.append(v)
     aum=None
     if grand and 0<grand[0]/divisor<10_000_000 and abs(grand[1]-100)<.01:aum=round(grand[0]/divisor,6)
