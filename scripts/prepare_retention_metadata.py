@@ -126,10 +126,12 @@ def prepare(*,apply=False,report_path=None):
         if states['metadata_only']==0 and not candidate_manifest_ok:
             raise ValueError('Zero-deletion rollout lost a reviewed link-only candidate from active packs')
 
+    try:inventory_label=str(INVENTORY.relative_to(ROOT))
+    except ValueError:inventory_label=str(INVENTORY)
     report={
         'prepared_at':db.now(),
         'mode':'apply_classifications_no_binary_change' if apply else 'dry_run',
-        'inventory_file':str(INVENTORY.relative_to(ROOT)),
+        'inventory_file':inventory_label,
         'reviewed_inventory_hashes':len(audited),
         'current_archive_hashes':len(archives),
         'new_unclassified_hashes':classes['unclassified'],
