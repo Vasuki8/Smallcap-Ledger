@@ -204,6 +204,16 @@ class RetentionMetadataPreparationTests(unittest.TestCase):
                 self.assertEqual(db.archive_retention(candidate)['binary_state'],'retained')
                 self.assertTrue(db.archive_binary_path(candidate).is_file())
                 self.assertTrue(report_path.is_file())
+
+                # A newer current fetch/review must never be downgraded by the
+                # older inventory when preparation runs again.
+                db.set_archive_retention(
+                    candidate,classification='retain_latest_or_review',
+                    reason='became current',reviewed_at='2026-09-25')
+                with patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
+                    prep.prepare(apply=True)
+                self.assertEqual(db.archive_retention(candidate)['classification'],
+                                 'retain_latest_or_review')
             finally:
                 prep.INVENTORY=previous_inventory
                 db.DATA=previous_data
