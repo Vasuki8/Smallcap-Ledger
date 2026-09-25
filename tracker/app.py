@@ -112,7 +112,9 @@ def funds():
         s['metrics']=metrics_for(s)
         s['available_expenses']=available_expenses(s)
         s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
-        s['portfolio']=db.one("SELECT id,as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
+        s['portfolio']=db.one("SELECT id,as_of,complete,source FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
+        s['portfolio_limitation']=portfolio_limitation(s['family'],s['portfolio'])
+        if s['portfolio'] is not None:s['portfolio']['limitation']=s['portfolio_limitation']
         s['stale_days']=(date.today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
     return {"funds":records,"as_of":db.now()}
 
