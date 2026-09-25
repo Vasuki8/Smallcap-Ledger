@@ -197,7 +197,7 @@ class RetentionMetadataPreparationTests(unittest.TestCase):
                 self.assertEqual(report['bytes_actually_deleted'],0)
                 self.assertEqual(report['binary_states'],{'retained':2})
                 self.assertTrue(report['protected_archive_metadata_unchanged'])
-                self.assertTrue(report['non_retention_table_counts_unchanged'])
+                self.assertTrue(report['non_retention_table_fingerprints_unchanged'])
                 self.assertFalse(report['deletion_enabled'])
                 self.assertEqual(db.archive_retention(protected)['classification'],'retain_evidence')
                 self.assertEqual(db.archive_retention(candidate)['classification'],'link_only_candidate')
