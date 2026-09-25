@@ -1,4 +1,4 @@
-name: Axis statutory API payload probe
+name: Axis portfolio nested CMS probe
 
 on:
   push:
@@ -14,35 +14,55 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Extract Axis statutory API payload builders
+      - name: Resolve Axis portfolio nested disclosure API
         shell: bash
         run: |
           python - <<'PY'
-          import re, urllib.request
+          import json,re,urllib.request,urllib.error
           UA="Mozilla/5.0"
-          url="https://www.axismf.com/_next/static/chunks/183-0b7c0e7078c2d2b0.js"
-          req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/javascript,*/*"})
-          with urllib.request.urlopen(req,timeout=30) as r:
-              js=r.read().decode("utf-8","replace")
-          print("BYTES",len(js))
-          terms=[
-              "placeGetStatutoryDisclosureDocumentList=async",
-              "placeGetStatutoryDisclosureSchemeType=async",
-              "placeGetStatutoryDisclosureNestedList=async",
-              "placeGetStatutorySubCategoryDisclosureDocuments=async",
-              "GET_STATUTORY_DISCLOSURE_DOCUMENT",
-              "GET_STATUTORY_DISCLOSURE_NESTED_LIST",
+          BUNDLE="https://www.axismf.com/_next/static/chunks/183-0b7c0e7078c2d2b0.js"
+          req=urllib.request.Request(BUNDLE,headers={"User-Agent":UA})
+          with urllib.request.urlopen(req,timeout=30) as r:js=r.read().decode("utf-8","replace")
+
+          for term in (
+              "placeGetStatutoryDisclosureNestedList(",
+              "placeGetStatutorySubCategory",
+              "placeGetStatutorySubcategory",
               "GET_STATUTORY_SUBCATEGORY_DISCLOSURE_DOCUMENTS",
-          ]
-          for term in terms:
-              p=js.find(term)
-              print("TERM",term,"POS",p)
-              if p>=0:print(js[max(0,p-1200):min(len(js),p+6500)])
-          for pat in [
-              r'placeGetStatutoryDisclosureDocumentList=async[^;]{0,5000}',
-              r'placeGetStatutoryDisclosureNestedList=async[^;]{0,5000}',
-              r'placeGetStatutorySubCategoryDisclosureDocuments=async[^;]{0,5000}',
-          ]:
-              m=re.search(pat,js)
-              if m:print("REGEX",pat,m.group(0))
+              "nestedList",
+          ):
+              print("CALL_TERM",term)
+              low=js.lower();q=term.lower();p=0;shown=0
+              while shown<12:
+                  i=low.find(q,p)
+                  if i<0:break
+                  print(js[max(0,i-2200):min(len(js),i+6000)])
+                  p=i+len(q);shown+=1
+
+          def post(path,payload):
+              url="https://www.axismf.com"+path
+              body=json.dumps(payload).encode()
+              req=urllib.request.Request(url,data=body,method="POST",headers={
+                  "User-Agent":UA,"Accept":"application/json,*/*",
+                  "Content-Type":"application/json",
+                  "Origin":"https://www.axismf.com",
+                  "Referer":"https://www.axismf.com/statutory-disclosures",
+              })
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read(500000)
+                      print("POST",path,payload,"STATUS",r.status,"TYPE",r.headers.get("content-type"))
+                      print(raw.decode("utf-8","replace")[:20000])
+              except urllib.error.HTTPError as e:
+                  print("POST_HTTP_ERROR",path,payload,e.code,e.read(10000).decode("utf-8","replace"))
+              except Exception as e:
+                  print("POST_ERROR",path,payload,repr(e))
+
+          for payload in (
+              {"sdID":"sdPortfolios"},
+              {"sdId":"sdPortfolios"},
+              {"sdID":"sdPortfolios","sdType":"nestedList"},
+              {"sdId":"sdPortfolios","sdType":"nestedList"},
+          ):
+              post("/cms/get-nested-list",payload)
           PY
