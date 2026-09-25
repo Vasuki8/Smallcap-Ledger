@@ -17,9 +17,86 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after Edelweiss portfolio source audit.
+Updated: 2026-09-25, after ICICI Prudential portfolio transport re-check.
 
 
+
+
+## Latest completed batch: ICICI Prudential portfolio transport re-check
+
+**ICICI Prudential Small Cap Fund remains a current partial portfolio because its exact first-party monthly portfolio ZIP transport is still broken upstream. No holdings were fabricated or promoted.**
+
+Diagnostic run **36093923776** re-tested the exact August and July 2026 portfolio URLs from the same GitHub Actions network used by production.
+
+Exact first-party entry URLs:
+
+- August: `https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip`
+- July: `https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip`
+
+Both still return **HTTP 307** to the exact first-party archive host:
+
+`https://archive.icicipruamc.com/...`
+
+The archive hostname is still unusable:
+
+- the GitHub runner resolver returns **`gaierror(-5, 'No address associated with hostname')`**;
+- Google DNS-over-HTTPS returns **no A Answer**;
+- Google DNS-over-HTTPS returns **no CNAME Answer**;
+- the authoritative response contains only the `icicipruamc.com` SOA;
+- direct August and July archive requests both fail before HTTP because the hostname does not resolve.
+
+This exactly reproduces the earlier blocker documented in runs **36024378270** and **36024773905**. The AMC's public metadata and redirect path remain internally consistent; the failure is the unresolved archive host, not a parser bug or missing filename.
+
+Do **not** work around this by pinning an old IP, disabling TLS verification, using third-party cached ZIPs as financial evidence, or converting the factsheet's separately disclosed **"Equity less than 1% of corpus"** aggregate into invented constituents.
+
+The tracker therefore retains **ICICI Prudential Small Cap Fund · 83 named positions · 2026-08-31 · partial · current**, sourced from the official complete factsheet. Production coverage remains unchanged:
+
+- reported TER **35/36**
+- BER **35/36**
+- dated Direct fee fallback **36/36**
+- AUM **36/36**
+- benchmark identity **36/36**
+- portfolios **35/36**, **28 complete**, **34 current**, **7 partial**
+- latest NAV **2026-09-24**
+
+### Next backend task
+
+The remaining portfolio backlog is now mostly verified source/precision boundaries rather than missing parser work. **Make partial-portfolio limitation reasons first-class machine-readable backend data.**
+
+The current API and `COVERAGE-AS-OF.json` expose `complete: false`, but do not explain why a retained portfolio is partial. Add a conservative structured limitation field for the latest retained portfolio without changing holdings or inventing weights. It should distinguish at minimum:
+
+- **source aggregate / undisclosed constituents** — ICICI Prudential, Axis;
+- **source publishes only top/named holdings** — Edelweiss, Bajaj where applicable;
+- **censored/non-numeric source weight** — Bandhan, Sundaram, UTI;
+- **upstream transport/source unavailable** — use for missing-portfolio cases such as Union, not as a substitute for a retained partial snapshot.
+
+Prefer storing/deriving the limitation from exact parser/source evidence rather than a free-form UI label. Expose it through the fund/portfolio API and coverage JSON, add regression tests, and keep existing completeness semantics unchanged. A censored `<0.01%`, `# Smallcap Ledger backend handoff
+
+## Source-retention audit — NO deletion authorized (2026-09-25 UTC)
+
+The owner approved classification and savings analysis BEFORE deleting anything. Completed report: `docs/SOURCE-RETENTION-AUDIT.md`; per-hash CSV/JSON inventories and summary are adjacent. Final review run **36093073121** passed **299 tests**. Source-pack measurement run **36092819677** checked all **95** packs against release digests. The exact production checkpoint is unchanged, with **629,225 rows** and **2,519 originals**.
+
+Final link-only candidates: **700 files / 404,498,141 raw bytes / 34,253,903 compressed payload bytes** (ZIP headers excluded). These are superseded discovery responses, not proven duplicates or guaranteed recoverable historical files. Current saved document versions, financial evidence, historical extractions, original reports, unknown requests and fragile transport sources remain protected or under review. **Deleted files/bytes: 0.**
+
+No production workflow, source-retention policy, database schema, collector, UI or schedule was changed. Approval of this audit is NOT approval to delete the candidates or retire the old legacy ZIP. Before any approved migration, make restore, replay, archive serving and publication/download code retention-aware, preserve provenance, validate replacement packs and retain rollback until independently verified.
+
+## Database cleanup (2026-09-25 UTC)
+
+**Read `docs/STORAGE-CLEANUP.md` for the current merge, production verification and cleanup status.** This is the storage batch's completion/handoff record; the validation evidence is in `docs/STORAGE-VALIDATION.json`.
+
+The owner requested unnecessary/redundant database storage cleanup. The four NAV/benchmark tables were migrated to composite-primary-key `WITHOUT ROWID` storage on a production copy. All 273 tests, all-table content equality, integrity/foreign-key checks, idempotence, checkpoint restore and generated-site validation passed. Measured database size: **100,773,888 to 73,322,496 bytes**; checkpoint ZIP **12,851,483 to 7,451,746 bytes**. No logical record or original source was removed.
+
+The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
+
+
+Updated: 2026-09-25, after ICICI Prudential portfolio transport re-check.
+
+
+, or `*` source marker must never become an estimated numeric weight.
+
+The source-retention audit remains **read-only**: no deletion of the 700 link-only candidates or retirement of the legacy cumulative ZIP is authorized by this batch.
+
+No production data, parser rules, UI, paid service, permissions, schedule cadence, source-retention policy or archive files changed in the ICICI transport re-check. The temporary diagnostic workflow was removed before this handoff update.
 
 ## Latest completed batch: Edelweiss portfolio source audit
 
