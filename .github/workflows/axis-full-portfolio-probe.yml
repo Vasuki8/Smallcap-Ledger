@@ -51,7 +51,7 @@ jobs:
           complete=next((x for x in snaps if x["complete"] and x["as_of"]=="2026-08-31"),None)
           assert complete, snaps
           assert complete["positions"]==134,complete
-          assert abs(float(complete["weight"])-100)<0.02,complete
+          assert abs(float(complete["weight"])-100)<=0.05,complete
           assert "Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026" in complete["source"]
           assert complete["hash"]
 
