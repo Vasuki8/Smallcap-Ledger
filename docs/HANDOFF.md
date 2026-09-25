@@ -1,6 +1,95 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-25, after Mirae Asset Small Cap explicit Total TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-25, after Groww Small Cap current BER recovery and Direct-plan coverage-summary correction. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: Groww Small Cap current BER recovery
+
+**Groww Small Cap Fund now has current, explicitly labelled Direct and Regular BER from Groww Mutual Fund's own signed BER notice. Future/conditional revised BER values were deliberately not promoted.**
+
+PR #101 merged as commit `aa0e04e33154f2d1628d0f22d07090b60298fe04`. Isolated validation run **36086300920** passed compileall, all **254 tests**, and a live first-party expense-page → BER notice → strict Smallcap row parse. Production workflow **#471**, run **36086366140**, passed the one-time Groww recovery, the same **254-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. Production #471 completed successfully at **2026-09-25T02:29:25Z**.
+
+A small correctness follow-up was then completed in PR #102, merged as commit `3b045693161208b31628d27b677d88bc8616efb4`. Family-level fee-like coverage summaries now prefer **Direct** when Regular and Direct observations share the same reporting date, while reporting date remains the primary ordering rule. Isolated validation run **36086652916** passed **255 tests**. Production workflow **#472**, run **36086706291**, passed the full **255-test** regression gate, site/download validation, cumulative-history publication and Pages deployment, completing successfully at **2026-09-25T02:34:31Z**.
+
+### Groww source discovery and exact observations
+
+Current first-party expense-ratio page:
+
+`https://www.growwmf.in/downloads/expense-ratio`
+
+The current 2026–27 page publishes signed BER notices on Groww's registered asset host. The newest notice containing **Groww Smallcap Fund** at recovery time is:
+
+`https://assets-netstorage.growwmf.in/compliance_docs/Downloads/Expense%20Ratio/Notice%20-%20Change%20in%20TER/2026%20-%202027/26.%20Notice%20-%20Change%20in%20BER.pdf`
+
+Exact PDF SHA-256:
+
+`ab1e3bbff3e527d8d43124578738d36929088b3c5758e433ef760b38a4efffa1`
+
+Notice identity: **26/2026–2027**. It was signed **2026-09-24** and explicitly labels the current values as **Current BER**, with footnote **As on September 23, 2026**.
+
+| Plan | Current BER as of 2026-09-23 | Revised BER shown in notice | Effective date |
+| --- | ---: | ---: | --- |
+| Direct | **0.42%** | 0.49% | 2026-09-30 |
+| Regular | **1.94%** | 1.94% (No change) | 2026-09-30 |
+
+The revised BER column is **not** stored as a current exact observation. The notice says the revised BER may be lower depending on the applicable AUM slab/regulatory requirements on the effective date, and its effective date was still in the future when collected. The tracker therefore retains only the exact **Current BER** observations dated 2026-09-23.
+
+The preceding Notice 24 independently exposed **Direct Current BER 0.45% as of 2026-08-31** with Regular shown as **NA** and a conditional revised Direct BER of 0.51% effective 2026-09-05. The collector treats NA as missing and never infers a Regular value.
+
+The parser/discovery path requires:
+- current-financial-year **Notice - Change in BER.pdf** identity;
+- exact registered Groww asset host and expense-ratio path;
+- exact BER notice heading and Current BER/Revised BER table headings;
+- exact scheme text **Groww Smallcap Fund**;
+- valid as-of, signed and effective dates with non-future observation/publication dates;
+- numeric Current BER within the accepted range;
+- one exact Smallcap row in the notice.
+
+`scripts/refresh_groww_expenses.py` performs the idempotent push recovery and records `source_upgrade_groww-ber-v1` only after recent Regular/Direct BER observations exist on one date from one exact Groww notice with one non-empty hash. Normal nightly collection remains active through `amc_expenses.update`.
+
+Production #471 logged:
+
+`Groww Small Cap Fund: official Current BER as of 2026-09-23 (Direct 0.42%, Regular 1.94%); notice 2026-09-24, revised BER effective 2026-09-30 not promoted`
+
+with the exact source and hash above.
+
+### Coverage-summary correction
+
+Before PR #102, the generic `base_expense_ratio` field in `COVERAGE-AS-OF.json` could surface Groww's Regular 1.94% row because Regular and Direct were tied on the same reporting date. The database observations were both correct; only the family-level representative row was nondeterministic.
+
+`tracker/coverage.py` now orders fee-like summary metrics by:
+1. newest reporting date;
+2. Direct before Regular when the reporting date is equal;
+3. observation timestamp after the date/plan tie.
+
+A regression test also confirms that a genuinely newer Regular observation still outranks an older Direct one. Final published Groww BER is therefore **Direct 0.42% as of 2026-09-23**, while the Regular 1.94% observation remains retained in history.
+
+Final Pages artifact from production #472 is **10844591043**, **230,727,776 bytes**, digest `sha256:3786e28ed05b5b41b8dd987ba4ee41ca2660f81ec6a5b9c681dcc2197133a6dc`. Final status commit `e0f880294a8245188198fd247b10f5b3cc3dec70` records the corrected published state.
+
+### Expense and portfolio coverage after Groww
+
+Coverage generated at **2026-09-25T02:33:30Z** is:
+
+- reported TER: **35 / 36**
+- base expense ratio / BER: **34 / 36** (up from 33 / 36)
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
+- latest included NAV: **2026-09-24**
+
+Groww now has **Direct BER 0.42% as of 2026-09-23** and **Regular BER 1.94% as of 2026-09-23**. Its retained explicitly reported Direct Total TER remains **1.12% as of 2026-04-30** from the official April factsheet; the BER notice does not publish a current Total TER, so no TER was derived from BER. Current AUM remains **₹948.2145 crore as of 2026-09-23** via AMFI, and the August portfolio remains complete at **62 positions as of 2026-08-31**.
+
+The sole fund without explicitly reported Total TER remains **Axis Small Cap Fund**. The remaining BER gaps are now only **Axis Small Cap Fund** and **UTI Small Cap Fund**. **Union Small Cap Fund** remains the sole zero-portfolio fund, and **Bajaj Finserv Small Cap Fund** remains the only stale collected portfolio.
+
+### Next backend task
+
+**UTI Small Cap Fund is the next preferred expense-source target.** The tracker currently retains Direct Total TER **0.86% as of 2026-07-31** from UTI's official Fund Watch but still has no explicitly labelled BER. Trace UTI's current first-party statutory TER/expense disclosure route for a dated, explicitly labelled BER. Prefer current structured disclosure/API/workbook evidence when available; preserve exact source URL/document identity/date/hash and do not derive BER from Total TER or components.
+
+**Axis remains a deliberate classification boundary:** its official fund page currently publishes only an unqualified Direct **Expense Ratio 0.71% as of 2026-09-23**. Keep that observation as `expense_ratio`; do not promote it to TER or BER without an explicitly labelled first-party source.
+
+Portfolio recovery remains secondary to the current expense-coverage pass: **Union Small Cap Fund** is the only fund with no retained portfolio; Bajaj Finserv remains stale; existing partial-source precision rules must not be weakened merely to close coverage.
+
+No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in this Groww batch.
 
 ## Latest completed batch: Mirae Asset Small Cap explicit Total TER/BER recovery
 
