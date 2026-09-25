@@ -200,8 +200,13 @@ class RetentionMetadataPreparationTests(unittest.TestCase):
                 ]))
                 prep.INVENTORY=inventory
                 manifest={'format':2,'created_at':'now'}
+                current_items={
+                    protected:{'classification':'retain_evidence','reasons':['synthetic protected evidence']},
+                    candidate:{'classification':'link_only_candidate','reasons':['synthetic superseded discovery response']},
+                }
                 report_path=root/'report.json'
-                with patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
+                with patch.object(prep.retention_audit,'collect',return_value=(current_items,[])), \
+                     patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
                     report=prep.prepare(apply=True,report_path=report_path)
                 self.assertEqual(report['files_actually_deleted'],0)
                 self.assertEqual(report['bytes_actually_deleted'],0)
@@ -220,7 +225,8 @@ class RetentionMetadataPreparationTests(unittest.TestCase):
                 db.set_archive_retention(
                     candidate,classification='retain_latest_or_review',
                     reason='became current',reviewed_at='2026-09-25')
-                with patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
+                with patch.object(prep.retention_audit,'collect',return_value=(current_items,[])), \
+                     patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
                     prep.prepare(apply=True)
                 self.assertEqual(db.archive_retention(candidate)['classification'],
                                  'retain_latest_or_review')
