@@ -134,6 +134,8 @@ def fund(code:int):
       WHERE p.family=? AND p.as_of=(SELECT MAX(as_of) FROM portfolios WHERE family=?)
       GROUP BY p.id ORDER BY p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
       (s['family'],s['family']))
+    for p in s['portfolios']:p['limitation']=portfolio_limitation(s['family'],p)
+    s['portfolio_limitation']=s['portfolios'][0]['limitation'] if s['portfolios'] else portfolio_limitation(s['family'])
     s['sources']=db.rows("SELECT * FROM source_pages WHERE instr(lower(?),lower(amc_match))>0 ORDER BY id",(s['amc'],))
     s['distribution_coverage']=db.one("SELECT * FROM distribution_coverage WHERE code=?",(code,))
     return s
