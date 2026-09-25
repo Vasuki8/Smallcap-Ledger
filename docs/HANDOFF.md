@@ -1,5 +1,13 @@
 # Smallcap Ledger backend handoff
 
+## Source-retention audit — NO deletion authorized (2026-09-25 UTC)
+
+The owner approved classification and savings analysis BEFORE deleting anything. Completed report: `docs/SOURCE-RETENTION-AUDIT.md`; per-hash CSV/JSON inventories and summary are adjacent. Final review run **36093073121** passed **299 tests**. Source-pack measurement run **36092819677** checked all **95** packs against release digests. The exact production checkpoint is unchanged, with **629,225 rows** and **2,519 originals**.
+
+Final link-only candidates: **700 files / 404,498,141 raw bytes / 34,253,903 compressed payload bytes** (ZIP headers excluded). These are superseded discovery responses, not proven duplicates or guaranteed recoverable historical files. Current saved document versions, financial evidence, historical extractions, original reports, unknown requests and fragile transport sources remain protected or under review. **Deleted files/bytes: 0.**
+
+No production workflow, source-retention policy, database schema, collector, UI or schedule was changed. Approval of this audit is NOT approval to delete the candidates or retire the old legacy ZIP. Before any approved migration, make restore, replay, archive serving and publication/download code retention-aware, preserve provenance, validate replacement packs and retain rollback until independently verified.
+
 ## Database cleanup (2026-09-25 UTC)
 
 **Read `docs/STORAGE-CLEANUP.md` for the current merge, production verification and cleanup status.** This is the storage batch's completion/handoff record; the validation evidence is in `docs/STORAGE-VALIDATION.json`.
