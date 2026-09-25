@@ -296,7 +296,7 @@ def report():
             "code":"review_nav_history_gaps",
             "actionable":True,
             "affected_funds":nav_gap_funds,
-            "affected_growth_plans":sum(row["family"] in nav_gap_funds for row in growth),
+            "affected_growth_plans":sum(bool(row["nav"]["gap_count_gt_7d"]) for row in growth),
             "reason":"Growth NAV histories contain one or more gaps longer than seven calendar days.",
         })
 
