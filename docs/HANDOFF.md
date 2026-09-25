@@ -17,12 +17,115 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after read-only portfolio recovery queue deployment.
+Updated: 2026-09-25, after Axis full recovery and material source-change watch deployment.
 
 
 
 
 
+
+
+## Latest completed batch: Axis full recovery + blocker source-change watch
+
+**Axis Small Cap Fund is no longer a portfolio or fee-coverage gap, and the remaining blocked portfolio queue now watches for material first-party evidence changes without retrying sources automatically.**
+
+### Axis complete monthly portfolio
+
+Commit `c3713ea704e346b427b232c7d5f6b20dda1555c4` recovered Axis's exact first-party monthly Small Cap workbook through the public statutory CMS flow. Validation run **36097681418** passed all **315 tests** plus production-state/site assertions.
+
+Current retained complete Axis snapshot:
+- reporting date: **2026-08-31**
+- positions: **134**
+- complete: **true**
+- source: `https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx`
+
+The parser strictly reconciles the constituent table and 100% grand total; no holding was inferred from the older factsheet aggregate. The later intramonth fund-page Top-10 snapshot remains retained history but is not preferred over the complete regulatory month-end. Commit `02ee47f1ebb802b165e7732363d0a8e89add3444` fixed fund/API selection accordingly; validation run **36098102438** passed **315 tests** and verified the static Axis export contains all 134 holdings.
+
+### Axis explicit BER and Total TER
+
+Commit `067748b42f3faa7f0dd6ae049cf822aa0ea3fe92` recovered Axis's public generated Total Expense Ratio workbook through the same first-party CMS transport. Validation run **36101232004** passed **323 tests**, production-checkpoint recovery, 36/36 BER+TER assertions and static-site validation.
+
+Current Axis fee evidence as of **2026-09-24**:
+- Regular BER **1.34%**
+- Regular Total TER **1.68%**
+- Direct BER **0.52%**
+- Direct Total TER **0.71%**
+- source: `https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-09-25_06_04_34.xlsx`
+
+The collector separately retains BER, brokerage, transaction cost, statutory levies and Total TER and cross-checks the browser API against the workbook. Axis's older unqualified fund-page expense ratio remains labelled separately; it was not retroactively promoted.
+
+Production workflow **36101432739** completed successfully after the Axis fee recovery. Current coverage is now:
+- funds **36**
+- AUM **36/36**
+- dated Direct fee **36/36**
+- reported TER **36/36**
+- BER **36/36**
+- benchmark identity **36/36**
+- portfolios **35/36**
+- complete portfolios **29**
+- current portfolios **34**
+- current + complete portfolios **29**
+- partial portfolios **6**
+- latest NAV **2026-09-24**
+
+### Material source-change watch for blocked portfolio recovery
+
+After Axis left the recovery queue, the generated queue had **7** remaining items and **0 actionable-now** targets. The remaining cases are verified source/transport or disclosure-precision boundaries, so repeated blind probing would add noise.
+
+PR **#120** merged as commit `2f08bd61c25666e97ddbb14ba6054a3da3bf11ca`. It extends `tracker/portfolio_recovery_queue.py` with a read-only material-change watch for the four `retry_after_source_change` cases.
+
+A blocked fund is promoted to `review_source_change` only when newly retained first-party evidence materially changes, such as:
+- a previously blocked exact recovery URL being fetched successfully after the reviewed blocker baseline;
+- an exact recovery source-page check moving out of a blocked status;
+- Union's watched host transport recovering;
+- a new first-party document classified as a portfolio appearing after blocker review.
+
+Routine timestamp refreshes and repeated identical failures do **not** reopen work. The watch itself performs no fetch, retry or portfolio mutation.
+
+Validation run **36102524816** passed all **327 tests** and the restored production checkpoint. It confirmed:
+- TER **36/36**
+- BER **36/36**
+- complete portfolios **29**
+- recovery queue items **7**
+- actionable now **0**
+- material source changes detected **0**
+
+Production workflow **#481**, run **36102660112**, completed successfully through all source upgrades, **327-test** regression gate, site generation/validation, split history publication, queue/status recording, Pages artifact upload and Pages deployment at **2026-09-25T06:25:31Z**.
+
+Final Pages artifact **10850105587** is **230,748,340 bytes** with digest `sha256:1f9acd42747a0a814033925a971cb65c3cdf1ce45233e50ff371d8f4fe62a986`.
+
+Status commit `6def40910f96157dc96ab35b04ad6c0b38451db4` records:
+- plans **143**
+- NAV observations **281,442**
+- benchmark observations **5,329**
+- retained portfolio snapshots **124**
+- document versions **1,784**
+- database bytes **73,347,072**
+- latest NAV **2026-09-24**
+
+Current material-change watch state generated at **2026-09-25T06:24:56Z**:
+- Union: unchanged host transport blocker;
+- Bajaj Finserv: unchanged exact Downloads 403 blocker;
+- Edelweiss: no post-review evidence that the statutory portfolio route recovered;
+- ICICI Prudential: no post-review evidence that the monthly ZIP/archive transport recovered.
+
+The queue therefore has no justified portfolio source-recovery target right now. Bandhan, Sundaram and UTI remain disclosure-precision cases and must not be completed by estimating censored weights.
+
+No paid service, external communication, UI change, source deletion or retention-policy change was introduced. The **700 link-only source-retention candidates remain untouched**, and the legacy cumulative ZIP has not been retired.
+
+### Next backend task
+
+**Do not probe any portfolio blocker while `source_changes_detected == 0`.** On future runs, inspect `docs/PORTFOLIO-RECOVERY-QUEUE.json` first; if a blocker is promoted to `review_source_change`, review that retained first-party evidence before any live retry.
+
+While the portfolio queue is closed, move the next backend batch to **historical performance / benchmark coverage auditing**. Build a read-only per-plan audit that identifies:
+- first and latest NAV date and observation count;
+- eligibility for 1Y / 3Y / 5Y displayed returns;
+- first/latest overlapping date with the relevant benchmark series;
+- missing or unusually large NAV gaps that can affect chart/comparison periods;
+- benchmark-series gaps versus merely reported benchmark identity;
+- funds where the website can display benchmark identity but lacks enough overlapping TRI observations for the selected performance period.
+
+Do not invent historical returns, forward-fill benchmark values, add paid data, or change the UI in that audit. Use retained NAV/benchmark evidence only, publish the audit in machine-readable and operator-readable form, and use it to choose the next historical-data repair batch.
 
 ## Latest completed batch: read-only portfolio recovery queue
 
