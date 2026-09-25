@@ -59,7 +59,10 @@ def run():
         and latest
         and latest["complete"]
         and latest["positions"] >= 130
-        and abs(float(latest["weight"] or 0) - 100) <= 0.02
+        # Individual published percentages are rounded to two decimals; the
+        # parsed workbook separately reconciles exact market values and the
+        # published 100% grand total before marking the snapshot complete.
+        and abs(float(latest["weight"] or 0) - 100) <= 0.05
         and valid_source
         and latest["hash"]
         and not failures
