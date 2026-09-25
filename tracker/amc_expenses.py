@@ -1469,7 +1469,10 @@ def _mirae_select_file(rows, today=None):
             ).date()
         except ValueError:
             continue
-        if title_day != file_day or published != file_day or file_day > today:
+        # PublishDate is CMS publication metadata and is not the TER observation
+        # date. Financial identity is established by the exact dated title and
+        # exact dated filename; retain PublishDate only as a validity check.
+        if title_day != file_day or file_day > today:
             continue
         found[file_day].append(path)
 
