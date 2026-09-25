@@ -27,7 +27,7 @@ def benchmark_identity(value):
     raw=str(value or "").strip()
     compact=_compact(raw)
     explicit_tri=("tri" in compact or "totalreturn" in compact)
-    smallcap250=("smallcap250" in compact or "smallcapindex250" in compact)
+    smallcap250=("smallcap250" in compact or "250smallcap" in compact or "smallcapindex250" in compact)
     canonical=None
     family=None
     if smallcap250 and "nifty" in compact:
