@@ -786,6 +786,178 @@ class MahindraExpenseTests(unittest.TestCase):
         self.assertTrue(all(call.args[7] == "mahhash" for call in mock_metric.call_args_list))
 
 
+class UtiExpenseTests(unittest.TestCase):
+    def row(
+        self,
+        day="12-July-2026",
+        *,
+        portfolio="751",
+        nsdl="UTIM/O/E/SCF/20/03/0094",
+        scheme="UTI Small Cap Fund",
+        direct_ter=0.66,
+    ):
+        return [
+            portfolio,
+            nsdl,
+            scheme,
+            day,
+            1.59,
+            0.00,
+            0.00,
+            0.20,
+            1.79,
+            2.02,
+            0.56,
+            0.00,
+            0.00,
+            0.10,
+            direct_ter,
+            0.88,
+        ]
+
+    def workbook(self, rows, *, header_override=None):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "YTD TER"
+        header = list(amc_expenses._UTI_HEADER)
+        if header_override:
+            header[header_override[0]] = header_override[1]
+        ws.append(header)
+        for row in rows:
+            ws.append(row)
+        extra = wb.create_sheet("Sheet1")
+        extra["A1"] = None
+        out = io.BytesIO()
+        wb.save(out)
+        wb.close()
+        return out.getvalue()
+
+    def test_uti_latest_exact_row_retains_published_ber_and_total_ter(self):
+        book = self.workbook([
+            self.row("11-July-2026"),
+            self.row("12-July-2026"),
+        ])
+        day, plans = amc_expenses.parse_uti_workbook(
+            book, date(2026, 9, 25)
+        )
+        self.assertEqual(day, "2026-07-12")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.59)
+        self.assertEqual(plans["Regular"]["ter"], 1.79)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.56)
+        self.assertEqual(plans["Direct"]["ter"], 0.66)
+
+    def test_uti_future_wrong_identity_duplicate_and_bad_total_are_rejected(self):
+        book = self.workbook([
+            self.row("12-July-2026"),
+            self.row("26-September-2026"),
+        ])
+        day, plans = amc_expenses.parse_uti_workbook(
+            book, date(2026, 9, 25)
+        )
+        self.assertEqual(day, "2026-07-12")
+        self.assertEqual(plans["Direct"]["ter"], 0.66)
+
+        for kwargs in (
+            {"portfolio": "999"},
+            {"nsdl": "UTIM/O/E/OTHER"},
+            {"scheme": "UTI Mid Cap Fund"},
+        ):
+            bad = self.workbook([self.row(**kwargs)])
+            with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+                amc_expenses.parse_uti_workbook(
+                    bad, date(2026, 9, 25)
+                )
+
+        row = self.row()
+        duplicate = self.workbook([row, list(row)])
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_uti_workbook(
+                duplicate, date(2026, 9, 25)
+            )
+
+        bad_total = self.workbook([self.row(direct_ter=0.70)])
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_uti_workbook(
+                bad_total, date(2026, 9, 25)
+            )
+
+    def test_uti_header_and_ytd_metadata_identity_are_strict(self):
+        changed = self.workbook(
+            [self.row()],
+            header_override=(10, "DIRECT_BER"),
+        )
+        with self.assertRaisesRegex(ValueError, "columns changed"):
+            amc_expenses.parse_uti_workbook(
+                changed, date(2026, 9, 25)
+            )
+
+        source = (
+            "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-07/"
+            "daily_ter_ytd_01042026_12072026_imp.xlsx?VersionId=abc"
+        )
+        payload = {
+            "field_component": [{
+                "component_type": "generic_file_upload",
+                "data": {
+                    "file_name": "Daily TER YTD 01042026-12072026",
+                    "link": {"url": source},
+                },
+            }]
+        }
+        with patch("tracker.amc_expenses.public_url", side_effect=lambda url: url):
+            end, selected = amc_expenses._uti_ytd_file(
+                payload, date(2026, 9, 25)
+            )
+        self.assertEqual(end, "2026-07-12")
+        self.assertEqual(selected, source)
+
+        payload["field_component"][0]["data"]["file_name"] = (
+            "Daily TER YTD 01042025-12072026"
+        )
+        with patch("tracker.amc_expenses.public_url", side_effect=lambda url: url):
+            with self.assertRaisesRegex(ValueError, "no current-financial-year"):
+                amc_expenses._uti_ytd_file(
+                    payload, date(2026, 9, 25)
+                )
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "UTI"})
+    @patch("tracker.amc_expenses._uti_disclosure")
+    def test_uti_collector_stores_exact_source_hash_and_reported_components(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        day, plans = amc_expenses.parse_uti_workbook(
+            self.workbook([self.row()]), date(2026, 9, 25)
+        )
+        source = (
+            "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-07/"
+            "daily_ter_ytd_01042026_12072026_imp.xlsx?VersionId=abc"
+        )
+        mock_disclosure.return_value = (
+            source,
+            day,
+            plans,
+            "utihash",
+            "2026-07-12",
+        )
+        result = amc_expenses.uti(today=date(2026, 9, 25))
+        self.assertIn("2026-07-12", result)
+        self.assertEqual(mock_metric.call_count, 10)
+        calls = {
+            (call.args[1], call.args[2]): call.args[4]
+            for call in mock_metric.call_args_list
+        }
+        self.assertEqual(calls[("Regular", "base_expense_ratio")], 1.59)
+        self.assertEqual(calls[("Regular", "ter")], 1.79)
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.56)
+        self.assertEqual(calls[("Direct", "ter")], 0.66)
+        self.assertTrue(all(call.args[3] == "2026-07-12" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == source for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "utihash" for call in mock_metric.call_args_list))
+
+
+
+
 class MiraeExpenseTests(unittest.TestCase):
     def row(self, day=46288.0, *, scheme="Mirae Asset Small Cap Fund",
             nsdl="MIRA/O/E/SCF/24/10/0075", direct_ter=0.0064):
