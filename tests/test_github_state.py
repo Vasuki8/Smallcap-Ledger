@@ -160,6 +160,30 @@ class SplitArchiveTests(unittest.TestCase):
             finally:
                 github_state.db.DATA=previous
 
+    def test_pack_planning_selects_only_retained_binary_hashes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            data=Path(tmp)
+            h1='1'*64;h2='2'*64
+            with sqlite3.connect(data/'ledger.sqlite3') as c:
+                c.execute('CREATE TABLE archives(hash TEXT PRIMARY KEY,path TEXT,bytes INTEGER,first_seen TEXT)')
+                c.execute('''CREATE TABLE archive_retention(
+                    hash TEXT PRIMARY KEY,classification TEXT,binary_state TEXT,
+                    reason TEXT,reviewed_at TEXT,updated_at TEXT)''')
+                c.executemany('INSERT INTO archives VALUES(?,?,?,?)',[
+                    (h1,f'archive/11/{h1}',10,'2026-09-01'),
+                    (h2,f'archive/22/{h2}',20,'2026-09-02'),
+                ])
+                c.executemany('INSERT INTO archive_retention VALUES(?,?,?,?,?,?)',[
+                    (h1,'retain_evidence','retained',None,None,'now'),
+                    (h2,'link_only_candidate','metadata_only','reviewed','2026-09-25','now'),
+                ])
+            previous=github_state.db.DATA;github_state.db.DATA=data
+            try:
+                rows=github_state.retained_archive_rows('first_seen,hash')
+            finally:
+                github_state.db.DATA=previous
+            self.assertEqual([x['hash'] for x in rows],[h1])
+
     def test_checkpoint_summary_supports_legacy_and_split(self):
         legacy={'format':1,'asset':'state.zip','sha256':'abc','bytes':123,'created_at':'now'}
         split={'format':2,'created_at':'now','database':{'asset':'database.zip'},'source_packs':[{'asset':'sources.zip'}]}
