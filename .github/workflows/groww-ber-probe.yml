@@ -1,0 +1,60 @@
+name: Groww BER source probe
+
+on:
+  push:
+    branches: [investigate/groww-ber-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Inspect Groww BER disclosure
+        shell: bash
+        run: |
+          uv run --frozen python - <<'PY'
+          import io, re
+          from urllib.parse import urljoin, urlparse, unquote
+          import httpx
+          from bs4 import BeautifulSoup
+          from pypdf import PdfReader
+
+          PAGE="https://www.growwmf.in/downloads/expense-ratio"
+          UA="SmallcapLedger/1.0 (public AMC disclosure collection)"
+
+          with httpx.Client(timeout=30,headers={"User-Agent":UA},follow_redirects=True) as client:
+              r=client.get(PAGE); r.raise_for_status()
+              print("PAGE",r.status_code,len(r.content),r.url,r.headers.get("content-type"))
+              soup=BeautifulSoup(r.content,"html.parser")
+              links=[]
+              for a in soup.find_all("a",href=True):
+                  href=urljoin(PAGE,a["href"])
+                  title=a.get_text(" ",strip=True)
+                  combined=unquote(href+" "+title)
+                  if re.search(r"Notice\s*-\s*Change\s+in\s+BER\.pdf",combined,re.I):
+                      links.append((title,href))
+              print("BER_LINKS",links)
+              for title,href in links:
+                  p=urlparse(href)
+                  if p.hostname!="assets-netstorage.growwmf.in":
+                      continue
+                  rr=client.get(href); rr.raise_for_status()
+                  print("PDF",title,rr.status_code,len(rr.content),rr.url,rr.headers.get("content-type"))
+                  reader=PdfReader(io.BytesIO(rr.content))
+                  print("PAGES",len(reader.pages))
+                  text="\n".join(page.extract_text() or "" for page in reader.pages)
+                  print("TEXT_BEGIN")
+                  print(text)
+                  print("TEXT_END")
+          PY
