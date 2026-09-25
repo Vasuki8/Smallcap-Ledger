@@ -1,4 +1,4 @@
-name: Axis expense CMS probe
+name: Axis expense recovery validation
 
 on:
   push:
@@ -9,11 +9,15 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     env:
+      GH_TOKEN: ${{ github.token }}
       SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_ARCHIVE_FORMAT: '2'
+      SMALLCAP_DATABASE_ONLY_RESTORE: '1'
+      PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -21,33 +25,48 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Inspect Axis TER generated workbook
+      - name: Compile
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Run regression suite
+        run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Restore production checkpoint
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Recover Axis explicit BER and TER
+        run: uv run --frozen python scripts/refresh_axis_expenses.py
+      - name: Verify production coverage and exact Axis evidence
         run: |
           uv run --frozen python - <<'PY'
-          import io,json,openpyxl
           from tracker import db
-          from tracker.amc_discovery import read
-          from tracker.axis_portfolios import cms_token
-
-          db.init()
-          endpoint="https://www.axismf.com/cms/expense-ratio-details"
-          headers={"Authorization":cms_token(read),"Content-Type":"application/json"}
-          payload={"fundType":"Equity","schemeCode":"SC","type":"Total Expense Ratio",
-                   "fromDate":"20-09-2026","toDate":"25-09-2026"}
-          raw,api_hash,_=read(endpoint,body=payload,headers=headers)
-          data=json.loads(raw)
-          print("API_HASH",api_hash)
-          print("API_STATUS",data.get("status"),data.get("statusCode"))
-          url=data["data"]["s3CsvResponse"]["location"]
-          print("WORKBOOK_URL",url)
-          body,h,typ=read(url)
-          print("WORKBOOK",len(body),h,typ,body[:8])
-          book=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
-          print("SHEETS",book.sheetnames)
-          for sheet in book:
-              print("SHEET",sheet.title,sheet.max_row,sheet.max_column)
-              for i,row in enumerate(sheet.iter_rows(values_only=True),1):
-                  print("ROW",i,row)
-                  if i>=20:break
-          book.close()
+          from tracker.coverage import report
+          data=report()
+          assert data['counts']['ter']==36,data['counts']
+          assert data['counts']['base_expense_ratio']==36,data['counts']
+          axis=next(x for x in data['funds'] if x['family']=='Axis Small Cap Fund')
+          assert axis['ter']['as_of']=='2026-09-24',axis['ter']
+          assert axis['base_expense_ratio']['as_of']=='2026-09-24',axis['base_expense_ratio']
+          assert float(axis['ter']['value'])==0.71,axis['ter']
+          assert float(axis['base_expense_ratio']['value'])==0.52,axis['base_expense_ratio']
+          assert axis['ter']['plan']=='Direct'
+          assert axis['base_expense_ratio']['plan']=='Direct'
+          rows=db.rows("""SELECT plan,metric,as_of,value,source,hash FROM metrics
+            WHERE family='Axis Small Cap Fund'
+              AND metric IN ('base_expense_ratio','brokerage','transaction_cost','statutory_levies','ter')
+              AND as_of='2026-09-24'
+            ORDER BY plan,metric""")
+          assert len(rows)==10,rows
+          assert {r['plan'] for r in rows}=={'Direct','Regular'}
+          assert len({r['source'] for r in rows})==1
+          source=rows[0]['source']
+          assert source.startswith('https://www.axismf.com/1/5/2125/Total_Expense_Ratio_')
+          assert source.endswith('.xlsx')
+          assert len({r['hash'] for r in rows})==1 and rows[0]['hash']
+          print('COVERAGE',data['counts'])
+          print('AXIS_TER',axis['ter'])
+          print('AXIS_BER',axis['base_expense_ratio'])
+          print('AXIS_SOURCE',source)
+          print('AXIS_HASH',rows[0]['hash'])
           PY
+      - name: Generate static site
+        run: uv run --frozen python scripts/export_site.py
+      - name: Validate static site
+        run: uv run --frozen python scripts/validate_site.py site
