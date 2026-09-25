@@ -1,0 +1,76 @@
+name: Axis expense CMS probe
+
+on:
+  push:
+    branches: [backend/axis-expense-recovery-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Trace Axis TER disclosure CMS
+        run: |
+          uv run --frozen python - <<'PY'
+          import json,re,html
+          from urllib.parse import urljoin
+          from bs4 import BeautifulSoup
+          from tracker import db
+          from tracker.amc_discovery import read
+          from tracker.axis_portfolios import cms_token,NESTED_ENDPOINT
+
+          db.init()
+          token=cms_token(read)
+          headers={"Authorization":token}
+          print("TOKEN_OK",len(token))
+
+          for url in (
+              "https://www.axismf.com/statutory-disclosures",
+              "https://www.axismf.com/downloads",
+          ):
+              try:
+                  raw,h,typ=read(url)
+                  text=raw.decode("utf-8","replace")
+                  print("PAGE",url,"BYTES",len(raw),"TYPE",typ,"HASH",h)
+                  soup=BeautifulSoup(text,"html.parser")
+                  for tag in soup.find_all(True):
+                      attrs=" ".join(f"{k}={v}" for k,v in tag.attrs.items())
+                      body=tag.get_text(" ",strip=True)
+                      if re.search(r"total expense ratio|expense ratio|statutory|portfolio",attrs+" "+body,re.I):
+                          print("TAG",tag.name,attrs[:1000],body[:600])
+                  scripts=[]
+                  for tag in soup.find_all("script",src=True):
+                      src=urljoin(url,html.unescape(tag["src"]))
+                      if src not in scripts:scripts.append(src)
+                  print("SCRIPTS",len(scripts))
+                  for s in scripts[:80]:print("SCRIPT",s)
+              except Exception as e:
+                  print("PAGE_ERROR",url,repr(e))
+
+          # Reuse the public token and probe only a short reviewed set of likely
+          # statutory parent IDs found in Axis naming conventions; print payload
+          # shape, never infer a document from a failed/ambiguous branch.
+          candidates=[
+              "sdTER","sdTotalExpenseRatio","sdExpenseRatio","sdTotalExpenseRatioOfMutualFundSchemes",
+              "sdPortfolios","sdPolicies","sdFinancials"
+          ]
+          for parent in candidates:
+              try:
+                  raw,h,typ=read(NESTED_ENDPOINT,body={"sdParentID":parent},headers=headers)
+                  data=json.loads(raw)
+                  print("NESTED",parent,json.dumps(data)[:12000])
+              except Exception as e:
+                  print("NESTED_ERROR",parent,repr(e))
+          PY
