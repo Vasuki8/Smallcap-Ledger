@@ -14,49 +14,34 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Query Mahindra public downloads API candidates
+      - name: Trace Mahindra public website response decoder
         run: |
           python - <<'PY'
-          import json,re,urllib.request
-          candidates=[
-            'https://investorapi.mahindramanulife.com/api/v1/web/preLogin/downloads',
-            'https://www.mahindramanulife.com/api/v1/web/preLogin/downloads',
-            'https://www.mahindramanulife.com/preLogin/downloads',
-          ]
-          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Accept':'application/json, text/plain, */*','Origin':'https://www.mahindramanulife.com','Referer':'https://www.mahindramanulife.com/downloads'}
-          for url in candidates:
-              print('CANDIDATE',url)
-              try:
-                  req=urllib.request.Request(url,headers=UA)
-                  with urllib.request.urlopen(req,timeout=45) as r:
-                      body=r.read()
-                      print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
-              except Exception as e:
-                  print('ERROR',type(e).__name__,e);continue
-              print('PREFIX',repr(body[:1000]))
-              try:
-                  data=json.loads(body)
-              except Exception as e:
-                  print('JSON_ERROR',e);continue
-              print('JSON_TYPE',type(data).__name__)
-              if isinstance(data,dict):
-                  print('TOP_KEYS',sorted(data.keys()))
-                  print('STATUS',data.get('status'),data.get('message'))
-                  payload=data.get('data')
-              else:
-                  payload=data
-              print('PAYLOAD_TYPE',type(payload).__name__,'COUNT',len(payload) if isinstance(payload,list) else None)
-              def walk(node,path=()):
-                  if isinstance(node,list):
-                      for x in node: walk(x,path)
-                  elif isinstance(node,dict):
-                      title=str(node.get('categoryName') or node.get('title') or '')
-                      new=path+((title,) if title else ())
-                      blob=json.dumps(node,ensure_ascii=False,default=str)
-                      if re.search(r'Total Expense Ratio|expense ratio|\bTER\b',blob,re.I):
-                          print('MATCH_PATH',' > '.join(new))
-                          print('MATCH',json.dumps(node,ensure_ascii=False,sort_keys=True,default=str)[:12000])
-                      for key in ('subcategories','files','children','data'):
-                          if key in node: walk(node[key],new)
-              walk(payload)
+          import re, urllib.request
+          url='https://www.mahindramanulife.com/assets/index-C3oiuZih.js'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
+          with urllib.request.urlopen(req,timeout=45) as r:
+              s=r.read().decode('utf-8','ignore')
+              print('FETCH',r.status,len(s),r.geturl())
+
+          for needle in [
+              'investorapi.mahindramanulife.com/api/v1/web',
+              'getClient("website")',
+              'payload',
+              'decrypt',
+              'AES.decrypt',
+              'VITE_AES',
+              'VITE_ENCRYPT',
+              'parseResponse',
+          ]:
+              print('NEEDLE',needle)
+              p=0;n=0
+              while True:
+                  p=s.find(needle,p)
+                  if p<0 or n>=30:break
+                  ctx=re.sub(r'\s+',' ',s[max(0,p-3000):p+6000])
+                  if needle in ('payload','decrypt') and not any(k in ctx.lower() for k in ('axios','interceptor','decrypt','payload','website')):
+                      p+=len(needle);n+=1;continue
+                  print('CTX',ctx[:9200])
+                  p+=len(needle);n+=1
           PY
