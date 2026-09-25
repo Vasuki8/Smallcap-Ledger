@@ -88,18 +88,22 @@ class PerformanceCoverageTests(unittest.TestCase):
         self.assertTrue(nifty["display_returns_supported"])
         self.assertTrue(all(nifty["nav"]["horizons"][f"{y}Y"]["eligible"] for y in (1,3,5)))
         self.assertEqual(nifty["benchmark"]["status"],"reported_tri_ready")
-        self.assertFalse(nifty["benchmark"]["website_default_mismatch"])
-        self.assertTrue(nifty["benchmark"]["required_series"]["available"])
+        self.assertTrue(nifty["benchmark"]["reported_series"]["available"])
+        self.assertEqual(nifty["benchmark"]["alternate_comparisons"],[])
         self.assertTrue(all(nifty["benchmark"]["overlap_horizons"][f"{y}Y"]["eligible"] for y in (1,3,5)))
 
         bse=plans[9902]
         self.assertEqual(bse["benchmark"]["reported_identity"]["canonical_tri_series"],BSE_SERIES)
         self.assertEqual(bse["benchmark"]["status"],"reported_tri_series_missing")
-        self.assertFalse(bse["benchmark"]["required_series"]["available"])
-        self.assertTrue(bse["benchmark"]["website_default_mismatch"])
-        self.assertGreater(bse["benchmark"]["website_default_overlap"]["observations"],2)
+        self.assertFalse(bse["benchmark"]["reported_series"]["available"])
+        self.assertEqual(len(bse["benchmark"]["alternate_comparisons"]),1)
+        alternate=bse["benchmark"]["alternate_comparisons"][0]
+        self.assertEqual(alternate["name"],providers.BENCHMARK)
+        self.assertEqual(alternate["role"],"alternate_comparison")
+        self.assertTrue(alternate["available"])
+        self.assertGreater(alternate["overlap"]["observations"],2)
         self.assertIn("reported_tri_series_missing",bse["issues"])
-        self.assertIn("website_default_benchmark_mismatch",bse["issues"])
+        self.assertNotIn("website_default_benchmark_mismatch",bse["issues"])
 
         unclear=plans[9903]
         self.assertEqual(unclear["benchmark"]["status"],"benchmark_identity_not_explicit_tri")
@@ -178,7 +182,7 @@ class PerformanceCoverageTests(unittest.TestCase):
         self.assertIn("2010-04-07",rendered)
         self.assertEqual(len(db.rows("SELECT * FROM nav WHERE code=105989")),3)
 
-    def test_audit_is_read_only_and_markdown_surfaces_mismatch(self):
+    def test_audit_is_read_only_and_markdown_uses_evidence_aware_policy(self):
         before={
             table:db.one(f"SELECT COUNT(*) n FROM {table}")["n"]
             for table in ("nav","benchmark","metrics","schemes")
@@ -191,7 +195,16 @@ class PerformanceCoverageTests(unittest.TestCase):
         self.assertEqual(before,after)
         self.assertIn("Historical performance and benchmark coverage audit",rendered)
         self.assertIn("collect_bse_250_smallcap_tri",rendered)
-        self.assertIn("website_default_benchmark_mismatch",rendered)
+        self.assertNotIn("website_default",rendered)
+        self.assertNotIn("website_default",str(audit))
+        self.assertEqual(audit["comparison_policy"],{
+            "default_role":"reported_benchmark",
+            "automatic_substitution":False,
+            "alternate_comparisons":"explicit_request_only",
+        })
+        self.assertEqual(audit["summary"]["reported_tri_series_missing_growth_plans"],1)
+        self.assertEqual(audit["summary"]["retained_alternate_comparison_growth_plans"],1)
+        self.assertNotIn("website_default_benchmark_mismatch",audit["summary"]["issue_counts"])
 
 
 if __name__=="__main__":

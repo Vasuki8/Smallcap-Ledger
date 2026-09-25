@@ -166,6 +166,30 @@ def _overlap_points(overlap):
     return [[p[0],1.0] for p in overlap]
 
 
+def _alternate_comparisons(nav, reported_name, benchmark_points):
+    """Summarize retained non-reported TRI series without treating them as defaults."""
+    if not reported_name:
+        return []
+    out=[]
+    for name,points in benchmark_points.items():
+        if name==reported_name:
+            continue
+        overlap=_overlap(nav,points)
+        overlap_points=_overlap_points(overlap)
+        out.append({
+            "name":name,
+            "role":"alternate_comparison",
+            "available":bool(points),
+            **_series_stats(points),
+            "overlap":{
+                **_series_stats(overlap_points),
+                "observations":len(overlap),
+            },
+            "overlap_horizons":_horizons(overlap_points),
+        })
+    return out
+
+
 def _latest_benchmark_metric(family):
     return db.one(
         """SELECT value,as_of,unit,source,observed_at
@@ -207,9 +231,7 @@ def _plan_issues(row):
         issues.append("nav_large_gap")
     status=row["benchmark"]["status"]
     if status!="reported_tri_ready":issues.append(status)
-    if row["benchmark"]["website_default_mismatch"]:
-        issues.append("website_default_benchmark_mismatch")
-    if row["benchmark"]["required_series"]["gap_count_gt_7d"]:
+    if row["benchmark"]["reported_series"]["gap_count_gt_7d"]:
         issues.append("benchmark_series_large_gap")
     if row["display_returns_supported"] and status=="reported_tri_ready":
         for label,info in row["benchmark"]["overlap_horizons"].items():
@@ -220,8 +242,6 @@ def _plan_issues(row):
 def report():
     """Audit every retained NAV plan against its reported benchmark identity/history."""
     benchmark_points=_benchmark_cache()
-    default_points=benchmark_points.get(providers.BENCHMARK,[])
-    default_stats=_series_stats(default_points)
     plans=[]
     families={}
 
@@ -243,12 +263,10 @@ def report():
         required_name=identity["canonical_tri_series"]
         required=benchmark_points.get(required_name,[]) if required_name else []
         required_overlap=_overlap(nav,required)
-        default_overlap=_overlap(nav,default_points)
-        required_stats=_series_stats(required)
+        reported_stats=_series_stats(required)
         required_overlap_stats=_series_stats(_overlap_points(required_overlap))
-        default_overlap_stats=_series_stats(_overlap_points(default_overlap))
         required_overlap_horizons=_horizons(_overlap_points(required_overlap))
-        default_overlap_horizons=_horizons(_overlap_points(default_overlap))
+        alternates=_alternate_comparisons(nav,required_name,benchmark_points)
         status=_comparison_status(identity,required,required_overlap)
 
         row={
@@ -265,29 +283,17 @@ def report():
             "benchmark":{
                 "reported_identity":identity,
                 "status":status,
-                "required_series":{
+                "reported_series":{
                     "name":required_name,
                     "available":bool(required),
-                    **required_stats,
+                    **reported_stats,
                 },
                 "overlap":{
                     **required_overlap_stats,
                     "observations":len(required_overlap),
                 },
                 "overlap_horizons":required_overlap_horizons,
-                "website_default_series":{
-                    "name":providers.BENCHMARK,
-                    "available":bool(default_points),
-                    **default_stats,
-                },
-                "website_default_overlap":{
-                    **default_overlap_stats,
-                    "observations":len(default_overlap),
-                },
-                "website_default_overlap_horizons":default_overlap_horizons,
-                "website_default_mismatch":bool(
-                    required_name and required_name!=providers.BENCHMARK
-                ),
+                "alternate_comparisons":alternates,
             },
         }
         row["issues"]=_plan_issues(row)
@@ -326,7 +332,7 @@ def report():
     repair_priorities=[]
     bse_affected=sorted({row["family"] for row in growth
                          if row["benchmark"]["reported_identity"]["canonical_tri_series"]==BSE_SERIES
-                         and not row["benchmark"]["required_series"]["available"]})
+                         and not row["benchmark"]["reported_series"]["available"]})
     if bse_affected:
         repair_priorities.append({
             "priority":1,
@@ -362,7 +368,11 @@ def report():
 
     return {
         "built_at":db.now(),
-        "website_default_benchmark":providers.BENCHMARK,
+        "comparison_policy":{
+            "default_role":"reported_benchmark",
+            "automatic_substitution":False,
+            "alternate_comparisons":"explicit_request_only",
+        },
         "benchmark_series":{
             name:_series_stats(points) for name,points in benchmark_points.items()
         },
@@ -373,8 +383,14 @@ def report():
             "reported_benchmark_identity_families":sum(bool(x["reported_benchmark"]["reported"]) for x in family_rows),
             "explicit_tri_growth_plans":len(explicit_tri),
             "reported_tri_ready_growth_plans":len(relevant_ready),
-            "website_default_mismatch_growth_plans":sum(
-                row["benchmark"]["website_default_mismatch"] for row in growth
+            "reported_tri_series_available_growth_plans":sum(
+                bool(row["benchmark"]["reported_series"]["available"]) for row in growth
+            ),
+            "reported_tri_series_missing_growth_plans":sum(
+                row["benchmark"]["status"]=="reported_tri_series_missing" for row in growth
+            ),
+            "retained_alternate_comparison_growth_plans":sum(
+                bool(row["benchmark"]["alternate_comparisons"]) for row in growth
             ),
             "official_history_gap_growth_plans":sum(
                 bool(row["nav"].get("official_history_gap_count")) for row in growth
@@ -402,7 +418,8 @@ def report():
             "Return eligibility mirrors the website's seven-day anchor tolerance but does not calculate or store a return.",
             "Benchmark overlap uses exact common dates only; no forward-fill or interpolation is performed.",
             "A reported benchmark identity is not treated as historical TRI coverage unless the retained identity explicitly establishes a total-return index.",
-            "website_default_mismatch flags plans whose explicit reported TRI benchmark differs from the website's current global default comparison series.",
+            "The default comparison role is the fund's reported benchmark; no retained alternate series is substituted automatically.",
+            "alternate_comparisons lists retained non-reported TRI series that can be selected explicitly without changing the fund's reported benchmark identity.",
             "Verified official-history NAV gaps remain visible as raw gaps but are excluded from the actionable missing-data queue; no NAV is inferred.",
             "This audit is read-only and uses retained NAV, benchmark and metric evidence only.",
         ],
@@ -422,7 +439,8 @@ def markdown(audit):
         f"- Reported benchmark identity families: **{summary['reported_benchmark_identity_families']} / {summary['families']}**.",
         f"- Explicit reported TRI identities on Growth plans: **{summary['explicit_tri_growth_plans']}**.",
         f"- Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **{summary['reported_tri_ready_growth_plans']}**.",
-        f"- Growth plans where the explicit reported TRI differs from the website's current default **{esc(audit['website_default_benchmark'])}**: **{summary['website_default_mismatch_growth_plans']}**.",
+        f"- Growth plans with their reported TRI series retained: **{summary['reported_tri_series_available_growth_plans']}**; reported TRI series missing: **{summary['reported_tri_series_missing_growth_plans']}**.",
+        f"- Growth plans with at least one retained explicit-only alternate comparison: **{summary['retained_alternate_comparison_growth_plans']}**.",
         f"- Verified official-history NAV gaps: **{summary['official_history_gap_intervals']} intervals across {summary['official_history_gap_growth_plans']} Growth plans**; retained as evidence, not actionable missing-value repairs.","",
         "| Horizon | NAV return eligible Growth plans | Relevant benchmark overlap eligible Growth plans |",
         "| --- | ---: | ---: |",
@@ -457,7 +475,7 @@ def markdown(audit):
                 )
 
     lines.extend(["","## Per-plan audit","",
-                  "| Fund / plan | NAV range / obs | 1Y | 3Y | 5Y | Reported benchmark | Required TRI series | Exact overlap | Issues |",
+                  "| Fund / plan | NAV range / obs | 1Y | 3Y | 5Y | Reported benchmark | Reported TRI series | Exact overlap | Issues |",
                   "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"])
     for row in audit["plans"]:
         nav=row["nav"];b=row["benchmark"];identity=b["reported_identity"]
@@ -470,7 +488,7 @@ def markdown(audit):
             h("3Y") if row["display_returns_supported"] else "n/a",
             h("5Y") if row["display_returns_supported"] else "n/a",
             esc(identity["reported"] or "Gap"),
-            esc(identity["canonical_tri_series"] or "Not established"),
+            esc(b["reported_series"]["name"] or "Not established"),
             esc(f"{overlap['first'] or 'Gap'} → {overlap['last'] or 'Gap'} · {overlap['observations']}"),
             esc(", ".join(row["issues"]) or "none"),
         ])+" |")
