@@ -374,6 +374,8 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
     with tempfile.TemporaryDirectory(prefix='smallcap-retention-simulation-') as tmp:
         root=Path(tmp);manifest=github_state._current_release_manifest(repo,root)
         if int(manifest.get('format',1))!=2:raise ValueError('Split checkpoint format required')
+        pinned_manifest=root/'pinned-active-manifest.json'
+        pinned_manifest.write_text(json.dumps(manifest,indent=2)+'\n')
         active_packs=manifest.get('source_packs',[])
         pack_for_hash={}
         for pack in active_packs:
@@ -462,16 +464,22 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
         if current_database_bytes!=current_db_asset['size']:
             raise ValueError('Active database asset size mismatch')
 
-        previous_data=db.DATA;db.DATA=sim_data
+        previous_data=db.DATA;previous_manifest=os.environ.get('SMALLCAP_ARCHIVE_MANIFEST_PATH')
+        os.environ['SMALLCAP_ARCHIVE_MANIFEST_PATH']=str(pinned_manifest)
+        db.DATA=sim_data
         try:
             materialization=materialization_checks(sim_data,replacement_examples,candidate_hashes)
             documents=document_checks(sim_data,candidate_hashes)
         finally:
             db.DATA=previous_data
-        # Generate/validate the full static site against the exact proposed
-        # metadata-only database before the replay check can write anything.
-        site=site_checks(sim_data,root,repo,candidate_hashes)
-        replay=replay_checks(sim_data,candidate_hashes)
+        try:
+            # Generate/validate the full static site against the exact proposed
+            # metadata-only database before the replay check can write anything.
+            site=site_checks(sim_data,root,repo,candidate_hashes)
+            replay=replay_checks(sim_data,candidate_hashes)
+        finally:
+            if previous_manifest is None:os.environ.pop('SMALLCAP_ARCHIVE_MANIFEST_PATH',None)
+            else:os.environ['SMALLCAP_ARCHIVE_MANIFEST_PATH']=previous_manifest
 
         candidate_output={
             'simulated_at':datetime.now(timezone.utc).isoformat(timespec='seconds'),
