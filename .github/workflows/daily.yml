@@ -74,6 +74,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/refresh_canara_expenses.py
+      - name: Apply Groww Current BER disclosure upgrade
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/refresh_groww_expenses.py
       - name: Apply HSBC detailed TER disclosure upgrade
         if: github.event_name == 'push'
         timeout-minutes: 5
