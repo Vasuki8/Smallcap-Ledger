@@ -16,6 +16,13 @@ queue_json.write_text(json.dumps(recovery_queue,indent=2,ensure_ascii=False)+'\n
 queue_md=ROOT/'docs'/'PORTFOLIO-RECOVERY-QUEUE.md'
 queue_md.write_text(recovery_queue_markdown(recovery_queue),encoding='utf-8')
 
+from tracker.performance_coverage import report as performance_coverage_report, markdown as performance_coverage_markdown
+performance_coverage=performance_coverage_report()
+performance_json=ROOT/'docs'/'PERFORMANCE-COVERAGE-AUDIT.json'
+performance_json.write_text(json.dumps(performance_coverage,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+performance_md=ROOT/'docs'/'PERFORMANCE-COVERAGE-AUDIT.md'
+performance_md.write_text(performance_coverage_markdown(performance_coverage),encoding='utf-8')
+
 target=ROOT/'deployment/update-status.json';target.parent.mkdir(exist_ok=True)
 target.write_text(json.dumps({'built_at':status['server_time'],'counts':status['counts'],'recent_jobs':[{k:j[k] for k in ('kind','started_at','finished_at','status')} for j in status['jobs'][:4]],'schedule':status['hosting']},indent=2)+'\n')
 
@@ -114,7 +121,8 @@ lines.extend([
 def git(*args,check=True):return subprocess.run(['git',*args],cwd=ROOT,check=check)
 git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
 git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md',
-    'docs/PORTFOLIO-RECOVERY-QUEUE.json','docs/PORTFOLIO-RECOVERY-QUEUE.md')
+    'docs/PORTFOLIO-RECOVERY-QUEUE.json','docs/PORTFOLIO-RECOVERY-QUEUE.md',
+    'docs/PERFORMANCE-COVERAGE-AUDIT.json','docs/PERFORMANCE-COVERAGE-AUDIT.md')
 if git('diff','--cached','--quiet',check=False).returncode:
     git('commit','-m','Record daily collection status and coverage [skip ci]')
     git('pull','--rebase','origin','main')
