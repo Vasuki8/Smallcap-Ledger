@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-25T05:22:17+00:00
+Prepared: 2026-09-25T06:07:30+00:00
 
 **36 funds, 143 NAV series, 281,442 NAV observations. Latest included NAV: 2026-09-24.**
 
@@ -12,7 +12,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | --- | --- | --- | --- | --- | ---: |
 | Abakkus Small Cap Fund | ₹ 3,131.94 · 2026-09-23 | 1.25% TER · 2026-09-24 | 68 positions · 2026-08-31 · complete · current | NIFTY SmallCap 250 TRI · 2026-09-24 | 29 |
 | Aditya Birla Sun Life Small Cap Fund | ₹ 6,277.90 · 2026-09-23 | 1.07% TER · 2026-09-23 | 89 positions · 2026-08-31 · complete · current | BSE 250 Small Cap Index TRI · 2026-07-31 | 5 |
-| Axis Small Cap Fund | ₹ 31,367.33 · 2026-09-23 | 0.71% Expense ratio · type not specified · 2026-09-23 | 134 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-09-24 | 8 |
+| Axis Small Cap Fund | ₹ 31,367.33 · 2026-09-23 | 0.71% TER · 2026-09-24 | 134 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-09-24 | 8 |
 | Bajaj Finserv Small Cap Fund | ₹ 2,782.35 · 2026-09-23 | 0.96% TER · 2026-09-24 | 13 positions · 2026-07-31 · partial · older | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
 | Bandhan Small Cap Fund | ₹ 36,290.04 · 2026-09-23 | 0.6% TER · 2026-09-23 | 260 positions · 2026-08-31 · partial · current | BSE 250 SmallCap TRI · 2025-03-31 | 3 |
 | Bank Of India Small Cap Fund | ₹ 3,618.18 · 2026-09-23 | 0.73% TER · 2026-09-24 | 103 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-08-31 | 7 |
