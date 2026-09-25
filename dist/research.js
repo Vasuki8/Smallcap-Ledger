@@ -1,9 +1,9 @@
-/* Smallcap Ledger research workspace. Presentation and browser-local preferences only.
-   Loaded after the core client; replaces presentation routes without changing analytics or source contracts. */
+/* Research desk: UI composition and browser-local preferences only.
+ * Loaded after the core client. The source/analytics/storage contracts are unchanged.
+ */
 (function () {
   'use strict';
-  const SAVED_KEY = 'smallcap-ledger.saved.v1';
-  const MAX_COMPARE = 3;
+  const SAVED_KEY = 'smallcap-ledger.saved.v1', MAX_COMPARE = 3;
   const paths = {
     explore: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     compare: '<path d="M8 3v18M16 3v18M3 7h10M11 17h10"/><path d="m5 4-3 3 3 3m14 4 3 3-3 3"/>',
@@ -14,7 +14,6 @@
     arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
     close: '<path d="m6 6 12 12M6 18 18 6"/>',
     external: '<path d="M14 3h7v7m0-7L10 14M10 3H4v17h17v-6"/>',
-    check: '<path d="m5 12 4 4L19 6"/>',
     shield: '<path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/><path d="m8 12 3 3 5-6"/>',
     back: '<path d="M20 12H5m6-6-6 6 6 6"/>'
   };
@@ -24,7 +23,7 @@
     return [...new Set(value.filter(x => (typeof x === 'number' || typeof x === 'string') && /^\d+$/.test(String(x))).map(Number).filter(x => Number.isSafeInteger(x) && x > 0))];
   }
   function number(value) {
-    if (value === null || value === undefined || (typeof value === 'string' && !value.trim()) || typeof value === 'boolean') return null;
+    if (value === null || value === undefined || (typeof value === 'string' && !value.trim()) || !['number','string'].includes(typeof value)) return null;
     const n = Number(value); return Number.isFinite(n) ? n : null;
   }
   function safeURL(url) {
@@ -56,8 +55,8 @@
     if (installed) return;
     installed = true;
     const base = {route, renderOverview, renderPerformance, renderFees, loadHoldings};
-    const ui = {view: 'funds', saved: [], comparison: [], amc: '', quality: '', direction: 'desc', details: new Map(), performanceRequest: 0};
-    try { ui.saved = codes(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch { /* Private mode or invalid preferences: start safely. */ }
+    const ui = {view: 'funds', saved: [], comparison: [], amc: '', quality: '', direction: 'desc', details: new Map(), performanceRequest: 0, monthly: 10000};
+    try { ui.saved = codes(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch { /* Private mode or invalid preference data: start safely. */ }
     const stamp = v => v && !Number.isNaN(Date.parse(v)) ? new Date(v).toLocaleString('en-GB', {day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC'}) + ' UTC' : 'Not recorded';
     const expenseName = fee => ({ter: 'TER', ter_observed: 'Observed TER', base_expense_ratio: 'BER', expense_ratio: 'Expense ratio'}[fee?.metric] || 'Expense');
     const source = (url, label = 'Source', extra = '') => safeURL(url) ? `<a class="source-link ${extra}" href="${E(safeURL(url))}" target="_blank" rel="noopener noreferrer">${E(label)} ${icon('external')}</a>` : '';
@@ -110,16 +109,16 @@
     function updateDock() {
       const dock = $('#compare-dock'); if (!dock) return;
       dock.hidden = !ui.comparison.length || ui.view === 'compare';
-      if (dock.hidden) { document.body.classList.remove('has-compare-dock'); return; }
-      document.body.classList.add('has-compare-dock');
-      dock.innerHTML = `<div class="dock-label"><strong>${ui.comparison.length} / ${MAX_COMPARE}</strong><span>plans selected</span></div><div class="dock-funds">${ui.comparison.map(code => { const f = state.funds.find(x => x.code === code) || (state.fund?.code === code ? state.fund : null); return f ? `<button data-remove-compare="${code}" title="Remove ${E(f.family)}">${E(shortName(f))}${icon('close')}</button>` : ''; }).join('')}</div><button class="text-button" data-clear-comparison>Clear</button><button class="primary" data-open-comparison ${ui.comparison.length < 2 ? 'disabled' : ''}>Compare plans ${icon('arrow')}</button>`;
+      document.body.classList.toggle('has-compare-dock', !dock.hidden);
+      if (dock.hidden) return;
+      dock.innerHTML = `<div class="dock-label"><strong>${ui.comparison.length} / ${MAX_COMPARE}</strong><span>plans selected</span></div><div class="dock-funds">${ui.comparison.map(code => { const f = state.funds.find(x => x.code === code) || (state.fund?.code === code ? state.fund : null); return f ? `<button data-remove-compare="${code}" title="Remove ${E(f.family)}" aria-label="Remove ${E(f.family)} from comparison">${E(shortName(f))}${icon('close')}</button>` : ''; }).join('')}</div><button class="text-button" data-clear-comparison>Clear</button><button class="primary" data-open-comparison ${ui.comparison.length < 2 ? 'disabled' : ''}>Compare plans ${icon('arrow')}</button>`;
     }
     function resetDirectory() {
       state.search = ''; state.plan = 'Direct'; state.option = 'Growth'; state.sort = 'aum'; state.page = 1;
       ui.amc = ''; ui.quality = ''; ui.direction = 'desc'; renderDashboard();
     }
     shell = function () {
-      $('#app').innerHTML = `<div class="research-layout"><header class="site-header"><div class="header-inner"><a class="brand" href="#/" aria-label="Smallcap Ledger home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5v14h13M10 14V9m4 5V6m4 8V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Smallcap<span class="brand-light"> Ledger</span><small>THE FUND RESEARCH DESK</small></span></a><nav class="primary-nav" aria-label="Main navigation"><a href="#/" data-nav="funds">Explore</a><a href="#/compare" data-nav="compare">Compare</a><a href="#/saved" data-nav="saved">Saved <span data-saved-count></span></a></nav><div class="header-tools"><a href="#/archive" data-nav="archive">${icon('data')}<span>Data & sources</span></a><a class="icon-button" href="#/settings" data-nav="settings" aria-label="Update status" title="Update status">${icon('clock')}</a>${HOSTED ? '' : '<button id="refresh-all" aria-label="Refresh local data">↻</button>'}</div></div></header><div class="workspace"><div class="breadcrumb" id="breadcrumb">Explore / Small-cap funds</div><main class="main" id="main" tabindex="-1"></main><footer class="site-footer"><span>Smallcap Ledger <span class="footer-dot">·</span> Research, not recommendations.</span><div><a href="#/archive">Sources & methodology</a><a href="#/settings">Update status</a><span class="release-label">Research desk / 02</span></div></footer></div><nav class="mobile-nav" aria-label="Mobile navigation">${[['funds', '#/', 'explore', 'Explore'], ['compare', '#/compare', 'compare', 'Compare'], ['saved', '#/saved', 'save', 'Saved'], ['archive', '#/archive', 'data', 'Data']].map(([key, href, i, label]) => `<a href="${href}" data-nav="${key}">${icon(i)}<span>${label}</span></a>`).join('')}</nav><div id="compare-dock" class="compare-dock" aria-label="Selected comparison plans" hidden></div></div>`;
+      $('#app').innerHTML = `<div class="research-layout"><header class="site-header"><div class="header-inner"><a class="brand" href="#/" aria-label="Smallcap Ledger home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5v14h13M10 14V9m4 5V6m4 8V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Smallcap<span class="brand-light"> Ledger</span><small>THE FUND RESEARCH DESK</small></span></a><nav class="primary-nav" aria-label="Main navigation"><a href="#/" data-nav="funds">Explore</a><a href="#/compare" data-nav="compare">Compare</a><a href="#/saved" data-nav="saved">Saved <span data-saved-count></span></a></nav><div class="header-tools"><a href="#/archive" data-nav="archive" aria-label="Data and sources">${icon('data')}<span>Data & sources</span></a><a class="icon-button" href="#/settings" data-nav="settings" aria-label="Update status" title="Update status">${icon('clock')}</a>${HOSTED ? '' : '<button id="refresh-all" aria-label="Refresh local data">↻</button>'}</div></div></header><div class="workspace"><div class="breadcrumb" id="breadcrumb">Explore / Small-cap funds</div><main class="main" id="main" tabindex="-1"></main><footer class="site-footer"><span>Smallcap Ledger <span class="footer-dot">·</span> Research, not recommendations.</span><div><a href="#/archive">Sources & methodology</a><a href="#/settings">Update status</a><span class="release-label">Research desk / 02</span></div></footer></div><nav class="mobile-nav" aria-label="Mobile navigation">${[['funds', '#/', 'explore', 'Explore'], ['compare', '#/compare', 'compare', 'Compare'], ['saved', '#/saved', 'save', 'Saved'], ['archive', '#/archive', 'data', 'Data']].map(([key, href, i, label]) => `<a href="${href}" data-nav="${key}">${icon(i)}<span>${label}</span></a>`).join('')}</nav><div id="compare-dock" class="compare-dock" aria-label="Selected comparison plans" hidden></div></div>`;
       $('#refresh-all')?.addEventListener('click', async () => { try { await post('/api/refresh', {kind: 'all'}); toast('Updates started.'); await pollStatus(); } catch (e) { toast(e.message); } });
       syncButtons();
     };
@@ -129,7 +128,7 @@
       $('#breadcrumb').textContent = saved ? 'Research desk / Saved funds' : 'Mutual funds / Equity / Small cap';
       document.title = `${saved ? 'Saved funds' : 'Explore small-cap funds'} · Smallcap Ledger`;
       const all = new Set(state.funds.map(f => f.family)).size;
-      $('#main').innerHTML = `${heading(saved ? 'YOUR RESEARCH DESK' : 'EXPLORE THE CATEGORY', saved ? 'Your saved funds.' : 'Small caps. A clearer view.', saved ? 'A private shortlist, saved in this browser. Plans and options stay separate.' : 'Compare the essentials. Follow the evidence. Research at your own pace.', saved ? '' : `<div class="universe-count"><strong>${all}</strong><span>funds in focus<br>${state.funds.length} plans & options</span></div>`)}${statusStrip()}<div id="busy-area">${busy()}</div><section class="panel directory-panel no-pad"><div class="directory-toolbar"><label class="search-control"><span class="sr-only">Search funds</span>${icon('search')}<input id="search-funds" type="search" placeholder="Search funds, fund houses or AMFI codes" value="${E(state.search)}"><kbd aria-hidden="true">/</kbd></label>${saved ? '<span class="saved-explainer">All saved plans & options</span>' : `<label><span class="sr-only">Plan and option view</span><select id="view-filter" aria-label="Plan and option view">${[['direct-growth', 'Direct · Growth'], ['regular-growth', 'Regular · Growth'], ['all-growth', 'All plans · Growth'], ['idcw', 'All plans · IDCW'], ['all', 'All plans & options']].map(([v, t]) => `<option value="${v}" ${currentFundView() === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>`}<label><span class="sr-only">Fund house</span><select id="amc-filter" aria-label="Fund house"><option value="">All fund houses</option>${[...new Set(state.funds.map(f => f.amc))].sort().map(amc => `<option ${ui.amc === amc ? 'selected' : ''}>${E(amc)}</option>`).join('')}</select></label></div><div class="directory-subtoolbar"><span id="result-count" role="status"></span><div><label><span class="sr-only">Portfolio coverage</span><select id="quality-filter" aria-label="Portfolio coverage"><option value="">Any portfolio coverage</option><option value="complete" ${ui.quality === 'complete' ? 'selected' : ''}>Complete portfolio</option><option value="partial" ${ui.quality === 'partial' ? 'selected' : ''}>Partial portfolio</option><option value="missing" ${ui.quality === 'missing' ? 'selected' : ''}>Portfolio not available</option></select></label><label class="mobile-sort"><span class="sr-only">Sort funds</span><select id="sort-funds" aria-label="Sort funds">${[['aum', 'AUM'], ['5', '5Y CAGR'], ['3', '3Y CAGR'], ['1', '1Y return'], ['ter', 'Expense'], ['family', 'Fund name']].map(([v,t]) => `<option value="${v}" ${state.sort === v ? 'selected' : ''}>Sort: ${t}</option>`).join('')}</select></label><button class="text-button" id="reset-directory">Reset</button></div></div><div id="fund-table"></div></section><div class="directory-footnote">${icon('shield')}<p>Reporting dates and sources travel with each figure. Returns are not forecasts. ${saved ? 'Saved funds are not synced across devices.' : 'Select two or three plans to compare, or bookmark a fund for later.'}</p></div>`;
+      $('#main').innerHTML = `${heading(saved ? 'YOUR RESEARCH DESK' : 'EXPLORE THE CATEGORY', saved ? 'Your saved funds.' : 'Small caps. A clearer view.', saved ? 'A private shortlist, saved in this browser. Plans and options stay separate.' : 'Compare the essentials. Follow the evidence. Research at your own pace.', saved ? '' : `<div class="universe-count"><strong>${all}</strong><span>funds in focus<br>${state.funds.length} plans & options</span></div>`)}${statusStrip()}<div id="busy-area">${busy()}</div><section class="panel directory-panel no-pad"><div class="directory-toolbar"><label class="search-control"><span class="sr-only">Search funds</span>${icon('search')}<input id="search-funds" type="search" placeholder="Search funds, fund houses or AMFI codes" value="${E(state.search)}"><kbd aria-hidden="true">/</kbd></label>${saved ? '<span class="saved-explainer">All saved plans & options</span>' : `<label><span class="sr-only">Plan and option view</span><select id="view-filter" aria-label="Plan and option view">${[['direct-growth', 'Direct · Growth'], ['regular-growth', 'Regular · Growth'], ['all-growth', 'All plans · Growth'], ['idcw', 'All plans · IDCW'], ['all', 'All plans & options']].map(([v, t]) => `<option value="${v}" ${currentFundView() === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>`}<label><span class="sr-only">Fund house</span><select id="amc-filter" aria-label="Fund house"><option value="">All fund houses</option>${[...new Set(state.funds.map(f => f.amc))].sort().map(amc => `<option ${ui.amc === amc ? 'selected' : ''}>${E(amc)}</option>`).join('')}</select></label></div><div class="directory-subtoolbar"><span id="result-count" role="status"></span><div><label><span class="sr-only">Portfolio coverage</span><select id="quality-filter" aria-label="Portfolio coverage"><option value="">Any portfolio coverage</option><option value="complete" ${ui.quality === 'complete' ? 'selected' : ''}>Complete portfolio</option><option value="partial" ${ui.quality === 'partial' ? 'selected' : ''}>Partial portfolio</option><option value="missing" ${ui.quality === 'missing' ? 'selected' : ''}>Portfolio not available</option></select></label><label class="mobile-sort"><span class="sr-only">Sort funds</span><select id="sort-funds" aria-label="Sort funds">${[['aum', 'AUM'], ['5', '5Y CAGR'], ['3', '3Y CAGR'], ['1', '1Y return'], ['ter', 'Expense'], ['family', 'Fund name'], ['nav','NAV']].map(([v,t]) => `<option value="${v}" ${state.sort === v ? 'selected' : ''}>Sort: ${t}</option>`).join('')}</select></label><button class="text-button" id="reset-directory">Reset</button></div></div><div id="fund-table"></div></section><div class="directory-footnote">${icon('shield')}<p>Reporting dates and sources travel with each figure. Returns are not forecasts. ${saved ? 'Saved funds are not synced across devices.' : 'Select two or three plans to compare, or bookmark a fund for later.'}</p></div>`;
       $('#search-funds').addEventListener('input', e => { state.search = e.target.value; state.page = 1; fundTable(); });
       $('#view-filter')?.addEventListener('change', e => { applyFundView(e.target.value); state.page = 1; fundTable(); });
       $('#amc-filter').addEventListener('change', e => { ui.amc = e.target.value; state.page = 1; fundTable(); });
@@ -207,12 +206,12 @@
     };
     function decorateSummary(f, p = null) {
       const cells = document.querySelectorAll('#fund-content .summary-panel > .summary-strip > div');
-      const ms = p ? [f.nav || (p.latest_nav ? {date: p.latest_nav[0], source: f.category_source} : null), f.metrics.aum, feeFor(f)] : [f.metrics.aum, feeFor(f), f.metrics.exit_load];
+      const ms = p ? [f.nav, f.metrics.aum, feeFor(f)] : [f.metrics.aum, feeFor(f), f.metrics.exit_load];
       ms.forEach((m, i) => {
         const cell = cells[i]; if (!cell) return;
         if (i === (p ? 2 : 1)) $('span', cell).textContent = expenseName(m);
         let small = $('small', cell); if (!small) { small = document.createElement('small'); cell.append(small); }
-        small.innerHTML = m ? dated(m) : 'Not available';
+        small.innerHTML = m ? dated(m) : p && i === 0 && p.latest_nav ? E(D(p.latest_nav[0])) : 'Not available';
       });
       if (p) ['1Y','3Y','5Y'].forEach((key, i) => { const cell = cells[i + 3], r = p.stats?.returns?.[key]; if (cell) cell.insertAdjacentHTML('beforeend', `<small>${r?.end ? 'Through ' + D(r.end) : 'Eligible history unavailable'}</small>`); });
     }
@@ -228,15 +227,16 @@
       const token = state.token, request = ++ui.performanceRequest;
       document.querySelectorAll('#fund-content details').forEach((d, i) => ui.details.set(`${state.fund?.code}:${state.tab}:${i}`, d.open));
       if (state.range === 'Custom' && state.customStart && state.customEnd && state.customStart > state.customEnd) { toast('The start date must come before the end date.'); return; }
-      if (state.monthly != null && (!Number.isFinite(state.monthly) || state.monthly < 100 || state.monthly > 100000000)) { toast('Enter a monthly SIP between ₹100 and ₹10 crore.'); return; }
-      const content = $('#fund-content'); content?.setAttribute('aria-busy', 'true');
+      if (state.monthly != null && (!Number.isFinite(state.monthly) || state.monthly < 100 || state.monthly > 100000000)) { state.monthly = ui.monthly; toast('Enter a monthly SIP between ₹100 and ₹10 crore.'); return; }
+      ui.monthly = state.monthly || 10000;
+      $('#fund-content')?.setAttribute('aria-busy', 'true');
       try { const p = await getPerformance(); if (token !== state.token || request !== ui.performanceRequest) return; state.perf = p; renderPerformance(); }
       catch (e) { if (token === state.token && request === ui.performanceRequest) toast(e.message); }
       finally { if (token === state.token && request === ui.performanceRequest) $('#fund-content')?.setAttribute('aria-busy', 'false'); }
     };
     loadHoldings = async function (id) {
-      const token = state.token; await base.loadHoldings(id); if (token !== state.token || state.tab !== 'portfolio') return;
-      const table = $('.holdings-table'); if (!table) return;
+      const token = state.token; await base.loadHoldings(id); if (token !== state.token || state.tab !== 'portfolio' || ($('#snapshot-picker') && String($('#snapshot-picker').value) !== String(id))) return;
+      const table = $('.holdings-table'); if (!table || $('#search-holdings')) return;
       const bar = document.createElement('div'); bar.className = 'holdings-search';
       bar.innerHTML = `<label class="search-control">${icon('search')}<input type="search" id="search-holdings" aria-label="Search holdings, ISIN or sector" placeholder="Search holdings, ISIN or sector"></label><span id="holding-result" role="status"></span>`;
       table.closest('.table-wrap').before(bar);
@@ -280,16 +280,20 @@
       $('#source-search').addEventListener('input', list); $('#source-filter').addEventListener('change', list); list();
     };
     route = async function () {
-      const page = (location.hash || '#/').split('/')[1];
+      const page = (location.hash || '#/').split('/')[1], previousView = ui.view;
       ui.view = page === 'saved' ? 'saved' : page === 'compare' ? 'compare' : page === 'fund' ? 'fund' : page || 'funds';
-      if (!['saved', 'compare'].includes(page)) { await base.route(); updateDock(); syncButtons(); return; }
+      if (!['saved', 'compare'].includes(page)) { await base.route(); syncButtons(); return; }
       const token = ++state.token;
-      $('#main').setAttribute('aria-busy', 'true'); $('#main').innerHTML = '<div class="loading" role="status"><span class="spinner"></span>Opening your research desk…</div>';
-      try { await loadFunds(); if (token !== state.token) return; if (page === 'saved') { state.page = 1; renderDashboard(); } else await renderCompare(); }
+      $('#main').setAttribute('aria-busy', 'true'); $('#main').innerHTML = '<div class="loading" role="status"><span class="spinner" aria-hidden="true"></span>Opening your research desk…</div>';
+      try {
+        await loadFunds(); if (token !== state.token) return;
+        if (page === 'saved') { if (previousView !== 'saved') { state.search = ''; ui.amc = ''; ui.quality = ''; state.page = 1; } renderDashboard(); }
+        else await renderCompare();
+      }
       catch (e) { if (token === state.token) $('#main').innerHTML = empty('This view could not be opened.', e.message, '<a href="#/">Return to Explore →</a>'); }
       finally { if (token === state.token) { $('#main').setAttribute('aria-busy', 'false'); $('#main').focus({preventScroll: true}); syncButtons(); } }
     };
-    // Replace the core hash listener once, not alongside it. Core polling calls the new route dynamically.
+    // Replace the original hash listener rather than registering two routers.
     window.removeEventListener('hashchange', base.route);
     window.addEventListener('hashchange', route);
     document.addEventListener('click', e => {
@@ -308,7 +312,6 @@
   if (typeof document !== 'undefined' && typeof window.route === 'function') {
     install();
     shell();
-    // Safe whether the core's initial request has already completed or is still in flight.
     route();
   }
 })();
