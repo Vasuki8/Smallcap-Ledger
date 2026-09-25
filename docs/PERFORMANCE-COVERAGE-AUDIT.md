@@ -1,6 +1,6 @@
 # Historical performance and benchmark coverage audit
 
-Prepared: 2026-09-25T20:25:25+00:00
+Prepared: 2026-09-25T20:28:37+00:00
 
 **Read-only:** retained NAV/benchmark evidence only; no forward-fill, return fabrication, source fetch or UI change.
 
@@ -35,6 +35,7 @@ Prepared: 2026-09-25T20:25:25+00:00
 These raw date gaps remain visible, but current official histories do not supply intermediate NAV observations. No value is interpolated or inferred.
 
 - **Aditya Birla Sun Life Small Cap Fund · Regular · Growth · 105804**: 2010-05-31 → 2010-06-08 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
+- **Aditya Birla Sun Life Small Cap Fund · Regular · IDCW · 105805**: 2010-05-31 → 2010-06-08 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
 - **DSP Small Cap Fund · Regular · Growth · 105989**: 2007-08-08 → 2007-08-16 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
 - **DSP Small Cap Fund · Regular · Growth · 105989**: 2008-08-27 → 2008-09-04 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
 - **DSP Small Cap Fund · Regular · Growth · 105989**: 2010-03-17 → 2010-03-25 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
@@ -49,7 +50,7 @@ These raw date gaps remain visible, but current official histories do not supply
 | Aditya Birla Sun Life Small Cap Fund · Direct · Growth · 119556 | 2013-01-07 → 2026-09-24 · 3375 | yes | yes | yes | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing |
 | Aditya Birla Sun Life Small Cap Fund · Direct · IDCW · 119557 | 2013-01-02 → 2026-09-24 · 3378 | n/a | n/a | n/a | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing |
 | Aditya Birla Sun Life Small Cap Fund · Regular · Growth · 105804 | 2007-05-31 → 2026-09-24 · 4750 | yes | yes | yes | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing |
-| Aditya Birla Sun Life Small Cap Fund · Regular · IDCW · 105805 | 2007-05-31 → 2026-09-24 · 4750 | n/a | n/a | n/a | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | nav_large_gap, reported_tri_series_missing |
+| Aditya Birla Sun Life Small Cap Fund · Regular · IDCW · 105805 | 2007-05-31 → 2026-09-24 · 4750 | n/a | n/a | n/a | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing |
 | Axis Small Cap Fund · Direct · Growth · 125354 | 2013-12-05 → 2026-09-24 · 3158 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-12-05 → 2026-09-24 · 3147 | none |
 | Axis Small Cap Fund · Direct · IDCW · 125351 | 2013-12-05 → 2026-09-24 · 3158 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-12-05 → 2026-09-24 · 3147 | none |
 | Axis Small Cap Fund · Regular · Growth · 125350 | 2013-12-05 → 2026-09-24 · 3158 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-12-05 → 2026-09-24 · 3147 | none |

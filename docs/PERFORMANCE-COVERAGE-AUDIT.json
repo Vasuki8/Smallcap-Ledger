@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-25T20:25:25+00:00",
+  "built_at": "2026-09-25T20:28:37+00:00",
   "comparison_policy": {
     "default_role": "reported_benchmark",
     "automatic_substitution": false,
@@ -44,7 +44,6 @@
       "nav_1y_return_unavailable": 10,
       "nav_3y_return_unavailable": 24,
       "nav_5y_return_unavailable": 28,
-      "nav_large_gap": 1,
       "reported_tri_series_missing": 38
     }
   },
@@ -136,7 +135,6 @@
       "plan_count": 4,
       "growth_plan_count": 2,
       "issue_codes": [
-        "nav_large_gap",
         "reported_tri_series_missing"
       ],
       "growth_horizons": {
@@ -2457,15 +2455,9 @@
         "first": "2007-05-31",
         "last": "2026-09-24",
         "observations": 4750,
-        "gap_count_gt_7d": 1,
-        "max_gap_days": 8,
-        "largest_gaps": [
-          {
-            "from": "2010-05-31",
-            "to": "2010-06-08",
-            "days": 8
-          }
-        ],
+        "gap_count_gt_7d": 0,
+        "max_gap_days": 0,
+        "largest_gaps": [],
         "raw_gap_count_gt_7d": 1,
         "raw_largest_gaps": [
           {
@@ -2474,8 +2466,43 @@
             "days": 8
           }
         ],
-        "official_history_gap_count": 0,
-        "official_history_gaps": [],
+        "official_history_gap_count": 1,
+        "official_history_gaps": [
+          {
+            "from": "2010-05-31",
+            "to": "2010-06-08",
+            "days": 8,
+            "classification": "verified_official_history_gap",
+            "verified_at": "2026-09-25",
+            "explanation": "AMFI's official historical NAV download was queried for the exact ABSL Regular IDCW scheme code 105805 and publishes only the two retained boundary observations for 2010-05-31 through 2010-06-08. No intermediate NAV value is inferred.",
+            "evidence": [
+              {
+                "provider": "AMFI",
+                "url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=3&frmdt=31-May-2010&todt=08-Jun-2010",
+                "response_sha256": "4b0ab23045b78f1e8b143ea8509f3da3f2dc5aa4d138e668f2a9645fd75db5fb",
+                "scheme_code": 105805,
+                "payout_isin": "INF209K01EO0",
+                "reinvestment_isin": "INF209K01EP7",
+                "observations": [
+                  {
+                    "date": "2010-05-31",
+                    "value": 11.5499
+                  },
+                  {
+                    "date": "2010-06-08",
+                    "value": 11.4193
+                  }
+                ],
+                "workflow_run": 36185438441
+              },
+              {
+                "provider": "NSE",
+                "url": "https://nsearchives.nseindia.com/content/press/04062010.htm",
+                "evidence": "NSE completed Normal Settlement N-2010102 on 2010-06-04, inside the interval."
+              }
+            ]
+          }
+        ],
         "horizons": {
           "1Y": {
             "eligible": true,
@@ -2604,7 +2631,6 @@
         ]
       },
       "issues": [
-        "nav_large_gap",
         "reported_tri_series_missing"
       ]
     },
