@@ -1,8 +1,6 @@
-name: Mirae TER public-source probe
+name: Mirae TER validation
 
 on:
-  push:
-    branches: [investigate/mirae-ter-20260925]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -11,9 +9,9 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -22,46 +20,24 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: uv sync --frozen
-      - name: Inspect latest Mirae Total Expense Ratio workbook
-        shell: bash
+      - name: Compile
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Run regression suite
+        run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Validate live Mirae first-party TER route
         run: |
           uv run --frozen python - <<'PY'
-          import json, urllib.request, xlrd
-
-          BASE="https://www.miraeassetmf.co.in"
-          PAGE=BASE+"/downloads/statutory-disclosure/total-expense-ratio"
-          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
-
-          def post(method,payload):
-              raw=json.dumps(payload,separators=(",",":")).encode()
-              req=urllib.request.Request(BASE+"/AjaxService/"+method,data=raw,headers={
-                  "User-Agent":UA,"Accept":"application/json, text/javascript, */*; q=0.01",
-                  "Content-Type":"application/json;charset=utf-8","Origin":BASE,
-                  "Referer":PAGE,"X-Requested-With":"XMLHttpRequest",
-              },method="POST")
-              with urllib.request.urlopen(req,timeout=30) as r:
-                  return json.loads(r.read())
-
-          data=post("GetDownloadsData",{"request":{
-              "modulename":"TotalExpenseRatio","title":"",
-              "fromdate":"2026-09-01","todate":"2026-12-31","pgno":1,"pgsize":100,
-          }})
-          assert data["ReturnCode"]=="0" and data["Data"]
-          item=data["Data"][0]
-          print("LATEST_META",json.dumps(item,ensure_ascii=False))
-          source=BASE+item["URL"]
-          req=urllib.request.Request(source,headers={"User-Agent":UA,"Referer":PAGE})
-          with urllib.request.urlopen(req,timeout=30) as r:
-              raw=r.read(10_000_000)
-              print("WORKBOOK_FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
-          book=xlrd.open_workbook(file_contents=raw)
-          print("SHEETS",book.sheet_names())
-          for sheet in book.sheets():
-              print("SHEET",sheet.name,sheet.nrows,sheet.ncols)
-              for i in range(min(sheet.nrows,12)):
-                  print("ROW",i,[sheet.cell_value(i,j) for j in range(min(sheet.ncols,20))])
-              for i in range(sheet.nrows):
-                  vals=[str(sheet.cell_value(i,j)) for j in range(sheet.ncols)]
-                  if any("small cap" in v.lower() for v in vals):
-                      print("SMALL_CAP_ROW",i,vals)
+          from datetime import date
+          from tracker import amc_expenses
+          source, day, plans, content_hash = amc_expenses._mirae_disclosure(date.today())
+          assert source.startswith("https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/")
+          assert day <= date.today().isoformat()
+          assert plans["Regular"]["ter"] >= plans["Regular"]["base_expense_ratio"]
+          assert plans["Direct"]["ter"] >= plans["Direct"]["base_expense_ratio"]
+          assert content_hash
+          print("MIRAE_SOURCE", source)
+          print("MIRAE_DAY", day)
+          print("MIRAE_REGULAR", plans["Regular"])
+          print("MIRAE_DIRECT", plans["Direct"])
+          print("MIRAE_HASH", content_hash)
           PY
