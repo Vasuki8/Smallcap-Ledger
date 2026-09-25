@@ -1,4 +1,4 @@
-name: Storage cleanup audit
+name: Storage cleanup validation
 on:
   push:
     branches: [maintenance/storage-cleanup-20260925]
@@ -9,61 +9,99 @@ concurrency:
   group: smallcap-storage-audit
   cancel-in-progress: false
 jobs:
-  audit:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       GH_TOKEN: ${{ github.token }}
       SMALLCAP_DATABASE_ONLY_RESTORE: '1'
+      SMALLCAP_NO_SCHEDULER: '1'
       PYTHONUNBUFFERED: '1'
     steps:
       - uses: actions/checkout@v6
-      - name: Restore database read-only for audit
-        run: python scripts/github_state.py restore
-      - name: Audit stored records and release assets
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Prepare integration changes on maintenance branch
         run: |
-          mkdir -p /tmp/storage-audit
-          gh release download tracker-history --repo "$GITHUB_REPOSITORY" --pattern latest.json --dir /tmp/storage-audit
-          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/releases/383859254/assets?per_page=100" > /tmp/storage-audit/assets.json
           python - <<'PY'
-          import json, sqlite3, pathlib, subprocess
+          from pathlib import Path
+          def change(path, old, new):
+              p=Path(path);text=p.read_text()
+              if old in text:
+                  assert text.count(old)==1, (path,old)
+                  p.write_text(text.replace(old,new))
+              else:
+                  assert new in text, (path,'expected integration anchor missing')
+          change('tracker/db.py','observed_at TEXT NOT NULL, PRIMARY KEY(code,date));','observed_at TEXT NOT NULL, PRIMARY KEY(code,date)) WITHOUT ROWID;')
+          change('tracker/db.py','UNIQUE(code,date,value,source));','PRIMARY KEY(code,date,value,source)) WITHOUT ROWID;')
+          change('tracker/db.py','PRIMARY KEY(name,date));','PRIMARY KEY(name,date)) WITHOUT ROWID;')
+          change('tracker/db.py','UNIQUE(name,date,value,source));','PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;')
+          change('.github/workflows/daily.yml','      - name: Check archive and financial calculations\n','      - name: Compact redundant database indexing\n        run: uv run --frozen python scripts/compact_database.py --apply --report deployment/storage-layout-v1.json\n      - name: Check archive and financial calculations\n')
+          change('scripts/record_build.py',"git('add','deployment/update-status.json','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md')","git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md')")
+          PY
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Compile Python
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Restore a production database copy
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Run full regression suite
+        run: |
+          set -o pipefail
+          uv run --frozen python -m unittest discover -s tests -v 2>&1 | tee /tmp/storage-tests.log
+      - name: Verify production-copy compaction and checkpoint round trip
+        run: |
+          uv run --frozen python - <<'PY'
+          import json, sqlite3, pathlib, re
+          from scripts import compact_database as cleanup, github_state as state
           from tracker import db
-          p=pathlib.Path('/tmp/storage-audit')
-          manifest=json.loads((p/'latest.json').read_text())
-          assets=[a for page in json.loads((p/'assets.json').read_text()) for a in page]
-          c=sqlite3.connect('file:data/ledger.sqlite3?mode=ro',uri=True)
-          c.row_factory=sqlite3.Row
-          def rows(sql): return [dict(r) for r in c.execute(sql)]
-          def refs(m):
-              if not m:return set()
-              if m.get('format',1)==1:return {m['asset']}
-              return {m['database']['asset'],*[x['asset'] for x in m['source_packs']]}
-          active=refs(manifest);previous=refs(manifest.get('previous'))
-          report={'commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
-            'database_bytes':pathlib.Path('data/ledger.sqlite3').stat().st_size,
-            'integrity':c.execute('PRAGMA integrity_check').fetchone()[0],
-            'foreign_key_violations':rows('PRAGMA foreign_key_check'),
-            'page_count':c.execute('PRAGMA page_count').fetchone()[0],
-            'freelist_count':c.execute('PRAGMA freelist_count').fetchone()[0],
-            'tables':{},'database_objects':rows('SELECT name,SUM(pgsize) bytes,COUNT(*) pages FROM dbstat GROUP BY name ORDER BY bytes DESC'),
-            'archive_media':rows('SELECT media_type,COUNT(*) files,SUM(bytes) bytes FROM archives GROUP BY media_type ORDER BY bytes DESC'),
-            'fetch_status':rows('SELECT status,COUNT(*) rows FROM fetches GROUP BY status'),
-            'fetch_duplicates':rows('SELECT COUNT(*) groups,SUM(n-1) extra_rows FROM (SELECT COUNT(*) n FROM fetches GROUP BY url,fetched_at,status,hash,detail HAVING COUNT(*)>1)'),
-            'largest_archives':rows('SELECT a.hash,a.bytes,a.media_type,(SELECT f.url FROM fetches f WHERE f.hash=a.hash ORDER BY f.id DESC LIMIT 1) url FROM archives a ORDER BY a.bytes DESC LIMIT 25'),
-            'release':{'assets':len(assets),'bytes':sum(a['size'] for a in assets),'active_bytes':sum(a['size'] for a in assets if a['name'] in active),'previous_only_bytes':sum(a['size'] for a in assets if a['name'] in previous-active),'unreferenced_assets':[{'name':a['name'],'bytes':a['size'],'id':a['id']} for a in assets if a['name'] not in active|previous|{'latest.json'}]},
-            'manifest':{'format':manifest.get('format'),'created_at':manifest.get('created_at'),'database':manifest.get('database'),'source_packs':len(manifest.get('source_packs',[])),'previous_database':(manifest.get('previous') or {}).get('database')},
-            'source_files':subprocess.check_output(['git','ls-files','scripts','tests','tracker'],text=True).splitlines()}
-          for name, in c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"):
-              report['tables'][name]=c.execute('SELECT COUNT(*) FROM "'+name+'"').fetchone()[0]
-          report['unreferenced_archive_records']=rows('''SELECT COUNT(*) files,SUM(bytes) bytes FROM archives a WHERE NOT EXISTS(SELECT 1 FROM metrics m WHERE m.hash=a.hash) AND NOT EXISTS(SELECT 1 FROM portfolios p WHERE p.hash=a.hash) AND NOT EXISTS(SELECT 1 FROM document_versions v WHERE v.hash=a.hash)''')
-          report['rowid_usage']=subprocess.run(['git','grep','-n','-i','rowid','--','tracker','scripts','tests'],text=True,capture_output=True).stdout
-          pathlib.Path('docs/STORAGE-AUDIT.json').write_text(json.dumps(report,indent=2)+'\n')
+          before=state.pack_database(pathlib.Path('/tmp/storage-before.zip'))
+          report=cleanup.compact_database(True)
+          assert report['all_logical_rows_unchanged']
+          assert report['after_bytes']<report['before_bytes'],report
+          assert len(report['tables_changed'])==4,report
+          second=cleanup.compact_database(True)
+          assert second['tables_changed']==[] and second['bytes_saved']==0,second
+          after=state.pack_database(pathlib.Path('/tmp/storage-after.zip'))
+          restored=pathlib.Path('/tmp/storage-roundtrip')
+          state._restore_database_only(pathlib.Path('/tmp/storage-after.zip'),restored,after)
+          with sqlite3.connect(restored/'ledger.sqlite3') as c:
+              assert cleanup.table_fingerprints(c)==report['preserved_tables']
+          report['checkpoint_before']=before
+          report['checkpoint_after']=after
+          report['checkpoint_roundtrip_verified']=True
+          report['idempotence_verified']=True
+          report['tests_passed']=int(re.search(r'Ran (\d+) tests',pathlib.Path('/tmp/storage-tests.log').read_text()).group(1))
+          pathlib.Path('docs/STORAGE-VALIDATION.json').write_text(json.dumps(report,indent=2)+'\n')
           print(json.dumps(report,indent=2))
           PY
-      - name: Record audit on maintenance branch only
+      - name: Export and validate website from compacted copy
         run: |
+          uv run --frozen python scripts/export_site.py
+          uv run --frozen python scripts/validate_site.py site
+      - name: Record tested integration and handoff
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('docs/STORAGE-VALIDATION.json');r=json.loads(p.read_text())
+          coverage=json.loads(Path('site/data/coverage.json').read_text())
+          r['site_validation_passed']=True;r['coverage_counts']=coverage['counts']
+          p.write_text(json.dumps(r,indent=2)+'\n')
+          handoff=Path('docs/HANDOFF.md');old=handoff.read_text()
+          header='# Smallcap Ledger backend handoff\n'
+          assert old.startswith(header)
+          section=f'''\n## Database cleanup: validated maintenance branch (2026-09-25 UTC)\n\nThe owner requested removal of unnecessary/redundant database storage. The maintenance branch has passed **{r['tests_passed']} tests**, all-table before/after content fingerprints, integrity and foreign-key validation, idempotence, checkpoint round-trip restore and generated-site/download validation. No production publication has occurred in this validation workflow.\n\nThe four NAV/benchmark current and observation tables now use composite primary-key `WITHOUT ROWID` storage. Every logical row, reporting/observation timestamp, correction, metric, portfolio, source hash and original binary remains unchanged. Fresh databases use the same layout. The daily workflow applies the migration before its regression/export/publish gates; `deployment/storage-layout-v1.json` retains first-application evidence. The publisher keeps the previous checkpoint for rollback.\n\nMeasured on a restored production copy: database **{r['before_bytes']:,} → {r['after_bytes']:,} bytes**; compacted checkpoint ZIP **{r['checkpoint_before']['bytes']:,} → {r['checkpoint_after']['bytes']:,} bytes**. See `docs/STORAGE-AUDIT.json` and `docs/STORAGE-VALIDATION.json`.\n\nThe audit separately found obsolete cumulative release asset `state-35791406887-1.zip` (**1,087,514,828 bytes**). **It has NOT been deleted or replaced.** Legacy release deletion was not performed in this batch. Do not claim this space has been reclaimed. Its database snapshot must be preserved and all originals independently verified in shared source packs before a separately authorized retirement. No original-source retention policy or fund-universe scope changed.\n\nBefore merge, remove the temporary storage validation workflow. After production succeeds, update this handoff with the PR, production run and live verification. Resume the portfolio source-recovery task below after storage work is closed.\n\n'''
+          handoff.write_text(header+section+old[len(header):])
+          readme=Path('README.md');text=readme.read_text()
+          addition='''\n\n## Lossless database storage cleanup\n\nNAV and benchmark tables use composite primary-key storage without redundant rowid indexes. This removes physical duplication, not financial records: current values, alternate observations/corrections, dates and sources all remain. `python scripts/compact_database.py` reports a plan; `--apply` performs a transactional migration, checks fingerprints of every logical table, validates foreign keys/integrity and compacts free pages. Unknown schemas, dependent views, custom indexes/triggers and incoming foreign keys fail closed. The normal daily pipeline runs this before tests and publication, retaining its previous durable checkpoint. No source binary is deleted. The first production result is recorded in `deployment/storage-layout-v1.json`.\n'''
+          if '## Lossless database storage cleanup' not in text:readme.write_text(text+addition)
+          PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/STORAGE-AUDIT.json
-          git commit -m 'Record read-only storage audit'
+          git add tracker/db.py scripts/record_build.py .github/workflows/daily.yml docs/STORAGE-VALIDATION.json docs/HANDOFF.md README.md
+          git commit -m 'Integrate and record verified lossless database compaction'
           git push origin HEAD:maintenance/storage-cleanup-20260925
