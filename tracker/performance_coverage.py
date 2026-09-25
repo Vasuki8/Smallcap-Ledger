@@ -475,7 +475,7 @@ def markdown(audit):
                 )
 
     lines.extend(["","## Per-plan audit","",
-                  "| Fund / plan | NAV range / obs | 1Y | 3Y | 5Y | Reported benchmark | Required TRI series | Exact overlap | Issues |",
+                  "| Fund / plan | NAV range / obs | 1Y | 3Y | 5Y | Reported benchmark | Reported TRI series | Exact overlap | Issues |",
                   "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"])
     for row in audit["plans"]:
         nav=row["nav"];b=row["benchmark"];identity=b["reported_identity"]
