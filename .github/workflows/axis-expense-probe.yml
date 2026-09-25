@@ -21,14 +21,39 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Resolve Axis TER lazy module
+      - name: Resolve Axis TER component chunk
         run: |
           uv run --frozen python - <<'PY'
+          import re,html
+          from urllib.parse import urljoin
+          from bs4 import BeautifulSoup
           from tracker import db
           from tracker.amc_discovery import read
+
           db.init()
-          url=("https://www.axismf.com/_next/static/chunks/app/servicecenter/"
-               "%5Bservicetype%5D/%5Bservices%5D/page-78aa5dcf4cefc6a2.js")
-          raw,_,_=read(url,archive=False)
-          print("PAGE_BUNDLE",raw.decode("utf-8","replace"))
+          page="https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
+          raw,_,_=read(page)
+          soup=BeautifulSoup(raw,"html.parser")
+          scripts=[urljoin(page,html.unescape(t["src"])) for t in soup.find_all("script",src=True)]
+
+          for url in scripts:
+              body,_,_=read(url,archive=False)
+              text=body.decode("utf-8","replace")
+              if "58988" in text:
+                  print("MODULE_58988_SCRIPT",url,"BYTES",len(body))
+                  p=text.find("58988")
+                  print("MODULE_58988_SNIP",text[max(0,p-3000):p+12000])
+
+          runtime=next((u for u in scripts if "/webpack-" in u),None)
+          print("RUNTIME",runtime)
+          if runtime:
+              body,_,_=read(runtime,archive=False)
+              text=body.decode("utf-8","replace")
+              for pat in ("1744","58988"):
+                  pos=0
+                  while True:
+                      i=text.find(pat,pos)
+                      if i<0:break
+                      print("RUNTIME_SNIP",pat,text[max(0,i-2500):i+5000])
+                      pos=i+len(pat)
           PY
