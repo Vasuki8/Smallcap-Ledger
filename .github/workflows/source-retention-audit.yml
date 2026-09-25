@@ -33,7 +33,8 @@ jobs:
           if new not in s:
               assert s.count(old)==1;s=s.replace(old,new)
           s=s.replace('Only superseded HTML/JavaScript/JSON/plain-text responses with a strictly newer retained version', 'Only superseded HTML/JavaScript responses with a strictly newer retained version')
-          s=s.replace('These are distinct response snapshots, not verified byte duplicates.', 'JSON/plain-text responses stay under review because request parameters and data semantics are not fully recorded. These are distinct response snapshots, not verified byte duplicates.')
+          marker='JSON/plain-text responses stay under review because request parameters and data semantics are not fully recorded. '
+          if marker not in s:s=s.replace('These are distinct response snapshots, not verified byte duplicates.', marker+'These are distinct response snapshots, not verified byte duplicates.')
           p.write_text(s)
           PY
       - name: Install locked dependencies and compile
@@ -42,9 +43,12 @@ jobs:
           uv run --frozen python -m compileall -q tracker scripts tests
       - name: Run all regression and retention-rule tests
         run: |
-          set -o pipefail
-          uv run --frozen python -m unittest discover -s tests -v 2>&1 | tee /tmp/retention-tests.log
-      - name: Pin and restore a separate production checkpoint copy
+          if ! uv run --frozen python -m unittest discover -s tests -v > /tmp/retention-tests.log 2>&1; then
+            tail -100 /tmp/retention-tests.log
+            exit 1
+          fi
+          tail -5 /tmp/retention-tests.log
+      - name: Pin and restore exact closed production checkpoint bytes
         run: |
           mkdir -p /tmp/retention-input
           gh release download tracker-history --repo "$GITHUB_REPOSITORY" --pattern latest.json --dir /tmp/retention-input
@@ -52,13 +56,19 @@ jobs:
           RID=$(python -c "import json;print(json.load(open('/tmp/retention-input/release.json'))['id'])")
           gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/releases/$RID/assets?per_page=100" > /tmp/retention-input/assets.json
           uv run --frozen python - <<'PY'
-          import json,os
+          import json,os,shutil,zipfile
           from pathlib import Path
           from scripts import github_state as state
           folder=Path('/tmp/retention-input');m=json.loads((folder/'latest.json').read_text())
           assert m['format']==2
           database=state.download_asset(os.environ['GITHUB_REPOSITORY'],m['database']['asset'],folder)
-          state._restore_database_only(database,Path('/tmp/retention-db'),m['database'])
+          assert database.stat().st_size==m['database']['bytes']
+          assert state.digest(database)==m['database']['sha256']
+          destination=Path('/tmp/retention-db');destination.mkdir()
+          with zipfile.ZipFile(database) as z:
+              assert z.namelist()==['data/ledger.sqlite3']
+              with z.open('data/ledger.sqlite3') as src,(destination/'ledger.sqlite3').open('wb') as out:
+                  shutil.copyfileobj(src,out)
           print('Pinned checkpoint',m['database'])
           PY
       - name: Audit every source and measure compressed pack payloads
