@@ -104,7 +104,7 @@ lines.extend([
 
 def git(*args,check=True):return subprocess.run(['git',*args],cwd=ROOT,check=check)
 git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
-git('add','deployment/update-status.json','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md')
+git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md')
 if git('diff','--cached','--quiet',check=False).returncode:
     git('commit','-m','Record daily collection status and coverage [skip ci]')
     git('pull','--rebase','origin','main')

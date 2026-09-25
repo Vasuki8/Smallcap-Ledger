@@ -501,3 +501,8 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
 
 This is a backend/data handoff. Do not start a UI pass unless explicitly requested.
+
+
+## Lossless database storage cleanup
+
+NAV and benchmark tables use composite primary-key storage without redundant rowid indexes. This removes physical duplication, not financial records: current values, alternate observations/corrections, dates and sources all remain. `python scripts/compact_database.py` reports a plan; `--apply` performs a transactional migration, checks fingerprints of every logical table, validates foreign keys/integrity and compacts free pages. Unknown schemas, dependent views, custom indexes/triggers and incoming foreign keys fail closed. The normal daily pipeline runs this before tests and publication, retaining its previous durable checkpoint. No source binary is deleted. The first production result is recorded in `deployment/storage-layout-v1.json`. See `docs/STORAGE-CLEANUP.md` for measured results and deployment status.

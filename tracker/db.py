@@ -46,11 +46,11 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS nav(
           code INTEGER NOT NULL REFERENCES schemes(code), date TEXT NOT NULL,
           value REAL NOT NULL CHECK(value>0), source TEXT NOT NULL,
-          observed_at TEXT NOT NULL, PRIMARY KEY(code,date));
+          observed_at TEXT NOT NULL, PRIMARY KEY(code,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS nav_observations(
           code INTEGER NOT NULL, date TEXT NOT NULL, value REAL NOT NULL,
           source TEXT NOT NULL, observed_at TEXT NOT NULL,
-          UNIQUE(code,date,value,source));
+          PRIMARY KEY(code,date,value,source)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS archives(
           hash TEXT PRIMARY KEY, path TEXT NOT NULL, bytes INTEGER NOT NULL,
           media_type TEXT, first_seen TEXT NOT NULL);
@@ -61,10 +61,10 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS benchmark(
           name TEXT NOT NULL, date TEXT NOT NULL, value REAL NOT NULL CHECK(value>0),
           source TEXT NOT NULL, observed_at TEXT NOT NULL,
-          PRIMARY KEY(name,date));
+          PRIMARY KEY(name,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS benchmark_observations(
           name TEXT NOT NULL,date TEXT NOT NULL,value REAL NOT NULL,source TEXT NOT NULL,
-          observed_at TEXT NOT NULL,UNIQUE(name,date,value,source));
+          observed_at TEXT NOT NULL,PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS metrics(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, plan TEXT NOT NULL DEFAULT 'All',
           metric TEXT NOT NULL, as_of TEXT NOT NULL, value TEXT NOT NULL, unit TEXT,

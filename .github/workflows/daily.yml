@@ -113,6 +113,8 @@ jobs:
         run: uv run --frozen python scripts/daily_update.py
       - name: Recover any interrupted collection status
         run: uv run --frozen python -c "from tracker import db; db.init(recover=True)"
+      - name: Compact redundant database indexing
+        run: uv run --frozen python scripts/compact_database.py --apply --report deployment/storage-layout-v1.json
       - name: Check archive and financial calculations
         run: uv run --frozen python -m unittest discover -s tests -v
       - name: Generate GitHub Pages site

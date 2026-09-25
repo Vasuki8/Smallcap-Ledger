@@ -1,0 +1,591 @@
+{
+  "commit": "de1c87130385c6b9ca7e0d4136c8f498a91cade6",
+  "database_bytes": 100773888,
+  "integrity": "ok",
+  "foreign_key_violations": [],
+  "page_count": 24603,
+  "freelist_count": 0,
+  "tables": {
+    "archives": 2519,
+    "benchmark": 5329,
+    "benchmark_observations": 5329,
+    "distribution_coverage": 0,
+    "distributions": 0,
+    "document_extractions": 6923,
+    "document_versions": 1782,
+    "documents": 2022,
+    "fetches": 7553,
+    "holdings": 7647,
+    "jobs": 824,
+    "metrics": 25403,
+    "nav": 281442,
+    "nav_observations": 281751,
+    "portfolios": 123,
+    "schemes": 143,
+    "settings": 112,
+    "source_pages": 323
+  },
+  "database_objects": [
+    {
+      "name": "nav_observations",
+      "bytes": 25165824,
+      "pages": 6144
+    },
+    {
+      "name": "nav",
+      "bytes": 25137152,
+      "pages": 6137
+    },
+    {
+      "name": "sqlite_autoindex_nav_observations_1",
+      "bytes": 17997824,
+      "pages": 4394
+    },
+    {
+      "name": "metrics",
+      "bytes": 8515584,
+      "pages": 2079
+    },
+    {
+      "name": "sqlite_autoindex_nav_1",
+      "bytes": 6496256,
+      "pages": 1586
+    },
+    {
+      "name": "sqlite_autoindex_metrics_1",
+      "bytes": 5001216,
+      "pages": 1221
+    },
+    {
+      "name": "document_extractions",
+      "bytes": 2392064,
+      "pages": 584
+    },
+    {
+      "name": "fetches",
+      "bytes": 1482752,
+      "pages": 362
+    },
+    {
+      "name": "idx_metrics_family_metric_date",
+      "bytes": 1445888,
+      "pages": 353
+    },
+    {
+      "name": "idx_fetches_url_time",
+      "bytes": 901120,
+      "pages": 220
+    },
+    {
+      "name": "sqlite_autoindex_document_extractions_1",
+      "bytes": 864256,
+      "pages": 211
+    },
+    {
+      "name": "benchmark_observations",
+      "bytes": 708608,
+      "pages": 173
+    },
+    {
+      "name": "benchmark",
+      "bytes": 708608,
+      "pages": 173
+    },
+    {
+      "name": "holdings",
+      "bytes": 618496,
+      "pages": 151
+    },
+    {
+      "name": "sqlite_autoindex_benchmark_observations_1",
+      "bytes": 569344,
+      "pages": 139
+    },
+    {
+      "name": "archives",
+      "bytes": 540672,
+      "pages": 132
+    },
+    {
+      "name": "documents",
+      "bytes": 479232,
+      "pages": 117
+    },
+    {
+      "name": "sqlite_autoindex_documents_1",
+      "bytes": 286720,
+      "pages": 70
+    },
+    {
+      "name": "sqlite_autoindex_benchmark_1",
+      "bytes": 225280,
+      "pages": 55
+    },
+    {
+      "name": "sqlite_autoindex_archives_1",
+      "bytes": 188416,
+      "pages": 46
+    },
+    {
+      "name": "document_versions",
+      "bytes": 188416,
+      "pages": 46
+    },
+    {
+      "name": "jobs",
+      "bytes": 163840,
+      "pages": 40
+    },
+    {
+      "name": "sqlite_autoindex_document_versions_1",
+      "bytes": 139264,
+      "pages": 34
+    },
+    {
+      "name": "idx_documents_family_seen",
+      "bytes": 122880,
+      "pages": 30
+    },
+    {
+      "name": "schemes",
+      "bytes": 98304,
+      "pages": 24
+    },
+    {
+      "name": "source_pages",
+      "bytes": 90112,
+      "pages": 22
+    },
+    {
+      "name": "idx_holdings_snapshot",
+      "bytes": 81920,
+      "pages": 20
+    },
+    {
+      "name": "portfolios",
+      "bytes": 36864,
+      "pages": 9
+    },
+    {
+      "name": "sqlite_autoindex_source_pages_1",
+      "bytes": 32768,
+      "pages": 8
+    },
+    {
+      "name": "sqlite_autoindex_portfolios_1",
+      "bytes": 20480,
+      "pages": 5
+    },
+    {
+      "name": "sqlite_schema",
+      "bytes": 12288,
+      "pages": 3
+    },
+    {
+      "name": "sqlite_autoindex_settings_1",
+      "bytes": 12288,
+      "pages": 3
+    },
+    {
+      "name": "settings",
+      "bytes": 12288,
+      "pages": 3
+    },
+    {
+      "name": "idx_schemes_family",
+      "bytes": 12288,
+      "pages": 3
+    },
+    {
+      "name": "idx_portfolios_family_date",
+      "bytes": 12288,
+      "pages": 3
+    },
+    {
+      "name": "sqlite_autoindex_distributions_1",
+      "bytes": 4096,
+      "pages": 1
+    },
+    {
+      "name": "distributions",
+      "bytes": 4096,
+      "pages": 1
+    },
+    {
+      "name": "distribution_coverage",
+      "bytes": 4096,
+      "pages": 1
+    }
+  ],
+  "archive_media": [
+    {
+      "media_type": "application/pdf",
+      "files": 332,
+      "bytes": 1337485807
+    },
+    {
+      "media_type": "text/html; charset=utf-8",
+      "files": 673,
+      "bytes": 284238698
+    },
+    {
+      "media_type": "text/html; charset=UTF-8",
+      "files": 326,
+      "bytes": 271425727
+    },
+    {
+      "media_type": "application/vnd.ms-excel",
+      "files": 134,
+      "bytes": 96729819
+    },
+    {
+      "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "files": 296,
+      "bytes": 91639410
+    },
+    {
+      "media_type": "application/json",
+      "files": 458,
+      "bytes": 35689256
+    },
+    {
+      "media_type": "text/html",
+      "files": 130,
+      "bytes": 9373520
+    },
+    {
+      "media_type": "text/plain",
+      "files": 6,
+      "bytes": 9124243
+    },
+    {
+      "media_type": "application/zip",
+      "files": 5,
+      "bytes": 6448889
+    },
+    {
+      "media_type": "application/javascript",
+      "files": 21,
+      "bytes": 6176630
+    },
+    {
+      "media_type": "application/javascript; charset=utf-8",
+      "files": 5,
+      "bytes": 3191682
+    },
+    {
+      "media_type": "application/json; charset=utf-8",
+      "files": 61,
+      "bytes": 2500166
+    },
+    {
+      "media_type": "application/x-javascript",
+      "files": 26,
+      "bytes": 2263725
+    },
+    {
+      "media_type": "application/octet-stream",
+      "files": 2,
+      "bytes": 2211974
+    },
+    {
+      "media_type": "application/x-zip-compressed",
+      "files": 1,
+      "bytes": 1755538
+    },
+    {
+      "media_type": "text/javascript; charset=utf-8",
+      "files": 2,
+      "bytes": 981829
+    },
+    {
+      "media_type": "application/javascript; charset=UTF-8",
+      "files": 27,
+      "bytes": 830659
+    },
+    {
+      "media_type": "application/vnd.ms-excel.sheet.binary.macroEnabled.12",
+      "files": 1,
+      "bytes": 255310
+    },
+    {
+      "media_type": "application/json; charset=UTF-8",
+      "files": 5,
+      "bytes": 113882
+    },
+    {
+      "media_type": "application/xml",
+      "files": 5,
+      "bytes": 40778
+    },
+    {
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "files": 2,
+      "bytes": 35694
+    },
+    {
+      "media_type": "text/xml",
+      "files": 1,
+      "bytes": 6432
+    }
+  ],
+  "fetch_status": [
+    {
+      "status": "error",
+      "rows": 298
+    },
+    {
+      "status": "ok",
+      "rows": 7255
+    }
+  ],
+  "fetch_duplicates": [
+    {
+      "groups": 22,
+      "extra_rows": 22
+    }
+  ],
+  "largest_archives": [
+    {
+      "hash": "50ef440a375e73908aa84e7b7ea4f9e633bcaf31c403b7d767ee9a0164986c98",
+      "bytes": 26159241,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-June-2025.pdf"
+    },
+    {
+      "hash": "ac8d903d188a6943e1c9a5a1afeeb8802d15c473572f3f498d7771290e421b76",
+      "bytes": 25143162,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/Nippon-FS-Mar-2026.pdf"
+    },
+    {
+      "hash": "77e7f602eabc2244e859426da0698484c2a5b1eca6ca2778d47a463b3ff60db1",
+      "bytes": 25055749,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-April-2025.pdf"
+    },
+    {
+      "hash": "62c2311af9f41d88718710fd0d9f3d5d000b9484d472afa40c72fb444c32b0bf",
+      "bytes": 23596896,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/Nippon-FS-Feb-2026.pdf"
+    },
+    {
+      "hash": "4a27e69e033c6c7c84658b658b74a74f16d2276e2f9c346fc3d100e8ab754243",
+      "bytes": 23092529,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/Nippon-FS-Dec-2025.pdf"
+    },
+    {
+      "hash": "d2a206bc68e7aea7c8f4b8d132ac38684e79c077a5c974891639c7a0a7e3a50c",
+      "bytes": 22993845,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/Nippon-FS-Sep-2025.pdf"
+    },
+    {
+      "hash": "833dfd2c3a86f8f8c9a7181c38cef8304246b8f880d8b56d81a11fce8bf8c6a4",
+      "bytes": 21973690,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheetsDocuments/Nippon-FS-APR-2026.pdf"
+    },
+    {
+      "hash": "4ad2169735f80f29c1d9e34fb66b6b8c54e1bb551290252b7188c07844d0a01e",
+      "bytes": 21842883,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheetsDocuments/Nippon-FS-JUNE-2026.pdf"
+    },
+    {
+      "hash": "a3d4514119d48dd10661686743bf5334621079fbde750945592d4ef8c6beff4f",
+      "bytes": 21228837,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-May-2025.pdf"
+    },
+    {
+      "hash": "ea0822016db03fc4e470cf7d4f9f0202ff22690fd5f291c5bec775332e87a1fa",
+      "bytes": 21186858,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-February-2025.pdf"
+    },
+    {
+      "hash": "0c3f3a8a482f39437c2ee0b3d2a32067b778c657d57c68574d48e132a22be262",
+      "bytes": 21080012,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/Nippon-FS-Nov-2025.pdf"
+    },
+    {
+      "hash": "1e7a43faf7e3ebc8132331110daf1bd32190b328d8fb29a27fe463f7cf98635b",
+      "bytes": 20560212,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-March-2025.pdf"
+    },
+    {
+      "hash": "c42e7ed96e361ac50cae3403d2b74d7cb87fe099ed566ac06331cdbfd5f2c288",
+      "bytes": 19167498,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheetsDocuments/Nippon-FS-JULY-2026.pdf"
+    },
+    {
+      "hash": "752017311a891219115145418d184ecae991b4334c828ff9e05f71f6166fd4ea",
+      "bytes": 18700647,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheetsDocuments/Nippon-FS-MAY-2026.pdf"
+    },
+    {
+      "hash": "0c03634f8991b4619bcfd1668eeea861e82e6c2d094e5cda90db33111593ea23",
+      "bytes": 17386523,
+      "media_type": "application/pdf",
+      "url": "https://www.quantumamc.com/FileCDN/FactSheet/00536281-16a1-488f-ab09-cf652e624dcb.pdf"
+    },
+    {
+      "hash": "ecda95db8183525b4b429c835d10d883b4db0757dabff2b562002d5a16cec366",
+      "bytes": 16733406,
+      "media_type": "application/pdf",
+      "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf"
+    },
+    {
+      "hash": "49efbc1dee9a71fc03f8479f4396aed29ba7a52cb0e96eb6821bf100747335e5",
+      "bytes": 15858920,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-November-2024.pdf"
+    },
+    {
+      "hash": "1de68f133a5e0e222c0bdcc69fc63e854a14dafb5e0cb40e8d6fed6a006cce99",
+      "bytes": 15726684,
+      "media_type": "application/pdf",
+      "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_August__2026_10082026160011.pdf"
+    },
+    {
+      "hash": "54293d85b6d54539b79beacca4d5ef7d1556c91c52fa04fe16c5599cf97a1c47",
+      "bytes": 15457070,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-August-2024.pdf"
+    },
+    {
+      "hash": "afc2e42be5d53994cb7b2a54e99af26733c9a59ce413563b6cb668bad8f74ca0",
+      "bytes": 15363701,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-October-2024.pdf"
+    },
+    {
+      "hash": "f80e45281cbf4793e515dd7e5af7d68a9db82e92c4a3ca237d281ce5c6d3d375",
+      "bytes": 15050029,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-July-2024.pdf"
+    },
+    {
+      "hash": "830a1031b502b8f1c289de99487139d322b0ca0cf28dcd14356ec3fed16d6dde",
+      "bytes": 14779472,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-September-2024.pdf"
+    },
+    {
+      "hash": "2915dc1cdbe5938d2cdb35c9b0a641250b46048ce526818b23795c34c9ff7ca8",
+      "bytes": 14776452,
+      "media_type": "application/vnd.ms-excel",
+      "url": "https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls"
+    },
+    {
+      "hash": "a130ce0886fdb6d2f7abc28b43726e941721f167c02de15edc3a9e6c068b561e",
+      "bytes": 13696224,
+      "media_type": "application/pdf",
+      "url": "https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf"
+    },
+    {
+      "hash": "3cd1dc11749ea7c1ad162160e42384e0ef223488e536541ec2faed5417ce9bbe",
+      "bytes": 13364288,
+      "media_type": "application/pdf",
+      "url": "https://mf.nipponindiaim.com/InvestorServices/FactSheets/NipponIndia-Factsheet-December-2024.pdf"
+    }
+  ],
+  "release": {
+    "assets": 99,
+    "bytes": 2510265465,
+    "active_bytes": 1409470155,
+    "previous_only_bytes": 12849919,
+    "unreferenced_assets": [
+      {
+        "name": "state-35791406887-1.zip",
+        "bytes": 1087514828,
+        "id": 582369546
+      }
+    ]
+  },
+  "manifest": {
+    "format": 2,
+    "created_at": "2026-09-25T02:48:29+00:00",
+    "database": {
+      "asset": "database-36087719595-1.zip",
+      "sha256": "05fba67c4818f3285b332696161dce2f1ad969f8ba5768106f5e66487c32736e",
+      "bytes": 12851483
+    },
+    "source_packs": 95,
+    "previous_database": {
+      "asset": "database-36086706291-1.zip",
+      "sha256": "f834f1d53c4df32cbfd7ed12dfc6f8b3770996c047cd44d32d4b4e0f0cd8490f",
+      "bytes": 12849919
+    }
+  },
+  "source_files": [
+    "scripts/daily_update.py",
+    "scripts/export_site.py",
+    "scripts/github_state.py",
+    "scripts/import_archive.py",
+    "scripts/package.py",
+    "scripts/record_build.py",
+    "scripts/refresh_amc_reports.py",
+    "scripts/refresh_bandhan_portfolios.py",
+    "scripts/refresh_canara_expenses.py",
+    "scripts/refresh_groww_expenses.py",
+    "scripts/refresh_hsbc_expenses.py",
+    "scripts/refresh_icici_expenses.py",
+    "scripts/refresh_invesco_expenses.py",
+    "scripts/refresh_jm_expenses.py",
+    "scripts/refresh_mahindra_expenses.py",
+    "scripts/refresh_mirae_expenses.py",
+    "scripts/refresh_sbi_portfolios.py",
+    "scripts/refresh_uti_expenses.py",
+    "scripts/validate_site.py",
+    "tests/test_amc_expenses.py",
+    "tests/test_amc_reports.py",
+    "tests/test_bandhan_portfolios.py",
+    "tests/test_coverage_expansion.py",
+    "tests/test_github_state.py",
+    "tests/test_jm_portfolios.py",
+    "tests/test_publications.py",
+    "tests/test_sbi_portfolios.py",
+    "tests/test_tracker.py",
+    "tracker/__init__.py",
+    "tracker/__main__.py",
+    "tracker/amc_discovery.py",
+    "tracker/amc_expenses.py",
+    "tracker/amc_metrics.py",
+    "tracker/amc_reports.py",
+    "tracker/amfi_metrics.py",
+    "tracker/analytics.py",
+    "tracker/app.py",
+    "tracker/bandhan_portfolios.py",
+    "tracker/coverage.py",
+    "tracker/db.py",
+    "tracker/disclosures.py",
+    "tracker/document_hosts.json",
+    "tracker/jm_portfolios.py",
+    "tracker/portfolio_parser.py",
+    "tracker/providers.py",
+    "tracker/publications.py",
+    "tracker/report_catalog.json",
+    "tracker/report_parser.py",
+    "tracker/reviewed_reports.json",
+    "tracker/reviewed_reports.py",
+    "tracker/sbi_portfolios.py",
+    "tracker/sources.json",
+    "tracker/structured_reports.py",
+    "tracker/sync.py"
+  ],
+  "unreferenced_archive_records": [
+    {
+      "files": 743,
+      "bytes": 298129384
+    }
+  ],
+  "rowid_usage": "tests/test_publications.py:33:                          (SBI,title,kind,'AMC',url,db.now(),db.now(),'AMC')).lastrowid\ntracker/sync.py:43:            jid=c.execute(\"INSERT INTO jobs(kind,started_at,status) VALUES(?,?,'running')\",(kind,db.now())).lastrowid\n"
+}
