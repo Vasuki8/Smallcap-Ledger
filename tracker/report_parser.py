@@ -185,6 +185,16 @@ def page_facts(text,family):
                 index=next((x.group(0).strip() for pattern in recognized if (x:=re.search(pattern,v,re.I))),None)
                 if index:add(key,index,unit='Reported')
             elif key=='fund_launch' and dated(v):add(key,dated(v),unit='Reported')
+    # Edelweiss can print an abbreviated benchmark label in one factsheet
+    # region while the same identified Small Cap page explicitly labels the
+    # performance/riskometer benchmark as TRI. Upgrade only when the literal
+    # total-return label is present in this same owned scheme page.
+    if family=='Edelweiss Small Cap Fund':
+        flat_benchmark=re.sub(r'\s+',' ',text)
+        if re.search(r'\bBenchmark(?:\s+Riskometer)?\b.{0,120}?Nifty\s+Small\s*Cap\s+250\s+TRI\b',
+                     flat_benchmark,re.I):
+            out=[fact for fact in out if fact['metric']!='benchmark']
+            add('benchmark','Nifty Smallcap 250 TRI',unit='Reported')
     if family=='SBI Small Cap Fund' and re.search(r'Benchmark BSE 250 Small Cap\s+Index TRI',text):
         for fact in out:
             if fact['metric']=='benchmark':fact['value']='BSE 250 Small Cap Index TRI'

@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113','amc-reports-2026-09-v114','amc-reports-2026-09-v115','amc-reports-2026-09-v116','amc-reports-2026-09-v117','amc-reports-2026-09-v118','amc-reports-2026-09-v119','amc-reports-2026-09-v120','amc-reports-2026-09-v121','amc-reports-2026-09-v122','amc-reports-2026-09-v123','amc-reports-2026-09-v124','amc-reports-2026-09-v125','amc-reports-2026-09-v126','amc-reports-2026-09-v127','amc-reports-2026-09-v128'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113','amc-reports-2026-09-v114','amc-reports-2026-09-v115','amc-reports-2026-09-v116','amc-reports-2026-09-v117','amc-reports-2026-09-v118','amc-reports-2026-09-v119','amc-reports-2026-09-v120','amc-reports-2026-09-v121','amc-reports-2026-09-v122','amc-reports-2026-09-v123','amc-reports-2026-09-v124','amc-reports-2026-09-v125','amc-reports-2026-09-v126','amc-reports-2026-09-v127','amc-reports-2026-09-v128','amc-reports-2026-09-v129'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -1158,10 +1158,50 @@ def run():
             print(f"::warning::JM v128 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
         ok.append(current and previous)
 
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v129':
+        # Recover only the two live scheme-page identities that are not already
+        # represented by a current archived factsheet. Each source must itself
+        # establish Total Return Index usage; unqualified older observations are
+        # retained rather than rewritten.
+        from tracker import amc_metrics
+        targets=(
+            ('Franklin India Small Cap Fund',
+             'https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'),
+            ('Groww Small Cap Fund',
+             'https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth'),
+        )
+        for family,url in targets:
+            try:
+                providers.can_crawl(url)
+                body,h,_=providers.fetch(url,max_bytes=8*1024*1024)
+                count=amc_metrics.parse_page(body,family,url,h)
+                did=providers.save_document(family,'Official benchmark identity page',url,'factsheet','Fund')
+                providers.doc_version(did,h)
+                print(f'{family}: explicit TRI benchmark page parsed ({count} fact(s))',flush=True)
+            except Exception as exc:
+                print(f"::warning::{family} benchmark identity refresh: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+
     # Dynamic AMC discovery is part of the immediately following daily
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
     checked,gaps=amc_reports.reprocess_archived()
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v129':
+        expected_sources={
+            'Edelweiss Small Cap Fund':'edelweiss_factsheet_september_2026_15092026193426.pdf',
+            'Franklin India Small Cap Fund':'/fund-details/fund-overview/4373/',
+            'Groww Small Cap Fund':'/mutual-funds/groww-small-cap-fund-direct-growth',
+        }
+        for family,source_fragment in expected_sources.items():
+            row=db.one("""SELECT value,as_of,source,hash FROM metrics
+              WHERE family=? AND metric='benchmark'
+              ORDER BY as_of DESC,observed_at DESC,id DESC LIMIT 1""",(family,))
+            valid=bool(row and row['value']=='Nifty Smallcap 250 TRI'
+                       and source_fragment.lower() in row['source'].lower()
+                       and row['hash'])
+            detail='none' if not row else f'{row["value"]} as of {row["as_of"]} · {row["source"]}'
+            if valid:print(f'{family}: explicit TRI identity verified · {detail}',flush=True)
+            else:print(f'::warning::{family}: explicit TRI identity not recovered; latest={detail}',flush=True)
+            ok.append(valid)
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v103':
         family='Edelweiss Small Cap Fund'
         snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions
