@@ -85,8 +85,11 @@ def db_fingerprints(path,exclude=('archive_retention',)):
         return result
 
 
-def simulate_database(target,candidate_hashes):
-    backup_database(target)
+def simulate_database(target,candidate_hashes,*,copy_live=True):
+    if copy_live:
+        backup_database(target)
+    elif not Path(target).is_file():
+        raise ValueError('Active checkpoint database is missing from the simulation workspace')
     before=db_fingerprints(target)
     marks=','.join('?' for _ in candidate_hashes)
     with sqlite3.connect(target) as c:
@@ -119,6 +122,19 @@ def simulate_database(target,candidate_hashes):
     if before!=after:
         raise ValueError('Simulation changed non-retention database content')
     return before
+
+
+def archive_rows(database):
+    with sqlite3.connect(database) as c:
+        c.row_factory=sqlite3.Row
+        return {r['hash']:dict(r) for r in c.execute(
+            'SELECT hash,path,bytes,first_seen FROM archives ORDER BY hash')}
+
+
+def protected_hashes(database):
+    with sqlite3.connect(database) as c:
+        return {r[0] for r in c.execute(
+            "SELECT hash FROM archive_retention WHERE classification='retain_evidence'")}
 
 
 def zip_database(database,target):
@@ -364,16 +380,27 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             for h in pack.get('hashes',[]):
                 if h in pack_for_hash:raise ValueError('Active manifest contains duplicate source hash')
                 pack_for_hash[h]=pack
-        live_rows={r['hash']:r for r in db.rows(
-            'SELECT hash,path,bytes,first_seen FROM archives ORDER BY hash')}
-        if set(pack_for_hash)!=set(live_rows):
-            raise ValueError('Active source-pack manifest does not cover the current database exactly')
-        if not candidate_hashes<=set(live_rows):
-            raise ValueError('Candidate hash missing from current database')
 
-        sim_data=root/'sim-data';sim_data.mkdir()
+        current_db_asset=assets.get(manifest['database']['asset'])
+        if not current_db_asset:raise ValueError('Active database asset is missing')
+        active_db_zip=github_state.download_asset(repo,manifest['database']['asset'],root)
+        if active_db_zip.stat().st_size!=int(manifest['database'].get('bytes') or current_db_asset['size']):
+            raise ValueError('Active database asset size mismatch')
+        expected_db_digest='sha256:'+github_state.digest(active_db_zip)
+        if current_db_asset.get('digest') and expected_db_digest!=current_db_asset['digest']:
+            raise ValueError('Active database release digest mismatch')
+
+        sim_data=root/'sim-data'
+        github_state._restore_database_only(active_db_zip,sim_data,manifest['database'])
+        active_db_zip.unlink()
         sim_db=sim_data/'ledger.sqlite3'
-        before=simulate_database(sim_db,sorted(candidate_hashes))
+        live_rows=archive_rows(sim_db)
+        if set(pack_for_hash)!=set(live_rows):
+            raise ValueError('Active source-pack manifest does not cover the active checkpoint database exactly')
+        if not candidate_hashes<=set(live_rows):
+            raise ValueError('Candidate hash missing from active checkpoint database')
+
+        before=simulate_database(sim_db,sorted(candidate_hashes),copy_live=False)
         after=db_fingerprints(sim_db)
         if before!=after:raise ValueError('Isolated simulation changed provenance/data content')
         retained_hashes=set(live_rows)-candidate_hashes
@@ -425,15 +452,12 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
         if len(proposed_coverage)!=len(set(proposed_coverage)) or set(proposed_coverage)!=retained_hashes:
             raise ValueError('Proposed manifest does not cover retained hashes exactly')
 
-        protected={r['hash'] for r in db.rows(
-            "SELECT hash FROM archive_retention WHERE classification='retain_evidence'")}
+        protected=protected_hashes(sim_db)
         if not protected<=retained_hashes:
             raise ValueError('Proposed migration would remove protected evidence')
 
         db_zip=root/'simulated-database.zip'
         proposed_database=zip_database(sim_db,db_zip)
-        current_db_asset=assets.get(manifest['database']['asset'])
-        if not current_db_asset:raise ValueError('Active database asset is missing')
         current_database_bytes=int(manifest['database'].get('bytes') or current_db_asset['size'])
         if current_database_bytes!=current_db_asset['size']:
             raise ValueError('Active database asset size mismatch')
