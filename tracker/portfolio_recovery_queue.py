@@ -423,6 +423,9 @@ def report(today=None):
             "actionable_now": sum(x["actionable_now"] for x in items),
             "stale_partial": sum(x["state"]=="partial_stale" for x in items),
             "missing": sum(x["state"]=="missing" for x in items),
+            "source_changes_detected": sum(
+                bool((x.get("source_change_watch") or {}).get("changed")) for x in items
+            ),
             "actions": action_counts,
         },
         "next_recovery_target": (
@@ -488,19 +491,23 @@ def markdown(queue):
         "## Queue",
         "",
         f"Items: **{summary['items']}** · actionable now: **{summary['actionable_now']}** · "
+        f"source changes: **{summary.get('source_changes_detected',0)}** · "
         f"stale partial: **{summary['stale_partial']}** · missing: **{summary['missing']}**",
         "",
-        "| Rank | Fund | State | Action | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |",
-        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Rank | Fund | State | Action | Source change | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |",
+        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ])
     for item in queue["items"]:
         source=item.get("recovery_url") or item.get("source_url") or "Gap"
         limitation=(item.get("limitation") or {}).get("code") or "none"
+        watch=item.get("source_change_watch") or {}
+        watch_text=(watch.get("change_reason") if watch.get("changed") else "none")
         lines.append("| "+" | ".join([
             str(item["rank"]),
             esc(item["family"]),
             esc(item["state"]),
             esc(item["action"]),
+            esc(watch_text),
             esc(item.get("reporting_date") or "Gap"),
             esc(limitation),
             esc(source),
