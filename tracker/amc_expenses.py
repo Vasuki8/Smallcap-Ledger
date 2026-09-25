@@ -18,7 +18,7 @@ from urllib.parse import quote, urlencode
 import httpx
 import openpyxl
 
-from . import db
+from . import db, jm_portfolios
 from .providers import fetch, number, public_url
 
 CANARA_FAMILY = "Canara Robeco Small Cap Fund"
@@ -44,6 +44,30 @@ INVESCO_NSDL_CODE = "INVM/O/E/SCF/18/07/0030"
 INVESCO_TER_PAGE = "https://www.invescomutualfund.com/statutory-disclosures/ter-mutual-fund-since-2026/ter"
 INVESCO_PLANS_API = "https://www.invescomutualfund.com/api/Common/GetAllPlans"
 INVESCO_TER_API = "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData"
+
+JM_FAMILY = "Jm Small Cap Fund"
+JM_PUBLISHED_NAME = "JM Small Cap Fund"
+JM_SCHEME_CODE = "SC"
+JM_NSDL_CODE = "JMFI/O/E/SCF/23/11/0016"
+JM_TER_PAGE = "https://www.jmfinancialmf.com/Scheme-Expense-Ratio"
+JM_TER_API = jm_portfolios.API_BASE + "GetTerPageLatest"
+JM_TER_REQUEST = {"IICategory": 0, "IVFundCode": ""}
+_JM_FIELDS = {
+    "Regular": {
+        "base_expense_ratio": "RegularBER",
+        "brokerage": "RegularBrokCost",
+        "transaction_cost": "RegularTransCost",
+        "statutory_levies": "RegularStatLevGST",
+        "ter": "RegularTotalTER",
+    },
+    "Direct": {
+        "base_expense_ratio": "DirectBER",
+        "brokerage": "DirectBrokCost",
+        "transaction_cost": "DirectTransCost",
+        "statutory_levies": "DirectStatLevGST",
+        "ter": "DirectTotalTER",
+    },
+}
 _INVESCO_FIELDS = {
     "Regular": {
         "base_expense_ratio": "Regular Plan - Base Expense Ratio (BER) (%)",
@@ -929,10 +953,141 @@ def invesco(progress=lambda _: None, today=None):
     )
 
 
+def _jm_percent(value, label):
+    if value is None or str(value).strip() in ("", "-", "NA", "N/A"):
+        raise ValueError(f"JM TER API is missing {label}")
+    parsed = number(value)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"JM TER API {label} is outside the accepted range")
+    return parsed
+
+
+def parse_jm_ter_records(records, today=None):
+    """Return the newest exact JM Small Cap BER and published Total TER pair."""
+    today = today or date.today()
+    if not isinstance(records, list):
+        raise ValueError("JM TER API response changed format")
+
+    matches = defaultdict(list)
+    for row in records:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("Scheme", "")).strip() != JM_PUBLISHED_NAME:
+            continue
+        if str(row.get("Schemecode", "")).strip().upper() != JM_SCHEME_CODE:
+            continue
+        if str(row.get("NsdlSchemeCode", "")).strip() != JM_NSDL_CODE:
+            continue
+        raw_day = str(row.get("TERDate", "")).strip()
+        try:
+            day = datetime.fromisoformat(raw_day.replace("Z", "+00:00")).date()
+        except ValueError:
+            continue
+        if day <= today:
+            matches[day.isoformat()].append(row)
+
+    if not matches:
+        raise ValueError("JM TER API contains no dated Small Cap rows")
+    day = max(matches)
+    if len(matches[day]) != 1:
+        raise ValueError(f"JM TER API has duplicate Small Cap rows for {day}")
+    row = matches[day][0]
+
+    plans = {}
+    for plan, fields in _JM_FIELDS.items():
+        values = {
+            metric: _jm_percent(row.get(field), f"{plan} {metric}")
+            for metric, field in fields.items()
+        }
+        if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+            raise ValueError(f"JM {plan} Total TER is below BER on {day}")
+        component_total = (
+            values["base_expense_ratio"]
+            + values["brokerage"]
+            + values["transaction_cost"]
+            + values["statutory_levies"]
+        )
+        if abs(component_total - values["ter"]) > 0.02:
+            raise ValueError(f"JM {plan} TER components do not reconcile on {day}")
+        plans[plan] = values
+    return day, plans
+
+
+def _jm_ter_disclosure(today=None):
+    today = today or date.today()
+    raw, _, _ = fetch(
+        JM_TER_API,
+        body=JM_TER_REQUEST,
+        archive=False,
+        max_bytes=4 * 1024 * 1024,
+    )
+    records = jm_portfolios._decrypt(raw)
+    day, plans = parse_jm_ter_records(records, today)
+
+    # Archive the decoded first-party financial payload rather than the
+    # AES-wrapped transport envelope. This is the exact JSON the public browser
+    # renders after applying JM's published client-side transport key.
+    evidence = json.dumps(
+        records,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    content_hash = db.archive(evidence, "application/json")
+    with db.connect() as connection:
+        connection.execute(
+            "INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",
+            (JM_TER_API, db.now(), "ok", content_hash),
+        )
+    return day, plans, content_hash
+
+
+def jm(progress=lambda _: None, today=None):
+    """Collect JM Small Cap's explicit BER and Total TER from its public table API."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (JM_FAMILY,)):
+        return "JM Small Cap is not in the active universe"
+
+    progress("JM Small Cap expense ratios · official Scheme Expense Ratio API")
+    try:
+        day, plans, content_hash = _jm_ter_disclosure(today)
+        for plan, values in plans.items():
+            for metric in (
+                "base_expense_ratio",
+                "brokerage",
+                "transaction_cost",
+                "statutory_levies",
+                "ter",
+            ):
+                db.metric(
+                    JM_FAMILY,
+                    plan,
+                    metric,
+                    day,
+                    values[metric],
+                    "% p.a. · reported by AMC",
+                    JM_TER_API,
+                    content_hash,
+                )
+    except Exception as exc:
+        with db.connect() as connection:
+            connection.execute(
+                "INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)",
+                (JM_TER_API, db.now(), "error", str(exc)[:400]),
+            )
+        raise
+
+    return (
+        f"{JM_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, hsbc, icici, invesco):
+    for collector in (canara, hsbc, icici, invesco, jm):
         try:
             results.append(collector(progress))
         except Exception as exc:
