@@ -1,0 +1,76 @@
+name: Axis preferred portfolio API validation
+
+on:
+  push:
+    branches:
+      - fix/axis-preferred-complete-api-20260925
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: "1"
+      SMALLCAP_ARCHIVE_FORMAT: "2"
+      SMALLCAP_DATABASE_ONLY_RESTORE: "1"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: "0.11.33"
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - name: Compile and test
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest discover -s tests -v
+      - name: Restore production checkpoint
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Verify Axis API and static export use complete month-end
+        run: |
+          uv run --frozen python - <<'PY'
+          import json
+          from pathlib import Path
+          from tracker import db
+          from tracker.app import funds,fund
+
+          family="Axis Small Cap Fund"
+          code=db.one("""SELECT code FROM schemes WHERE family=? AND plan='Direct'
+                         AND option='Growth' ORDER BY code LIMIT 1""",(family,))["code"]
+          summary=next(x for x in funds()["funds"] if x["code"]==code)
+          detail=fund(code)
+          print("AXIS_CODE",code)
+          print("SUMMARY_PORTFOLIO",summary["portfolio"])
+          print("DETAIL_PORTFOLIO",detail["portfolios"][0])
+          assert summary["portfolio"]["as_of"]=="2026-08-31",summary["portfolio"]
+          assert summary["portfolio"]["complete"]==1,summary["portfolio"]
+          assert summary["portfolio_limitation"] is None
+          assert detail["portfolios"][0]["as_of"]=="2026-08-31",detail["portfolios"][0]
+          assert detail["portfolios"][0]["complete"]==1,detail["portfolios"][0]
+          assert detail["portfolios"][0]["holding_count"]==134,detail["portfolios"][0]
+          assert detail["portfolio_limitation"] is None
+          PY
+          uv run --frozen python scripts/export_site.py
+          uv run --frozen python scripts/validate_site.py site
+          uv run --frozen python - <<'PY'
+          import json
+          from pathlib import Path
+          from tracker import db
+
+          family="Axis Small Cap Fund"
+          code=db.one("""SELECT code FROM schemes WHERE family=? AND plan='Direct'
+                         AND option='Growth' ORDER BY code LIMIT 1""",(family,))["code"]
+          detail=json.loads((Path("site/data/funds")/f"{code}.json").read_text())
+          snap=detail["portfolios"][0]
+          assert snap["as_of"]=="2026-08-31" and snap["complete"]==1,snap
+          payload=json.loads((Path("site/data/portfolios")/f"{snap['id']}.json").read_text())
+          print("STATIC_AXIS_SNAPSHOT",snap)
+          print("STATIC_AXIS_HOLDINGS",len(payload["holdings"]))
+          assert len(payload["holdings"])==134
+          assert payload["limitation"] is None
+          PY
