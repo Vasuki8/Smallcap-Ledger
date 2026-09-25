@@ -1,72 +1,18 @@
 {
-  "built_at": "2026-09-25T04:49:12+00:00",
+  "built_at": "2026-09-25T05:17:15+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "summary": {
-    "items": 8,
-    "actionable_now": 1,
+    "items": 7,
+    "actionable_now": 0,
     "stale_partial": 1,
     "missing": 1,
     "actions": {
-      "search_fuller_first_party_disclosure": 1,
       "retry_after_source_change": 4,
       "requires_more_precise_amc_disclosure": 3
     }
   },
-  "next_recovery_target": {
-    "family": "Axis Small Cap Fund",
-    "action": "search_fuller_first_party_disclosure",
-    "retry_condition": "Search first-party Axis statutory/monthly portfolio disclosures for a constituent-level source that identifies holdings hidden by the current aggregate."
-  },
+  "next_recovery_target": null,
   "items": [
-    {
-      "family": "Axis Small Cap Fund",
-      "amc": "Axis Mutual Fund",
-      "state": "partial_current",
-      "stale": false,
-      "reporting_date": "2026-09-16",
-      "positions": 10,
-      "source_url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
-      "recovery_url": null,
-      "limitation": {
-        "code": "undisclosed_constituents",
-        "kind": "source_aggregate",
-        "basis": "related_first_party_disclosure",
-        "source_marker": "Other Domestic Equity (Less than 0.50% of the corpus)",
-        "detail": "The AMC disclosure aggregates undisclosed smaller equity constituents, so exact names and weights are not available.",
-        "scope": "partial_portfolio"
-      },
-      "action": "search_fuller_first_party_disclosure",
-      "actionable_now": true,
-      "actionability_score": 90,
-      "retry_condition": "Search first-party Axis statutory/monthly portfolio disclosures for a constituent-level source that identifies holdings hidden by the current aggregate.",
-      "evidence": {
-        "latest_fetch": {
-          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
-          "fetched_at": "2026-09-24T22:11:56+00:00",
-          "status": "ok",
-          "hash": "54624cf7b2d4ea1c1ab3f176c379bd893df7d1ac183ae6bea46264b8fbfcfae1",
-          "detail": null
-        },
-        "latest_source_page_check": {
-          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
-          "label": "Fund page",
-          "status": "Checked",
-          "last_checked": "2026-09-24T22:12:17+00:00",
-          "detail": "4 relevant links; 4 documents archived; 1 facts/holdings; 3 documents without extracted tables; 0 download/parser gaps",
-          "match": "exact_url"
-        },
-        "latest_document": {
-          "title": "Fund page",
-          "kind": "source page",
-          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
-          "last_seen": "2026-09-24T22:11:56+00:00",
-          "hash": "54624cf7b2d4ea1c1ab3f176c379bd893df7d1ac183ae6bea46264b8fbfcfae1",
-          "observed_at": "2026-09-24T22:11:57+00:00"
-        },
-        "latest_evidence_at": "2026-09-24T22:12:17+00:00"
-      },
-      "rank": 1
-    },
     {
       "family": "Union Small Cap Fund",
       "amc": "Union Mutual Fund",
@@ -101,7 +47,7 @@
         "latest_document": null,
         "latest_evidence_at": "2026-09-24T22:11:52+00:00"
       },
-      "rank": 2
+      "rank": 1
     },
     {
       "family": "Bajaj Finserv Small Cap Fund",
@@ -150,7 +96,7 @@
         },
         "latest_evidence_at": "2026-09-24T22:08:02+00:00"
       },
-      "rank": 3
+      "rank": 2
     },
     {
       "family": "Edelweiss Small Cap Fund",
@@ -199,7 +145,7 @@
         },
         "latest_evidence_at": "2026-09-24T22:09:18+00:00"
       },
-      "rank": 4
+      "rank": 3
     },
     {
       "family": "ICICI Prudential Small Cap Fund",
@@ -248,7 +194,7 @@
         },
         "latest_evidence_at": "2026-09-24T21:55:13+00:00"
       },
-      "rank": 5
+      "rank": 4
     },
     {
       "family": "Bandhan Small Cap Fund",
@@ -297,7 +243,7 @@
         },
         "latest_evidence_at": "2026-09-24T22:09:05+00:00"
       },
-      "rank": 6
+      "rank": 5
     },
     {
       "family": "Sundaram Small Cap Fund",
@@ -346,7 +292,7 @@
         },
         "latest_evidence_at": "2026-09-24T22:10:21+00:00"
       },
-      "rank": 7
+      "rank": 6
     },
     {
       "family": "UTI Small Cap Fund",
@@ -395,7 +341,7 @@
         },
         "latest_evidence_at": "2026-09-24T21:53:15+00:00"
       },
-      "rank": 8
+      "rank": 7
     }
   ],
   "notes": [

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-25T04:48:50+00:00",
+  "built_at": "2026-09-25T05:16:36+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -146,31 +146,17 @@
         "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct"
       },
       "portfolio": {
-        "as_of": "2026-09-16",
-        "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
-        "complete": 0,
-        "positions": 10,
-        "limitation": {
-          "code": "undisclosed_constituents",
-          "kind": "source_aggregate",
-          "basis": "related_first_party_disclosure",
-          "source_marker": "Other Domestic Equity (Less than 0.50% of the corpus)",
-          "detail": "The AMC disclosure aggregates undisclosed smaller equity constituents, so exact names and weights are not available.",
-          "scope": "partial_portfolio"
-        }
+        "as_of": "2026-08-31",
+        "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx",
+        "complete": 1,
+        "positions": 134,
+        "limitation": null
       },
-      "portfolio_complete": false,
+      "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 6,
+      "official_publications": 8,
       "portfolio_gap": null,
-      "portfolio_limitation": {
-        "code": "undisclosed_constituents",
-        "kind": "source_aggregate",
-        "basis": "related_first_party_disclosure",
-        "source_marker": "Other Domestic Equity (Less than 0.50% of the corpus)",
-        "detail": "The AMC disclosure aggregates undisclosed smaller equity constituents, so exact names and weights are not available.",
-        "scope": "partial_portfolio"
-      }
+      "portfolio_limitation": null
     },
     {
       "family": "Bajaj Finserv Small Cap Fund",
@@ -2041,7 +2027,7 @@
           "title": "Union Small Cap Fund Scheme Information Document",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-25T04:48:33+00:00",
+          "last_seen": "2026-09-25T05:16:18+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -2069,9 +2055,9 @@
     "document_not_archived": 1
   },
   "portfolio_limitation_reasons": {
-    "undisclosed_constituents": 2,
     "named_subset_only": 2,
     "non_numeric_source_weight": 3,
+    "undisclosed_constituents": 1,
     "upstream_source_unavailable": 1
   },
   "counts": {
@@ -2081,10 +2067,10 @@
     "ter": 35,
     "base_expense_ratio": 35,
     "portfolio": 35,
-    "portfolio_complete": 28,
+    "portfolio_complete": 29,
     "portfolio_fresh": 34,
-    "portfolio_fresh_complete": 28,
-    "portfolio_partial": 7,
+    "portfolio_fresh_complete": 29,
+    "portfolio_partial": 6,
     "benchmark_identity": 36
   },
   "notes": [
@@ -2093,6 +2079,7 @@
     "The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.",
     "Base expense ratio and total expense ratio are distinct.",
     "A benchmark name does not establish availability of its historical TRI series.",
+    "Coverage prefers a complete snapshot for the expected regulatory month-end over a later intramonth partial view.",
     "Portfolio records may be partial; portfolio_limitation gives the evidence-based reason without estimating undisclosed weights."
   ]
 }
