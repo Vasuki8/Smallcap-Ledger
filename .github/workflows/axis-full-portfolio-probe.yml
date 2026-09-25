@@ -2,7 +2,8 @@ name: Axis monthly workbook parser probe
 
 on:
   push:
-    branches: [backend/axis-full-portfolio-20260925]
+    branches:
+      - backend/axis-full-portfolio-20260925
   workflow_dispatch:
 
 permissions:
@@ -12,27 +13,32 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 12
-    env:
-      SMALLCAP_NO_SCHEDULER: '1'
-      SMALLCAP_DATA_DIR: ${{ runner.temp }}/axis-probe-data
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
         with:
-          version: '0.11.33'
-          python-version: '3.12'
-      - run: uv sync --frozen
+          version: "0.11.33"
+          python-version: "3.12"
+      - name: Install dependencies
+        run: uv sync --frozen
       - name: Parse exact Axis Small Cap August monthly workbook
+        env:
+          SMALLCAP_NO_SCHEDULER: "1"
         run: |
           uv run --frozen python - <<'PY'
-          import hashlib,io,urllib.request
+          import hashlib,io,tempfile,urllib.request
+          from pathlib import Path
           import openpyxl
           from tracker import db,disclosures
           from tracker.portfolio_parser import parse_sheet
 
+          db.DATA=Path(tempfile.mkdtemp(prefix="axis-portfolio-probe-"))
           URL="https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx"
           FAMILY="Axis Small Cap Fund"
-          req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0","Accept":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,*/*"})
+          req=urllib.request.Request(URL,headers={
+              "User-Agent":"Mozilla/5.0",
+              "Accept":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,*/*",
+          })
           with urllib.request.urlopen(req,timeout=45) as r:
               raw=r.read(20_000_000)
               print("FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
@@ -45,20 +51,20 @@ jobs:
               rows=[[c.value for c in row] for row in cells]
               formats=[[c.number_format or "" for c in row] for row in cells]
               print("SHEET",sheet.title,"ROWS",len(rows),"COLS",max((len(x) for x in rows),default=0))
-              for row in rows[:25]:print("ROW",row[:12])
+              for row in rows[:18]:print("ROW",row[:12])
               parsed=parse_sheet(rows,formats,FAMILY)
               if parsed:
                   print("PARSED_DAY",parsed["day"])
                   print("PARSED_AUM",parsed["aum"])
                   print("PARSED_COMPLETE",parsed["complete"])
                   print("POSITION_COUNT",len(parsed["positions"]))
-                  print("WEIGHT_SUM",sum(x["weight"] for x in parsed["positions"]))
+                  print("WEIGHT_SUM",round(sum(x["weight"] for x in parsed["positions"]),8))
                   print("UNKNOWN_ROWS",parsed["unknown_rows"])
                   kinds={}
                   for x in parsed["positions"]:kinds[x["asset_type"]]=kinds.get(x["asset_type"],0)+1
                   print("ASSET_COUNTS",kinds)
-                  print("FIRST_POSITIONS",parsed["positions"][:10])
-                  print("LAST_POSITIONS",parsed["positions"][-10:])
+                  print("FIRST_POSITIONS",parsed["positions"][:8])
+                  print("LAST_POSITIONS",parsed["positions"][-8:])
           book.close()
 
           db.init()
