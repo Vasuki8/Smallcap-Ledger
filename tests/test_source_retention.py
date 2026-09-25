@@ -137,6 +137,16 @@ class RetentionDependencyTests(unittest.TestCase):
         self.assertNotIn('database_literal_hash_dependency:archive_retention.hash',
                          result[self.old]['evidence_reasons'])
 
+    def test_collect_exposes_binary_state_without_changing_classification_rules(self):
+        self.c.execute("""UPDATE archive_retention SET
+          classification='link_only_candidate',binary_state='metadata_only'
+          WHERE hash=?""",(self.old,))
+        self.c.commit()
+        result=self.collect()
+        self.assertEqual(result[self.old]['binary_state'],'metadata_only')
+        self.assertEqual(result[self.old]['stored_classification'],'link_only_candidate')
+        self.assertEqual(result[self.old]['classification'],'link_only_candidate')
+
     def test_generated_inventory_does_not_self_protect_every_hash(self):
         (self.root/'docs').mkdir()
         (self.root/'docs'/'SOURCE-RETENTION-INVENTORY.json').write_text(repr(self.old))
