@@ -20,36 +20,40 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Inspect JM TER request contract
+      - name: Decode JM public TER payloads like the browser
         run: |
           uv run --frozen python - <<'PY'
-          import json,re,urllib.request
+          import base64,json,subprocess
           import httpx
-          base='https://jmmfapi.jmfinancialmf.com/api/'
-          page='https://www.jmfinancialmf.com/Scheme-Expense-Ratio'
-          js='https://www.jmfinancialmf.com/static/js/main.d8e32c01.js'
+          from tracker.jm_portfolios import API_BASE,_AES_KEY,_AES_IV
+
+          def decrypt_value(value):
+              ciphertext=base64.b64decode(value,validate=True)
+              p=subprocess.run([
+                  'openssl','enc','-d','-aes-256-cbc',
+                  '-K',_AES_KEY.hex(),'-iv',_AES_IV.hex()
+              ],input=ciphertext,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
+              print('OPENSSL_RC',p.returncode,'PLAIN_BYTES',len(p.stdout))
+              if p.returncode:
+                  print('OPENSSL_ERR',p.stderr.decode(errors='replace'))
+                  return None
+              text=p.stdout.decode('latin1')
+              print('PLAIN_PREFIX',repr(text[:500]))
+              return json.loads(text)
 
           with httpx.Client(timeout=45,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}) as client:
               for name,body in [
                   ('GetTerPageDropDown',{'IICategory':0}),
                   ('GetTerPageLatest',{'IICategory':0,'IVFundCode':''}),
               ]:
-                  r=client.post(base+name,json=body)
-                  print('POST_JSON',name,r.status_code,r.headers.get('content-type'),repr(r.text[:1000]))
-                  r=client.post(base+name,data=body)
-                  print('POST_FORM',name,r.status_code,r.headers.get('content-type'),repr(r.text[:1000]))
-
-          req=urllib.request.Request(js,headers={'User-Agent':'Mozilla/5.0'})
-          with urllib.request.urlopen(req,timeout=45) as r:
-              s=r.read().decode('utf-8','ignore')
-          for needle in ['function At','const At','var At','At=function','axios.create','Content-Type','application/json','JSON.stringify']:
-              print('NEEDLE',needle)
-              p=0;n=0
-              while True:
-                  p=s.find(needle,p)
-                  if p<0 or n>=20:break
-                  ctx=re.sub(r'\s+',' ',s[max(0,p-2200):p+4000])
-                  if 'axios' in ctx.lower() or 'At' in ctx or 'content-type' in ctx.lower():
-                      print('CTX',ctx[:6400])
-                  p+=len(needle);n+=1
+                  r=client.post(API_BASE+name,json=body)
+                  outer=r.json()
+                  print('OUTER',name,outer.get('statusCode'),sorted(outer))
+                  data=decrypt_value(outer['data'])
+                  print('DECRYPTED',name,type(data).__name__,len(data) if isinstance(data,list) else None)
+                  if isinstance(data,list):
+                      for row in data:
+                          text=json.dumps(row,sort_keys=True,ensure_ascii=False,default=str)
+                          if 'small' in text.lower() or name=='GetTerPageDropDown':
+                              print('ROW',name,text)
           PY
