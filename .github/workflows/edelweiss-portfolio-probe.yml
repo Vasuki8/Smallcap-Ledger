@@ -34,6 +34,7 @@ jobs:
           from pathlib import Path
           from pypdf import PdfReader
           from tracker import db
+          from scripts import github_state
           from tracker.report_parser import edelweiss_top30_portfolio, edelweiss_top10_portfolio
 
           rows=db.rows("""SELECT d.url,d.title,dv.hash,a.path,a.bytes,a.media_type
@@ -45,6 +46,7 @@ jobs:
           print("DOCS",rows[:20])
           row=next((r for r in rows if 'September_2026' in r['url']),None)
           assert row, "September Edelweiss factsheet archive not found"
+          github_state.materialize_hashes([row["hash"]])
           path=db.DATA/row["path"]
           raw=path.read_bytes()
           print("SOURCE",row["url"])
