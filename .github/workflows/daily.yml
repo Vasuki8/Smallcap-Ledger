@@ -58,6 +58,10 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
+      - name: Audit historical NAV gaps
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/audit_nav_gaps.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
