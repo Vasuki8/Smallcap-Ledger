@@ -1,0 +1,49 @@
+name: Isolated retention replacement simulation
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/retention-simulation.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Validate simulation syntax and unit coverage
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest tests.test_retention_repack_simulation tests.test_github_state -v
+      - name: Run isolated replacement-pack simulation
+        run: uv run --frozen python scripts/simulate_retention_repack.py
+      - name: Persist review artifacts only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add deployment/retention-pack-simulation.json \
+            docs/RETENTION-PROPOSED-MANIFEST.json \
+            docs/RETENTION-MIGRATION-CANDIDATES.json \
+            docs/RETENTION-REPLACEMENT-SIMULATION.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record isolated retention replacement simulation [skip ci]'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
