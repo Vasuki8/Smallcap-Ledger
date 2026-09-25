@@ -1,6 +1,7 @@
 """Auditable per-fund coverage, regenerated from the cumulative archive."""
 from datetime import date,timedelta
 from . import db
+from .portfolio_limitations import portfolio_limitation
 
 FEE_METRICS=('ter','ter_observed','base_expense_ratio','expense_ratio')
 
@@ -84,12 +85,18 @@ def report():
         row['portfolio_fresh']=bool(row['portfolio'] and row['portfolio']['as_of']>=expected)
         row['official_publications']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND origin='AMC' AND kind!='source page'",(family,))['n']
         row['portfolio_gap']=None if row['portfolio'] else _portfolio_gap_audit(family,scheme['amc'],row['official_publications'])
+        row['portfolio_limitation']=portfolio_limitation(family,row['portfolio'],row['portfolio_gap'])
+        if row['portfolio'] is not None:
+            row['portfolio']['limitation']=row['portfolio_limitation']
         rows.append(row)
-    gap_reasons={}
+    gap_reasons={};limitation_reasons={}
     for row in rows:
         if row.get('portfolio_gap'):
             reason=row['portfolio_gap']['reason'];gap_reasons[reason]=gap_reasons.get(reason,0)+1
-    return {'built_at':db.now(),'portfolio_expected_as_of':expected,'funds':rows,'portfolio_gap_reasons':gap_reasons,'counts':{
+        if row.get('portfolio_limitation'):
+            code=row['portfolio_limitation']['code'];limitation_reasons[code]=limitation_reasons.get(code,0)+1
+    return {'built_at':db.now(),'portfolio_expected_as_of':expected,'funds':rows,'portfolio_gap_reasons':gap_reasons,
+            'portfolio_limitation_reasons':limitation_reasons,'counts':{
         'funds':len(rows),'aum':sum(bool(r['aum']) for r in rows),
         'fee':sum(bool(r['fee']) for r in rows),
         'ter':sum(bool(r['ter']) for r in rows),'base_expense_ratio':sum(bool(r['base_expense_ratio']) for r in rows),
@@ -104,4 +111,4 @@ def report():
                  'The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.',
                  'Base expense ratio and total expense ratio are distinct.',
                  'A benchmark name does not establish availability of its historical TRI series.',
-                 'Portfolio records may be partial; see each snapshot and source.']}
+                 'Portfolio records may be partial; portfolio_limitation gives the evidence-based reason without estimating undisclosed weights.']}
