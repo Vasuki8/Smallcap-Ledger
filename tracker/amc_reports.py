@@ -540,14 +540,21 @@ def reprocess_archived():
     init();checked=0;gaps=[]
     rows=db.rows('''SELECT DISTINCT d.family,d.url,v.hash,a.path FROM documents d
       JOIN document_versions v ON v.document_id=d.id JOIN archives a ON a.hash=v.hash
+      LEFT JOIN archive_retention r ON r.hash=a.hash
       LEFT JOIN document_extractions e ON e.family=d.family AND e.hash=v.hash AND e.parser_version=?
-      WHERE d.origin='AMC' AND e.hash IS NULL ORDER BY d.last_seen DESC''',(PARSER_VERSION,))
+      WHERE d.origin='AMC' AND e.hash IS NULL
+        AND COALESCE(r.binary_state,'retained')='retained'
+      ORDER BY d.last_seen DESC''',(PARSER_VERSION,))
     for row in rows:
         if not parser_upgrade_applies(row['family']):continue
         if exclusion_reason(row['family'],row['url']):continue
         if classify('',row['url']) not in ('factsheet','portfolio','scheme document'):continue
         if not should_reprocess_existing(row['family'],row['url'],row['hash']):continue
         try:
-            extract((db.DATA/row['path']).read_bytes(),row['family'],row['url'],row['hash']);checked+=1
+            binary=db.archive_binary_path(row['hash'])
+            if not binary:
+                gaps.append(row['family']+': retained source binary is unavailable')
+                continue
+            extract(binary.read_bytes(),row['family'],row['url'],row['hash']);checked+=1
         except Exception as e:gaps.append(row['family']+': '+str(e)[:120])
     return checked,gaps
