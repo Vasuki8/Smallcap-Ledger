@@ -1,4 +1,4 @@
-name: Edelweiss archived statutory route probe
+name: Edelweiss archived statutory detail probe
 
 on:
   push:
@@ -27,34 +27,51 @@ jobs:
         run: uv sync --frozen
       - name: Restore cumulative history
         run: uv run --frozen python scripts/github_state.py restore
-      - name: Inspect archived portfolio-of-schemes HTML
+      - name: Inspect archived statutory markup cleanly
         run: |
           uv run --frozen python - <<'PY'
-          import re, html
+          import re
+          from bs4 import BeautifulSoup
           from tracker import db
           from scripts import github_state
 
-          row=db.one("""SELECT f.hash,a.path,a.bytes,a.media_type,f.fetched_at
+          row=db.one("""SELECT f.hash,a.path,f.fetched_at
               FROM fetches f JOIN archives a ON a.hash=f.hash
               WHERE f.url='https://www.edelweissmf.com/statutory/portfolio-of-schemes'
                 AND f.status='ok' AND f.hash IS NOT NULL
               ORDER BY f.fetched_at DESC LIMIT 1""")
           assert row
           github_state.materialize_hashes([row['hash']])
-          raw=(db.DATA/row['path']).read_bytes()
-          text=raw.decode('utf-8','replace')
-          print('HASH',row['hash'],'BYTES',len(raw),'FETCHED',row['fetched_at'],row['media_type'])
-          print('TERM_COUNTS', {k:len(re.findall(k,text,re.I)) for k in ['portfolio','monthly','xls','xlsx','api','ajax','scheme']})
-          print('LINKS')
-          for m in re.finditer(r'(?:href|src)=["\']([^"\']+)["\']',text,re.I):
-              u=html.unescape(m.group(1))
-              if re.search(r'portfolio|xls|api|ajax|scheme',u,re.I): print(u)
-          print('SNIPPETS')
-          for pat in ['portfolio of scheme','monthly portfolio','xlsx','xls','api/','ajax','portfolio']:
-              low=text.lower(); p=0; shown=0
-              while shown<15:
-                  i=low.find(pat.lower(),p)
+          text=(db.DATA/row['path']).read_text(errors='replace')
+          soup=BeautifulSoup(text,'html.parser')
+          print('HASH',row['hash'],'FETCHED',row['fetched_at'])
+
+          print('EXTERNAL_SCRIPTS')
+          for tag in soup.find_all('script',src=True):
+              src=tag.get('src','')
+              if src and not src.startswith('data:'): print(src)
+
+          print('RELEVANT_ATTRS')
+          for tag in soup.find_all(True):
+              attrs=' '.join(f'{k}={v}' for k,v in tag.attrs.items() if k in ('href','src','data-url','data-api','data-endpoint','action','id','class'))
+              if attrs and re.search(r'portfolio|scheme|xls|download|api|financial',attrs,re.I) and 'data:image' not in attrs:
+                  print(tag.name,attrs[:1200])
+
+          clean=re.sub(r'data:image/[^\"\']+[\"\']','',text,flags=re.I)
+          clean=re.sub(r'\s+',' ',clean)
+          for pat in ['portfolio-of-schemes','Portfolio of scheme','xls','api/','api.','download','financials-portfolios']:
+              print('PATTERN',pat)
+              low=clean.lower(); pos=0; shown=0
+              while shown<20:
+                  i=low.find(pat.lower(),pos)
                   if i<0: break
-                  print('SNIP',pat,re.sub(r'\s+',' ',text[max(0,i-1000):min(len(text),i+2400)]))
-                  p=i+len(pat); shown+=1
+                  snip=clean[max(0,i-800):min(len(clean),i+1600)]
+                  if 'base64,' not in snip.lower(): print(snip[:2400])
+                  pos=i+len(pat); shown+=1
+
+          print('URL_CANDIDATES')
+          urls=sorted(set(re.findall(r'https?://[^\"\'<> ]+',text)))
+          for u in urls:
+              if re.search(r'portfolio|scheme|xls|api|download',u,re.I) and 'base64' not in u:
+                  print(u[:1800])
           PY
