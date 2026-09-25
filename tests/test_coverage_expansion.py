@@ -341,11 +341,16 @@ Small Cap Fund - An open-ended equity scheme predominantly investing in small ca
             c.execute("INSERT INTO portfolios VALUES(7,'Test Small Cap Fund','2026-07-31',0,'source','hash','old')")
             c.execute("""INSERT INTO holdings(id,snapshot_id,isin,name,sector,weight,quantity,asset_type)
               VALUES(9,7,'INE123456789','Alpha Ltd','Banks',95,NULL,'Equity')""")
-        old=db.rows('SELECT * FROM portfolios');hold=db.rows('SELECT * FROM holdings')
+        old=db.rows('''SELECT id,family,as_of,complete,source,hash,observed_at
+          FROM portfolios''');hold=db.rows('SELECT * FROM holdings')
         db.init();db.init()
         sid=disclosures.portfolio('Test Small Cap Fund','2026-07-31',[{'name':'Alpha Ltd','weight':95},{'name':'Cash','weight':5}],True,'source','hash')
         self.assertNotEqual(sid,7)
-        self.assertEqual(db.rows('SELECT * FROM portfolios WHERE id=7'),old)
+        self.assertEqual(db.rows('''SELECT id,family,as_of,complete,source,hash,observed_at
+          FROM portfolios WHERE id=7'''),old)
+        limitation=db.one('SELECT limitation_code,limitation_detail FROM portfolios WHERE id=7')
+        self.assertEqual(limitation['limitation_code'],'partial_unclassified')
+        self.assertTrue(limitation['limitation_detail'])
         self.assertEqual(db.rows('SELECT * FROM holdings WHERE id=9'),hold)
         self.assertEqual(db.rows('PRAGMA foreign_key_check'),[])
 
