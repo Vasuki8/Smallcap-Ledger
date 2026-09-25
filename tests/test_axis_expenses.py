@@ -151,6 +151,19 @@ class AxisExpenseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"unexpected workbook URL"):
             amc_expenses._axis_select_workbook(bad,date(2026,9,25))
 
+    @patch("tracker.amc_expenses.axis_portfolios.cms_token")
+    @patch("tracker.amc_expenses.fetch")
+    def test_axis_public_token_adapter_accepts_non_archiving_read_contract(
+        self,mock_fetch,mock_cms_token
+    ):
+        mock_fetch.return_value=(b'{"token":"transport"}',"ignored","application/json")
+        def exercise(read_fn):
+            read_fn("https://www.axismf.com/cms/token",body={},archive=False)
+            return "public-token"
+        mock_cms_token.side_effect=exercise
+        self.assertEqual(amc_expenses._axis_cms_token(),"public-token")
+        self.assertFalse(mock_fetch.call_args.kwargs["archive"])
+
     @patch("tracker.amc_expenses.fetch")
     @patch("tracker.amc_expenses._axis_cms_token",return_value="public-token")
     def test_axis_disclosure_uses_current_accepted_schema_and_cross_checks_workbook(
