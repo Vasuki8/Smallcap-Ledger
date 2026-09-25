@@ -13,7 +13,7 @@
       if(parts[1]==='funds'){
         const f=await json('data/funds/'+Number(parts[2])+'.json');
         if(parts[3]==='documents')return json('data/communications/'+f.family_id+'.json');
-        if(parts[3]==='performance'){const [nav,benchmarks]=await Promise.all([json('data/nav/'+f.code+'.json'),json('data/benchmarks.json')]);const q=Object.fromEntries(u.searchParams);return window.SmallcapAnalytics.response(f,nav,benchmarks[q.benchmark],q);}
+        if(parts[3]==='performance'){const [nav,benchmarks]=await Promise.all([json('data/nav/'+f.code+'.json'),json('data/benchmarks.json')]);const q=Object.fromEntries(u.searchParams);return window.SmallcapAnalytics.response(f,nav,benchmarks,q);}
         return f;
       }
       if(parts[1]==='portfolios')return json('data/portfolios/'+Number(parts[2])+'.json');
