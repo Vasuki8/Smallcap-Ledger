@@ -20,7 +20,6 @@ PAGES=[
     ('Bajaj','Bajaj Finserv Small Cap Fund','https://www.bajajamc.com/mutual-funds/equity-funds/bajaj-finserv-small-cap-fund'),
     ('Quantum','Quantum Small Cap Fund','https://www.quantumamc.com/equity-funds/quantum-small-cap-fund'),
     ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html'),
-    ('Franklin','Franklin India Small Cap Fund','https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'),
     ('Groww','Groww Small Cap Fund','https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth'),
     ('Invesco','Invesco India Small Cap Fund','https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp'),
     ('PGIM','Pgim India Small Cap Fund','https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund'),
