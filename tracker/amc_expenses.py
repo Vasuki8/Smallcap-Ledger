@@ -17,6 +17,7 @@ from urllib.parse import quote, urlencode, urlparse
 
 import httpx
 import openpyxl
+import xlrd
 
 from . import db, jm_portfolios
 from .providers import fetch, number, public_url
@@ -52,6 +53,31 @@ JM_NSDL_CODE = "JMFI/O/E/SCF/23/11/0016"
 JM_TER_PAGE = "https://www.jmfinancialmf.com/Scheme-Expense-Ratio"
 JM_TER_API = jm_portfolios.API_BASE + "GetTerPageLatest"
 JM_TER_REQUEST = {"IICategory": 0, "IVFundCode": ""}
+
+MIRAE_FAMILY = "Mirae Asset Small Cap Fund"
+MIRAE_NSDL_CODE = "MIRA/O/E/SCF/24/10/0075"
+MIRAE_TER_PAGE = "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/total-expense-ratio"
+MIRAE_DOWNLOADS_API = "https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData"
+MIRAE_FILE_BASE = "https://www.miraeassetmf.co.in"
+_MIRAE_TITLE = re.compile(r"^Total Expense Ratio -(\\d{2}) ([A-Za-z]{3}) (20\\d{2})$")
+_MIRAE_FILE = re.compile(r"^/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_(\\d{2})(\\d{2})(20\\d{2})\\.xls$", re.I)
+_MIRAE_HEADER_1 = (
+    "NSDL Scheme Code", "Scheme Name", "TER Date (DD/MM/ YYYY)",
+    "Regular", "", "", "", "", "Direct", "", "", "", "",
+)
+_MIRAE_HEADER_2 = (
+    "", "", "",
+    "Regular Plan - Base Expense Ratio (BER) (%)",
+    "Regular Plan - Brokerage cost (%)",
+    "Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+    "Regular Plan - Statutory Levies (including GST) (%)",
+    "Regular Plan - Total TER (%)",
+    "Direct Plan - Base Expense Ratio (BER) (%)",
+    "Direct Plan - Brokerage cost (%)",
+    "Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+    "Direct Plan - Statutory Levies (including GST) (%)",
+    "Direct Plan - Total TER (%)",
+)
 
 MAHINDRA_FAMILY = "Mahindra Manulife Small Cap Fund"
 MAHINDRA_NSDL_CODE = "MAHM/O/E/SCF/22/07/0020"
@@ -1358,10 +1384,255 @@ def mahindra(progress=lambda _: None, today=None):
     )
 
 
+
+def _mirae_headers():
+    return {
+        "User-Agent": "SmallcapLedger/1.0 (public AMC disclosure collection)",
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "Content-Type": "application/json;charset=utf-8",
+        "Origin": MIRAE_FILE_BASE,
+        "Referer": MIRAE_TER_PAGE,
+        "X-Requested-With": "XMLHttpRequest",
+    }
+
+
+def _mirae_download_rows(today=None):
+    """Read Mirae's public TotalExpenseRatio download metadata used by its browser."""
+    today = today or date.today()
+    public_url(MIRAE_DOWNLOADS_API)
+    start = today - timedelta(days=14)
+    payload = {
+        "request": {
+            "modulename": "TotalExpenseRatio",
+            "title": "",
+            "fromdate": start.isoformat(),
+            "todate": today.isoformat(),
+            "pgno": 1,
+            "pgsize": 100,
+        }
+    }
+    try:
+        with httpx.Client(
+            timeout=httpx.Timeout(30, connect=15),
+            headers=_mirae_headers(),
+            follow_redirects=False,
+        ) as client:
+            response = client.post(MIRAE_DOWNLOADS_API, json=payload)
+            response.raise_for_status()
+            data = response.json()
+    except (httpx.HTTPError, json.JSONDecodeError, ValueError) as exc:
+        raise ValueError("Mirae Total Expense Ratio download API is unavailable or invalid") from exc
+    if (
+        not isinstance(data, dict)
+        or str(data.get("ReturnCode")) != "0"
+        or not isinstance(data.get("Data"), list)
+    ):
+        raise ValueError("Mirae Total Expense Ratio download API response changed format")
+    return data["Data"]
+
+
+def _mirae_metadata_day(value):
+    match = re.fullmatch(r"/Date\((\d{10,13})\)/", str(value or "").strip())
+    if not match:
+        return None
+    stamp = int(match.group(1))
+    if stamp < 10**12:
+        stamp *= 1000
+    try:
+        return datetime.utcfromtimestamp(stamp / 1000).date()
+    except (OSError, OverflowError, ValueError):
+        return None
+
+
+def _mirae_select_file(rows, today=None):
+    """Select one latest internally consistent AMC TER workbook metadata row."""
+    today = today or date.today()
+    found = defaultdict(list)
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        title = str(row.get("Title") or "").strip()
+        path = str(row.get("URL") or "").strip()
+        title_match = _MIRAE_TITLE.fullmatch(title)
+        file_match = _MIRAE_FILE.fullmatch(path)
+        published = _mirae_metadata_day(row.get("PublishDate"))
+        if not title_match or not file_match or published is None:
+            continue
+        try:
+            title_day = datetime.strptime(
+                f"{title_match.group(1)} {title_match.group(2)} {title_match.group(3)}",
+                "%d %b %Y",
+            ).date()
+            file_day = datetime.strptime(
+                f"{file_match.group(1)}{file_match.group(2)}{file_match.group(3)}",
+                "%d%m%Y",
+            ).date()
+        except ValueError:
+            continue
+        if title_day != file_day or published != file_day or file_day > today:
+            continue
+        found[file_day].append(path)
+
+    if not found:
+        raise ValueError("Mirae TER metadata returned no dated current workbook")
+    day = max(found)
+    if len(found[day]) != 1:
+        raise ValueError("Mirae TER metadata returned duplicate workbooks for the latest date")
+    source = MIRAE_FILE_BASE + found[day][0]
+    public_url(source)
+    return source, day.isoformat()
+
+
+def _mirae_header(value):
+    return re.sub(r"\s+", " ", str(value or "").strip())
+
+
+def _mirae_fraction(value, label):
+    if value is None or str(value).strip() in ("", "-", "NA", "N/A"):
+        raise ValueError(f"Mirae TER workbook is missing {label}")
+    raw = number(value)
+    # The AMC XLS stores percent-formatted cells as fractions (e.g. 0.0064 = 0.64%).
+    # Reject a layout/format change rather than silently guessing a scale.
+    if not 0 <= raw <= 0.05:
+        raise ValueError(f"Mirae TER workbook {label} is outside the expected fraction range")
+    return raw * 100.0
+
+
+def parse_mirae_rows(rows, *, datemode=0, today=None):
+    """Return newest exact Mirae Small Cap BER and published Total TER plan pair."""
+    today = today or date.today()
+    rows = list(rows)
+    if len(rows) < 3:
+        raise ValueError("Mirae TER workbook contains no usable rows")
+    header1 = tuple(_mirae_header(v) for v in rows[0][:13])
+    header2 = tuple(_mirae_header(v) for v in rows[1][:13])
+    if header1 != _MIRAE_HEADER_1:
+        raise ValueError("Mirae TER workbook top header changed")
+    if header2 != _MIRAE_HEADER_2:
+        raise ValueError("Mirae TER workbook metric columns changed")
+
+    matches = defaultdict(list)
+    for row in rows[2:]:
+        if len(row) < 13:
+            continue
+        if str(row[0] or "").strip() != MIRAE_NSDL_CODE:
+            continue
+        if str(row[1] or "").strip() != MIRAE_FAMILY:
+            continue
+        raw_day = row[2]
+        try:
+            if isinstance(raw_day, (int, float)):
+                day = xlrd.xldate_as_datetime(raw_day, datemode).date()
+            else:
+                day = datetime.strptime(str(raw_day).strip(), "%d/%m/%Y").date()
+        except (ValueError, TypeError, xlrd.XLDateError):
+            continue
+        if day <= today:
+            matches[day.isoformat()].append(row)
+
+    if not matches:
+        raise ValueError("Mirae TER workbook contains no dated Small Cap rows")
+    day = max(matches)
+    if len(matches[day]) != 1:
+        raise ValueError(f"Mirae TER workbook has duplicate Small Cap rows for {day}")
+    row = matches[day][0]
+
+    regular = {
+        "base_expense_ratio": _mirae_fraction(row[3], "Regular BER"),
+        "brokerage": _mirae_fraction(row[4], "Regular brokerage"),
+        "transaction_cost": _mirae_fraction(row[5], "Regular transaction cost"),
+        "statutory_levies": _mirae_fraction(row[6], "Regular statutory levies"),
+        "ter": _mirae_fraction(row[7], "Regular Total TER"),
+    }
+    direct = {
+        "base_expense_ratio": _mirae_fraction(row[8], "Direct BER"),
+        "brokerage": _mirae_fraction(row[9], "Direct brokerage"),
+        "transaction_cost": _mirae_fraction(row[10], "Direct transaction cost"),
+        "statutory_levies": _mirae_fraction(row[11], "Direct statutory levies"),
+        "ter": _mirae_fraction(row[12], "Direct Total TER"),
+    }
+    for plan, values in (("Regular", regular), ("Direct", direct)):
+        if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+            raise ValueError(f"Mirae {plan} Total TER is below BER on {day}")
+        component_total = (
+            values["base_expense_ratio"]
+            + values["brokerage"]
+            + values["transaction_cost"]
+            + values["statutory_levies"]
+        )
+        if abs(component_total - values["ter"]) > 0.02:
+            raise ValueError(f"Mirae {plan} TER components do not reconcile on {day}")
+    return day, {"Regular": regular, "Direct": direct}
+
+
+def parse_mirae_workbook(content, today=None):
+    try:
+        book = xlrd.open_workbook(file_contents=content)
+    except Exception as exc:
+        raise ValueError("Mirae TER disclosure is not a readable XLS workbook") from exc
+    if book.sheet_names() != ["Report"]:
+        raise ValueError("Mirae TER workbook sheet layout changed")
+    sheet = book.sheet_by_name("Report")
+    rows = (
+        [sheet.cell_value(i, j) for j in range(sheet.ncols)]
+        for i in range(sheet.nrows)
+    )
+    return parse_mirae_rows(rows, datemode=book.datemode, today=today)
+
+
+def _mirae_disclosure(today=None):
+    today = today or date.today()
+    rows = _mirae_download_rows(today)
+    source, metadata_day = _mirae_select_file(rows, today)
+    workbook, content_hash, typ = fetch(source, max_bytes=5 * 1024 * 1024)
+    if typ.split(";", 1)[0].strip().lower() not in (
+        "application/vnd.ms-excel",
+        "application/octet-stream",
+    ):
+        raise ValueError("Mirae TER source returned an unexpected content type")
+    day, plans = parse_mirae_workbook(workbook, today)
+    if day != metadata_day:
+        raise ValueError("Mirae TER workbook latest row does not match its published file date")
+    return source, day, plans, content_hash
+
+
+def mirae(progress=lambda _: None, today=None):
+    """Collect Mirae Asset Small Cap's explicit BER and Total TER workbook."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (MIRAE_FAMILY,)):
+        return "Mirae Asset Small Cap is not in the active universe"
+
+    progress("Mirae Asset Small Cap expense ratios · official Total Expense Ratio workbook")
+    source, day, plans, content_hash = _mirae_disclosure(today)
+    for plan, values in plans.items():
+        for metric in (
+            "base_expense_ratio",
+            "brokerage",
+            "transaction_cost",
+            "statutory_levies",
+            "ter",
+        ):
+            db.metric(
+                MIRAE_FAMILY,
+                plan,
+                metric,
+                day,
+                values[metric],
+                "% p.a. · reported by AMC",
+                source,
+                content_hash,
+            )
+    return (
+        f"{MIRAE_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, hsbc, icici, invesco, jm, mahindra):
+    for collector in (canara, hsbc, icici, invesco, jm, mahindra, mirae):
         try:
             results.append(collector(progress))
         except Exception as exc:
