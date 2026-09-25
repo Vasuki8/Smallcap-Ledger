@@ -1,7 +1,54 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-25, after Union + Bajaj portfolio source re-audit.
+Updated: 2026-09-25, after Edelweiss portfolio source audit.
 
+
+
+## Latest completed batch: Edelweiss portfolio source audit
+
+**Edelweiss Small Cap Fund remains a verified current partial portfolio. No holding or weight was fabricated or promoted in this batch.**
+
+The exact production September factsheet was recovered from the tracker's cumulative archive rather than re-downloaded from the AMC because current GitHub Actions requests to Edelweiss's factsheet/statutory routes return **HTTP 403 Forbidden**. Retained evidence:
+
+- source: `https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf`
+- SHA-256: `ecda95db8183525b4b429c835d10d883b4db0757dabff2b562002d5a16cec366`
+- bytes: **16,733,406**
+- portfolio reporting date: **2026-08-31**
+
+The exact Small Cap page publishes only **Top 10 Holdings**, not a complete constituent table. The retained rows are City Union Bank 3.17%, Karur Vysya Bank 2.64%, Multi Commodity Exchange of India 2.64%, PNB Housing Finance 2.34%, Avalon Technologies 2.27%, Gabriel India 2.18%, KEI Industries 2.06%, Ajanta Pharma 1.94%, Fortis Healthcare 1.92% and Radico Khaitan 1.84%. They reconcile to the factsheet's explicit **Top 10 stocks: 23.00%** total.
+
+The same page contains an **Additional Information pertaining to Portfolio of the scheme** section. PDF annotation inspection in successful diagnostic run **36089827060** proved that all five portfolio-related "Click Here" links resolve to the exact first-party route:
+
+`https://www.edelweissmf.com/statutory/portfolio-of-schemes`
+
+The tracker history contains prior successful fetches of that exact page. The newest retained HTML is:
+
+- fetched: **2026-09-24T04:43:04Z**
+- SHA-256: `c2978d8fc61804b4afad5e3c65d98131ed2d6f74c31c45980212518deea5ab6a`
+- bytes: **795,717**
+
+Runs **36089882783**, **36089930620** and **36090041993** inspected the retained page and database history. The archived page is an Angular application shell; it contains no exact monthly workbook attachment, no child portfolio document already retained by the tracker, and no directly usable Small Cap holding payload. Its client bundle is referenced as `main.0411e4933dfdb2cb.js`, but the current production runner receives **HTTP 403** when requesting that bundle as well. Current direct requests to the statutory page and September PDF likewise return 403.
+
+This establishes a transport/discovery boundary rather than a parser-completeness bug. The existing conservative Top-30 parser is not applicable to the current September factsheet because that PDF genuinely publishes a Top-10 table. Do not expand the 10 named holdings by inference, reuse an older month's Top-30 list as current, guess workbook filenames, or mark the snapshot complete.
+
+Published coverage therefore remains unchanged:
+- reported TER **35/36**
+- BER **35/36**
+- dated Direct fee fallback **36/36**
+- AUM **36/36**
+- benchmark identity **36/36**
+- portfolios **35/36**, **28 complete**, **34 current**, **7 partial**
+- latest NAV **2026-09-24**
+
+### Next backend task
+
+Do **not** repeat Edelweiss source probing unless its first-party statutory route or static bundle becomes reachable again, or an exact monthly attachment URL becomes available.
+
+**ICICI Prudential Small Cap Fund is the next preferred portfolio source-recovery target for a bounded transport re-check.** Earlier work already identified exact first-party August/July monthly portfolio ZIP metadata, but the files redirected to `archive.icicipruamc.com`, whose authoritative public DNS did not resolve at the time. First verify whether that exact official transport has materially changed. If the host still has no usable public transport, record the unchanged blocker and do not guess alternate filenames or use third-party copies.
+
+Bandhan, Sundaram and UTI remain disclosure-precision blockers because their source files contain censored or non-numeric tiny positions; Axis remains an aggregate-disclosure blocker; Union and Bajaj remain the transport/source-discovery blockers documented in the previous batch. Axis also remains the only fund without explicitly labelled TER and BER.
+
+No UI, paid-service, permission, archive-retention policy, schedule cadence or production data changed in this audit. Temporary diagnostic workflows were removed before merge.
 
 ## Latest completed batch: Union + Bajaj portfolio source re-audit
 
