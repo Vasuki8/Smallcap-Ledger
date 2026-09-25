@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Inspect public Mirae TER page and browser scripts
+      - name: Inspect Mirae public TER service contract
         shell: bash
         run: |
           python - <<'PY'
@@ -22,7 +22,7 @@ jobs:
           PAGE = "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/total-expense-ratio"
           UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
 
-          def get(url, limit=8_000_000):
+          def get(url, limit=10_000_000):
               req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
               with urllib.request.urlopen(req, timeout=30) as r:
                   data = r.read(limit + 1)
@@ -31,50 +31,37 @@ jobs:
                       raise RuntimeError("response too large")
                   return data.decode("utf-8", "replace")
 
-          page = get(PAGE)
-          print("PAGE_TERMS")
-          for term in ("expense", "ratio", "publish", "search", "ajax", "api", "service", "sitefinity"):
-              hits=[m.start() for m in re.finditer(term, page, re.I)]
-              print(term, len(hits), hits[:15])
-
-          print("FORM_AND_INPUT_SNIPPETS")
-          for m in re.finditer(r"<(?:form|input|button)[^>]{0,1000}>", page, re.I|re.S):
-              s=re.sub(r"\s+"," ",m.group(0))
-              if re.search(r"ter|expense|publish|search|date|title",s,re.I):
-                  print(html.unescape(s[:1800]))
-
-          scripts=[]
-          for m in re.finditer(r"<script[^>]+src=[\"']([^\"']+)", page, re.I):
-              src=html.unescape(m.group(1))
-              scripts.append(urllib.parse.urljoin(PAGE,src))
-          print("SCRIPTS", len(scripts))
-          for s in scripts:
-              print("SCRIPT", s)
-
-          needles=("totalexpense","total-expense","expense ratio","publishdate","publish date",
-                   "searchtotal","statutory","ajax","api/","service","sitefinity","sfapi")
-          for s in scripts:
-              if urllib.parse.urlparse(s).hostname not in {
-                  "www.miraeassetmf.co.in","miraeassetmf.co.in"
-              }:
+          page=get(PAGE)
+          urls=[]
+          for m in re.finditer(r"<script[^>]+src=[\"']([^\"']+)",page,re.I):
+              urls.append(urllib.parse.urljoin(PAGE,html.unescape(m.group(1))))
+          for u in urls:
+              if urllib.parse.urlparse(u).hostname not in {"www.miraeassetmf.co.in","miraeassetmf.co.in"}:
                   continue
               try:
-                  text=get(s, 6_000_000)
+                  text=get(u)
               except Exception as e:
-                  print("SCRIPT_ERROR", s, repr(e))
-                  continue
-              low=text.lower()
-              matched=[n for n in needles if n in low]
-              if not matched:
-                  continue
-              print("MATCHED_SCRIPT", s, matched)
-              for n in matched:
+                  print("ERROR",u,repr(e)); continue
+              for needle in (
+                  "GetDownloadsDataAsync","GetDownloadsYearsAsync","GetTERNoticeDownloads",
+                  "AjaxService","GetDownloadsData","TotalExpenseRatio"
+              ):
                   start=0
                   shown=0
-                  while shown < 8:
-                      i=low.find(n,start)
+                  low=text.lower(); token=needle.lower()
+                  while shown<12:
+                      i=low.find(token,start)
                       if i<0: break
-                      a=max(0,i-500); b=min(len(text),i+1000)
-                      print("SNIP",n, re.sub(r"\s+"," ",text[a:b]))
-                      start=i+len(n); shown+=1
+                      a=max(0,i-1000); b=min(len(text),i+2200)
+                      print("CONTEXT",u,needle,re.sub(r"\s+"," ",text[a:b]))
+                      start=i+len(token); shown+=1
+
+          print("PAGE_AJAXSERVICE_CONTEXT")
+          for needle in ("AjaxService","GetDownloadsDataAsync","GetTERNoticeDownloads"):
+              start=0
+              while True:
+                  i=page.lower().find(needle.lower(),start)
+                  if i<0: break
+                  print("PAGE_CONTEXT",needle,re.sub(r"\s+"," ",page[max(0,i-1200):min(len(page),i+2400)]))
+                  start=i+len(needle)
           PY
