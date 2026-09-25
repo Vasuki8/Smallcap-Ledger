@@ -204,23 +204,16 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(amc_metrics.parse_page(content.replace(b'Axis Small Cap Fund',b'Axis Large Cap Fund'),'Axis Small Cap Fund',url,h),0)
 
     def test_current_official_pages_add_only_explicit_tri_benchmark_identities(self):
-        from tracker import amc_metrics
+        from tracker import amc_metrics,reviewed_reports
 
-        franklin='https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'
-        franklin_html=b'''<html><h1>Franklin India Small Cap Fund (Erstwhile Franklin India Smaller Companies Fund)</h1>
-        <p>Benchmark(s) : Nifty Smallcap 250</p>
-        <p>Benchmark returns calculated based on Total Return Index Values</p></html>'''
-        fh=db.archive(franklin_html,'text/html')
-        self.assertEqual(amc_metrics.parse_page(franklin_html,'Franklin India Small Cap Fund',franklin,fh),1)
-        row=db.one("SELECT value,unit,source FROM metrics WHERE hash=? AND metric='benchmark'",(fh,))
-        self.assertEqual(row['value'],'Nifty Smallcap 250 TRI')
-        self.assertIn('Total Return Index',row['unit'])
-        self.assertEqual(row['source'],franklin)
-
-        ambiguous=franklin_html.replace(b'Benchmark returns calculated based on Total Return Index Values',b'')
-        ah=db.archive(ambiguous,'text/html')
-        self.assertEqual(amc_metrics.parse_page(ambiguous,'Franklin India Small Cap Fund',franklin,ah),0)
-        self.assertIsNone(db.one("SELECT value FROM metrics WHERE hash=? AND metric='benchmark'",(ah,)))
+        franklin=next(x for x in reviewed_reports.reports()
+                      if x['family']=='Franklin India Small Cap Fund' and x['reviewed_at']=='2026-09-25')
+        self.assertEqual(franklin['as_of'],'2026-09-25')
+        self.assertIn('/fund-details/fund-overview/4373/',franklin['source'])
+        self.assertIn('Total Return Index',franklin['note'])
+        self.assertEqual(franklin['facts'],[{
+            'metric':'benchmark','value':'Nifty Smallcap 250 TRI',
+            'unit':'Observed on official fund page · Total Return Index'}])
 
         groww='https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth'
         groww_html=b'''<html><h1>Groww Small Cap Fund Direct Growth</h1>
