@@ -64,7 +64,7 @@ def public_url(url):
     return url
 
 
-def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024):
+def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024, headers=None):
     original=url
     # Public GETs occasionally fail on slow AMC hosts. Retry only transient
     # transport failures once; never retry HTTP status errors, validation
@@ -80,8 +80,14 @@ def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024):
                 with httpx.Client(timeout=httpx.Timeout(timeout,connect=15),headers={"User-Agent":USER_AGENT,"Accept":"*/*"}, follow_redirects=False) as client:
                     for _ in range(6):
                         public_url(current)
+                        request_headers={"Referer":NIFTY_PAGE} if "niftyindices.com" in current else {}
+                        # Internal public-CMS callers may need a browser-issued token.
+                        # Never forward caller-supplied headers across a redirect to a
+                        # different host.
+                        if headers and (urlparse(current).hostname or '').lower()==(urlparse(original).hostname or '').lower():
+                            request_headers.update(headers)
                         with client.stream("POST" if body is not None else "GET",current,json=body,
-                                           headers={"Referer":NIFTY_PAGE} if "niftyindices.com" in current else {}) as r:
+                                           headers=request_headers) as r:
                             if r.is_redirect:
                                 current=urljoin(current,r.headers.get("location",""))
                                 continue
