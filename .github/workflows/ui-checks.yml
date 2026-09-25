@@ -1,0 +1,41 @@
+name: Research UI checks
+
+on:
+  pull_request:
+    paths:
+      - 'dist/**'
+      - 'tests/**'
+      - '.github/workflows/ui-checks.yml'
+      - 'pyproject.toml'
+      - 'uv.lock'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-ui-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1, same pin as daily publisher
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Validate source syntax
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          node --check dist/app.js
+          node --check dist/research.js
+      - name: Run existing and research-desk regressions
+        run: uv run --frozen python -m unittest discover -s tests -v
