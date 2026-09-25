@@ -382,6 +382,51 @@ class TrackerTests(unittest.TestCase):
         self.assertFalse(disclosures.official_publication_url('https://news.example.com/hdfc-market-outlook','HDFC'))
         self.assertFalse(disclosures.official_publication_url('https://hdfcfund.com.evil.example/news','HDFC'))
 
+    def test_archive_retention_state_cannot_downgrade_protected_evidence(self):
+        h=db.archive(b'protected retention invariant','application/pdf')
+        db.set_archive_retention(
+            h,classification='retain_evidence',reason='financial evidence',
+            reviewed_at='2026-09-25')
+        with self.assertRaisesRegex(ValueError,'cannot be downgraded'):
+            db.set_archive_retention(h,classification='link_only_candidate')
+        with self.assertRaisesRegex(ValueError,'must retain'):
+            db.set_archive_retention(h,binary_state='metadata_only')
+        state=db.archive_retention(h)
+        self.assertEqual(state['classification'],'retain_evidence')
+        self.assertEqual(state['binary_state'],'retained')
+        self.assertTrue(db.archive_binary_path(h).is_file())
+
+    def test_metadata_only_archive_is_not_downloadable_and_refetch_rehydrates(self):
+        payload=b'superseded discovery page retained for safety'
+        h=db.archive(payload,'text/html')
+        path=db.archive_binary_path(h)
+        self.assertIsNotNone(path);self.assertTrue(path.is_file())
+        db.set_archive_retention(
+            h,classification='link_only_candidate',binary_state='metadata_only',
+            reason='synthetic retention test',reviewed_at='2026-09-25')
+        # Retention state is logical only in this plumbing batch: no byte deletion.
+        self.assertTrue(path.is_file())
+        self.assertIsNone(db.archive_binary_path(h))
+        response=self.client.get('/api/archive/'+h)
+        self.assertEqual(response.status_code,404)
+        self.assertIn('not retained',response.json()['detail'])
+        did=providers.save_document('Test Small Cap Fund','Old source shell',
+                                    'https://example.com/old-shell','source page','AMC')
+        providers.doc_version(did,h)
+        docs=self.client.get('/api/funds/1/documents').json()
+        shell=next(d for d in docs if d['url']=='https://example.com/old-shell')
+        self.assertEqual(shell['versions'],[])
+        status=self.client.get('/api/status').json()['counts']
+        self.assertGreaterEqual(status['archive_metadata_only_files'],1)
+
+        # Identical bytes fetched again are current evidence and are safely
+        # rehydrated/reviewed instead of remaining a broken current source.
+        self.assertEqual(db.archive(payload,'text/html'),h)
+        retention=db.archive_retention(h)
+        self.assertEqual(retention['binary_state'],'retained')
+        self.assertEqual(retention['classification'],'retain_latest_or_review')
+        self.assertEqual(self.client.get('/api/archive/'+h).status_code,200)
+
     def test_github_archive_roundtrip_and_traversal_rejection(self):
         from scripts.github_state import pack,unpack
         import zipfile
@@ -407,6 +452,9 @@ class TrackerTests(unittest.TestCase):
             check_superset(db.DATA,incoming)
             with sqlite3.connect(incoming/'ledger.sqlite3') as c:c.execute("DELETE FROM nav WHERE date='2024-05-01'")
             with self.assertRaisesRegex(ValueError,'historical nav'):check_superset(db.DATA,incoming)
+            incoming2=tmp/'incoming2';unpack(archive,incoming2)
+            with sqlite3.connect(incoming2/'ledger.sqlite3') as c:c.execute("DROP TABLE archive_retention")
+            with self.assertRaisesRegex(ValueError,'retention metadata'):check_superset(db.DATA,incoming2)
 
     def test_static_and_python_financial_calculations_agree(self):
         import json,math,subprocess

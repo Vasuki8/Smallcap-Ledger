@@ -293,13 +293,31 @@ def documents(code:int):
     docs=[d for d in docs if not exclusion_reason(s['amc'],d['url'],d['title'])]
     for d in docs:
         d['title']=providers.document_title(d['title'],d['url'])
-        d['versions']=db.rows("SELECT v.*,a.media_type,a.bytes FROM document_versions v JOIN archives a ON a.hash=v.hash WHERE document_id=? ORDER BY v.id DESC",(d['id'],))
+        d['versions']=db.rows("""SELECT v.*,a.media_type,a.bytes,
+          COALESCE(r.classification,'unclassified') retention_classification
+          FROM document_versions v JOIN archives a ON a.hash=v.hash
+          LEFT JOIN archive_retention r ON r.hash=a.hash
+          WHERE document_id=? AND COALESCE(r.binary_state,'retained')='retained'
+          ORDER BY v.id DESC""",(d['id'],))
     return docs
 
 
 @app.get('/api/status')
 def status():
-    counts=db.one("SELECT (SELECT COUNT(*) FROM schemes) plans,(SELECT COUNT(DISTINCT family) FROM schemes) funds,(SELECT COUNT(*) FROM nav) nav_points,(SELECT COUNT(*) FROM benchmark) benchmark_points,(SELECT COUNT(*) FROM portfolios) portfolios,(SELECT COUNT(*) FROM document_versions) documents,(SELECT COALESCE(SUM(bytes),0) FROM archives) archive_bytes")
+    counts=db.one("""SELECT
+      (SELECT COUNT(*) FROM schemes) plans,
+      (SELECT COUNT(DISTINCT family) FROM schemes) funds,
+      (SELECT COUNT(*) FROM nav) nav_points,
+      (SELECT COUNT(*) FROM benchmark) benchmark_points,
+      (SELECT COUNT(*) FROM portfolios) portfolios,
+      (SELECT COUNT(*) FROM document_versions) documents,
+      (SELECT COALESCE(SUM(a.bytes),0) FROM archives a LEFT JOIN archive_retention r ON r.hash=a.hash
+        WHERE COALESCE(r.binary_state,'retained')='retained') archive_bytes,
+      (SELECT COUNT(*) FROM archives a LEFT JOIN archive_retention r ON r.hash=a.hash
+        WHERE COALESCE(r.binary_state,'retained')='retained') archive_binary_files,
+      (SELECT COUNT(*) FROM archive_retention WHERE binary_state='metadata_only') archive_metadata_only_files,
+      (SELECT COALESCE(SUM(a.bytes),0) FROM archives a JOIN archive_retention r ON r.hash=a.hash
+        WHERE r.binary_state='metadata_only') archive_metadata_only_bytes""")
     database_path=db.DATA/"ledger.sqlite3"
     counts["database_bytes"]=database_path.stat().st_size if database_path.is_file() else 0
     counts["total_storage_bytes"]=counts["database_bytes"]+counts["archive_bytes"]
@@ -351,10 +369,12 @@ async def toggle_source(source_id:int,request:Request):
 @app.get('/api/archive/{content_hash}')
 def download_archive(content_hash:str):
     if not re.fullmatch('[0-9a-f]{64}',content_hash):raise HTTPException(404)
-    r=db.one("SELECT * FROM archives WHERE hash=?",(content_hash,))
+    r=db.archive_retention(content_hash)
     if not r:raise HTTPException(404,'Archived file is unavailable')
-    p=(db.DATA/r['path']).resolve()
-    if not p.is_relative_to(db.DATA) or not p.is_file():raise HTTPException(404,'Archived file is missing; original link remains available')
+    if r['binary_state']!='retained':
+        raise HTTPException(404,'Saved binary is not retained; original source link and provenance remain available')
+    p=db.archive_binary_path(content_hash)
+    if not p:raise HTTPException(404,'Archived file is missing; original link remains available')
     typ=r['media_type'] or ''
     ext='.pdf' if 'pdf' in typ else '.xlsx' if 'spreadsheetml' in typ else '.xls' if 'excel' in typ else '.xml' if 'xml' in typ else '.html' if 'html' in typ else '.json' if 'json' in typ else '.csv' if 'csv' in typ else '.txt'
     # Some public CDNs serve documents as application/octet-stream.

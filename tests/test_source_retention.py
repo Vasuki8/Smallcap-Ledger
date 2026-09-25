@@ -4,6 +4,7 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 from scripts import audit_source_retention as audit
 
 
@@ -74,6 +75,7 @@ class RetentionDependencyTests(unittest.TestCase):
         self.c = sqlite3.connect(self.path)
         self.c.executescript('''
           CREATE TABLE archives(hash TEXT PRIMARY KEY,path TEXT,bytes INTEGER,media_type TEXT,first_seen TEXT);
+          CREATE TABLE archive_retention(hash TEXT PRIMARY KEY,classification TEXT,binary_state TEXT,reason TEXT,reviewed_at TEXT,updated_at TEXT);
           CREATE TABLE fetches(id INTEGER PRIMARY KEY,url TEXT,fetched_at TEXT,status TEXT,hash TEXT,detail TEXT);
           CREATE TABLE metrics(family TEXT,source TEXT,hash TEXT,as_of TEXT);
           CREATE TABLE portfolios(family TEXT,source TEXT,hash TEXT,as_of TEXT);
@@ -89,6 +91,8 @@ class RetentionDependencyTests(unittest.TestCase):
         self.new = 'b'*64
         for h, when in ((self.old, '2026-09-01'), (self.new, '2026-09-24')):
             self.c.execute('INSERT INTO archives VALUES(?,?,?,?,?)', (h, 'archive/'+h[:2]+'/'+h, 100, 'text/html', when))
+            self.c.execute('INSERT INTO archive_retention VALUES(?,?,?,?,?,?)',
+                           (h,'unclassified','retained',None,None,when))
             self.c.execute('INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)', (self.url, when, 'ok', h))
         self.c.commit()
 
@@ -125,6 +129,24 @@ class RetentionDependencyTests(unittest.TestCase):
         (self.root/'tracker'/'replay.py').write_text('SOURCE_HASH='+repr(self.old))
         self.assertEqual(self.collect()[self.old]['classification'], 'retain_evidence')
 
+    def test_retention_metadata_table_does_not_self_protect_candidates(self):
+        self.c.execute("UPDATE archive_retention SET classification='link_only_candidate' WHERE hash=?",(self.old,))
+        self.c.commit()
+        result=self.collect()
+        self.assertEqual(result[self.old]['classification'],'link_only_candidate')
+        self.assertNotIn('database_literal_hash_dependency:archive_retention.hash',
+                         result[self.old]['evidence_reasons'])
+
+    def test_collect_exposes_binary_state_without_changing_classification_rules(self):
+        self.c.execute("""UPDATE archive_retention SET
+          classification='link_only_candidate',binary_state='metadata_only'
+          WHERE hash=?""",(self.old,))
+        self.c.commit()
+        result=self.collect()
+        self.assertEqual(result[self.old]['binary_state'],'metadata_only')
+        self.assertEqual(result[self.old]['stored_classification'],'link_only_candidate')
+        self.assertEqual(result[self.old]['classification'],'link_only_candidate')
+
     def test_generated_inventory_does_not_self_protect_every_hash(self):
         (self.root/'docs').mkdir()
         (self.root/'docs'/'SOURCE-RETENTION-INVENTORY.json').write_text(repr(self.old))
@@ -156,6 +178,61 @@ class RetentionDependencyTests(unittest.TestCase):
     def test_source_hash_missing_from_archive_is_reported(self):
         self.c.execute('INSERT INTO metrics VALUES(?,?,?,?)', ('Fund', self.url, 'c'*64, '2026-09-24'))
         self.assertEqual(audit.collect(self.c, self.root)[1], ['c'*64])
+
+
+
+class RetentionMetadataPreparationTests(unittest.TestCase):
+    def test_prepare_applies_reviewed_classes_without_changing_binary_state(self):
+        import json
+        from tracker import db
+        from scripts import prepare_retention_metadata as prep
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);previous_data=db.DATA;previous_inventory=prep.INVENTORY
+            db.DATA=root
+            try:
+                db.init()
+                protected=db.archive(b'protected evidence','application/pdf')
+                candidate=db.archive(b'old discovery shell','text/html')
+                inventory=root/'inventory.json'
+                inventory.write_text(json.dumps([
+                    {'hash':protected,'classification':'retain_evidence'},
+                    {'hash':candidate,'classification':'link_only_candidate'},
+                ]))
+                prep.INVENTORY=inventory
+                manifest={'format':2,'created_at':'now'}
+                current_items={
+                    protected:{'classification':'retain_evidence','reasons':['synthetic protected evidence']},
+                    candidate:{'classification':'link_only_candidate','reasons':['synthetic superseded discovery response']},
+                }
+                report_path=root/'report.json'
+                with patch.object(prep.retention_audit,'collect',return_value=(current_items,[])), \
+                     patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
+                    report=prep.prepare(apply=True,report_path=report_path)
+                self.assertEqual(report['files_actually_deleted'],0)
+                self.assertEqual(report['bytes_actually_deleted'],0)
+                self.assertEqual(report['binary_states'],{'retained':2})
+                self.assertTrue(report['protected_archive_metadata_unchanged'])
+                self.assertTrue(report['non_retention_table_fingerprints_unchanged'])
+                self.assertFalse(report['deletion_enabled'])
+                self.assertEqual(db.archive_retention(protected)['classification'],'retain_evidence')
+                self.assertEqual(db.archive_retention(candidate)['classification'],'link_only_candidate')
+                self.assertEqual(db.archive_retention(candidate)['binary_state'],'retained')
+                self.assertTrue(db.archive_binary_path(candidate).is_file())
+                self.assertTrue(report_path.is_file())
+
+                # A newer current fetch/review must never be downgraded by the
+                # older inventory when preparation runs again.
+                db.set_archive_retention(
+                    candidate,classification='retain_latest_or_review',
+                    reason='became current',reviewed_at='2026-09-25')
+                with patch.object(prep.retention_audit,'collect',return_value=(current_items,[])), \
+                     patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
+                    prep.prepare(apply=True)
+                self.assertEqual(db.archive_retention(candidate)['classification'],
+                                 'retain_latest_or_review')
+            finally:
+                prep.INVENTORY=previous_inventory
+                db.DATA=previous_data
 
 
 if __name__ == '__main__': unittest.main()
