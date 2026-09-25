@@ -1,17 +1,16 @@
-name: Inspect Mahindra TER disclosure
+name: Validate Mahindra TER collector
 
 on:
   push:
     branches: [backend/mahindra-ter-v134]
-    paths: [.github/workflows/inspect-mahindra-ter.yml]
 
 permissions:
   contents: read
 
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -20,36 +19,20 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Verify latest Mahindra Small Cap TER rows
+      - run: uv run --frozen python -m compileall -q tracker scripts tests
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Verify live Mahindra Small Cap TER disclosure
         run: |
           uv run --frozen python - <<'PY'
-          import io,json,urllib.request,hashlib
-          from datetime import date,datetime
-          import openpyxl
-
-          url='https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.mahindramanulife.com/downloads'})
-          with urllib.request.urlopen(req,timeout=60) as r:
-              body=r.read(); print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
-          print('SHA256',hashlib.sha256(body).hexdigest())
-          wb=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
-          ws=wb['Sheet1']
-          exact=[]
-          for i,row in enumerate(ws.iter_rows(values_only=True),1):
-              vals=list(row)
-              if len(vals)<13: continue
-              if str(vals[0] or '').strip()!='MAHM/O/E/SCF/22/07/0020': continue
-              if str(vals[1] or '').strip()!='Mahindra Manulife Small Cap Fund': continue
-              try: day=datetime.strptime(str(vals[2]).strip(),'%d-%b-%Y').date()
-              except ValueError: continue
-              if day<=date.today(): exact.append((day,i,vals))
-          exact.sort()
-          print('EXACT_ROWS',len(exact))
-          for day,i,vals in exact[-7:]:
-              print('ROW',i,day.isoformat(),json.dumps([None if v is None else str(v) for v in vals],ensure_ascii=False))
-          day,i,row=exact[-1]
-          print('LATEST',day.isoformat(),'ROW',i)
-          print('REGULAR',row[3],row[4],row[5],row[6],row[7])
-          print('DIRECT',row[8],row[9],row[10],row[11],row[12])
-          wb.close()
+          from datetime import date
+          from tracker import amc_expenses,db
+          db.init()
+          source,day,plans,content_hash=amc_expenses._mahindra_disclosure(date.today())
+          assert source.startswith('https://www.mahindramanulife.com/uploads/download/')
+          assert set(plans)=={'Regular','Direct'}
+          assert 0 <= plans['Direct']['base_expense_ratio'] <= plans['Direct']['ter'] <= 5
+          assert 0 <= plans['Regular']['base_expense_ratio'] <= plans['Regular']['ter'] <= 5
+          print('MAHINDRA_VERIFIED',day,plans)
+          print('MAHINDRA_SOURCE',source)
+          print('MAHINDRA_HASH',content_hash)
           PY
