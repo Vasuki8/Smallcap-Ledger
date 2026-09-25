@@ -1,4 +1,4 @@
-name: Edelweiss portfolio parser probe
+name: Edelweiss archived parser probe
 
 on:
   push:
@@ -11,7 +11,12 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_ARCHIVE_FORMAT: '2'
+      SMALLCAP_DATABASE_ONLY_RESTORE: '1'
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -20,36 +25,47 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: uv sync --frozen
-      - name: Inspect real Edelweiss September factsheet extraction
-        shell: bash
+      - name: Restore cumulative history
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Inspect archived Edelweiss September factsheet
         run: |
           uv run --frozen python - <<'PY'
-          import io, urllib.request
+          import io
+          from pathlib import Path
           from pypdf import PdfReader
+          from tracker import db
           from tracker.report_parser import edelweiss_top30_portfolio, edelweiss_top10_portfolio
 
-          URL="https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf"
-          req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0","Accept":"application/pdf,*/*"})
-          with urllib.request.urlopen(req,timeout=45) as r:
-              raw=r.read(25_000_000)
-              print("FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
+          rows=db.rows("""SELECT d.url,d.title,dv.hash,a.path,a.bytes,a.media_type
+              FROM documents d
+              JOIN document_versions dv ON dv.document_id=d.id
+              JOIN archives a ON a.hash=dv.hash
+              WHERE d.family='Edelweiss Small Cap Fund'
+              ORDER BY dv.observed_at DESC""")
+          print("DOCS",rows[:20])
+          row=next((r for r in rows if 'September_2026' in r['url']),None)
+          assert row, "September Edelweiss factsheet archive not found"
+          path=db.DATA/row["path"]
+          raw=path.read_bytes()
+          print("SOURCE",row["url"])
+          print("HASH",row["hash"])
+          print("BYTES",len(raw),row["media_type"])
           reader=PdfReader(io.BytesIO(raw))
-          print("PAGES",len(reader.pages))
           for i,p in enumerate(reader.pages):
               text=p.extract_text() or ""
               if "Edelweiss Small Cap Fund" not in text:
                   continue
               layout=p.extract_text(extraction_mode="layout") or ""
-              print("SMALLCAP_PAGE",i,"STD_LEN",len(text),"LAYOUT_LEN",len(layout))
-              print("STD_PARSE",edelweiss_top30_portfolio(text))
-              print("LAYOUT_PARSE",edelweiss_top30_portfolio(layout))
-              next_two="\n".join((reader.pages[i+1].extract_text() or "" if i+1<len(reader.pages) else "",
-                                   reader.pages[i+2].extract_text() or "" if i+2<len(reader.pages) else ""))
-              print("TOP10_PARSE",edelweiss_top10_portfolio(text,next_two))
-              print("STD_TEXT_START")
-              print(text[:12000])
-              print("STD_TEXT_END")
-              print("LAYOUT_TEXT_START")
-              print(layout[:15000])
-              print("LAYOUT_TEXT_END")
+              print("SMALLCAP_PAGE",i,"STD",len(text),"LAYOUT",len(layout))
+              print("STD_TOP30",edelweiss_top30_portfolio(text))
+              print("LAYOUT_TOP30",edelweiss_top30_portfolio(layout))
+              next_two="\n".join(
+                  reader.pages[j].extract_text() or ""
+                  for j in range(i+1,min(i+3,len(reader.pages)))
+              )
+              print("TOP10",edelweiss_top10_portfolio(text,next_two))
+              print("STD_TEXT")
+              print(text[:14000])
+              print("LAYOUT_TEXT")
+              print(layout[:17000])
           PY
