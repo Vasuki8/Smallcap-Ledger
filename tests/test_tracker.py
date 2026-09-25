@@ -382,6 +382,31 @@ class TrackerTests(unittest.TestCase):
         self.assertFalse(disclosures.official_publication_url('https://news.example.com/hdfc-market-outlook','HDFC'))
         self.assertFalse(disclosures.official_publication_url('https://hdfcfund.com.evil.example/news','HDFC'))
 
+    def test_metadata_only_archive_is_not_downloadable_and_refetch_rehydrates(self):
+        payload=b'superseded discovery page retained for safety'
+        h=db.archive(payload,'text/html')
+        path=db.archive_binary_path(h)
+        self.assertIsNotNone(path);self.assertTrue(path.is_file())
+        db.set_archive_retention(
+            h,classification='link_only_candidate',binary_state='metadata_only',
+            reason='synthetic retention test',reviewed_at='2026-09-25')
+        # Retention state is logical only in this plumbing batch: no byte deletion.
+        self.assertTrue(path.is_file())
+        self.assertIsNone(db.archive_binary_path(h))
+        response=self.client.get('/api/archive/'+h)
+        self.assertEqual(response.status_code,404)
+        self.assertIn('not retained',response.json()['detail'])
+        status=self.client.get('/api/status').json()['counts']
+        self.assertGreaterEqual(status['archive_metadata_only_files'],1)
+
+        # Identical bytes fetched again are current evidence and are safely
+        # rehydrated/reviewed instead of remaining a broken current source.
+        self.assertEqual(db.archive(payload,'text/html'),h)
+        retention=db.archive_retention(h)
+        self.assertEqual(retention['binary_state'],'retained')
+        self.assertEqual(retention['classification'],'retain_latest_or_review')
+        self.assertEqual(self.client.get('/api/archive/'+h).status_code,200)
+
     def test_github_archive_roundtrip_and_traversal_rejection(self):
         from scripts.github_state import pack,unpack
         import zipfile
