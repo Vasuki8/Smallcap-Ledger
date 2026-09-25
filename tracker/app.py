@@ -15,7 +15,8 @@ from fastapi import FastAPI,HTTPException,Request,UploadFile,File,Form
 from fastapi.responses import FileResponse,Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
-from . import db,analytics,providers,disclosures
+from . import db,analytics,providers,disclosures,coverage
+from .portfolio_limits import missing_limitation
 from .sync import updater
 
 
@@ -89,6 +90,21 @@ def available_expenses(s):
     return out
 
 
+
+def decorate_portfolio(row):
+    """Attach the stable public limitation object to a retained snapshot row."""
+    if not row:return row
+    row['limitation']=(
+        {'code':row.get('limitation_code'),'detail':row.get('limitation_detail')}
+        if row.get('limitation_code') else None)
+    return row
+
+
+def family_portfolio_limitation(family,amc,portfolio):
+    if portfolio:
+        return portfolio.get('limitation')
+    return missing_limitation(coverage.portfolio_gap(family,amc))
+
 def dated_return(code,latest,years):
     d=analytics.shift_years(date.fromisoformat(latest['date']),years)
     p=db.one("SELECT date,value FROM nav WHERE code=? AND date<=? ORDER BY date DESC LIMIT 1",(code,d.isoformat()))
@@ -111,7 +127,9 @@ def funds():
         s['metrics']=metrics_for(s)
         s['available_expenses']=available_expenses(s)
         s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
-        s['portfolio']=db.one("SELECT id,as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
+        s['portfolio']=decorate_portfolio(db.one("""SELECT id,as_of,complete,limitation_code,limitation_detail
+          FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1""",(s['family'],)))
+        s['portfolio_limitation']=family_portfolio_limitation(s['family'],s['amc'],s['portfolio'])
         s['stale_days']=(date.today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
     return {"funds":records,"as_of":db.now()}
 
@@ -131,6 +149,9 @@ def fund(code:int):
       WHERE p.family=? AND p.as_of=(SELECT MAX(as_of) FROM portfolios WHERE family=?)
       GROUP BY p.id ORDER BY p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
       (s['family'],s['family']))
+    for p in s['portfolios']:decorate_portfolio(p)
+    s['portfolio_limitation']=family_portfolio_limitation(
+        s['family'],s['amc'],s['portfolios'][0] if s['portfolios'] else None)
     s['sources']=db.rows("SELECT * FROM source_pages WHERE instr(lower(?),lower(amc_match))>0 ORDER BY id",(s['amc'],))
     s['distribution_coverage']=db.one("SELECT * FROM distribution_coverage WHERE code=?",(code,))
     return s
@@ -177,7 +198,7 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str=pro
 
 @app.get('/api/portfolios/{snapshot_id}')
 def holdings(snapshot_id:int):
-    p=db.one("SELECT * FROM portfolios WHERE id=?",(snapshot_id,))
+    p=decorate_portfolio(db.one("SELECT * FROM portfolios WHERE id=?",(snapshot_id,)))
     if not p:raise HTTPException(404,"Snapshot not found")
     p['holdings']=db.rows("SELECT * FROM holdings WHERE snapshot_id=? ORDER BY weight DESC",(snapshot_id,))
     current=date.fromisoformat(p['as_of']);previous_month=(current.replace(day=1)-timedelta(days=1)).strftime('%Y-%m')
@@ -187,6 +208,7 @@ def holdings(snapshot_id:int):
       WHERE p.family=? AND substr(p.as_of,1,7)=?
       GROUP BY p.id ORDER BY p.as_of DESC,p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
       (p['family'],previous_month))
+    prior=decorate_portfolio(prior)
     p['previous']=prior;p['changes']=[]
     if prior:
         old=db.rows("SELECT * FROM holdings WHERE snapshot_id=?",(prior['id'],))
