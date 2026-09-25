@@ -187,6 +187,56 @@ class TrackerTests(unittest.TestCase):
         r=self.client.get('/api/funds/2/performance').json()
         self.assertFalse(r['can_total_return']);self.assertEqual(r['comparison'],[]);self.assertIsNone(r['sip'])
 
+    def test_performance_defaults_to_reported_nifty_tri_when_available(self):
+        family='Evidence Nifty Small Cap Fund';code=9931
+        with db.connect() as c:
+            c.execute('INSERT OR IGNORE INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (code,family+' Direct Growth',family,'Evidence AMC','Direct','Growth','test'))
+        points=[('2024-01-02',100),('2025-01-02',110),('2026-01-02',121)]
+        db.save_nav(code,points,providers.AMFI_NAV)
+        db.save_benchmark(providers.BENCHMARK,[(d,v*2) for d,v in points],providers.NIFTY_PAGE)
+        db.metric(family,'All','benchmark','2026-01-02','Nifty Smallcap 250 TRI','Reported',
+                  'https://example.com/nifty-benchmark','nifty-benchmark')
+        r=self.client.get(f'/api/funds/{code}/performance').json()
+        self.assertEqual(r['reported_benchmark']['canonical_tri_series'],providers.BENCHMARK)
+        self.assertEqual(r['reported_benchmark']['status'],'available')
+        self.assertEqual(r['comparison_series']['name'],providers.BENCHMARK)
+        self.assertEqual(r['comparison_series']['role'],'reported_benchmark')
+        self.assertEqual(r['comparison_series']['status'],'available')
+        self.assertTrue(r['comparison_series']['available'])
+        self.assertGreaterEqual(len(r['comparison']),2)
+
+    def test_performance_does_not_substitute_nifty_for_missing_reported_bse(self):
+        from tracker.performance_coverage import BSE_SERIES
+        family='Evidence BSE Small Cap Fund';code=9932
+        with db.connect() as c:
+            c.execute('INSERT OR IGNORE INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (code,family+' Direct Growth',family,'Evidence AMC','Direct','Growth','test'))
+        points=[('2024-01-02',100),('2025-01-02',110),('2026-01-02',121)]
+        db.save_nav(code,points,providers.AMFI_NAV)
+        db.save_benchmark(providers.BENCHMARK,[(d,v*2) for d,v in points],providers.NIFTY_PAGE)
+        db.metric(family,'All','benchmark','2026-01-02','BSE 250 SmallCap TRI','Reported',
+                  'https://example.com/bse-benchmark','bse-benchmark')
+        r=self.client.get(f'/api/funds/{code}/performance').json()
+        self.assertEqual(r['reported_benchmark']['canonical_tri_series'],BSE_SERIES)
+        self.assertEqual(r['reported_benchmark']['status'],'series_missing')
+        self.assertEqual(r['benchmark'],BSE_SERIES)
+        self.assertEqual(r['comparison_series']['role'],'reported_benchmark')
+        self.assertEqual(r['comparison_series']['status'],'reported_series_missing')
+        self.assertFalse(r['comparison_series']['available'])
+        self.assertEqual(r['comparison'],[])
+        self.assertIsNone(r['benchmark_source'])
+
+        alt=self.client.get(f'/api/funds/{code}/performance',
+                            params={'benchmark':providers.BENCHMARK}).json()
+        self.assertEqual(alt['reported_benchmark']['canonical_tri_series'],BSE_SERIES)
+        self.assertEqual(alt['reported_benchmark']['status'],'series_missing')
+        self.assertEqual(alt['comparison_series']['name'],providers.BENCHMARK)
+        self.assertEqual(alt['comparison_series']['role'],'alternate_comparison')
+        self.assertEqual(alt['comparison_series']['status'],'available')
+        self.assertTrue(alt['comparison_series']['available'])
+        self.assertGreaterEqual(len(alt['comparison']),2)
+
     def test_flat_nav_sip_has_zero_profit(self):
         result=analytics.sip([['2024-01-01',100],['2024-02-01',100],['2024-03-01',100],['2024-03-31',100]],1000)
         self.assertEqual(result['invested'],3000);self.assertAlmostEqual(result['gain'],0)
