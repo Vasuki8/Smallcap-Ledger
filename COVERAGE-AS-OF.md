@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-25T00:22:01+00:00
+Prepared: 2026-09-25T01:12:32+00:00
 
 **36 funds, 143 NAV series, 281,442 NAV observations. Latest included NAV: 2026-09-24.**
 
@@ -31,7 +31,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Jm Small Cap Fund | ₹ 955.14 · 2026-09-23 | 0.97% TER · 2026-09-24 | 85 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-06-30 | 6 |
 | Kotak Small Cap Fund | ₹ 19,520.76 · 2026-09-23 | 0.6459% TER · 2026-09-22 | 81 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-08-31 | 8 |
 | LIC Mf Small Cap Fund | ₹ 853.41 · 2026-09-23 | 1.31% TER · 2026-09-24 | 57 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 - TRI · 2026-08-31 | 27 |
-| Mahindra Manulife Small Cap Fund | ₹ 5,528.25 · 2026-09-23 | 0.47% BER · 2026-08-31 | 82 positions · 2026-08-31 · complete · current | BSE 250 Small Cap TRI · 2026-08-31 | 11 |
+| Mahindra Manulife Small Cap Fund | ₹ 5,528.25 · 2026-09-23 | 0.92% TER · 2026-09-24 | 82 positions · 2026-08-31 · complete · current | BSE 250 Small Cap TRI · 2026-08-31 | 11 |
 | Mirae Asset Small Cap Fund | ₹ 5,965.33 · 2026-09-23 | 0.34% BER · 2026-07-31 | 86 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 (TRI) · 2026-07-31 | 6 |
 | Motilal Oswal Small Cap Fund | ₹ 8,431.85 · 2026-09-23 | 0.85% TER · 2026-09-23 | 63 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
 | Nippon India Small Cap Fund | ₹ 83,095.73 · 2026-09-23 | 0.68% TER · 2026-09-24 | 257 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 653 |
