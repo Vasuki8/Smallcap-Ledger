@@ -441,11 +441,13 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
         previous_data=db.DATA;db.DATA=sim_data
         try:
             materialization=materialization_checks(sim_data,replacement_examples,candidate_hashes)
-            replay=replay_checks(sim_data,candidate_hashes)
             documents=document_checks(sim_data,candidate_hashes)
         finally:
             db.DATA=previous_data
+        # Generate/validate the full static site against the exact proposed
+        # metadata-only database before the replay check can write anything.
         site=site_checks(sim_data,root,repo,candidate_hashes)
+        replay=replay_checks(sim_data,candidate_hashes)
 
         candidate_output={
             'simulated_at':datetime.now(timezone.utc).isoformat(timespec='seconds'),
