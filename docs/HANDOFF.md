@@ -26,6 +26,24 @@ Updated: 2026-09-25, after historical performance / benchmark coverage audit dep
 
 
 
+## Latest completed batch: BSE 250 SmallCap TRI source audit — first-party subscription blocker
+
+**The historical BSE 250 SmallCap TRI collection task was traced to the authoritative provider and deliberately stopped without inserting data because no verified free first-party daily TRI history was found.** Read `docs/BSE-TRI-SOURCE-AUDIT.md` for the bounded source audit and exact source links.
+
+BSE Index Services' official March 2026 factsheet establishes the identity boundary: **SML250** is the Price Return ticker and **SML250T** is the Total Return ticker. The same factsheet prints distinct 30 March 2026 levels — **7043.82 Total Returns** versus **5646.83 Price Returns** — so the public price-index route cannot be relabelled as TRI.
+
+The official BSE Indices Methodology independently maps BSE 250 SmallCap to PR **SML250** / TR **SML250T** and states that **daily constituent and index level data are available via subscription**. A bounded first-party search did not identify a free historical `SML250T` CSV/API/download that satisfies the project's retained-date/source requirements.
+
+No benchmark row, observation, archive, collector, endpoint, UI, source-retention rule or paid service was added. The existing **Nifty Smallcap 250 TRI** series remains separate and unchanged. Do not derive TRI from the price index/dividend yield, use a third-party substitute, or purchase/license data without separate owner approval.
+
+The performance audit therefore intentionally remains unchanged for the **10 funds / 20 Growth plans** that explicitly report BSE 250 SmallCap TRI: they stay `reported_tri_series_missing` and `website_default_benchmark_mismatch` until a trustworthy BSE TRI series exists and fund-specific benchmark selection is separately implemented.
+
+### Next backend task
+
+**Verify the three currently non-TRI benchmark identities from first-party AMC evidence: Edelweiss Small Cap Fund, Franklin India Small Cap Fund and Groww Small Cap Fund.** Promote a benchmark identity to **Nifty Smallcap 250 TRI** only when a current AMC factsheet/KIM/SID/scheme page explicitly establishes total-return identity; otherwise preserve the unqualified benchmark name and record the limitation. This is an identity repair only — do not change the performance UI or default benchmark selection in the same batch.
+
+Retry BSE TRI collection only after a material first-party distribution change or separate approval for a licensed source. Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`, and the **700 link-only retention candidates plus legacy cumulative ZIP remain untouched**.
+
 ## Latest completed batch: historical performance / benchmark coverage audit
 
 **The backend now publishes a read-only per-plan audit of NAV history, displayed-return eligibility and relevant benchmark-series coverage. No historical return was invented, no benchmark value was forward-filled, no source was fetched by the audit, and no UI behavior changed.**
