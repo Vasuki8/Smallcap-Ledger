@@ -31,12 +31,23 @@ def digest_rows(rows):
     return hashlib.sha256(payload).hexdigest()
 
 
-def table_counts(exclude=('archive_retention',)):
+def table_fingerprints(exclude=('archive_retention',)):
+    """Hash every logical row outside the new metadata table."""
     ignored=set(exclude)
-    tables=[r['name'] for r in db.rows(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
-    ) if r['name'] not in ignored]
-    return {name:db.one(f'SELECT COUNT(*) n FROM "{name}"')['n'] for name in tables}
+    with db.connect() as c:
+        tables=[r['name'] for r in c.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+        ).fetchall() if r['name'] not in ignored]
+        out={}
+        for name in tables:
+            quoted='"'+name.replace('"','""')+'"'
+            columns=[r['name'] for r in c.execute(f'PRAGMA table_info({quoted})').fetchall()]
+            order=','.join('"'+x.replace('"','""')+'"' for x in columns)
+            h=hashlib.sha256();count=0
+            for row in c.execute(f'SELECT * FROM {quoted} ORDER BY {order}'):
+                h.update((repr(tuple(row))+'\n').encode());count+=1
+            out[name]={'rows':count,'sha256':h.hexdigest()}
+        return out
 
 
 def active_manifest_hashes():
@@ -65,7 +76,7 @@ def prepare(*,apply=False,report_path=None):
     if missing:
         raise ValueError('Reviewed retention hash is absent from current archive metadata: '+missing[0])
 
-    before_counts=table_counts()
+    before_fingerprints=table_fingerprints()
     protected_hashes=sorted(h for h,row in audited.items() if row['classification']=='retain_evidence')
     protected_rows=[archives[h] for h in protected_hashes]
     protected_digest_before=digest_rows(protected_rows)
@@ -93,8 +104,8 @@ def prepare(*,apply=False,report_path=None):
               classification=?,reason=?,reviewed_at=?,updated_at=?
               WHERE hash=?""",records)
 
-    after_counts=table_counts()
-    if before_counts!=after_counts:
+    after_fingerprints=table_fingerprints()
+    if before_fingerprints!=after_fingerprints:
         raise ValueError('Retention metadata preparation changed a provenance/data table')
     protected_after={r['hash']:r for r in db.rows(
         'SELECT hash,path,bytes,media_type,first_seen FROM archives ORDER BY hash')
@@ -143,7 +154,8 @@ def prepare(*,apply=False,report_path=None):
         'protected_archive_metadata_sha256_before':protected_digest_before,
         'protected_archive_metadata_sha256_after':protected_digest_after,
         'protected_archive_metadata_unchanged':protected_digest_before==protected_digest_after,
-        'non_retention_table_counts_unchanged':before_counts==after_counts,
+        'non_retention_table_fingerprints_unchanged':before_fingerprints==after_fingerprints,
+        'non_retention_table_fingerprints':after_fingerprints,
         'files_actually_deleted':0,
         'bytes_actually_deleted':0,
         'active_checkpoint_format':int(manifest.get('format',1)) if manifest else None,
