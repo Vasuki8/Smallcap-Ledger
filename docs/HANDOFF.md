@@ -1,5 +1,14 @@
 # Smallcap Ledger backend handoff
 
+## Database cleanup (2026-09-25 UTC)
+
+**Read `docs/STORAGE-CLEANUP.md` for the current merge, production verification and cleanup status.** This is the storage batch's completion/handoff record; the validation evidence is in `docs/STORAGE-VALIDATION.json`.
+
+The owner requested unnecessary/redundant database storage cleanup. The four NAV/benchmark tables were migrated to composite-primary-key `WITHOUT ROWID` storage on a production copy. All 273 tests, all-table content equality, integrity/foreign-key checks, idempotence, checkpoint restore and generated-site validation passed. Measured database size: **100,773,888 to 73,322,496 bytes**; checkpoint ZIP **12,851,483 to 7,451,746 bytes**. No logical record or original source was removed.
+
+The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
+
+
 Updated: 2026-09-25, after Edelweiss portfolio source audit.
 
 
