@@ -182,6 +182,42 @@ class PerformanceCoverageTests(unittest.TestCase):
         self.assertIn("2010-04-07",rendered)
         self.assertEqual(len(db.rows("SELECT * FROM nav WHERE code=105989")),3)
 
+    def test_absl_regular_idcw_gap_is_verified_at_exact_option_level(self):
+        with db.connect() as c:
+            c.execute(
+                """INSERT OR REPLACE INTO schemes(
+                   code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (105805,"Aditya Birla Sun Life Small Cap Fund Regular IDCW",
+                 "Aditya Birla Sun Life Small Cap Fund","ABSL AMC",
+                 "Regular","IDCW","test"),
+            )
+        db.save_nav(
+            105805,
+            [("2010-05-31",11.5499),("2010-06-08",11.4193),("2010-06-09",11.5)],
+            "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx",
+        )
+        db.metric(
+            "Aditya Birla Sun Life Small Cap Fund","All","benchmark","2026-07-31",
+            "BSE 250 Small Cap Index TRI","Reported","https://example.com/absl-benchmark","absl-benchmark",
+        )
+        audit=report()
+        row=next(x for x in audit["plans"] if x["code"]==105805)
+        self.assertEqual(row["nav"]["raw_gap_count_gt_7d"],1)
+        self.assertEqual(row["nav"]["official_history_gap_count"],1)
+        self.assertEqual(row["nav"]["gap_count_gt_7d"],0)
+        gap=row["nav"]["official_history_gaps"][0]
+        self.assertEqual((gap["from"],gap["to"]),("2010-05-31","2010-06-08"))
+        amfi=next(x for x in gap["evidence"] if x["provider"]=="AMFI")
+        self.assertEqual(amfi["scheme_code"],105805)
+        self.assertEqual(amfi["payout_isin"],"INF209K01EO0")
+        self.assertEqual(amfi["reinvestment_isin"],"INF209K01EP7")
+        self.assertEqual(amfi["observations"],[
+            {"date":"2010-05-31","value":11.5499},
+            {"date":"2010-06-08","value":11.4193},
+        ])
+        self.assertNotIn("nav_large_gap",row["issues"])
+
     def test_audit_is_read_only_and_markdown_uses_evidence_aware_policy(self):
         before={
             table:db.one(f"SELECT COUNT(*) n FROM {table}")["n"]
