@@ -21,8 +21,44 @@ import xlrd
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-from . import db, jm_portfolios
+from . import db, axis_portfolios, jm_portfolios
 from .providers import fetch, number, public_url
+
+AXIS_FAMILY = "Axis Small Cap Fund"
+AXIS_SCHEME_CODE = "SC"
+AXIS_NSDL_CODE = "AXIS/O/E/SCF/13/09/0016"
+AXIS_TER_PAGE = "https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
+AXIS_TER_API = "https://www.axismf.com/cms/expense-ratio-details"
+AXIS_TER_TYPE = "Total Expense Ratio"
+AXIS_TER_FUND_TYPE = "Equity"
+_AXIS_TER_FILE = re.compile(
+    r"^/1/5/2125/Total_Expense_Ratio_20\d{2}-\d{2}-\d{2}_\d{2}_\d{2}_\d{2}\.xlsx$",
+    re.I,
+)
+_AXIS_HEADER_1 = (
+    "NSDL Scheme Code", "Name of Schemes", "Date (DD/MM/YYYY)",
+    "Regular Plan", "", "", "", "",
+    "Direct Plan", "", "", "", "",
+    "Retail Plan", "", "", "", "",
+)
+_AXIS_HEADER_3 = (
+    "", "", "",
+    "Base Expense Ratio (BER) (%) 1",
+    "Brokerage cost (%)2",
+    "Transaction Cost incurred for the purpose of execution of trade (%)3",
+    "Statutory Levies (including GST) (%) 4",
+    "Total TER (%) 5",
+    "Base Expense Ratio (BER) (%) 1",
+    "Brokerage cost (%)2",
+    "Transaction Cost incurred for the purpose of execution of trade (%)3",
+    "Statutory Levies (including GST) (%) 4",
+    "Total TER (%) 5",
+    "Base Expense Ratio (BER) (%) 1",
+    "Brokerage cost (%)2",
+    "Transaction Cost incurred for the purpose of execution of trade (%)3",
+    "Statutory Levies (including GST) (%) 4",
+    "Total TER (%) 5",
+)
 
 CANARA_FAMILY = "Canara Robeco Small Cap Fund"
 CANARA_SCHEME_CODE = "SC"
@@ -2067,10 +2103,264 @@ def mahindra(progress=lambda _: None, today=None):
     )
 
 
+
+def _axis_percent(value, label):
+    if value is None or str(value).strip() in ("", "-", "NA", "N/A"):
+        raise ValueError(f"Axis TER disclosure is missing {label}")
+    parsed = number(value)
+    if not 0 <= parsed <= 5:
+        raise ValueError(f"Axis TER disclosure {label} is outside the accepted range")
+    return parsed
+
+
+def _axis_values(row, offset, plan, day):
+    values = {
+        "base_expense_ratio": _axis_percent(row[offset], f"{plan} BER"),
+        "brokerage": _axis_percent(row[offset + 1], f"{plan} brokerage"),
+        "transaction_cost": _axis_percent(row[offset + 2], f"{plan} transaction cost"),
+        "statutory_levies": _axis_percent(row[offset + 3], f"{plan} statutory levies"),
+        "ter": _axis_percent(row[offset + 4], f"{plan} Total TER"),
+    }
+    if values["ter"] + 1e-9 < values["base_expense_ratio"]:
+        raise ValueError(f"Axis {plan} Total TER is below BER on {day}")
+    component_total = (
+        values["base_expense_ratio"]
+        + values["brokerage"]
+        + values["transaction_cost"]
+        + values["statutory_levies"]
+    )
+    if abs(component_total - values["ter"]) > 0.02:
+        raise ValueError(f"Axis {plan} TER components do not reconcile on {day}")
+    return values
+
+
+def parse_axis_records(records, today=None):
+    """Parse the browser API's exact Axis Small Cap TER rows."""
+    today = today or date.today()
+    if not isinstance(records, list):
+        raise ValueError("Axis TER API response changed row format")
+    matches = defaultdict(list)
+    for row in records:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("schemeName") or "").strip() != AXIS_FAMILY:
+            continue
+        if str(row.get("nsdlSchemeCode") or "").strip() != AXIS_NSDL_CODE:
+            continue
+        try:
+            day = datetime.strptime(str(row.get("date") or "").strip(), "%d-%m-%Y").date()
+        except ValueError:
+            continue
+        plan = str(row.get("planOption") or "").strip()
+        if day <= today and plan in ("Regular", "Direct"):
+            matches[day.isoformat()].append(row)
+    if not matches:
+        raise ValueError("Axis TER API contains no dated Small Cap rows")
+    day = max(matches)
+    rows = matches[day]
+    by_plan = defaultdict(list)
+    for row in rows:
+        by_plan[str(row.get("planOption") or "").strip()].append(row)
+    if set(by_plan) != {"Regular", "Direct"} or any(len(v) != 1 for v in by_plan.values()):
+        raise ValueError(f"Axis TER API does not have one exact plan pair for {day}")
+    plans = {}
+    for plan, offset in (("Regular", 0), ("Direct", 0)):
+        row = by_plan[plan][0]
+        sequence = [
+            row.get("baseTer"),
+            row.get("addExpenses2"),
+            row.get("addExpenses3"),
+            row.get("gst"),
+            row.get("totalTer"),
+        ]
+        plans[plan] = _axis_values(sequence, 0, plan, day)
+    return day, plans
+
+
+def _axis_header(value):
+    return re.sub(r"\s+", " ", "" if value is None else str(value)).strip()
+
+
+def parse_axis_workbook(content, today=None):
+    """Parse Axis's generated first-party Total Expense Ratio XLSX."""
+    today = today or date.today()
+    try:
+        book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
+    except Exception as exc:
+        raise ValueError("Axis TER disclosure is not a readable XLSX workbook") from exc
+    try:
+        if book.sheetnames != ["TotalExpenseRatio"]:
+            raise ValueError("Axis TER workbook sheet layout changed")
+        sheet = book["TotalExpenseRatio"]
+        if sheet.max_column != 18 or sheet.max_row < 10:
+            raise ValueError("Axis TER workbook dimensions changed")
+        rows = sheet.iter_rows(values_only=True)
+        header1 = next(rows, None)
+        blank = next(rows, None)
+        header3 = next(rows, None)
+        clean1 = tuple(_axis_header(v) for v in (header1 or ())[:18])
+        clean_blank = tuple(_axis_header(v) for v in (blank or ())[:18])
+        clean3 = tuple(_axis_header(v) for v in (header3 or ())[:18])
+        if clean1 != _AXIS_HEADER_1:
+            raise ValueError("Axis TER workbook top header changed")
+        if any(clean_blank):
+            raise ValueError("Axis TER workbook spacer row changed")
+        if clean3 != _AXIS_HEADER_3:
+            raise ValueError("Axis TER workbook metric columns changed")
+
+        matches = defaultdict(list)
+        footnote_ber = False
+        for row in rows:
+            if not row:
+                continue
+            first = str(row[0] or "").strip()
+            if first.startswith("1. Base Expense Ratio (BER) as per Regulation 66(7)"):
+                footnote_ber = True
+            if len(row) < 13:
+                continue
+            if first != AXIS_NSDL_CODE:
+                continue
+            if str(row[1] or "").strip() != AXIS_FAMILY:
+                continue
+            try:
+                day = datetime.strptime(str(row[2] or "").strip(), "%d-%m-%Y").date()
+            except ValueError:
+                continue
+            if day <= today:
+                matches[day.isoformat()].append(row)
+
+        if not footnote_ber:
+            raise ValueError("Axis TER workbook BER regulatory footnote changed")
+        if not matches:
+            raise ValueError("Axis TER workbook contains no dated Small Cap rows")
+        day = max(matches)
+        if len(matches[day]) != 1:
+            raise ValueError(f"Axis TER workbook has duplicate Small Cap rows for {day}")
+        row = matches[day][0]
+        plans = {
+            "Regular": _axis_values(row, 3, "Regular", day),
+            "Direct": _axis_values(row, 8, "Direct", day),
+        }
+        return day, plans
+    finally:
+        book.close()
+
+
+def _axis_cms_token():
+    def token_read(url, body=None, headers=None):
+        return fetch(
+            url,
+            body=body,
+            headers=headers,
+            archive=False,
+            max_bytes=1024 * 1024,
+        )
+    return axis_portfolios.cms_token(token_read)
+
+
+def _axis_select_workbook(payload, today=None):
+    today = today or date.today()
+    if (
+        not isinstance(payload, dict)
+        or payload.get("status") != "success"
+        or payload.get("statusCode") != 0
+        or not isinstance(payload.get("data"), dict)
+    ):
+        raise ValueError("Axis TER API returned an unsuccessful response")
+    data = payload["data"]
+    api_day, api_plans = parse_axis_records(data.get("totalExpenseRatioData"), today)
+    report = data.get("s3CsvResponse")
+    if not isinstance(report, dict):
+        raise ValueError("Axis TER API did not expose its generated workbook")
+    source = str(report.get("location") or report.get("Location") or "").strip()
+    parsed = urlparse(source)
+    if (
+        parsed.scheme != "https"
+        or parsed.hostname != "www.axismf.com"
+        or not _AXIS_TER_FILE.fullmatch(parsed.path)
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise ValueError("Axis TER API returned an unexpected workbook URL")
+    public_url(source)
+    return source, api_day, api_plans
+
+
+def _axis_disclosure(today=None):
+    today = today or date.today()
+    start = today - timedelta(days=14)
+    payload = {
+        "fundType": AXIS_TER_FUND_TYPE,
+        "schemeCode": AXIS_SCHEME_CODE,
+        "type": AXIS_TER_TYPE,
+        "fromDate": start.strftime("%d-%m-%Y"),
+        "toDate": today.strftime("%d-%m-%Y"),
+    }
+    raw, _, _ = fetch(
+        AXIS_TER_API,
+        body=payload,
+        headers={"Authorization": _axis_cms_token(), "Content-Type": "application/json"},
+        archive=False,
+        max_bytes=4 * 1024 * 1024,
+    )
+    try:
+        response = json.loads(raw)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise ValueError("Axis TER API returned invalid JSON") from exc
+    source, api_day, api_plans = _axis_select_workbook(response, today)
+    workbook, content_hash, _ = fetch(source, max_bytes=4 * 1024 * 1024)
+    if not workbook.startswith(b"PK"):
+        raise ValueError("Axis TER source is not an XLSX workbook")
+    day, plans = parse_axis_workbook(workbook, today)
+    if day != api_day:
+        raise ValueError("Axis TER workbook latest date does not match API rows")
+    for plan in ("Regular", "Direct"):
+        for metric in (
+            "base_expense_ratio", "brokerage", "transaction_cost",
+            "statutory_levies", "ter",
+        ):
+            if abs(plans[plan][metric] - api_plans[plan][metric]) > 1e-9:
+                raise ValueError(f"Axis TER workbook/API mismatch for {plan} {metric}")
+    return source, day, plans, content_hash
+
+
+def axis(progress=lambda _: None, today=None):
+    """Collect Axis Small Cap's explicit BER and Total TER workbook."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (AXIS_FAMILY,)):
+        return "Axis Small Cap is not in the active universe"
+
+    progress("Axis Small Cap expense ratios · official Total Expense Ratio workbook")
+    source, day, plans, content_hash = _axis_disclosure(today)
+    for plan, values in plans.items():
+        for metric in (
+            "base_expense_ratio",
+            "brokerage",
+            "transaction_cost",
+            "statutory_levies",
+            "ter",
+        ):
+            db.metric(
+                AXIS_FAMILY,
+                plan,
+                metric,
+                day,
+                values[metric],
+                "% p.a. · reported by AMC",
+                source,
+                content_hash,
+            )
+    return (
+        f"{AXIS_FAMILY}: official BER/TER as of {day} "
+        f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
+        f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, groww, hsbc, icici, invesco, jm, mahindra, mirae, uti):
+    for collector in (axis, canara, groww, hsbc, icici, invesco, jm, mahindra, mirae, uti):
         try:
             results.append(collector(progress))
         except Exception as exc:
