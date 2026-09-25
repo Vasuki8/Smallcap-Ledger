@@ -678,5 +678,109 @@ class MahindraExpenseTests(unittest.TestCase):
         self.assertTrue(all(call.args[7] == "mahhash" for call in mock_metric.call_args_list))
 
 
+class MiraeExpenseTests(unittest.TestCase):
+    def row(self, day=46288.0, *, scheme="Mirae Asset Small Cap Fund",
+            nsdl="MIRA/O/E/SCF/24/10/0075", direct_ter=0.0064):
+        return [
+            nsdl, scheme, day,
+            0.0157, 0.0007, 0.0001, 0.0047, 0.0212,
+            0.0032, 0.0007, 0.0001, 0.0024, direct_ter,
+        ]
+
+    def test_latest_exact_mirae_row_retains_explicit_ber_and_total_ter(self):
+        day, plans = amc_expenses.parse_mirae_rows(
+            [self.row(46287.0), self.row(46288.0)],
+            datemode=0,
+            today=date(2026, 9, 23),
+        )
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(plans["Regular"]["base_expense_ratio"], 1.57)
+        self.assertEqual(plans["Regular"]["ter"], 2.12)
+        self.assertEqual(plans["Direct"]["base_expense_ratio"], 0.32)
+        self.assertEqual(plans["Direct"]["ter"], 0.64)
+
+    def test_mirae_identity_duplicate_and_reconciliation_are_strict(self):
+        for kwargs in (
+            {"scheme": "Mirae Asset Midcap Fund"},
+            {"nsdl": "MIRA/O/E/OTHER"},
+        ):
+            with self.assertRaisesRegex(ValueError, "no dated Small Cap rows"):
+                amc_expenses.parse_mirae_rows(
+                    [self.row(**kwargs)], datemode=0, today=date(2026, 9, 23)
+                )
+
+        row = self.row()
+        with self.assertRaisesRegex(ValueError, "duplicate Small Cap rows"):
+            amc_expenses.parse_mirae_rows(
+                [row, list(row)], datemode=0, today=date(2026, 9, 23)
+            )
+
+        with self.assertRaisesRegex(ValueError, "components do not reconcile"):
+            amc_expenses.parse_mirae_rows(
+                [self.row(direct_ter=0.0070)], datemode=0, today=date(2026, 9, 23)
+            )
+
+    def test_mirae_download_metadata_requires_matching_title_file_and_publish_date(self):
+        payload = {
+            "ReturnCode": "0",
+            "Data": [
+                {
+                    "Title": "Total Expense Ratio -23 Sep 2026",
+                    "URL": "/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_23092026.xls",
+                    "PublishDate": "/Date(1790121600000)/",
+                },
+                {
+                    "Title": "Total Expense Ratio -24 Sep 2026",
+                    "URL": "/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_24092026.xls",
+                    "PublishDate": "/Date(1790208000000)/",
+                },
+            ],
+        }
+        day, source = amc_expenses._mirae_select_download(
+            payload, today=date(2026, 9, 23)
+        )
+        self.assertEqual(day, "2026-09-23")
+        self.assertEqual(
+            source,
+            "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/"
+            "IN_MF_EXPENSE_RATIO_SEBI_V3_23092026.xls",
+        )
+
+        payload["Data"][0]["PublishDate"] = "/Date(1790035200000)/"
+        with self.assertRaisesRegex(ValueError, "no current valid workbook"):
+            amc_expenses._mirae_select_download(
+                {"ReturnCode": "0", "Data": [payload["Data"][0]]},
+                today=date(2026, 9, 23),
+            )
+
+    @patch("tracker.amc_expenses.db.metric")
+    @patch("tracker.amc_expenses.db.one", return_value={"code": "MIRAE"})
+    @patch("tracker.amc_expenses._mirae_disclosure")
+    def test_mirae_collector_stores_source_hash_and_all_reported_components(
+        self, mock_disclosure, _mock_one, mock_metric
+    ):
+        day, plans = amc_expenses.parse_mirae_rows(
+            [self.row()], datemode=0, today=date(2026, 9, 23)
+        )
+        source = (
+            "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/"
+            "IN_MF_EXPENSE_RATIO_SEBI_V3_23092026.xls"
+        )
+        mock_disclosure.return_value = (source, day, plans, "miraehash")
+        result = amc_expenses.mirae(today=date(2026, 9, 24))
+        self.assertIn("2026-09-23", result)
+        self.assertEqual(mock_metric.call_count, 10)
+        calls = {
+            (call.args[1], call.args[2]): call.args[4]
+            for call in mock_metric.call_args_list
+        }
+        self.assertEqual(calls[("Regular", "ter")], 2.12)
+        self.assertEqual(calls[("Direct", "ter")], 0.64)
+        self.assertEqual(calls[("Direct", "base_expense_ratio")], 0.32)
+        self.assertTrue(all(call.args[3] == "2026-09-23" for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[6] == source for call in mock_metric.call_args_list))
+        self.assertTrue(all(call.args[7] == "miraehash" for call in mock_metric.call_args_list))
+
+
 if __name__ == "__main__":
     unittest.main()
