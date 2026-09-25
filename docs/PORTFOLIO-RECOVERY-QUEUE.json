@@ -1,0 +1,408 @@
+{
+  "built_at": "2026-09-25T04:49:12+00:00",
+  "portfolio_expected_as_of": "2026-08-31",
+  "summary": {
+    "items": 8,
+    "actionable_now": 1,
+    "stale_partial": 1,
+    "missing": 1,
+    "actions": {
+      "search_fuller_first_party_disclosure": 1,
+      "retry_after_source_change": 4,
+      "requires_more_precise_amc_disclosure": 3
+    }
+  },
+  "next_recovery_target": {
+    "family": "Axis Small Cap Fund",
+    "action": "search_fuller_first_party_disclosure",
+    "retry_condition": "Search first-party Axis statutory/monthly portfolio disclosures for a constituent-level source that identifies holdings hidden by the current aggregate."
+  },
+  "items": [
+    {
+      "family": "Axis Small Cap Fund",
+      "amc": "Axis Mutual Fund",
+      "state": "partial_current",
+      "stale": false,
+      "reporting_date": "2026-09-16",
+      "positions": 10,
+      "source_url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+      "recovery_url": null,
+      "limitation": {
+        "code": "undisclosed_constituents",
+        "kind": "source_aggregate",
+        "basis": "related_first_party_disclosure",
+        "source_marker": "Other Domestic Equity (Less than 0.50% of the corpus)",
+        "detail": "The AMC disclosure aggregates undisclosed smaller equity constituents, so exact names and weights are not available.",
+        "scope": "partial_portfolio"
+      },
+      "action": "search_fuller_first_party_disclosure",
+      "actionable_now": true,
+      "actionability_score": 90,
+      "retry_condition": "Search first-party Axis statutory/monthly portfolio disclosures for a constituent-level source that identifies holdings hidden by the current aggregate.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+          "fetched_at": "2026-09-24T22:11:56+00:00",
+          "status": "ok",
+          "hash": "54624cf7b2d4ea1c1ab3f176c379bd893df7d1ac183ae6bea46264b8fbfcfae1",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+          "label": "Fund page",
+          "status": "Checked",
+          "last_checked": "2026-09-24T22:12:17+00:00",
+          "detail": "4 relevant links; 4 documents archived; 1 facts/holdings; 3 documents without extracted tables; 0 download/parser gaps",
+          "match": "exact_url"
+        },
+        "latest_document": {
+          "title": "Fund page",
+          "kind": "source page",
+          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+          "last_seen": "2026-09-24T22:11:56+00:00",
+          "hash": "54624cf7b2d4ea1c1ab3f176c379bd893df7d1ac183ae6bea46264b8fbfcfae1",
+          "observed_at": "2026-09-24T22:11:57+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T22:12:17+00:00"
+      },
+      "rank": 1
+    },
+    {
+      "family": "Union Small Cap Fund",
+      "amc": "Union Mutual Fund",
+      "state": "missing",
+      "stale": false,
+      "reporting_date": null,
+      "positions": null,
+      "source_url": "https://www.unionmf.com/about-us/downloads/monthly-portfolio",
+      "recovery_url": "https://www.unionmf.com/about-us/downloads/monthly-portfolio",
+      "limitation": {
+        "code": "upstream_source_unavailable",
+        "kind": "upstream_transport",
+        "basis": "first_party_transport",
+        "source_marker": "Official Downloads routes refuse the production runner connection",
+        "detail": "No retained portfolio exists because the AMC portfolio transport is unavailable from the production collection network.",
+        "scope": "missing_portfolio"
+      },
+      "action": "retry_after_source_change",
+      "actionable_now": false,
+      "actionability_score": 40,
+      "retry_condition": "Retry only after Union's official Downloads/portfolio transport is reachable from the production collection network or an exact first-party attachment is exposed.",
+      "evidence": {
+        "latest_fetch": null,
+        "latest_source_page_check": {
+          "url": "https://www.unionmf.com/",
+          "label": "Fund house",
+          "status": "Gap",
+          "last_checked": "2026-09-24T22:11:52+00:00",
+          "detail": "[Errno 111] Connection refused",
+          "match": "same_host"
+        },
+        "latest_document": null,
+        "latest_evidence_at": "2026-09-24T22:11:52+00:00"
+      },
+      "rank": 2
+    },
+    {
+      "family": "Bajaj Finserv Small Cap Fund",
+      "amc": "Bajaj Finserv Mutual Fund",
+      "state": "partial_stale",
+      "stale": true,
+      "reporting_date": "2026-07-31",
+      "positions": 13,
+      "source_url": "https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_August-2026.pdf",
+      "recovery_url": "https://www.bajajamc.com/downloads",
+      "limitation": {
+        "code": "named_subset_only",
+        "kind": "source_subset",
+        "basis": "first_party_factsheet",
+        "source_marker": "Name (Top 10 Holdings) / Other Equities",
+        "detail": "The retained factsheet names only a subset of holdings and aggregates the remaining equities.",
+        "scope": "partial_portfolio"
+      },
+      "action": "retry_after_source_change",
+      "actionable_now": false,
+      "actionability_score": 40,
+      "retry_condition": "Retry only when the AMC Downloads transport becomes usable from the production runner or an exact current monthly Small Cap attachment URL is exposed first-party.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_August-2026.pdf",
+          "fetched_at": "2026-09-24T22:08:00+00:00",
+          "status": "ok",
+          "hash": "3ce84effef0ffeec0b1424bb17e50a1fdaa4245d54e66a7e05efc6bb69a46f3a",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_August-2026.pdf",
+          "label": "Official report archive",
+          "status": "Checked",
+          "last_checked": "2026-09-24T22:08:02+00:00",
+          "detail": "18 extracted facts/holdings; 1 document archived; 0 download/parser gaps",
+          "match": "exact_url"
+        },
+        "latest_document": {
+          "title": "Bajaj Finserv Small Cap Fund August 2026",
+          "kind": "disclosure",
+          "url": "https://media.bajajamc.com/wp-content/uploads/2026/02/Bajaj-Finserv-Small-Cap-Fund_August-2026.pdf",
+          "last_seen": "2026-09-24T22:08:00+00:00",
+          "hash": "3ce84effef0ffeec0b1424bb17e50a1fdaa4245d54e66a7e05efc6bb69a46f3a",
+          "observed_at": "2026-09-07T21:09:24+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T22:08:02+00:00"
+      },
+      "rank": 3
+    },
+    {
+      "family": "Edelweiss Small Cap Fund",
+      "amc": "Edelweiss Mutual Fund",
+      "state": "partial_current",
+      "stale": false,
+      "reporting_date": "2026-08-31",
+      "positions": 10,
+      "source_url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
+      "recovery_url": "https://www.edelweissmf.com/statutory/portfolio-of-schemes",
+      "limitation": {
+        "code": "named_subset_only",
+        "kind": "source_subset",
+        "basis": "first_party_factsheet",
+        "source_marker": "Top 10 Holdings / Top 10 stocks: 23.00%",
+        "detail": "The current AMC factsheet publishes only the Top 10 named holdings, not the full constituent portfolio.",
+        "scope": "partial_portfolio"
+      },
+      "action": "retry_after_source_change",
+      "actionable_now": false,
+      "actionability_score": 40,
+      "retry_condition": "Retry only when the statutory portfolio route/static application transport becomes reachable again or it exposes an exact monthly portfolio attachment.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
+          "fetched_at": "2026-09-24T21:57:48+00:00",
+          "status": "ok",
+          "hash": "ecda95db8183525b4b429c835d10d883b4db0757dabff2b562002d5a16cec366",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://www.edelweissmf.com/",
+          "label": "Fund house",
+          "status": "Limited",
+          "last_checked": "2026-09-24T22:09:18+00:00",
+          "detail": "Page archived; no automatically readable fund documents found",
+          "match": "same_host"
+        },
+        "latest_document": {
+          "title": "Factsheet - September 2026",
+          "kind": "factsheet",
+          "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf",
+          "last_seen": "2026-09-24T21:57:48+00:00",
+          "hash": "ecda95db8183525b4b429c835d10d883b4db0757dabff2b562002d5a16cec366",
+          "observed_at": "2026-09-22T21:46:58+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T22:09:18+00:00"
+      },
+      "rank": 4
+    },
+    {
+      "family": "ICICI Prudential Small Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "state": "partial_current",
+      "stale": false,
+      "reporting_date": "2026-08-31",
+      "positions": 83,
+      "source_url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+      "recovery_url": "https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip",
+      "limitation": {
+        "code": "undisclosed_constituents",
+        "kind": "source_aggregate",
+        "basis": "first_party_factsheet",
+        "source_marker": "Equity less than 1% of corpus",
+        "detail": "The AMC factsheet separately aggregates equity below 1% of corpus, so those constituent names and exact weights are undisclosed.",
+        "scope": "partial_portfolio"
+      },
+      "action": "retry_after_source_change",
+      "actionable_now": false,
+      "actionability_score": 40,
+      "retry_condition": "Retry only when the first-party monthly ZIP stops redirecting to an unresolved archive host or ICICI exposes the same archive through another working first-party route.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+          "fetched_at": "2026-09-24T21:54:56+00:00",
+          "status": "ok",
+          "hash": "0a492e7e08bacbc030edb89674ee89b28ed48898153e73f4603a75e421b7a63d",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+          "label": "Official report archive",
+          "status": "Checked",
+          "last_checked": "2026-09-24T21:55:13+00:00",
+          "detail": "86 extracted facts/holdings; 1 document archived; 0 download/parser gaps",
+          "match": "exact_url"
+        },
+        "latest_document": {
+          "title": "Complete",
+          "kind": "factsheet",
+          "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+          "last_seen": "2026-09-24T21:54:56+00:00",
+          "hash": "0a492e7e08bacbc030edb89674ee89b28ed48898153e73f4603a75e421b7a63d",
+          "observed_at": "2026-09-09T19:59:35+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T21:55:13+00:00"
+      },
+      "rank": 5
+    },
+    {
+      "family": "Bandhan Small Cap Fund",
+      "amc": "Bandhan Mutual Fund",
+      "state": "partial_current",
+      "stale": false,
+      "reporting_date": "2026-08-31",
+      "positions": 260,
+      "source_url": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx",
+      "recovery_url": null,
+      "limitation": {
+        "code": "non_numeric_source_weight",
+        "kind": "source_precision",
+        "basis": "first_party_workbook",
+        "source_marker": "$ = Less Than 0.01% of NAV",
+        "detail": "The AMC workbook publishes one or more security weights only as less than 0.01% of NAV; no numeric estimate is stored.",
+        "scope": "partial_portfolio"
+      },
+      "action": "requires_more_precise_amc_disclosure",
+      "actionable_now": false,
+      "actionability_score": 20,
+      "retry_condition": "Revisit only when the AMC publishes exact numeric NAV weights for positions currently disclosed with a less-than-0.01% marker.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx",
+          "fetched_at": "2026-09-24T21:47:59+00:00",
+          "status": "ok",
+          "hash": "f793184232eb89f776bfab87cc6729dd203af3fce6d054ca23332d6667828975",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
+          "label": "Factsheets",
+          "status": "Limited",
+          "last_checked": "2026-09-24T22:09:05+00:00",
+          "detail": "Page archived; no automatically readable fund documents found",
+          "match": "latest_amc_check"
+        },
+        "latest_document": {
+          "title": "Bandhan Small Cap Fund 31 August 2026",
+          "kind": "disclosure",
+          "url": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx",
+          "last_seen": "2026-09-24T21:48:00+00:00",
+          "hash": "f793184232eb89f776bfab87cc6729dd203af3fce6d054ca23332d6667828975",
+          "observed_at": "2026-09-24T18:35:49+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T22:09:05+00:00"
+      },
+      "rank": 6
+    },
+    {
+      "family": "Sundaram Small Cap Fund",
+      "amc": "Sundaram Mutual Fund",
+      "state": "partial_current",
+      "stale": false,
+      "reporting_date": "2026-08-31",
+      "positions": 77,
+      "source_url": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx",
+      "recovery_url": null,
+      "limitation": {
+        "code": "non_numeric_source_weight",
+        "kind": "source_precision",
+        "basis": "first_party_workbook",
+        "source_marker": "# percentage to NAV of security is less than 0.01%",
+        "detail": "The AMC workbook publishes a written-off holding with a less-than-0.01% marker rather than an exact numeric weight.",
+        "scope": "partial_portfolio"
+      },
+      "action": "requires_more_precise_amc_disclosure",
+      "actionable_now": false,
+      "actionability_score": 20,
+      "retry_condition": "Revisit only when the AMC publishes an exact numeric weight for the written-off holding currently disclosed only as less than 0.01%.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx",
+          "fetched_at": "2026-09-24T21:49:18+00:00",
+          "status": "ok",
+          "hash": "663e7170e2810e7f8e89cef9422cb6c4b653b098591eb6530ff61b4d582cb031",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://www.sundarammutual.com/",
+          "label": "Fund house",
+          "status": "Limited",
+          "last_checked": "2026-09-24T22:10:21+00:00",
+          "detail": "Page archived; no automatically readable fund documents found",
+          "match": "same_host"
+        },
+        "latest_document": {
+          "title": "Monthly portfolio",
+          "kind": "portfolio",
+          "url": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx",
+          "last_seen": "2026-09-24T21:49:18+00:00",
+          "hash": "663e7170e2810e7f8e89cef9422cb6c4b653b098591eb6530ff61b4d582cb031",
+          "observed_at": "2026-09-22T02:23:52+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T22:10:21+00:00"
+      },
+      "rank": 7
+    },
+    {
+      "family": "UTI Small Cap Fund",
+      "amc": "UTI Mutual Fund",
+      "state": "partial_current",
+      "stale": false,
+      "reporting_date": "2026-08-31",
+      "positions": 108,
+      "source_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16",
+      "recovery_url": null,
+      "limitation": {
+        "code": "non_numeric_source_weight",
+        "kind": "source_precision",
+        "basis": "first_party_workbook",
+        "source_marker": "* / SHORT TERM DEPOSITS without exact % TO NAV",
+        "detail": "The AMC source censors at least one tiny security weight and omits an exact NAV percentage for short-term deposits.",
+        "scope": "partial_portfolio"
+      },
+      "action": "requires_more_precise_amc_disclosure",
+      "actionable_now": false,
+      "actionability_score": 20,
+      "retry_condition": "Revisit only when the AMC publishes exact numeric NAV weights for the censored tiny security and short-term deposits.",
+      "evidence": {
+        "latest_fetch": {
+          "url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16",
+          "fetched_at": "2026-09-09T20:01:32+00:00",
+          "status": "ok",
+          "hash": "149126d8fcce5a35c9f1cde4dd6da630e1793aaba9f61e18e6a3b91e986a1644",
+          "detail": null
+        },
+        "latest_source_page_check": {
+          "url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/uti_fund_watch_active_august_2026_rv2.pdf?VersionId=B2XKeBTyWsZMGfHUqI3nbdnzhATN16Ax",
+          "label": "Official report archive",
+          "status": "Checked",
+          "last_checked": "2026-09-24T21:53:15+00:00",
+          "detail": "4 extracted facts/holdings; 1 document archived; 0 download/parser gaps",
+          "match": "same_host"
+        },
+        "latest_document": {
+          "title": "Consolidated Portfolio August 2026",
+          "kind": "portfolio",
+          "url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16",
+          "last_seen": "2026-09-09T20:01:32+00:00",
+          "hash": "149126d8fcce5a35c9f1cde4dd6da630e1793aaba9f61e18e6a3b91e986a1644",
+          "observed_at": "2026-09-09T20:01:32+00:00"
+        },
+        "latest_evidence_at": "2026-09-24T21:53:15+00:00"
+      },
+      "rank": 8
+    }
+  ],
+  "notes": [
+    "Read-only prioritization: generating this queue never fetches sources or mutates portfolio data.",
+    "Actionability score determines rank before stale/missing tie-breakers; retained position count is never a ranking input.",
+    "retry_after_source_change entries should not be re-probed until new first-party transport/source evidence appears.",
+    "requires_more_precise_amc_disclosure entries cannot be completed by estimating censored weights.",
+    "A changed partial source that no longer matches a reviewed limitation is prioritized for explicit review."
+  ]
+}
