@@ -11,7 +11,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     env:
       SMALLCAP_NO_SCHEDULER: '1'
     steps:
@@ -21,45 +21,35 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Trace Axis TER browser API
+      - name: Inspect Axis TER page bundle
         run: |
           uv run --frozen python - <<'PY'
-          import re,html
-          from urllib.parse import urljoin
-          from bs4 import BeautifulSoup
+          import re
           from tracker import db
           from tracker.amc_discovery import read
 
           db.init()
-          page="https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
-          raw,_,_=read(page)
-          soup=BeautifulSoup(raw,"html.parser")
-          scripts=[]
-          for tag in soup.find_all("script",src=True):
-              url=urljoin(page,html.unescape(tag["src"]))
-              if url not in scripts:scripts.append(url)
-          print("SCRIPT_COUNT",len(scripts))
-          needles=(
-              "totalexpenseratio","expenseRatio","expense-ratio","baseExpense",
-              "baseTer","totalTer","terData","downloadTer","getTer","/cms/",
-              "expense ratio","fromDate","toDate","planOption"
-          )
-          for url in scripts:
-              try:
-                  body,_,_=read(url,archive=False)
-              except Exception as e:
-                  print("SCRIPT_ERROR",url,repr(e));continue
-              text=body.decode("utf-8","replace")
-              low=text.lower()
-              matched=[n for n in needles if n.lower() in low]
-              if not matched:continue
-              print("MATCHED",url,matched,"BYTES",len(body))
-              for needle in matched:
-                  pos=0;shown=0
-                  while shown<10:
-                      i=low.find(needle.lower(),pos)
-                      if i<0:break
-                      snippet=re.sub(r"\s+"," ",text[max(0,i-1000):min(len(text),i+2500)])
-                      print("SNIP",needle,snippet)
-                      pos=i+len(needle);shown+=1
+          url=("https://www.axismf.com/_next/static/chunks/app/servicecenter/"
+               "%5Bservicetype%5D/%5Bservices%5D/page-78aa5dcf4cefc6a2.js")
+          raw,_,_=read(url,archive=False)
+          text=raw.decode("utf-8","replace")
+          print("BUNDLE_BYTES",len(raw))
+          # Print string literals and compact neighborhoods that are plausibly
+          # request/config data for the TER page, not generic library symbols.
+          literals=sorted(set(re.findall(r'["\']([^"\']{1,300})["\']',text)))
+          for value in literals:
+              if re.search(r'expense|\bter\b|scheme|plan|from.?date|to.?date|download|cms|api',value,re.I):
+                  if re.search(r'css|svg|png|jpg|font|tooltip|router|webpack',value,re.I):
+                      continue
+                  print("LITERAL",value)
+          for pat in (
+              "TotalExpenseRatioComp","totalexpenseratio","expenseRatio",
+              "fromDate","toDate","planOption","schemeType"
+          ):
+              low=text.lower();pos=0;shown=0
+              while shown<20:
+                  i=low.find(pat.lower(),pos)
+                  if i<0:break
+                  print("SNIP",pat,re.sub(r"\s+"," ",text[max(0,i-1800):min(len(text),i+5000)]))
+                  pos=i+len(pat);shown+=1
           PY
