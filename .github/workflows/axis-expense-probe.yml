@@ -21,35 +21,14 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Inspect Axis TER page bundle
+      - name: Resolve Axis TER lazy module
         run: |
           uv run --frozen python - <<'PY'
-          import re
           from tracker import db
           from tracker.amc_discovery import read
-
           db.init()
           url=("https://www.axismf.com/_next/static/chunks/app/servicecenter/"
                "%5Bservicetype%5D/%5Bservices%5D/page-78aa5dcf4cefc6a2.js")
           raw,_,_=read(url,archive=False)
-          text=raw.decode("utf-8","replace")
-          print("BUNDLE_BYTES",len(raw))
-          # Print string literals and compact neighborhoods that are plausibly
-          # request/config data for the TER page, not generic library symbols.
-          literals=sorted(set(re.findall(r'["\']([^"\']{1,300})["\']',text)))
-          for value in literals:
-              if re.search(r'expense|\bter\b|scheme|plan|from.?date|to.?date|download|cms|api',value,re.I):
-                  if re.search(r'css|svg|png|jpg|font|tooltip|router|webpack',value,re.I):
-                      continue
-                  print("LITERAL",value)
-          for pat in (
-              "TotalExpenseRatioComp","totalexpenseratio","expenseRatio",
-              "fromDate","toDate","planOption","schemeType"
-          ):
-              low=text.lower();pos=0;shown=0
-              while shown<20:
-                  i=low.find(pat.lower(),pos)
-                  if i<0:break
-                  print("SNIP",pat,re.sub(r"\s+"," ",text[max(0,i-1800):min(len(text),i+5000)]))
-                  pos=i+len(pat);shown+=1
+          print("PAGE_BUNDLE",raw.decode("utf-8","replace"))
           PY
