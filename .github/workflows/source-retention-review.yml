@@ -1,0 +1,162 @@
+name: Review source retention proposal
+on:
+  push:
+    branches: [audit/source-retention-20260925]
+    paths: ['.github/workflows/source-retention-review.yml']
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Protect latest saved version of every document independently of URL fetches
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/audit_source_retention.py');s=p.read_text()
+          old="    if item['latest_for_urls']: reasons.append('latest_saved_response_for_at_least_one_url')"
+          new=old+"\n    if item.get('latest_document_ids'): reasons.append('latest_saved_download_for_at_least_one_document')"
+          assert s.count(old)==1;s=s.replace(old,new)
+          old="                 latest_error_urls=[], extraction_statuses=Counter())"
+          new="                 latest_error_urls=[], latest_document_ids=[], extraction_statuses=Counter())"
+          assert s.count(old)==1;s=s.replace(old,new)
+          anchor="    for row in connection.execute('''SELECT d.*,v.hash,v.observed_at FROM document_versions v"
+          insert="    latest_document_pairs = {(r[0], r[1]) for r in connection.execute('''SELECT v.document_id,v.hash FROM document_versions v WHERE v.observed_at=(SELECT MAX(v2.observed_at) FROM document_versions v2 WHERE v2.document_id=v.document_id)''')}\n"
+          assert s.count(anchor)==1;s=s.replace(anchor,insert+anchor)
+          old="        x['titles'].add(r['title'])"
+          new=old+"\n        if (r['id'], r['hash']) in latest_document_pairs: x['latest_document_ids'].append(r['id'])"
+          assert s.count(old)==1;s=s.replace(old,new)
+          s=s.replace("'urls', 'latest_for_urls', 'fragile_urls', 'latest_error_urls', 'pack'", "'urls', 'latest_for_urls', 'latest_document_ids', 'fragile_urls', 'latest_error_urls', 'pack'")
+          s=s.replace('Protect the latest saved version of every exact URL and sources', 'Protect the latest saved version of every document, independently of later URL fetches, and every exact URL; also protect sources')
+          p.write_text(s)
+          p=Path('tests/test_source_retention.py');s=p.read_text()
+          anchor="    def test_source_hash_missing_from_archive_is_reported(self):"
+          addition="""    def test_current_document_version_is_retained_despite_newer_unattached_fetch(self):
+                  self.c.execute('INSERT INTO documents VALUES(?,?,?,?,?,?)', (1, 'Fund', self.url, 'Downloads', None, 'source page'))
+                  self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.old, '2026-09-01'))
+                  result = self.collect()
+                  self.assertEqual(result[self.old]['classification'], 'retain_latest_or_review')
+                  self.assertEqual(result[self.old]['latest_document_ids'], [1])
+
+              def test_old_document_version_can_be_candidate_after_new_version_attached(self):
+                  self.c.execute('INSERT INTO documents VALUES(?,?,?,?,?,?)', (1, 'Fund', self.url, 'Downloads', None, 'source page'))
+                  self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.old, '2026-09-01'))
+                  self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.new, '2026-09-24'))
+                  result = self.collect()
+                  self.assertEqual(result[self.old]['classification'], 'link_only_candidate')
+                  self.assertEqual(result[self.new]['classification'], 'retain_latest_or_review')
+
+          """
+          import textwrap
+          addition=textwrap.dedent(addition)
+          # Normalize the first method's indentation after YAML literal processing.
+          addition='\n'.join(line[10:] if line.startswith('          ') else line for line in addition.splitlines())
+          addition='''    def test_current_document_version_is_retained_despite_newer_unattached_fetch(self):
+                  self.c.execute('INSERT INTO documents VALUES(?,?,?,?,?,?)', (1, 'Fund', self.url, 'Downloads', None, 'source page'))
+                  self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.old, '2026-09-01'))
+                  result = self.collect()
+                  self.assertEqual(result[self.old]['classification'], 'retain_latest_or_review')
+                  self.assertEqual(result[self.old]['latest_document_ids'], [1])
+
+              def test_old_document_version_can_be_candidate_after_new_version_attached(self):
+                  self.c.execute('INSERT INTO documents VALUES(?,?,?,?,?,?)', (1, 'Fund', self.url, 'Downloads', None, 'source page'))
+                  self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.old, '2026-09-01'))
+                  self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.new, '2026-09-24'))
+                  result = self.collect()
+                  self.assertEqual(result[self.old]['classification'], 'link_only_candidate')
+                  self.assertEqual(result[self.new]['classification'], 'retain_latest_or_review')
+
+          '''
+          lines=addition.splitlines()
+          lines=[lines[0]]+[line[10:] if line.startswith('          ') else line for line in lines[1:]]
+          addition='\n'.join(lines)+'\n'
+          assert s.count(anchor)==1;s=s.replace(anchor,addition+anchor);p.write_text(s)
+          PY
+      - name: Run full regression suite
+        run: |
+          uv sync --frozen
+          uv run --frozen python -m compileall -q tracker scripts tests
+          if ! uv run --frozen python -m unittest discover -s tests -v > /tmp/retention-review-tests.log 2>&1; then
+            tail -100 /tmp/retention-review-tests.log
+            exit 1
+          fi
+          tail -5 /tmp/retention-review-tests.log
+      - name: Recheck snapshot and derive final inventory using previously verified pack measurements
+        run: |
+          mkdir -p /tmp/retention-review-input
+          gh release download tracker-history --repo "$GITHUB_REPOSITORY" --pattern latest.json --dir /tmp/retention-review-input
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/tracker-history" > /tmp/retention-review-input/release.json
+          uv run --frozen python - <<'PY'
+          import json,os,re,sqlite3,zipfile,shutil
+          from pathlib import Path
+          from datetime import datetime,timezone
+          from contextlib import closing
+          from scripts import audit_source_retention as a,github_state as state
+          folder=Path('/tmp/retention-review-input');m=json.loads((folder/'latest.json').read_text())
+          prior=json.loads(Path('docs/SOURCE-RETENTION-SUMMARY.json').read_text())
+          inventory={x['hash']:x for x in json.loads(Path('docs/SOURCE-RETENTION-INVENTORY.json').read_text())}
+          assert m['database']==prior['checkpoint'],'Production pointer moved; do not mix snapshots'
+          assets=json.loads((folder/'release.json').read_text())['assets'];names={x['name']:x for x in assets}
+          for pack in prior['verified_packs']:
+              assert names[pack['asset']]['digest']=='sha256:'+pack['sha256']
+              assert names[pack['asset']]['size']==pack['bytes']
+          packed={h for p in m['source_packs'] for h in p['hashes']};assert packed==set(inventory)
+          dbzip=state.download_asset(os.environ['GITHUB_REPOSITORY'],m['database']['asset'],folder)
+          assert a.sha256(dbzip)==m['database']['sha256'] and dbzip.stat().st_size==m['database']['bytes']
+          database=folder/'ledger.sqlite3'
+          with zipfile.ZipFile(dbzip) as z:
+              assert z.namelist()==['data/ledger.sqlite3']
+              with z.open('data/ledger.sqlite3') as src,database.open('wb') as dst:shutil.copyfileobj(src,dst)
+          before=a.sha256(database);assert before==prior['database_sha256_after']
+          with closing(sqlite3.connect(database.as_uri()+'?mode=ro',uri=True)) as c:
+              c.execute('PRAGMA query_only=ON')
+              assert c.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+              assert not c.execute('PRAGMA foreign_key_check').fetchone()
+              items,missing=a.collect(c);assert not missing and set(items)==set(inventory)
+          assert a.sha256(database)==before
+          for h,x in items.items():
+              old=inventory[h]
+              assert (x['bytes'],x['path'])==(old['bytes'],old['path'])
+              for key in ('pack','compressed_payload_bytes'):x[key]=old[key]
+          report=a.summarize(items,m,assets,database.stat().st_size)
+          report.update({key:prior[key] for key in ('checkpoint','table_counts','logical_rows','verified_packs')})
+          report.update(audited_at=datetime.now(timezone.utc).isoformat(timespec='seconds'),mode='read_only_proposal',
+            database_sha256_before=before,database_sha256_after=before,database_unchanged=True,input_manifest_unchanged=True,
+            unique_hash_coverage_verified=True,live_amc_urls_checked=0,source_pack_measurement_run_id=prior['validation_run_id'],
+            validation_run_id=os.environ['GITHUB_RUN_ID'],source_commit=os.environ['GITHUB_SHA'],
+            tests_passed=int(re.search(r'Ran (\d+) tests',Path('/tmp/retention-review-tests.log').read_text()).group(1)),
+            production_checkpoint_still_unchanged=True,latest_document_download_dependencies_checked=True)
+          a.write_reports(Path('docs'),report,items)
+          md=Path('docs/SOURCE-RETENTION-AUDIT.md')
+          md.write_text(md.read_text()+f"\nValidation: **{report['tests_passed']} passing tests**, final dependency-review run **{report['validation_run_id']}**; compressed source packs measured and SHA-256 verified in **{report['source_pack_measurement_run_id']}**. The production checkpoint and all source-pack release digests remain unchanged. All **{report['logical_rows']:,} database rows** and **{len(items):,} originals** remain. No AMC links were live-probed. Latest saved document-download versions were independently protected.\n")
+          handoff=Path('docs/HANDOFF.md');s=handoff.read_text()
+          start=s.index('## Source-retention audit');end=s.index('## Database cleanup',start)
+          g=report['groups'];x=g['link_only_candidate']
+          section=f"## Source-retention audit — NO deletion authorized (2026-09-25 UTC)\n\nThe owner approved classification and savings analysis BEFORE deleting anything. Completed report: `docs/SOURCE-RETENTION-AUDIT.md`; per-hash CSV/JSON inventories and summary are adjacent. Final review run **{report['validation_run_id']}** passed **{report['tests_passed']} tests**. Source-pack measurement run **{report['source_pack_measurement_run_id']}** checked all **95** packs against release digests. The exact production checkpoint is unchanged, with **629,225 rows** and **2,519 originals**.\n\nFinal link-only candidates: **{x['files']} files / {x['raw_bytes']:,} raw bytes / {x['compressed_payload_bytes']:,} compressed payload bytes** (ZIP headers excluded). These are superseded discovery responses, not proven duplicates or guaranteed recoverable historical files. Current saved document versions, financial evidence, historical extractions, original reports, unknown requests and fragile transport sources remain protected or under review. **Deleted files/bytes: 0.**\n\nNo production workflow, source-retention policy, database schema, collector, UI or schedule was changed. Approval of this audit is NOT approval to delete the candidates or retire the old legacy ZIP. Before any approved migration, make restore, replay, archive serving and publication/download code retention-aware, preserve provenance, validate replacement packs and retain rollback until independently verified.\n\n"
+          handoff.write_text(s[:start]+section+s[end:])
+          print(json.dumps({'groups':g,'tests_passed':report['tests_passed'],'database_unchanged':True},indent=2))
+          PY
+      - name: Save final report on audit branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/audit_source_retention.py tests/test_source_retention.py docs/SOURCE-RETENTION-* docs/HANDOFF.md
+          git commit -m 'Finalize read-only retention audit with saved-download protection'
+          git push origin HEAD:audit/source-retention-20260925
+      - name: Package report and per-file inventories
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-retention-audit-20260925
+          path: docs/SOURCE-RETENTION-*
+          retention-days: 7
