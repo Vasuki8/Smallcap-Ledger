@@ -121,12 +121,22 @@ class AxisPortfolioTests(unittest.TestCase):
              "Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_test.xlsx"),
             "axis-monthly-complete",
         )
-        with patch("tracker.coverage.expected_portfolio_as_of",return_value="2026-08-31"):
+        from tracker.app import fund, funds
+        with patch("tracker.coverage.expected_portfolio_as_of",return_value="2026-08-31"), \
+             patch("tracker.app.expected_portfolio_as_of",return_value="2026-08-31"):
             row=next(x for x in coverage.report()["funds"] if x["family"]==FAMILY)
+            detail=fund(9901)
+            summary=next(x for x in funds()["funds"] if x["code"]==9901)
         self.assertEqual(row["portfolio"]["as_of"],"2026-08-31")
         self.assertTrue(row["portfolio_complete"])
         self.assertTrue(row["portfolio_fresh"])
         self.assertIsNone(row["portfolio_limitation"])
+        self.assertEqual(detail["portfolios"][0]["as_of"],"2026-08-31")
+        self.assertEqual(detail["portfolios"][0]["complete"],1)
+        self.assertIsNone(detail["portfolios"][0]["limitation"])
+        self.assertEqual(summary["portfolio"]["as_of"],"2026-08-31")
+        self.assertEqual(summary["portfolio"]["complete"],1)
+        self.assertIsNone(summary["portfolio_limitation"])
 
     def test_nested_branch_requires_exact_monthly_portfolio_identity(self):
         body=json.dumps({
