@@ -75,7 +75,7 @@ def prepare(*,apply=False,report_path=None):
         precedence={'unclassified':0,'link_only_candidate':1,
                     'retain_latest_or_review':2,'retain_evidence':3}
         current={r['hash']:r for r in db.rows(
-            'SELECT hash,classification,binary_state FROM archive_retention')}
+            'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
         records=[]
         for h,row in audited.items():
             reviewed=row['classification']
@@ -83,8 +83,10 @@ def prepare(*,apply=False,report_path=None):
                 raise ValueError('Invalid reviewed classification for '+h)
             existing=current[h]['classification']
             # Historical audit metadata may strengthen an unclassified row, but
-            # must never downgrade a hash promoted by a newer current fetch.
-            classification=reviewed if precedence[reviewed]>precedence[existing] else existing
+            # must never downgrade or overwrite a hash promoted by a newer fetch.
+            if precedence[existing]>precedence[reviewed]:
+                continue
+            classification=reviewed if precedence[reviewed]>=precedence[existing] else existing
             records.append((classification,REASON,REVIEWED_AT,stamp,h))
         with db.connect() as c:
             c.executemany("""UPDATE archive_retention SET
