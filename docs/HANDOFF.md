@@ -1,6 +1,99 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-25, after Groww Small Cap current BER recovery and Direct-plan coverage-summary correction. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-25, after UTI Small Cap explicit BER recovery from the public YTD TER workbook. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: UTI Small Cap explicit BER recovery
+
+**UTI Small Cap Fund now has explicitly labelled Direct and Regular BER from UTI Mutual Fund's own public YTD TER workbook. The tracker did not use or bypass UTI's authenticated scheduler API.**
+
+PR #103 merged as commit `2e02b0e1fa11df72c4ced20675d8e47b385e4383`. Isolated validation run **36087658254** passed compileall, all **259 tests**, and a live first-party UTI CMS metadata → YTD TER workbook → strict Small Cap parser check. Production workflow **#473**, run **36087719595**, then passed the one-time UTI recovery, the same **259-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The production run completed successfully at **2026-09-25T02:49:01Z**.
+
+### UTI source discovery and exact observations
+
+UTI's current production web application publishes the public CMS metadata endpoint:
+
+`https://www.utimf.com/api/page/get-ytd-ter-disc-page-data`
+
+At recovery time that endpoint exposed the current-financial-year file:
+
+- CMS title: **Daily TER YTD 01042026-12072026**
+- source workbook: `https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-07/daily_ter_ytd_01042026_12072026_imp.xlsx?VersionId=IkGh3zzgPAsjAuVAMH.mIny_xn3zhpxb`
+- workbook SHA-256: `f1ec288c456330387706a4ad32e59f381c320e200eb145c0d9978212179f9094`
+- CMS YTD end date: **2026-07-12**
+
+UTI's production JavaScript also exposes a scheduler route named `getTerData` under `https://prod-api-investor.utimf.com/api/v1/scheduler/getTerData`. Direct unauthenticated requests returned **401 Unauthorized**. The tracker does **not** attempt to obtain or bypass credentials for that route; the public CMS workbook is the auditable source used here.
+
+The workbook's **YTD TER** sheet has these exact published columns:
+
+`PORTFOLIO, NSDL_CODE, PORTFOLIO_NAME, TRANS_DATE, BER_REG, BRK_REG, TRAN_REG, STAT_REG, TOTALTER_REG, WTD_TER_REG, BER_DIR, BRK_DIR, TRAN_DIR, STAT_DIR, TOTALTER_DIR, WTD_TER_DIR`
+
+The parser requires exact UTI Small Cap identity:
+
+- portfolio code: **751**
+- NSDL scheme code: **UTIM/O/E/SCF/20/03/0094**
+- scheme name: **UTI Small Cap Fund**
+
+Newest exact row in the public YTD file: **2026-07-12**
+
+| Plan | BER | Brokerage | Transaction cost | Statutory levies | Total TER |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Regular | **1.59%** | 0.00% | 0.00% | 0.20% | **1.79%** |
+| Direct | **0.56%** | 0.00% | 0.00% | 0.10% | **0.66%** |
+
+The workbook also publishes WTD TER columns. Those are validated as part of the source schema but are not promoted into the daily Total TER metric. The tracker stores only the explicitly published BER, brokerage, transaction cost, statutory levies and Total TER fields.
+
+The parser rejects changed headers, wrong portfolio/NSDL/scheme identity, future rows, duplicate latest rows, missing/out-of-range values, Total TER below BER, and component totals that fail reconciliation within rounding tolerance. The CMS selector requires the title dates and workbook filename dates to agree, requires the current financial year to start on 1 April, rejects future end dates and accepts only UTI's registered public CloudFront path.
+
+`scripts/refresh_uti_expenses.py` performs the idempotent push recovery and records `source_upgrade_uti-ber-v1` only after a current-financial-year Regular/Direct BER+TER pair exists on one exact date from one UTI YTD workbook with one non-empty source hash. Normal nightly collection remains active through `amc_expenses.update`.
+
+Production #473 logged:
+
+`UTI Small Cap Fund: official BER/TER as of 2026-07-12 (Direct 0.56%/0.66% BER/TER; YTD file through 2026-07-12)`
+
+with the exact source and hash above.
+
+### Date precedence and retained UTI TER
+
+The new YTD workbook establishes BER, but it is **not** UTI's newest retained Total TER observation. The tracker already has UTI's official Fund Watch observation:
+
+- Direct Total TER: **0.86%**
+- reporting date: **2026-07-31**
+- source: `https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/uti_fund_watch_active_august_2026_rv2.pdf?VersionId=B2XKeBTyWsZMGfHUqI3nbdnzhATN16Ax`
+
+Because reporting date remains the primary ordering rule, the website continues to show **Direct TER 0.86% as of 2026-07-31** while separately exposing **Direct BER 0.56% as of 2026-07-12**. No value was derived or forward-filled.
+
+Status commit `7eae627ec707c681b43f71902ac034eeeec2e561` records the published state. Final Pages artifact **10844880313** is **230,729,840 bytes**, digest `sha256:78b2a09036b06ae4273478e89a03b66a9c6595f4b3b2348229bf0a8cb95223fe`.
+
+### Expense and portfolio coverage after UTI
+
+Coverage generated at **2026-09-25T02:48:03Z** is:
+
+- reported TER: **35 / 36**
+- base expense ratio / BER: **35 / 36** (up from 34 / 36)
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
+- latest included NAV: **2026-09-24**
+
+UTI's current AUM is **₹5,404.066 crore as of 2026-09-23** via AMFI. Its August portfolio remains current but partial at **108 retained positions as of 2026-08-31**.
+
+**Axis Small Cap Fund is now the only fund without both explicitly labelled TER and BER.** Its official fund page still publishes only an unqualified Direct **Expense Ratio 0.71% as of 2026-09-23**. Keep that value classified as `expense_ratio`; do not promote it to TER or BER without an explicitly labelled first-party disclosure.
+
+### Next backend task
+
+The expense-source pass is now complete for every fund except the deliberate Axis classification boundary. **Return to portfolio recovery, with Union Small Cap Fund as the next preferred target because it is the sole fund with no retained portfolio at all.**
+
+Before retrying Union, re-read the prior Union source/transport investigations in this handoff and current source-page evidence. Union has previously been an official-host transport blocker. Retry only if its current first-party disclosure route, robots policy, attachment path or transport has materially changed; do not guess filenames, weaken host checks or invent holdings simply to close the gap. If Union remains unchanged/unreachable after a bounded evidence-based check, move to **Bajaj Finserv Small Cap Fund**, which remains the only stale collected portfolio.
+
+Other current portfolio boundaries remain:
+- **Bajaj Finserv Small Cap Fund**: stale collected portfolio.
+- **Axis, Edelweiss, ICICI Prudential, Sundaram and UTI**: current partials with existing source/access/data-precision constraints.
+- **Sundaram**: one holding is disclosed only as less than 0.01%; do not fabricate an exact weight.
+- **UTI**: current source abbreviates/censors small positions; do not infer exact weights.
+- completed structured recoveries such as SBI, Tata, TRUSTMF, Invesco and JM should not be rerun without new source evidence.
+
+No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in this UTI batch.
 
 ## Latest completed batch: Groww Small Cap current BER recovery
 
