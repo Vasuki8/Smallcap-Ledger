@@ -21,25 +21,17 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Inspect Axis TER metadata and endpoint
+      - name: Call Axis TER endpoint with public CMS token
         run: |
           uv run --frozen python - <<'PY'
-          import json,re
+          import json
           from tracker import db
           from tracker.amc_discovery import read
+          from tracker.axis_portfolios import cms_token
 
           db.init()
-          page="https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
-          raw,_,_=read(page)
-          text=raw.decode("utf-8","replace")
-          for pat in ("expenseRatioResponse","schemeDetails","totalExpenseRatio"):
-              low=text.lower();i=low.find(pat.lower())
-              print("PAGE_PATTERN",pat,"POS",i)
-              if i>=0:
-                  snip=text[max(0,i-2500):min(len(text),i+12000)]
-                  # Collapse escape noise but preserve raw data keys/values.
-                  print("PAGE_SNIP",snip)
-
+          token=cms_token(read)
+          headers={"Authorization":token,"Content-Type":"application/json"}
           endpoint="https://www.axismf.com/cms/expense-ratio-details"
           probes=[
               {},
@@ -48,9 +40,9 @@ jobs:
           ]
           for payload in probes:
               try:
-                  body,h,typ=read(endpoint,body=payload)
-                  print("API_PROBE",json.dumps(payload),len(body),typ,h,
-                        body.decode("utf-8","replace")[:16000])
+                  body,h,typ=read(endpoint,body=payload,headers=headers)
+                  print("API_PROBE",json.dumps(payload),len(body),typ,h)
+                  print(body.decode("utf-8","replace")[:30000])
               except Exception as e:
                   print("API_ERROR",json.dumps(payload),repr(e))
           PY
