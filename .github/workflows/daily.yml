@@ -102,6 +102,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/refresh_mirae_expenses.py
+      - name: Apply UTI YTD BER disclosure upgrade
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/refresh_uti_expenses.py
       - name: Collect daily data
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
         timeout-minutes: 40
