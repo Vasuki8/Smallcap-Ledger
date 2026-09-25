@@ -1,6 +1,76 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-25, after Mahindra Manulife Small Cap TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-25, after Mirae Asset Small Cap explicit Total TER/BER production recovery. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+## Latest completed batch: Mirae Asset Small Cap explicit Total TER/BER recovery
+
+**Mirae Asset Small Cap Fund now has current, explicitly labelled BER and Total TER from Mirae Asset Mutual Fund's own daily statutory-disclosure workbook.**
+
+PR #100 merged as commit `9f8431ac94f6e5ecbad323f55632e2bb45e905cf`. Isolated validation run **36084851382** passed compileall, all **249 tests**, and a live first-party statutory service → current TER workbook → strict Small Cap parser check. Production workflow **#470**, run **36084922795**, then passed the one-time Mirae recovery, the same **249-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The production run completed successfully at **2026-09-25T02:08:49Z**.
+
+### Mirae source discovery and exact observations
+
+Current first-party statutory TER page:
+
+`https://www.miraeassetmf.co.in/downloads/statutory-disclosure/total-expense-ratio`
+
+Mirae's production browser loads the disclosure list from the public same-origin service:
+
+`https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData`
+
+using the exact module name **TotalExpenseRatio** plus bounded from/to dates and pagination. No investor login, account credential, token or private secret is used.
+
+For **2026-09-23**, the service returned the exact record:
+
+- title: **Total Expense Ratio -23 Sep 2026**
+- workbook: `https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_23092026.xls`
+- publish date: **2026-09-23**
+- workbook SHA-256: `ad2faa3e9140f121268b2385d2b81d7b5e3d2b0af5b2c87b6c3e13bba9541722`
+
+The legacy XLS has one **Report** sheet and explicit columns for BER, brokerage, transaction cost, statutory levies including GST and **Total TER** for both Regular and Direct plans. The parser requires exact scheme name **Mirae Asset Small Cap Fund**, exact NSDL code **MIRA/O/E/SCF/24/10/0075**, exact two-row header identity and the newest unique non-future row.
+
+Newest exact row: **2026-09-23**
+
+| Plan | BER | Brokerage | Transaction cost | Statutory levies incl. GST | Total TER |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Regular | **1.57%** | 0.07% | 0.01% | 0.47% | **2.12%** |
+| Direct | **0.32%** | 0.07% | 0.01% | 0.24% | **0.64%** |
+
+The tracker stores the workbook's explicit **Total TER** fields. It does **not** derive Total TER from BER or components. Component arithmetic is only a rejection check. Metadata title date, workbook filename date and published date must all agree. The parser also rejects changed workbook layout, wrong scheme/NSDL identity, future dates, duplicate latest rows, missing/out-of-range values, Total TER below BER, and component totals that fail reconciliation within rounding tolerance.
+
+`scripts/refresh_mirae_expenses.py` performs the idempotent push recovery and records `source_upgrade_mirae-ter-v1` only after recent Regular/Direct BER+TER observations exist on one date from one exact Mirae daily TER workbook with one non-empty hash. Normal nightly collection remains active through `amc_expenses.update`.
+
+Production #470 logged:
+
+`Mirae Asset Small Cap Fund: official BER/TER as of 2026-09-23 (Direct 0.32%/0.64% BER/TER)`
+
+with the exact source and workbook hash above. Status commit `eadc871b7d90f9f2b5584fd174b471c580835769` records the published coverage state.
+
+### Expense and portfolio coverage after Mirae
+
+Coverage generated at **2026-09-25T02:07:40Z** is:
+
+- reported TER: **35 / 36** (up from 34 / 36)
+- base expense ratio / BER: **33 / 36**
+- dated Direct fee fallback: **36 / 36**
+- AUM: **36 / 36**
+- benchmark identity: **36 / 36**
+- portfolios: **35 / 36**, **28 complete**, **34 current**, **7 partial**
+- latest included NAV: **2026-09-24**
+
+Mirae's published Direct fee is now **TER 0.64% with BER 0.32%, both as of 2026-09-23**, replacing the older **0.34% BER as of 2026-07-31** fallback. Its current AUM is **₹5,965.3286 crore as of 2026-09-23** via AMFI. Its August portfolio remains complete at **86 positions as of 2026-08-31**.
+
+The sole fund without explicitly reported Total TER is now **Axis Small Cap Fund**. The remaining BER gaps are **Axis, Groww and UTI**. The sole zero-portfolio fund is **Union Small Cap Fund**; **Bajaj Finserv Small Cap Fund** remains the only stale collected portfolio.
+
+### Next backend task
+
+**Groww Small Cap Fund is the next preferred expense-source target.** The tracker has a dated Direct TER **1.12% as of 2026-04-30** from Groww Mutual Fund's official factsheet but still has no explicit BER. Trace Groww's current first-party statutory TER/expense disclosure route for a current explicitly labelled BER and, if available, a fresher Total TER. Preserve exact source identity/date/hash and do not derive BER or TER from components.
+
+After Groww, investigate **UTI Small Cap Fund** for an explicitly labelled BER. **Axis remains a deliberate classification boundary:** its official fund page currently publishes only an unqualified Direct **Expense Ratio 0.71% as of 2026-09-23**. Keep that observation as `expense_ratio`; do not promote it to TER or BER without an explicitly labelled first-party source.
+
+Portfolio recovery remains secondary to the current expense-coverage pass: **Union Small Cap Fund** is still the only fund with no retained portfolio; Bajaj Finserv remains stale; existing partial-source precision rules must not be weakened merely to close coverage.
+
+No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in this Mirae expense-recovery batch.
 
 ## Latest completed batch: Mahindra Manulife Small Cap current TER/BER recovery
 
@@ -238,7 +308,6 @@ After JM, continue with **Mahindra Manulife** and **Mirae Asset**. **Axis** rema
 No UI, paid-service, permission, archive-retention policy or schedule-cadence change was made in the ICICI/Invesco expense-recovery batches.
 
 ## Latest completed batch: HSBC Small Cap detailed TER/BER recovery
-
 **HSBC Small Cap Fund now has current, explicitly labelled AMC-published BER and Total TER from the detailed TER workbook linked by HSBC's own factsheet.**
 
 PR #95 merged as commit `1077f6887d07b1e81de1dbf9ab1c03e88dd66096`. Isolated validation run **36064819731** passed compileall, all **224 tests**, and a live end-to-end AMC-link -> CAMS browser transport -> decoded workbook -> strict HSBC row parse. Production workflow **#465**, run **36064999961**, then passed the one-time HSBC recovery, the same **224-test** regression gate, generated-site/download validation, cumulative-history publication, status recording and GitHub Pages deployment. The production run completed successfully at **2026-09-24T22:16:34Z**.
@@ -477,7 +546,6 @@ Investigation evidence is in temporary branch Actions runs **36024082115** (exac
 ## Previous completed task: Invesco complete current + prior monthly portfolio recovery
 
 Merged PR #90 as commit `fb2548153b360612366006afe6c7a8a0f36f0970`. Production workflow **#460**, run **36019462111**, passed cumulative-history restore, parser v127 recovery, all **199 tests**, generated-site/download validation, cumulative-history publication and GitHub Pages deployment. The published coverage was built at **2026-09-24T15:20:56Z**, status was recorded at **2026-09-24T15:21:18Z**, and the workflow completed successfully at **2026-09-24T15:21:58Z**.
-
 Invesco's current Next.js site exposes the same first-party read-only API used by its Monthly Holdings page: `GET https://www.invescomutualfund.com/api/CompleteMonthlyHoldings?year=<YEAR>&classification=equity`. The API returns exact fund/month workbook URLs. Discovery now selects only the exact **Invesco India Small Cap Fund** row and only the newest two closed calendar months, including January/year rollover handling. Registered-host and workbook-extension checks remain mandatory.
 
 Official source evidence retained in production:
