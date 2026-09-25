@@ -1,0 +1,59 @@
+{
+  "checked_at": "2026-09-25T03:47:48.477581+00:00",
+  "production_run_id": 36091631221,
+  "production_conclusion": "success",
+  "production_commit": "64e16f1ff426ed8d3ccd0a82af9c1d3a78db3f07",
+  "live_url": "https://vasuki8.github.io/Smallcap-Ledger/",
+  "live_build_time": "2026-09-25T03:46:14+00:00",
+  "expected_build_time": "2026-09-25T03:46:14+00:00",
+  "live_counts": {
+    "plans": 143,
+    "funds": 36,
+    "nav_points": 281442,
+    "benchmark_points": 5329,
+    "portfolios": 123,
+    "documents": 1782,
+    "archive_bytes": 2162519668,
+    "database_bytes": 73322496,
+    "total_storage_bytes": 2235842164,
+    "aum_funds": 36,
+    "fee_funds": 36,
+    "latest_nav_date": "2026-09-24"
+  },
+  "live_coverage_counts": {
+    "funds": 36,
+    "aum": 36,
+    "fee": 36,
+    "ter": 35,
+    "base_expense_ratio": 35,
+    "portfolio": 35,
+    "portfolio_complete": 28,
+    "portfolio_fresh": 34,
+    "portfolio_fresh_complete": 28,
+    "portfolio_partial": 7,
+    "benchmark_identity": 36
+  },
+  "live_homepage_fund_nav_and_csv_verified": true,
+  "sample_fund_code": 154215,
+  "database_checkpoint": {
+    "asset": "database-36091631221-1.zip",
+    "sha256": "83b22717df940e94aa0423ca216dfa5e1849bfb5b94b8cd183a6c9c530e97d73",
+    "bytes": 7451756
+  },
+  "database_bytes": 73322496,
+  "published_database_integrity": "ok",
+  "published_records_match_production_migration": true,
+  "tables_preserved": 18,
+  "logical_rows_preserved": 629225,
+  "rollback_database_checkpoint": {
+    "asset": "database-36087719595-1.zip",
+    "sha256": "05fba67c4818f3285b332696161dce2f1ad969f8ba5768106f5e66487c32736e",
+    "bytes": 12851483
+  },
+  "source_packs_retained": 95,
+  "archived_originals_retained": 2519,
+  "legacy_asset_unchanged": {
+    "name": "state-35791406887-1.zip",
+    "bytes": 1087514828
+  }
+}
