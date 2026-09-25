@@ -62,6 +62,15 @@ def _portfolio_gap_audit(family,amc,official_publications):
     return {'reason':reason,'document':document,'extraction':extraction,'source_page':source_page}
 
 
+
+def portfolio_gap(family,amc,official_publications=None):
+    """Return retained audit evidence for a family with no portfolio snapshot."""
+    if official_publications is None:
+        official_publications=db.one(
+            "SELECT COUNT(*) n FROM documents WHERE family=? AND origin='AMC' AND kind!='source page'",
+            (family,))['n']
+    return _portfolio_gap_audit(family,amc,official_publications)
+
 def report():
     rows=[];expected=expected_portfolio_as_of()
     for scheme in db.rows('SELECT DISTINCT family,amc FROM schemes ORDER BY family'):
@@ -90,7 +99,7 @@ def report():
         row['portfolio_complete']=bool(row['portfolio'] and row['portfolio']['complete'])
         row['portfolio_fresh']=bool(row['portfolio'] and row['portfolio']['as_of']>=expected)
         row['official_publications']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND origin='AMC' AND kind!='source page'",(family,))['n']
-        row['portfolio_gap']=None if row['portfolio'] else _portfolio_gap_audit(family,scheme['amc'],row['official_publications'])
+        row['portfolio_gap']=None if row['portfolio'] else portfolio_gap(family,scheme['amc'],row['official_publications'])
         row['portfolio_limitation']=(row['portfolio'].get('limitation') if row['portfolio']
                                      else missing_limitation(row['portfolio_gap']))
         rows.append(row)
