@@ -21,10 +21,10 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Discover accepted Axis TER request schema
+      - name: Inspect Axis TER generated workbook
         run: |
           uv run --frozen python - <<'PY'
-          import json
+          import io,json,openpyxl
           from tracker import db
           from tracker.amc_discovery import read
           from tracker.axis_portfolios import cms_token
@@ -32,20 +32,22 @@ jobs:
           db.init()
           endpoint="https://www.axismf.com/cms/expense-ratio-details"
           headers={"Authorization":cms_token(read),"Content-Type":"application/json"}
-          probes=[
-              {"fundType":"Equity"},
-              {"fundType":"Equity","schemeCode":"SC"},
-              {"fundType":"Equity","schemeCode":"SC","fromDate":"01-09-2026","toDate":"25-09-2026"},
-              {"fundType":"Equity","schemeCode":"SC","type":"Total Expense Ratio","fromDate":"01-09-2026","toDate":"25-09-2026"},
-              {"fundType":"Equity Scheme","schemeCode":"SC","type":"Total Expense Ratio","fromDate":"01-09-2026","toDate":"25-09-2026"},
-              {"fundType":"Equity Schemes","schemeCode":"SC","type":"Total Expense Ratio","fromDate":"01-09-2026","toDate":"25-09-2026"},
-              {"fundType":"Equity","schemeCode":"ALL","type":"Total Expense Ratio","fromDate":"01-09-2026","toDate":"25-09-2026"},
-          ]
-          for payload in probes:
-              try:
-                  body,h,typ=read(endpoint,body=payload,headers=headers)
-                  print("PROBE",json.dumps(payload,separators=(",",":")),"=>",
-                        body.decode("utf-8","replace")[:20000])
-              except Exception as e:
-                  print("ERROR",json.dumps(payload,separators=(",",":")),repr(e))
+          payload={"fundType":"Equity","schemeCode":"SC","type":"Total Expense Ratio",
+                   "fromDate":"20-09-2026","toDate":"25-09-2026"}
+          raw,api_hash,_=read(endpoint,body=payload,headers=headers)
+          data=json.loads(raw)
+          print("API_HASH",api_hash)
+          print("API_STATUS",data.get("status"),data.get("statusCode"))
+          url=data["data"]["s3CsvResponse"]["location"]
+          print("WORKBOOK_URL",url)
+          body,h,typ=read(url)
+          print("WORKBOOK",len(body),h,typ,body[:8])
+          book=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
+          print("SHEETS",book.sheetnames)
+          for sheet in book:
+              print("SHEET",sheet.title,sheet.max_row,sheet.max_column)
+              for i,row in enumerate(sheet.iter_rows(values_only=True),1):
+                  print("ROW",i,row)
+                  if i>=20:break
+          book.close()
           PY
