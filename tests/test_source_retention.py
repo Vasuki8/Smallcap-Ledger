@@ -4,6 +4,7 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 from scripts import audit_source_retention as audit
 
 
@@ -167,6 +168,45 @@ class RetentionDependencyTests(unittest.TestCase):
     def test_source_hash_missing_from_archive_is_reported(self):
         self.c.execute('INSERT INTO metrics VALUES(?,?,?,?)', ('Fund', self.url, 'c'*64, '2026-09-24'))
         self.assertEqual(audit.collect(self.c, self.root)[1], ['c'*64])
+
+
+
+class RetentionMetadataPreparationTests(unittest.TestCase):
+    def test_prepare_applies_reviewed_classes_without_changing_binary_state(self):
+        import json
+        from tracker import db
+        from scripts import prepare_retention_metadata as prep
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);previous_data=db.DATA;previous_inventory=prep.INVENTORY
+            db.DATA=root
+            try:
+                db.init()
+                protected=db.archive(b'protected evidence','application/pdf')
+                candidate=db.archive(b'old discovery shell','text/html')
+                inventory=root/'inventory.json'
+                inventory.write_text(json.dumps([
+                    {'hash':protected,'classification':'retain_evidence'},
+                    {'hash':candidate,'classification':'link_only_candidate'},
+                ]))
+                prep.INVENTORY=inventory
+                manifest={'format':2,'created_at':'now'}
+                report_path=root/'report.json'
+                with patch.object(prep,'active_manifest_hashes',return_value=(manifest,{protected,candidate})):
+                    report=prep.prepare(apply=True,report_path=report_path)
+                self.assertEqual(report['files_actually_deleted'],0)
+                self.assertEqual(report['bytes_actually_deleted'],0)
+                self.assertEqual(report['binary_states'],{'retained':2})
+                self.assertTrue(report['protected_archive_metadata_unchanged'])
+                self.assertTrue(report['non_retention_table_counts_unchanged'])
+                self.assertFalse(report['deletion_enabled'])
+                self.assertEqual(db.archive_retention(protected)['classification'],'retain_evidence')
+                self.assertEqual(db.archive_retention(candidate)['classification'],'link_only_candidate')
+                self.assertEqual(db.archive_retention(candidate)['binary_state'],'retained')
+                self.assertTrue(db.archive_binary_path(candidate).is_file())
+                self.assertTrue(report_path.is_file())
+            finally:
+                prep.INVENTORY=previous_inventory
+                db.DATA=previous_data
 
 
 if __name__ == '__main__': unittest.main()
