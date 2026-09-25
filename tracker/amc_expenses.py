@@ -13,7 +13,7 @@ import subprocess
 import uuid
 import zipfile
 import xml.etree.ElementTree as ET
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlparse
 
 import httpx
 import openpyxl
