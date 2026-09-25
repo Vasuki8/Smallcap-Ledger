@@ -11,50 +11,33 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
-      - name: Inspect UTI TER APIs and frontend contract
+      - name: Extract UTI TER component request shape
         shell: bash
         run: |
           python - <<'PY'
-          import json, re, urllib.request
-
-          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
-          MAIN="https://www.utimf.com/main.4ae2d0c3fb6b241f.js"
-          URLS=[
-              "https://www.utimf.com/api/page/get-ter-download-page-docs",
-              "https://www.utimf.com/api/page/get-ytd-ter-disc-page-data",
-          ]
-          def get(url,limit=10_000_000):
-              req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/json, text/plain, */*"})
-              with urllib.request.urlopen(req,timeout=30) as r:
-                  raw=r.read(limit+1)
-                  print("FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
-                  if len(raw)>limit: raise RuntimeError("too large")
-                  return raw.decode("utf-8","replace")
-
-          for url in URLS:
-              try:
-                  text=get(url,5_000_000)
-                  print("API_BODY",url,text[:100000])
-              except Exception as e:
-                  print("API_ERROR",url,repr(e))
-
-          main=get(MAIN)
-          low=main.lower()
-          for needle in ("getTERFile","getYTDTERFile","getTERURL","getTerData","get-ter-download-page-docs","get-ytd-ter-disc-page-data"):
-              token=needle.lower(); start=0
-              for n in range(12):
-                  i=low.find(token,start)
-                  if i<0: break
-                  print("CONTEXT",needle,n+1,re.sub(r"\s+"," ",main[max(0,i-1800):min(len(main),i+5500)]))
-                  start=i+len(token)
-
-          for needle in ("baseUrl:", "cmsUrl:", "baseurl:", "cmsurl:"):
+          import re, urllib.request
+          URL="https://www.utimf.com/main.4ae2d0c3fb6b241f.js"
+          req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0","Accept":"application/javascript"})
+          with urllib.request.urlopen(req,timeout=30) as r:
+              text=r.read(8_000_000).decode("utf-8","replace")
+          low=text.lower()
+          for needle in (".getterfiledetails(", "getterfiledetails(", ".getytdterfile(", ".getterfile("):
               start=0
-              for n in range(12):
-                  i=main.find(needle,start)
+              for n in range(20):
+                  i=low.find(needle,start)
                   if i<0: break
-                  print("ENV",needle,n+1,re.sub(r"\s+"," ",main[max(0,i-500):min(len(main),i+1800)]))
+                  print("USE",needle,n+1,re.sub(r"\s+"," ",text[max(0,i-3500):min(len(text),i+9000)]))
                   start=i+len(needle)
+          for token in ("schemeName", "schemeCode", "fromDate", "toDate", "terDate"):
+              start=0
+              shown=0
+              while shown<20:
+                  i=text.find(token,start)
+                  if i<0: break
+                  nearby=text[max(0,i-1800):min(len(text),i+3500)]
+                  if "getTER" in nearby or "getTer" in nearby or "TER" in nearby:
+                      print("FIELD",token,shown+1,re.sub(r"\s+"," ",nearby)); shown+=1
+                  start=i+len(token)
           PY
