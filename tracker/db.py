@@ -291,10 +291,11 @@ def archive(content: bytes, media_type: str = "application/octet-stream"):
         # If deliberately metadata-only bytes later reappear from a fresh source
         # fetch/import, they are current again and must be re-reviewed rather than
         # silently discarded or left as a broken current source.
-        if previous and previous['binary_state']=='metadata_only':
+        if previous and (previous['binary_state']=='metadata_only'
+                         or previous['classification']=='link_only_candidate'):
             c.execute("""UPDATE archive_retention SET
               classification='retain_latest_or_review',binary_state='retained',
-              reason='Rehydrated because identical bytes were fetched again as current source evidence',
+              reason='Promoted because identical bytes were fetched/imported again as current source evidence',
               updated_at=? WHERE hash=?""",(now(),h))
     return h
 
