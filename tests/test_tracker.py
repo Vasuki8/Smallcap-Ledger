@@ -208,7 +208,7 @@ class TrackerTests(unittest.TestCase):
 
         franklin='https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'
         franklin_html=b'''<html><h1>Franklin India Small Cap Fund (Erstwhile Franklin India Smaller Companies Fund)</h1>
-        <p>Equity Small Cap</p><p>Benchmark(s) : Nifty Smallcap 250</p>
+        <p>Benchmark(s) : Nifty Smallcap 250</p>
         <p>Benchmark returns calculated based on Total Return Index Values</p></html>'''
         fh=db.archive(franklin_html,'text/html')
         self.assertEqual(amc_metrics.parse_page(franklin_html,'Franklin India Small Cap Fund',franklin,fh),1)
