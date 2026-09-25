@@ -114,6 +114,52 @@ class SplitArchiveTests(unittest.TestCase):
                 z.write(source,'data/'+row['path'])
             self.assertTrue(github_state.verify_source_pack_zip(archive,plan))
 
+    def test_verify_data_requires_only_logically_retained_binaries(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);data=root/'data';data.mkdir()
+            retained=b'protected-evidence';metadata=b'old-discovery-shell'
+            h1=hashlib.sha256(retained).hexdigest();h2=hashlib.sha256(metadata).hexdigest()
+            with sqlite3.connect(data/'ledger.sqlite3') as c:
+                c.execute('CREATE TABLE schemes(code INTEGER PRIMARY KEY)')
+                c.execute('CREATE TABLE nav(code INTEGER,date TEXT,value REAL)')
+                c.execute('CREATE TABLE archives(hash TEXT PRIMARY KEY,path TEXT,bytes INTEGER)')
+                c.execute('''CREATE TABLE archive_retention(
+                    hash TEXT PRIMARY KEY,classification TEXT,binary_state TEXT,
+                    reason TEXT,reviewed_at TEXT,updated_at TEXT)''')
+                c.execute('INSERT INTO schemes VALUES(1)')
+                c.execute("INSERT INTO nav VALUES(1,'2026-09-01',10.0)")
+                c.executemany('INSERT INTO archives VALUES(?,?,?)',[
+                    (h1,f'archive/{h1[:2]}/{h1}',len(retained)),
+                    (h2,f'archive/{h2[:2]}/{h2}',len(metadata)),
+                ])
+                c.executemany('INSERT INTO archive_retention VALUES(?,?,?,?,?,?)',[
+                    (h1,'retain_evidence','retained',None,None,'now'),
+                    (h2,'link_only_candidate','metadata_only','reviewed',None,'now'),
+                ])
+            target=data/f'archive/{h1[:2]}/{h1}';target.parent.mkdir(parents=True);target.write_bytes(retained)
+            github_state.verify_data(data)
+            target.unlink()
+            with self.assertRaisesRegex(ValueError,'Missing retained archive file'):
+                github_state.verify_data(data)
+
+    def test_selective_materialization_rejects_metadata_only_hash_before_download(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            data=Path(tmp);h='a'*64
+            with sqlite3.connect(data/'ledger.sqlite3') as c:
+                c.execute('CREATE TABLE archives(hash TEXT PRIMARY KEY,path TEXT,bytes INTEGER,first_seen TEXT)')
+                c.execute('''CREATE TABLE archive_retention(
+                    hash TEXT PRIMARY KEY,classification TEXT,binary_state TEXT,
+                    reason TEXT,reviewed_at TEXT,updated_at TEXT)''')
+                c.execute('INSERT INTO archives VALUES(?,?,?,?)',(h,f'archive/aa/{h}',100,'2026-09-01'))
+                c.execute('INSERT INTO archive_retention VALUES(?,?,?,?,?,?)',
+                          (h,'link_only_candidate','metadata_only','reviewed','2026-09-25','now'))
+            previous=github_state.db.DATA;github_state.db.DATA=data
+            try:
+                with self.assertRaisesRegex(ValueError,'metadata-only'):
+                    github_state.materialize_hashes([h])
+            finally:
+                github_state.db.DATA=previous
+
     def test_checkpoint_summary_supports_legacy_and_split(self):
         legacy={'format':1,'asset':'state.zip','sha256':'abc','bytes':123,'created_at':'now'}
         split={'format':2,'created_at':'now','database':{'asset':'database.zip'},'source_packs':[{'asset':'sources.zip'}]}
