@@ -17,12 +17,91 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after read-only portfolio recovery queue deployment.
+Updated: 2026-09-25, after Axis Small Cap complete statutory portfolio recovery.
 
 
 
 
 
+
+
+## Latest completed batch: Axis Small Cap complete statutory portfolio recovery
+
+**Axis Small Cap Fund now has a verified complete current regulatory monthly portfolio from Axis's own statutory-disclosure CMS. No unnamed constituent was inferred and the old factsheet aggregate was not split or estimated.**
+
+PR **#117** merged as commit `c3713ea704e346b427b232c7d5f6b20dda1555c4`. The implementation follows Axis's public browser flow:
+1. obtain the public CMS token from `/cms/token`;
+2. send that token raw in the same-host `Authorization` header;
+3. resolve `sdPortfolios` through `/cms/get-nested-list`;
+4. require the exact **Monthly Scheme Portfolios** child `sdMonthSchemePortfolio`;
+5. query `/cms/get-scheme-documents`;
+6. require exact scheme identity **Axis Small Cap Fund / scheme code SC**, exact closed-month title/date, Axis-owned HTTPS workbook URL and a unique matching document.
+
+The exact recovered August source is:
+
+`https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx`
+
+- source reporting date: **2026-08-31**
+- source SHA-256: `c1c89414f6c677b6809fbe1f5a67909a73071a98aab600f80464eda5d3af583e`
+- source AUM: **₹31,448.3176 crore**
+- retained complete holdings: **134**
+
+The complete workbook contains **128 named equities**, **1 NIFTY September 2026 future**, **1 Treasury Bill**, **3 explicitly coded CCIL TREPS transactions**, and **1 Net Receivables/(Payables)** row. The three TREPS transactions share the same issuer name but publish distinct source codes; those codes are retained in the holding names instead of aggregating the rows.
+
+The parser marks the snapshot complete only after source reconciliation. Axis publishes the section totals **Equity 91.52% + futures 0.85% + T-bill 0.47% + TREPS 7.43% - net receivables 0.27% = 100.00%**. Its market values likewise reconcile to the published **₹31,448.3176 crore** grand total. The stored individual percentage rows sum to **100.03%** only because the workbook displays individual weights rounded to two decimals; no balancing value was added.
+
+Isolated validation run **36097681418** passed compileall and all **315 tests**, restored the then-current production checkpoint, recovered the exact complete workbook, verified the 134 positions and source hash, raised current complete coverage from **28 to 29**, reduced partials from **7 to 6**, removed Axis from the recovery queue, and passed generated-site validation.
+
+Production workflow **#478**, run **36097839702**, successfully applied the Axis recovery, passed all regression/site/archive/status gates and deployed GitHub Pages. That run wrote the new complete snapshot and regenerated coverage/queue evidence.
+
+A final backend integration issue was then corrected: the fund API/static exporter had still preferred Axis's later **2026-09-16 Top-10 intramonth partial** by raw date even though the regulatory August month-end was now complete. PR **#118** merged as commit `02ee47f1ebb802b165e7732363d0a8e89add3444` and aligns fund summary/detail selection with coverage semantics: a **complete snapshot at or after the expected regulatory month-end** is preferred over a later intramonth partial.
+
+Validation run **36098102438** again passed all **315 tests**, restored production #478, and proved:
+- Axis Direct Growth fund code **125354** selects the **2026-08-31 complete snapshot**;
+- fund-detail snapshot **261** has **134 holdings**, no limitation and source hash `c1c89414...`;
+- generated-site validation passes;
+- the actual exported `site/data/portfolios/261.json` contains **134 holdings**.
+
+Production workflow **#479**, run **36098245258**, then completed successfully through tests, site generation/validation, cumulative-history publication, status/coverage/queue recording, artifact upload and Pages deployment at **2026-09-25T05:23:15Z**.
+
+Final Pages artifact **10848790096** is **230,748,159 bytes** with digest `sha256:6721f3e4b4e95167b14c852659ee2f613e3397ad329ddac8618c6b7ac3dd6e79`. Status commit `e97a5804b1b9c5942e450e5f9da817e8d2c1efbf` records the deployed state.
+
+### Production coverage after Axis recovery
+
+- funds **36**
+- AUM **36/36**
+- dated Direct fee **36/36**
+- reported TER **35/36**
+- BER **35/36**
+- benchmark identity **36/36**
+- portfolios **35/36**
+- complete portfolios **29**
+- current portfolios **34**
+- current + complete portfolios **29**
+- partial portfolios **6**
+- latest NAV **2026-09-24**
+
+The recovery queue generated at **2026-09-25T05:22:42Z** now contains **7** incomplete/missing portfolio cases and **0 actionable-now** items:
+- Union, Bajaj Finserv, Edelweiss and ICICI Prudential remain `retry_after_source_change`;
+- Bandhan, Sundaram and UTI remain `requires_more_precise_amc_disclosure`;
+- `next_recovery_target` is **null**.
+
+Do not re-probe those seven portfolio cases merely because they are incomplete. The queue's retry conditions remain authoritative until new first-party evidence appears.
+
+### Next backend task
+
+**Axis fee-type recovery is now the highest-value remaining data gap.** Axis is the only fund without an explicitly labelled TER and BER.
+
+Current retained fee evidence must remain unchanged until a stronger first-party source is found:
+- Direct value: **0.71%**
+- observation date: **2026-09-23**
+- metric: **`expense_ratio`**
+- source: `https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct`
+- label status: **unqualified** — it does not establish TER versus BER.
+
+Next run should perform a bounded Axis-first-party fee audit. Reuse the now-understood public Axis statutory CMS/browser transport and retained source evidence first, looking specifically for **Total Expense Ratio / TER / Base Expense Ratio / BER** disclosures or downloadable workbooks. Store only values whose Axis source explicitly identifies the metric type and reporting date. If Axis exposes TER but not BER, recover TER only and leave BER missing; do not derive BER from components or relabel the current 0.71% observation.
+
+No UI code, paid service, external communication, source deletion or retention-policy change was introduced in this Axis portfolio batch. The **700 link-only retention candidates and the legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: read-only portfolio recovery queue
 
