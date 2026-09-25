@@ -75,6 +75,7 @@ def classify(item):
     if item['kind'] in ('json', 'text'): reasons.append('request_parameters_or_data_semantics_require_review')
     if item['kind'] not in ('html', 'javascript', 'json', 'text'): reasons.append('original_publication_or_unknown_binary')
     if item['latest_for_urls']: reasons.append('latest_saved_response_for_at_least_one_url')
+    if item.get('latest_document_ids'): reasons.append('latest_saved_download_for_at_least_one_document')
     if item['fragile_urls']: reasons.append('documented_transport_boundary')
     if item['latest_error_urls']: reasons.append('latest_retained_fetch_or_source_page_status_is_error')
     if item['pending_extractions']: reasons.append('unresolved_extraction_requires_review')
@@ -94,7 +95,7 @@ def collect(connection, root=ROOT):
         if not re.fullmatch(r'[0-9a-f]{64}', a['hash']) or a['bytes'] < 0: raise ValueError('Invalid archive identity')
         a.update(urls=set(), families=set(), titles=set(), reporting_dates=set(), references=Counter(),
                  evidence_reasons=[], pending_extractions=[], latest_for_urls=[], fragile_urls=[],
-                 latest_error_urls=[], extraction_statuses=Counter())
+                 latest_error_urls=[], latest_document_ids=[], extraction_statuses=Counter())
         items[a['hash']] = a
     by_url = defaultdict(dict)
     latest_fetch = {}
@@ -124,6 +125,7 @@ def collect(connection, root=ROOT):
             attach(r.get('hash'), r.get('source', ''), r.get('family', ''),
                    'historical_or_current_' + table + '_hash', table)
             if r.get('hash') in items: items[r['hash']]['reporting_dates'].add(r['as_of'])
+    latest_document_pairs = {(r[0], r[1]) for r in connection.execute('''SELECT v.document_id,v.hash FROM document_versions v WHERE v.observed_at=(SELECT MAX(v2.observed_at) FROM document_versions v2 WHERE v2.document_id=v.document_id)''')}
     for row in connection.execute('''SELECT d.*,v.hash,v.observed_at FROM document_versions v
                                     JOIN documents d ON d.id=v.document_id'''):
         r = dict(row)
@@ -131,6 +133,7 @@ def collect(connection, root=ROOT):
         x = items.get(r['hash'])
         if not x: continue
         x['titles'].add(r['title'])
+        if (r['id'], r['hash']) in latest_document_pairs: x['latest_document_ids'].append(r['id'])
         if r.get('published_at'): x['reporting_dates'].add('document_published:' + r['published_at'])
         # Publications with explicit dates or narrative/notice categories are not generic discovery shells.
         if r.get('published_at') or r['kind'] in ('newsletter', 'letter', 'market view', 'scheme document'):
@@ -296,7 +299,7 @@ def write_reports(output, report, items):
     (output / 'SOURCE-RETENTION-INVENTORY.json').write_text(json.dumps(list(items.values()), indent=2, ensure_ascii=False) + '\n')
     fields = ['hash', 'classification', 'bytes', 'compressed_payload_bytes', 'kind', 'media_type', 'host',
               'primary_url', 'first_seen', 'families', 'reporting_dates', 'titles', 'reasons', 'references',
-              'urls', 'latest_for_urls', 'fragile_urls', 'latest_error_urls', 'pack']
+              'urls', 'latest_for_urls', 'latest_document_ids', 'fragile_urls', 'latest_error_urls', 'pack']
     with (output / 'SOURCE-RETENTION-INVENTORY.csv').open('w', encoding='utf-8-sig', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction='ignore'); writer.writeheader()
         for x in items.values():
@@ -315,7 +318,7 @@ def write_reports(output, report, items):
     lines += ['', f"Audit time: {report['audited_at']}. Checkpoint: `{report['checkpoint']['asset']}`.", '',
               f"Potential link-only reduction: **{groups['link_only_candidate']['raw_bytes']:,} raw bytes** ({report['candidate_percent_of_raw_archive']}% of originals). **Actual deletion: 0 bytes.**", '',
               '## Decision rules', '',
-              'Retain all sources tied by hash or exact source URL to financial records; successful historical extractions; dated/narrative AMC publications; literal code/handoff hash dependencies. Original PDFs, workbooks and other downloadable/unknown files remain retained or under review. Protect the latest saved version of every exact URL and sources with documented transport boundaries or a latest recorded error.', '',
+              'Retain all sources tied by hash or exact source URL to financial records; successful historical extractions; dated/narrative AMC publications; literal code/handoff hash dependencies. Original PDFs, workbooks and other downloadable/unknown files remain retained or under review. Protect the latest saved version of every document, independently of later URL fetches, and every exact URL; also protect sources with documented transport boundaries or a latest recorded error.', '',
               'Only superseded HTML/JavaScript responses with a strictly newer retained version for every associated URL and no identified evidence/replay dependency become link-only candidates. JSON/plain-text responses stay under review because request parameters and data semantics are not fully recorded. These are distinct response snapshots, not verified byte duplicates. Link-only means knowingly giving up old discovery-response bytes while retaining metadata and newer responses.', '',
               '## Before any deletion', '',
               'Obtain explicit approval of the exact candidate hashes. Add explicit binary-retention state without deleting provenance metadata. Make restore, verification, reprocessing, archive serving, publication selection and download labels retention-aware. Prevent re-archiving the same discardable responses. Build replacement packs and validate all retained members, sources and the complete website before switching an atomic manifest. Keep rollback packs until independently verified. This audit does not implement those steps.', '',

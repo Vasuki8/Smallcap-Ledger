@@ -2,12 +2,11 @@
 
 ## Source-retention audit — NO deletion authorized (2026-09-25 UTC)
 
-The owner approved classification and a savings report BEFORE any deletion. Read `docs/SOURCE-RETENTION-AUDIT.md`, `docs/SOURCE-RETENTION-SUMMARY.json` and the per-hash CSV/JSON inventory. Audit run **36092819677**, **297 tests**, checked **2,519 unique originals / 2,162,519,668 raw bytes**, all **95** immutable source packs, and an unchanged production-checkpoint copy.
+The owner approved classification and savings analysis BEFORE deleting anything. Completed report: `docs/SOURCE-RETENTION-AUDIT.md`; per-hash CSV/JSON inventories and summary are adjacent. Final review run **36093073121** passed **299 tests**. Source-pack measurement run **36092819677** checked all **95** packs against release digests. The exact production checkpoint is unchanged, with **629,225 rows** and **2,519 originals**.
 
-Proposed link-only candidates: **701 files / 404,832,360 raw bytes**, representing **34,294,362 compressed payload bytes** before ZIP overhead. These are superseded discovery responses, not proven duplicate files or guaranteed recoverable historical bytes. Financial-source hashes and URLs, successful historical extractions, original downloadable reports, latest source copies, ambiguous API responses, and transport/replay dependencies remain protected or under review. **Actual deleted files/bytes: 0.**
+Final link-only candidates: **700 files / 404,498,141 raw bytes / 34,253,903 compressed payload bytes** (ZIP headers excluded). These are superseded discovery responses, not proven duplicates or guaranteed recoverable historical files. Current saved document versions, financial evidence, historical extractions, original reports, unknown requests and fragile transport sources remain protected or under review. **Deleted files/bytes: 0.**
 
-Do not implement deletion or retire release/legacy assets without a separate explicit owner approval of the exact scope. The current restore/export/replay paths assume binaries exist; a retention-aware migration and independently verified repack/rollback plan are prerequisites. No production code path, database schema, retention policy, source collector, daily schedule or UI was changed. Resume the prior backend queue only after the owner chooses whether to proceed with the proposal.
-
+No production workflow, source-retention policy, database schema, collector, UI or schedule was changed. Approval of this audit is NOT approval to delete the candidates or retire the old legacy ZIP. Before any approved migration, make restore, replay, archive serving and publication/download code retention-aware, preserve provenance, validate replacement packs and retain rollback until independently verified.
 
 ## Database cleanup (2026-09-25 UTC)
 

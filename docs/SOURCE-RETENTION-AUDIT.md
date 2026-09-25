@@ -5,16 +5,16 @@ No archived file, source-pack asset, database row, production policy, schedule o
 | Classification | Files | Uncompressed bytes | Compressed payload bytes |
 | --- | ---: | ---: | ---: |
 | retain_evidence | 983 | 1,292,121,482 | 1036713814 |
-| retain_latest_or_review | 835 | 465,565,826 | 325013922 |
-| link_only_candidate | 701 | 404,832,360 | 34294362 |
+| retain_latest_or_review | 836 | 465,900,045 | 325054381 |
+| link_only_candidate | 700 | 404,498,141 | 34253903 |
 
-Audit time: 2026-09-25T04:04:17+00:00. Checkpoint: `database-36091631221-1.zip`.
+Audit time: 2026-09-25T04:06:40+00:00. Checkpoint: `database-36091631221-1.zip`.
 
-Potential link-only reduction: **404,832,360 raw bytes** (18.7204% of originals). **Actual deletion: 0 bytes.**
+Potential link-only reduction: **404,498,141 raw bytes** (18.7049% of originals). **Actual deletion: 0 bytes.**
 
 ## Decision rules
 
-Retain all sources tied by hash or exact source URL to financial records; successful historical extractions; dated/narrative AMC publications; literal code/handoff hash dependencies. Original PDFs, workbooks and other downloadable/unknown files remain retained or under review. Protect the latest saved version of every exact URL and sources with documented transport boundaries or a latest recorded error.
+Retain all sources tied by hash or exact source URL to financial records; successful historical extractions; dated/narrative AMC publications; literal code/handoff hash dependencies. Original PDFs, workbooks and other downloadable/unknown files remain retained or under review. Protect the latest saved version of every document, independently of later URL fetches, and every exact URL; also protect sources with documented transport boundaries or a latest recorded error.
 
 Only superseded HTML/JavaScript responses with a strictly newer retained version for every associated URL and no identified evidence/replay dependency become link-only candidates. JSON/plain-text responses stay under review because request parameters and data semantics are not fully recorded. These are distinct response snapshots, not verified byte duplicates. Link-only means knowingly giving up old discovery-response bytes while retaining metadata and newer responses.
 
@@ -50,4 +50,4 @@ Obtain explicit approval of the exact candidate hashes. Add explicit binary-rete
 
 Full inventory: `SOURCE-RETENTION-INVENTORY.csv` and `.json`. Every unique hash has a classification, source URLs, reasons, reporting/publication dates where known, and measured byte counts.
 
-Validation: 297 passing tests. Audit run 36092819677. Database SHA-256 before/after: `3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe` (unchanged). All 629,225 rows remain. All 95 source packs were downloaded as disposable audit copies and checked against release SHA-256 metadata; archive membership and compressed sizes were verified. No AMC links were live-probed.
+Validation: **299 passing tests**, final dependency-review run **36093073121**; compressed source packs measured and SHA-256 verified in **36092819677**. The production checkpoint and all source-pack release digests remain unchanged. All **629,225 database rows** and **2,519 originals** remain. No AMC links were live-probed. Latest saved document-download versions were independently protected.

@@ -9,19 +9,19 @@
       "compressed_payload_bytes": 1036713814
     },
     "retain_latest_or_review": {
-      "files": 835,
-      "raw_bytes": 465565826,
-      "compressed_payload_bytes": 325013922
+      "files": 836,
+      "raw_bytes": 465900045,
+      "compressed_payload_bytes": 325054381
     },
     "link_only_candidate": {
-      "files": 701,
-      "raw_bytes": 404832360,
-      "compressed_payload_bytes": 34294362
+      "files": 700,
+      "raw_bytes": 404498141,
+      "compressed_payload_bytes": 34253903
     }
   },
-  "candidate_percent_of_raw_archive": 18.7204,
-  "proposed_raw_archive_bytes": 1757687308,
-  "proposed_database_plus_sources_bytes": 1831009804,
+  "candidate_percent_of_raw_archive": 18.7049,
+  "proposed_raw_archive_bytes": 1758021527,
+  "proposed_database_plus_sources_bytes": 1831344023,
   "bytes_actually_deleted": 0,
   "files_actually_deleted": 0,
   "hosts": [
@@ -201,13 +201,6 @@
       "candidate_raw_bytes": 356388
     },
     {
-      "host": "itiamc.com",
-      "files": 16,
-      "raw_bytes": 7942458,
-      "candidate_files": 1,
-      "candidate_raw_bytes": 334219
-    },
-    {
       "host": "bandhanmutual.com",
       "files": 20,
       "raw_bytes": 209890,
@@ -362,6 +355,13 @@
       "candidate_raw_bytes": 0
     },
     {
+      "host": "itiamc.com",
+      "files": 16,
+      "raw_bytes": 7942458,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
       "host": "jmmfapi.jmfinancialmf.com",
       "files": 1,
       "raw_bytes": 5823,
@@ -411,6 +411,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -456,6 +457,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -501,6 +503,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -546,6 +549,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -591,6 +595,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -631,6 +636,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -676,6 +682,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -716,6 +723,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -761,6 +769,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -801,6 +810,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -841,6 +851,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -881,6 +892,7 @@
       "latest_for_urls": [],
       "fragile_urls": [],
       "latest_error_urls": [],
+      "latest_document_ids": [],
       "extraction_statuses": {},
       "kind": "html",
       "superseded_for_all_urls": true,
@@ -925,17 +937,11 @@
     "Existing restore, replay and website download code requires retained binaries. No deletion or policy change is enabled by this report.",
     "Legacy cumulative backup, current rollback checkpoint, repository bootstrap, and published Pages copies are separate and untouched."
   ],
-  "audited_at": "2026-09-25T04:04:17+00:00",
-  "mode": "read_only_proposal",
   "checkpoint": {
     "asset": "database-36091631221-1.zip",
     "sha256": "83b22717df940e94aa0423ca216dfa5e1849bfb5b94b8cd183a6c9c530e97d73",
     "bytes": 7451756
   },
-  "database_sha256_before": "3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe",
-  "database_sha256_after": "3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe",
-  "database_unchanged": true,
-  "input_manifest_unchanged": true,
   "table_counts": {
     "settings": 112,
     "schemes": 143,
@@ -957,7 +963,6 @@
     "benchmark_observations": 5329
   },
   "logical_rows": 629225,
-  "unique_hash_coverage_verified": true,
   "verified_packs": [
     {
       "asset": "sources-2026-09-p001-6cd248e8dee29327.zip",
@@ -1530,8 +1535,18 @@
       "members": 1
     }
   ],
+  "audited_at": "2026-09-25T04:06:40+00:00",
+  "mode": "read_only_proposal",
+  "database_sha256_before": "3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe",
+  "database_sha256_after": "3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe",
+  "database_unchanged": true,
+  "input_manifest_unchanged": true,
+  "unique_hash_coverage_verified": true,
   "live_amc_urls_checked": 0,
-  "validation_run_id": "36092819677",
-  "source_commit": "6309a207b27e86bfb850694b00bba80f6b7f09b5",
-  "tests_passed": 297
+  "source_pack_measurement_run_id": "36092819677",
+  "validation_run_id": "36093073121",
+  "source_commit": "fc40a6531bad2c17b79442d99f7454153daf1952",
+  "tests_passed": 299,
+  "production_checkpoint_still_unchanged": true,
+  "latest_document_download_dependencies_checked": true
 }

@@ -138,6 +138,21 @@ class RetentionDependencyTests(unittest.TestCase):
         self.c.execute('INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)', (self.url, '2026-09-25', 'error', '403 Forbidden'))
         self.assertEqual(self.collect()[self.old]['classification'], 'retain_latest_or_review')
 
+    def test_current_document_version_is_retained_despite_newer_unattached_fetch(self):
+        self.c.execute('INSERT INTO documents VALUES(?,?,?,?,?,?)', (1, 'Fund', self.url, 'Downloads', None, 'source page'))
+        self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.old, '2026-09-01'))
+        result = self.collect()
+        self.assertEqual(result[self.old]['classification'], 'retain_latest_or_review')
+        self.assertEqual(result[self.old]['latest_document_ids'], [1])
+
+    def test_old_document_version_can_be_candidate_after_new_version_attached(self):
+        self.c.execute('INSERT INTO documents VALUES(?,?,?,?,?,?)', (1, 'Fund', self.url, 'Downloads', None, 'source page'))
+        self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.old, '2026-09-01'))
+        self.c.execute('INSERT INTO document_versions VALUES(?,?,?)', (1, self.new, '2026-09-24'))
+        result = self.collect()
+        self.assertEqual(result[self.old]['classification'], 'link_only_candidate')
+        self.assertEqual(result[self.new]['classification'], 'retain_latest_or_review')
+
     def test_source_hash_missing_from_archive_is_reported(self):
         self.c.execute('INSERT INTO metrics VALUES(?,?,?,?)', ('Fund', self.url, 'c'*64, '2026-09-24'))
         self.assertEqual(audit.collect(self.c, self.root)[1], ['c'*64])
