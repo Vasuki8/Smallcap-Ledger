@@ -1,0 +1,90 @@
+name: UTI BER source probe
+
+on:
+  push:
+    branches: [investigate/uti-ber-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Inspect UTI public expense disclosure routes
+        shell: bash
+        run: |
+          uv run --frozen python - <<'PY'
+          import html, re, urllib.parse, urllib.request
+
+          BASE="https://www.utimf.com"
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
+          candidates=[
+              "/downloads/ter",
+              "/downloads/total-expense-ratio",
+              "/downloads/expense-ratio",
+              "/statutory-disclosures/total-expense-ratio",
+              "/statutory-disclosures/expense-ratio",
+              "/forms-and-downloads/",
+              "/sitemap.xml",
+              "/robots.txt",
+          ]
+
+          def get(url,limit=8_000_000):
+              req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"*/*"})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      data=r.read(limit+1)
+                      print("FETCH",r.status,len(data),r.geturl(),r.headers.get("content-type"))
+                      if len(data)>limit: raise RuntimeError("too large")
+                      return data.decode("utf-8","replace")
+              except Exception as e:
+                  print("FETCH_ERROR",url,repr(e))
+                  return ""
+
+          pages=[]
+          for path in candidates:
+              url=urllib.parse.urljoin(BASE,path)
+              text=get(url)
+              if text:
+                  pages.append((url,text))
+                  low=text.lower()
+                  if "sitemap" in path:
+                      for m in re.finditer(r"<loc>([^<]*(?:expense|ratio|ter)[^<]*)</loc>",text,re.I):
+                          print("SITEMAP_MATCH",html.unescape(m.group(1)))
+                  else:
+                      print("PAGE_TERMS",url,{k:low.count(k) for k in ("expense","base ter","base expense","ter","download","api")})
+
+          scripts=[]
+          for url,text in pages:
+              if "text/html" not in "text/html": pass
+              for m in re.finditer(r"<script[^>]+src=[\"']([^\"']+)",text,re.I):
+                  src=urllib.parse.urljoin(url,html.unescape(m.group(1)))
+                  if urllib.parse.urlparse(src).hostname in {"www.utimf.com","utimf.com"}:
+                      scripts.append(src)
+          scripts=list(dict.fromkeys(scripts))
+          print("SCRIPTS",len(scripts))
+          for src in scripts[:80]:
+              text=get(src,10_000_000)
+              if not text: continue
+              low=text.lower()
+              matches=[n for n in ("expense-ratio","expense ratio","total-expense","base ter","base expense","get-ter","get-expense","api/") if n in low]
+              if not matches: continue
+              print("MATCHED_SCRIPT",src,matches)
+              for n in matches:
+                  start=0
+                  for _ in range(12):
+                      i=low.find(n,start)
+                      if i<0: break
+                      print("SNIP",n,re.sub(r"\s+"," ",text[max(0,i-700):min(len(text),i+1600)]))
+                      start=i+len(n)
+          PY
