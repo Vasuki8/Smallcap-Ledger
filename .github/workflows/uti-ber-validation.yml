@@ -1,0 +1,52 @@
+name: Validate UTI BER integration
+
+on:
+  push:
+    branches: [feature/uti-ber-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Compile
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Unit tests
+        run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Live UTI YTD BER validation
+        run: |
+          uv run --frozen python - <<'PY'
+          from datetime import date
+          from tracker import amc_expenses, db
+          db.init()
+          source, day, plans, content_hash, metadata_end = amc_expenses._uti_disclosure(date.today())
+          assert source.startswith("https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/")
+          assert "daily_ter_ytd_" in source.lower()
+          assert content_hash
+          assert day <= metadata_end
+          assert day >= f"{amc_expenses._uti_financial_year_start(date.today())}-04-01"
+          for plan in ("Regular", "Direct"):
+              values = plans[plan]
+              assert values["ter"] >= values["base_expense_ratio"]
+              assert abs(
+                  values["base_expense_ratio"]
+                  + values["brokerage"]
+                  + values["transaction_cost"]
+                  + values["statutory_levies"]
+                  - values["ter"]
+              ) <= 0.02
+          print("UTI_LIVE", source, day, plans, content_hash, metadata_end)
+          PY
