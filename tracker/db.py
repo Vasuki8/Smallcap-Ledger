@@ -74,6 +74,7 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS portfolios(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, as_of TEXT NOT NULL,
           complete INTEGER NOT NULL DEFAULT 0, source TEXT NOT NULL, hash TEXT NOT NULL,
+          limitation_code TEXT, limitation_detail TEXT,
           observed_at TEXT NOT NULL, UNIQUE(family,as_of,hash,complete));
         CREATE INDEX IF NOT EXISTS idx_portfolios_family_date ON portfolios(family,as_of);
         CREATE TABLE IF NOT EXISTS holdings(
@@ -124,6 +125,7 @@ def init(recover=False):
             c.execute("UPDATE jobs SET status='interrupted',finished_at=?,detail='Application stopped before this update finished; the next run resumes retained history.' WHERE status='running'", (now(),))
     migrate_portfolio_completeness()
     migrate_holding_quantity()
+    migrate_portfolio_limitations()
     prune_portfolio_history()
 
 
@@ -137,8 +139,11 @@ def migrate_portfolio_completeness():
         c.execute('''CREATE TABLE portfolios_expanded(
           id INTEGER PRIMARY KEY,family TEXT NOT NULL,as_of TEXT NOT NULL,
           complete INTEGER NOT NULL DEFAULT 0,source TEXT NOT NULL,hash TEXT NOT NULL,
+          limitation_code TEXT,limitation_detail TEXT,
           observed_at TEXT NOT NULL,UNIQUE(family,as_of,hash,complete))''')
-        c.execute('INSERT INTO portfolios_expanded SELECT * FROM portfolios')
+        c.execute('''INSERT INTO portfolios_expanded(
+          id,family,as_of,complete,source,hash,observed_at)
+          SELECT id,family,as_of,complete,source,hash,observed_at FROM portfolios''')
         c.execute('DROP TABLE portfolios')
         c.execute('ALTER TABLE portfolios_expanded RENAME TO portfolios')
         c.execute('CREATE INDEX idx_portfolios_family_date ON portfolios(family,as_of)')
@@ -152,6 +157,30 @@ def migrate_holding_quantity():
         columns={row['name'] for row in c.execute('PRAGMA table_info(holdings)').fetchall()}
         if 'quantity' not in columns:
             c.execute('ALTER TABLE holdings ADD COLUMN quantity REAL')
+
+
+def migrate_portfolio_limitations():
+    """Add and backfill canonical partial-portfolio limitation metadata."""
+    from .portfolio_limits import retained_limitation
+    with connect() as c:
+        columns={row['name'] for row in c.execute('PRAGMA table_info(portfolios)').fetchall()}
+        if 'limitation_code' not in columns:
+            c.execute('ALTER TABLE portfolios ADD COLUMN limitation_code TEXT')
+        if 'limitation_detail' not in columns:
+            c.execute('ALTER TABLE portfolios ADD COLUMN limitation_detail TEXT')
+        rows=c.execute("""SELECT id,family,source,complete,limitation_code,limitation_detail
+          FROM portfolios""").fetchall()
+        for row in rows:
+            if row['complete']:
+                if row['limitation_code'] is not None or row['limitation_detail'] is not None:
+                    c.execute("""UPDATE portfolios SET limitation_code=NULL,limitation_detail=NULL
+                      WHERE id=?""",(row['id'],))
+                continue
+            if row['limitation_code'] is not None and row['limitation_detail'] is not None:
+                continue
+            limitation=retained_limitation(row['family'],row['source'],False)
+            c.execute("""UPDATE portfolios SET limitation_code=?,limitation_detail=?
+              WHERE id=?""",(limitation['code'],limitation['detail'],row['id']))
 
 
 def prune_portfolio_history(family=None):
