@@ -1,6 +1,36 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-25, after UTI Small Cap explicit BER recovery from the public YTD TER workbook. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+Updated: 2026-09-25, after Union + Bajaj portfolio source re-audit. Read this file, README.md, current COVERAGE-AS-OF.json and the latest Actions/deployment state before continuing. This handoff supersedes older portfolio-backlog paragraphs retained in README.md. Live repository and source evidence override summaries.
+
+
+## Latest completed batch: Union + Bajaj portfolio source re-audit
+
+**No portfolio values were invented or promoted in this batch. The two highest-priority portfolio gaps were re-checked from the same GitHub Actions network used by production, and both remain transport/source-discovery blockers.**
+
+Diagnostic run **36088945502** retried Union's exact official portfolio routes from a GitHub-hosted runner:
+- `https://www.unionmf.com/about-us/downloads`
+- `https://www.unionmf.com/about-us/downloads/monthly-portfolio`
+
+Both still fail before page/script discovery with **`URLError: [Errno 111] Connection refused`**. This reproduces the prior production-network boundary. A separate public web crawl can currently read Union's Downloads page and confirms that Union advertises Monthly Portfolios there, but that does not provide the production updater with a fetchable first-party attachment. No guessed filename, alternate IP, TLS bypass, third-party copy or inferred holding was used. **Union Small Cap Fund therefore remains the sole fund with no retained portfolio.**
+
+The handoff-directed fallback, **Bajaj Finserv Small Cap Fund**, was then re-checked. Bajaj's official public Downloads page at `https://www.bajajamc.com/downloads` visibly contains a dedicated **Monthly Portfolio** section with year/month selectors, and Bajaj scheme documents state that portfolio disclosure is provided as a downloadable spreadsheet. However, combined diagnostic run **36089063486** received **HTTP 403 Forbidden** when the GitHub runner requested that Downloads page, before its client-side scripts/API could be traced. A bounded public-source search found the existing lagged Small Cap factsheet but did not expose a concrete current August 2026 monthly Small Cap spreadsheet URL. The tracker therefore retains Bajaj's existing **13-position partial dated 2026-07-31**; it was not relabelled as August merely because the factsheet filename says August 2026.
+
+Current published coverage remains unchanged from production #473:
+- reported TER **35/36**
+- BER **35/36**
+- dated Direct fee fallback **36/36**
+- AUM **36/36**
+- benchmark identity **36/36**
+- portfolios **35/36**, **28 complete**, **34 current**, **7 partial**
+- latest NAV **2026-09-24**
+
+### Next backend task
+
+Do **not** repeat Union or Bajaj source probing unless their first-party transport materially changes or an exact current attachment URL becomes available. **Edelweiss Small Cap Fund is the next preferred portfolio-recovery target** because it is a current partial and is more likely to yield incremental source recovery than the already-proven Axis, Sundaram, UTI, Union and Bajaj boundaries. Re-read the prior Edelweiss v89-v103 source tracing before any new attempt; promote only exact first-party named holdings and preserve partial status if the source itself is incomplete.
+
+Axis remains the only fund without explicitly labelled TER and BER. Its current official Direct `expense_ratio` must remain unqualified unless a first-party source explicitly labels TER or BER.
+
+No UI, paid-service, permissions, archive-retention policy, schedule cadence or production data was changed in this audit. Temporary diagnostic workflows were removed before merge.
 
 ## Latest completed batch: UTI Small Cap explicit BER recovery
 
