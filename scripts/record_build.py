@@ -122,7 +122,9 @@ def git(*args,check=True):return subprocess.run(['git',*args],cwd=ROOT,check=che
 git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
 git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md',
     'docs/PORTFOLIO-RECOVERY-QUEUE.json','docs/PORTFOLIO-RECOVERY-QUEUE.md',
-    'docs/PERFORMANCE-COVERAGE-AUDIT.json','docs/PERFORMANCE-COVERAGE-AUDIT.md')
+    'docs/PERFORMANCE-COVERAGE-AUDIT.json','docs/PERFORMANCE-COVERAGE-AUDIT.md',
+    'docs/RETENTION-PROPOSED-MANIFEST.json','docs/RETENTION-MIGRATION-CANDIDATES.json',
+    'docs/RETENTION-REPLACEMENT-SIMULATION.md')
 if git('diff','--cached','--quiet',check=False).returncode:
     git('commit','-m','Record daily collection status and coverage [skip ci]')
     git('pull','--rebase','origin','main')
