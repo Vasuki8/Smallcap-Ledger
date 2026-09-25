@@ -62,6 +62,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/audit_nav_gaps.py
+      - name: Audit AMC historical NAV sources
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/audit_amc_nav_sources.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
