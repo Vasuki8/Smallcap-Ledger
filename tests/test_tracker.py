@@ -396,6 +396,12 @@ class TrackerTests(unittest.TestCase):
         response=self.client.get('/api/archive/'+h)
         self.assertEqual(response.status_code,404)
         self.assertIn('not retained',response.json()['detail'])
+        did=providers.save_document('Test Small Cap Fund','Old source shell',
+                                    'https://example.com/old-shell','source page','AMC')
+        providers.doc_version(did,h)
+        docs=self.client.get('/api/funds/1/documents').json()
+        shell=next(d for d in docs if d['url']=='https://example.com/old-shell')
+        self.assertEqual(shell['versions'],[])
         status=self.client.get('/api/status').json()['counts']
         self.assertGreaterEqual(status['archive_metadata_only_files'],1)
 
