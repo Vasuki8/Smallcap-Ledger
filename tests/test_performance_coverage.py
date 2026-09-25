@@ -115,6 +115,7 @@ class PerformanceCoverageTests(unittest.TestCase):
         self.assertEqual(priorities[0]["code"],"collect_bse_250_smallcap_tri")
         self.assertEqual(priorities[0]["affected_funds"],["BSE Test Small Cap Fund"])
         self.assertEqual(priorities[0]["affected_growth_plans"],1)
+        self.assertFalse(priorities[0]["actionable"])
         self.assertEqual(priorities[1]["code"],"verify_non_tri_benchmark_identity")
         self.assertEqual(priorities[1]["affected_funds"],["Unclear Test Small Cap Fund"])
 
@@ -144,6 +145,38 @@ class PerformanceCoverageTests(unittest.TestCase):
         priority=next(x for x in audit["repair_priorities"] if x["code"]=="review_nav_history_gaps")
         self.assertEqual(priority["affected_growth_plans"],1)
         self.assertEqual(len(db.rows("SELECT * FROM nav WHERE code=9905")),4)
+
+    def test_reviewed_official_history_gap_is_visible_but_not_actionable(self):
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO schemes(
+                   code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (105989,"DSP Small Cap Fund Regular Growth","DSP Small Cap Fund",
+                 "DSP Mutual Fund","Regular","Growth","test"),
+            )
+        db.save_nav(
+            105989,
+            [("2010-04-07",14.166),("2010-04-15",14.455),("2010-04-16",14.5)],
+            "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx",
+        )
+        db.metric(
+            "DSP Small Cap Fund","All","benchmark","2026-09-25",
+            "BSE 250 SmallCap TRI","Reported","https://example.com/dsp-benchmark","dsp-benchmark",
+        )
+        audit=report()
+        row=next(x for x in audit["plans"] if x["code"]==105989)
+        self.assertEqual(row["nav"]["raw_gap_count_gt_7d"],1)
+        self.assertEqual(row["nav"]["official_history_gap_count"],1)
+        self.assertEqual(row["nav"]["gap_count_gt_7d"],0)
+        self.assertEqual(row["nav"]["official_history_gaps"][0]["from"],"2010-04-07")
+        self.assertEqual(row["nav"]["official_history_gaps"][0]["to"],"2010-04-15")
+        self.assertNotIn("nav_large_gap",row["issues"])
+        self.assertFalse(any(p["code"]=="review_nav_history_gaps" for p in audit["repair_priorities"]))
+        rendered=markdown(audit)
+        self.assertIn("Verified official-history NAV gaps",rendered)
+        self.assertIn("2010-04-07",rendered)
+        self.assertEqual(len(db.rows("SELECT * FROM nav WHERE code=105989")),3)
 
     def test_audit_is_read_only_and_markdown_surfaces_mismatch(self):
         before={
