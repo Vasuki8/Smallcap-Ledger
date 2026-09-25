@@ -309,6 +309,13 @@ def _extract_source_hashes(archive,hashes,destination):
 
 
 def _current_release_manifest(repo,folder):
+    override=os.environ.get('SMALLCAP_ARCHIVE_MANIFEST_PATH')
+    if override:
+        pointer=Path(override).resolve()
+        if not pointer.is_file():raise ValueError('Archive manifest override is missing')
+        manifest=json.loads(pointer.read_text())
+        if int(manifest.get('format',1))<2:raise ValueError('Archive manifest override must use split format')
+        return manifest
     pointer=download_asset(repo,'latest.json',folder)
     manifest=json.loads(pointer.read_text());pointer.unlink()
     return manifest

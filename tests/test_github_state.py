@@ -184,6 +184,20 @@ class SplitArchiveTests(unittest.TestCase):
                 github_state.db.DATA=previous
             self.assertEqual([x['hash'] for x in rows],[h1])
 
+    def test_manifest_override_pins_isolated_restore_without_network(self):
+        import json,os
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);manifest=root/'pinned.json'
+            expected={'format':2,'created_at':'pinned','database':{'asset':'db.zip'},'source_packs':[]}
+            manifest.write_text(json.dumps(expected))
+            previous=os.environ.get('SMALLCAP_ARCHIVE_MANIFEST_PATH')
+            os.environ['SMALLCAP_ARCHIVE_MANIFEST_PATH']=str(manifest)
+            try:
+                self.assertEqual(github_state._current_release_manifest('owner/repo',root),expected)
+            finally:
+                if previous is None:os.environ.pop('SMALLCAP_ARCHIVE_MANIFEST_PATH',None)
+                else:os.environ['SMALLCAP_ARCHIVE_MANIFEST_PATH']=previous
+
     def test_checkpoint_summary_supports_legacy_and_split(self):
         legacy={'format':1,'asset':'state.zip','sha256':'abc','bytes':123,'created_at':'now'}
         split={'format':2,'created_at':'now','database':{'asset':'database.zip'},'source_packs':[{'asset':'sources.zip'}]}
