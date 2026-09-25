@@ -1,4 +1,4 @@
-name: Axis portfolio nested CMS probe
+name: Axis statutory nested portfolio probe
 
 on:
   push:
@@ -14,55 +14,58 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve Axis portfolio nested disclosure API
+      - name: Call Axis portfolio nested API exactly like browser
         shell: bash
         run: |
           python - <<'PY'
           import json,re,urllib.request,urllib.error
-          UA="Mozilla/5.0"
-          BUNDLE="https://www.axismf.com/_next/static/chunks/183-0b7c0e7078c2d2b0.js"
-          req=urllib.request.Request(BUNDLE,headers={"User-Agent":UA})
-          with urllib.request.urlopen(req,timeout=30) as r:js=r.read().decode("utf-8","replace")
 
-          for term in (
-              "placeGetStatutoryDisclosureNestedList(",
-              "placeGetStatutorySubCategory",
-              "placeGetStatutorySubcategory",
-              "GET_STATUTORY_SUBCATEGORY_DISCLOSURE_DOCUMENTS",
-              "nestedList",
-          ):
-              print("CALL_TERM",term)
-              low=js.lower();q=term.lower();p=0;shown=0
-              while shown<12:
-                  i=low.find(q,p)
-                  if i<0:break
-                  print(js[max(0,i-2200):min(len(js),i+6000)])
-                  p=i+len(q);shown+=1
+          ROOT="https://www.axismf.com"
+          PAGE=ROOT+"/statutory-disclosures"
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
 
-          def post(path,payload):
-              url="https://www.axismf.com"+path
-              body=json.dumps(payload).encode()
-              req=urllib.request.Request(url,data=body,method="POST",headers={
-                  "User-Agent":UA,"Accept":"application/json,*/*",
-                  "Content-Type":"application/json",
-                  "Origin":"https://www.axismf.com",
-                  "Referer":"https://www.axismf.com/statutory-disclosures",
-              })
+          def call(method,path,payload=None,headers=None):
+              body=None if payload is None else json.dumps(payload).encode()
+              h={"User-Agent":UA,"Accept":"application/json,text/plain,*/*",
+                 "Referer":PAGE,"Origin":ROOT}
+              if body is not None:h["Content-Type"]="application/json"
+              if headers:h.update(headers)
+              req=urllib.request.Request(ROOT+path,data=body,method=method,headers=h)
               try:
                   with urllib.request.urlopen(req,timeout=30) as r:
-                      raw=r.read(500000)
-                      print("POST",path,payload,"STATUS",r.status,"TYPE",r.headers.get("content-type"))
-                      print(raw.decode("utf-8","replace")[:20000])
+                      raw=r.read(1_000_000)
+                      print("CALL",method,path,payload,"STATUS",r.status,
+                            "TYPE",r.headers.get("content-type"),
+                            "AUTH",r.headers.get("authorization"))
+                      print(raw.decode("utf-8","replace")[:80000])
+                      return r.status,raw,r.headers
               except urllib.error.HTTPError as e:
-                  print("POST_HTTP_ERROR",path,payload,e.code,e.read(10000).decode("utf-8","replace"))
+                  raw=e.read(100000)
+                  print("HTTP_ERROR",method,path,payload,e.code,
+                        e.headers.get("content-type"),raw.decode("utf-8","replace")[:50000])
+                  return e.code,raw,e.headers
               except Exception as e:
-                  print("POST_ERROR",path,payload,repr(e))
+                  print("CALL_ERROR",method,path,payload,repr(e))
+                  return None,b"",{}
 
-          for payload in (
-              {"sdID":"sdPortfolios"},
-              {"sdId":"sdPortfolios"},
-              {"sdID":"sdPortfolios","sdType":"nestedList"},
-              {"sdId":"sdPortfolios","sdType":"nestedList"},
-          ):
-              post("/cms/get-nested-list",payload)
+          # Correct browser payload: StatutoryNestedList -> {sdParentID:e.parentID}
+          call("POST","/cms/get-nested-list",{"sdParentID":"sdPortfolios"})
+
+          # Trace public CMS token bootstrap if the nested request is forbidden.
+          for method,payload in (("GET",None),("POST",{}),("POST",None)):
+              call(method,"/cms/token",payload)
+
+          # Inspect implementation around public CMS token/header setup.
+          bundle=ROOT+"/_next/static/chunks/2949-d62ba4877ec805c0.js"
+          req=urllib.request.Request(bundle,headers={"User-Agent":UA})
+          with urllib.request.urlopen(req,timeout=30) as r:js=r.read().decode("utf-8","replace")
+          for term in ("/cms/token","GETCMSTOKEN","getApiServiceHeaders","getBearerToken",
+                       "checkAndUpdateHeaders","prepareHeaders"):
+              print("TERM",term)
+              low=js.lower();q=term.lower();p=0;shown=0
+              while shown<8:
+                  i=low.find(q,p)
+                  if i<0:break
+                  print(js[max(0,i-2500):min(len(js),i+7000)])
+                  p=i+len(q);shown+=1
           PY
