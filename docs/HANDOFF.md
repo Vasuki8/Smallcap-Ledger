@@ -70,29 +70,7 @@ The current API and `COVERAGE-AS-OF.json` expose `complete: false`, but do not e
 - **censored/non-numeric source weight** — Bandhan, Sundaram, UTI;
 - **upstream transport/source unavailable** — use for missing-portfolio cases such as Union, not as a substitute for a retained partial snapshot.
 
-Prefer storing/deriving the limitation from exact parser/source evidence rather than a free-form UI label. Expose it through the fund/portfolio API and coverage JSON, add regression tests, and keep existing completeness semantics unchanged. A censored `<0.01%`, `# Smallcap Ledger backend handoff
-
-## Source-retention audit — NO deletion authorized (2026-09-25 UTC)
-
-The owner approved classification and savings analysis BEFORE deleting anything. Completed report: `docs/SOURCE-RETENTION-AUDIT.md`; per-hash CSV/JSON inventories and summary are adjacent. Final review run **36093073121** passed **299 tests**. Source-pack measurement run **36092819677** checked all **95** packs against release digests. The exact production checkpoint is unchanged, with **629,225 rows** and **2,519 originals**.
-
-Final link-only candidates: **700 files / 404,498,141 raw bytes / 34,253,903 compressed payload bytes** (ZIP headers excluded). These are superseded discovery responses, not proven duplicates or guaranteed recoverable historical files. Current saved document versions, financial evidence, historical extractions, original reports, unknown requests and fragile transport sources remain protected or under review. **Deleted files/bytes: 0.**
-
-No production workflow, source-retention policy, database schema, collector, UI or schedule was changed. Approval of this audit is NOT approval to delete the candidates or retire the old legacy ZIP. Before any approved migration, make restore, replay, archive serving and publication/download code retention-aware, preserve provenance, validate replacement packs and retain rollback until independently verified.
-
-## Database cleanup (2026-09-25 UTC)
-
-**Read `docs/STORAGE-CLEANUP.md` for the current merge, production verification and cleanup status.** This is the storage batch's completion/handoff record; the validation evidence is in `docs/STORAGE-VALIDATION.json`.
-
-The owner requested unnecessary/redundant database storage cleanup. The four NAV/benchmark tables were migrated to composite-primary-key `WITHOUT ROWID` storage on a production copy. All 273 tests, all-table content equality, integrity/foreign-key checks, idempotence, checkpoint restore and generated-site validation passed. Measured database size: **100,773,888 to 73,322,496 bytes**; checkpoint ZIP **12,851,483 to 7,451,746 bytes**. No logical record or original source was removed.
-
-The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
-
-
-Updated: 2026-09-25, after ICICI Prudential portfolio transport re-check.
-
-
-, or `*` source marker must never become an estimated numeric weight.
+Prefer storing/deriving the limitation from exact parser/source evidence rather than a free-form UI label. Expose it through the fund/portfolio API and coverage JSON, add regression tests, and keep existing completeness semantics unchanged. Censored source markers such as `<0.01%`, dollar-sign footnotes, or `*` must never become estimated numeric weights.
 
 The source-retention audit remains **read-only**: no deletion of the 700 link-only candidates or retirement of the legacy cumulative ZIP is authorized by this batch.
 
