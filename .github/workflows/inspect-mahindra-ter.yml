@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Trace Mahindra public website response decoder
+      - name: Extract Mahindra response decode helper
         run: |
           python - <<'PY'
           import re, urllib.request
@@ -22,26 +22,26 @@ jobs:
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'})
           with urllib.request.urlopen(req,timeout=45) as r:
               s=r.read().decode('utf-8','ignore')
-              print('FETCH',r.status,len(s),r.geturl())
-
-          for needle in [
-              'investorapi.mahindramanulife.com/api/v1/web',
-              'getClient("website")',
-              'payload',
-              'decrypt',
-              'AES.decrypt',
-              'VITE_AES',
-              'VITE_ENCRYPT',
-              'parseResponse',
+          for pat in [
+              r'function Fn\([^)]*\)\{.{0,7000}',
+              r'Fn=.{0,7000}',
+              r'const Fn=.{0,7000}',
+              r'function Ti\([^)]*\)\{.{0,5000}',
+              r'function Ze\([^)]*\)\{.{0,5000}',
           ]:
+              print('PATTERN',pat)
+              matches=list(re.finditer(pat,s,re.S))
+              print('COUNT',len(matches))
+              for m in matches[:8]:
+                  print('MATCH',re.sub(r'\s+',' ',m.group(0))[:7600])
+          for needle in ['payload:"','payload)', '.payload', 'enc.Utf8.parse', 'CryptoJS']:
               print('NEEDLE',needle)
               p=0;n=0
               while True:
                   p=s.find(needle,p)
-                  if p<0 or n>=30:break
-                  ctx=re.sub(r'\s+',' ',s[max(0,p-3000):p+6000])
-                  if needle in ('payload','decrypt') and not any(k in ctx.lower() for k in ('axios','interceptor','decrypt','payload','website')):
-                      p+=len(needle);n+=1;continue
-                  print('CTX',ctx[:9200])
+                  if p<0 or n>=30: break
+                  ctx=re.sub(r'\s+',' ',s[max(0,p-2500):p+4500])
+                  if 'payload' in ctx and ('AES' in ctx or 'decrypt' in ctx.lower() or 'Fn' in ctx):
+                      print('CTX',ctx[:7200])
                   p+=len(needle);n+=1
           PY
