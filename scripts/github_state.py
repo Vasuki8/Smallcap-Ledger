@@ -44,6 +44,28 @@ def _database_snapshot(path):
     with sqlite3.connect(path) as compact:compact.execute('VACUUM')
 
 
+def _has_retention_table(connection=None):
+    if connection is not None:
+        return bool(connection.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='archive_retention'"
+        ).fetchone())
+    return bool(db.one(
+        "SELECT 1 ok FROM sqlite_master WHERE type='table' AND name='archive_retention'"
+    ))
+
+
+def retained_archive_rows(order_by='hash'):
+    """Return only hashes whose binary is logically retained; old DBs mean all."""
+    allowed={'hash','first_seen,hash'}
+    if order_by not in allowed:raise ValueError('Unsafe archive ordering')
+    if not _has_retention_table():
+        return db.rows(f'SELECT hash,path,bytes,first_seen FROM archives ORDER BY {order_by}')
+    return db.rows(f'''SELECT a.hash,a.path,a.bytes,a.first_seen
+      FROM archives a LEFT JOIN archive_retention r ON r.hash=a.hash
+      WHERE COALESCE(r.binary_state,'retained')='retained'
+      ORDER BY {order_by}''')
+
+
 def pack_database(target):
     target=Path(target);target.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
@@ -132,10 +154,22 @@ def verify_database(folder):
 def verify_data(folder):
     folder=Path(folder);verify_database(folder)
     with sqlite3.connect(f'file:{(folder/"ledger.sqlite3").as_posix()}?mode=ro',uri=True) as c:
-        for h,path,size in c.execute('SELECT hash,path,bytes FROM archives'):
+        has_retention=_has_retention_table(c)
+        query=('''SELECT a.hash,a.path,a.bytes FROM archives a
+          LEFT JOIN archive_retention r ON r.hash=a.hash
+          WHERE COALESCE(r.binary_state,'retained')='retained' '''
+          if has_retention else 'SELECT hash,path,bytes FROM archives')
+        for h,path,size in c.execute(query):
             p=(folder/path).resolve()
-            if not p.is_relative_to(folder.resolve()) or not p.is_file():raise ValueError('Missing archive file '+h)
+            if not p.is_relative_to(folder.resolve()) or not p.is_file():raise ValueError('Missing retained archive file '+h)
             if p.stat().st_size!=size or digest(p)!=h:raise ValueError('Source-file checksum failed: '+h)
+        if has_retention:
+            bad=c.execute("""SELECT COUNT(*) FROM archive_retention
+              WHERE binary_state NOT IN ('retained','metadata_only')
+                 OR classification NOT IN ('unclassified','retain_evidence','retain_latest_or_review','link_only_candidate')
+                 OR (binary_state='metadata_only' AND classification!='link_only_candidate')
+                 OR (classification='retain_evidence' AND binary_state!='retained')""").fetchone()[0]
+            if bad:raise ValueError('Invalid archive retention state')
 
 
 def pack(target):
@@ -144,7 +178,7 @@ def pack(target):
         snapshot=Path(tmp)/'ledger.sqlite3';_database_snapshot(snapshot)
         with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
             z.write(snapshot,'data/ledger.sqlite3')
-            for r in db.rows('SELECT hash,path FROM archives ORDER BY hash'):
+            for r in retained_archive_rows('hash'):
                 p=db.DATA/r['path']
                 if not p.is_file() or digest(p)!=r['hash']:raise ValueError('Missing or damaged original '+r['hash'])
                 z.write(p,'data/'+r['path'])
@@ -237,10 +271,18 @@ def _extract_source_hashes(archive,hashes,destination):
     destination=Path(destination).resolve();wanted=set(hashes)
     if not wanted:return 0
     placeholders=','.join('?' for _ in wanted)
-    rows={r['hash']:r for r in db.rows(
-        'SELECT hash,path,bytes FROM archives WHERE hash IN (%s)'%placeholders,
-        tuple(sorted(wanted)))}
-    if set(rows)!=wanted:raise ValueError('Requested source hash is not present in the database')
+    if _has_retention_table():
+        rows={r['hash']:r for r in db.rows(
+            '''SELECT a.hash,a.path,a.bytes FROM archives a
+               LEFT JOIN archive_retention r ON r.hash=a.hash
+               WHERE a.hash IN (%s) AND COALESCE(r.binary_state,'retained')='retained' '''%placeholders,
+            tuple(sorted(wanted)))}
+    else:
+        rows={r['hash']:r for r in db.rows(
+            'SELECT hash,path,bytes FROM archives WHERE hash IN (%s)'%placeholders,
+            tuple(sorted(wanted)))}
+    if set(rows)!=wanted:
+        raise ValueError('Requested source hash is metadata-only, unknown, or not retained')
     written=0
     with zipfile.ZipFile(archive) as z:
         for h,row in rows.items():
@@ -274,9 +316,17 @@ def materialize_hashes(hashes):
     """Restore only source binaries needed by the current operation."""
     requested=set(hashes)
     if not requested:return 0
-    archive_rows={r['hash']:r for r in db.rows('SELECT hash,path,bytes FROM archives')}
+    if _has_retention_table():
+        archive_rows={r['hash']:r for r in db.rows('''SELECT a.hash,a.path,a.bytes,
+          COALESCE(r.binary_state,'retained') binary_state
+          FROM archives a LEFT JOIN archive_retention r ON r.hash=a.hash''')}
+    else:
+        archive_rows={r['hash']:{**r,'binary_state':'retained'}
+                      for r in db.rows('SELECT hash,path,bytes FROM archives')}
     unknown=requested-set(archive_rows)
     if unknown:raise ValueError('Unknown source hash '+sorted(unknown)[0])
+    metadata_only=sorted(h for h in requested if archive_rows[h]['binary_state']!='retained')
+    if metadata_only:raise ValueError('Source binary is intentionally metadata-only: '+metadata_only[0])
     missing=set()
     for h in requested:
         row=archive_rows[h];p=(db.DATA/row['path']).resolve()
@@ -304,7 +354,7 @@ def materialize_hashes(hashes):
 
 
 def materialize_all_source_packs():
-    return materialize_hashes([r['hash'] for r in db.rows('SELECT hash FROM archives')])
+    return materialize_hashes([r['hash'] for r in retained_archive_rows('hash')])
 
 
 def _checkpoint_summary(manifest):
@@ -386,12 +436,19 @@ def publish_split():
         tmp=Path(tmp);previous=None
         if 'latest.json' in assets:
             old=download_asset(repo,'latest.json',tmp);previous=json.loads(old.read_text());old.unlink()
-        rows=db.rows('SELECT hash,path,bytes,first_seen FROM archives ORDER BY first_seen,hash')
+        rows=retained_archive_rows('first_seen,hash')
         previous_packs=list((previous or {}).get('source_packs',[])) if int((previous or {}).get('format',1))>=2 else []
         covered={h for p in previous_packs for h in p.get('hashes',[])}
-        current_hashes={row['hash'] for row in rows}
-        if covered-current_hashes:
+        all_hashes={row['hash'] for row in db.rows('SELECT hash FROM archives')}
+        retained_hashes={row['hash'] for row in rows}
+        if covered-all_hashes:
             raise ValueError('Current database no longer references source files retained by the previous checkpoint')
+        # A future approved metadata-only migration must build replacement packs
+        # atomically. Never keep an active immutable pack that still carries
+        # logically metadata-only members by accident.
+        retired_in_active_packs=covered-retained_hashes
+        if retired_in_active_packs:
+            raise ValueError('Metadata-only retention state requires an approved source-pack repack before publish')
         new_rows=[row for row in rows if row['hash'] not in covered]
         plans=source_pack_plan(new_rows)
         # Existing format-2 source packs are immutable and reused verbatim.
