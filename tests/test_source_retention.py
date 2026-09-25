@@ -74,6 +74,7 @@ class RetentionDependencyTests(unittest.TestCase):
         self.c = sqlite3.connect(self.path)
         self.c.executescript('''
           CREATE TABLE archives(hash TEXT PRIMARY KEY,path TEXT,bytes INTEGER,media_type TEXT,first_seen TEXT);
+          CREATE TABLE archive_retention(hash TEXT PRIMARY KEY,classification TEXT,binary_state TEXT,reason TEXT,reviewed_at TEXT,updated_at TEXT);
           CREATE TABLE fetches(id INTEGER PRIMARY KEY,url TEXT,fetched_at TEXT,status TEXT,hash TEXT,detail TEXT);
           CREATE TABLE metrics(family TEXT,source TEXT,hash TEXT,as_of TEXT);
           CREATE TABLE portfolios(family TEXT,source TEXT,hash TEXT,as_of TEXT);
@@ -89,6 +90,8 @@ class RetentionDependencyTests(unittest.TestCase):
         self.new = 'b'*64
         for h, when in ((self.old, '2026-09-01'), (self.new, '2026-09-24')):
             self.c.execute('INSERT INTO archives VALUES(?,?,?,?,?)', (h, 'archive/'+h[:2]+'/'+h, 100, 'text/html', when))
+            self.c.execute('INSERT INTO archive_retention VALUES(?,?,?,?,?,?)',
+                           (h,'unclassified','retained',None,None,when))
             self.c.execute('INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)', (self.url, when, 'ok', h))
         self.c.commit()
 
@@ -124,6 +127,14 @@ class RetentionDependencyTests(unittest.TestCase):
         (self.root/'tracker').mkdir()
         (self.root/'tracker'/'replay.py').write_text('SOURCE_HASH='+repr(self.old))
         self.assertEqual(self.collect()[self.old]['classification'], 'retain_evidence')
+
+    def test_retention_metadata_table_does_not_self_protect_candidates(self):
+        self.c.execute("UPDATE archive_retention SET classification='link_only_candidate' WHERE hash=?",(self.old,))
+        self.c.commit()
+        result=self.collect()
+        self.assertEqual(result[self.old]['classification'],'link_only_candidate')
+        self.assertNotIn('database_literal_hash_dependency:archive_retention.hash',
+                         result[self.old]['evidence_reasons'])
 
     def test_generated_inventory_does_not_self_protect_every_hash(self):
         (self.root/'docs').mkdir()
