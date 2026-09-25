@@ -6,7 +6,7 @@ from datetime import date
 from pathlib import Path
 from unittest.mock import patch
 
-from tracker import db
+from tracker import db, disclosures, coverage
 from tracker.axis_portfolios import (
     FAMILY, DOCUMENTS_ENDPOINT, NESTED_ENDPOINT, TOKEN_ENDPOINT,
     document_candidates, discover, validate_monthly_branch,
@@ -97,6 +97,36 @@ class AxisPortfolioTests(unittest.TestCase):
         self.assertIsNotNone(parsed)
         self.assertFalse(parsed["complete"])
         self.assertEqual(parsed["unknown_rows"],["Clearing Corporation of India Ltd"])
+
+    def test_coverage_prefers_current_complete_month_end_over_later_partial(self):
+        with db.connect() as connection:
+            connection.execute(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (9901,"Axis Small Cap Direct Growth",FAMILY,
+                 "Axis Mutual Fund","Direct","Growth","test"),
+            )
+        disclosures.portfolio(
+            FAMILY,"2026-09-16",
+            [{"name":"Top Holding Limited","weight":10}],
+            False,
+            "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+            "axis-intraday-partial",
+        )
+        disclosures.portfolio(
+            FAMILY,"2026-08-31",
+            [{"name":"Full Monthly Holding Limited","weight":100}],
+            True,
+            ("https://www.axismf.com/1/5/464/560/3622/4549/"
+             "Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_test.xlsx"),
+            "axis-monthly-complete",
+        )
+        with patch("tracker.coverage.expected_portfolio_as_of",return_value="2026-08-31"):
+            row=next(x for x in coverage.report()["funds"] if x["family"]==FAMILY)
+        self.assertEqual(row["portfolio"]["as_of"],"2026-08-31")
+        self.assertTrue(row["portfolio_complete"])
+        self.assertTrue(row["portfolio_fresh"])
+        self.assertIsNone(row["portfolio_limitation"])
 
     def test_nested_branch_requires_exact_monthly_portfolio_identity(self):
         body=json.dumps({
