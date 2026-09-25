@@ -39,6 +39,24 @@ Month End AUM: Rs. 100 Cr''')
         self.assertEqual([x['value'] for x in facts if x['metric']=='benchmark'],
                          ['Nifty Small Cap 250 TRI'])
 
+    def test_edelweiss_only_promotes_benchmark_when_same_page_explicitly_says_tri(self):
+        f='Edelweiss Small Cap Fund'
+        explicit=self.report(f,'''Data as on August 31, 2026
+Benchmark
+Nifty Smallcap 250
+Trailing Return Benchmark (Nifty Smallcap 250 TRI)
+Month End AUM: Rs. 6,580 Cr''')
+        facts=page_facts(explicit,f)
+        self.assertEqual([x['value'] for x in facts if x['metric']=='benchmark'],
+                         ['Nifty Smallcap 250 TRI'])
+        ambiguous=self.report(f,'''Data as on August 31, 2026
+Benchmark
+Nifty Smallcap 250
+Month End AUM: Rs. 6,580 Cr''')
+        facts=page_facts(ambiguous,f)
+        self.assertEqual([x['value'] for x in facts if x['metric']=='benchmark'],
+                         ['Nifty Smallcap 250'])
+
     def test_scheme_benchmark_bse_label_is_trimmed_to_index_name(self):
         f='Test Small Cap Fund'
         text=self.report(f,'''Portfolio as on August 31, 2026
@@ -158,6 +176,24 @@ Month End AUM: Rs. 100 Cr''')
             self.assertFalse(amc_reports.should_reprocess_existing(
                 'Quant Small Cap Fund',
                 'https://quantmutual.com/Admin/Factsheet/factsheet.pdf'))
+
+    def test_v129_targets_only_explicit_tri_identity_repair(self):
+        from tracker import amc_reports
+        expected={'Edelweiss Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund'}
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v129'):
+            for family in expected:
+                self.assertTrue(amc_reports.parser_upgrade_applies(family))
+            self.assertTrue(amc_reports.should_reprocess_existing(
+                'Edelweiss Small Cap Fund',
+                'https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_September_2026_15092026193426.pdf',
+                'hash'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Franklin India Small Cap Fund','https://example.com/factsheet.pdf','hash'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Axis Small Cap Fund'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v129'",source)
+        self.assertIn("'Franklin India Small Cap Fund'",source)
+        self.assertIn("'Groww Small Cap Fund'",source)
 
     def test_v46_targets_only_benchmark_recovery_families(self):
         from tracker import amc_reports
