@@ -1,0 +1,252 @@
+[
+  {
+    "code": 105804,
+    "family": "Aditya Birla Sun Life Small Cap Fund",
+    "plan": "Regular",
+    "option": "Growth",
+    "from": "2010-05-31",
+    "to": "2010-06-08",
+    "days": 8,
+    "classification": "verified_official_history_gap",
+    "verified_at": "2026-09-25",
+    "explanation": "AMFI's official historical NAV download publishes the two boundary observations and no intermediate rows for scheme code 105804. The same interval is also present in retained Regular IDCW code 105805. NSE records normal market settlement inside the interval, so it is not explainable as a whole-market closure. No intermediate NAV value is inferred.",
+    "evidence": [
+      {
+        "provider": "AMFI",
+        "url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=3&frmdt=31-May-2010&todt=08-Jun-2010",
+        "response_sha256": "4b0ab23045b78f1e8b143ea8509f3da3f2dc5aa4d138e668f2a9645fd75db5fb",
+        "observations": [
+          {
+            "date": "2010-05-31",
+            "value": 11.5499
+          },
+          {
+            "date": "2010-06-08",
+            "value": 11.4193
+          }
+        ],
+        "workflow_run": 36167369624
+      },
+      {
+        "provider": "NSE",
+        "url": "https://nsearchives.nseindia.com/content/press/04062010.htm",
+        "evidence": "NSE completed Normal Settlement N-2010102 on 2010-06-04, inside the interval."
+      }
+    ],
+    "related_scheme_codes": [
+      105805
+    ]
+  },
+  {
+    "code": 105989,
+    "family": "DSP Small Cap Fund",
+    "historical_name": "DSP BlackRock Micro Cap Fund",
+    "plan": "Regular",
+    "option": "Growth",
+    "from": "2007-08-08",
+    "to": "2007-08-16",
+    "days": 8,
+    "classification": "verified_official_history_gap",
+    "verified_at": "2026-09-25",
+    "explanation": "AMFI and DSP's current first-party historical NAV exporter both publish only the boundary observations. DSP internal option id 157 is confirmed by the current public NAV page; a September 2026 control query returns normal daily business-day rows, validating the exporter path. No intermediate NAV value is inferred.",
+    "evidence": [
+      {
+        "provider": "AMFI",
+        "url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=6&frmdt=08-Aug-2007&todt=16-Aug-2007",
+        "response_sha256": "0e0b4fbb97ced0d2379c5694be3bf2c91d35059617b7ee9ba2996e874c68e4f1",
+        "observations": [
+          {
+            "date": "2007-08-08",
+            "value": 10.574
+          },
+          {
+            "date": "2007-08-16",
+            "value": 10.169
+          }
+        ],
+        "workflow_run": 36167369624
+      },
+      {
+        "provider": "DSP Mutual Fund",
+        "url": "https://www.dspim.com/ajax?type=investment_center&sub_type=nav&count=true&for=datatable&scheme_type=EQU&scheme_code=157&from_date=08-AUG-2007&to_date=16-AUG-2007",
+        "internal_option_id": "157",
+        "records_total": 2,
+        "observations": [
+          {
+            "date": "2007-08-08",
+            "value": 10.574
+          },
+          {
+            "date": "2007-08-16",
+            "value": 10.169
+          }
+        ],
+        "workflow_run": 36174919035
+      },
+      {
+        "provider": "NSE",
+        "url": "https://nsearchives.nseindia.com/content/press/09082007.htm",
+        "evidence": "NSE completed Normal Settlement N-2007149 on 2007-08-09, inside the interval."
+      }
+    ]
+  },
+  {
+    "code": 105989,
+    "family": "DSP Small Cap Fund",
+    "historical_name": "DSP BlackRock Micro Cap Fund",
+    "plan": "Regular",
+    "option": "Growth",
+    "from": "2008-08-27",
+    "to": "2008-09-04",
+    "days": 8,
+    "classification": "verified_official_history_gap",
+    "verified_at": "2026-09-25",
+    "explanation": "AMFI and DSP's current first-party historical NAV exporter both publish only the boundary observations. The interval contains NSE normal settlements. No intermediate NAV value is inferred.",
+    "evidence": [
+      {
+        "provider": "AMFI",
+        "url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=6&frmdt=27-Aug-2008&todt=04-Sep-2008",
+        "response_sha256": "44d535bf13665ed3d3d361a92f474644bc8aa4a207bda68184822707b45883b4",
+        "observations": [
+          {
+            "date": "2008-08-27",
+            "value": 9.166
+          },
+          {
+            "date": "2008-09-04",
+            "value": 9.322
+          }
+        ],
+        "workflow_run": 36167369624
+      },
+      {
+        "provider": "DSP Mutual Fund",
+        "url": "https://www.dspim.com/ajax?type=investment_center&sub_type=nav&count=true&for=datatable&scheme_type=EQU&scheme_code=157&from_date=27-AUG-2008&to_date=04-SEP-2008",
+        "internal_option_id": "157",
+        "records_total": 2,
+        "observations": [
+          {
+            "date": "2008-08-27",
+            "value": 9.166
+          },
+          {
+            "date": "2008-09-04",
+            "value": 9.322
+          }
+        ],
+        "workflow_run": 36174919035
+      },
+      {
+        "provider": "NSE",
+        "url": "https://nsearchives.nseindia.com/content/press/01092008.htm",
+        "evidence": "NSE completed Normal Settlement N-2008165 on 2008-09-01, inside the interval."
+      }
+    ]
+  },
+  {
+    "code": 105989,
+    "family": "DSP Small Cap Fund",
+    "historical_name": "DSP BlackRock Micro Cap Fund",
+    "plan": "Regular",
+    "option": "Growth",
+    "from": "2010-03-17",
+    "to": "2010-03-25",
+    "days": 8,
+    "classification": "verified_official_history_gap",
+    "verified_at": "2026-09-25",
+    "explanation": "AMFI and DSP's current first-party historical NAV exporter both publish only the boundary observations. The interval contains an NSE normal settlement. No intermediate NAV value is inferred.",
+    "evidence": [
+      {
+        "provider": "AMFI",
+        "url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=6&frmdt=17-Mar-2010&todt=25-Mar-2010",
+        "response_sha256": "f7d70e9ce8150b53e9138ffb2568a14da81c5c6f5caf7ea210c9ba481c2ffe8e",
+        "observations": [
+          {
+            "date": "2010-03-17",
+            "value": 13.28
+          },
+          {
+            "date": "2010-03-25",
+            "value": 13.458
+          }
+        ],
+        "workflow_run": 36167369624
+      },
+      {
+        "provider": "DSP Mutual Fund",
+        "url": "https://www.dspim.com/ajax?type=investment_center&sub_type=nav&count=true&for=datatable&scheme_type=EQU&scheme_code=157&from_date=17-MAR-2010&to_date=25-MAR-2010",
+        "internal_option_id": "157",
+        "records_total": 2,
+        "observations": [
+          {
+            "date": "2010-03-17",
+            "value": 13.28
+          },
+          {
+            "date": "2010-03-25",
+            "value": 13.458
+          }
+        ],
+        "workflow_run": 36174919035
+      },
+      {
+        "provider": "NSE",
+        "url": "https://nsearchives.nseindia.com/content/press/19032010.htm",
+        "evidence": "NSE completed Normal Settlement N-2010050 on 2010-03-19, inside the interval."
+      }
+    ]
+  },
+  {
+    "code": 105989,
+    "family": "DSP Small Cap Fund",
+    "historical_name": "DSP BlackRock Micro Cap Fund",
+    "plan": "Regular",
+    "option": "Growth",
+    "from": "2010-04-07",
+    "to": "2010-04-15",
+    "days": 8,
+    "classification": "verified_official_history_gap",
+    "verified_at": "2026-09-25",
+    "explanation": "AMFI and DSP's current first-party historical NAV exporter both publish only the boundary observations. NSE notices confirm normal-market trading inside the interval. No intermediate NAV value is inferred.",
+    "evidence": [
+      {
+        "provider": "AMFI",
+        "url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=6&frmdt=07-Apr-2010&todt=15-Apr-2010",
+        "response_sha256": "4bc7dcee1b79e0e59609f205a4f8f481947993017c6fd2633c9a417432656d0c",
+        "observations": [
+          {
+            "date": "2010-04-07",
+            "value": 14.166
+          },
+          {
+            "date": "2010-04-15",
+            "value": 14.455
+          }
+        ],
+        "workflow_run": 36167369624
+      },
+      {
+        "provider": "DSP Mutual Fund",
+        "url": "https://www.dspim.com/ajax?type=investment_center&sub_type=nav&count=true&for=datatable&scheme_type=EQU&scheme_code=157&from_date=07-APR-2010&to_date=15-APR-2010",
+        "internal_option_id": "157",
+        "records_total": 2,
+        "observations": [
+          {
+            "date": "2010-04-07",
+            "value": 14.166
+          },
+          {
+            "date": "2010-04-15",
+            "value": 14.455
+          }
+        ],
+        "workflow_run": 36174919035
+      },
+      {
+        "provider": "NSE",
+        "url": "https://nsearchives.nseindia.com/content/press/06042010.htm",
+        "evidence": "NSE's 2010-04-06 notice states securities would trade in the Normal Market on 2010-04-08, inside the interval."
+      }
+    ]
+  }
+]

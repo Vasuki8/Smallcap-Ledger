@@ -6,6 +6,7 @@ returns, forward-fills benchmark values, fetches new data, or changes UI behavio
 from __future__ import annotations
 
 import bisect
+import json
 import re
 from collections import Counter
 from datetime import date
@@ -16,6 +17,32 @@ from . import analytics, db, providers
 HORIZONS=(1,3,5)
 LARGE_GAP_DAYS=7
 BSE_SERIES="BSE 250 SmallCap TRI"
+
+NAV_GAP_EVIDENCE_PATH=db.ROOT/"tracker"/"nav_gap_evidence.json"
+
+
+def _nav_gap_evidence(code):
+    """Return reviewed official-history gaps for one scheme code."""
+    try:
+        rows=json.loads(NAV_GAP_EVIDENCE_PATH.read_text())
+    except (OSError,json.JSONDecodeError):
+        return {}
+    return {
+        (row["from"],row["to"]):row
+        for row in rows
+        if int(row.get("code",0))==int(code)
+        and row.get("classification")=="verified_official_history_gap"
+    }
+
+
+def _gap_list(points):
+    dates=[date.fromisoformat(p[0]) for p in points]
+    return [
+        {"from":dates[i-1].isoformat(),"to":dates[i].isoformat(),"days":(dates[i]-dates[i-1]).days}
+        for i in range(1,len(dates))
+        if (dates[i]-dates[i-1]).days>LARGE_GAP_DAYS
+    ]
+
 
 
 def _compact(value):
@@ -50,12 +77,7 @@ def _series_stats(points):
             "first":None,"last":None,"observations":0,
             "gap_count_gt_7d":0,"max_gap_days":None,"largest_gaps":[],
         }
-    dates=[date.fromisoformat(p[0]) for p in points]
-    gaps=[]
-    for i in range(1,len(dates)):
-        days=(dates[i]-dates[i-1]).days
-        if days>LARGE_GAP_DAYS:
-            gaps.append({"from":dates[i-1].isoformat(),"to":dates[i].isoformat(),"days":days})
+    gaps=_gap_list(points)
     largest=sorted(gaps,key=lambda x:(x["days"],x["to"]),reverse=True)[:5]
     return {
         "first":points[0][0],
@@ -64,6 +86,44 @@ def _series_stats(points):
         "gap_count_gt_7d":len(gaps),
         "max_gap_days":max((x["days"] for x in gaps),default=0),
         "largest_gaps":largest,
+    }
+
+
+def _nav_series_stats(points, code):
+    """Separate unexplained gaps from reviewed gaps already absent upstream."""
+    base=_series_stats(points)
+    if not points:
+        return {
+            **base,
+            "raw_gap_count_gt_7d":0,
+            "raw_largest_gaps":[],
+            "official_history_gap_count":0,
+            "official_history_gaps":[],
+        }
+    raw=_gap_list(points)
+    evidence=_nav_gap_evidence(code)
+    known=[];unresolved=[]
+    for gap in raw:
+        reviewed=evidence.get((gap["from"],gap["to"]))
+        if reviewed:
+            known.append({
+                **gap,
+                "classification":reviewed["classification"],
+                "verified_at":reviewed.get("verified_at"),
+                "explanation":reviewed.get("explanation"),
+                "evidence":reviewed.get("evidence",[]),
+            })
+        else:
+            unresolved.append(gap)
+    return {
+        **base,
+        "gap_count_gt_7d":len(unresolved),
+        "max_gap_days":max((x["days"] for x in unresolved),default=0),
+        "largest_gaps":sorted(unresolved,key=lambda x:(x["days"],x["to"]),reverse=True)[:5],
+        "raw_gap_count_gt_7d":len(raw),
+        "raw_largest_gaps":sorted(raw,key=lambda x:(x["days"],x["to"]),reverse=True)[:5],
+        "official_history_gap_count":len(known),
+        "official_history_gaps":known,
     }
 
 
@@ -170,7 +230,7 @@ def report():
     for scheme in schemes:
         nav=[[r["date"],float(r["value"])] for r in db.rows(
             "SELECT date,value FROM nav WHERE code=? ORDER BY date",(scheme["code"],))]
-        nav_stats=_series_stats(nav)
+        nav_stats=_nav_series_stats(nav,scheme["code"])
         nav_stats["horizons"]=_horizons(nav)
         metric=_latest_benchmark_metric(scheme["family"])
         identity=benchmark_identity(metric["value"] if metric else None)
@@ -271,12 +331,12 @@ def report():
         repair_priorities.append({
             "priority":1,
             "code":"collect_bse_250_smallcap_tri",
-            "actionable":True,
+            "actionable":False,
             "affected_funds":bse_affected,
             "affected_growth_plans":sum(
                 row["family"] in bse_affected for row in growth
             ),
-            "reason":"Funds explicitly report BSE 250 SmallCap TRI, but no matching historical TRI series is retained.",
+            "reason":"Funds explicitly report BSE 250 SmallCap TRI, but no matching historical TRI series is retained; the first-party daily-history route is currently subscription-distributed.",
         })
     nontri=sorted({row["family"] for row in growth
                    if row["benchmark"]["status"]=="benchmark_identity_not_explicit_tri"})
@@ -316,6 +376,12 @@ def report():
             "website_default_mismatch_growth_plans":sum(
                 row["benchmark"]["website_default_mismatch"] for row in growth
             ),
+            "official_history_gap_growth_plans":sum(
+                bool(row["nav"].get("official_history_gap_count")) for row in growth
+            ),
+            "official_history_gap_intervals":sum(
+                row["nav"].get("official_history_gap_count",0) for row in growth
+            ),
             "growth_return_eligibility":{
                 f"{y}Y":sum(row["nav"]["horizons"][f"{y}Y"]["eligible"] for row in growth)
                 for y in HORIZONS
@@ -337,6 +403,7 @@ def report():
             "Benchmark overlap uses exact common dates only; no forward-fill or interpolation is performed.",
             "A reported benchmark identity is not treated as historical TRI coverage unless the retained identity explicitly establishes a total-return index.",
             "website_default_mismatch flags plans whose explicit reported TRI benchmark differs from the website's current global default comparison series.",
+            "Verified official-history NAV gaps remain visible as raw gaps but are excluded from the actionable missing-data queue; no NAV is inferred.",
             "This audit is read-only and uses retained NAV, benchmark and metric evidence only.",
         ],
     }
@@ -355,7 +422,8 @@ def markdown(audit):
         f"- Reported benchmark identity families: **{summary['reported_benchmark_identity_families']} / {summary['families']}**.",
         f"- Explicit reported TRI identities on Growth plans: **{summary['explicit_tri_growth_plans']}**.",
         f"- Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **{summary['reported_tri_ready_growth_plans']}**.",
-        f"- Growth plans where the explicit reported TRI differs from the website's current default **{esc(audit['website_default_benchmark'])}**: **{summary['website_default_mismatch_growth_plans']}**.","",
+        f"- Growth plans where the explicit reported TRI differs from the website's current default **{esc(audit['website_default_benchmark'])}**: **{summary['website_default_mismatch_growth_plans']}**.",
+        f"- Verified official-history NAV gaps: **{summary['official_history_gap_intervals']} intervals across {summary['official_history_gap_growth_plans']} Growth plans**; retained as evidence, not actionable missing-value repairs.","",
         "| Horizon | NAV return eligible Growth plans | Relevant benchmark overlap eligible Growth plans |",
         "| --- | ---: | ---: |",
     ]
@@ -375,6 +443,18 @@ def markdown(audit):
         lines.extend(["","### Affected funds",""])
         for p in audit["repair_priorities"]:
             lines.append(f"- **{esc(p['code'])}:** "+", ".join(esc(x) for x in p["affected_funds"]))
+
+    known_gap_plans=[row for row in audit["plans"] if row["nav"].get("official_history_gap_count")]
+    if known_gap_plans:
+        lines.extend(["","## Verified official-history NAV gaps","",
+                      "These raw date gaps remain visible, but current official histories do not supply intermediate NAV observations. No value is interpolated or inferred.",""])
+        for row in known_gap_plans:
+            for gap in row["nav"]["official_history_gaps"]:
+                lines.append(
+                    f"- **{esc(row['family'])} · {esc(row['plan'])} · {esc(row['option'])} · {row['code']}**: "
+                    f"{gap['from']} → {gap['to']} ({gap['days']} calendar days) · "
+                    f"{esc(gap['classification'])} · verified {esc(gap.get('verified_at'))}"
+                )
 
     lines.extend(["","## Per-plan audit","",
                   "| Fund / plan | NAV range / obs | 1Y | 3Y | 5Y | Reported benchmark | Required TRI series | Exact overlap | Issues |",
