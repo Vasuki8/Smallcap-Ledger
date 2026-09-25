@@ -1,17 +1,16 @@
-name: Inspect JM TER disclosure
+name: Validate JM TER collector
 
 on:
   push:
     branches: [backend/jm-ter-v133]
-    paths: [.github/workflows/inspect-jm-ter.yml]
 
 permissions:
   contents: read
 
 jobs:
-  inspect:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
@@ -20,40 +19,19 @@ jobs:
           python-version: '3.12'
           enable-cache: true
       - run: uv sync --frozen
-      - name: Decode JM public TER payloads like the browser
+      - run: uv run --frozen python -m compileall -q tracker scripts tests
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - name: Verify live JM Small Cap TER disclosure
         run: |
           uv run --frozen python - <<'PY'
-          import base64,json,subprocess
-          import httpx
-          from tracker.jm_portfolios import API_BASE,_AES_KEY,_AES_IV
-
-          def decrypt_value(value):
-              ciphertext=base64.b64decode(value,validate=True)
-              p=subprocess.run([
-                  'openssl','enc','-d','-aes-256-cbc',
-                  '-K',_AES_KEY.hex(),'-iv',_AES_IV.hex()
-              ],input=ciphertext,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
-              print('OPENSSL_RC',p.returncode,'PLAIN_BYTES',len(p.stdout))
-              if p.returncode:
-                  print('OPENSSL_ERR',p.stderr.decode(errors='replace'))
-                  return None
-              text=p.stdout.decode('latin1')
-              print('PLAIN_PREFIX',repr(text[:500]))
-              return json.loads(text)
-
-          with httpx.Client(timeout=45,headers={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}) as client:
-              for name,body in [
-                  ('GetTerPageDropDown',{'IICategory':0}),
-                  ('GetTerPageLatest',{'IICategory':0,'IVFundCode':''}),
-              ]:
-                  r=client.post(API_BASE+name,json=body)
-                  outer=r.json()
-                  print('OUTER',name,outer.get('statusCode'),sorted(outer))
-                  data=decrypt_value(outer['data'])
-                  print('DECRYPTED',name,type(data).__name__,len(data) if isinstance(data,list) else None)
-                  if isinstance(data,list):
-                      for row in data:
-                          text=json.dumps(row,sort_keys=True,ensure_ascii=False,default=str)
-                          if 'small' in text.lower() or name=='GetTerPageDropDown':
-                              print('ROW',name,text)
+          from datetime import date
+          from tracker import amc_expenses,db
+          db.init()
+          day,plans,content_hash=amc_expenses._jm_ter_disclosure(date.today())
+          assert set(plans)=={'Regular','Direct'}
+          assert 0 <= plans['Direct']['base_expense_ratio'] <= plans['Direct']['ter'] <= 5
+          assert 0 <= plans['Regular']['base_expense_ratio'] <= plans['Regular']['ter'] <= 5
+          print('JM_VERIFIED',day,plans)
+          print('JM_SOURCE',amc_expenses.JM_TER_API)
+          print('JM_HASH',content_hash)
           PY
