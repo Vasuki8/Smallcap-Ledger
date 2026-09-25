@@ -16,6 +16,7 @@ from fastapi.responses import FileResponse,Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 from . import db,analytics,providers,disclosures
+from .portfolio_limitations import portfolio_limitation
 from .sync import updater
 
 
