@@ -1216,6 +1216,8 @@ def run():
     # is a completed transport audit: all reviewed official routes were tried,
     # while the normal nightly discovery path continues retrying the live source.
     transport_audit_complete=(amc_reports.PARSER_VERSION=='amc-reports-2026-09-v45' and not gaps)
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v129' and (not ok or not all(ok) or gaps):
+        raise SystemExit('Explicit TRI benchmark identity recovery did not verify all three target funds')
     if (all(ok) or transport_audit_complete) and not gaps:
         with db.connect() as c:c.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',(key,'true'))
 
