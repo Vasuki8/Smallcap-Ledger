@@ -203,6 +203,34 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual(amc_metrics.parse_page(content,'Axis Small Cap Fund',url.replace('axis-small-cap','axis-large-cap'),h),0)
         self.assertEqual(amc_metrics.parse_page(content.replace(b'Axis Small Cap Fund',b'Axis Large Cap Fund'),'Axis Small Cap Fund',url,h),0)
 
+    def test_current_official_pages_add_only_explicit_tri_benchmark_identities(self):
+        from tracker import amc_metrics
+
+        franklin='https://www.franklintempletonindia.com/fund-details/fund-overview/4373/franklin-india-small-cap-fund-erstwhile-franklin-india-smaller-companies-fund'
+        franklin_html=b'''<html><h1>Franklin India Small Cap Fund (Erstwhile Franklin India Smaller Companies Fund)</h1>
+        <p>Equity Small Cap</p><p>Benchmark(s) : Nifty Smallcap 250</p>
+        <p>Benchmark returns calculated based on Total Return Index Values</p></html>'''
+        fh=db.archive(franklin_html,'text/html')
+        self.assertEqual(amc_metrics.parse_page(franklin_html,'Franklin India Small Cap Fund',franklin,fh),1)
+        row=db.one("SELECT value,unit,source FROM metrics WHERE hash=? AND metric='benchmark'",(fh,))
+        self.assertEqual(row['value'],'Nifty Smallcap 250 TRI')
+        self.assertIn('Total Return Index',row['unit'])
+        self.assertEqual(row['source'],franklin)
+
+        ambiguous=franklin_html.replace(b'Benchmark returns calculated based on Total Return Index Values',b'')
+        ah=db.archive(ambiguous,'text/html')
+        self.assertEqual(amc_metrics.parse_page(ambiguous,'Franklin India Small Cap Fund',franklin,ah),0)
+        self.assertIsNone(db.one("SELECT value FROM metrics WHERE hash=? AND metric='benchmark'",(ah,)))
+
+        groww='https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth'
+        groww_html=b'''<html><h1>Groww Small Cap Fund Direct Growth</h1>
+        <h2>Scheme Performance</h2><p>Annualised returns as on 31 Aug 2026</p>
+        <p>Scheme Benchmark - Nifty Smallcap 250 TRI</p></html>'''
+        gh=db.archive(groww_html,'text/html')
+        self.assertEqual(amc_metrics.parse_page(groww_html,'Groww Small Cap Fund',groww,gh),1)
+        row=db.one("SELECT value,as_of,source FROM metrics WHERE hash=? AND metric='benchmark'",(gh,))
+        self.assertEqual(row,{'value':'Nifty Smallcap 250 TRI','as_of':'2026-08-31','source':groww})
+
     def test_amfi_daily_aum_preserves_scheme_identity_date_and_source(self):
         from tracker.amfi_metrics import save_daily_aum,PERFORMANCE_PAGE
         h=db.archive(b'official AMFI daily AUM fixture','application/json')
