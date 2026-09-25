@@ -78,14 +78,26 @@ def report_date(text):
     return None
 
 
-def portfolio(family,day,positions,complete,source,h,*,replace_existing_partial=False):
+def portfolio(family,day,positions,complete,source,h,*,replace_existing_partial=False,
+              limitation_code=None,limitation_detail=None):
     if not positions or not day: return None
     if any(not -100<=x["weight"]<=100 for x in positions): raise ValueError("Portfolio weights outside expected percentage units")
     if sum(x["weight"] for x in positions)>110: raise ValueError("Portfolio weight total suggests duplicated rows or wrong units")
     if any(x.get("quantity") is not None and x["quantity"]<0 for x in positions): raise ValueError("Portfolio quantity cannot be negative")
+    from .portfolio_limits import retained_limitation,validate_limitation
+    if not complete and limitation_code is None:
+        limitation=retained_limitation(family,source,False)
+        limitation_code=limitation["code"];limitation_detail=limitation["detail"]
+    validate_limitation(limitation_code,limitation_detail,bool(complete))
     with db.connect() as c:
-        c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
+        c.execute("""INSERT OR IGNORE INTO portfolios(
+          family,as_of,complete,source,hash,limitation_code,limitation_detail,observed_at)
+          VALUES(?,?,?,?,?,?,?,?)""",
+          (family,day,int(complete),source,h,limitation_code,limitation_detail,db.now()))
         sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
+        c.execute("""UPDATE portfolios SET limitation_code=?,limitation_detail=?
+          WHERE id=? AND (limitation_code IS NULL OR limitation_detail IS NULL)""",
+          (limitation_code,limitation_detail,sid))
         existing=c.execute("SELECT id,isin,name,asset_type,quantity FROM holdings WHERE snapshot_id=?",(sid,)).fetchall()
         if replace_existing_partial and not complete and existing:
             # Parser upgrades may recover additional explicit rows from the same
