@@ -14,54 +14,41 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - name: Decode Mahindra public downloads tree
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect exact Mahindra TER workbooks
         run: |
-          python - <<'PY'
-          import base64,json,re,subprocess,urllib.request
-          url='https://investorapi.mahindramanulife.com/api/v1/web/preLogin/downloads'
-          key=b'mahindra2024mahindra2024mahindra'
-          iv=b'hasnainsheikh202'
-          print('KEY_LEN',len(key),'IV_LEN',len(iv))
-          req=urllib.request.Request(url,headers={
-              'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0',
-              'Accept':'application/json, text/plain, */*',
-              'Origin':'https://www.mahindramanulife.com',
-              'Referer':'https://www.mahindramanulife.com/downloads',
-          })
-          with urllib.request.urlopen(req,timeout=60) as r:
-              raw=r.read(); print('FETCH',r.status,len(raw),r.headers.get('content-type'),r.geturl())
-          outer=json.loads(raw)
-          cipher=base64.b64decode(outer['payload'],validate=True)
-          p=subprocess.run([
-              'openssl','enc','-d','-aes-256-cbc',
-              '-K',key.hex(),'-iv',iv.hex()
-          ],input=cipher,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
-          print('OPENSSL',p.returncode,len(p.stdout),p.stderr.decode(errors='replace'))
-          data=json.loads(p.stdout.decode('utf-8'))
-          print('TOP',type(data).__name__,sorted(data) if isinstance(data,dict) else None)
-          if isinstance(data,dict):
-              print('STATUS',data.get('status'),data.get('message'))
-              root=data.get('data')
-          else: root=data
-          print('ROOT',type(root).__name__,len(root) if isinstance(root,list) else None)
+          uv run --frozen python - <<'PY'
+          import io,json,re,urllib.request,hashlib
+          import openpyxl
 
-          def summary_file(f):
-              return {k:f.get(k) for k in ('id','title','fileName','fileUrl','redirectUrl','fileExtension','fileSize','createdAt') if k in f}
-          def walk(node,path=()):
-              if isinstance(node,list):
-                  for x in node: walk(x,path)
-              elif isinstance(node,dict):
-                  title=str(node.get('categoryName') or '')
-                  new=path+((title,) if title else ())
-                  if title and re.search(r'Total Expense Ratio|Expense Ratio',title,re.I):
-                      print('CATEGORY_PATH',' > '.join(new),'ID',node.get('categoryId'))
-                      print('CATEGORY_FILES',json.dumps([summary_file(f) for f in node.get('files',[])],ensure_ascii=False,sort_keys=True,default=str))
-                      print('SUBCATEGORY_NAMES',[x.get('categoryName') for x in node.get('subcategories',[]) if isinstance(x,dict)])
-                  for f in node.get('files',[]) if isinstance(node.get('files'),list) else []:
-                      blob=json.dumps(f,ensure_ascii=False,default=str)
-                      if re.search(r'Total Expense Ratio|\bTER\b|expense ratio',blob,re.I):
-                          print('FILE_MATCH',' > '.join(new),json.dumps(summary_file(f),ensure_ascii=False,sort_keys=True,default=str))
-                  for child in node.get('subcategories',[]) if isinstance(node.get('subcategories'),list) else []:
-                      walk(child,new)
-          walk(root)
+          urls=[
+            'https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx',
+            'https://www.mahindramanulife.com/uploads/download/8e0a5334-dcf7-44c0-a22b-8cc6883d3a82.xlsx',
+          ]
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0','Referer':'https://www.mahindramanulife.com/downloads'}
+          for url in urls:
+              print('SOURCE',url)
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  body=r.read()
+                  print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
+              print('SHA256',hashlib.sha256(body).hexdigest(),'MAGIC',body[:8])
+              wb=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
+              print('SHEETS',wb.sheetnames)
+              for ws in wb.worksheets:
+                  print('SHEET',ws.title,ws.max_row,ws.max_column)
+                  matches=[]
+                  for i,row in enumerate(ws.iter_rows(values_only=True),1):
+                      vals=[None if v is None else str(v) for v in row]
+                      joined=' | '.join(v or '' for v in vals)
+                      if i<=12 or re.search(r'Mahindra\s+Manulife\s+Small\s+Cap\s+Fund|Small\s+Cap\s+Fund',joined,re.I):
+                          matches.append((i,vals))
+                  for i,vals in matches[:80]:
+                      print('ROW',i,json.dumps(vals,ensure_ascii=False))
+              wb.close()
           PY
