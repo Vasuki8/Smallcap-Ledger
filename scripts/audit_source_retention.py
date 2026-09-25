@@ -72,6 +72,7 @@ def classify(item):
     if evidence: return 'retain_evidence', sorted(set(evidence))
     reasons = []
     if not item['urls'] or not all(valid_url(u) for u in item['urls']): reasons.append('missing_or_nonportable_source_url')
+    if item['kind'] in ('json', 'text'): reasons.append('request_parameters_or_data_semantics_require_review')
     if item['kind'] not in ('html', 'javascript', 'json', 'text'): reasons.append('original_publication_or_unknown_binary')
     if item['latest_for_urls']: reasons.append('latest_saved_response_for_at_least_one_url')
     if item['fragile_urls']: reasons.append('documented_transport_boundary')
@@ -315,7 +316,7 @@ def write_reports(output, report, items):
               f"Potential link-only reduction: **{groups['link_only_candidate']['raw_bytes']:,} raw bytes** ({report['candidate_percent_of_raw_archive']}% of originals). **Actual deletion: 0 bytes.**", '',
               '## Decision rules', '',
               'Retain all sources tied by hash or exact source URL to financial records; successful historical extractions; dated/narrative AMC publications; literal code/handoff hash dependencies. Original PDFs, workbooks and other downloadable/unknown files remain retained or under review. Protect the latest saved version of every exact URL and sources with documented transport boundaries or a latest recorded error.', '',
-              'Only superseded HTML/JavaScript/JSON/plain-text responses with a strictly newer retained version for every associated URL and no identified evidence/replay dependency become link-only candidates. These are distinct response snapshots, not verified byte duplicates. Link-only means knowingly giving up old discovery-response bytes while retaining metadata and newer responses.', '',
+              'Only superseded HTML/JavaScript responses with a strictly newer retained version for every associated URL and no identified evidence/replay dependency become link-only candidates. JSON/plain-text responses stay under review because request parameters and data semantics are not fully recorded. These are distinct response snapshots, not verified byte duplicates. Link-only means knowingly giving up old discovery-response bytes while retaining metadata and newer responses.', '',
               '## Before any deletion', '',
               'Obtain explicit approval of the exact candidate hashes. Add explicit binary-retention state without deleting provenance metadata. Make restore, verification, reprocessing, archive serving, publication selection and download labels retention-aware. Prevent re-archiving the same discardable responses. Build replacement packs and validate all retained members, sources and the complete website before switching an atomic manifest. Keep rollback packs until independently verified. This audit does not implement those steps.', '',
               '## Important limits', '']

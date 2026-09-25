@@ -1,0 +1,1537 @@
+{
+  "archive_files": 2519,
+  "archive_raw_bytes": 2162519668,
+  "database_bytes": 73322496,
+  "groups": {
+    "retain_evidence": {
+      "files": 983,
+      "raw_bytes": 1292121482,
+      "compressed_payload_bytes": 1036713814
+    },
+    "retain_latest_or_review": {
+      "files": 835,
+      "raw_bytes": 465565826,
+      "compressed_payload_bytes": 325013922
+    },
+    "link_only_candidate": {
+      "files": 701,
+      "raw_bytes": 404832360,
+      "compressed_payload_bytes": 34294362
+    }
+  },
+  "candidate_percent_of_raw_archive": 18.7204,
+  "proposed_raw_archive_bytes": 1757687308,
+  "proposed_database_plus_sources_bytes": 1831009804,
+  "bytes_actually_deleted": 0,
+  "files_actually_deleted": 0,
+  "hosts": [
+    {
+      "host": "samcomf.com",
+      "files": 260,
+      "raw_bytes": 439540929,
+      "candidate_files": 71,
+      "candidate_raw_bytes": 219887652
+    },
+    {
+      "host": "mutualfund.adityabirlacapital.com",
+      "files": 87,
+      "raw_bytes": 71260437,
+      "candidate_files": 50,
+      "candidate_raw_bytes": 47379014
+    },
+    {
+      "host": "tatamutualfund.com",
+      "files": 38,
+      "raw_bytes": 41503697,
+      "candidate_files": 20,
+      "candidate_raw_bytes": 24298711
+    },
+    {
+      "host": "assetmanagement.hsbc.co.in",
+      "files": 44,
+      "raw_bytes": 49868012,
+      "candidate_files": 32,
+      "candidate_raw_bytes": 15880362
+    },
+    {
+      "host": "dspim.com",
+      "files": 79,
+      "raw_bytes": 45330224,
+      "candidate_files": 42,
+      "candidate_raw_bytes": 14332703
+    },
+    {
+      "host": "mf.nipponindiaim.com",
+      "files": 253,
+      "raw_bytes": 512091464,
+      "candidate_files": 43,
+      "candidate_raw_bytes": 12102253
+    },
+    {
+      "host": "growwmf.in",
+      "files": 27,
+      "raw_bytes": 12230493,
+      "candidate_files": 20,
+      "candidate_raw_bytes": 8828786
+    },
+    {
+      "host": "barodabnpparibasmf.in",
+      "files": 84,
+      "raw_bytes": 34835382,
+      "candidate_files": 70,
+      "candidate_raw_bytes": 7876457
+    },
+    {
+      "host": "heliosmf.in",
+      "files": 199,
+      "raw_bytes": 146939835,
+      "candidate_files": 26,
+      "candidate_raw_bytes": 7464567
+    },
+    {
+      "host": "quantumamc.com",
+      "files": 120,
+      "raw_bytes": 175290251,
+      "candidate_files": 37,
+      "candidate_raw_bytes": 7204292
+    },
+    {
+      "host": "invescomutualfund.com",
+      "files": 30,
+      "raw_bytes": 15020507,
+      "candidate_files": 16,
+      "candidate_raw_bytes": 7128040
+    },
+    {
+      "host": "sundarammutual.com",
+      "files": 44,
+      "raw_bytes": 9809504,
+      "candidate_files": 21,
+      "candidate_raw_bytes": 5183844
+    },
+    {
+      "host": "hdfcfund.com",
+      "files": 56,
+      "raw_bytes": 8513400,
+      "candidate_files": 30,
+      "candidate_raw_bytes": 4130674
+    },
+    {
+      "host": "quantmutual.com",
+      "files": 70,
+      "raw_bytes": 90441382,
+      "candidate_files": 40,
+      "candidate_raw_bytes": 3971749
+    },
+    {
+      "host": "miraeassetmf.co.in",
+      "files": 49,
+      "raw_bytes": 18977222,
+      "candidate_files": 21,
+      "candidate_raw_bytes": 3368441
+    },
+    {
+      "host": "boimf.in",
+      "files": 43,
+      "raw_bytes": 36250377,
+      "candidate_files": 19,
+      "candidate_raw_bytes": 3053233
+    },
+    {
+      "host": "wealthcompanyamc.in",
+      "files": 46,
+      "raw_bytes": 13804448,
+      "candidate_files": 16,
+      "candidate_raw_bytes": 2984919
+    },
+    {
+      "host": "abakkusmf.com",
+      "files": 43,
+      "raw_bytes": 29792443,
+      "candidate_files": 4,
+      "candidate_raw_bytes": 2328297
+    },
+    {
+      "host": "canararobeco.com",
+      "files": 17,
+      "raw_bytes": 3759274,
+      "candidate_files": 7,
+      "candidate_raw_bytes": 1621180
+    },
+    {
+      "host": "kotakmf.com",
+      "files": 57,
+      "raw_bytes": 10854613,
+      "candidate_files": 31,
+      "candidate_raw_bytes": 1259094
+    },
+    {
+      "host": "licmf.com",
+      "files": 41,
+      "raw_bytes": 84862376,
+      "candidate_files": 10,
+      "candidate_raw_bytes": 1063891
+    },
+    {
+      "host": "niftyindices.com",
+      "files": 27,
+      "raw_bytes": 901638,
+      "candidate_files": 26,
+      "candidate_raw_bytes": 875211
+    },
+    {
+      "host": "axismf.com",
+      "files": 25,
+      "raw_bytes": 37033719,
+      "candidate_files": 5,
+      "candidate_raw_bytes": 814622
+    },
+    {
+      "host": "motilaloswalmf.com",
+      "files": 20,
+      "raw_bytes": 12435865,
+      "candidate_files": 8,
+      "candidate_raw_bytes": 634960
+    },
+    {
+      "host": "sbimf.com",
+      "files": 18,
+      "raw_bytes": 1921891,
+      "candidate_files": 6,
+      "candidate_raw_bytes": 356388
+    },
+    {
+      "host": "itiamc.com",
+      "files": 16,
+      "raw_bytes": 7942458,
+      "candidate_files": 1,
+      "candidate_raw_bytes": 334219
+    },
+    {
+      "host": "bandhanmutual.com",
+      "files": 20,
+      "raw_bytes": 209890,
+      "candidate_files": 16,
+      "candidate_raw_bytes": 167912
+    },
+    {
+      "host": "pgimindia.com",
+      "files": 25,
+      "raw_bytes": 17022753,
+      "candidate_files": 1,
+      "candidate_raw_bytes": 139673
+    },
+    {
+      "host": "icicipruamc.com",
+      "files": 7,
+      "raw_bytes": 12790681,
+      "candidate_files": 5,
+      "candidate_raw_bytes": 108141
+    },
+    {
+      "host": "utimf.com",
+      "files": 11,
+      "raw_bytes": 49750,
+      "candidate_files": 2,
+      "candidate_raw_bytes": 27976
+    },
+    {
+      "host": "mahindramanulife.com",
+      "files": 21,
+      "raw_bytes": 6387232,
+      "candidate_files": 2,
+      "candidate_raw_bytes": 17972
+    },
+    {
+      "host": "jmfinancialmf.com",
+      "files": 10,
+      "raw_bytes": 28238101,
+      "candidate_files": 2,
+      "candidate_raw_bytes": 6178
+    },
+    {
+      "host": "trustmf.com",
+      "files": 8,
+      "raw_bytes": 4392616,
+      "candidate_files": 1,
+      "candidate_raw_bytes": 949
+    },
+    {
+      "host": "amfiindia.com",
+      "files": 93,
+      "raw_bytes": 16061593,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "api.mfapi.in",
+      "files": 434,
+      "raw_bytes": 33344306,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "app.beta.icicipruamc.com",
+      "files": 1,
+      "raw_bytes": 238073,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "assets-netstorage.growwmf.in",
+      "files": 7,
+      "raw_bytes": 15943086,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "bajajamc.com",
+      "files": 1,
+      "raw_bytes": 1343610,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "betacms.tatamutualfund.com",
+      "files": 3,
+      "raw_bytes": 2085095,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "cmsnew.bandhanmutual.com",
+      "files": 13,
+      "raw_bytes": 921436,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "communicate-ai.adityabirlacapital.com",
+      "files": 1,
+      "raw_bytes": 25894,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "files": 8,
+      "raw_bytes": 36154099,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "digital.camsonline.com",
+      "files": 1,
+      "raw_bytes": 5493673,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "digitalassets.canararobeco.com",
+      "files": 4,
+      "raw_bytes": 8739790,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "edelweissmf.com",
+      "files": 33,
+      "raw_bytes": 55762896,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "files.hdfcfund.com",
+      "files": 14,
+      "raw_bytes": 3834330,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "franklintempletonindia.com",
+      "files": 5,
+      "raw_bytes": 1085913,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "info.tatamutualfund.com",
+      "files": 1,
+      "raw_bytes": 48480,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "jmmfapi.jmfinancialmf.com",
+      "files": 1,
+      "raw_bytes": 5823,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "media.bajajamc.com",
+      "files": 1,
+      "raw_bytes": 866172,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "prod-dist-api.tatamfdev.com",
+      "files": 1,
+      "raw_bytes": 77903,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    },
+    {
+      "host": "storage.googleapis.com",
+      "files": 2,
+      "raw_bytes": 184632,
+      "candidate_files": 0,
+      "candidate_raw_bytes": 0
+    }
+  ],
+  "top_candidates": [
+    {
+      "hash": "330a49ed3b8f7f0af019f8ccbc870025ef8e78b4ed8cad5fb28473ad993dcd24",
+      "path": "archive/33/330a49ed3b8f7f0af019f8ccbc870025ef8e78b4ed8cad5fb28473ad993dcd24",
+      "bytes": 12221400,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-23T22:35:04+00:00",
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets"
+      ],
+      "families": [],
+      "titles": [],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets",
+      "host": "assetmanagement.hsbc.co.in",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets",
+          "fetched_at": "2026-09-24T21:46:34+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p001-1a9e757dcab7c07b.zip",
+      "compressed_payload_bytes": 668379
+    },
+    {
+      "hash": "b53fe80cc5653477e26b4cf08988f5fd4f5319c7117c385c2da5cad28c4526c9",
+      "path": "archive/b5/b53fe80cc5653477e26b4cf08988f5fd4f5319c7117c385c2da5cad28c4526c9",
+      "bytes": 8077157,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-23T22:12:24+00:00",
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds"
+      ],
+      "families": [
+        "Aditya Birla Sun Life Small Cap Fund"
+      ],
+      "titles": [
+        "Official factsheets, scheme data and disclosures"
+      ],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1,
+        "document_versions": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+      "host": "mutualfund.adityabirlacapital.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+          "fetched_at": "2026-09-24T22:06:02+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p002-a0e779b11854a7cb.zip",
+      "compressed_payload_bytes": 1251569
+    },
+    {
+      "hash": "0c660c444111060f30900f1f0314f09344dba167ea289796aca32c86b1f812cb",
+      "path": "archive/0c/0c660c444111060f30900f1f0314f09344dba167ea289796aca32c86b1f812cb",
+      "bytes": 8075707,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-22T21:53:05+00:00",
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds"
+      ],
+      "families": [
+        "Aditya Birla Sun Life Small Cap Fund"
+      ],
+      "titles": [
+        "Official factsheets, scheme data and disclosures"
+      ],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1,
+        "document_versions": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+      "host": "mutualfund.adityabirlacapital.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+          "fetched_at": "2026-09-24T22:06:02+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p012-01b30b45f7eb7aee.zip",
+      "compressed_payload_bytes": 1251316
+    },
+    {
+      "hash": "a5b4efad374a7f6e0b483a5c71704c99e05d15538bb42a88b31769e2a805b563",
+      "path": "archive/a5/a5b4efad374a7f6e0b483a5c71704c99e05d15538bb42a88b31769e2a805b563",
+      "bytes": 8074228,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-22T03:05:10+00:00",
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds"
+      ],
+      "families": [
+        "Aditya Birla Sun Life Small Cap Fund"
+      ],
+      "titles": [
+        "Official factsheets, scheme data and disclosures"
+      ],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1,
+        "document_versions": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+      "host": "mutualfund.adityabirlacapital.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+          "fetched_at": "2026-09-24T22:06:02+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p009-4f03c4b564f0be0d.zip",
+      "compressed_payload_bytes": 1251158
+    },
+    {
+      "hash": "0014dd913c16c600a8e99c6a85e03c4f95c9ead62d59a995e1f8c53d4966c49d",
+      "path": "archive/00/0014dd913c16c600a8e99c6a85e03c4f95c9ead62d59a995e1f8c53d4966c49d",
+      "bytes": 8057923,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-07T21:53:24+00:00",
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds"
+      ],
+      "families": [
+        "Aditya Birla Sun Life Small Cap Fund"
+      ],
+      "titles": [
+        "Official factsheets, scheme data and disclosures"
+      ],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1,
+        "document_versions": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+      "host": "mutualfund.adityabirlacapital.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+          "fetched_at": "2026-09-24T22:06:02+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p005-4bbaca6225748b35.zip",
+      "compressed_payload_bytes": 1249172
+    },
+    {
+      "hash": "1f7a88fce5e87961dec02caef32e0b7b640c81355c15f601b4210604b73dcc8f",
+      "path": "archive/1f/1f7a88fce5e87961dec02caef32e0b7b640c81355c15f601b4210604b73dcc8f",
+      "bytes": 3483992,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-24T21:48:42+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ],
+      "families": [],
+      "titles": [],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "fetched_at": "2026-09-24T22:02:53+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p001-b7dd7d0d076551f8.zip",
+      "compressed_payload_bytes": 138626
+    },
+    {
+      "hash": "0e18c05564252c02c067b468f0ff2699f0daaf87bee6f8cafaf23a619337f05d",
+      "path": "archive/0e/0e18c05564252c02c067b468f0ff2699f0daaf87bee6f8cafaf23a619337f05d",
+      "bytes": 3483480,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-23T22:09:08+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ],
+      "families": [
+        "Samco Small Cap Fund"
+      ],
+      "titles": [
+        "Statutory Disclosures"
+      ],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1,
+        "document_versions": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "fetched_at": "2026-09-24T22:02:53+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p001-d69bf77851258744.zip",
+      "compressed_payload_bytes": 138605
+    },
+    {
+      "hash": "36b6954ae9dc4d4ef2dbc2534e174ad63ea8d6dd1e91dcef21bdd24e0dcbb395",
+      "path": "archive/36/36b6954ae9dc4d4ef2dbc2534e174ad63ea8d6dd1e91dcef21bdd24e0dcbb395",
+      "bytes": 3483480,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-23T21:54:07+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ],
+      "families": [],
+      "titles": [],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "fetched_at": "2026-09-24T22:02:53+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p001-d69bf77851258744.zip",
+      "compressed_payload_bytes": 138611
+    },
+    {
+      "hash": "81111e3038a0a8a19dd761e91fdff97bf018d6c50388d78453cdc81051ac945a",
+      "path": "archive/81/81111e3038a0a8a19dd761e91fdff97bf018d6c50388d78453cdc81051ac945a",
+      "bytes": 3483480,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-23T22:06:32+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure#scheme-financials"
+      ],
+      "families": [
+        "Samco Small Cap Fund"
+      ],
+      "titles": [
+        "Scheme Financials"
+      ],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1,
+        "document_versions": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure#scheme-financials",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure#scheme-financials",
+          "fetched_at": "2026-09-24T22:01:35+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p001-d69bf77851258744.zip",
+      "compressed_payload_bytes": 138611
+    },
+    {
+      "hash": "0702329ed43705b99562badc7d0b0f9dee95b70a3825f6fec3d7076e24048691",
+      "path": "archive/07/0702329ed43705b99562badc7d0b0f9dee95b70a3825f6fec3d7076e24048691",
+      "bytes": 3480660,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-22T20:23:25+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ],
+      "families": [],
+      "titles": [],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "fetched_at": "2026-09-24T22:02:53+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p011-fb76743aa6cad95e.zip",
+      "compressed_payload_bytes": 138489
+    },
+    {
+      "hash": "0b0078e69ec9829734519946b71a4583e9704100dbafd5780f0a08b25116f3b7",
+      "path": "archive/0b/0b0078e69ec9829734519946b71a4583e9704100dbafd5780f0a08b25116f3b7",
+      "bytes": 3480660,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-22T22:58:20+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ],
+      "families": [],
+      "titles": [],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "fetched_at": "2026-09-24T22:02:53+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p001-fceaaa951958638d.zip",
+      "compressed_payload_bytes": 138493
+    },
+    {
+      "hash": "0b38e1ece6cc643e55ebed83e64a9997af50ca898ff636c1b8685a82f7b63e87",
+      "path": "archive/0b/0b38e1ece6cc643e55ebed83e64a9997af50ca898ff636c1b8685a82f7b63e87",
+      "bytes": 3480660,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-22T17:36:50+00:00",
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ],
+      "families": [],
+      "titles": [],
+      "reporting_dates": [],
+      "references": {
+        "fetches": 1
+      },
+      "evidence_reasons": [],
+      "pending_extractions": [],
+      "latest_for_urls": [],
+      "fragile_urls": [],
+      "latest_error_urls": [],
+      "extraction_statuses": {},
+      "kind": "html",
+      "superseded_for_all_urls": true,
+      "classification": "link_only_candidate",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "latest_fetch_evidence": [
+        {
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "fetched_at": "2026-09-24T22:02:53+00:00",
+          "status": "ok",
+          "detail": null
+        }
+      ],
+      "pack": "sources-2026-09-p010-7a03e81ca73a4bda.zip",
+      "compressed_payload_bytes": 138490
+    }
+  ],
+  "release": {
+    "current_checkpoint_created_at": "2026-09-25T03:46:19+00:00",
+    "assets": 99,
+    "total_bytes": 2504867611,
+    "active_asset_bytes": 1404070428,
+    "previous_only_bytes": 12851483,
+    "unreferenced_assets": [
+      {
+        "name": "state-35791406887-1.zip",
+        "bytes": 1087514828
+      }
+    ]
+  },
+  "limitations": [
+    "Metadata/dependency classification, not a semantic review of every original file.",
+    "No live AMC link availability checks; retained fetch history is dated evidence only.",
+    "Different hashes are different saved bytes, not proven duplicates. Candidate deletion loses those historical response snapshots.",
+    "A URL or SHA-256 cannot reconstruct an overwritten or unavailable document.",
+    "Original PDFs/workbooks and successful historical extractions are protected, including data beyond rolling parsed portfolio retention.",
+    "Compressed payload totals exclude ZIP headers; actual release reduction requires approved repacking and rollback retirement.",
+    "Existing restore, replay and website download code requires retained binaries. No deletion or policy change is enabled by this report.",
+    "Legacy cumulative backup, current rollback checkpoint, repository bootstrap, and published Pages copies are separate and untouched."
+  ],
+  "audited_at": "2026-09-25T04:04:17+00:00",
+  "mode": "read_only_proposal",
+  "checkpoint": {
+    "asset": "database-36091631221-1.zip",
+    "sha256": "83b22717df940e94aa0423ca216dfa5e1849bfb5b94b8cd183a6c9c530e97d73",
+    "bytes": 7451756
+  },
+  "database_sha256_before": "3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe",
+  "database_sha256_after": "3603663b195c77c138815409cb8f8ad9fe6dc98d4e7d3adf85a6374972fcaebe",
+  "database_unchanged": true,
+  "input_manifest_unchanged": true,
+  "table_counts": {
+    "settings": 112,
+    "schemes": 143,
+    "archives": 2519,
+    "fetches": 7553,
+    "metrics": 25403,
+    "holdings": 7647,
+    "documents": 2022,
+    "document_versions": 1782,
+    "source_pages": 323,
+    "distribution_coverage": 0,
+    "distributions": 0,
+    "jobs": 824,
+    "document_extractions": 6923,
+    "portfolios": 123,
+    "nav": 281442,
+    "nav_observations": 281751,
+    "benchmark": 5329,
+    "benchmark_observations": 5329
+  },
+  "logical_rows": 629225,
+  "unique_hash_coverage_verified": true,
+  "verified_packs": [
+    {
+      "asset": "sources-2026-09-p001-6cd248e8dee29327.zip",
+      "bytes": 91665485,
+      "sha256": "f41701918eba4f20446883f5d74bbb599e39562ca2423f5eee065d3388a29d06",
+      "members": 304
+    },
+    {
+      "asset": "sources-2026-09-p002-b63f15c6a89bb72a.zip",
+      "bytes": 98634775,
+      "sha256": "a986bd6fa952d8b9b4069967ceedc90452fbcbfb4c367efe7895810eb4853bfc",
+      "members": 227
+    },
+    {
+      "asset": "sources-2026-09-p003-d57d3a2c64651522.zip",
+      "bytes": 95307374,
+      "sha256": "49e0206fc33ed54bd6dcf48fad5b963ee5eb7d44dc1b000f2e6c0fb3484b2283",
+      "members": 133
+    },
+    {
+      "asset": "sources-2026-09-p004-cf865c9c36d424a0.zip",
+      "bytes": 109523593,
+      "sha256": "dbb88d075cf5e7c2b42c04e59a889f20f767a5ce4a6c8bc8ec2537ea3d13ae00",
+      "members": 35
+    },
+    {
+      "asset": "sources-2026-09-p005-4bbaca6225748b35.zip",
+      "bytes": 105701616,
+      "sha256": "2f64362ba167cfac3c4059323da97ca79ceb279149b45144b3bb9aaa6ee59961",
+      "members": 76
+    },
+    {
+      "asset": "sources-2026-09-p006-3904a330d9c1108d.zip",
+      "bytes": 102068162,
+      "sha256": "eedff2779794c67d6b99f8d07eb2624942c6632cb3a5e7a145b69abfce87acab",
+      "members": 229
+    },
+    {
+      "asset": "sources-2026-09-p007-78528146ecb807e7.zip",
+      "bytes": 105810168,
+      "sha256": "6c7ff0c03475ebbc0a9aa6585fd5e3e084a7b10712b321a8937dcb4b33ef0178",
+      "members": 168
+    },
+    {
+      "asset": "sources-2026-09-p008-98889c26edf71fa9.zip",
+      "bytes": 87372471,
+      "sha256": "31246353fffe0d4015382ab056fa17fe37864861e3e2603f1d31aa05bc27ee45",
+      "members": 115
+    },
+    {
+      "asset": "sources-2026-09-p009-4f03c4b564f0be0d.zip",
+      "bytes": 92303128,
+      "sha256": "38e7c45f9027b1827b95f8224cdd87c408403f2bd7de94b3e664a344ff45a455",
+      "members": 84
+    },
+    {
+      "asset": "sources-2026-09-p010-7a03e81ca73a4bda.zip",
+      "bytes": 23278153,
+      "sha256": "4b6bcf3438b7d36bf6ba80e05c0dfaa316acee940955607c42ffbf82f1c2ad6c",
+      "members": 66
+    },
+    {
+      "asset": "sources-2026-09-p011-fb76743aa6cad95e.zip",
+      "bytes": 62451573,
+      "sha256": "440653d7c551c1e002b0383c92fa5adcc99befea24daf195ac2560e92db16d8a",
+      "members": 222
+    },
+    {
+      "asset": "sources-2026-09-p012-01b30b45f7eb7aee.zip",
+      "bytes": 100898418,
+      "sha256": "bec0324a9797fcb6f73f23a142c2e34d4675c3803c14ccef8da9e7ea4080fc88",
+      "members": 98
+    },
+    {
+      "asset": "sources-2026-09-p013-2d79f0702685ed27.zip",
+      "bytes": 295947,
+      "sha256": "a47e432f7ae4e6deb12b63226d73fc9e398b8c9d569eea2ec5dc5f38d4762f64",
+      "members": 3
+    },
+    {
+      "asset": "sources-2026-09-p001-fc5201e6a34ed064.zip",
+      "bytes": 157219,
+      "sha256": "ddd27e1579d1db60d14415816b0082bf68b9ee7a9f3de38c4c274d82d1e642ed",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-111cc93ac1cc3b24.zip",
+      "bytes": 157228,
+      "sha256": "38692f4c30fcca211842accab0cc6e8fa37822aac4d2e67e7686f5a14eb740bd",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-bd8d85734b439980.zip",
+      "bytes": 157235,
+      "sha256": "07c5c9f46219fe4c117cc41e1fbc89716bc5828774591f820bafae01cb41181d",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-4a543e7a5c9e0ec9.zip",
+      "bytes": 18497,
+      "sha256": "db01d79f928805494bb00c75cb9d27f2bb0095abd591c66f67c8fac282f6ec1c",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-fceaaa951958638d.zip",
+      "bytes": 157223,
+      "sha256": "f832b4e33839810697ff17b3ec1a64236a01c67a957dce527d5a5a8058804094",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-7583a9a71696ccdc.zip",
+      "bytes": 157218,
+      "sha256": "dc2332da738e56a202567862f3ea34c837aa94e8afaa9ff6053068ac8deeeef2",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-425bbbb3de03d2a0.zip",
+      "bytes": 200130,
+      "sha256": "cc96f46708b44386716ee441aeb21ce9cd22f18ee9032ec11216c07f89236c19",
+      "members": 4
+    },
+    {
+      "asset": "sources-2026-09-p001-43501d1c32f80116.zip",
+      "bytes": 175366,
+      "sha256": "101bad90dcd37d1926280facc8cdc0f86e432f3be2a95026c1281cc012b1e1c5",
+      "members": 3
+    },
+    {
+      "asset": "sources-2026-09-p001-d5f2ab3ed7a14b8a.zip",
+      "bytes": 192195,
+      "sha256": "0443952aae021f741415eb6187fe328e64b0f601e16b8ad1a14a7e1945f510e5",
+      "members": 4
+    },
+    {
+      "asset": "sources-2026-09-p001-63e1ca9a124a32d0.zip",
+      "bytes": 175369,
+      "sha256": "830581069d08bae6555a4e288d5ae953fa3faed73aa98b1710564cd1a59758fe",
+      "members": 3
+    },
+    {
+      "asset": "sources-2026-09-p001-960c0c7275f41f1f.zip",
+      "bytes": 175368,
+      "sha256": "3bab4ac0ef8532e998ec66b6397b0bd68d337165d9a2dc09ed38cee0ee1d288f",
+      "members": 3
+    },
+    {
+      "asset": "sources-2026-09-p001-c4ecb78b2980e784.zip",
+      "bytes": 448592,
+      "sha256": "5bf35a163597e8ab73938fcbc8a12101c594a738526a0de3fdb76e28447f5ae6",
+      "members": 5
+    },
+    {
+      "asset": "sources-2026-09-p001-87f98b9eab5c722f.zip",
+      "bytes": 375882,
+      "sha256": "b18346c88473bf78ff0c59b932bb74ae0f767c07844f06497e4019fa0bdc0e86",
+      "members": 4
+    },
+    {
+      "asset": "sources-2026-09-p001-5efc88fdad6f1a63.zip",
+      "bytes": 5078423,
+      "sha256": "972debf770be725b666b1c6be8de97629a214bbf37adc3fc2622856675282bc8",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-826c3c076d88e10f.zip",
+      "bytes": 9053,
+      "sha256": "e4821d6c86cc28ce017a8478337dd51cd94b4e5fb7d3bc65ff59915b8bbf6c54",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-bea1f4fba166bce1.zip",
+      "bytes": 3237833,
+      "sha256": "60c5a25ae58aa0a9f936c9dea8e81cf7f11257e5b68b341f084b661f9e849fd0",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-16d2cd5e347bdd6e.zip",
+      "bytes": 36262,
+      "sha256": "b8dc50c34a84ce7ca285a8dfbfa51705489a763888acd269d7af59b20b1d5ca2",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-c2b2b2b210b01279.zip",
+      "bytes": 117783,
+      "sha256": "ff10c6026b883f776eec1f8aed7e14f0f5eaf7d8b82c7bca6ba8fbe975245421",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-d69bf77851258744.zip",
+      "bytes": 65158580,
+      "sha256": "4b0026dd73db7323761caa0ac854dd808cb9be54b8373987b38087a93e6a783d",
+      "members": 224
+    },
+    {
+      "asset": "sources-2026-09-p002-a0e779b11854a7cb.zip",
+      "bytes": 80575144,
+      "sha256": "cec2b1495f84a1d83bf27db652bc1ad97a7364369b891362cd8ff3dd4d667134",
+      "members": 67
+    },
+    {
+      "asset": "sources-2026-09-p001-2ca97123be7113dd.zip",
+      "bytes": 28248,
+      "sha256": "e4604b8ca6feb4df06e09014bed6669c28eda54a40164832f0b283a634b1df63",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-035d29a61b9f77e5.zip",
+      "bytes": 28309,
+      "sha256": "96d02ecae5dace4294f41d875b9921d9c23ade2b08f96556c7164ac216d0526e",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-1a9e757dcab7c07b.zip",
+      "bytes": 7592827,
+      "sha256": "9d64f8bb70dfcabebdcf18f9c8966bfea8a12de6af7bb5211095c0d4fb60bdb4",
+      "members": 3
+    },
+    {
+      "asset": "sources-2026-09-p001-d2de618b6e81d2ca.zip",
+      "bytes": 3316718,
+      "sha256": "6e416632fdbdad02347998c9cded061357f95b01afd1da9d136051cf7cfda83c",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-3292cb9d17e5c1fa.zip",
+      "bytes": 24372,
+      "sha256": "cf60ae831afa12885e2fb03859296d5139cf47ea4bcea47bc1319cff4395e027",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-08f01faa71ae1c93.zip",
+      "bytes": 24370,
+      "sha256": "7b60345c6eb7b00e2bad5c8600115caeb9e779cad5da103cdb117ebe0294ef19",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-27d522a572f34ce9.zip",
+      "bytes": 24367,
+      "sha256": "0afe992b30334c691d038e98771cbd3dd3494dfdebf30664c0b0e237e89427cd",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-ce881d48a8963341.zip",
+      "bytes": 24370,
+      "sha256": "1935b0ef8261e04a8846bb51e31e657abd380944f96fb500f8cbb2c089e15e27",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-41d6077ac8b7a46b.zip",
+      "bytes": 27378,
+      "sha256": "218cd13eaff953a91d5ee9b5baed2f32a341bc6d8aeda26e6c2ed921814d0729",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-22c5c5243db4e67c.zip",
+      "bytes": 115462,
+      "sha256": "e0c5ebc81aad0903b90ebc37f5dac31020d4d2f255085969c802fce19725e2e6",
+      "members": 8
+    },
+    {
+      "asset": "sources-2026-09-p001-59a610d67be62ea8.zip",
+      "bytes": 435689,
+      "sha256": "6e5e9e8158f158de9bad457e959f522854a8a5436c56ca405121e37fa460df7e",
+      "members": 13
+    },
+    {
+      "asset": "sources-2026-09-p001-3148db97f7182c8b.zip",
+      "bytes": 36774,
+      "sha256": "e2adcd06296c69b2e283cb0b4b65769649fbf76ec89629845c61c17cbed5a45d",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-a56c72b1ee03c8be.zip",
+      "bytes": 1763081,
+      "sha256": "0a0be36b3443167db13fe5277d103836b52b1816802e5fa7d490cbddfd37d17e",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-b47e3943b85c886e.zip",
+      "bytes": 627508,
+      "sha256": "d546ff19a9b658200f909dcf3b0a555c7e002b48d012d80a88845ec4d58128c0",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-e56b2bd34880d161.zip",
+      "bytes": 3744,
+      "sha256": "06c992fadbc3d451e9363381b5223ac41bc685d8ec9112322ff040e7f867d6bc",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-b2540bd6673227da.zip",
+      "bytes": 230496,
+      "sha256": "1c05f8eb948a96e6d50dc3244199c8c3125844fa1f556b9f526f6795d676774c",
+      "members": 4
+    },
+    {
+      "asset": "sources-2026-09-p001-3d1ffd622bdb0324.zip",
+      "bytes": 2597,
+      "sha256": "e3ebbcb21036f350df5120a462d41c646174a54b61396f30ad1e1de5305c42d5",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-335d6ff2cb482f47.zip",
+      "bytes": 34557,
+      "sha256": "97fa16201280281f2d517df0ca209644ea6bbe7cb0de4da593283300965a1d5c",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-fe98c0c4302f3f99.zip",
+      "bytes": 82547,
+      "sha256": "720a9ead7b1624f7c1fbe9928ba89f37e5703cce72f4dd380aba605e571fbcff",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-1b1703bdc04d1fd6.zip",
+      "bytes": 24331,
+      "sha256": "0a217a38dadee583d6bf7886eefd6af8003b1c83fa774a5f1d5b1fa26b844869",
+      "members": 7
+    },
+    {
+      "asset": "sources-2026-09-p001-ed6649e0f7fae99b.zip",
+      "bytes": 248418,
+      "sha256": "f75c28e232c063ee26b796754159ede3a15e8a1c48a5c0d4b9451495ba2d18b2",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-6eb80751b560c184.zip",
+      "bytes": 1247107,
+      "sha256": "7c30794f59160ba8d85e17e3d9b17dca3982f44972cee4b6e2dac33ea4c156e3",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-0d42ebbcd5535d7d.zip",
+      "bytes": 58551,
+      "sha256": "41ae8386b24d556737d0061255566fbc2bc06af89c345a4530c5e4416b5c787c",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-0addd30d6c86ef0a.zip",
+      "bytes": 58555,
+      "sha256": "3b46f3a7efbc91dbaa2316e26046fecf5a7ccbaecbe8f665ce9c27044c2bf862",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-fd2fc3677d6d25f6.zip",
+      "bytes": 58543,
+      "sha256": "de0f5edf51b0a529a1899c1b49b3d10f369f1b039f2a81a56fb407229fe6fddc",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-28241b5d3eea33c0.zip",
+      "bytes": 58549,
+      "sha256": "c8e251751786de442ba28db8362abf3d0c7a01a096c639d4eda38c0d9013da71",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-8480343ac500c736.zip",
+      "bytes": 786842,
+      "sha256": "139d3cb00e545cb2ff0bc169d55370be4ee57286dc4210ee0ace68f123f96098",
+      "members": 5
+    },
+    {
+      "asset": "sources-2026-09-p001-fadb2df986c0a8e8.zip",
+      "bytes": 158920,
+      "sha256": "087df208c538652b1d3682800a57ce1947f734e56ee2e793d82238f278bb445a",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-2cb148819eaa5832.zip",
+      "bytes": 158912,
+      "sha256": "790c41b3a5f51eef46849c0d170124585c4547ce2c34a59e1da4b1f06753fd99",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-0222f9c988619a1c.zip",
+      "bytes": 158925,
+      "sha256": "7ff3e4d8eb48980006923c03500b0e2d48e3d4720672a9152613b51add53964e",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-ab2711d24622b58a.zip",
+      "bytes": 158925,
+      "sha256": "d2d3adc98bf7fa215153871e11b1245c1e583317e682c743124b19d6390a8fae",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-3a083dd68138b244.zip",
+      "bytes": 158928,
+      "sha256": "8307bb3067e0a4814dc9c5e2a76fbc4703cebfebec2f6bdc98fe365cb7f476a4",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-21a798a948d7fa30.zip",
+      "bytes": 158927,
+      "sha256": "3a2410979e9c3534d31cdf8cb79401be94cbea6e71448588960f1e91fed972a0",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-013e79f043a6bd41.zip",
+      "bytes": 158922,
+      "sha256": "355f6f04fe360dc74261d5740c6fe2f4ade605472a4cd6e93d93c24c2cc25e16",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-0e056c49c4825b21.zip",
+      "bytes": 158921,
+      "sha256": "0fd6ff05a83cbf2195f161547816c379d300eef9db912dd98f3dbc5097e3f391",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-1848120178d760a8.zip",
+      "bytes": 158923,
+      "sha256": "b5e80d2273116132a1d6d8d49c688447bbad95fcf9955d0d7707f278bdd4b23f",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-1984dc13733d2916.zip",
+      "bytes": 310216,
+      "sha256": "1b23cd95c2b88f88e37eb3baa30e976bbb22493f24cef7c99d7c5a6448931622",
+      "members": 8
+    },
+    {
+      "asset": "sources-2026-09-p001-c3987adde9451108.zip",
+      "bytes": 2761,
+      "sha256": "011c203c98fb151ba9505e3cfa8668ce4dbbf2a010c174389ff6d53ed1a43e7f",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-2e81dd9a3509840e.zip",
+      "bytes": 316200,
+      "sha256": "e3c16b28769aa614261949abd79ad94e7b13527679b413b328053e8565b4be1f",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-ce2c1fc559dcc2bd.zip",
+      "bytes": 18166,
+      "sha256": "f91709721ba6e8d133367344877e80c387edd617538499a36094e7774621581b",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-3c7d49b80ee8530b.zip",
+      "bytes": 18169,
+      "sha256": "30a7756c997b933bb3a8123211b954a6943091f0443e3974838b621c2464cc3e",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-8f4b1e2b676d2e0e.zip",
+      "bytes": 164271,
+      "sha256": "1f3498a47253a907c30a452142bab304d7c5fd9703de6ed9b5b8dda2e80e39b5",
+      "members": 8
+    },
+    {
+      "asset": "sources-2026-09-p001-db2378b9e5269308.zip",
+      "bytes": 520,
+      "sha256": "3421efc0a4fc707b7de09560eaa6ef7eeb9f30582baa4f05316ba203d21feaa2",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-52e8a117aa387743.zip",
+      "bytes": 798,
+      "sha256": "9d3d4a8fcb57a5c27159bb45b0802d00fa3a1a6986507bf878fce3a7ab214389",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-fdcb9dc17889e4c2.zip",
+      "bytes": 118631,
+      "sha256": "f99fdbe9a4d43c05a435809fad88e42769f6f5f07602766b22d76af97e06c7db",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-47e7c3737ad53a15.zip",
+      "bytes": 174939,
+      "sha256": "5d69a91a340776cbcd552dca7de55428df11a8df5c395fcdce791bfdbf62ae64",
+      "members": 4
+    },
+    {
+      "asset": "sources-2026-09-p001-c20f4f0401da83bb.zip",
+      "bytes": 1540320,
+      "sha256": "5798bce886cb51066dee2a5eb5043fcc644cb9f8b85d482bfa78fcdf97792354",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-2fe762265c220a13.zip",
+      "bytes": 16839,
+      "sha256": "4494116452b9f248de86303285bbacbacedbd2b626b2e3936680ae782f56b0f6",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-f46a2827238f23a3.zip",
+      "bytes": 222381,
+      "sha256": "9f5c3ed7fc2101700112e38bdba00492750e5d4fb0911aaad2c13d95033ac558",
+      "members": 3
+    },
+    {
+      "asset": "sources-2026-09-p001-89e75409b84de239.zip",
+      "bytes": 130303,
+      "sha256": "7ccba6d434eec677723b4e6f4f3bee1fcd3fe8d9bfd25775dcb42ad18a7a1f5a",
+      "members": 2
+    },
+    {
+      "asset": "sources-2026-09-p001-4340a2ade4ed3cac.zip",
+      "bytes": 154658,
+      "sha256": "0691fa170850d90b352e90674c852a9a3acf9c75f71a812f157212ff8f8c63f9",
+      "members": 4
+    },
+    {
+      "asset": "sources-2026-09-p001-35561f6655c4a982.zip",
+      "bytes": 5977,
+      "sha256": "cffeea81c42c8b027d9d41201122f9f97329422f87da8f175cd446fc099ab41c",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-b7dd7d0d076551f8.zip",
+      "bytes": 63315077,
+      "sha256": "051f70a552760a4d207382fcc0889009cfe0af87d9cb65890a2801090220daf7",
+      "members": 238
+    },
+    {
+      "asset": "sources-2026-09-p002-c4bf3b50c08796b9.zip",
+      "bytes": 74060893,
+      "sha256": "03de011b5ceddc2b9ccadaf9cc7eb27c4717c26391b2bd51c761d70c7ebf930c",
+      "members": 63
+    },
+    {
+      "asset": "sources-2026-09-p001-74cab425da57092e.zip",
+      "bytes": 4487842,
+      "sha256": "3f0f7c151fd45046529bb42bd9019a89558476333b22d05a76edfda52a4d3df1",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-84582a96aca00b70.zip",
+      "bytes": 135428,
+      "sha256": "05e4be52383a4e7bce8b35c90454ab1c8deffcc8f0ea6e6e54e9061262ad4882",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-6db9ddf5c78d0bfe.zip",
+      "bytes": 962,
+      "sha256": "1dbcf60247a86d83ca140429e7441105f4e2aaa8c0cf19251f13fbe5a4489cc2",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-9c4e64bf4e04a4ee.zip",
+      "bytes": 1246,
+      "sha256": "53aabd032bd4be11d9692fd5a59c7ef8ef0acf3f855dbbf22660fe416bea4a14",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-77fc66026eefafb1.zip",
+      "bytes": 177320,
+      "sha256": "4fecdb495ec308e2c5424d9229aee127f9198e348587277ab8eba9ba207c8068",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-785b823d2e849812.zip",
+      "bytes": 98931,
+      "sha256": "6d533b7ab63a7de3467a160b26d88e2396146757a84deace1db514c3a95b9d1a",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-8c62580c514c4526.zip",
+      "bytes": 102641,
+      "sha256": "ea857ef597a99a31d7bfae653908b24220bc48d670cbcb5ec51e4bb5bf1a13ed",
+      "members": 1
+    },
+    {
+      "asset": "sources-2026-09-p001-f24e1173c664bb50.zip",
+      "bytes": 577107,
+      "sha256": "cc5b2a6b1fc2646ec6a8da1e024cf2bba422eddf40cea1eb6d815941c6666616",
+      "members": 1
+    }
+  ],
+  "live_amc_urls_checked": 0,
+  "validation_run_id": "36092819677",
+  "source_commit": "6309a207b27e86bfb850694b00bba80f6b7f09b5",
+  "tests_passed": 297
+}
