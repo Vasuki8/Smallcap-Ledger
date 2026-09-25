@@ -59,8 +59,8 @@ MIRAE_NSDL_CODE = "MIRA/O/E/SCF/24/10/0075"
 MIRAE_TER_PAGE = "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/total-expense-ratio"
 MIRAE_DOWNLOADS_API = "https://www.miraeassetmf.co.in/AjaxService/GetDownloadsData"
 MIRAE_FILE_BASE = "https://www.miraeassetmf.co.in"
-_MIRAE_TITLE = re.compile(r"^Total Expense Ratio -(\\d{2}) ([A-Za-z]{3}) (20\\d{2})$")
-_MIRAE_FILE = re.compile(r"^/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_(\\d{2})(\\d{2})(20\\d{2})\\.xls$", re.I)
+_MIRAE_TITLE = re.compile(r"^Total Expense Ratio -(\d{2}) ([A-Za-z]{3}) (20\d{2})$")
+_MIRAE_FILE = re.compile(r"^/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_(\d{2})(\d{2})(20\d{2})\.xls$", re.I)
 _MIRAE_HEADER_1 = (
     "NSDL Scheme Code", "Scheme Name", "TER Date (DD/MM/ YYYY)",
     "Regular", "", "", "", "", "Direct", "", "", "", "",
