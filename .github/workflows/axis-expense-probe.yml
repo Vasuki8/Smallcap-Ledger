@@ -11,7 +11,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     env:
       SMALLCAP_NO_SCHEDULER: '1'
     steps:
@@ -21,7 +21,7 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Locate Axis TER implementation module
+      - name: Resolve Axis TER API function
         run: |
           uv run --frozen python - <<'PY'
           import html,re
@@ -34,14 +34,35 @@ jobs:
           page="https://www.axismf.com/servicecenter/navterandothers/totalexpenseratio"
           raw,_,_=read(page)
           soup=BeautifulSoup(raw,"html.parser")
-          scripts=[urljoin(page,html.unescape(t["src"])) for t in soup.find_all("script",src=True)]
+          scripts=[]
+          for tag in soup.find_all("script",src=True):
+              url=urljoin(page,html.unescape(tag["src"]))
+              if url not in scripts:scripts.append(url)
+
+          needle="fetchExpenseRatioDetails"
           for url in scripts:
-              body,_,_=read(url,archive=False)
+              try:
+                  body,_,_=read(url,archive=False)
+              except Exception as e:
+                  print("SCRIPT_ERROR",url,repr(e));continue
               text=body.decode("utf-8","replace")
-              for needle in ("36579:function","36579:","TotalExpenseRatioModule"):
-                  i=text.find(needle)
-                  if i>=0:
-                      print("FOUND",needle,url,"BYTES",len(body))
-                      print(text[max(0,i-8000):min(len(text),i+30000)])
-                      break
+              if needle not in text:continue
+              print("FOUND_SYMBOL",url,"BYTES",len(body),"COUNT",text.count(needle))
+              pos=0
+              while True:
+                  i=text.find(needle,pos)
+                  if i<0:break
+                  print("SYMBOL_SNIP",text[max(0,i-12000):min(len(text),i+12000)])
+                  pos=i+len(needle)
+
+          # Also capture request-shaped literals from only the component chunk.
+          component=next((u for u in scripts if u.endswith("/183-0b7c0e7078c2d2b0.js")),None)
+          if component:
+              body,_,_=read(component,archive=False)
+              text=body.decode("utf-8","replace")
+              literals=sorted(set(re.findall(r'["\']([^"\']{2,350})["\']',text)))
+              for value in literals:
+                  if re.search(r'expense|ratio|ter|scheme|plan|fromDate|toDate|download',value,re.I):
+                      if re.search(r'css|svg|png|jpg|font|tooltip|router|webpack|editor|filter|center',value,re.I):continue
+                      print("LITERAL",value)
           PY
