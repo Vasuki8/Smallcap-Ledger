@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after historical NAV-gap source classification deployment.
+Updated: 2026-09-25, after evidence-aware performance benchmark API deployment.
 
 
 
@@ -25,6 +25,79 @@ Updated: 2026-09-25, after historical NAV-gap source classification deployment.
 
 
 
+
+## Latest completed batch: evidence-aware performance benchmark API
+
+**The backend performance endpoint no longer silently substitutes the global Nifty Smallcap 250 TRI series when a fund explicitly reports a different benchmark.** PR **#137** merged as commit `40047da14133b585c95146d0f90fcf902448356d`.
+
+### API contract
+
+`GET /api/funds/{code}/performance` now resolves the fund family's latest reported benchmark metric through the same explicit-TRI identity rules used by the performance coverage audit.
+
+The response now includes:
+
+- `reported_benchmark` — reported label, canonical TRI series, source/date/unit, availability and identity status;
+- `comparison_series` — the series actually used for comparison, its role, availability/status and source metadata;
+- the legacy `benchmark` / `benchmark_source` fields remain for compatibility, but they now reflect the resolved comparison rather than a global default.
+
+Default behavior when no `benchmark` query parameter is supplied:
+
+- if the fund's reported canonical TRI series is retained, that series is used with `comparison_series.role = reported_benchmark`;
+- if the reported canonical series is known but unavailable, the API returns that reported series name with `reported_benchmark.status = series_missing`, `comparison_series.status = reported_series_missing`, `comparison_series.available = false`, no benchmark source and **no comparison points**;
+- an unverified/unmapped benchmark identity is not silently mapped to Nifty.
+
+Explicit alternate behavior:
+
+- a caller may still request `?benchmark=Nifty Smallcap 250 TRI` or another retained comparison series;
+- if that request differs from the fund's reported canonical benchmark, the response labels it `comparison_series.role = alternate_comparison`;
+- the `reported_benchmark` object remains unchanged, so an alternate comparison cannot masquerade as the fund's stated benchmark.
+
+This means the **20 Growth plans across the 10 BSE-benchmarked funds** no longer default to Nifty at the backend API layer while the BSE 250 SmallCap TRI series is unavailable.
+
+### Regression and production verification
+
+New regression coverage proves:
+
+1. a Nifty-benchmarked Growth fund defaults to the retained **Nifty Smallcap 250 TRI** and returns a normal reported-benchmark comparison;
+2. a BSE-benchmarked Growth fund with no retained BSE TRI history returns **no default substitute comparison**, `reported_series_missing`, and no benchmark source;
+3. the same BSE-benchmarked fund can explicitly request Nifty and receives comparison points labelled **alternate_comparison** while its reported BSE identity remains visible.
+
+Production workflow **#496 / run 36178229573** completed successfully on the real restored checkpoint at **2026-09-25T19:14:14Z**:
+
+- syntax/dependency setup and checkpoint restore passed;
+- all normal source upgrade steps passed;
+- database compaction passed;
+- **338 tests passed**, including both new performance benchmark-selection tests;
+- site generation and generated-data/download validation passed;
+- cumulative-history publication and status recording passed;
+- Pages deployment passed.
+
+Status commit: `b24b0747cd6e15c7e0eedf5f461ae9c14706b3e4`.
+
+Pages artifact **10883086851** is **230,659,980 bytes** with digest `sha256:e0612e03ca52272870e0e089edf3512d007e87bdf15110a09ffeffa9e10257d0`.
+
+### Important boundary
+
+**This batch changed the Python/backend API contract only.** The hosted GitHub Pages client currently uses `dist/static-data.js` + `dist/analytics.js` and `dist/app.js`, which still contain the older client-side Nifty fallback behavior. Do not claim the public performance screen is fixed yet.
+
+### Next backend/UI integration task
+
+**Make the hosted/static performance path consume the verified evidence-aware benchmark contract and remove the client-side silent Nifty fallback.**
+
+The next batch should:
+
+- update the static request adapter / analytics response so hosted `/api/funds/{code}/performance` exposes the same `reported_benchmark` and `comparison_series` semantics as the Python API;
+- stop `dist/app.js` from falling back to Nifty when a fund reports BSE but the BSE TRI series is unavailable;
+- for a missing reported BSE series, show the fund's reported benchmark and a clear **history unavailable** state with no default comparison chart/return table;
+- keep the Advanced benchmark control, but label a user-selected Nifty series clearly as an **alternate comparison**, never as the reported benchmark;
+- make chart legends, return-table headings, benchmark notes and overview copy read from the API/static response contract rather than from `state.benchmark` assumptions;
+- preserve IDCW/no-total-return behavior;
+- add Python/static parity regression tests for Nifty default, BSE missing-series default, BSE + explicit Nifty alternate, and IDCW;
+- verify the deployed light/minimal UI on GitHub Pages after the static contract is aligned.
+
+The historical BSE TRI source remains blocked under the current free first-party-source rule. Do not substitute the BSE price index, derive TRI, or add an unapproved third-party series.
+
+Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`; the **700 link-only retention candidates and legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: historical NAV-gap source classification
 
