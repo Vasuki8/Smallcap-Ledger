@@ -1,0 +1,56 @@
+name: Inspect Mahindra TER disclosure
+
+on:
+  push:
+    branches: [backend/mahindra-ter-v134]
+    paths: [.github/workflows/inspect-mahindra-ter.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Trace Mahindra downloads TER source
+        run: |
+          python - <<'PY'
+          import re, urllib.parse, urllib.request
+          page='https://www.mahindramanulife.com/downloads'
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
+          def fetch(url):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  b=r.read()
+                  print('FETCH',r.status,len(b),r.headers.get('content-type'),r.geturl())
+                  return b,r.geturl()
+          body,final=fetch(page)
+          html=body.decode('utf-8','ignore')
+          print('TITLE',re.findall(r'<title[^>]*>(.*?)</title>',html,re.I|re.S)[:1])
+          for needle in ['Total Expense Ratio','mandatory-disclosures','downloads','TER']:
+              p=0;n=0
+              while True:
+                  p=html.lower().find(needle.lower(),p)
+                  if p<0 or n>=20:break
+                  print('PAGE_CTX',needle,re.sub(r'\s+',' ',html[max(0,p-1400):p+3200])[:4800])
+                  p+=len(needle);n+=1
+          scripts=[urllib.parse.urljoin(final,x) for x in re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I)]
+          print('SCRIPT_COUNT',len(scripts))
+          for full in scripts:
+              try:b,_=fetch(full)
+              except Exception as e:
+                  print('SCRIPT_ERROR',full,type(e).__name__,e);continue
+              s=b.decode('utf-8','ignore')
+              if not re.search(r'Total Expense Ratio|mandatory-disclosures|download|expense.?ratio|api/',s,re.I):
+                  continue
+              print('SCRIPT_MATCH',full,'LEN',len(s))
+              for needle in ['Total Expense Ratio','mandatory-disclosures','expenseRatio','expense-ratio','GetDownload','downloads','api/']:
+                  p=0;n=0
+                  while True:
+                      p=s.lower().find(needle.lower(),p)
+                      if p<0 or n>=30:break
+                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1200):p+3000])[:4400])
+                      p+=len(needle);n+=1
+          PY
