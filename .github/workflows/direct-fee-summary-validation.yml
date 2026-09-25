@@ -1,0 +1,28 @@
+name: Validate Direct fee summary preference
+
+on:
+  push:
+    branches: [fix/direct-fee-summary-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Compile
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: Unit tests
+        run: uv run --frozen python -m unittest discover -s tests -v
