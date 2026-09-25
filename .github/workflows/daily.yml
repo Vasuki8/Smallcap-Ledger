@@ -53,8 +53,6 @@ jobs:
         run: uv run --frozen python -m compileall -q tracker scripts tests
       - name: Restore cumulative history
         run: uv run --frozen python scripts/github_state.py restore
-      - name: Prepare retention metadata without deleting binaries
-        run: uv run --frozen python scripts/prepare_retention_metadata.py --apply --report deployment/retention-readiness.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
@@ -123,6 +121,8 @@ jobs:
         run: uv run --frozen python scripts/daily_update.py
       - name: Recover any interrupted collection status
         run: uv run --frozen python -c "from tracker import db; db.init(recover=True)"
+      - name: Prepare retention metadata without deleting binaries
+        run: uv run --frozen python scripts/prepare_retention_metadata.py --apply --report deployment/retention-readiness.json
       - name: Compact redundant database indexing
         run: uv run --frozen python scripts/compact_database.py --apply --report deployment/storage-layout-v1.json
       - name: Check archive and financial calculations
