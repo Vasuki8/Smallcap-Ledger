@@ -16,6 +16,7 @@ from fastapi.responses import FileResponse,Response
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 from . import db,analytics,providers,disclosures
+from .portfolio_limitations import portfolio_limitation
 from .sync import updater
 
 
@@ -111,7 +112,9 @@ def funds():
         s['metrics']=metrics_for(s)
         s['available_expenses']=available_expenses(s)
         s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
-        s['portfolio']=db.one("SELECT id,as_of,complete FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
+        s['portfolio']=db.one("SELECT id,as_of,complete,source FROM portfolios WHERE family=? ORDER BY as_of DESC,complete DESC,id DESC LIMIT 1",(s['family'],))
+        s['portfolio_limitation']=portfolio_limitation(s['family'],s['portfolio'])
+        if s['portfolio'] is not None:s['portfolio']['limitation']=s['portfolio_limitation']
         s['stale_days']=(date.today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
     return {"funds":records,"as_of":db.now()}
 
@@ -131,6 +134,8 @@ def fund(code:int):
       WHERE p.family=? AND p.as_of=(SELECT MAX(as_of) FROM portfolios WHERE family=?)
       GROUP BY p.id ORDER BY p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
       (s['family'],s['family']))
+    for p in s['portfolios']:p['limitation']=portfolio_limitation(s['family'],p)
+    s['portfolio_limitation']=s['portfolios'][0]['limitation'] if s['portfolios'] else portfolio_limitation(s['family'])
     s['sources']=db.rows("SELECT * FROM source_pages WHERE instr(lower(?),lower(amc_match))>0 ORDER BY id",(s['amc'],))
     s['distribution_coverage']=db.one("SELECT * FROM distribution_coverage WHERE code=?",(code,))
     return s
@@ -179,6 +184,7 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str=pro
 def holdings(snapshot_id:int):
     p=db.one("SELECT * FROM portfolios WHERE id=?",(snapshot_id,))
     if not p:raise HTTPException(404,"Snapshot not found")
+    p['limitation']=portfolio_limitation(p['family'],p)
     p['holdings']=db.rows("SELECT * FROM holdings WHERE snapshot_id=? ORDER BY weight DESC",(snapshot_id,))
     current=date.fromisoformat(p['as_of']);previous_month=(current.replace(day=1)-timedelta(days=1)).strftime('%Y-%m')
     prior=db.one("""SELECT p.*,COUNT(h.id) holding_count,
@@ -187,6 +193,7 @@ def holdings(snapshot_id:int):
       WHERE p.family=? AND substr(p.as_of,1,7)=?
       GROUP BY p.id ORDER BY p.as_of DESC,p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
       (p['family'],previous_month))
+    if prior:prior['limitation']=portfolio_limitation(prior['family'],prior)
     p['previous']=prior;p['changes']=[]
     if prior:
         old=db.rows("SELECT * FROM holdings WHERE snapshot_id=?",(prior['id'],))
