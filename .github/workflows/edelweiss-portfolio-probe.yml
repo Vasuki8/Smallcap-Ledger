@@ -1,4 +1,4 @@
-name: Edelweiss embedded portfolio-link probe
+name: Edelweiss retained source audit
 
 on:
   push:
@@ -27,44 +27,33 @@ jobs:
         run: uv sync --frozen
       - name: Restore cumulative history
         run: uv run --frozen python scripts/github_state.py restore
-      - name: Extract embedded Edelweiss portfolio hyperlinks
+      - name: Audit retained Edelweiss portfolio source evidence
         run: |
           uv run --frozen python - <<'PY'
-          import io
-          from pypdf import PdfReader
           from tracker import db
-          from scripts import github_state
 
-          row=db.one("""SELECT d.url,dv.hash,a.path
-              FROM documents d JOIN document_versions dv ON dv.document_id=d.id
-              JOIN archives a ON a.hash=dv.hash
+          print('DOCUMENTS')
+          for r in db.rows("""SELECT d.title,d.kind,d.url,d.last_seen,dv.hash,a.bytes,a.media_type
+              FROM documents d
+              LEFT JOIN document_versions dv ON dv.document_id=d.id
+              LEFT JOIN archives a ON a.hash=dv.hash
               WHERE d.family='Edelweiss Small Cap Fund'
-                AND d.url LIKE '%Edelweiss_Factsheet_September_2026%'
-              ORDER BY dv.observed_at DESC LIMIT 1""")
-          assert row
-          github_state.materialize_hashes([row['hash']])
-          raw=(db.DATA/row['path']).read_bytes()
-          reader=PdfReader(io.BytesIO(raw))
-          page=reader.pages[14]
-          print('SOURCE',row['url'])
-          print('HASH',row['hash'])
-          annots_obj=page.get('/Annots')
-          annots=annots_obj.get_object() if hasattr(annots_obj,'get_object') else (annots_obj or [])
-          print('ANNOT_COUNT',len(annots))
-          urls=[]
-          for idx,ref in enumerate(annots):
-              obj=ref.get_object()
-              action=obj.get('/A')
-              uri=action.get('/URI') if action else None
-              dest=obj.get('/Dest')
-              rect=obj.get('/Rect')
-              if uri:
-                  uri=str(uri)
-                  urls.append(uri)
-                  print('ANNOT_URI',idx,rect,uri)
-              elif dest:
-                  print('ANNOT_DEST',idx,rect,dest)
-          print('UNIQUE_URLS')
-          for u in dict.fromkeys(urls):
-              print(u)
+                AND (lower(d.title) LIKE '%portfolio%' OR lower(d.url) LIKE '%portfolio%'
+                     OR lower(d.url) LIKE '%.xls%' OR lower(d.url) LIKE '%.csv%')
+              ORDER BY d.last_seen DESC,d.url,dv.observed_at DESC"""):
+              print(r)
+
+          print('SOURCE_PAGES')
+          for r in db.rows("""SELECT amc_match,url,label,kind,last_checked,status,detail
+              FROM source_pages WHERE lower(amc_match) LIKE '%edelweiss%'
+              ORDER BY last_checked DESC,url"""):
+              print(r)
+
+          print('FETCHES')
+          for r in db.rows("""SELECT url,fetched_at,status,hash,detail
+              FROM fetches
+              WHERE lower(url) LIKE '%edelweissmf.com%'
+                AND (lower(url) LIKE '%portfolio%' OR lower(url) LIKE '%.xls%')
+              ORDER BY fetched_at DESC LIMIT 100"""):
+              print(r)
           PY
