@@ -1,6 +1,6 @@
 # Historical performance and benchmark coverage audit
 
-Prepared: 2026-09-25T18:43:06+00:00
+Prepared: 2026-09-25T18:51:55+00:00
 
 **Read-only:** retained NAV/benchmark evidence only; no forward-fill, return fabrication, source fetch or UI change.
 
@@ -11,6 +11,7 @@ Prepared: 2026-09-25T18:43:06+00:00
 - Explicit reported TRI identities on Growth plans: **72**.
 - Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **52**.
 - Growth plans where the explicit reported TRI differs from the website's current default **Nifty Smallcap 250 TRI**: **20**.
+- Verified official-history NAV gaps: **5 intervals across 2 Growth plans**; retained as evidence, not actionable missing-value repairs.
 
 | Horizon | NAV return eligible Growth plans | Relevant benchmark overlap eligible Growth plans |
 | --- | ---: | ---: |
@@ -22,13 +23,21 @@ Prepared: 2026-09-25T18:43:06+00:00
 
 | Priority | Repair | Affected funds | Affected Growth plans | Reason |
 | ---: | --- | ---: | ---: | --- |
-| 1 | collect_bse_250_smallcap_tri | 10 | 20 | Funds explicitly report BSE 250 SmallCap TRI, but no matching historical TRI series is retained. |
-| 3 | review_nav_history_gaps | 2 | 2 | Growth NAV histories contain one or more gaps longer than seven calendar days. |
+| 1 | collect_bse_250_smallcap_tri | 10 | 20 | Funds explicitly report BSE 250 SmallCap TRI, but no matching historical TRI series is retained; the first-party daily-history route is currently subscription-distributed. |
 
 ### Affected funds
 
 - **collect_bse_250_smallcap_tri:** Aditya Birla Sun Life Small Cap Fund, Bajaj Finserv Small Cap Fund, Bandhan Small Cap Fund, DSP Small Cap Fund, HDFC Small Cap Fund, Invesco India Small Cap Fund, Mahindra Manulife Small Cap Fund, Quantum Small Cap Fund, SBI Small Cap Fund, Union Small Cap Fund
-- **review_nav_history_gaps:** Aditya Birla Sun Life Small Cap Fund, DSP Small Cap Fund
+
+## Verified official-history NAV gaps
+
+These raw date gaps remain visible, but current official histories do not supply intermediate NAV observations. No value is interpolated or inferred.
+
+- **Aditya Birla Sun Life Small Cap Fund · Regular · Growth · 105804**: 2010-05-31 → 2010-06-08 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
+- **DSP Small Cap Fund · Regular · Growth · 105989**: 2007-08-08 → 2007-08-16 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
+- **DSP Small Cap Fund · Regular · Growth · 105989**: 2008-08-27 → 2008-09-04 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
+- **DSP Small Cap Fund · Regular · Growth · 105989**: 2010-03-17 → 2010-03-25 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
+- **DSP Small Cap Fund · Regular · Growth · 105989**: 2010-04-07 → 2010-04-15 (8 calendar days) · verified_official_history_gap · verified 2026-09-25
 
 ## Per-plan audit
 
@@ -38,7 +47,7 @@ Prepared: 2026-09-25T18:43:06+00:00
 | Abakkus Small Cap Fund · Regular · Growth · 154214 | 2026-03-20 → 2026-09-24 · 128 | no | no | no | NIFTY SmallCap 250 TRI | Nifty Smallcap 250 TRI | 2026-03-20 → 2026-09-24 · 127 | nav_1y_return_unavailable, nav_3y_return_unavailable, nav_5y_return_unavailable, benchmark_1y_overlap_unavailable, benchmark_3y_overlap_unavailable, benchmark_5y_overlap_unavailable |
 | Aditya Birla Sun Life Small Cap Fund · Direct · Growth · 119556 | 2013-01-07 → 2026-09-24 · 3375 | yes | yes | yes | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
 | Aditya Birla Sun Life Small Cap Fund · Direct · IDCW · 119557 | 2013-01-02 → 2026-09-24 · 3378 | n/a | n/a | n/a | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
-| Aditya Birla Sun Life Small Cap Fund · Regular · Growth · 105804 | 2007-05-31 → 2026-09-24 · 4750 | yes | yes | yes | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | nav_large_gap, reported_tri_series_missing, website_default_benchmark_mismatch |
+| Aditya Birla Sun Life Small Cap Fund · Regular · Growth · 105804 | 2007-05-31 → 2026-09-24 · 4750 | yes | yes | yes | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
 | Aditya Birla Sun Life Small Cap Fund · Regular · IDCW · 105805 | 2007-05-31 → 2026-09-24 · 4750 | n/a | n/a | n/a | BSE 250 Small Cap Index TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | nav_large_gap, reported_tri_series_missing, website_default_benchmark_mismatch |
 | Axis Small Cap Fund · Direct · Growth · 125354 | 2013-12-05 → 2026-09-24 · 3158 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-12-05 → 2026-09-24 · 3147 | none |
 | Axis Small Cap Fund · Direct · IDCW · 125351 | 2013-12-05 → 2026-09-24 · 3158 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2013-12-05 → 2026-09-24 · 3147 | none |
@@ -66,7 +75,7 @@ Prepared: 2026-09-25T18:43:06+00:00
 | Canara Robeco Small Cap Fund · Regular · IDCW · 146128 | 2019-02-19 → 2026-09-24 · 1871 | n/a | n/a | n/a | Nifty Smallcap 250 Index TRI | Nifty Smallcap 250 TRI | 2019-02-19 → 2026-09-24 · 1868 | none |
 | DSP Small Cap Fund · Direct · Growth · 119212 | 2013-01-02 → 2026-09-24 · 3381 | yes | yes | yes | BSE 250 Small Cap TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
 | DSP Small Cap Fund · Direct · IDCW · 119213 | 2013-01-03 → 2026-09-24 · 3380 | n/a | n/a | n/a | BSE 250 Small Cap TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
-| DSP Small Cap Fund · Regular · Growth · 105989 | 2007-06-20 → 2026-09-24 · 4212 | yes | yes | yes | BSE 250 Small Cap TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | nav_large_gap, reported_tri_series_missing, website_default_benchmark_mismatch |
+| DSP Small Cap Fund · Regular · Growth · 105989 | 2007-06-20 → 2026-09-24 · 4212 | yes | yes | yes | BSE 250 Small Cap TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
 | DSP Small Cap Fund · Regular · IDCW · 113153 | 2010-08-03 → 2026-09-24 · 3979 | n/a | n/a | n/a | BSE 250 Small Cap TRI | BSE 250 SmallCap TRI | Gap → Gap · 0 | reported_tri_series_missing, website_default_benchmark_mismatch |
 | Edelweiss Small Cap Fund · Direct · Growth · 146196 | 2019-02-14 → 2026-09-24 · 1876 | yes | yes | yes | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2019-02-14 → 2026-09-24 · 1871 | none |
 | Edelweiss Small Cap Fund · Direct · IDCW · 146197 | 2019-02-14 → 2026-09-24 · 1876 | n/a | n/a | n/a | Nifty Smallcap 250 TRI | Nifty Smallcap 250 TRI | 2019-02-14 → 2026-09-24 · 1871 | none |
@@ -184,4 +193,5 @@ Prepared: 2026-09-25T18:43:06+00:00
 - Benchmark overlap uses exact common dates only; no forward-fill or interpolation is performed.
 - A reported benchmark identity is not treated as historical TRI coverage unless the retained identity explicitly establishes a total-return index.
 - website_default_mismatch flags plans whose explicit reported TRI benchmark differs from the website's current global default comparison series.
+- Verified official-history NAV gaps remain visible as raw gaps but are excluded from the actionable missing-data queue; no NAV is inferred.
 - This audit is read-only and uses retained NAV, benchmark and metric evidence only.
