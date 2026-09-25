@@ -17,13 +17,117 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after Axis full recovery and material source-change watch deployment.
+Updated: 2026-09-25, after historical performance / benchmark coverage audit deployment.
 
 
 
 
 
 
+
+
+## Latest completed batch: historical performance / benchmark coverage audit
+
+**The backend now publishes a read-only per-plan audit of NAV history, displayed-return eligibility and relevant benchmark-series coverage. No historical return was invented, no benchmark value was forward-filled, no source was fetched by the audit, and no UI behavior changed.**
+
+PR **#122** merged as commit `4a205bb26dc9a622e545f1d8e83f498496a170f6`. Validation run **36155574354** passed compileall, all **332 tests**, restored the production checkpoint, verified that the audit is read-only, and checked the production repair ranking.
+
+Production workflow **#482**, run **36155756588**, then completed successfully through all source upgrades, the **332-test** regression gate, site generation/validation, split history publication, performance-audit/status recording, Pages artifact upload and Pages deployment at **2026-09-25T15:42:46Z**.
+
+Final Pages artifact **10873013694** is **230,748,479 bytes** with digest `sha256:3e025e7427e713a960d4b3c73f27d26b37f6d44653026608d07a7f93728076e1`. Status commit `99dec7b6938f295151f81d1d14358a08b1dca186` records the deployed collection/coverage state and generated audit.
+
+### Audit contract and published evidence
+
+New module `tracker/performance_coverage.py` audits all retained plan NAV series against each fund's latest reported benchmark identity. The normal status recorder now publishes:
+
+- `docs/PERFORMANCE-COVERAGE-AUDIT.json` — machine-readable per-plan evidence;
+- `docs/PERFORMANCE-COVERAGE-AUDIT.md` — operator-readable summary and repair queue.
+
+The audit mirrors the website's current **7-day** historical anchor tolerance for displayed 1Y / 3Y / 5Y returns but does not calculate or store substitute returns. Benchmark overlap uses **exact common dates only**; there is no forward-fill or interpolation.
+
+A reported benchmark identity is treated as historical TRI coverage only when the retained identity explicitly establishes a total-return index and a matching retained series exists. The audit separately records the website's current global default benchmark, `Nifty Smallcap 250 TRI`, so a plan can be flagged when the UI is able to compare against Nifty even though the fund explicitly reports a different TRI.
+
+Production audit generated at **2026-09-25T15:42:06Z**:
+
+- plans **143**
+- Growth plans **72**
+- reported benchmark identity **36/36 funds**
+- Growth plans with explicit reported TRI identity **66**
+- Growth plans with the relevant reported TRI series and at least two exact overlapping dates **46**
+- Growth plans whose explicit reported TRI differs from the website's current Nifty default **20**
+
+Displayed NAV-return eligibility among Growth plans:
+- **1Y: 62 / 72**
+- **3Y: 48 / 72**
+- **5Y: 44 / 72**
+
+Relevant reported-benchmark overlap eligibility:
+- **1Y: 38 / 72**
+- **3Y: 28 / 72**
+- **5Y: 26 / 72**
+
+The tracker currently retains only one historical benchmark series:
+
+- `Nifty Smallcap 250 TRI`
+- first observation **2005-04-01**
+- latest observation **2026-09-24**
+- observations **5,329**
+- gaps longer than 7 calendar days **0**
+
+### Repair priorities produced by the audit
+
+**Priority 1 — collect `BSE 250 SmallCap TRI` history.**
+
+Ten funds explicitly report BSE 250 SmallCap TRI (or equivalent Total Return Index wording), affecting **20 Growth plans**, but there is no matching BSE TRI series in the database:
+
+- Aditya Birla Sun Life Small Cap Fund
+- Bajaj Finserv Small Cap Fund
+- Bandhan Small Cap Fund
+- DSP Small Cap Fund
+- HDFC Small Cap Fund
+- Invesco India Small Cap Fund
+- Mahindra Manulife Small Cap Fund
+- Quantum Small Cap Fund
+- SBI Small Cap Fund
+- Union Small Cap Fund
+
+Those plans currently have `reported_tri_series_missing` and `website_default_benchmark_mismatch`. Do **not** treat the existing Nifty comparison as the fund's relevant reported benchmark merely because the website endpoint defaults to Nifty.
+
+**Priority 2 — verify non-TRI benchmark identities.**
+
+Three funds / **6 Growth plans** have retained benchmark identity text that does not explicitly establish TRI:
+
+- Edelweiss Small Cap Fund — `Nifty Smallcap 250`
+- Franklin India Small Cap Fund — `Nifty Smallcap 250`
+- Groww Small Cap Fund — `Nifty Smallcap 250 Index`
+
+Do not silently map these identities to the retained Nifty TRI series without new first-party evidence explicitly establishing total-return benchmark identity.
+
+**Priority 3 — review true NAV-history gaps.**
+
+The audit found >7-day NAV gaps affecting **2 Growth plans** across:
+- Aditya Birla Sun Life Small Cap Fund
+- DSP Small Cap Fund
+
+These are separate from normal fund age limitations. Newer funds lacking 3Y/5Y history are correctly marked ineligible because the scheme itself does not yet have enough history.
+
+### Next backend task
+
+**Collect an official historical `BSE 250 SmallCap TRI` series and integrate it without changing the current UI yet.**
+
+Requirements:
+- use a free, authoritative first-party BSE / index-provider source only;
+- retain exact source URL, observation dates and collection evidence;
+- store the series under a distinct canonical key such as `BSE 250 SmallCap TRI`; do not overwrite or alias the existing Nifty series;
+- validate identity strictly enough that a price index cannot be mistaken for TRI;
+- preserve revisions/observations under the existing benchmark evidence model;
+- backfill enough history to support the affected funds' available 1Y / 3Y / 5Y periods where the source permits;
+- rerun `docs/PERFORMANCE-COVERAGE-AUDIT.json` and confirm the 20 Growth-plan `website_default_benchmark_mismatch` findings remain visible until the application actually selects each fund's reported benchmark series;
+- do not switch the performance endpoint/UI to fund-specific benchmark selection in the same batch unless that change is separately validated after the BSE series itself is trustworthy.
+
+After the BSE series is retained and validated, the following batch should make benchmark selection fund-specific so BSE-benchmarked funds no longer default to Nifty comparisons.
+
+Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`; do not re-probe its blocked sources unless the material source-change watch promotes one for review. The source-retention audit remains read-only: the **700 link-only candidates and legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: Axis full recovery + blocker source-change watch
 
