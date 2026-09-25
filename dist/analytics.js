@@ -28,7 +28,26 @@
     if(end>first&&npv(low)*npv(high)<0){for(let i=0;i<100;i++){const mid=(low+high)/2;if(npv(mid)>0)low=mid;else high=mid;}xirr=(low+high)/2*100;}
     return {invested:payments.length*monthly,value,gain:value-payments.length*monthly,xirr,payments:payments.length,start:points[0][0],end,convention:'First available NAV of each month in the selected range; no tax or exit-load adjustment.'};
   }
-  function response(fund,nav,benchmark,query={}){
+  const compact=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+  function benchmarkIdentity(value){
+    const raw=String(value||'').trim(),c=compact(raw),explicit=c.includes('tri')||c.includes('totalreturn');
+    const small250=c.includes('smallcap250')||c.includes('250smallcap')||c.includes('smallcapindex250');
+    let family=null,canonical=null;
+    if(small250&&c.includes('nifty')){family='Nifty Smallcap 250';if(explicit)canonical='Nifty Smallcap 250 TRI';}
+    else if(small250&&c.includes('bse')){family='BSE 250 SmallCap';if(explicit)canonical='BSE 250 SmallCap TRI';}
+    return {reported:raw||null,family,explicit_total_return:!!explicit,canonical_tri_series:canonical};
+  }
+  function reportedBenchmark(fund,benchmarks){
+    const metric=fund.metrics?.benchmark||null,identity=benchmarkIdentity(metric?.value),canonical=identity.canonical_tri_series;
+    const available=!!(canonical&&benchmarks?.[canonical]?.data?.length);
+    let status='available';
+    if(!identity.reported)status='identity_missing';
+    else if(!identity.explicit_total_return)status='identity_not_explicit_tri';
+    else if(!canonical)status='identity_unmapped';
+    else if(!available)status='series_missing';
+    return {...identity,as_of:metric?.as_of||null,source:metric?.source||null,unit:metric?.unit||null,series_available:available,status};
+  }
+  function response(fund,nav,benchmarks,query={}){
     const {start,end}=query,monthly=Number(query.monthly||10000),coverage=fund.distribution_coverage;
     for(const value of [start,end])if(value&&(!/^\d{4}-\d{2}-\d{2}$/.test(value)||!Number.isFinite(day(value))||new Date(value+'T00:00:00Z').toISOString().slice(0,10)!==value))throw Error('Enter a valid date range.');
     if(!Number.isFinite(monthly)||monthly<100||monthly>100000000)throw Error('Monthly SIP must be between ₹100 and ₹10 crore.');
@@ -36,8 +55,24 @@
     let total=fund.option==='Growth'?nav:[],method='Growth NAV; fund expenses already reflected. Tax and exit loads excluded.';
     if(fund.option==='IDCW'){method='NAV-only view. IDCW distributions are missing; total-return comparisons and SIP results require a complete distribution history.';if(coverage){total=reinvested(nav,fund.distributions||[],coverage.start,coverage.end);method='Hypothetical reinvested IDCW total return using user-confirmed complete distributions. Tax and exit loads excluded.';}}
     else if(fund.option!=='Growth')method='NAV-only view. Bonus or other unit adjustments are not mapped; adjusted comparisons and SIP results are unavailable.';
-    const selected=total.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),navSelected=nav.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),bp=benchmark?.data||[],common=aligned(total.filter(p=>!end||p[0]<=end),bp);
-    return {nav:navSelected,total_return_series:selected,method,can_total_return:!!selected.length,benchmark:query.benchmark,comparison:aligned(selected,bp),stats:performance(total),range_stats:performance(selected),comparison_stats:{fund:performance(common.map(p=>[p[0],p[1]] )).returns,benchmark:performance(common.map(p=>[p[0],p[2]])).returns},sip:sip(selected,monthly),latest_nav:nav.at(-1)||null,first_nav:nav[0]?.[0],last_nav:nav.at(-1)?.[0],benchmark_source:benchmark?{...benchmark,data:undefined,points:bp.length}:null,distribution_coverage:coverage};
+    const reported=reportedBenchmark(fund,benchmarks||{}),requested=String(query.benchmark||'').trim()||null;
+    const comparisonName=requested||reported.canonical_tri_series;
+    const comparisonRole=comparisonName?(comparisonName===reported.canonical_tri_series?'reported_benchmark':'alternate_comparison'):null;
+    const benchmark=comparisonName?(benchmarks||{})[comparisonName]:null,bp=benchmark?.data||[],available=!!bp.length;
+    let comparisonStatus;
+    if(!comparisonName)comparisonStatus=reported.status;
+    else if(available)comparisonStatus='available';
+    else if(comparisonRole==='reported_benchmark')comparisonStatus='reported_series_missing';
+    else comparisonStatus='alternate_series_missing';
+    const selected=total.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),navSelected=nav.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),common=aligned(total.filter(p=>!end||p[0]<=end),bp);
+    const source=available?{...benchmark,data:undefined,points:bp.length}:null;
+    return {nav:navSelected,total_return_series:selected,method,can_total_return:!!selected.length,
+      reported_benchmark:reported,
+      comparison_series:{name:comparisonName,role:comparisonRole,status:comparisonStatus,available,source},
+      benchmark:comparisonName,comparison:aligned(selected,bp),stats:performance(total),range_stats:performance(selected),
+      comparison_stats:{fund:performance(common.map(p=>[p[0],p[1]])).returns,benchmark:performance(common.map(p=>[p[0],p[2]])).returns},
+      sip:sip(selected,monthly),latest_nav:nav.at(-1)||null,first_nav:nav[0]?.[0],last_nav:nav.at(-1)?.[0],
+      benchmark_source:source,distribution_coverage:coverage};
   }
-  const api={shift,performance,aligned,reinvested,sip,response};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.SmallcapAnalytics=api;
+  const api={shift,performance,aligned,reinvested,sip,benchmarkIdentity,reportedBenchmark,response};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.SmallcapAnalytics=api;
 })(typeof window!=='undefined'?window:globalThis);

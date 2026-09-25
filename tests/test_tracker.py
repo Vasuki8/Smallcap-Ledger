@@ -430,6 +430,63 @@ class TrackerTests(unittest.TestCase):
         result=subprocess.run(['node','-e',"const a=require('./dist/analytics.js');console.log(JSON.stringify(a.response({option:'IDCW'},[['2024-01-01',100],['2024-02-01',95]],{data:[['2024-01-01',100],['2024-02-01',110]]})));"],cwd=db.ROOT,text=True,capture_output=True,check=True)
         idcw=json.loads(result.stdout);self.assertFalse(idcw['can_total_return']);self.assertEqual(idcw['comparison'],[]);self.assertIsNone(idcw['sip'])
 
+    def test_static_performance_contract_matches_evidence_aware_backend(self):
+        import json,subprocess
+        script=r"""
+const a=require('./dist/analytics.js');
+const nav=[['2024-01-02',100],['2025-01-02',110],['2026-01-02',121]];
+const nifty={name:'Nifty Smallcap 250 TRI',first:'2024-01-02',last:'2026-01-02',points:3,source:'https://example.com/nifty',data:nav.map(([d,v])=>[d,v*2])};
+const benchmarks={'Nifty Smallcap 250 TRI':nifty};
+const bseFund={option:'Growth',metrics:{benchmark:{value:'BSE 250 SmallCap TRI',as_of:'2026-01-02',source:'https://example.com/bse',unit:'Reported'}},distribution_coverage:null};
+const niftyFund={option:'Growth',metrics:{benchmark:{value:'Nifty Smallcap 250 TRI',as_of:'2026-01-02',source:'https://example.com/nifty-id',unit:'Reported'}},distribution_coverage:null};
+const idcwFund={...niftyFund,option:'IDCW'};
+process.stdout.write(JSON.stringify({
+  bseDefault:a.response(bseFund,nav,benchmarks,{}),
+  bseAlternate:a.response(bseFund,nav,benchmarks,{benchmark:'Nifty Smallcap 250 TRI'}),
+  niftyDefault:a.response(niftyFund,nav,benchmarks,{}),
+  idcw:a.response(idcwFund,nav,benchmarks,{})
+}));
+"""
+        r=subprocess.run(['node','-e',script],cwd=db.ROOT,text=True,capture_output=True,check=True)
+        out=json.loads(r.stdout)
+        b=out['bseDefault']
+        self.assertEqual(b['reported_benchmark']['canonical_tri_series'],'BSE 250 SmallCap TRI')
+        self.assertEqual(b['reported_benchmark']['status'],'series_missing')
+        self.assertEqual(b['comparison_series']['name'],'BSE 250 SmallCap TRI')
+        self.assertEqual(b['comparison_series']['role'],'reported_benchmark')
+        self.assertEqual(b['comparison_series']['status'],'reported_series_missing')
+        self.assertFalse(b['comparison_series']['available'])
+        self.assertEqual(b['comparison'],[])
+        self.assertIsNone(b['benchmark_source'])
+
+        alt=out['bseAlternate']
+        self.assertEqual(alt['reported_benchmark']['canonical_tri_series'],'BSE 250 SmallCap TRI')
+        self.assertEqual(alt['comparison_series']['name'],'Nifty Smallcap 250 TRI')
+        self.assertEqual(alt['comparison_series']['role'],'alternate_comparison')
+        self.assertEqual(alt['comparison_series']['status'],'available')
+        self.assertTrue(alt['comparison_series']['available'])
+        self.assertGreaterEqual(len(alt['comparison']),2)
+
+        n=out['niftyDefault']
+        self.assertEqual(n['comparison_series']['name'],'Nifty Smallcap 250 TRI')
+        self.assertEqual(n['comparison_series']['role'],'reported_benchmark')
+        self.assertEqual(n['comparison_series']['status'],'available')
+        self.assertGreaterEqual(len(n['comparison']),2)
+
+        self.assertFalse(out['idcw']['can_total_return'])
+        self.assertEqual(out['idcw']['comparison'],[])
+        self.assertIsNone(out['idcw']['sip'])
+
+    def test_static_javascript_parses_and_has_no_silent_nifty_fallback(self):
+        import subprocess
+        for path in ('dist/analytics.js','dist/static-data.js','dist/app.js'):
+            subprocess.run(['node','--check',path],cwd=db.ROOT,text=True,capture_output=True,check=True)
+        source=(db.ROOT/'dist'/'app.js').read_text()
+        self.assertIn("state.benchmark=null",source)
+        self.assertIn("Reported benchmark history unavailable",source)
+        self.assertIn("alternate comparison",source)
+        self.assertNotIn("?'BSE 250 SmallCap TRI':'Nifty Smallcap 250 TRI'",source)
+
     def test_db_init_reclassifies_retained_risk_factor_factsheet_as_disclosure(self):
         with db.connect() as c:
             c.execute("""INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
