@@ -1,0 +1,56 @@
+name: Inspect JM TER disclosure
+
+on:
+  push:
+    branches: [backend/jm-ter-v133]
+    paths: [.github/workflows/inspect-jm-ter.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Trace JM Scheme Expense Ratio page
+        run: |
+          python - <<'PY'
+          import re, urllib.parse, urllib.request
+          page='https://www.jmfinancialmf.com/Scheme-Expense-Ratio'
+          UA={'User-Agent':'Mozilla/5.0 Smallcap-Ledger/1.0'}
+          def fetch(url):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  body=r.read()
+                  print('FETCH',r.status,len(body),r.headers.get('content-type'),r.geturl())
+                  return body,r.geturl()
+          body,final=fetch(page)
+          html=body.decode('utf-8','ignore')
+          print('TITLE',re.findall(r'<title[^>]*>(.*?)</title>',html,re.I|re.S)[:1])
+          for needle in ['Scheme Expense Ratio','Total TER','Expense Ratio','GetTER','SchemeExpense','Base Expense Ratio']:
+              p=0;n=0
+              while True:
+                  p=html.lower().find(needle.lower(),p)
+                  if p<0 or n>=15:break
+                  print('PAGE_CTX',needle,re.sub(r'\s+',' ',html[max(0,p-1200):p+2600])[:4000])
+                  p+=len(needle);n+=1
+          scripts=[urllib.parse.urljoin(final,x) for x in re.findall(r'<script[^>]+src=["\']([^"\']+)',html,re.I)]
+          print('SCRIPT_COUNT',len(scripts))
+          for full in scripts:
+              try:b,_=fetch(full)
+              except Exception as e:
+                  print('SCRIPT_ERROR',full,type(e).__name__,e);continue
+              s=b.decode('utf-8','ignore')
+              if not re.search(r'Scheme Expense Ratio|Total TER|ExpenseRatio|GetTER|SchemeExpense|Base Expense Ratio',s,re.I):
+                  continue
+              print('SCRIPT_MATCH',full,'LEN',len(s))
+              for needle in ['GetTER','ExpenseRatio','SchemeExpense','Total TER','Base Expense Ratio','api/']:
+                  p=0;n=0
+                  while True:
+                      p=s.lower().find(needle.lower(),p)
+                      if p<0 or n>=30:break
+                      print('CTX',needle,re.sub(r'\s+',' ',s[max(0,p-1200):p+2600])[:4200])
+                      p+=len(needle);n+=1
+          PY
