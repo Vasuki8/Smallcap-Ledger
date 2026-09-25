@@ -13,11 +13,13 @@ import subprocess
 import uuid
 import zipfile
 import xml.etree.ElementTree as ET
-from urllib.parse import quote, urlencode, urlparse
+from urllib.parse import quote, unquote, urlencode, urljoin, urlparse
 
 import httpx
 import openpyxl
 import xlrd
+from bs4 import BeautifulSoup
+from pypdf import PdfReader
 
 from . import db, jm_portfolios
 from .providers import fetch, number, public_url
@@ -27,6 +29,12 @@ CANARA_SCHEME_CODE = "SC"
 CANARA_PAGE = "https://www.canararobeco.com/expense-ratio"
 CANARA_API = "https://www.canararobeco.com/wp-json/ter/v1/records"
 CANARA_PLANS = {"Regular Plan": "Regular", "Direct Plan": "Direct"}
+
+GROWW_FAMILY = "Groww Small Cap Fund"
+GROWW_PUBLISHED_NAME = "Groww Smallcap Fund"
+GROWW_BER_PAGE = "https://www.growwmf.in/downloads/expense-ratio"
+GROWW_BER_HOST = "assets-netstorage.growwmf.in"
+_GROWW_BER_TITLE = re.compile(r"^(\d+)\.\s*Notice\s*-\s*Change\s+in\s+BER\.pdf$", re.I)
 
 ICICI_FAMILY = "ICICI Prudential Small Cap Fund"
 ICICI_TER_PAGE = "https://www.icicipruamc.com/about-us/financials-&-disclosures?currentTabFilter=Total%20Expense%20Ratio"
@@ -316,6 +324,222 @@ def canara(progress=lambda _: None, today=None, lookback_days=7):
         f"{CANARA_FAMILY}: official AMC BER/TER as of {day} "
         f"(Direct {plans['Direct']['base_expense_ratio']:.2f}%/"
         f"{plans['Direct']['ter']:.2f}% BER/TER)"
+    )
+
+
+def _groww_financial_year(today):
+    start = today.year if today.month >= 4 else today.year - 1
+    return f"{start} - {start + 1}"
+
+
+def _groww_ber_links(content, today=None):
+    """Return current-financial-year first-party Groww BER notices, newest number first."""
+    today = today or date.today()
+    soup = BeautifulSoup(content, "html.parser")
+    expected_dir = (
+        "/compliance_docs/Downloads/Expense Ratio/Notice - Change in TER/"
+        + _groww_financial_year(today)
+        + "/"
+    )
+    found = defaultdict(set)
+    for link in soup.find_all("a", href=True):
+        title = " ".join(link.stripped_strings).strip()
+        match = _GROWW_BER_TITLE.fullmatch(title)
+        if not match:
+            continue
+        url = urljoin(GROWW_BER_PAGE, str(link.get("href") or "").strip())
+        parsed = urlparse(url)
+        path = unquote(parsed.path)
+        if (
+            parsed.scheme != "https"
+            or parsed.hostname != GROWW_BER_HOST
+            or not path.startswith(expected_dir)
+            or not path.lower().endswith(".pdf")
+        ):
+            continue
+        public_url(url)
+        found[int(match.group(1))].add(url)
+
+    if not found:
+        raise ValueError("Groww expense page exposes no current-year BER notices")
+    if any(len(urls) != 1 for urls in found.values()):
+        raise ValueError("Groww expense page has duplicate BER notice identities")
+    return [
+        (notice, next(iter(found[notice])))
+        for notice in sorted(found, reverse=True)
+    ]
+
+
+def _groww_pdf_text(content):
+    if not content.startswith(b"%PDF"):
+        raise ValueError("Groww BER notice is not a PDF")
+    try:
+        reader = PdfReader(io.BytesIO(content))
+        if len(reader.pages) != 1:
+            raise ValueError("Groww BER notice page count changed")
+        text = reader.pages[0].extract_text() or ""
+    except Exception as exc:
+        if isinstance(exc, ValueError):
+            raise
+        raise ValueError("Groww BER notice could not be parsed") from exc
+    if not text.strip():
+        raise ValueError("Groww BER notice contains no extractable text")
+    return text
+
+
+def _groww_ber_number(raw, label):
+    token = str(raw or "").strip()
+    if token.upper() == "NA":
+        return None
+    try:
+        value = number(token)
+    except ValueError as exc:
+        raise ValueError(f"Groww BER notice has invalid {label}") from exc
+    if not 0 <= value <= 5:
+        raise ValueError(f"Groww BER notice {label} is outside the accepted range")
+    return value
+
+
+def parse_groww_ber_text(text, today=None):
+    """Parse exact Current BER values; deliberately ignore conditional revised BER."""
+    today = today or date.today()
+    normalized = re.sub(r"\s+", " ", str(text or "")).strip()
+
+    notice = re.search(
+        r"Notice\s+no\.\s*(\d+)\s*/\s*(20\d{2})\s*[–-]\s*(20\d{2})",
+        normalized,
+        re.I,
+    )
+    if not notice:
+        raise ValueError("Groww BER notice identity changed")
+    if not re.search(
+        r"Change\s+in\s+Base\s+Expense\s+Ratio.*?BER.*?scheme\(s\)\s+of\s+Groww\s+Mutual\s+Fund",
+        normalized,
+        re.I,
+    ):
+        raise ValueError("Groww BER notice heading changed")
+    if not re.search(
+        r"Scheme\(s\)\s+Name\s+Current\s+BER\*\s+Revised\s+BER\*\*\s+"
+        r"Direct\s*\(%\)\s+Regular\s*\(%\)\s+Direct\s*\(%\)\s+Regular\s*\(%\)",
+        normalized,
+        re.I,
+    ):
+        raise ValueError("Groww BER notice table heading changed")
+
+    as_of_match = re.search(
+        r"\*\s*As\s+on\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})\.",
+        normalized,
+        re.I,
+    )
+    signed_match = re.search(
+        r"Authorised\s+Signatory\s+Date:\s*([A-Za-z]+\s+\d{1,2},\s*20\d{2})",
+        normalized,
+        re.I,
+    )
+    effective_match = re.search(
+        r"with\s+effect\s+from\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})",
+        normalized,
+        re.I,
+    )
+    if not as_of_match or not signed_match or not effective_match:
+        raise ValueError("Groww BER notice dates changed format")
+    try:
+        as_of = datetime.strptime(as_of_match.group(1).replace("  ", " "), "%B %d, %Y").date()
+        signed = datetime.strptime(signed_match.group(1).replace("  ", " "), "%B %d, %Y").date()
+        effective = datetime.strptime(effective_match.group(1).replace("  ", " "), "%B %d, %Y").date()
+    except ValueError as exc:
+        raise ValueError("Groww BER notice contains an invalid date") from exc
+    if as_of > today or signed > today:
+        raise ValueError("Groww BER notice contains a future observation/publication date")
+    if as_of > signed or effective < signed:
+        raise ValueError("Groww BER notice date ordering is invalid")
+
+    row_pattern = re.compile(
+        r"Groww\s+Smallcap\s+Fund\s+"
+        r"(NA|\d+(?:\.\d+)?)\s+"
+        r"(NA|\d+(?:\.\d+)?)\s+"
+        r"(NA|\d+(?:\.\d+)?)\s+"
+        r"(NA|\d+(?:\.\d+)?)(?:\s*\(No\s+change\))?",
+        re.I,
+    )
+    rows = row_pattern.findall(normalized)
+    if len(rows) != 1:
+        raise ValueError("Groww BER notice does not contain one exact Smallcap row")
+    current_direct, current_regular, revised_direct, revised_regular = rows[0]
+    plans = {}
+    direct = _groww_ber_number(current_direct, "Direct Current BER")
+    regular = _groww_ber_number(current_regular, "Regular Current BER")
+    # Validate the published revised columns but never store them as exact current observations.
+    _groww_ber_number(revised_direct, "Direct Revised BER")
+    _groww_ber_number(revised_regular, "Regular Revised BER")
+    if direct is not None:
+        plans["Direct"] = direct
+    if regular is not None:
+        plans["Regular"] = regular
+    if not plans:
+        raise ValueError("Groww BER notice has no numeric Current BER for Smallcap")
+    return as_of.isoformat(), plans, int(notice.group(1)), signed.isoformat(), effective.isoformat()
+
+
+def parse_groww_ber_pdf(content, today=None):
+    return parse_groww_ber_text(_groww_pdf_text(content), today)
+
+
+def _groww_disclosure(today=None):
+    today = today or date.today()
+    page, _, _ = fetch(GROWW_BER_PAGE, archive=False, max_bytes=2 * 1024 * 1024)
+    candidates = _groww_ber_links(page, today)
+    relevant = []
+    for notice_number, source in candidates[:8]:
+        raw, _, _ = fetch(source, archive=False, max_bytes=2 * 1024 * 1024)
+        text = _groww_pdf_text(raw)
+        if not re.search(r"Groww\s+Smallcap\s+Fund", text, re.I):
+            continue
+        day, plans, parsed_notice, signed, effective = parse_groww_ber_text(text, today)
+        if parsed_notice != notice_number:
+            raise ValueError("Groww BER notice title number and PDF identity do not match")
+        relevant.append((day, notice_number, source, plans, signed, effective))
+
+    if not relevant:
+        raise ValueError("Groww BER notices contain no Smallcap Current BER observation")
+    latest_day = max(item[0] for item in relevant)
+    latest = [item for item in relevant if item[0] == latest_day]
+    signatures = {(tuple(sorted(item[3].items())), item[4], item[5]) for item in latest}
+    if len(signatures) != 1:
+        raise ValueError(f"Groww BER notices conflict for latest observation {latest_day}")
+    selected = max(latest, key=lambda item: item[1])
+    _, notice_number, source, _, _, _ = selected
+
+    content, content_hash, _ = fetch(source, max_bytes=2 * 1024 * 1024)
+    day, plans, parsed_notice, signed, effective = parse_groww_ber_pdf(content, today)
+    if parsed_notice != notice_number or day != latest_day:
+        raise ValueError("Groww BER notice changed between discovery and archive fetch")
+    return source, day, plans, content_hash, signed, effective
+
+
+def groww(progress=lambda _: None, today=None):
+    """Collect Groww Small Cap's explicitly published Current BER observations."""
+    today = today or date.today()
+    if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (GROWW_FAMILY,)):
+        return "Groww Small Cap is not in the active universe"
+
+    progress("Groww Small Cap expense ratios · official Current BER notice")
+    source, day, plans, content_hash, signed, effective = _groww_disclosure(today)
+    for plan, value in plans.items():
+        db.metric(
+            GROWW_FAMILY,
+            plan,
+            "base_expense_ratio",
+            day,
+            value,
+            "% p.a. · reported by AMC",
+            source,
+            content_hash,
+        )
+    detail = ", ".join(f"{plan} {value:.2f}%" for plan, value in sorted(plans.items()))
+    return (
+        f"{GROWW_FAMILY}: official Current BER as of {day} ({detail}); "
+        f"notice {signed}, revised BER effective {effective} not promoted"
     )
 
 
@@ -1608,7 +1832,7 @@ def mahindra(progress=lambda _: None, today=None):
 def update(progress=lambda _: None):
     results = []
     errors = []
-    for collector in (canara, hsbc, icici, invesco, jm, mahindra, mirae):
+    for collector in (canara, groww, hsbc, icici, invesco, jm, mahindra, mirae):
         try:
             results.append(collector(progress))
         except Exception as exc:
