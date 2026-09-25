@@ -4,11 +4,11 @@ Audit date: **2026-09-25 UTC**
 
 ## Outcome
 
-The five >7-calendar-day NAV intervals previously flagged for repair are **verified official-history gaps**, not values that can currently be recovered from the authoritative sources checked.
+The six retained >7-calendar-day NAV intervals reviewed so far are **verified official-history gaps**, not values that can currently be recovered from the authoritative sources checked.
 
 No NAV observation was added, estimated, interpolated or forward-filled.
 
-The performance audit should continue to preserve the raw date gaps, but these five intervals should no longer appear as unexplained/actionable `nav_large_gap` defects. Their evidence is retained in `tracker/nav_gap_evidence.json`.
+The performance audit should continue to preserve the raw date gaps, and none of these six intervals should appear as unexplained/actionable `nav_large_gap` defects. Their evidence is retained in `tracker/nav_gap_evidence.json`.
 
 ## Authoritative AMFI check
 
@@ -17,6 +17,7 @@ AMFI's official historical NAV endpoint was queried by exact AMC/date window and
 For every flagged interval, AMFI returned **exactly two observations: the existing boundary dates** and no intermediate rows.
 
 - **ABSL Small Cap Regular Growth · code 105804:** 2010-05-31 **11.5499** → 2010-06-08 **11.4193**.
+- **ABSL Small Cap Regular IDCW · code 105805:** 2010-05-31 **11.5499** → 2010-06-08 **11.4193**; exact AMFI row identity includes payout ISIN **INF209K01EO0** and reinvestment ISIN **INF209K01EP7**.
 - **DSP Small Cap Regular Growth · code 105989:** 2007-08-08 **10.5740** → 2007-08-16 **10.1690**.
 - DSP: 2008-08-27 **9.1660** → 2008-09-04 **9.3220**.
 - DSP: 2010-03-17 **13.2800** → 2010-03-25 **13.4580**.
@@ -24,7 +25,7 @@ For every flagged interval, AMFI returned **exactly two observations: the existi
 
 The exact AMFI query URLs, response SHA-256 values and boundary observations are in the machine-readable evidence file.
 
-ABSL Regular IDCW code **105805** independently has the same 2010-05-31 → 2010-06-08 retained gap, which supports a scheme-period publication gap rather than a single Growth-code ingestion defect.
+ABSL Regular IDCW code **105805** was checked independently at exact scheme-code level in workflow run **36185438441**. AMFI returned exactly the two retained boundary rows and no intermediate observations. The response SHA-256 is **4b0ab23045b78f1e8b143ea8509f3da3f2dc5aa4d138e668f2a9645fd75db5fb**. This closes the last unresolved tracker NAV-gap classification without inserting any NAV.
 
 ## DSP first-party confirmation
 
