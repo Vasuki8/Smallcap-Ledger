@@ -17,11 +17,77 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after machine-readable portfolio limitation deployment.
+Updated: 2026-09-25, after read-only portfolio recovery queue deployment.
 
 
 
 
+
+
+## Latest completed batch: read-only portfolio recovery queue
+
+**The backend now publishes a deterministic recovery queue for every partial or missing portfolio, ranked by source actionability rather than retained position count. The queue is read-only: generating it performs no source fetch, retry or portfolio mutation.**
+
+PR **#114** merged as commit `24e8a28a22395e31804223d602467d8f47e316a0`. Isolated validation run **36095583451** passed compileall and all **309 tests**, restored the production checkpoint, verified all eight incomplete/missing funds had retained timestamped fetch/source-page evidence, and confirmed the action split and ranking.
+
+The first production attempt, workflow **#476** / run **36095715032**, passed the 309-test gate, site generation/validation and cumulative archive publication, but correctly stopped before deployment when `scripts/record_build.py` could not import the repo-root `tracker` package from script execution context. No bad Pages deployment occurred.
+
+PR **#115** merged the import-path fix as commit `5efcbeb03ac4bb1ed01baea6c3fc00a2f6b43a25`. Focused validation run **36095854354** again passed all **309 tests** and verified the recorder's script-context import. Production workflow **#477**, run **36095921572**, then completed successfully through tests, generated-site validation, cumulative-history publication, recovery-queue recording, GitHub Pages artifact upload and Pages deployment at **2026-09-25T04:50:20Z**.
+
+Final Pages artifact **10847801270** is **230,742,223 bytes** with digest `sha256:7ea3c5d35db32fed41898b41c2bc965bcd285b684b71b41e4b4fa0030c86a482`. Status commit `5bce311a61e5681a6d9c2b695640e76ff67990af` records the deployed collection/coverage state and generated queue.
+
+### Queue contract and published evidence
+
+New module `tracker/portfolio_recovery_queue.py` combines the existing machine-readable portfolio limitation with retained fetch/source-page/document evidence. It assigns an actionability score and action class; **retained position count is never a ranking input**. A changed unclassified partial is intentionally ranked highest for review.
+
+The normal status recorder now publishes:
+- `docs/PORTFOLIO-RECOVERY-QUEUE.json` — structured operator data;
+- `docs/PORTFOLIO-RECOVERY-QUEUE.md` — human-readable queue.
+
+Production queue generated at **2026-09-25T04:49:12Z** contains **8** incomplete/missing funds:
+- **1 actionable now** — search for a fuller first-party disclosure;
+- **4 retry only after source/transport change**;
+- **3 cannot improve without a more precise AMC disclosure**;
+- **1 stale partial** — Bajaj Finserv;
+- **1 missing portfolio** — Union.
+
+Current order:
+
+| Rank | Fund | State | Action | Limitation |
+| ---: | --- | --- | --- | --- |
+| 1 | Axis Small Cap Fund | current partial | `search_fuller_first_party_disclosure` | `undisclosed_constituents` |
+| 2 | Union Small Cap Fund | missing | `retry_after_source_change` | `upstream_source_unavailable` |
+| 3 | Bajaj Finserv Small Cap Fund | stale partial | `retry_after_source_change` | `named_subset_only` |
+| 4 | Edelweiss Small Cap Fund | current partial | `retry_after_source_change` | `named_subset_only` |
+| 5 | ICICI Prudential Small Cap Fund | current partial | `retry_after_source_change` | `undisclosed_constituents` |
+| 6 | Bandhan Small Cap Fund | current partial | `requires_more_precise_amc_disclosure` | `non_numeric_source_weight` |
+| 7 | Sundaram Small Cap Fund | current partial | `requires_more_precise_amc_disclosure` | `non_numeric_source_weight` |
+| 8 | UTI Small Cap Fund | current partial | `requires_more_precise_amc_disclosure` | `non_numeric_source_weight` |
+
+Each queue row includes the exact retained source URL, portfolio reporting date, limitation payload, optional recovery/watch URL, latest exact fetch evidence, latest relevant source-page check, latest matching document evidence, latest evidence timestamp and a concise retry condition.
+
+The queue deliberately prevents repeated blind probes:
+- **Union**: retry only after its official portfolio transport becomes reachable or an exact attachment appears.
+- **Bajaj**: remains visibly stale, but retry only when the Downloads transport works from production or a current exact attachment appears.
+- **Edelweiss**: retry only after its statutory portfolio route/static transport changes or an exact attachment appears.
+- **ICICI Prudential**: retry only after its monthly ZIP stops redirecting to the unresolved archive host or another working first-party route appears.
+- **Bandhan, Sundaram and UTI**: do not estimate censored/non-numeric weights; wait for more precise AMC disclosure.
+
+No paid service, external communication, UI change, source deletion or portfolio mutation was introduced. The source-retention audit remains read-only: the **700 link-only candidates and legacy cumulative ZIP remain untouched**.
+
+### Next backend task
+
+The queue selects **Axis Small Cap Fund** as the sole actionable-now portfolio recovery target.
+
+Start from retained evidence before any new broad probing. The latest retained snapshot is a **10-position current partial dated 2026-09-16** from:
+
+`https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct`
+
+The queue's latest retained source evidence is **2026-09-24T22:12:17Z**. Earlier Axis audit already proved that the official August full factsheet is reachable but not constituent-complete: it publishes **Equity 92.37%**, named holdings down to 0.50%, the explicit aggregate **Other Domestic Equity (Less than 0.50% of the corpus) 15.20%**, and **Debt, Cash & other current assets 7.63%**.
+
+**Next batch:** search Axis's own statutory/monthly portfolio disclosure surfaces for an exact workbook, ZIP, API payload or other first-party constituent-level source that identifies the holdings hidden by that aggregate. Reuse retained source/fetch evidence first, then perform only a bounded live discovery if needed. Do not split the 15.20% aggregate, infer unnamed constituents, weaken source validation, or mark the factsheet snapshot complete.
+
+Axis is also the only fund without explicitly labelled TER/BER. Keep its current unqualified expense-ratio observation distinct during this portfolio investigation; do not promote it to TER or BER without a separately explicit first-party label.
 
 ## Latest completed batch: machine-readable portfolio limitation reasons
 
