@@ -20,6 +20,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from tracker import db
 from scripts import github_state
+from scripts import audit_source_retention as retention_audit
 
 INVENTORY=ROOT/'docs'/'SOURCE-RETENTION-INVENTORY.json'
 REVIEWED_AT='2026-09-25'
@@ -75,6 +76,10 @@ def prepare(*,apply=False,report_path=None):
     missing=sorted(set(audited)-set(archives))
     if missing:
         raise ValueError('Reviewed retention hash is absent from current archive metadata: '+missing[0])
+    with db.connect() as connection:
+        current_items,current_missing=retention_audit.collect(connection,ROOT)
+    if current_missing:
+        raise ValueError('Current dependency scan found an unresolved source hash: '+current_missing[0])
 
     before_fingerprints=table_fingerprints()
     protected_hashes=sorted(h for h,row in audited.items() if row['classification']=='retain_evidence')
@@ -90,15 +95,20 @@ def prepare(*,apply=False,report_path=None):
         records=[]
         for h,row in audited.items():
             reviewed=row['classification']
+            rescanned=current_items[h]['classification']
             if reviewed not in db.RETENTION_CLASSIFICATIONS-{'unclassified'}:
                 raise ValueError('Invalid reviewed classification for '+h)
+            if rescanned not in db.RETENTION_CLASSIFICATIONS-{'unclassified'}:
+                raise ValueError('Invalid current retention classification for '+h)
             existing=current[h]['classification']
-            # Historical audit metadata may strengthen an unclassified row, but
-            # must never downgrade or overwrite a hash promoted by a newer fetch.
-            if precedence[existing]>precedence[reviewed]:
+            strongest=max((reviewed,rescanned,existing),key=lambda x:precedence[x])
+            if strongest==existing and precedence[existing]>max(precedence[reviewed],precedence[rescanned]):
                 continue
-            classification=reviewed if precedence[reviewed]>=precedence[existing] else existing
-            records.append((classification,REASON,REVIEWED_AT,stamp,h))
+            reason=REASON
+            if precedence[rescanned]>precedence[reviewed]:
+                reason=('Reviewed audit classification strengthened by current dependency scan: '+
+                        ', '.join(current_items[h].get('reasons') or [rescanned])[:600])
+            records.append((strongest,reason,REVIEWED_AT,stamp,h))
         with db.connect() as c:
             c.executemany("""UPDATE archive_retention SET
               classification=?,reason=?,reviewed_at=?,updated_at=?
@@ -146,6 +156,13 @@ def prepare(*,apply=False,report_path=None):
         'mode':'apply_classifications_no_binary_change' if apply else 'dry_run',
         'inventory_file':inventory_label,
         'reviewed_inventory_hashes':len(audited),
+        'historical_link_only_candidates':sum(
+            row['classification']=='link_only_candidate' for row in audited.values()),
+        'historical_candidates_strengthened_by_current_scan':sum(
+            row['classification']=='link_only_candidate'
+            and current_items[h]['classification']!='link_only_candidate'
+            for h,row in audited.items()),
+        'current_dependency_scan_missing_hashes':len(current_missing),
         'current_archive_hashes':len(archives),
         'new_unclassified_hashes':classes['unclassified'],
         'retention_groups':retention,
