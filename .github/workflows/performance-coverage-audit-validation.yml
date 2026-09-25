@@ -1,0 +1,69 @@
+name: Performance coverage audit validation
+
+on:
+  push:
+    branches: [backend/performance-coverage-audit-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SMALLCAP_NO_SCHEDULER: '1'
+      SMALLCAP_ARCHIVE_FORMAT: '2'
+      SMALLCAP_DATABASE_ONLY_RESTORE: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Compile and test
+        run: |
+          uv run --frozen python -m compileall -q tracker scripts tests
+          uv run --frozen python -m unittest discover -s tests -v
+      - name: Restore production checkpoint
+        run: uv run --frozen python scripts/github_state.py restore
+      - name: Verify production performance audit
+        run: |
+          uv run --frozen python - <<'PY'
+          import json
+          from tracker import db,providers
+          from tracker.performance_coverage import report,markdown
+
+          before={t:db.one(f"SELECT COUNT(*) n FROM {t}")["n"]
+                  for t in ("nav","benchmark","metrics","schemes")}
+          audit=report()
+          after={t:db.one(f"SELECT COUNT(*) n FROM {t}")["n"]
+                 for t in before}
+          assert before==after,(before,after)
+          assert audit["summary"]["plans"]==143,audit["summary"]
+          assert audit["summary"]["families"]==36,audit["summary"]
+          assert audit["summary"]["growth_plans"]>0
+          assert providers.BENCHMARK in audit["benchmark_series"]
+          assert audit["summary"]["reported_benchmark_identity_families"]==36
+          assert audit["repair_priorities"],audit["summary"]
+          assert audit["repair_priorities"][0]["code"]=="collect_bse_250_smallcap_tri",audit["repair_priorities"]
+          text=markdown(audit)
+          assert "# Historical performance and benchmark coverage audit" in text
+          assert "collect_bse_250_smallcap_tri" in text
+
+          print("SUMMARY",json.dumps(audit["summary"],sort_keys=True))
+          print("BENCHMARK_SERIES",json.dumps(audit["benchmark_series"],sort_keys=True))
+          print("PRIORITIES",json.dumps(audit["repair_priorities"],sort_keys=True))
+          for row in audit["plans"]:
+              if row["issues"]:
+                  print("PLAN",row["code"],row["family"],row["plan"],row["option"],
+                        row["nav"]["first"],row["nav"]["last"],row["nav"]["observations"],
+                        row["benchmark"]["reported_identity"]["reported"],
+                        row["benchmark"]["status"],
+                        row["benchmark"]["website_default_mismatch"],
+                        ",".join(row["issues"]))
+          PY
