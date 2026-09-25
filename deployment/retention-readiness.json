@@ -1,19 +1,19 @@
 {
-  "prepared_at": "2026-09-25T21:18:51+00:00",
+  "prepared_at": "2026-09-25T22:16:36+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
   "historical_link_only_candidates": 700,
-  "historical_candidates_strengthened_by_current_scan": 0,
+  "historical_candidates_strengthened_by_current_scan": 4,
   "current_dependency_scan_missing_hashes": 0,
-  "current_archive_hashes": 2526,
-  "new_unclassified_hashes": 7,
+  "current_archive_hashes": 2790,
+  "new_unclassified_hashes": 271,
   "retention_groups": [
     {
       "classification": "link_only_candidate",
       "binary_state": "retained",
-      "files": 700,
-      "bytes": 404498141
+      "files": 695,
+      "bytes": 403318035
     },
     {
       "classification": "retain_evidence",
@@ -24,24 +24,24 @@
     {
       "classification": "retain_latest_or_review",
       "binary_state": "retained",
-      "files": 835,
-      "bytes": 465895337
+      "files": 840,
+      "bytes": 467075443
     },
     {
       "classification": "unclassified",
       "binary_state": "retained",
-      "files": 7,
-      "bytes": 1920223
+      "files": 271,
+      "bytes": 240300535
     }
   ],
   "binary_states": {
-    "retained": 2526
+    "retained": 2790
   },
   "classifications": {
-    "link_only_candidate": 700,
+    "link_only_candidate": 695,
     "retain_evidence": 984,
-    "retain_latest_or_review": 835,
-    "unclassified": 7
+    "retain_latest_or_review": 840,
+    "unclassified": 271
   },
   "protected_archive_metadata_sha256_before": "47b10cbf4ee07427db21adc6d24b1447dcea3747f5d6fad2cea51ce5b3d94f39",
   "protected_archive_metadata_sha256_after": "47b10cbf4ee07427db21adc6d24b1447dcea3747f5d6fad2cea51ce5b3d94f39",
@@ -49,16 +49,16 @@
   "non_retention_table_fingerprints_unchanged": true,
   "non_retention_table_fingerprints": {
     "archives": {
-      "rows": 2526,
-      "sha256": "84f57a87ab78a3491f376577244b51f4ec90dc144b6c06199913a3721656e4f8"
+      "rows": 2790,
+      "sha256": "53b4de222df16be6732057bc373b87e227d90c9c74182fa5d3e0e10dadfced78"
     },
     "benchmark": {
-      "rows": 5329,
-      "sha256": "fca0e1beea94026a36917ea9919d3b1cd1b4b7e130c9ad9aaba76be43c56ed61"
+      "rows": 5330,
+      "sha256": "3339d0e2811b74c2dc94e5acc06c067f2d6298dc50d39895d90aaf48d9e3930c"
     },
     "benchmark_observations": {
-      "rows": 5329,
-      "sha256": "385291c87f983bca4cc27937a9cfbc9cf53dea58fd018f08e76051359c68fdee"
+      "rows": 5330,
+      "sha256": "53b1927eab61b9f56c49a46b9b037d35efb214be7c3bf1c75338849f32a6933f"
     },
     "distribution_coverage": {
       "rows": 0,
@@ -69,62 +69,62 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "document_extractions": {
-      "rows": 6927,
-      "sha256": "0c7b28a06c918de115f6f6fce069c75cad24fc64bf95c5396f0fd2a9973e5845"
+      "rows": 7258,
+      "sha256": "64f17960652cb29d2b18289b749ee8326fca1010c69cecf5831ea1da326f2e9e"
     },
     "document_versions": {
-      "rows": 1787,
-      "sha256": "4754b396cf20923ea89fc2d017fd0966222d883bf20ec1b2399396e33fd67eb6"
+      "rows": 2035,
+      "sha256": "5983e075d94e4c1396a3fa08a5f3f73f331ac67d341bca54de508135e4f5a685"
     },
     "documents": {
-      "rows": 2026,
-      "sha256": "2ddea5feefc9bba6397bcfafbc558fd035f03bf508faf4393a783abd3eefe39b"
+      "rows": 2027,
+      "sha256": "61e0993f2ec4fe9c9a4df4cd555f85c3eb206cc71b2fc431c7819df1d2045550"
     },
     "fetches": {
-      "rows": 7561,
-      "sha256": "9644a6b5b671638adebbae489c564c23549016b09037398bbe5513cf3054f5fc"
+      "rows": 8379,
+      "sha256": "8748d52b405b18e70c4b223fa9434750e136028f8b4abad76f5543b48fb8a7e0"
     },
     "holdings": {
-      "rows": 7781,
-      "sha256": "e5fa207c9c263c4f37336009dba87c4a556f9780726c99dbc27f27400ef4f969"
+      "rows": 7956,
+      "sha256": "aed319fe14087cebea6f2ad862e2b659875539777857730e0e2977f8ed83d607"
     },
     "jobs": {
-      "rows": 825,
-      "sha256": "8de0025bac60d80e40e307c8b5613ba4e1b7f6cb9bc4c5cc27d0ac2107a58fcc"
+      "rows": 856,
+      "sha256": "09a520f2dc7ff28d8365728f807d5b69adb8dfdc0a0dc3a6df163f898b836090"
     },
     "metrics": {
-      "rows": 25418,
-      "sha256": "d98d6f99d17f0eda0317d3fbb7bfe757458932d09f1c79e0f4fdcaa33a87f569"
+      "rows": 26578,
+      "sha256": "a6e5bab90359f392e1b3d66730abdb5520e1025d5616b74834fef4e0f0db479b"
     },
     "nav": {
-      "rows": 281442,
-      "sha256": "ccfcb5fd14e1db140c3a33b5e3e1ef0fa2a916e8ab48850ceea15ee986dbaf4b"
+      "rows": 281584,
+      "sha256": "65c10799b3a0a654c8a077c0daa44ba55b17064678e9404dc1f04cc9d167318f"
     },
     "nav_observations": {
-      "rows": 281751,
-      "sha256": "f3cf582d5a4c514e5842a4ff09a4a6e0b288448cc70c714cb3ce240b6a2f9aa5"
+      "rows": 281893,
+      "sha256": "bd458d06dfb7a428b104534cbfc3f94ed8c955f0079de0522e65a86d8faf7352"
     },
     "portfolios": {
-      "rows": 124,
-      "sha256": "7b791156c52719b3c5907f2775e0439800b6c4e56ae197d6256b775a044ee70d"
+      "rows": 131,
+      "sha256": "ce530826270807e4d75275caaa0d87168858eed17ff949d59bfac7a4c17e1656"
     },
     "schemes": {
       "rows": 143,
-      "sha256": "90a22f7271ae9c0a50ff6c27e0a9d0c548e47c4ecf63af163836c9bb5136f37d"
+      "sha256": "f9954af9a8abc039343adb62038d4852c6b8423b76af556e882acd71c8220802"
     },
     "settings": {
       "rows": 115,
       "sha256": "fc8e4bd28c78227b1709a2dcf6162d1d5e2aea26be4f8a472ca75adc8cdb2af6"
     },
     "source_pages": {
-      "rows": 323,
-      "sha256": "017472dac1475b7f4d99dfb81e9b02c912801a92e6ed3954375b89471db3b600"
+      "rows": 324,
+      "sha256": "5e5d598a4fb576b619dad1153f0a9846c253b0f2edf26c2e8bdb3913e7644e25"
     }
   },
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-25T21:03:50+00:00",
+  "active_checkpoint_created_at": "2026-09-25T21:19:42+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,
