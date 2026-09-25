@@ -1,0 +1,99 @@
+name: Verify storage cleanup publication
+on:
+  push:
+    branches: [maintenance/storage-cleanup-20260925]
+    paths: ['.github/workflows/storage-live-check.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify production and published contents without changing history
+        run: |
+          python - <<'PY'
+          import datetime, hashlib, json, pathlib, sqlite3, subprocess, tempfile, time, urllib.request, zipfile
+          repo='Vasuki8/Smallcap-Ledger';run_id=36091631221
+          def gh(*args):return subprocess.check_output(['gh',*args],text=True)
+          for attempt in range(24):
+              run=json.loads(gh('api',f'repos/{repo}/actions/runs/{run_id}'))
+              if run['status']=='completed':break
+              time.sleep(10)
+          assert run['status']=='completed' and run['conclusion']=='success',run['status']
+          base='https://vasuki8.github.io/Smallcap-Ledger/'
+          def get(path):
+              req=urllib.request.Request(base+path+'?storage-check='+str(run_id),headers={'User-Agent':'Smallcap-Ledger-storage-verification/1.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=45) as response:
+                  assert response.status==200
+                  return response.read()
+          expected=json.loads(gh('api',f'repos/{repo}/contents/deployment/update-status.json','-H','Accept: application/vnd.github.raw+json'))
+          status=None
+          for attempt in range(12):
+              status=json.loads(get('data/status.json'))
+              if status['server_time']==expected['built_at']:break
+              time.sleep(5)
+          assert status['server_time']==expected['built_at'],'Live site is not the expected published build'
+          html=get('').decode()
+          assert 'Smallcap' in html
+          directory=json.loads(get('data/funds.json'))
+          coverage=json.loads(get('data/coverage.json'))
+          assert len(directory['funds'])==143
+          assert coverage['counts']['funds']==36
+          assert coverage['counts']['aum']==36 and coverage['counts']['fee']==36
+          code=directory['funds'][0]['code']
+          detail=json.loads(get(f'data/funds/{code}.json'))
+          nav=json.loads(get(f'data/nav/{code}.json'))
+          assert nav and detail
+          downloads=json.loads(get('data/downloads.json'))
+          assert get(downloads[f'/api/export/nav/{code}'])
+          with tempfile.TemporaryDirectory() as folder:
+              gh('release','download','tracker-history','--repo',repo,'--pattern','latest.json','--dir',folder)
+              manifest=json.loads((pathlib.Path(folder)/'latest.json').read_text())
+              asset=manifest['database']
+              assert asset['asset']=='database-36091631221-1.zip',asset
+              assert manifest['previous']['database']['asset']=='database-36087719595-1.zip'
+              assert len(manifest['source_packs'])==95
+              gh('release','download','tracker-history','--repo',repo,'--pattern',asset['asset'],'--dir',folder)
+              archive=pathlib.Path(folder)/asset['asset']
+              assert archive.stat().st_size==asset['bytes']
+              assert hashlib.sha256(archive.read_bytes()).hexdigest()==asset['sha256']
+              with zipfile.ZipFile(archive) as z:
+                  assert z.namelist()==['data/ledger.sqlite3']
+                  path=pathlib.Path(folder)/'verify.sqlite3';path.write_bytes(z.read('data/ledger.sqlite3'))
+              with sqlite3.connect(path) as connection:
+                  assert connection.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+                  assert connection.execute('PRAGMA foreign_key_check').fetchall()==[]
+                  from scripts.compact_database import table_fingerprints
+                  fingerprints=table_fingerprints(connection)
+                  expected_fingerprints=json.loads(pathlib.Path('docs/STORAGE-VALIDATION.json').read_text())['preserved_tables']
+                  assert fingerprints==expected_fingerprints,'Published records differ from validated records'
+              legacy=json.loads(gh('api',f'repos/{repo}/releases/assets/582369546'))
+              assert legacy['size']==1087514828 and legacy['name']=='state-35791406887-1.zip'
+              result={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                'production_run_id':run_id,'production_conclusion':run['conclusion'],
+                'production_commit':run['head_sha'],'live_url':base,
+                'live_build_time':status['server_time'],'expected_build_time':expected['built_at'],
+                'live_counts':status['counts'],'live_coverage_counts':coverage['counts'],
+                'live_homepage_fund_nav_and_csv_verified':True,'sample_fund_code':code,
+                'database_checkpoint':asset,'database_bytes':path.stat().st_size,
+                'published_database_integrity':'ok','published_records_match_validated_fingerprints':True,
+                'tables_preserved':len(fingerprints),'logical_rows_preserved':sum(x['rows'] for x in fingerprints.values()),
+                'rollback_database_checkpoint':manifest['previous']['database'],
+                'source_packs_retained':len(manifest['source_packs']),
+                'archived_originals_retained':fingerprints['archives']['rows'],
+                'legacy_asset_unchanged':{'name':legacy['name'],'bytes':legacy['size']}}
+              pathlib.Path('docs/STORAGE-LIVE-VERIFICATION.json').write_text(json.dumps(result,indent=2)+'\n')
+              print(json.dumps(result,indent=2))
+          PY
+      - name: Record read-only verification on maintenance branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/STORAGE-LIVE-VERIFICATION.json
+          git commit -m 'Record verified production archive and live website after cleanup'
+          git push origin HEAD:maintenance/storage-cleanup-20260925
