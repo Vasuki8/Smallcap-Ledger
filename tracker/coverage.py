@@ -66,7 +66,14 @@ def report():
     for scheme in db.rows('SELECT DISTINCT family,amc FROM schemes ORDER BY family'):
         family=scheme['family'];row=dict(scheme)
         for key in ('aum','ter','ter_observed','base_expense_ratio','expense_ratio','benchmark'):
-            row[key]=db.one('SELECT as_of,value,unit,plan,source FROM metrics WHERE family=? AND metric=? ORDER BY as_of DESC,observed_at DESC LIMIT 1',(family,key))
+            if key in FEE_METRICS:
+                row[key]=db.one("""SELECT as_of,value,unit,plan,source FROM metrics
+                  WHERE family=? AND metric=?
+                  ORDER BY as_of DESC,
+                           CASE plan WHEN 'Direct' THEN 0 WHEN 'Regular' THEN 1 WHEN 'All' THEN 2 ELSE 3 END,
+                           observed_at DESC LIMIT 1""",(family,key))
+            else:
+                row[key]=db.one('SELECT as_of,value,unit,plan,source FROM metrics WHERE family=? AND metric=? ORDER BY as_of DESC,observed_at DESC LIMIT 1',(family,key))
         row['fee']=db.one("""SELECT metric,as_of,value,unit,plan,source FROM metrics
           WHERE family=? AND plan='Direct' AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio')
           ORDER BY CASE metric WHEN 'ter' THEN 0 WHEN 'ter_observed' THEN 1 WHEN 'base_expense_ratio' THEN 2 ELSE 3 END,
