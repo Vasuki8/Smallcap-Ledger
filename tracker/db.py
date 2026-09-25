@@ -247,10 +247,10 @@ def set_archive_retention(content_hash, *, classification=None, binary_state=Non
                 'retain_latest_or_review':2,'retain_evidence':3}
     if precedence[next_class]<precedence[current['classification']]:
         raise ValueError('Archive retention classification cannot be downgraded')
-    if next_state=='metadata_only' and next_class!='link_only_candidate':
-        raise ValueError('Only reviewed link-only candidates may become metadata-only')
     if next_class=='retain_evidence' and next_state!='retained':
         raise ValueError('Protected evidence must retain its binary')
+    if next_state=='metadata_only' and next_class!='link_only_candidate':
+        raise ValueError('Only reviewed link-only candidates may become metadata-only')
     with connect() as c:
         c.execute("""INSERT INTO archive_retention(
           hash,classification,binary_state,reason,reviewed_at,updated_at)
