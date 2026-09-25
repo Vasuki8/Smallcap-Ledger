@@ -1,0 +1,79 @@
+name: Union portfolio transport probe
+
+on:
+  push:
+    branches: [backend/union-bajaj-portfolio-20260925]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Probe Union public portfolio routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re, urllib.parse, urllib.request
+
+          URLS = [
+              "https://www.unionmf.com/about-us/downloads",
+              "https://www.unionmf.com/about-us/downloads/monthly-portfolio",
+          ]
+          UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36"
+
+          def get(url, limit=6_000_000):
+              req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"text/html,*/*"})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  raw=r.read(limit+1)
+                  if len(raw)>limit: raise RuntimeError("oversize")
+                  print("FETCH",r.status,len(raw),r.geturl(),r.headers.get("content-type"))
+                  return raw.decode("utf-8","replace")
+
+          pages=[]
+          for url in URLS:
+              try:
+                  text=get(url)
+                  pages.append((url,text))
+                  print("PAGE_MATCHES",url,
+                        "monthly",len(re.findall("monthly",text,re.I)),
+                        "portfolio",len(re.findall("portfolio",text,re.I)),
+                        "api",len(re.findall("api",text,re.I)))
+              except Exception as e:
+                  print("PAGE_ERROR",url,repr(e))
+
+          scripts=[]
+          for base,text in pages:
+              for src in re.findall(r'<script[^>]+src=["\']([^"\']+)',text,re.I):
+                  url=urllib.parse.urljoin(base,src)
+                  if url not in scripts: scripts.append(url)
+          print("SCRIPT_COUNT",len(scripts))
+          for s in scripts:
+              print("SCRIPT",s)
+
+          needles=("monthlyportfolio","monthly-portfolio","portfolio","downloads","api/","ajax","service")
+          for s in scripts:
+              host=urllib.parse.urlparse(s).hostname or ""
+              if not host.endswith("unionmf.com"): continue
+              try:
+                  text=get(s)
+              except Exception as e:
+                  print("SCRIPT_ERROR",s,repr(e)); continue
+              low=text.lower()
+              matched=[n for n in needles if n in low]
+              if not matched: continue
+              print("MATCHED_SCRIPT",s,matched)
+              for n in matched:
+                  pos=0
+                  shown=0
+                  while shown<8:
+                      i=low.find(n,pos)
+                      if i<0: break
+                      a=max(0,i-450); b=min(len(text),i+900)
+                      print("SNIP",n,re.sub(r"\s+"," ",text[a:b]))
+                      pos=i+len(n); shown+=1
+          PY
