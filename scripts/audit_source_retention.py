@@ -27,7 +27,7 @@ BINARY_EXTENSIONS = {'.pdf', '.xls', '.xlsx', '.xlsb', '.xml', '.csv', '.zip',
                      '.doc', '.docx', '.ppt', '.pptx'}
 FINANCIAL_TABLES = {'metrics', 'portfolios', 'nav', 'nav_observations', 'benchmark',
                     'benchmark_observations', 'distributions', 'distribution_coverage', 'schemes'}
-KNOWN_HASH_TABLES = {'archives', 'metrics', 'portfolios', 'fetches',
+KNOWN_HASH_TABLES = {'archives', 'archive_retention', 'metrics', 'portfolios', 'fetches',
                      'document_versions', 'document_extractions'}
 STATES = ('retain_evidence', 'retain_latest_or_review', 'link_only_candidate')
 
