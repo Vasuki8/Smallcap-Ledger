@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-25T19:12:41+00:00
+Prepared: 2026-09-25T19:15:48+00:00
 
 **36 funds, 143 NAV series, 281,442 NAV observations. Latest included NAV: 2026-09-24.**
 
