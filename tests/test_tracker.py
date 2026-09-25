@@ -382,6 +382,20 @@ class TrackerTests(unittest.TestCase):
         self.assertFalse(disclosures.official_publication_url('https://news.example.com/hdfc-market-outlook','HDFC'))
         self.assertFalse(disclosures.official_publication_url('https://hdfcfund.com.evil.example/news','HDFC'))
 
+    def test_archive_retention_state_cannot_downgrade_protected_evidence(self):
+        h=db.archive(b'protected retention invariant','application/pdf')
+        db.set_archive_retention(
+            h,classification='retain_evidence',reason='financial evidence',
+            reviewed_at='2026-09-25')
+        with self.assertRaisesRegex(ValueError,'cannot be downgraded'):
+            db.set_archive_retention(h,classification='link_only_candidate')
+        with self.assertRaisesRegex(ValueError,'must retain'):
+            db.set_archive_retention(h,binary_state='metadata_only')
+        state=db.archive_retention(h)
+        self.assertEqual(state['classification'],'retain_evidence')
+        self.assertEqual(state['binary_state'],'retained')
+        self.assertTrue(db.archive_binary_path(h).is_file())
+
     def test_metadata_only_archive_is_not_downloadable_and_refetch_rehydrates(self):
         payload=b'superseded discovery page retained for safety'
         h=db.archive(payload,'text/html')
