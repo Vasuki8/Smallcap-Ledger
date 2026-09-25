@@ -208,6 +208,7 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str|Non
     benchmark_source=(db.one("""SELECT source,MAX(date) last,MIN(date) first,COUNT(*) points
       FROM benchmark WHERE name=?""",(comparison_name,)) if comparison_name else None)
     comparison_available=bool(bp)
+    if not comparison_available:benchmark_source=None
     if not comparison_name:comparison_status=reported['status']
     elif comparison_available:comparison_status='available'
     elif comparison_role=='reported_benchmark':comparison_status='reported_series_missing'
