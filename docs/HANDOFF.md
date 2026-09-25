@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after explicit TRI benchmark identity repair deployment.
+Updated: 2026-09-25, after historical NAV-gap source classification deployment.
 
 
 
@@ -25,6 +25,84 @@ Updated: 2026-09-25, after explicit TRI benchmark identity repair deployment.
 
 
 
+
+## Latest completed batch: historical NAV-gap source classification
+
+**The five >7-calendar-day Growth-plan NAV intervals flagged for ABSL and DSP are now verified as gaps in the available official histories, not recoverable missing values and not tracker ingestion defects. No NAV value was added, estimated, interpolated or forward-filled.** Read `docs/NAV-GAP-AUDIT.md` and `tracker/nav_gap_evidence.json` for the retained source evidence.
+
+### Evidence trail
+
+PR **#129** merged as commit `f49670b1c8bf07bd91dd58e1576d1153f212c195` and queried AMFI's official historical NAV download by exact AMC/date window and exact scheme code. Production run **#488 / 36167369624** showed that every flagged interval returns **only the two already-retained boundary observations**:
+
+- ABSL Small Cap Regular Growth · code **105804**: **2010-05-31 11.5499 → 2010-06-08 11.4193**;
+- DSP Small Cap Regular Growth · code **105989**:
+  - **2007-08-08 10.5740 → 2007-08-16 10.1690**
+  - **2008-08-27 9.1660 → 2008-09-04 9.3220**
+  - **2010-03-17 13.2800 → 2010-03-25 13.4580**
+  - **2010-04-07 14.1660 → 2010-04-15 14.4550**
+
+The exact AMFI query URLs and response SHA-256 values are retained in `tracker/nav_gap_evidence.json`.
+
+PRs **#130–#133** then traced the current first-party AMC historical-NAV transports without writing data:
+- #130 `d807cd0c14a8b0d1876f90de28943679b306455b` — current AMC source/transport discovery;
+- #131 `e7cebf5c2b579e38b81c78f04058a62d9caa34ca` — browser/API contract extraction;
+- #132 `441df78faf4d3f0b5b6221431cf6aa9545833bb6` — initial first-party row probe;
+- #133 `87e2a1da9542730de2d915c37d85cd1597b7117e` — resilient retry after the initial diagnostic path failed.
+
+DSP's current public NAV page maps Small Cap **Regular Growth** to internal option id **157**. PR **#134**, commit `566b9544529f888d94966af06f73321722d9ac9c`, corrected the probe to use that exact first-party id. Production run **#493 / 36174919035** proved:
+
+- each of the four historical DSP intervals returns **exactly 2 rows**, matching AMFI's boundary NAVs;
+- a control request for **2026-09-01 → 2026-09-10** returns **8 daily business-day rows**, so the DSP exporter is functioning and capable of returning ordinary daily NAV history where rows exist.
+
+Official NSE archive checks also show normal-market activity/settlements inside the flagged intervals. That rules out a blanket whole-market weekend/holiday explanation, but it does **not** establish the fund-specific operational reason for the missing dates. The tracker therefore records only the evidence that current authoritative histories do not expose intermediate NAV observations.
+
+### Final audit behavior
+
+PR **#135** merged as commit `b1c7c8272800cc1e7a69f5fcb48692e24736bdcc`.
+
+`tracker/performance_coverage.py` now separates:
+- **raw gaps** — the literal >7-day intervals retained in the NAV series;
+- **verified official-history gaps** — reviewed intervals where authoritative history does not provide intermediate values;
+- **unresolved gaps** — gaps that still require source repair/review.
+
+The five Growth-plan intervals are preserved in the JSON/Markdown audit as `verified_official_history_gap`, but no longer create `nav_large_gap` issues or the actionable `review_nav_history_gaps` repair priority.
+
+Production workflow **#494 / 36176007361** completed successfully at **2026-09-25T18:52:28Z**:
+- compile/preflight and production checkpoint restore passed;
+- all normal source-upgrade steps passed;
+- the temporary NAV diagnostic steps were removed from the workflow;
+- **336 tests passed**;
+- site generation and generated-data/download validation passed;
+- cumulative-history publication and status recording passed;
+- Pages deployment passed.
+
+Status commit `4310d5b0e2a3ab55f479abb77a5f56471204ef6b` records the final audit. Pages artifact **10881713134** is **230,660,587 bytes** with digest `sha256:675f134be954e9db6e8f261c459fcba95c270750157a3847d892639defa31121`.
+
+Final production audit generated at **2026-09-25T18:51:55Z**:
+- ABSL Growth code **105804**: raw gaps **1**, verified official-history gaps **1**, unresolved gaps **0**;
+- DSP Growth code **105989**: raw gaps **4**, verified official-history gaps **4**, unresolved gaps **0**;
+- verified official-history Growth gaps: **5 intervals across 2 Growth plans**;
+- the actionable `review_nav_history_gaps` priority is **gone**.
+
+ABSL Regular IDCW code **105805** still has the same raw 2010 interval and therefore contributes one non-Growth `nav_large_gap` issue count. It is outside the displayed Growth-return repair queue and was intentionally **not** reclassified without an exact option-level first-party row check.
+
+The BSE historical-series repair is now explicitly marked **non-actionable** in the performance audit under the current source constraint: 10 funds / 20 Growth plans explicitly report BSE 250 SmallCap TRI, but BSE's first-party daily index-level history is subscription-distributed. Do not substitute the price index, derive TRI, or use an unapproved third-party series.
+
+### Next backend task
+
+**Make the performance endpoint benchmark selection evidence-aware so it does not silently present Nifty Smallcap 250 TRI as the fund benchmark for BSE-benchmarked funds.**
+
+Current `/api/funds/{code}/performance` defaults its `benchmark` parameter globally to `Nifty Smallcap 250 TRI`, while the audit correctly records **20 Growth plans** whose explicit reported benchmark is BSE 250 SmallCap TRI and whose relevant BSE series is unavailable.
+
+The next batch should:
+- resolve each fund's latest explicit reported benchmark identity before choosing a comparison series;
+- use the reported canonical TRI series when it is retained;
+- when the reported series is known but unavailable (currently BSE), return an explicit unavailable/missing-series status and **no substitute benchmark comparison** rather than silently using Nifty;
+- preserve an explicitly user-selected alternative comparison as a separately labelled comparison, not as the fund's reported benchmark;
+- add regression coverage for Nifty-benchmarked funds, BSE-benchmarked funds with no retained BSE series, IDCW/no-total-return cases, and explicit alternate-comparison requests;
+- update the static site only after the API contract is verified, keeping the light/minimal UI and clearly distinguishing **reported benchmark** from any optional comparison index.
+
+Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`; the **700 link-only retention candidates and legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: explicit Nifty Smallcap 250 TRI identity repair
 
