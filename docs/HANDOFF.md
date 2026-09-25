@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after historical performance / benchmark coverage audit deployment.
+Updated: 2026-09-25, after explicit TRI benchmark identity repair deployment.
 
 
 
@@ -25,6 +25,54 @@ Updated: 2026-09-25, after historical performance / benchmark coverage audit dep
 
 
 
+
+## Latest completed batch: explicit Nifty Smallcap 250 TRI identity repair
+
+**The three previously ambiguous Nifty Smallcap 250 benchmark identities are now resolved from first-party AMC evidence without globally treating an unqualified index name as TRI.** Edelweiss, Franklin India and Groww now all retain explicit **Nifty Smallcap 250 TRI** benchmark identity, while their older unqualified observations remain preserved as historical evidence.
+
+Implementation PR **#125** merged as commit `5b35cfc619612d0f035970e9d111c32c43f16479`. It introduced parser version **v129**, limited to **Edelweiss Small Cap Fund, Franklin India Small Cap Fund and Groww Small Cap Fund**, plus a release verification gate. Production workflow **#484**, run **36160649977**, passed all tests and deployment, but its generated audit correctly exposed that Franklin was still being superseded by the older unqualified August observation.
+
+PR **#126** merged as commit `ec1eb64cabc1e94b1405ac27f84ae3fda52a85e5` and strengthened v129 so the push release fails unless all three targets actually resolve to explicit TRI evidence. Workflow **#485**, run **36161100270**, then **failed intentionally before deployment** because Franklin's client-rendered live page returned only the shell to the GitHub runner. That failure was the expected safety behavior: Edelweiss and Groww verified, Franklin did not, and no false completion was published.
+
+PR **#127** merged as commit `1587ec2f79d6723bd2754a57f8de2769afd299aa`. Franklin now uses the project's existing **reviewed official report** path for publicly readable first-party evidence that cannot be reliably machine-extracted by the runner. The current Franklin fund page observed **2026-09-25** identifies **Nifty Smallcap 250** as the scheme benchmark and explicitly states that benchmark returns are calculated using **Total Return Index** values, so the tracker records **Nifty Smallcap 250 TRI** with the exact official page as source and no synthetic file hash.
+
+The final production workflow **#486**, run **36166599704**, completed successfully at **2026-09-25T17:23:22Z**. Its v129 gate logged:
+
+- Edelweiss Small Cap Fund — **Nifty Smallcap 250 TRI**, as of **2026-08-31**, retained official September factsheet;
+- Franklin India Small Cap Fund — **Nifty Smallcap 250 TRI**, observed **2026-09-25**, reviewed current official fund page with explicit Total Return Index statement;
+- Groww Small Cap Fund — **Nifty Smallcap 250 TRI**, as of **2026-08-31**, current official scheme-performance page.
+
+The production regression gate passed **335 tests**. Site generation and generated-data/download validation passed. Status commit `c3876383e2d717d599e7b77616ee99943d5fc2a4` records the resulting coverage state. Pages artifact **10877698652** is **230,660,338 bytes** with digest `sha256:efa547f30dca6956d35a5a7aa00ede6493daa1df7b8cfc88d7d2cde4a308ae4e`.
+
+### Performance-audit impact
+
+The production audit generated at **2026-09-25T17:22:46Z** now reports:
+
+- plans: **143**
+- Growth plans: **72**
+- reported benchmark identity: **36 / 36 funds**
+- Growth plans with explicit reported TRI identity: **72 / 72** (up from 66 / 72)
+- Growth plans with the relevant reported TRI series and at least two exact overlapping dates: **52 / 72** (up from 46 / 72)
+- relevant benchmark overlap eligibility: **1Y 42 / 72**, **3Y 32 / 72**, **5Y 30 / 72**
+
+The former `verify_non_tri_benchmark_identity` repair item is gone. Edelweiss and Franklin have no remaining benchmark-identity issue. Groww's TRI identity is fixed, but its 1Y/3Y/5Y return and overlap periods remain unavailable because the scheme history begins only in **2026**, which is an age limitation rather than a data-identity gap.
+
+The **20 Growth plans across 10 BSE-benchmarked funds** still remain `reported_tri_series_missing` / `website_default_benchmark_mismatch` because the historical **BSE 250 SmallCap TRI** series is not retained. Per `docs/BSE-TRI-SOURCE-AUDIT.md`, that collection task is blocked under the free first-party-source rule because BSE states daily index-level data are available via subscription. Do not substitute the BSE price index, derive TRI, or use a third-party series. Retry only after a material first-party distribution change or separate approval for a licensed source.
+
+### Next backend task
+
+**Review the remaining historical NAV gaps for ABSL and DSP Regular Growth before attempting any backfill.** The audit currently flags only short **8-calendar-day** intervals:
+
+- Aditya Birla Sun Life Small Cap Fund · Regular Growth · AMFI code **105804**: **2010-05-31 → 2010-06-08**;
+- DSP Small Cap Fund · Regular Growth · AMFI code **105989**:
+  - **2007-08-08 → 2007-08-16**
+  - **2008-08-27 → 2008-09-04**
+  - **2010-03-17 → 2010-03-25**
+  - **2010-04-07 → 2010-04-15**
+
+First determine whether each interval represents a true missing NAV observation or a legitimate valuation/market-calendar gap. Use authoritative retained/AMFI evidence and do not interpolate or manufacture NAV values. If an official missing observation exists, retain its exact date/value/source as a normal NAV observation and rerun the performance audit. If the interval is legitimate, update the audit logic/evidence so it does not classify a valid calendar gap as missing data.
+
+Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`; do not retry blocked portfolio sources while the source-change watch is unchanged. The **700 link-only retention candidates and legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: BSE 250 SmallCap TRI source audit — first-party subscription blocker
 
