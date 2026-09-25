@@ -1760,6 +1760,27 @@ Total Net Assets as on 31-August-2026 100.00%
         self.assertEqual(row['portfolio_gap']['reason'],'source_unavailable')
         self.assertEqual(row['portfolio_gap']['source_page']['status'],'Gap')
 
+    def test_coverage_fee_metric_prefers_direct_only_on_same_date(self):
+        from tracker import coverage
+        family='Tie Break Small Cap Fund'
+        with db.connect() as c:
+            c.execute(
+                'INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                (999901,family,family,'Tie Break Mutual Fund','Direct','Growth','test'),
+            )
+        db.metric(family,'Regular','base_expense_ratio','2026-09-23',1.94,'% p.a.','official')
+        db.metric(family,'Direct','base_expense_ratio','2026-09-23',0.42,'% p.a.','official')
+        row=next(x for x in coverage.report()['funds'] if x['family']==family)
+        self.assertEqual(row['base_expense_ratio']['plan'],'Direct')
+        self.assertEqual(float(row['base_expense_ratio']['value']),0.42)
+
+        # Reporting date remains the primary ordering rule: a genuinely newer
+        # Regular observation must not be hidden by an older Direct one.
+        db.metric(family,'Regular','base_expense_ratio','2026-09-24',1.90,'% p.a.','official')
+        row=next(x for x in coverage.report()['funds'] if x['family']==family)
+        self.assertEqual(row['base_expense_ratio']['plan'],'Regular')
+        self.assertEqual(row['base_expense_ratio']['as_of'],'2026-09-24')
+
     def test_portfolio_freshness_target_has_new_month_grace(self):
         from datetime import date
         from tracker.coverage import expected_portfolio_as_of
