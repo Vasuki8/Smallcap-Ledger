@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after evidence-aware performance benchmark API deployment.
+Updated: 2026-09-25, after hosted/static benchmark-aware performance deployment.
 
 
 
@@ -25,6 +25,106 @@ Updated: 2026-09-25, after evidence-aware performance benchmark API deployment.
 
 
 
+
+## Latest completed batch: hosted/static benchmark-aware performance integration
+
+**GitHub Pages now follows the same evidence-aware benchmark contract as the Python backend. The public performance UI no longer silently substitutes Nifty Smallcap 250 TRI for funds that explicitly report BSE 250 SmallCap TRI when BSE TRI history is unavailable.**
+
+PR **#139** merged as commit `a770e63e1063aaf68a24aaaebcc16075b3b672c4`.
+
+### Hosted/static contract
+
+`dist/static-data.js` now passes the full retained benchmark registry into the browser analytics layer instead of selecting a benchmark before the contract can resolve the fund's reported identity.
+
+`dist/analytics.js` now mirrors the backend response semantics:
+
+- resolves the latest fund-reported benchmark from `fund.metrics.benchmark`;
+- maps only explicit total-return identities to canonical TRI series;
+- returns `reported_benchmark` with identity/source/date/availability/status;
+- returns `comparison_series` with name, role, status, availability and source;
+- defaults to the fund's reported canonical TRI series;
+- returns `reported_series_missing` and no comparison when the reported TRI history is unavailable;
+- labels an explicitly selected different retained series as `alternate_comparison`;
+- preserves IDCW/no-total-return behavior.
+
+`dist/app.js` no longer initializes or resets a fund to a global Nifty fallback. `state.benchmark` is now null by default and is populated only when the user explicitly selects an alternate comparison.
+
+### Public UI behavior
+
+For a fund whose reported benchmark series is retained:
+
+- overview and performance charts use the reported TRI series;
+- legends and return-table headings read the resolved comparison from the response contract;
+- the benchmark note identifies the fund's reported benchmark and retained TRI history.
+
+For a BSE-benchmarked fund while BSE TRI history is unavailable:
+
+- the default comparison remains **BSE 250 SmallCap TRI**;
+- no Nifty line, matched-date table values or substitute benchmark statistics are shown;
+- the UI displays **Reported benchmark history unavailable** and explains that no substitute index is shown automatically.
+
+Advanced options still allow a user to choose a retained series such as **Nifty Smallcap 250 TRI**, but the UI labels it **alternate comparison** and continues to show the fund's reported BSE benchmark separately.
+
+The hosted benchmark-coverage note was also corrected: it now states that no alternate comparator is automatically substituted when a reported TRI history is unavailable.
+
+### Regression and production verification
+
+Two new static parity tests were added:
+
+1. browser analytics parity for:
+   - reported Nifty default;
+   - reported BSE with missing BSE history;
+   - explicit Nifty alternate comparison for a BSE-reported fund;
+   - IDCW/no-total-return behavior;
+2. shipped JavaScript syntax plus a direct assertion that the old client-side Nifty fallback expression is gone.
+
+Production workflow **#498 / run 36180681359** completed successfully at **2026-09-25T19:37:34Z**:
+
+- dependency/syntax setup and production checkpoint restore passed;
+- all normal source-upgrade steps passed;
+- database compaction passed;
+- **340 tests passed**, including both new static parity tests;
+- generated GitHub Pages site validation passed;
+- cumulative-history publication and build-status recording passed;
+- Pages artifact upload passed;
+- Pages deployment passed.
+
+Status commit: `3dbdb84658e5ccff36b5822ab87b5b2ec8630aa9`.
+
+Pages artifact **10884112452** is **230,661,408 bytes** with digest `sha256:968b05877f907f0fd9d7734a0f45a79d62c58df56692a96a238bd6e6b6aa262b`.
+
+### Remaining audit inconsistency
+
+The generated performance audit at **2026-09-25T19:37:02Z** still contains the legacy informational fields/issues:
+
+- `website_default_mismatch_growth_plans = 20`;
+- `website_default_benchmark_mismatch`;
+- `website_default_series` / `website_default_overlap`;
+- a note describing Nifty as the website's global default comparison.
+
+Those fields describe the **pre-#139 UI model** and are now stale. They do not mean the deployed UI is still substituting Nifty.
+
+### Next backend task
+
+**Update the performance coverage audit so its benchmark-comparison semantics match the now-deployed evidence-aware API/static UI.**
+
+The next batch should:
+
+- remove or deprecate the stale `website_default_benchmark_mismatch` issue and `website_default_mismatch_growth_plans` summary;
+- stop describing Nifty Smallcap 250 TRI as the website's global default benchmark;
+- replace the old `website_default_*` structures with evidence-aware fields if useful, for example:
+  - reported benchmark series availability;
+  - optional alternate-comparison availability;
+  - explicit distinction between missing reported-series history and an available alternate comparator;
+- keep `reported_tri_series_missing` for funds whose reported TRI series is genuinely unavailable;
+- preserve exact-overlap and no-forward-fill rules;
+- keep the BSE historical-series repair non-actionable under the current subscription-only first-party source constraint;
+- add regression coverage proving that BSE funds can have an available Nifty alternate without being classified as using Nifty by default;
+- regenerate `docs/PERFORMANCE-COVERAGE-AUDIT.json` / `.md` and confirm the obsolete website-default mismatch counts disappear.
+
+After that audit cleanup, reassess remaining actionable performance gaps rather than re-opening the blocked BSE source task.
+
+Portfolio recovery remains gated by `docs/PORTFOLIO-RECOVERY-QUEUE.json`; the **700 link-only retention candidates and legacy cumulative ZIP remain untouched**.
 
 ## Latest completed batch: evidence-aware performance benchmark API
 
