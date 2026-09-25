@@ -184,6 +184,7 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str=pro
 def holdings(snapshot_id:int):
     p=db.one("SELECT * FROM portfolios WHERE id=?",(snapshot_id,))
     if not p:raise HTTPException(404,"Snapshot not found")
+    p['limitation']=portfolio_limitation(p['family'],p)
     p['holdings']=db.rows("SELECT * FROM holdings WHERE snapshot_id=? ORDER BY weight DESC",(snapshot_id,))
     current=date.fromisoformat(p['as_of']);previous_month=(current.replace(day=1)-timedelta(days=1)).strftime('%Y-%m')
     prior=db.one("""SELECT p.*,COUNT(h.id) holding_count,
@@ -192,6 +193,7 @@ def holdings(snapshot_id:int):
       WHERE p.family=? AND substr(p.as_of,1,7)=?
       GROUP BY p.id ORDER BY p.as_of DESC,p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
       (p['family'],previous_month))
+    if prior:prior['limitation']=portfolio_limitation(prior['family'],prior)
     p['previous']=prior;p['changes']=[]
     if prior:
         old=db.rows("SELECT * FROM holdings WHERE snapshot_id=?",(prior['id'],))
