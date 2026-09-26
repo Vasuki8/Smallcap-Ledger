@@ -19,7 +19,7 @@ from pathlib import PurePosixPath
 from urllib.parse import quote
 
 FAMILY = "ICICI Prudential Small Cap Fund"
-PARSER_VERSION = "icici-portfolios-2026-09-v1"
+PARSER_VERSION = "icici-portfolios-2026-09-v2"
 
 PAGE = "https://www.icicipruamc.com/news-and-media/downloads"
 API_BASE = "https://apimf.icicipruamc.com"
@@ -32,7 +32,10 @@ CATEGORY_CODE = "OTHERS"
 SUBCATEGORY_TITLE = "Monthly Portfolio Disclosures"
 SUBCATEGORY_CODE = "MONTHLY_PORTFOLIO_DISCSLO_DWND"
 SUBCATEGORY_INTERNAL = "monthly-portfolio-disclosures"
-WORKBOOK_NAME = "ICICI Prudential Small Cap Fund.xlsx"
+WORKBOOK_NAMES = {
+    "icici prudential small cap fund.xlsx",
+    "icici prudential smallcap fund.xlsx",
+}
 
 _TITLE = re.compile(r"^Monthly Portfolio Disclosure ([A-Za-z]+) (20\d{2})$")
 _FILENAME = re.compile(r"^Monthly-Portfolio-Disclosure-([A-Za-z]+)-(20\d{2})\.zip$", re.I)
@@ -208,7 +211,7 @@ def extract_zip(content, family, url, content_hash):
             path = PurePosixPath(entry.filename)
             if path.is_absolute() or ".." in path.parts or "\\" in entry.filename or entry.flag_bits & 1:
                 raise ValueError("Unsupported ICICI monthly portfolio ZIP entry")
-            if path.name.casefold() == WORKBOOK_NAME.casefold():
+            if path.name.casefold() in WORKBOOK_NAMES:
                 if path.suffix.lower() != ".xlsx" or not 0 < entry.file_size <= 5 * 1024 * 1024:
                     raise ValueError("ICICI Small Cap workbook has an unsupported file shape")
                 matches.append(entry)

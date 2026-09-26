@@ -54,10 +54,12 @@ def workbook_bytes():
         ["Portfolio as on Aug 31,2026", None, None, None, None, None, None],
         ["Company/Issuer/Instrument Name", "ISIN", "Coupon", "Industry/Rating",
          "Quantity", "Exposure/Market Value(Rs.Lakh)", "% to Nav"],
-        ["Equity & Equity Related Instruments", None, None, None, None, None, None],
+        ["Equity & Equity Related Instruments", None, None, None, None, 9900, 99],
+        ["Listed / Awaiting Listing On Stock Exchanges", None, None, None, None, 9900, 99],
         ["Alpha Industries Ltd", "INE000A01011", None, "Industrial Products",
          1000, 9900, 99],
-        ["TREPS", None, None, None, None, 100, 1],
+        ["Others", None, None, None, None, 100, 1],
+        ["Cash Margin - Derivatives", None, None, None, None, 100, 1],
         ["Grand Total", None, None, None, None, 10000, 100],
     ]
     book = openpyxl.Workbook()
@@ -70,13 +72,13 @@ def workbook_bytes():
     return out.getvalue(), rows
 
 
-def zip_bytes(*, duplicate=False, unsafe=False):
+def zip_bytes(*, duplicate=False, unsafe=False, filename="ICICI Prudential Small Cap Fund.xlsx"):
     book, _ = workbook_bytes()
     out = io.BytesIO()
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(icici.WORKBOOK_NAME, book)
+        archive.writestr(filename, book)
         if duplicate:
-            archive.writestr("nested/" + icici.WORKBOOK_NAME, book)
+            archive.writestr("nested/ICICI Prudential Smallcap Fund.xlsx", book)
         if unsafe:
             archive.writestr("../escape.txt", b"x")
     return out.getvalue()
@@ -166,6 +168,13 @@ class IciciPortfolioTests(unittest.TestCase):
             workbook = parse.call_args.args[0]
             self.assertTrue(workbook.startswith(b"PK"))
             self.assertEqual(parse.call_args.args[1:], (icici.FAMILY, source, "hash"))
+            self.assertEqual(
+                icici.extract_zip(
+                    zip_bytes(filename="ICICI Prudential Smallcap Fund.xlsx"),
+                    icici.FAMILY, source, "hash",
+                ),
+                9,
+            )
         with self.assertRaisesRegex(ValueError, "exactly one"):
             icici.extract_zip(zip_bytes(duplicate=True), icici.FAMILY, source, "hash")
         with self.assertRaisesRegex(ValueError, "Unsupported"):
