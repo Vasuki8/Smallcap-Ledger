@@ -18,6 +18,7 @@ COMMUNICATION_KINDS=("market view","unitholder letter")
 _COMMUNICATION_SOURCE=re.compile(
     r"newsletter|letter.*unitholder|unitholder.*letter|"
     r"market[\s_\-]*(?:outlook|update|view|insights?|commentar(?:y|ies))|equity[\s_\-]*outlook|"
+    r"20\d{2}[\s_\-]+outlook|"
     r"latest[\s_\-]*commentar|investment[\s_\-]*(?:view|outlook)|"
     r"(?:cio|ceo)[\s_\-]*(?:letter|view)|outlooks?\s*&\s*economy|"
     r"product[\s_\-]*note|presentation",
