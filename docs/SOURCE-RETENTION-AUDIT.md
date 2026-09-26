@@ -1,5 +1,91 @@
 # Source-retention audit — proposal only
 
+## Isolated replacement-pack simulation completed — no production mutation
+
+The storage-reduction proposal has now been simulated end-to-end against an exact active checkpoint. **No production binary state changed and no release asset was uploaded, deleted, retired or switched.**
+
+The authoritative current simulation is committed in:
+
+- `deployment/retention-pack-simulation.json`
+- `docs/RETENTION-PROPOSED-MANIFEST.json`
+- `docs/RETENTION-MIGRATION-CANDIDATES.json`
+- `docs/RETENTION-REPLACEMENT-SIMULATION.md`
+
+Final isolated workflow **run 36205872175** completed successfully at **2026-09-26T00:45:24Z**.
+
+### Candidate-set change since the original audit
+
+The historical audit reviewed **700** link-only candidates. By the active checkpoint created **2026-09-25T22:17:18Z**, newer collection evidence had strengthened **5** of those hashes to `retain_latest_or_review`.
+
+The final simulated migration therefore contains **695 currently eligible candidates**, not 700.
+
+- historical reviewed candidates: **700**
+- currently eligible candidates: **695**
+- reviewed hashes excluded because newer evidence strengthened them: **5**
+- proposed metadata-only raw bytes: **403,318,035**
+- reviewed compressed payload bytes for those 695 candidates: **34,139,810**
+
+The five excluded hashes remain binary-retained and are listed with their current retention reasons in the committed candidate/report artifacts.
+
+### Exact proposed pack result
+
+The active checkpoint contains **2,790 archive hashes** and **101 active source packs**.
+
+The final proposal would:
+
+- keep **2,095** hashes binary-retained;
+- mark **695** hashes metadata-only;
+- affect **49** current source packs;
+- replace **24** affected packs;
+- fully retire **25** packs that contain only proposed metadata-only candidates;
+- produce **76** steady-state source packs total.
+
+Measured asset sizes:
+
+- current source-pack assets: **1,540,491,329 bytes**
+- proposed source-pack assets: **1,506,186,949 bytes**
+- exact source-pack asset reduction: **34,304,380 bytes**
+- current active database ZIP: **7,919,692 bytes**
+- simulated database ZIP: **7,920,662 bytes**
+- exact active-set reduction including the database ZIP change: **34,303,410 bytes**
+
+The database ZIP grows by **970 bytes** because of the simulated retention-state metadata, so the active-set reduction is 970 bytes smaller than the source-pack reduction.
+
+### Validation results
+
+All simulation gates passed:
+
+- non-retention database fingerprints unchanged;
+- proposed manifest covers every retained hash exactly once;
+- duplicate proposed manifest hashes: **0**;
+- all **984** protected evidence hashes remain retained;
+- metadata-only selective materialization is blocked;
+- a retained replacement-pack member can be selectively materialized and hash-verified;
+- AMC replay eligibility contains no metadata-only candidate and has **0 replay gaps**;
+- metadata-only archive download endpoint returns the unavailable state;
+- metadata-only saved document versions are hidden from saved-copy listings;
+- full static-site generation and validation pass;
+- metadata-only candidates published on the simulated site: **0**;
+- current active manifest/database/source packs remain preserved as rollback.
+
+The simulated static site was **344,503,712 bytes** and exposed **137** saved archive downloads, none from the proposed metadata-only set.
+
+### Authorization boundary
+
+Production mutations performed by the simulation:
+
+- release uploads: **0**
+- release deletions: **0**
+- active-manifest switches: **0**
+- production binary-state changes: **0**
+- production source-file deletions: **0**
+- legacy ZIP retirements: **0**
+
+The exact migration proposal is ready for review, but **an actual binary-reduction migration remains approval-gated**.
+
+The original 700-candidate simulation against the earlier 21:19 checkpoint remains historical evidence only. A later normal workflow correctly failed when it tried to reuse that stale 700-hash set after current evidence had strengthened one of those hashes. That failure led to the current-eligible intersection rule, and the final 695-hash run is the authoritative proposal.
+
+
 ## Retention-aware infrastructure deployed — still zero deletion
 
 The prerequisite retention-aware storage plumbing is now deployed, but **binary deletion is still disabled and not approved**.

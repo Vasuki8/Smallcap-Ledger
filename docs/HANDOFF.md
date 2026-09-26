@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-25, after non-destructive retention-aware storage plumbing deployment.
+Updated: 2026-09-26, after isolated retention replacement-pack simulation.
 
 
 
@@ -25,6 +25,116 @@ Updated: 2026-09-25, after non-destructive retention-aware storage plumbing depl
 
 
 
+
+## Latest completed batch: isolated retention replacement-pack simulation
+
+**The replacement-pack migration has been simulated successfully without changing production storage. The authoritative proposed set is 695 currently eligible hashes, not the original historical 700, because newer evidence protected 5 reviewed candidates.**
+
+Implementation history:
+
+- PR **#150** / commit `d649192948eca5cde370328c63f6d58591255f55` added the isolated replacement-pack simulator and regression coverage.
+- PR **#151** / commit `bf527857aed773c7761d1dafdc6a7a0b54ddcf9f` tightened the simulation to restore the exact active database checkpoint rather than an in-flight workflow database.
+- PR **#152** / commit `aa7b7d7866638e3cfcda4b1ca985f6cb821c8901` pinned all selective materialization/replay operations to the same captured active manifest.
+- PR **#153** / commit `7a2b005e89a27a5ff3c54cda5815849b7953a612` created the dedicated isolated one-time workflow.
+- The first successful pinned simulation, run **36194814270**, validated all 700 against the earlier 21:19 checkpoint and produced historical review evidence.
+- A subsequent normal tracker run correctly exposed that the old 700-hash set had become stale after newer source evidence strengthened some hashes.
+- PR **#154** / commit `49092a076af20f8bb28a7457bc6a2ee7bbac6afd` changed the simulator to intersect the reviewed inventory with the active checkpoint's current retention state and removed simulation from the normal daily workflow.
+- Final isolated simulation run **36205872175** completed successfully at **2026-09-26T00:45:24Z**.
+- PR **#155** / commit `72dcca3a6934ea511e767cb4f6fd2fd0df069ad2` removed the completed one-time simulation workflow.
+
+The normal daily workflow without the simulation hook also completed successfully as workflow **#514 / run 36205872176**.
+
+### Final current-eligible proposal
+
+Checkpoint:
+
+- active manifest created: **2026-09-25T22:17:18Z**
+- database asset: `database-36193281824-1.zip`
+- archive hashes: **2,790**
+- active source packs: **101**
+
+Candidate evolution:
+
+- historical reviewed link-only candidates: **700**
+- currently eligible link-only candidates: **695**
+- reviewed hashes promoted/protected by newer evidence: **5**
+- retained hashes after proposed migration: **2,095**
+
+The five excluded reviewed hashes are explicitly recorded in `docs/RETENTION-MIGRATION-CANDIDATES.json` with their current `retain_latest_or_review` reasons. They remain binary-retained.
+
+### Exact measured savings
+
+For the 695 currently eligible candidates:
+
+- raw bytes: **403,318,035**
+- compressed payload bytes from the reviewed pack audit: **34,139,810**
+- affected active packs: **49**
+- proposed replacement packs: **24**
+- packs fully retired in the proposed steady state: **25**
+- proposed source-pack count: **76**
+
+Asset sizes:
+
+- current source-pack assets: **1,540,491,329 bytes**
+- proposed source-pack assets: **1,506,186,949 bytes**
+- exact source-pack reduction: **34,304,380 bytes**
+- current database ZIP: **7,919,692 bytes**
+- simulated database ZIP: **7,920,662 bytes**
+- exact active-set reduction: **34,303,410 bytes**
+
+This is proposed steady-state savings only. **Actual reclaimed release bytes remain 0.**
+
+### Simulation validation
+
+The committed artifacts prove:
+
+- every non-retention database table fingerprint is unchanged;
+- proposed pack coverage is exact with **0 duplicate hashes**;
+- all **984** protected evidence hashes remain retained;
+- metadata-only materialization is blocked;
+- retained replacement members restore and checksum correctly;
+- AMC replay has **0 gaps** and no metadata-only eligibility;
+- metadata-only archive downloads are unavailable;
+- metadata-only document saved copies are hidden;
+- full static-site generation/validation succeeds;
+- simulated site publishes **0** metadata-only candidates;
+- all **101** current active source packs and the current database asset remain preserved as rollback.
+
+Production mutations in this task:
+
+- release uploads: **0**
+- release deletions: **0**
+- active manifest switches: **0**
+- production binary-state changes: **0**
+- source-file deletions: **0**
+- legacy ZIP retirement: **false**
+
+Review artifacts:
+
+- `deployment/retention-pack-simulation.json`
+- `docs/RETENTION-PROPOSED-MANIFEST.json`
+- `docs/RETENTION-MIGRATION-CANDIDATES.json`
+- `docs/RETENTION-REPLACEMENT-SIMULATION.md`
+
+### Approval boundary and next autonomous task
+
+**Do not execute the 695-hash binary reduction without explicit owner approval.** The proposal is ready, but changing binary states, uploading replacement packs, switching `latest.json`, retiring old packs or deleting any source file is a destructive/storage action that remains separately approval-gated.
+
+Until such approval is given, the next safe backend task is:
+
+**Run a fresh conservative retention classification review for the 271 newer `unclassified + retained` hashes added after the original 2,519-hash audit.**
+
+That next batch should:
+
+1. classify only the 271 newer hashes using the same dependency-first rules;
+2. never weaken any existing `retain_evidence` or `retain_latest_or_review` state;
+3. keep every binary retained;
+4. update the retention inventory/audit counts;
+5. report whether any of those 271 are new link-only candidates, but do not merge them into the approved migration set automatically;
+6. regenerate a separate proposed-candidate delta for review;
+7. pause immediately if `docs/PORTFOLIO-RECOVERY-QUEUE.json` reports an actionable first-party source change.
+
+Current portfolio queue remains **7 items / 0 actionable_now / 0 source changes detected**. BSE TRI remains non-actionable under the free first-party-source constraint.
 
 ## Latest completed batch: non-destructive retention-aware storage plumbing
 
