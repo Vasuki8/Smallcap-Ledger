@@ -114,6 +114,41 @@ class PublicationCoverageTests(unittest.TestCase):
             priorities["discover_first_party_communication_sources"]["affected_funds"],
         )
 
+    def test_robots_blocked_archives_are_non_actionable_limitations(self):
+        with db.connect() as c:
+            c.executemany(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                [
+                    (9806,"Franklin Direct Growth","Franklin India Small Cap Fund",
+                     "Franklin Templeton Mutual Fund","Direct","Growth","test"),
+                    (9807,"Kotak 2 Direct Growth","Kotak Small Cap Fund",
+                     "Kotak Mahindra Mutual Fund","Direct","Growth","test"),
+                ],
+            )
+        providers.save_document(
+            "Franklin India Small Cap Fund","Weekly Market Review",
+            "https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries/test",
+            "market view","AMC",published="2026-09-18",origin="AMC")
+        providers.save_document(
+            "Kotak Small Cap Fund","Monthly Outlook PPT sept 2026",
+            "https://www.kotakmf.com/kotakmf/reportupload/download/Monthly/1/2026/8",
+            "market view","AMC",published="2026-09-09",origin="AMC")
+        audit=report()
+        rows={r["family"]:r for r in audit["funds"]}
+        self.assertIn("communication_archive_limitation",rows["Franklin India Small Cap Fund"]["issues"])
+        self.assertIn("communication_archive_limitation",rows["Kotak Small Cap Fund"]["issues"])
+        priorities={p["code"]:p for p in audit["repair_priorities"]}
+        limited=priorities["documented_communication_archive_limitation"]
+        self.assertFalse(limited["actionable"])
+        self.assertEqual(
+            limited["affected_funds"],
+            ["Franklin India Small Cap Fund","Kotak Small Cap Fund"],
+        )
+        repairable=priorities.get("repair_unarchived_communication_documents",{})
+        self.assertNotIn("Franklin India Small Cap Fund",repairable.get("affected_funds",[]))
+        self.assertNotIn("Kotak Small Cap Fund",repairable.get("affected_funds",[]))
+
     def test_missing_published_date_is_visible_without_using_first_seen(self):
         digest=db.archive(b"letter","application/pdf")
         doc=providers.save_document(

@@ -25,6 +25,16 @@ _DOCUMENTED_SOURCE_LIMITATIONS={
         ),
     },
 }
+_DOCUMENTED_ARCHIVE_LIMITATIONS={
+    "Franklin India Small Cap Fund":{
+        "code":"original_asset_blocked_by_robots_policy",
+        "reason":"Franklin commentary metadata and article identity are retained from the first-party API, but the original Widen-hosted binaries remain link-only because automatic access is disallowed by robots policy.",
+    },
+    "Kotak Small Cap Fund":{
+        "code":"original_asset_blocked_by_robots_policy",
+        "reason":"Kotak Monthly Market Update metadata and the first-party PDF URL are retained, but the original PDF remains link-only when Kotak robots policy disallows automatic retrieval.",
+    },
+}
 _COMMUNICATION_SOURCE=re.compile(
     r"newsletter|letter.*unitholder|unitholder.*letter|"
     r"market[\s_\-]*(?:outlook|update|view|insights?|commentar(?:y|ies))|equity[\s_\-]*outlook|"
@@ -79,9 +89,12 @@ def report():
         observed=[d["latest_observed_at"] for d in docs if d.get("latest_observed_at")]
         issues=[]
         source_limitation=_DOCUMENTED_SOURCE_LIMITATIONS.get(family)
+        archive_limitation=_DOCUMENTED_ARCHIVE_LIMITATIONS.get(family)
         if not docs:issues.append("no_amc_communications_collected")
         if not docs and source_limitation:issues.append("communication_source_limitation")
-        if docs and archived<len(docs):issues.append("communication_document_not_archived")
+        if docs and archived<len(docs):
+            issues.append("communication_document_not_archived")
+            if archive_limitation:issues.append("communication_archive_limitation")
         if docs and len(published)<len(docs):issues.append("publication_date_missing")
         row={
             "family":family,
@@ -95,6 +108,7 @@ def report():
             "latest_observed_at":max(observed) if observed else None,
             "registered_communication_sources":source_pages,
             "source_limitation":source_limitation,
+            "archive_limitation":archive_limitation,
             "issues":issues,
         }
         funds.append(row)
@@ -105,7 +119,11 @@ def report():
                         if not r["registered_communication_sources"]
                         and not r.get("source_limitation")]
     limited=[r for r in no_docs if r.get("source_limitation")]
-    unarchived=[r for r in funds if "communication_document_not_archived" in r["issues"]]
+    unarchived=[r for r in funds
+                if "communication_document_not_archived" in r["issues"]
+                and not r.get("archive_limitation")]
+    archive_limited=[r for r in funds
+                     if "communication_archive_limitation" in r["issues"]]
 
     priorities=[]
     if with_registered:
@@ -131,6 +149,14 @@ def report():
             "actionable":False,
             "affected_funds":[r["family"] for r in limited],
             "reason":"The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears.",
+        })
+    if archive_limited:
+        priorities.append({
+            "priority":3,
+            "code":"documented_communication_archive_limitation",
+            "actionable":False,
+            "affected_funds":[r["family"] for r in archive_limited],
+            "reason":"The original AMC communication asset is intentionally retained as link-only because robots policy disallows automatic retrieval; keep the metadata/source link and do not treat this as a repairable fetch failure.",
         })
     if unarchived:
         priorities.append({
@@ -169,6 +195,7 @@ def report():
             "Factsheets, scheme documents, portfolios and generic disclosures remain available on fund pages but do not satisfy communication coverage.",
             "A missing published_at value is reported as missing metadata; first_seen is never substituted as the publication date.",
             "Documented source limitations remain visible as zero communication coverage and are not silently promoted from excluded source classes.",
+            "Robots-blocked originals remain visible as link-only archive limitations and are not queued as ordinary repairable download failures.",
             "The audit is read-only and performs no source fetch, document mutation or UI change.",
         ],
     }
