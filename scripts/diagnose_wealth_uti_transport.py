@@ -168,6 +168,64 @@ def inspect(label,url):
     return item
 
 
+UTI_CMS_ENDPOINTS=(
+    "https://www.utimf.com/api/CMSDATA_knowledge_hub",
+    "https://www.utimf.com/api/homepage-market-insights",
+    "https://www.utimf.com/api/homepage-from-cios-desk",
+    "https://www.utimf.com/api/cios-desk",
+)
+
+
+def _sample_rows(value):
+    if isinstance(value,dict):
+        rows=value.get("rows")
+        if isinstance(rows,list):return rows
+        data=value.get("data")
+        if isinstance(data,list):return data
+        if isinstance(data,dict):
+            nested=data.get("rows")
+            if isinstance(nested,list):return nested
+    if isinstance(value,list):return value
+    return []
+
+
+def inspect_uti_cms(url):
+    item={"url":url}
+    try:
+        providers.can_crawl(url)
+        body,_,typ=providers.fetch(
+            url,archive=False,max_bytes=12*1024*1024,
+            headers={"Accept":"application/json"},
+        )
+        item.update({"ok":True,"bytes":len(body),"media_type":typ})
+        parsed=json.loads(body.decode("utf-8","replace"))
+        item["top_type"]=type(parsed).__name__
+        item["top_keys"]=sorted(parsed.keys())[:100] if isinstance(parsed,dict) else []
+        rows=_sample_rows(parsed)
+        item["row_count"]=len(rows)
+        samples=[]
+        for row in rows[:30]:
+            if not isinstance(row,dict):continue
+            samples.append({
+                "keys":sorted(row.keys())[:120],
+                "nid":row.get("nid"),
+                "title":row.get("title") or row.get("content_title") or row.get("field_title"),
+                "category":row.get("field_knowledge_hub_category"),
+                "asset_type":row.get("field_asset_type"),
+                "pdf":row.get("pdf"),
+                "s3pdf":row.get("s3pdf"),
+                "view_node":row.get("view_node"),
+                "date":row.get("date") or row.get("created") or row.get("field_date"),
+            })
+        item["samples"]=samples
+    except Exception as exc:
+        item.update({
+            "ok":False,
+            "error":(str(exc) or type(exc).__name__).splitlines()[0][:1000],
+        })
+    return item
+
+
 def main():
     targets=[inspect(label,url) for label,url in TARGETS]
     uti_scripts=[]
@@ -185,10 +243,12 @@ def main():
         "mode":"read_only_non_fatal",
         "targets":targets,
         "uti_scripts":uti_scripts,
+        "uti_cms":[inspect_uti_cms(url) for url in UTI_CMS_ENDPOINTS],
         "notes":[
             "No response bytes are archived by this diagnostic.",
             "Raw contexts are bounded around known communication/API markers only.",
             "UTI root main.*.js is inspected read-only for first-party content/API transport strings.",
+            "UTI CMS probes persist only response shape and selected communication fields; response bytes are not archived.",
             "Candidate links/strings still require source-specific validation before collection.",
         ],
     }
