@@ -6,6 +6,7 @@ or unitholder-letter records for reviewed repairable families are eligible.
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import sys
 from urllib.parse import urlparse
 
@@ -21,6 +22,7 @@ FAMILIES=(
     ("Samco Small Cap Fund","Samco"),
 )
 PER_FAMILY_LIMIT=40
+REPORT=ROOT/"deployment"/"communication-archive-repair.json"
 
 
 def missing(family):
@@ -120,8 +122,21 @@ def repair(fetch_fn=providers.fetch,can_crawl_fn=providers.can_crawl):
     return report
 
 
+def write_report(report,path=REPORT):
+    payload=dict(report)
+    payload["prepared_at"]=db.now()
+    payload["mode"]="exact_retained_urls_best_effort"
+    payload["scope"]=[family for family,_ in FAMILIES]
+    path=Path(path)
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    return path
+
+
 def main():
-    repair()
+    result=repair()
+    path=write_report(result)
+    print("Wrote",path,flush=True)
     # This repair is best-effort: one stale/blocked historical URL must not stop
     # publication, and successful repairs remain retained.
     return 0
