@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T22:17:08+00:00",
+  "built_at": "2026-09-26T22:35:10+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,11 +11,11 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 31,
-    "funds_without_amc_communications": 5,
-    "communication_documents": 224,
-    "archived_communication_documents": 207,
-    "market_views": 208,
+    "funds_with_amc_communications": 32,
+    "funds_without_amc_communications": 4,
+    "communication_documents": 230,
+    "archived_communication_documents": 213,
+    "market_views": 214,
     "unitholder_letters": 16,
     "documents_with_published_date": 52,
     "funds_with_registered_communication_sources": 29,
@@ -23,8 +23,8 @@
       "communication_archive_limitation": 3,
       "communication_document_not_archived": 4,
       "communication_source_limitation": 1,
-      "no_amc_communications_collected": 5,
-      "publication_date_missing": 24
+      "no_amc_communications_collected": 4,
+      "publication_date_missing": 25
     }
   },
   "repair_priorities": [
@@ -33,7 +33,6 @@
       "code": "review_registered_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "Sundaram Small Cap Fund",
         "The Wealth Company Small Cap Fund",
         "UTI Small Cap Fund",
         "Union Small Cap Fund"
@@ -859,7 +858,7 @@
           "url": "https://www.sbimf.com/monthly-outlook-videos",
           "label": "Monthly Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:14:03+00:00",
+          "last_checked": "2026-09-26T22:31:12+00:00",
           "detail": "1 SBI annual Outlook article(s) retained; 1 expected year URL(s) absent; 0 download/parser gaps"
         }
       ],
@@ -892,27 +891,27 @@
     {
       "family": "Sundaram Small Cap Fund",
       "amc": "Sundaram Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 6,
+      "archived_communication_count": 6,
+      "market_view_count": 6,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": null,
+      "latest_observed_at": "2026-09-26T22:31:53+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Sundaram",
           "url": "https://www.sundarammutual.com/knowledge-hub",
           "label": "Market Outlook / Knowledge Hub",
-          "status": "Pending",
-          "last_checked": null,
-          "detail": null
+          "status": "Checked",
+          "last_checked": "2026-09-26T22:31:53+00:00",
+          "detail": "6 Sundaram recent Outlook PDFs retained; 0 card-linked month URL(s) absent; 0 download/parser gaps"
         }
       ],
       "source_limitation": null,
       "archive_limitation": null,
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {
@@ -931,7 +930,7 @@
           "url": "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html",
           "label": "Equity Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:14:13+00:00",
+          "last_checked": "2026-09-26T22:31:55+00:00",
           "detail": "1 Tata Equity Market Outlook page retained; source reports as on 2026-08-31; publication day not inferred; 0 download/parser gaps"
         }
       ],
@@ -1004,7 +1003,7 @@
           "url": "https://www.utimf.com/learn",
           "label": "Leadership Desk / Market Insights",
           "status": "Partial",
-          "last_checked": "2026-09-26T22:15:15+00:00",
+          "last_checked": "2026-09-26T22:33:00+00:00",
           "detail": "UTI Learn / Fund House insight source identity changed"
         }
       ],
@@ -1030,7 +1029,7 @@
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
           "status": "Partial",
-          "last_checked": "2026-09-26T22:15:13+00:00",
+          "last_checked": "2026-09-26T22:32:58+00:00",
           "detail": "[Errno 111] Connection refused"
         }
       ],

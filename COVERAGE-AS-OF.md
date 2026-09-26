@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-26T22:16:39+00:00
+Prepared: 2026-09-26T22:34:26+00:00
 
 **36 funds, 143 NAV series, 281,584 NAV observations. Latest included NAV: 2026-09-25.**
 
@@ -40,7 +40,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Quantum Small Cap Fund | ₹ 263.58 · 2026-09-24 | 0.83% TER · 2026-09-24 | 60 positions · 2026-08-31 · complete · current | BSE 250 SmallCap TRI · 2025-08-31 | 75 |
 | SBI Small Cap Fund | ₹ 41,758.31 · 2026-09-24 | 0.79% TER · 2026-09-24 | 73 positions · 2026-08-31 · complete · current | BSE 250 Small Cap Index TRI · 2026-07-31 | 7 |
 | Samco Small Cap Fund | ₹ 264.27 · 2026-09-24 | 1.97% TER · 2026-09-25 | 78 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 625 |
-| Sundaram Small Cap Fund | ₹ 4,133.91 · 2026-09-24 | 0.97% TER · 2026-09-23 | 77 positions · 2026-08-31 · partial · current | Nifty Small Cap 250 TRI · 2026-05-31 | 7 |
+| Sundaram Small Cap Fund | ₹ 4,133.91 · 2026-09-24 | 0.97% TER · 2026-09-23 | 77 positions · 2026-08-31 · partial · current | Nifty Small Cap 250 TRI · 2026-05-31 | 13 |
 | Tata Small Cap Fund | ₹ 13,421.46 · 2026-09-24 | 0.51% TER · 2026-09-23 | 67 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 6 |
 | The Wealth Company Small Cap Fund | ₹ 142.07 · 2026-09-24 | 2.05% TER · 2026-09-25 | 59 positions · 2026-08-31 · complete · current | NIFTY SmallCap 250 TRI · 2026-09-25 | 22 |
 | Trustmf Small Cap Fund | ₹ 3,854.11 · 2026-09-24 | 1.54% TER · 2026-09-25 | 73 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2024-11-27 | 5 |

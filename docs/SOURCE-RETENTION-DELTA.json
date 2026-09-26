@@ -1,18 +1,18 @@
 {
-  "reviewed_at": "2026-09-26T22:16:23+00:00",
+  "reviewed_at": "2026-09-26T22:34:09+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 374,
+  "new_hashes_reviewed": 380,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_evidence": 157,
+    "retain_evidence": 163,
     "retain_latest_or_review": 212,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_evidence": 232165531,
+    "retain_evidence": 236399135,
     "retain_latest_or_review": 91285150,
     "link_only_candidate": 3851376
   },
@@ -66,6 +66,30 @@
       ],
       "urls": [
         "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2021/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
+      "hash": "022ff9a2f006a217d500eefb0d023f4702cadf5c854977d140953d4cfaf8f7f8",
+      "bytes": 703551,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:31:34+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://blog.sundarammutual.com/Documents/outlook-august-2026.pdf",
+      "host": "blog.sundarammutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-august-2026.pdf"
+      ],
+      "urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-august-2026.pdf"
       ]
     },
     {
@@ -332,6 +356,30 @@
       ],
       "urls": [
         "https://www.heliosmf.in/portfolio-disclosure/"
+      ]
+    },
+    {
+      "hash": "09db9ddae6d7c6eb6509c8543eba2f662f242356c7d45efeccb8490462498574",
+      "bytes": 728021,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:31:28+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://blog.sundarammutual.com/Documents/outlook-september-2026.pdf",
+      "host": "blog.sundarammutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-september-2026.pdf"
+      ],
+      "urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-september-2026.pdf"
       ]
     },
     {
@@ -1440,6 +1488,30 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/union-budget-fy2025-fixed-income-perspective"
+      ]
+    },
+    {
+      "hash": "27859900581ffa0b4f8b2b9a352c4a85704dba802756ce738a6cabaa1afae8dc",
+      "bytes": 954006,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:31:53+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://blog.sundarammutual.com/Documents/outlook-april-2026.pdf",
+      "host": "blog.sundarammutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-april-2026.pdf"
+      ],
+      "urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-april-2026.pdf"
       ]
     },
     {
@@ -2728,6 +2800,30 @@
       ],
       "urls": [
         "https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/NIMF-MONTHLY-PORTFOLIO-May-24.xls"
+      ]
+    },
+    {
+      "hash": "4833d41696269964f1105b01200d18f7db8229fce40014c7818f66f5123e9812",
+      "bytes": 574503,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:31:48+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://blog.sundarammutual.com/Documents/outlook-may-2026.pdf",
+      "host": "blog.sundarammutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-may-2026.pdf"
+      ],
+      "urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-may-2026.pdf"
       ]
     },
     {
@@ -5171,6 +5267,30 @@
       ]
     },
     {
+      "hash": "89e0b3fdb74181d32789f2477a501e31f60bbc4c98d97906c9c76f5ba9f95365",
+      "bytes": 681002,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:31:40+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://blog.sundarammutual.com/Documents/outlook-july-2026.pdf",
+      "host": "blog.sundarammutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-july-2026.pdf"
+      ],
+      "urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-july-2026.pdf"
+      ]
+    },
+    {
       "hash": "8c105781dc55d8153d976d48e898eea9498e0d33330211ac04d3a8f170bc04a8",
       "bytes": 425901,
       "media_type": "text/html; charset=utf-8",
@@ -5818,6 +5938,30 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-june-2026"
+      ]
+    },
+    {
+      "hash": "a1b108ce35d9a0047a77495004e38cb8c213b86f9127c9ab44509419a2baf441",
+      "bytes": 592521,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:31:44+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://blog.sundarammutual.com/Documents/outlook-june-2026.pdf",
+      "host": "blog.sundarammutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-june-2026.pdf"
+      ],
+      "urls": [
+        "https://blog.sundarammutual.com/Documents/outlook-june-2026.pdf"
       ]
     },
     {
