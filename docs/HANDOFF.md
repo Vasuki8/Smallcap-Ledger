@@ -1,8 +1,140 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after Groww/HSBC first-party communication recovery and successful production deployment.
+Updated: 2026-09-26, after ICICI Prudential/Invesco first-party communication recovery and successful production deployment.
 
-## Latest completed batch: recover Groww and HSBC AMC communications
+## Latest completed batch: recover ICICI Prudential and Invesco AMC communications
+
+**ICICI Prudential Small Cap Fund and Invesco India Small Cap Fund are no longer in the missing-communication-source queue.** This batch used narrowly scoped first-party communication anchors and did not promote general factsheets into the news/communication surface.
+
+### ICICI Prudential evidence
+
+Registered source:
+
+`https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html`
+
+Source label: **Monthly Market Outlook - August 2026**.
+
+The collector now recognizes only the reviewed ICICI first-party SEBI-repository pattern where:
+
+- host is `icicipruamc.com`;
+- path is under `/blob/sebi-repo/Advertisements/`;
+- the path contains an explicit `Release date DD-MM-YYYY` segment;
+- the document name is a **Monthly Market Outlook** HTML page.
+
+For this retained source:
+
+- kind: `market view`;
+- explicit `published_at`: **2026-08-11**, taken only from the source's literal `Release date 11-08-2026` URL segment;
+- archived HTML identity check: **passed**;
+- retained HTML contains both **Equity Market Outlook** and **Fixed Income Outlook** and identifies ICICI Prudential;
+- no publication date was inferred from the market-data observation date.
+
+The generic page collector also retained two relevant first-party communication links exposed from that page. Final ICICI audit state is therefore **3 market views / 3 archived originals / 1 explicit publication date**.
+
+### Invesco India evidence
+
+Registered source:
+
+`https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0`
+
+Source label: **Market Outlook - April 2026**.
+
+Production verified that the source is a real first-party PDF and archived it as `market view` evidence.
+
+- archived original: **yes**
+- parser/download gaps: **0**
+- explicit `published_at`: **null**
+
+The filename establishes **April 2026**, but not an exact publication day. The tracker therefore preserves the date gap instead of manufacturing a day such as April 1 or month-end.
+
+### Implementation
+
+PR **#200** merged as commit `bf2a942da187d8041ee902fba6bca4f585f3611a`.
+
+It added:
+
+- the two reviewed first-party communication sources to `tracker/sources.json`;
+- narrow ICICI Monthly Market Outlook recognition in `tracker/disclosures.py`;
+- first-party ICICI release-date extraction from the reviewed URL pattern only;
+- `scripts/refresh_icici_invesco_communications.py`;
+- regression coverage for source registration, ICICI source/date identity, ICICI HTML retention, Invesco direct-PDF behavior and idempotent recovery;
+- a push-time production recovery gate.
+
+During branch review a noisy `tracker/disclosures.py` diff was detected before merge. The file was rebuilt from `main`, leaving the intended core diff at only **16 additions / 3 deletions**.
+
+No third-party news, factsheet-as-news substitution, inferred publication day, portfolio change or financial-data change was introduced.
+
+### Production verification
+
+Final production workflow **36247278262** completed successfully at **2026-09-26T14:07:29Z**.
+
+Live recovery evidence:
+
+- **ICICI Prudential**
+  - Monthly Market Outlook retained as `market view`
+  - `published_at=2026-08-11`
+  - archived original: **1**
+  - HTML outlook identity: **true**
+  - source result: **2 relevant links / 2 documents archived / 0 download-parser gaps**
+
+- **Invesco India**
+  - Market Outlook - April 2026 retained as `market view`
+  - archived original: **1**
+  - PDF identity: **true**
+  - `published_at`: **null**
+  - source result: **1 document archived / 0 download-parser gaps**
+
+Full validation:
+
+- build: **success**
+- full regression suite: **419 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10907926739** is **234,818,796 bytes** with digest `sha256:88dde6d398e76bd93039878eb67a31d2fece0620fa1d5b9aa3a3cd4a391195ed`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T14:06:57Z**:
+
+- funds with at least one retained AMC communication: **25 / 36** (was 23)
+- funds with no retained AMC communication: **11**
+- retained communication documents: **214**
+- archived communication originals: **166**
+- market/newsletter/CIO/product-view documents: **192**
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **50**
+- funds with a registered communication-oriented source: **19**
+
+**ICICI Prudential final state:** **3 market views / 3 archived originals / 1 explicit date**, latest **2026-08-11**. It still reports `publication_date_missing` because two retained communication records do not have an exact source publication date.
+
+**Invesco India final state:** **1 market view / 1 archived original / 0 explicit dates**. Its remaining audit issue is `publication_date_missing`; preserve that gap.
+
+### Next backend/data-retrieval task
+
+Continue bounded first-party communication-source discovery for the remaining **11** funds:
+
+1. **Kotak Small Cap Fund**
+2. **Mirae Asset Small Cap Fund**
+3. PGIM India Small Cap Fund
+4. Quant Small Cap Fund
+5. SBI Small Cap Fund
+6. Sundaram Small Cap Fund
+7. Tata Small Cap Fund
+8. The Wealth Company Small Cap Fund
+9. TRUSTMF Small Cap Fund
+10. UTI Small Cap Fund
+11. Union Small Cap Fund
+
+Start with **Kotak**, then **Mirae Asset**. Prefer dedicated first-party market-outlook / investment-view / CIO-view / newsletter surfaces or exact first-party current anchors. Do not count ordinary factsheets as communications merely because they contain a market commentary section.
+
+The `repair_unarchived_communication_documents` queue remains **Franklin India, LIC MF, Nippon India and Samco**. Franklin remains policy-limited because its Widen originals are robots-blocked while first-party metadata and dates are retained.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**.
+
+## Previous completed batch: recover Groww and HSBC AMC communications
 
 **Groww Small Cap Fund and HSBC Small Cap Fund are no longer in the missing-communication-source queue.** Both now have dedicated first-party communication collectors that retain explicit source dates and originals without treating monthly fund factsheets as news.
 
