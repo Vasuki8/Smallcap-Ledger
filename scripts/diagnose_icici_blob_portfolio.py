@@ -1,7 +1,7 @@
 """Read-only ICICI monthly portfolio transport probe using current blob delivery."""
 from __future__ import annotations
-import sys
-from pathlib import Path
+import io,sys,zipfile
+from pathlib import Path,PurePosixPath
 from urllib.parse import urlparse
 import httpx
 
@@ -44,6 +44,44 @@ def main():
         print('ICICI_BLOB_SIGNATURE '+r.content[:32].hex(),flush=True)
         if r.status_code==200 and r.content.startswith(b'PK'):
             print('ICICI_BLOB_ZIP_OK bytes='+str(len(r.content)),flush=True)
+            with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+                entries=z.infolist()
+                print(f'ICICI_ZIP_ENTRIES count={len(entries)} total_uncompressed={sum(x.file_size for x in entries)}',flush=True)
+                spreadsheets=[]
+                for entry in entries:
+                    p=PurePosixPath(entry.filename)
+                    safe=not (p.is_absolute() or '..' in p.parts or '\\' in entry.filename or entry.flag_bits&1)
+                    print('ICICI_ZIP_MEMBER '+entry.filename+
+                          f' bytes={entry.file_size} compressed={entry.compress_size} safe={safe}',flush=True)
+                    if safe and p.suffix.lower() in ('.xls','.xlsx') and 0<entry.file_size<=40*1024*1024:
+                        spreadsheets.append(entry)
+                print(f'ICICI_ZIP_SPREADSHEETS count={len(spreadsheets)}',flush=True)
+                import openpyxl,xlrd
+                for entry in spreadsheets[:80]:
+                    with z.open(entry) as fh:body=fh.read()
+                    try:
+                        if body.startswith(b'PK'):
+                            book=openpyxl.load_workbook(io.BytesIO(body),read_only=True,data_only=True)
+                            sheet_names=book.sheetnames
+                            print('ICICI_WORKBOOK '+entry.filename+' sheets='+repr(sheet_names),flush=True)
+                            for sh in book.worksheets:
+                                if 'small' in sh.title.lower():
+                                    rows=[]
+                                    for row in sh.iter_rows(min_row=1,max_row=18,values_only=True):
+                                        rows.append([str(x)[:160] if x is not None else '' for x in row[:12]])
+                                    print('ICICI_SMALL_SHEET '+entry.filename+' :: '+sh.title+' :: '+repr(rows),flush=True)
+                            book.close()
+                        elif body.startswith(b'\xd0\xcf'):
+                            book=xlrd.open_workbook(file_contents=body,on_demand=True)
+                            print('ICICI_WORKBOOK '+entry.filename+' sheets='+repr(book.sheet_names()),flush=True)
+                            for name in book.sheet_names():
+                                if 'small' not in name.lower():continue
+                                sh=book.sheet_by_name(name)
+                                rows=[sh.row_values(i)[:12] for i in range(min(18,sh.nrows))]
+                                print('ICICI_SMALL_SHEET '+entry.filename+' :: '+name+' :: '+repr(rows),flush=True)
+                            book.release_resources()
+                    except Exception as exc:
+                        print('ICICI_WORKBOOK_ERROR '+entry.filename+' '+(str(exc) or type(exc).__name__).splitlines()[0][:500],flush=True)
     except Exception as exc:
         print('ICICI_BLOB_ERROR '+(str(exc) or type(exc).__name__).splitlines()[0][:700],flush=True)
 
