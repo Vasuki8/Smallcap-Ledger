@@ -147,6 +147,19 @@ class RetentionDependencyTests(unittest.TestCase):
         self.assertEqual(result[self.old]['stored_classification'],'link_only_candidate')
         self.assertEqual(result[self.old]['classification'],'link_only_candidate')
 
+    def test_generated_migration_artifacts_do_not_self_protect_hashes(self):
+        (self.root/'docs').mkdir()
+        for name in (
+            'RETENTION-PROPOSED-MANIFEST.json',
+            'RETENTION-MIGRATION-CANDIDATES.json',
+            'RETENTION-REPLACEMENT-SIMULATION.md',
+        ):
+            (self.root/'docs'/name).write_text('generated review hash '+self.old)
+        result=self.collect()
+        self.assertEqual(result[self.old]['classification'],'link_only_candidate')
+        self.assertFalse(any(
+            'RETENTION-' in reason for reason in result[self.old]['evidence_reasons']))
+
     def test_generated_inventory_does_not_self_protect_every_hash(self):
         (self.root/'docs').mkdir()
         (self.root/'docs'/'SOURCE-RETENTION-INVENTORY.json').write_text(repr(self.old))
@@ -182,6 +195,72 @@ class RetentionDependencyTests(unittest.TestCase):
 
 
 class RetentionMetadataPreparationTests(unittest.TestCase):
+    def test_prepare_repairs_generated_artifact_false_promotion_and_classifies_new_hash(self):
+        import json
+        from tracker import db
+        from scripts import prepare_retention_metadata as prep
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);previous_data=db.DATA;previous_inventory=prep.INVENTORY
+            db.DATA=root
+            try:
+                db.init()
+                old_candidate=db.archive(b'old reviewed candidate','text/html')
+                new_hash=db.archive(b'new current source page','text/html')
+                inventory=root/'inventory.json'
+                inventory.write_text(json.dumps([
+                    {'hash':old_candidate,'classification':'link_only_candidate'},
+                ]))
+                prep.INVENTORY=inventory
+                # Simulate the bug created by generated migration artifacts.
+                with db.connect() as cx:
+                    cx.execute("""UPDATE archive_retention SET
+                      classification='retain_evidence',
+                      reason=? WHERE hash=?""",(
+                      prep.SCAN_REASON_PREFIX+
+                      'code_or_handoff_literal_hash:docs/RETENTION-PROPOSED-MANIFEST.json',
+                      old_candidate))
+                current_items={
+                    old_candidate:{
+                        'classification':'link_only_candidate',
+                        'reasons':['superseded_html_or_script_response'],
+                        'primary_url':'https://example.com/old',
+                        'host':'example.com','kind':'html','evidence_reasons':[],
+                        'latest_for_urls':[],'urls':['https://example.com/old'],
+                    },
+                    new_hash:{
+                        'classification':'retain_latest_or_review',
+                        'reasons':['latest_saved_response_for_at_least_one_url'],
+                        'primary_url':'https://example.com/current',
+                        'host':'example.com','kind':'html','evidence_reasons':[],
+                        'latest_for_urls':['https://example.com/current'],
+                        'urls':['https://example.com/current'],
+                    },
+                }
+                manifest={'format':2,'created_at':'now'}
+                delta=root/'delta.json';delta_md=root/'delta.md';candidate=root/'candidates.json'
+                with patch.object(prep.retention_audit,'collect',return_value=(current_items,[])), \
+                     patch.object(prep,'active_manifest_hashes',
+                                  return_value=(manifest,{old_candidate,new_hash})):
+                    report=prep.prepare(
+                        apply=True,delta_path=delta,delta_markdown=delta_md,
+                        candidate_delta=candidate)
+                self.assertEqual(db.archive_retention(old_candidate)['classification'],
+                                 'link_only_candidate')
+                self.assertEqual(db.archive_retention(new_hash)['classification'],
+                                 'retain_latest_or_review')
+                self.assertEqual(db.archive_retention(old_candidate)['binary_state'],'retained')
+                self.assertEqual(db.archive_retention(new_hash)['binary_state'],'retained')
+                self.assertEqual(report['post_audit_hashes_reviewed'],1)
+                delta_payload=json.loads(delta.read_text())
+                self.assertEqual(delta_payload['new_hashes_reviewed'],1)
+                self.assertEqual(delta_payload['classifications'],
+                                 {'retain_latest_or_review':1})
+                self.assertEqual(json.loads(candidate.read_text())['count'],0)
+                self.assertTrue(delta_md.is_file())
+            finally:
+                prep.INVENTORY=previous_inventory
+                db.DATA=previous_data
+
     def test_prepare_applies_reviewed_classes_without_changing_binary_state(self):
         import json
         from tracker import db

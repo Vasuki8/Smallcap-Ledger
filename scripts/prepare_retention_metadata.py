@@ -25,6 +25,115 @@ from scripts import audit_source_retention as retention_audit
 INVENTORY=ROOT/'docs'/'SOURCE-RETENTION-INVENTORY.json'
 REVIEWED_AT='2026-09-25'
 REASON='Classification imported from reviewed 2026-09-25 source-retention audit; binary state unchanged'
+SCAN_REASON_PREFIX='Reviewed audit classification strengthened by current dependency scan: '
+PRECEDENCE={'unclassified':0,'link_only_candidate':1,
+            'retain_latest_or_review':2,'retain_evidence':3}
+
+
+def independently_reviewed_existing(row):
+    """Return a stored class only when it did not come from our audit importer."""
+    if not row or row['classification']=='unclassified':
+        return None
+    reason=row.get('reason') or ''
+    if reason==REASON or reason.startswith(SCAN_REASON_PREFIX):
+        return None
+    return row['classification']
+
+
+def choose_classification(reviewed,current_item,existing):
+    choices=[current_item['classification']]
+    if reviewed:choices.append(reviewed['classification'])
+    trusted=independently_reviewed_existing(existing)
+    if trusted:choices.append(trusted)
+    return max(choices,key=lambda x:PRECEDENCE[x])
+
+
+def classification_reason(target,reviewed,current_item,existing):
+    trusted=independently_reviewed_existing(existing)
+    reviewed_class=reviewed['classification'] if reviewed else 'unclassified'
+    if trusted==target and PRECEDENCE[trusted]>=PRECEDENCE[current_item['classification']] \
+            and PRECEDENCE[trusted]>=PRECEDENCE[reviewed_class]:
+        return existing.get('reason') or 'Existing independently reviewed retention state'
+    if PRECEDENCE[current_item['classification']]>PRECEDENCE[reviewed_class]:
+        return SCAN_REASON_PREFIX+', '.join(current_item.get('reasons') or [current_item['classification']])[:600]
+    if reviewed:
+        return REASON
+    return 'Fresh post-audit classification from current conservative dependency scan: '+ \
+           ', '.join(current_item.get('reasons') or [current_item['classification']])[:600]
+
+
+def write_delta_review(path,markdown_path,candidate_path,new_hashes,current_items,before,after,archives):
+    rows=[]
+    for h in sorted(new_hashes):
+        item=current_items[h]
+        rows.append({
+            'hash':h,
+            'bytes':archives[h]['bytes'],
+            'media_type':archives[h].get('media_type'),
+            'first_seen':archives[h].get('first_seen'),
+            'classification_before':before[h]['classification'],
+            'classification_after':after[h]['classification'],
+            'binary_state_after':after[h]['binary_state'],
+            'primary_url':item.get('primary_url'),
+            'host':item.get('host'),
+            'kind':item.get('kind'),
+            'reasons':item.get('reasons') or [],
+            'evidence_reasons':item.get('evidence_reasons') or [],
+            'latest_for_urls':item.get('latest_for_urls') or [],
+            'urls':item.get('urls') or [],
+        })
+    classes=Counter(x['classification_after'] for x in rows)
+    class_bytes=Counter()
+    for x in rows:class_bytes[x['classification_after']]+=int(x['bytes'] or 0)
+    candidates=[x for x in rows if x['classification_after']=='link_only_candidate']
+    report={
+        'reviewed_at':db.now(),
+        'scope':'post_original_audit_hashes_only',
+        'original_reviewed_inventory_hashes':len(json.loads(INVENTORY.read_text(encoding='utf-8'))),
+        'new_hashes_reviewed':len(rows),
+        'binary_state_policy':'all_retained',
+        'files_deleted':0,
+        'bytes_deleted':0,
+        'classifications':dict(classes),
+        'classification_bytes':dict(class_bytes),
+        'new_link_only_candidates':len(candidates),
+        'new_link_only_candidate_raw_bytes':sum(int(x['bytes'] or 0) for x in candidates),
+        'migration_set_policy':'delta_not_merged_into_approved_695_hash_proposal',
+        'rows':rows,
+    }
+    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+    candidate_payload={
+        'reviewed_at':report['reviewed_at'],
+        'scope':'new_hash_delta_only',
+        'count':len(candidates),
+        'raw_bytes':report['new_link_only_candidate_raw_bytes'],
+        'production_binary_state_changes':0,
+        'merged_into_existing_695_hash_proposal':False,
+        'candidates':candidates,
+    }
+    cp=Path(candidate_path);cp.parent.mkdir(parents=True,exist_ok=True)
+    cp.write_text(json.dumps(candidate_payload,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+    lines=[
+        '# Source-retention post-audit delta review','',
+        f"Reviewed **{len(rows)}** hashes added after the original audited inventory.",
+        '**Every binary remains retained. Deleted files/bytes: 0 / 0.**','',
+        '| Classification | Files | Raw bytes |','| --- | ---: | ---: |',
+    ]
+    for name in ('retain_evidence','retain_latest_or_review','link_only_candidate','unclassified'):
+        lines.append(f"| {name} | {classes.get(name,0):,} | {class_bytes.get(name,0):,} |")
+    lines += [
+        '',
+        f"New link-only candidates: **{len(candidates)} files / {report['new_link_only_candidate_raw_bytes']:,} raw bytes**.",
+        'These are a separate review delta and are not merged into the existing approval-gated 695-hash migration proposal.',
+        '',
+        'Full per-hash review: SOURCE-RETENTION-DELTA.json.',
+        'Candidate-only delta: SOURCE-RETENTION-NEW-CANDIDATES.json.',
+        ''
+    ]
+    mp=Path(markdown_path);mp.parent.mkdir(parents=True,exist_ok=True)
+    mp.write_text('\n'.join(lines),encoding='utf-8')
+    return report
 
 
 def digest_rows(rows):
@@ -63,7 +172,7 @@ def active_manifest_hashes():
     return manifest,packed
 
 
-def prepare(*,apply=False,report_path=None):
+def prepare(*,apply=False,report_path=None,delta_path=None,delta_markdown=None,candidate_delta=None):
     db.init()
     inventory=json.loads(INVENTORY.read_text(encoding='utf-8'))
     if not isinstance(inventory,list) or not inventory:
@@ -73,6 +182,7 @@ def prepare(*,apply=False,report_path=None):
         raise ValueError('Retention inventory contains duplicate hashes')
     archives={r['hash']:r for r in db.rows(
         'SELECT hash,path,bytes,media_type,first_seen FROM archives ORDER BY hash')}
+    new_hashes=set(archives)-set(audited)
     missing=sorted(set(audited)-set(archives))
     if missing:
         raise ValueError('Reviewed retention hash is absent from current archive metadata: '+missing[0])
@@ -86,29 +196,20 @@ def prepare(*,apply=False,report_path=None):
     protected_rows=[archives[h] for h in protected_hashes]
     protected_digest_before=digest_rows(protected_rows)
 
+    stored_before={r['hash']:r for r in db.rows(
+        'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
     if apply:
         stamp=db.now()
-        precedence={'unclassified':0,'link_only_candidate':1,
-                    'retain_latest_or_review':2,'retain_evidence':3}
-        current={r['hash']:r for r in db.rows(
-            'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
         records=[]
-        for h,row in audited.items():
-            reviewed=row['classification']
-            rescanned=current_items[h]['classification']
-            if reviewed not in db.RETENTION_CLASSIFICATIONS-{'unclassified'}:
-                raise ValueError('Invalid reviewed classification for '+h)
-            if rescanned not in db.RETENTION_CLASSIFICATIONS-{'unclassified'}:
-                raise ValueError('Invalid current retention classification for '+h)
-            existing=current[h]['classification']
-            strongest=max((reviewed,rescanned,existing),key=lambda x:precedence[x])
-            if strongest==existing and precedence[existing]>max(precedence[reviewed],precedence[rescanned]):
-                continue
-            reason=REASON
-            if precedence[rescanned]>precedence[reviewed]:
-                reason=('Reviewed audit classification strengthened by current dependency scan: '+
-                        ', '.join(current_items[h].get('reasons') or [rescanned])[:600])
-            records.append((strongest,reason,REVIEWED_AT,stamp,h))
+        for h in sorted(archives):
+            reviewed=audited.get(h)
+            item=current_items[h]
+            existing=stored_before[h]
+            target=choose_classification(reviewed,item,existing)
+            reason=classification_reason(target,reviewed,item,existing)
+            reviewed_at=(reviewed.get('reviewed_at') if reviewed and reviewed.get('reviewed_at')
+                         else (existing.get('reviewed_at') or REVIEWED_AT))
+            records.append((target,reason,reviewed_at,stamp,h))
         with db.connect() as c:
             c.executemany("""UPDATE archive_retention SET
               classification=?,reason=?,reviewed_at=?,updated_at=?
@@ -135,8 +236,18 @@ def prepare(*,apply=False,report_path=None):
     if invalid:raise ValueError('Unsafe archive retention state: '+invalid[0]['hash'])
     states=Counter()
     classes=Counter()
-    for row in db.rows('SELECT classification,binary_state FROM archive_retention'):
+    stored_after={r['hash']:r for r in db.rows(
+        'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
+    for row in stored_after.values():
         states[row['binary_state']]+=1;classes[row['classification']]+=1
+
+    delta_report=None
+    if delta_path or delta_markdown or candidate_delta:
+        if not (delta_path and delta_markdown and candidate_delta):
+            raise ValueError('All delta output paths are required together')
+        delta_report=write_delta_review(
+            delta_path,delta_markdown,candidate_delta,new_hashes,current_items,
+            stored_before,stored_after,archives)
 
     manifest,packed=active_manifest_hashes()
     protected_manifest_ok=None
@@ -144,7 +255,8 @@ def prepare(*,apply=False,report_path=None):
     if packed is not None:
         protected_manifest_ok=set(protected_hashes)<=packed
         if not protected_manifest_ok:raise ValueError('Active source packs do not cover all protected evidence')
-        candidate_hashes={h for h,row in audited.items() if row['classification']=='link_only_candidate'}
+        candidate_hashes={h for h,row in stored_after.items()
+                          if row['classification']=='link_only_candidate'}
         candidate_manifest_ok=candidate_hashes<=packed
         if states['metadata_only']==0 and not candidate_manifest_ok:
             raise ValueError('Zero-deletion rollout lost a reviewed link-only candidate from active packs')
@@ -160,8 +272,11 @@ def prepare(*,apply=False,report_path=None):
             row['classification']=='link_only_candidate' for row in audited.values()),
         'historical_candidates_strengthened_by_current_scan':sum(
             row['classification']=='link_only_candidate'
-            and current_items[h]['classification']!='link_only_candidate'
+            and choose_classification(row,current_items[h],stored_before[h])!='link_only_candidate'
             for h,row in audited.items()),
+        'post_audit_hashes_reviewed':len(new_hashes),
+        'post_audit_delta':({k:v for k,v in delta_report.items() if k!='rows'}
+                            if delta_report else None),
         'current_dependency_scan_missing_hashes':len(current_missing),
         'current_archive_hashes':len(archives),
         'new_unclassified_hashes':classes['unclassified'],
@@ -203,5 +318,10 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     p.add_argument('--apply',action='store_true')
     p.add_argument('--report',type=Path)
+    p.add_argument('--delta-report',type=Path)
+    p.add_argument('--delta-markdown',type=Path)
+    p.add_argument('--candidate-delta',type=Path)
     args=p.parse_args()
-    prepare(apply=args.apply,report_path=args.report)
+    prepare(apply=args.apply,report_path=args.report,
+            delta_path=args.delta_report,delta_markdown=args.delta_markdown,
+            candidate_delta=args.candidate_delta)
