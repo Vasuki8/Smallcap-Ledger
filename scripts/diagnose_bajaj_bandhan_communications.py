@@ -46,18 +46,24 @@ def main():
                           "kind="+providers.classify(label,target),
                           "label="+repr(label[:300]),
                           "url="+target,flush=True)
-            if amc=="Bajaj":
-                for node in soup.find_all(string=lambda x:isinstance(x,str) and "outlook" in x.lower()):
-                    parent=node.parent
-                    block=parent
-                    for _ in range(5):
+            if amc=="Bajaj" and "LId=5" in url:
+                for node in soup.find_all(string=lambda x:isinstance(x,str) and "equity outlook" in x.lower()):
+                    block=node.parent
+                    for level in range(7):
                         if block is None:break
-                        html=str(block)
-                        if "Download" in html or "download" in html or "OUTLOOK" in html.upper():break
+                        print("COMM_PROBE_BAJAJ_CARD_LEVEL",url,"level="+str(level),
+                              "tag="+block.name,
+                              "attrs="+repr(dict(block.attrs)),
+                              "text="+repr(block.get_text(" ",strip=True)[:1400]),
+                              "html="+repr(str(block)[:6000]),flush=True)
                         block=block.parent
-                    print("COMM_PROBE_BAJAJ_OUTLOOK_NODE",url,
-                          repr((block or parent).get_text(" ",strip=True)[:1200]),
-                          repr(str(block or parent)[:3500]),flush=True)
+                for tag in soup.find_all(["button","a","input"]):
+                    attrs=dict(tag.attrs);txt=tag.get_text(" ",strip=True)
+                    raw=(txt+" "+repr(attrs)).lower()
+                    if "download" in raw or "outlook" in raw:
+                        print("COMM_PROBE_BAJAJ_CONTROL",url,
+                              "tag="+tag.name,"text="+repr(txt[:500]),
+                              "attrs="+repr(attrs),flush=True)
             for script in soup.find_all("script"):
                 raw=(script.string or script.get_text() or "")
                 if any(k in raw.lower() for k in ("outlook","marketingmaterial","api/","ajax","download")):
