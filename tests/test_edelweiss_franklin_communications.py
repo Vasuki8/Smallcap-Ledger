@@ -85,10 +85,16 @@ class EdelweissFranklinCommunicationTests(unittest.TestCase):
         self.assertIn(("Edelweiss",upgrade.EDELWEISS_FACTOR,"Factor Investing Outlook 2026"),pairs)
         self.assertIn(("Franklin",upgrade.FRANKLIN_LATEST,"Latest Commentaries / Market Insights"),pairs)
         self.assertFalse(any(r[0]=="Franklin" and "widen.net" in r[1] for r in rows))
-        self.assertTrue(disclosures.official_publication_url(
+        self.assertFalse(disclosures.official_publication_url(
             "https://franklintempletonprod.widen.net/s/x/current","Franklin"))
         self.assertFalse(disclosures.official_publication_url(
             "https://franklintempletonprod.widen.net/s/x/current","Edelweiss"))
+        parsed=franklin.parse(json.dumps(api_payload()).encode())
+        self.assertTrue(all(
+            not row["asset_url"] or
+            row["asset_url"].startswith("https://franklintempletonprod.widen.net/")
+            for row in parsed
+        ))
 
     def test_franklin_api_parser_keeps_only_clear_market_commentaries(self):
         rows=franklin.parse(json.dumps(api_payload()).encode())
