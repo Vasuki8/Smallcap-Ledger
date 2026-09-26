@@ -38,6 +38,10 @@ _DOCUMENTED_ARCHIVE_LIMITATIONS={
         "code":"original_asset_blocked_by_robots_policy",
         "reason":"Samco's retained Small Cap Fund scheme presentation is a qualifying AMC communication, but its media1.samco.in original remains link-only because automatic access is disallowed by robots policy.",
     },
+    "LIC Mf Small Cap Fund":{
+        "code":"first_party_asset_returns_empty_response",
+        "reason":"LIC Mutual Fund's current Market Update page still lists the retained 2025 Monthly Market Outlooks, but their exact first-party PDF endpoints return application/pdf responses with zero bytes under reviewed automated retrieval, including with the Market Update page as same-site referer.",
+    },
 }
 _COMMUNICATION_SOURCE=re.compile(
     r"newsletter|letter.*unitholder|unitholder.*letter|"
@@ -160,7 +164,7 @@ def report():
             "code":"documented_communication_archive_limitation",
             "actionable":False,
             "affected_funds":[r["family"] for r in archive_limited],
-            "reason":"The original AMC communication asset is intentionally retained as link-only because robots policy disallows automatic retrieval; keep the metadata/source link and do not treat this as a repairable fetch failure.",
+            "reason":"The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure.",
         })
     if unarchived:
         priorities.append({
@@ -199,7 +203,7 @@ def report():
             "Factsheets, scheme documents, portfolios and generic disclosures remain available on fund pages but do not satisfy communication coverage.",
             "A missing published_at value is reported as missing metadata; first_seen is never substituted as the publication date.",
             "Documented source limitations remain visible as zero communication coverage and are not silently promoted from excluded source classes.",
-            "Robots-blocked originals remain visible as link-only archive limitations and are not queued as ordinary repairable download failures.",
+            "Unavailable originals remain visible as link-only archive limitations when reviewed automated retrieval is blocked or the first-party endpoint returns no document bytes; they are not queued as ordinary repairable download failures.",
             "The audit is read-only and performs no source fetch, document mutation or UI change.",
         ],
     }
