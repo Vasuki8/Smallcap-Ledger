@@ -39,22 +39,22 @@ def resolve_registered_amc(value,source_rows):
         return ' '.join(re.findall(r'[a-z0-9]+',str(text).lower()))
     def tokens(text):
         return frozenset(x for x in re.findall(r'[a-z0-9]+',str(text).lower()) if x not in generic)
-    target_words=words(value)
+    keys=list(dict.fromkeys(row[0] for row in source_rows))
+    normalized=words(value)
+    # Two real AMC names contain another registered source key as a later word.
+    # Keep this narrow instead of making arbitrary multi-brand names resolve by
+    # first-token order; genuinely ambiguous names must continue to return None.
+    aliases={
+        'kotak mahindra mutual fund':'Kotak',
+        'mahindra manulife mutual fund':'Mahindra',
+    }
+    alias=aliases.get(normalized)
+    if alias and any(str(key).lower()==alias.lower() for key in keys):
+        return next(key for key in keys if str(key).lower()==alias.lower())
     target=tokens(value)
     if not target:return None
-    keys=list(dict.fromkeys(row[0] for row in source_rows))
     exact=[key for key in keys if tokens(key)==target]
     if len(exact)==1:return exact[0]
-    # Prefer the registered key at the start of the AMC name. This separates
-    # "Kotak" from "Mahindra" for "Kotak Mahindra Mutual Fund" while correctly
-    # mapping "Mahindra Manulife Mutual Fund" to the Mahindra source family.
-    prefixes=[key for key in keys
-              if words(key) and (target_words==words(key)
-                                 or target_words.startswith(words(key)+' '))]
-    if prefixes:
-        longest=max(len(words(key)) for key in prefixes)
-        best=[key for key in prefixes if len(words(key))==longest]
-        if len(best)==1:return best[0]
     subsets=[]
     for key in keys:
         current=tokens(key)
