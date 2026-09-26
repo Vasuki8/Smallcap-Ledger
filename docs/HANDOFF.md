@@ -1,8 +1,103 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after AMC communication coverage audit and source-key matching correction.
+Updated: 2026-09-26, after retained ITI/Mahindra AMC communication recovery and successful production deployment.
 
-## Latest completed batch: audit AMC-origin communication/news coverage
+## Latest completed batch: recover retained ITI and Mahindra AMC communications
+
+**The first actionable communication-retrieval queue item is complete.** ITI Small Cap Fund and Mahindra Manulife Small Cap Fund now expose their already-retained first-party monthly outlook/update pages as AMC communications instead of leaving them misclassified as factsheets/source pages.
+
+### Retained evidence reviewed
+
+Read-only diagnostic PR **#180** merged as commit `23dc472e20c8926cc316e980a224e8b5e110e9e8` and inspected the restored production database before any classification change.
+
+It established the exact retained rows:
+
+- **ITI · Equity Market Update** — `https://www.itiamc.com/digitalfactsheet/July2026/equity-update.html` — one archived HTML version; previously `factsheet`.
+- **ITI · Debt Market Update** — `https://www.itiamc.com/digitalfactsheet/July2026/debt-update.html` — one archived HTML version; previously `factsheet`.
+- **ITI · Market Outlook** — `https://www.itiamc.com/digitalfactsheet/July2026/CEO.html` — one archived HTML version; previously `source page`.
+- **Mahindra Manulife · Market Outlook** — `https://www.mahindramanulife.com/digital-factsheet/july-2026/Outlook.html` — one archived HTML version; previously `source page`.
+
+The ITI update pages were misclassified because the generic word `digitalfactsheet` in the URL took precedence over their explicit **Equity Market Update / Debt Market Update** titles.
+
+### Implementation
+
+PR **#181** merged as commit `eab7f7a1b68ba9a950f8919a7ab0852d73981551`.
+
+The backend now:
+
+- gives explicit communication titles precedence over generic `factsheet` path text;
+- treats only **dated monthly digital-factsheet pages** with explicit communication titles as communication artifacts; generic market-update directories remain source pages;
+- promotes the four exact already-versioned rows above to `market view`;
+- leaves all four `published_at` fields **null** because no exact publication date is retained; collection time is not substituted;
+- uses a canonical AMC/source-key resolver for document ingestion so a **Mahindra** source cannot attach to **Kotak Mahindra Mutual Fund**;
+- keeps third-party news excluded;
+- adds an idempotent push-time retained-evidence recovery gate;
+- removes the completed diagnostic step/script.
+
+The first implementation run correctly stopped at regression before publication because a general prefix rule made an intentionally ambiguous synthetic AMC name resolve when it should not.
+
+PR **#182** merged as commit `b6e538d6b75defd0cae04a3e45d79a49dd52b0c9` and narrowed that resolver to two reviewed real-world aliases only:
+
+- `Kotak Mahindra Mutual Fund -> Kotak`
+- `Mahindra Manulife Mutual Fund -> Mahindra`
+
+All other ambiguous multi-brand names continue to resolve to **none** rather than guessing.
+
+### Production verification
+
+Final production workflow **36219730560** completed successfully at **2026-09-26T05:07:44Z**:
+
+- retained communication recovery: **4 promoted**
+- ITI exact market-view rows: **3**
+- Mahindra Manulife exact market-view rows: **1**
+- Kotak/Mahindra communication cross-associations: **0**
+- full regression suite: **385 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10898318429** is **236,554,212 bytes** with digest `sha256:a762bef0ac87ab6159285762ef7ecd7f9dd5e6872be4d620638776a3b6ea4431`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T05:07:08Z**:
+
+- funds with at least one retained AMC communication: **15 / 36** (was 13)
+- funds with no retained AMC communication: **21** (was 23)
+- retained communication documents: **158** (was 154)
+- archived communication originals: **120** (was 116)
+- market/newsletter/CIO/product-view documents: **136** (was 132)
+- letters to unitholders: **22**
+- documents with an explicit `published_at`: **0**
+- correctly matched registered communication-oriented source coverage: **9 fund houses**
+
+ITI now has **3 / 3 archived market-view pages**. Mahindra Manulife now has **1 / 1 archived market-view page**. Their only remaining communication-audit issue is `publication_date_missing`; do not infer a date from `first_seen` or from the monthly directory name.
+
+The former `review_registered_communication_sources` repair priority is now gone.
+
+### Next backend/data-retrieval task
+
+**Begin bounded first-party communication-source discovery for the remaining 21 funds with no retained AMC communication and no dedicated communication source registered.**
+
+Current affected funds, in audit order:
+
+**Abakkus, Axis, Bajaj Finserv, Bandhan, Edelweiss, Franklin India, Groww, HSBC, ICICI Prudential, Invesco India, Kotak, Mirae Asset, PGIM India, Quant, SBI, Sundaram, Tata, The Wealth Company, TRUSTMF, UTI and Union Small Cap funds.**
+
+Start with **Abakkus Small Cap Fund**, then **Axis Small Cap Fund**, using existing registered AMC/fund pages first. For each fund:
+
+- identify only first-party newsletters, market/CIO/investment views, product views/presentations, or letters to unitholders;
+- register a dedicated communication source only when the page identity is unambiguous;
+- retain the original URL/hash and explicit publication date when the source supplies one;
+- never use `first_seen` as a publication date;
+- never ingest third-party news or generic press/news coverage merely because it mentions the fund;
+- add source-specific regression evidence before marking the fund covered.
+
+The separate `repair_unarchived_communication_documents` queue remains for **LIC MF, Nippon India and Samco** after the missing-source discovery priority.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**; do not re-probe Union, Bajaj or Edelweiss portfolio routes until their retained source-change watch changes, and do not estimate Bandhan/Sundaram/UTI censored portfolio weights.
+
+## Previous completed batch: audit AMC-origin communication/news coverage
 
 **The backend now has a dedicated read-only audit for the tracker’s AMC-publication requirement.** It measures newsletters/market/CIO/investment views and letters to unitholders separately from factsheets, portfolios and generic disclosures, and it explicitly excludes third-party news.
 
