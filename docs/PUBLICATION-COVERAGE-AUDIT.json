@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T13:12:19+00:00",
+  "built_at": "2026-09-26T14:06:57+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,18 +11,18 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 23,
-    "funds_without_amc_communications": 13,
-    "communication_documents": 210,
-    "archived_communication_documents": 162,
-    "market_views": 188,
+    "funds_with_amc_communications": 25,
+    "funds_without_amc_communications": 11,
+    "communication_documents": 214,
+    "archived_communication_documents": 166,
+    "market_views": 192,
     "unitholder_letters": 22,
-    "documents_with_published_date": 49,
-    "funds_with_registered_communication_sources": 17,
+    "documents_with_published_date": 50,
+    "funds_with_registered_communication_sources": 19,
     "issue_counts": {
       "communication_document_not_archived": 4,
-      "no_amc_communications_collected": 13,
-      "publication_date_missing": 18
+      "no_amc_communications_collected": 11,
+      "publication_date_missing": 20
     }
   },
   "repair_priorities": [
@@ -31,8 +31,6 @@
       "code": "discover_first_party_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "ICICI Prudential Small Cap Fund",
-        "Invesco India Small Cap Fund",
         "Kotak Small Cap Fund",
         "Mirae Asset Small Cap Fund",
         "Pgim India Small Cap Fund",
@@ -453,31 +451,49 @@
     {
       "family": "ICICI Prudential Small Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 3,
+      "archived_communication_count": 3,
+      "market_view_count": 3,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "published_date_count": 1,
+      "latest_published_at": "2026-08-11",
+      "latest_observed_at": "2026-09-26T14:05:10+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "ICICI",
+          "url": "https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html",
+          "label": "Monthly Market Outlook - August 2026",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:05:10+00:00",
+          "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 2 documents without extracted tables; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {
       "family": "Invesco India Small Cap Fund",
       "amc": "Invesco Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 1,
+      "archived_communication_count": 1,
+      "market_view_count": 1,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "latest_observed_at": "2026-09-26T14:05:13+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "Invesco",
+          "url": "https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0",
+          "label": "Market Outlook - April 2026",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:05:15+00:00",
+          "detail": "0 extracted facts/holdings; 1 document archived; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {

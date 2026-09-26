@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T13:11:41+00:00",
+  "reviewed_at": "2026-09-26T14:06:17+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 322,
+  "new_hashes_reviewed": 325,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
     "retain_latest_or_review": 206,
-    "retain_evidence": 111,
+    "retain_evidence": 114,
     "link_only_candidate": 5
   },
   "classification_bytes": {
     "retain_latest_or_review": 89691498,
-    "retain_evidence": 211360771,
+    "retain_evidence": 213833274,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -773,7 +773,7 @@
       "bytes": 133428,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:27+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-october-2025",
@@ -887,6 +887,30 @@
       ],
       "urls": [
         "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/half-yearly/"
+      ]
+    },
+    {
+      "hash": "1f3af8f9d48c603329ec77c32f819abd32578673791dcb1fd9b076c7033cbe9a",
+      "bytes": 42085,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T14:05:05+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html",
+      "host": "icicipruamc.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html"
+      ],
+      "urls": [
+        "https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html"
       ]
     },
     {
@@ -1183,7 +1207,7 @@
       "bytes": 133649,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:40+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/union-budget-fy2025-fixed-income-perspective",
@@ -1379,7 +1403,7 @@
       "bytes": 3142762,
       "media_type": "application/pdf",
       "first_seen": "2026-09-26T13:10:12+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://cms-resources.growwmf.in/uploads/weekly_report_8_6345528cb0.pdf",
@@ -1629,7 +1653,7 @@
       "bytes": 133383,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:24+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-february-2026",
@@ -1701,7 +1725,7 @@
       "bytes": 133632,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:20+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-april-2026",
@@ -2102,7 +2126,7 @@
       "bytes": 512901,
       "media_type": "application/pdf",
       "first_seen": "2026-09-26T13:10:14+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://cms-resources.growwmf.in/uploads/Fixed_Income_Weekly_Wrap_Sep_18_ec9832772c.pdf",
@@ -2269,6 +2293,32 @@
       ]
     },
     {
+      "hash": "46734cc25ed150da00a4816b693bc229d2ba70477a11b646ac64eb539082a214",
+      "bytes": 590811,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T14:05:07+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.icicipruamc.com/blob/emailmedia/mutualfund/EQUITY MARKET  UPDATE.pdf",
+      "host": "icicipruamc.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.icicipruamc.com/blob/emailmedia/mutualfund/EQUITY MARKET  UPDATE.pdf",
+        "https://www.icicipruamc.com/blob/emailmedia/mutualfund/EQUITY%20MARKET%20%20UPDATE.pdf"
+      ],
+      "urls": [
+        "https://www.icicipruamc.com/blob/emailmedia/mutualfund/EQUITY MARKET  UPDATE.pdf",
+        "https://www.icicipruamc.com/blob/emailmedia/mutualfund/EQUITY%20MARKET%20%20UPDATE.pdf"
+      ]
+    },
+    {
       "hash": "46f5b0f066be6a52486e06b13b1d6e91ec15eb488b8235581eac206cbbfd4fdf",
       "bytes": 143723,
       "media_type": "text/html; charset=utf-8",
@@ -2397,7 +2447,7 @@
       "bytes": 133212,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:26+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-december-2025",
@@ -3364,7 +3414,7 @@
       "bytes": 133763,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:25+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/union-budget-fy27-fixed-income-perspective-feb",
@@ -3412,7 +3462,7 @@
       "bytes": 132796,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:36+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-oct-2024",
@@ -4356,7 +4406,7 @@
       "bytes": 133305,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:39+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2024",
@@ -4503,7 +4553,7 @@
       "bytes": 133396,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:34+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-december-2024",
@@ -4576,7 +4626,7 @@
       "bytes": 842545,
       "media_type": "application/pdf",
       "first_seen": "2026-09-26T13:10:11+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://cms-resources.growwmf.in/uploads/daily_report_4_c7907e5e42.pdf",
@@ -4983,7 +5033,7 @@
       "bytes": 133186,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:19+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-june-2026",
@@ -5031,7 +5081,7 @@
       "bytes": 133379,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:18+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2026",
@@ -5220,7 +5270,7 @@
       "bytes": 146699,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:30+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/the-macro-sphere-monetary-policy-how-far-have-we-come",
@@ -5294,7 +5344,7 @@
       "bytes": 132904,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:29+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-august-2025",
@@ -5541,7 +5591,7 @@
       "bytes": 35805,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:08+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_latest_or_review",
       "classification_after": "retain_latest_or_review",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/distributor/knowledge-hub/publications",
@@ -5762,7 +5812,7 @@
       "bytes": 153594,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:22+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/the-macro-sphere-stem-the-fall-but-how-the-past-playbook-and-the-way-ahead",
@@ -6061,7 +6111,7 @@
       "bytes": 145349,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:23+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/compelling-valuations-emerge-after-recent-market-corrections",
@@ -6472,7 +6522,7 @@
       "bytes": 133246,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:33+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-for-february-2025",
@@ -6739,7 +6789,7 @@
       "bytes": 133167,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:32+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-june-2025",
@@ -6878,7 +6928,7 @@
       "bytes": 134185,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:32+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-update-april-2025",
@@ -7000,7 +7050,7 @@
       "bytes": 133322,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:41+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/union-budget-fy2025-key-highlights",
@@ -7676,7 +7726,7 @@
       "bytes": 141133,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:28+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_evidence",
       "classification_after": "retain_evidence",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/gst-2-0-reforms-sectoral-impact-sept-2025",
@@ -7693,6 +7743,30 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/gst-2-0-reforms-sectoral-impact-sept-2025"
+      ]
+    },
+    {
+      "hash": "f7a915b334264efd5cbe19cbfc59a2210a3dbca2ebb0a3ddef5c2aa1461d7723",
+      "bytes": 1839607,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T14:05:13+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0",
+      "host": "invescomutualfund.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0"
+      ],
+      "urls": [
+        "https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0"
       ]
     },
     {
@@ -7724,7 +7798,7 @@
       "bytes": 201434,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-09-26T13:10:17+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "retain_latest_or_review",
       "classification_after": "retain_latest_or_review",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
