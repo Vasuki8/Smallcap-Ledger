@@ -1,9 +1,59 @@
 {
-  "simulated_at": "2026-09-25T22:05:44+00:00",
+  "simulated_at": "2026-09-26T00:45:19+00:00",
   "classification": "link_only_candidate",
   "proposed_binary_state": "metadata_only",
-  "count": 700,
-  "raw_bytes": 404498141,
+  "historical_reviewed_candidate_count": 700,
+  "current_eligible_candidate_count": 695,
+  "excluded_reviewed_candidate_count": 5,
+  "count": 695,
+  "raw_bytes": 403318035,
+  "excluded_reviewed_candidates": [
+    {
+      "hash": "253034400136ade59abf2fca7e30b62f32321354d86409e9c4207db578c699a3",
+      "reviewed_classification": "link_only_candidate",
+      "current_classification": "retain_latest_or_review",
+      "current_binary_state": "retained",
+      "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
+      "current_reviewed_at": "2026-09-25",
+      "current_updated_at": "2026-09-25T22:16:34+00:00"
+    },
+    {
+      "hash": "36a9f18e7fc8b5d20c68a10233b507e154be1a9e89e7e53a254e3dbacbdc6de8",
+      "reviewed_classification": "link_only_candidate",
+      "current_classification": "retain_latest_or_review",
+      "current_binary_state": "retained",
+      "current_reason": "Promoted because identical bytes were fetched/imported again as current source evidence",
+      "current_reviewed_at": "2026-09-25",
+      "current_updated_at": "2026-09-25T21:54:10+00:00"
+    },
+    {
+      "hash": "c1bcc40fcde7fff3750de27466f525ba5086af6677764714c8885f4de0581fc1",
+      "reviewed_classification": "link_only_candidate",
+      "current_classification": "retain_latest_or_review",
+      "current_binary_state": "retained",
+      "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
+      "current_reviewed_at": "2026-09-25",
+      "current_updated_at": "2026-09-25T22:16:34+00:00"
+    },
+    {
+      "hash": "c4f7f3175440571a0cca59c067c30ad4158290a88e4760b35ab2886a9a53592c",
+      "reviewed_classification": "link_only_candidate",
+      "current_classification": "retain_latest_or_review",
+      "current_binary_state": "retained",
+      "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
+      "current_reviewed_at": "2026-09-25",
+      "current_updated_at": "2026-09-25T22:16:34+00:00"
+    },
+    {
+      "hash": "d5ea0bd6ba6e79572fe37b7137a0c0aabfdcece05593da116e8ea1a15eeb36d7",
+      "reviewed_classification": "link_only_candidate",
+      "current_classification": "retain_latest_or_review",
+      "current_binary_state": "retained",
+      "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
+      "current_reviewed_at": "2026-09-25",
+      "current_updated_at": "2026-09-25T22:16:34+00:00"
+    }
+  ],
   "candidates": [
     {
       "hash": "0014dd913c16c600a8e99c6a85e03c4f95c9ead62d59a995e1f8c53d4966c49d",
@@ -942,15 +992,6 @@
       "classification": "link_only_candidate"
     },
     {
-      "hash": "253034400136ade59abf2fca7e30b62f32321354d86409e9c4207db578c699a3",
-      "bytes": 276219,
-      "current_pack": "sources-2026-09-p001-d69bf77851258744.zip",
-      "host": "mutualfund.adityabirlacapital.com",
-      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets",
-      "kind": "html",
-      "classification": "link_only_candidate"
-    },
-    {
       "hash": "258c6d9d456cd65c50c4427bb1a7dd1fd6ce33bcd28b9c4bd9c50a2643d1b566",
       "bytes": 161842,
       "current_pack": "sources-2026-09-p009-4f03c4b564f0be0d.zip",
@@ -1388,15 +1429,6 @@
       "current_pack": "sources-2026-09-p001-d69bf77851258744.zip",
       "host": "mutualfund.adityabirlacapital.com",
       "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-error-disclosures",
-      "kind": "html",
-      "classification": "link_only_candidate"
-    },
-    {
-      "hash": "36a9f18e7fc8b5d20c68a10233b507e154be1a9e89e7e53a254e3dbacbdc6de8",
-      "bytes": 92350,
-      "current_pack": "sources-2026-09-p001-47e7c3737ad53a15.zip",
-      "host": "sbimf.com",
-      "primary_url": "https://www.sbimf.com/ajaxcall/CMS/GetSchemePortfolioSheets",
       "kind": "html",
       "classification": "link_only_candidate"
     },
@@ -4758,15 +4790,6 @@
       "classification": "link_only_candidate"
     },
     {
-      "hash": "c1bcc40fcde7fff3750de27466f525ba5086af6677764714c8885f4de0581fc1",
-      "bytes": 269825,
-      "current_pack": "sources-2026-09-p011-fb76743aa6cad95e.zip",
-      "host": "mutualfund.adityabirlacapital.com",
-      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio",
-      "kind": "html",
-      "classification": "link_only_candidate"
-    },
-    {
       "hash": "c21c9d39091ffaa4cfa80514c726b04866152d3b436bf0ed01e15a56eed4aea3",
       "bytes": 102692,
       "current_pack": "sources-2026-09-p005-4bbaca6225748b35.zip",
@@ -4844,15 +4867,6 @@
       "current_pack": "sources-2026-09-p006-3904a330d9c1108d.zip",
       "host": "assetmanagement.hsbc.co.in",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/portfolio-management-services",
-      "kind": "html",
-      "classification": "link_only_candidate"
-    },
-    {
-      "hash": "c4f7f3175440571a0cca59c067c30ad4158290a88e4760b35ab2886a9a53592c",
-      "bytes": 272000,
-      "current_pack": "sources-2026-09-p001-d69bf77851258744.zip",
-      "host": "mutualfund.adityabirlacapital.com",
-      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-difference-disclosures",
       "kind": "html",
       "classification": "link_only_candidate"
     },
@@ -5321,15 +5335,6 @@
       "current_pack": "sources-2026-09-p002-a0e779b11854a7cb.zip",
       "host": "mf.nipponindiaim.com",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures",
-      "kind": "html",
-      "classification": "link_only_candidate"
-    },
-    {
-      "hash": "d5ea0bd6ba6e79572fe37b7137a0c0aabfdcece05593da116e8ea1a15eeb36d7",
-      "bytes": 269712,
-      "current_pack": "sources-2026-09-p001-d69bf77851258744.zip",
-      "host": "mutualfund.adityabirlacapital.com",
-      "primary_url": "https://mutualfund.adityabirlacapital.com/market-update",
       "kind": "html",
       "classification": "link_only_candidate"
     },
