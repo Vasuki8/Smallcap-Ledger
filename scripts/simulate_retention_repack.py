@@ -137,6 +137,44 @@ def protected_hashes(database):
             "SELECT hash FROM archive_retention WHERE classification='retain_evidence'")}
 
 
+def reviewed_candidate_states(database,reviewed_hashes):
+    reviewed_hashes=sorted(reviewed_hashes)
+    if not reviewed_hashes:return {},[]
+    marks=','.join('?' for _ in reviewed_hashes)
+    with sqlite3.connect(database) as c:
+        c.row_factory=sqlite3.Row
+        rows={r['hash']:dict(r) for r in c.execute(
+            f'''SELECT hash,classification,binary_state,reason,reviewed_at,updated_at
+                FROM archive_retention WHERE hash IN ({marks})''',
+            tuple(reviewed_hashes))}
+    missing=sorted(set(reviewed_hashes)-set(rows))
+    return rows,missing
+
+
+def current_eligible_candidates(database,reviewed_candidates):
+    reviewed_by_hash={r['hash']:r for r in reviewed_candidates}
+    states,missing=reviewed_candidate_states(database,reviewed_by_hash)
+    if missing:
+        raise ValueError('Reviewed candidate is absent from active checkpoint retention metadata: '+missing[0])
+    eligible=[]
+    excluded=[]
+    for h,row in reviewed_by_hash.items():
+        state=states[h]
+        if state['classification']=='link_only_candidate' and state['binary_state']=='retained':
+            eligible.append(row)
+        else:
+            excluded.append({
+                'hash':h,
+                'reviewed_classification':row.get('classification'),
+                'current_classification':state['classification'],
+                'current_binary_state':state['binary_state'],
+                'current_reason':state.get('reason'),
+                'current_reviewed_at':state.get('reviewed_at'),
+                'current_updated_at':state.get('updated_at'),
+            })
+    return sorted(eligible,key=lambda x:x['hash']),sorted(excluded,key=lambda x:x['hash'])
+
+
 def zip_database(database,target):
     database=Path(database);target=Path(target)
     with sqlite3.connect(database) as c:c.execute('VACUUM')
@@ -328,7 +366,9 @@ def markdown(report):
         '',
         '**No release asset was uploaded, deleted or switched. No production binary state changed.**','',
         '## Proposed steady-state reduction','',
-        f"- reviewed candidates simulated metadata-only: **{report['candidate_count']}**",
+        f"- historical reviewed candidates: **{report['historical_reviewed_candidate_count']}**",
+        f"- currently eligible candidates simulated metadata-only: **{report['candidate_count']}**",
+        f"- reviewed hashes excluded because current evidence strengthened them: **{report['excluded_reviewed_candidate_count']}**",
         f"- candidate raw source bytes: **{s['candidate_raw_bytes']:,}**",
         f"- candidate compressed payload bytes from reviewed pack audit: **{s['candidate_compressed_payload_bytes']:,}**",
         f"- affected active source packs: **{report['affected_pack_count']}**",
@@ -364,8 +404,8 @@ def markdown(report):
 
 def simulate(report_path,manifest_path,candidates_path,markdown_path):
     queue_summary=ensure_no_actionable_portfolio_change()
-    candidates=load_candidates();candidate_hashes={r['hash'] for r in candidates}
-    reviewed_payload=sum(int(r.get('compressed_payload_bytes') or 0) for r in candidates)
+    reviewed_candidates=load_candidates()
+    reviewed_candidate_hashes={r['hash'] for r in reviewed_candidates}
     repo=os.environ.get('GITHUB_REPOSITORY','')
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo):
         raise ValueError('GITHUB_REPOSITORY is required for the simulation')
@@ -399,8 +439,14 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
         live_rows=archive_rows(sim_db)
         if set(pack_for_hash)!=set(live_rows):
             raise ValueError('Active source-pack manifest does not cover the active checkpoint database exactly')
-        if not candidate_hashes<=set(live_rows):
-            raise ValueError('Candidate hash missing from active checkpoint database')
+        if not reviewed_candidate_hashes<=set(live_rows):
+            raise ValueError('Reviewed candidate hash missing from active checkpoint database')
+
+        candidates,excluded_reviewed=current_eligible_candidates(sim_db,reviewed_candidates)
+        candidate_hashes={r['hash'] for r in candidates}
+        if not candidate_hashes:
+            raise ValueError('No reviewed link-only candidates remain currently eligible')
+        reviewed_payload=sum(int(r.get('compressed_payload_bytes') or 0) for r in candidates)
 
         before=simulate_database(sim_db,sorted(candidate_hashes),copy_live=False)
         after=db_fingerprints(sim_db)
@@ -485,8 +531,12 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'simulated_at':datetime.now(timezone.utc).isoformat(timespec='seconds'),
             'classification':'link_only_candidate',
             'proposed_binary_state':'metadata_only',
+            'historical_reviewed_candidate_count':len(reviewed_candidates),
+            'current_eligible_candidate_count':len(candidates),
+            'excluded_reviewed_candidate_count':len(excluded_reviewed),
             'count':len(candidates),
             'raw_bytes':sum(int(live_rows[h]['bytes']) for h in candidate_hashes),
+            'excluded_reviewed_candidates':excluded_reviewed,
             'candidates':[
                 {
                     'hash':r['hash'],'bytes':int(live_rows[r['hash']]['bytes']),
@@ -506,8 +556,11 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'database':proposed_database,
             'source_packs':proposed_packs,
             'source_pack_raw_limit':manifest.get('source_pack_raw_limit'),
+            'historical_reviewed_candidate_count':len(reviewed_candidates),
             'candidate_count':len(candidate_hashes),
+            'excluded_reviewed_candidate_count':len(excluded_reviewed),
             'candidate_hashes_sha256':json_sha(sorted(candidate_hashes)),
+            'excluded_reviewed_hashes_sha256':json_sha([x['hash'] for x in excluded_reviewed]),
             'retained_hash_count':len(retained_hashes),
             'rollback':{
                 'active_manifest':github_state._checkpoint_summary(manifest),
@@ -526,7 +579,10 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'active_manifest_created_at':manifest.get('created_at'),
             'active_database_asset':manifest['database']['asset'],
             'current_archive_hashes':len(live_rows),
+            'historical_reviewed_candidate_count':len(reviewed_candidates),
             'candidate_count':len(candidate_hashes),
+            'excluded_reviewed_candidate_count':len(excluded_reviewed),
+            'excluded_reviewed_candidates':excluded_reviewed,
             'retained_hash_count':len(retained_hashes),
             'affected_pack_count':len(affected),
             'replacement_pack_count':sum(not p.get('reuse',False) for p in proposed_packs),
