@@ -72,6 +72,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 6
         run: uv run --frozen python scripts/diagnose_sbi_sundaram_card_markup.py
+      - name: Diagnose SBI and Sundaram exact link targets
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/diagnose_sbi_sundaram_link_targets.py
       - name: Apply PGIM and quant communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
