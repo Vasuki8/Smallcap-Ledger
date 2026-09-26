@@ -1,18 +1,18 @@
 {
-  "reviewed_at": "2026-09-26T22:47:33+00:00",
+  "reviewed_at": "2026-09-26T22:52:06+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 380,
+  "new_hashes_reviewed": 385,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_evidence": 163,
+    "retain_evidence": 168,
     "retain_latest_or_review": 212,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_evidence": 236399135,
+    "retain_evidence": 237762970,
     "retain_latest_or_review": 91285150,
     "link_only_candidate": 3851376
   },
@@ -235,6 +235,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_July2025_Samco_Active_Momentum_Fund_1754646886.xlsx"
+      ]
+    },
+    {
+      "hash": "0580d68b47f4224007a891f6870375f261d4b318b3b642abead8240a8c9f4298",
+      "bytes": 228897,
+      "media_type": "image/png",
+      "first_seen": "2026-09-26T22:49:35+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.wealthcompanyamc.in/uploads/English_2904_fce1f249ed.png",
+      "host": "wealthcompanyamc.in",
+      "kind": "publication_or_unknown_binary",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_2904_fce1f249ed.png"
+      ],
+      "urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_2904_fce1f249ed.png"
       ]
     },
     {
@@ -1418,6 +1442,30 @@
       ]
     },
     {
+      "hash": "26766179ea19fee551e55d8f52e8c9736300247900d7668a950618356b6ac161",
+      "bytes": 210654,
+      "media_type": "image/png",
+      "first_seen": "2026-09-26T22:49:37+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.wealthcompanyamc.in/uploads/English_2804_ef664c366e.png",
+      "host": "wealthcompanyamc.in",
+      "kind": "publication_or_unknown_binary",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_2804_ef664c366e.png"
+      ],
+      "urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_2804_ef664c366e.png"
+      ]
+    },
+    {
       "hash": "26999f8ff66b000481ccb05a82e9bd3ce5bf0b061c220a903d424148a0359e42",
       "bytes": 19221,
       "media_type": "text/html",
@@ -2305,6 +2353,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/amc-document-download/SchemeInformationDocument-SamcoSmallCapFund_1757407768.pdf"
+      ]
+    },
+    {
+      "hash": "3f64e86fe3833ab083dd8b51ec7408b743173be55ef7546ea2e53b71a3afe566",
+      "bytes": 366115,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T22:49:39+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.wealthcompanyamc.in/uploads/2704_fb61c2c28e.pdf",
+      "host": "wealthcompanyamc.in",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.wealthcompanyamc.in/uploads/2704_fb61c2c28e.pdf"
+      ],
+      "urls": [
+        "https://www.wealthcompanyamc.in/uploads/2704_fb61c2c28e.pdf"
       ]
     },
     {
@@ -5242,6 +5314,30 @@
       ]
     },
     {
+      "hash": "89a93a416796d55f82c8fea324b79ad7bc551f8fc4b81f586137ffff967a30dc",
+      "bytes": 296167,
+      "media_type": "image/png",
+      "first_seen": "2026-09-26T22:49:32+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.wealthcompanyamc.in/uploads/English_3004_839e34e11b.png",
+      "host": "wealthcompanyamc.in",
+      "kind": "publication_or_unknown_binary",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_3004_839e34e11b.png"
+      ],
+      "urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_3004_839e34e11b.png"
+      ]
+    },
+    {
       "hash": "89d322bb0b1eb6ded247211db75526878af7bd3f7a879a29ac0d4a407f696708",
       "bytes": 39936,
       "media_type": "application/vnd.ms-excel",
@@ -7932,6 +8028,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_July2025_SamcoLargeMidCapFund_1754647504.xlsx"
+      ]
+    },
+    {
+      "hash": "d5e5a8d0f247ad876301b789f776c79c181e1796b373eab4801a22df51df8280",
+      "bytes": 262002,
+      "media_type": "image/png",
+      "first_seen": "2026-09-26T22:49:42+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.wealthcompanyamc.in/uploads/English_2704_e406287e4d.png",
+      "host": "wealthcompanyamc.in",
+      "kind": "publication_or_unknown_binary",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_2704_e406287e4d.png"
+      ],
+      "urls": [
+        "https://www.wealthcompanyamc.in/uploads/English_2704_e406287e4d.png"
       ]
     },
     {
