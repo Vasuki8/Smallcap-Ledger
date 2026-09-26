@@ -584,6 +584,11 @@ def ingest_source(source):
         if "hdfcfund.com/explore/" in url: hdfc(soup,family,url,h)
         from .amc_metrics import parse_page
         parse_page(content,family,url,h)
+        if (source["amc_match"].lower()=="franklin"
+            and url=="https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries"):
+            from .franklin_communications import ingest as franklin_ingest
+            rows=franklin_ingest(family)
+            nlinks+=len(rows)
         for target,title in sorted(links.items(),key=lambda item:last_attempt.get(item[0],'')):
             if target==url or not target.startswith(("http://","https://")): continue
             if not official_publication_url(target,source['amc_match']):continue
