@@ -149,6 +149,35 @@ class PublicationCoverageTests(unittest.TestCase):
         self.assertNotIn("Franklin India Small Cap Fund",repairable.get("affected_funds",[]))
         self.assertNotIn("Kotak Small Cap Fund",repairable.get("affected_funds",[]))
 
+    def test_empty_first_party_asset_is_non_actionable_archive_limitation(self):
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (9808,"LIC Direct Growth","LIC Mf Small Cap Fund",
+                 "LIC Mutual Fund","Direct","Growth","test"),
+            )
+        providers.save_document(
+            "LIC Mf Small Cap Fund","LICMF Monthly Market Outlook January 2025",
+            "https://www.licmf.com/assets/pdfs/monthly_market_outlook_jan_2025-985953721.pdf",
+            "market view","AMC",origin="AMC")
+        audit=report()
+        row=next(r for r in audit["funds"] if r["family"]=="LIC Mf Small Cap Fund")
+        self.assertIn("communication_document_not_archived",row["issues"])
+        self.assertIn("communication_archive_limitation",row["issues"])
+        self.assertEqual(
+            row["archive_limitation"]["code"],
+            "first_party_asset_returns_empty_response",
+        )
+        priorities={p["code"]:p for p in audit["repair_priorities"]}
+        limited=priorities["documented_communication_archive_limitation"]
+        self.assertFalse(limited["actionable"])
+        self.assertIn("LIC Mf Small Cap Fund",limited["affected_funds"])
+        self.assertNotIn(
+            "LIC Mf Small Cap Fund",
+            priorities.get("repair_unarchived_communication_documents",{}).get("affected_funds",[]),
+        )
+
     def test_missing_published_date_is_visible_without_using_first_seen(self):
         digest=db.archive(b"letter","application/pdf")
         doc=providers.save_document(
