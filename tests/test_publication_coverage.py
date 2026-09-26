@@ -22,11 +22,15 @@ class PublicationCoverageTests(unittest.TestCase):
                     (9801,"Alpha Direct Growth","Alpha Small Cap Fund","Alpha AMC","Direct","Growth","test"),
                     (9802,"Beta Direct Growth","Beta Small Cap Fund","Beta AMC","Direct","Growth","test"),
                     (9803,"Gamma Direct Growth","Gamma Small Cap Fund","Gamma AMC","Direct","Growth","test"),
+                    (9804,"Kotak Direct Growth","Kotak Small Cap Fund","Kotak Mahindra Mutual Fund","Direct","Growth","test"),
                 ],
             )
             c.execute("""INSERT INTO source_pages(amc_match,url,label,status)
                          VALUES(?,?,?,?)""",
                       ("Beta AMC","https://beta.example.com/market-outlook","Market Outlook","Checked"))
+            c.execute("""INSERT INTO source_pages(amc_match,url,label,status)
+                         VALUES(?,?,?,?)""",
+                      ("Mahindra","https://mahindra.example.com/outlook","Market Outlook","Checked"))
 
         digest=db.archive(b"alpha-view","application/pdf")
         doc=providers.save_document(
@@ -50,6 +54,7 @@ class PublicationCoverageTests(unittest.TestCase):
         alpha=rows["Alpha Small Cap Fund"]
         beta=rows["Beta Small Cap Fund"]
         gamma=rows["Gamma Small Cap Fund"]
+        kotak=rows["Kotak Small Cap Fund"]
 
         self.assertEqual(alpha["communication_count"],1)
         self.assertEqual(alpha["market_view_count"],1)
@@ -64,9 +69,11 @@ class PublicationCoverageTests(unittest.TestCase):
         self.assertEqual(gamma["communication_count"],0)
         self.assertEqual(gamma["registered_communication_sources"],[])
         self.assertIn("no_amc_communications_collected",gamma["issues"])
+        self.assertEqual(kotak["registered_communication_sources"],[])
+        self.assertIn("no_amc_communications_collected",kotak["issues"])
 
         self.assertEqual(audit["summary"]["funds_with_amc_communications"],1)
-        self.assertEqual(audit["summary"]["funds_without_amc_communications"],2)
+        self.assertEqual(audit["summary"]["funds_without_amc_communications"],3)
         self.assertEqual(audit["summary"]["communication_documents"],1)
         self.assertEqual(audit["summary"]["archived_communication_documents"],1)
         self.assertFalse(audit["policy"]["third_party_news_included"])
@@ -78,7 +85,7 @@ class PublicationCoverageTests(unittest.TestCase):
             ["Beta Small Cap Fund"])
         self.assertEqual(
             priorities["discover_first_party_communication_sources"]["affected_funds"],
-            ["Gamma Small Cap Fund"])
+            ["Gamma Small Cap Fund","Kotak Small Cap Fund"])
         self.assertTrue(priorities["review_registered_communication_sources"]["actionable"])
 
     def test_missing_published_date_is_visible_without_using_first_seen(self):
