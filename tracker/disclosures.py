@@ -566,6 +566,14 @@ def ingest_source(source):
         and url=="https://www.quantmutual.com/downloads/investment_outlook"):
         from .quant_communications import ingest as quant_ingest
         return quant_ingest()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="sbi"
+        and url=="https://www.sbimf.com/learn-about-mutual-funds/2026-outlook"):
+        from .sbi_sundaram_communications import ingest_sbi
+        return ingest_sbi()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="sundaram"
+        and url=="https://www.sundarammutual.com/knowledge-hub"):
+        from .sbi_sundaram_communications import ingest_sundaram
+        return ingest_sundaram()["detail"]
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
