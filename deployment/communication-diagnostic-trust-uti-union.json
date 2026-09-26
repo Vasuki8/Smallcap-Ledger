@@ -1,0 +1,64 @@
+{
+  "prepared_at": "2026-09-26T21:51:03+00:00",
+  "mode": "read_only_non_fatal",
+  "primary": [
+    {
+      "amc": "Trust",
+      "url": "https://www.trustmf.com/",
+      "ok": true,
+      "bytes": 949,
+      "media_type": "text/html; charset=UTF-8",
+      "title": "TRUST Mutual Fund | Invest in Mutual Funds Online",
+      "text_prefix": "TRUST Mutual Fund | Invest in Mutual Funds Online",
+      "relevant_links": []
+    },
+    {
+      "amc": "Trust",
+      "url": "https://www.trustmf.com/get-curious",
+      "ok": true,
+      "bytes": 949,
+      "media_type": "text/html; charset=UTF-8",
+      "title": "TRUST Mutual Fund | Invest in Mutual Funds Online",
+      "text_prefix": "TRUST Mutual Fund | Invest in Mutual Funds Online",
+      "relevant_links": []
+    },
+    {
+      "amc": "UTI",
+      "url": "https://www.utimf.com/learn",
+      "ok": true,
+      "bytes": 13988,
+      "media_type": "text/html",
+      "title": "UTI Mutual Fund Invest Online",
+      "text_prefix": "UTI Mutual Fund Invest Online",
+      "relevant_links": []
+    },
+    {
+      "amc": "UTI",
+      "url": "https://www.utimf.com/",
+      "ok": true,
+      "bytes": 13988,
+      "media_type": "text/html",
+      "title": "UTI Mutual Fund Invest Online",
+      "text_prefix": "UTI Mutual Fund Invest Online",
+      "relevant_links": []
+    },
+    {
+      "amc": "Union",
+      "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/market-outlook",
+      "ok": false,
+      "error": "[Errno 111] Connection refused"
+    },
+    {
+      "amc": "Union",
+      "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
+      "ok": false,
+      "error": "[Errno 111] Connection refused"
+    }
+  ],
+  "uti_secondary": [],
+  "notes": [
+    "No source binary is archived by this diagnostic.",
+    "Factsheets are not treated as communication sources.",
+    "Only first-party ownership/link structure is inspected."
+  ]
+}

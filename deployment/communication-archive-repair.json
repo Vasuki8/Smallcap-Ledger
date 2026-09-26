@@ -1,0 +1,199 @@
+{
+  "families": {
+    "LIC Mf Small Cap Fund": {
+      "before": 5,
+      "repaired": 0,
+      "failed": 5,
+      "skipped": 0,
+      "remaining": 5,
+      "repaired_rows": [],
+      "failed_rows": [
+        {
+          "url": "https://www.licmf.com/assets/pdfs/monthly_market_outlook_jan_2025-985953721.pdf",
+          "error": "response did not validate as an expected document/page"
+        },
+        {
+          "url": "https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook February 2025.pdf",
+          "error": "response did not validate as an expected document/page"
+        },
+        {
+          "url": "https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook March 2025.pdf",
+          "error": "response did not validate as an expected document/page"
+        },
+        {
+          "url": "https://www.licmf.com/assets/pdfs/LIC MF Monthly Market Outlook May 2025.pdf",
+          "error": "response did not validate as an expected document/page"
+        },
+        {
+          "url": "https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook July 2025.pdf",
+          "error": "response did not validate as an expected document/page"
+        }
+      ],
+      "skipped_rows": []
+    },
+    "Nippon India Small Cap Fund": {
+      "before": 28,
+      "repaired": 28,
+      "failed": 0,
+      "skipped": 0,
+      "remaining": 0,
+      "repaired_rows": [
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Gold-Silver/Aug-2023/Gold-Silver-Note-Aug-23.pdf",
+          "hash": "642757add066f936f7775b2c420eebd24e99c8809051a31d2b172859302c23ec"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2021/Fixed-Income-Market-Outlook.html",
+          "hash": "01961fa34ea586f733c70a287822b1751ac70352fdbaf069a8b4e3071aee975f"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2021/Fixed-Income-Market-Outlook.html",
+          "hash": "cbcad6daa0c92e339f9c4e162b11ecb92a872d3b634a4b44d55c1c60b5f0b8a6"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2021/Fixed-Income-Market-Outlook.html",
+          "hash": "1b66bf0e46b9178728f58338ef69afb34276201439d0da256596471a0024d567"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "7c3db29bb482218b128bf976e6e2ed9ce5cfce4d230c68173ec22a14429d02e0"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "e93c9a3cfb6de1780022d56334c521ce2e82f99057721aa07a44c5877697ee90"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/mar-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "1c2404e0f1e979e4bbe4dd40c64f18d6a17fbae9e0db9d2194efe853189761b9"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "11f95fdb0ad7174dba1a3c89a6d9a7e4db2ed83a7abd2bdf4abd51bfc355824a"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "33bf5ecf32740596e0ff119a605c38b99b9313e90c47827fa7711cb7f13f4621"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "2a5b0ec6540e6d893a567957a76b2276aee7417c9f4227acab2e92bf32861b0b"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "884a949ab55db13100f95ee21bc4d47f60731ceb867f6d0f9839da17b3dee201"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "4d74a72f636d8d185c09971946c29241f5dc7b001776535a8d57b4fe9200d8d3"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "61651ead472befd2451741fd981a80d0386ab9d6303e083960e88902855a425a"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "7b1b16d4638e02ddbf6eb198a17d17d07884ac5f92810da7d7ee731d8eb0aad3"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2022/Fixed-Income-Market-Outlook.html",
+          "hash": "841fbdfac72d21738625dcbbdb50606b916db14201897dc4e80957d8770b128f"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "c2230e7461234110a9b4e794008a3e82a5692ebf19f93b7b3f6917de614ff7bc"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "c50305ac8404f4f26cabd5288dbbf88f2a7ca2dfa3c084883b501fa2db599a81"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Apr-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "26999f8ff66b000481ccb05a82e9bd3ce5bf0b061c220a903d424148a0359e42"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "508db5b69aa5db677cb7f73e979801e8a5e7c9c1e94732df099db4b379015d49"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "a3771a5757490953896ad9c1e0a66d8135bd941114d91a43e81db5ccf0931d8d"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "df17945a4a5cf0fa98ba4d3acbe0b0d8d41b268755563567f962382d0a790f7f"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "34a89eaa88e184e16161eccf7c29777fc84c7c93d4acb617759a893605ae455f"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "bb05c415c2d45c906d3d4833957001d959a3228893d545f89ba33a96475c1452"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "30a31e1bebb0ddfc7f0adc419bbac07d701910bb739c0bb343697c9b30d52944"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2023/Fixed-Income-Market-Outlook.html",
+          "hash": "60c5391dc38bca0108df3b7315f982542c8af87eeff4eb5a81230444dee6d149"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2024/Fixed-Income-Market-Outlook.html",
+          "hash": "cfd826c394123f4f7163117bd719a54828a15811ba1ba5a1f77eefea83bb764c"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2024/Fixed-Income-Market-Outlook.html",
+          "hash": "2148eb283ad4d873cbdfcff6ffb1a8a6f8d3eb3ec5e8619f2bad7fdf1f1671db"
+        },
+        {
+          "url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2024/Fixed-Income-Market-Outlook.html",
+          "hash": "127959d0e8fe901952bedb407c016c60b9554d8c2bdb22ef60eafc5c2e138430"
+        }
+      ],
+      "failed_rows": [],
+      "skipped_rows": []
+    },
+    "Samco Small Cap Fund": {
+      "before": 5,
+      "repaired": 0,
+      "failed": 5,
+      "skipped": 0,
+      "remaining": 5,
+      "repaired_rows": [],
+      "failed_rows": [
+        {
+          "url": "https://media1.samco.in/scomamc/amc_documents/Lienrequestletterfromunitholder_1790053774.pdf",
+          "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file"
+        },
+        {
+          "url": "https://media1.samco.in/scomamc/amc_documents/Lienrequestletterfromunitholder_1790053774.pdf ",
+          "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file"
+        },
+        {
+          "url": "https://media1.samco.in/scomamc/media_uploads/SamcoSmallCapFund-SchemePresentatiom(1)_1760509070.pdf",
+          "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file"
+        },
+        {
+          "url": "https://media1.samco.in/scomamc/amc_documents/5LienRequestLetterfromUnitholder_1642424329_1648116937.pdf",
+          "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file"
+        },
+        {
+          "url": "https://media1.samco.in/scomamc/amc_documents/5LienRequestLetterfromUnitholder_1642424329_1648116937.pdf ",
+          "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file"
+        }
+      ],
+      "skipped_rows": []
+    }
+  },
+  "repaired": 28,
+  "failed": 10,
+  "skipped": 0,
+  "prepared_at": "2026-09-26T21:52:41+00:00",
+  "mode": "exact_retained_urls_best_effort",
+  "scope": [
+    "LIC Mf Small Cap Fund",
+    "Nippon India Small Cap Fund",
+    "Samco Small Cap Fund"
+  ]
+}

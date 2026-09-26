@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T18:35:26+00:00",
+  "reviewed_at": "2026-09-26T21:52:45+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 341,
+  "new_hashes_reviewed": 374,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_evidence": 127,
-    "retain_latest_or_review": 209,
+    "retain_evidence": 157,
+    "retain_latest_or_review": 212,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_evidence": 230791597,
-    "retain_latest_or_review": 90714937,
+    "retain_evidence": 232165531,
+    "retain_latest_or_review": 91285150,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -42,6 +42,30 @@
       ],
       "urls": [
         "https://www.quantmutual.com/Admin/Pdf/VLRT-OUTLOOK-JULY-AUGUST2021.pdf"
+      ]
+    },
+    {
+      "hash": "01961fa34ea586f733c70a287822b1751ac70352fdbaf069a8b4e3071aee975f",
+      "bytes": 21735,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:30+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2021/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2021/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2021/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -433,6 +457,54 @@
       ]
     },
     {
+      "hash": "11f95fdb0ad7174dba1a3c89a6d9a7e4db2ed83a7abd2bdf4abd51bfc355824a",
+      "bytes": 22358,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:33+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2022/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
+      "hash": "127959d0e8fe901952bedb407c016c60b9554d8c2bdb22ef60eafc5c2e138430",
+      "bytes": 23774,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:40+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2024/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2024/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2024/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "13401516ec103f871252db21b6b55bc3da472e73273e4b554856ca81456a8058",
       "bytes": 298974,
       "media_type": "text/html; charset=utf-8",
@@ -699,6 +771,30 @@
       ]
     },
     {
+      "hash": "1b66bf0e46b9178728f58338ef69afb34276201439d0da256596471a0024d567",
+      "bytes": 19115,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:31+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2021/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2021/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2021/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "1b80e1dc95c9d604ec187e85361e24125903fe7657c9416133d76d02a49ae1aa",
       "bytes": 1897,
       "media_type": "text/html",
@@ -768,6 +864,30 @@
       ],
       "urls": [
         "https://www.barodabnpparibasmf.in/mandatory-disclosures/unclaimed-redemption-and-dividend-details"
+      ]
+    },
+    {
+      "hash": "1c2404e0f1e979e4bbe4dd40c64f18d6a17fbae9e0db9d2194efe853189761b9",
+      "bytes": 25982,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:32+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/mar-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/mar-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/mar-2022/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -1034,6 +1154,30 @@
       ]
     },
     {
+      "hash": "2148eb283ad4d873cbdfcff6ffb1a8a6f8d3eb3ec5e8619f2bad7fdf1f1671db",
+      "bytes": 25172,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:40+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2024/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2024/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2024/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "21ccd9b307b154e994cd292138f00b1425f8662d4cc1ca72c8ce863c9b33d886",
       "bytes": 101692,
       "media_type": "text/html; charset=utf-8",
@@ -1226,6 +1370,30 @@
       ]
     },
     {
+      "hash": "26999f8ff66b000481ccb05a82e9bd3ce5bf0b061c220a903d424148a0359e42",
+      "bytes": 19221,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:37+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Apr-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Apr-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Apr-2023/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "26c0b166da7383c12264543bb2849b005747e6432c8b6c3b49f4105ec5b8eab0",
       "bytes": 795708,
       "media_type": "text/html; charset=utf-8",
@@ -1347,6 +1515,30 @@
       ],
       "urls": [
         "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Small+Cap+Fund&fincialYear=2026&month=9"
+      ]
+    },
+    {
+      "hash": "2a5b0ec6540e6d893a567957a76b2276aee7417c9f4227acab2e92bf32861b0b",
+      "bytes": 18419,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:34+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2022/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -1544,6 +1736,30 @@
       ]
     },
     {
+      "hash": "30a31e1bebb0ddfc7f0adc419bbac07d701910bb739c0bb343697c9b30d52944",
+      "bytes": 21819,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:39+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2023/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "314d13864b2f16fe2f97878fed8ecd1b2a6c75c1732c8d13e85c4271e8f4c50f",
       "bytes": 326208,
       "media_type": "text/html; charset=UTF-8",
@@ -1592,6 +1808,30 @@
       ]
     },
     {
+      "hash": "33bf5ecf32740596e0ff119a605c38b99b9313e90c47827fa7711cb7f13f4621",
+      "bytes": 20005,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:33+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2022/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
       "bytes": 25378416,
       "media_type": "application/x-zip-compressed",
@@ -1621,6 +1861,30 @@
       ],
       "urls": [
         "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip"
+      ]
+    },
+    {
+      "hash": "34a89eaa88e184e16161eccf7c29777fc84c7c93d4acb617759a893605ae455f",
+      "bytes": 22019,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:38+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2023/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -1790,6 +2054,30 @@
       ],
       "urls": [
         "https://www.dspim.com/mandatory-disclosures"
+      ]
+    },
+    {
+      "hash": "38a8bd5156d451303a2836bf4fee4eadc77334d09dfbcc47bb84b82ce8fcd24d",
+      "bytes": 321823,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T21:50:08+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.sbimf.com/learn-about-mutual-funds/2026-outlook",
+      "host": "sbimf.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.sbimf.com/learn-about-mutual-funds/2026-outlook"
+      ],
+      "urls": [
+        "https://www.sbimf.com/learn-about-mutual-funds/2026-outlook"
       ]
     },
     {
@@ -2563,6 +2851,30 @@
       ]
     },
     {
+      "hash": "4d74a72f636d8d185c09971946c29241f5dc7b001776535a8d57b4fe9200d8d3",
+      "bytes": 18933,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:34+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2022/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "4e11de6db5286f89b8783a75904fc9d10f8989a9ebe5ee73ff231787a532e03d",
       "bytes": 418476,
       "media_type": "text/html; charset=utf-8",
@@ -2683,6 +2995,30 @@
       ],
       "urls": [
         "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2024/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
+      "hash": "508db5b69aa5db677cb7f73e979801e8a5e7c9c1e94732df099db4b379015d49",
+      "bytes": 17671,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:37+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/May-2023/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -3176,6 +3512,54 @@
       ]
     },
     {
+      "hash": "605ef944fc93fa3c2476cecd01966f34d3c028dd4a36f66f65967dcb93fe5b92",
+      "bytes": 247798,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T21:50:14+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.sundarammutual.com/knowledge-hub",
+      "host": "sundarammutual.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.sundarammutual.com/knowledge-hub"
+      ],
+      "urls": [
+        "https://www.sundarammutual.com/knowledge-hub"
+      ]
+    },
+    {
+      "hash": "60c5391dc38bca0108df3b7315f982542c8af87eeff4eb5a81230444dee6d149",
+      "bytes": 21121,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:39+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2023/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "6156c6097f87050eb1c5f09665ba00eb4681a8b873ecfe3cb802d27d6a145422",
       "bytes": 9073,
       "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -3199,6 +3583,30 @@
       ],
       "urls": [
         "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-09-25_21_46_46.xlsx"
+      ]
+    },
+    {
+      "hash": "61651ead472befd2451741fd981a80d0386ab9d6303e083960e88902855a425a",
+      "bytes": 20745,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:35+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Oct-2022/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -3303,6 +3711,30 @@
       ],
       "urls": [
         "https://www.dspim.com/factsheets/idcw-history"
+      ]
+    },
+    {
+      "hash": "642757add066f936f7775b2c420eebd24e99c8809051a31d2b172859302c23ec",
+      "bytes": 461396,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T21:52:30+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Gold-Silver/Aug-2023/Gold-Silver-Note-Aug-23.pdf",
+      "host": "mf.nipponindiaim.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Gold-Silver/Aug-2023/Gold-Silver-Note-Aug-23.pdf"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Gold-Silver/Aug-2023/Gold-Silver-Note-Aug-23.pdf"
       ]
     },
     {
@@ -4109,6 +4541,30 @@
       ]
     },
     {
+      "hash": "7b1b16d4638e02ddbf6eb198a17d17d07884ac5f92810da7d7ee731d8eb0aad3",
+      "bytes": 20057,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:35+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2022/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "7b89fd9031f6db8fa7459cec81d0d01d08c41d1443ef07c45edeaab9eb6a4bae",
       "bytes": 296188,
       "media_type": "text/html; charset=utf-8",
@@ -4178,6 +4634,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/mutual-funds/samco-small-cap-fund-direct-growth/scdgg"
+      ]
+    },
+    {
+      "hash": "7c3db29bb482218b128bf976e6e2ed9ce5cfce4d230c68173ec22a14429d02e0",
+      "bytes": 22122,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:32+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2022/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -4424,6 +4904,30 @@
       ]
     },
     {
+      "hash": "841fbdfac72d21738625dcbbdb50606b916db14201897dc4e80957d8770b128f",
+      "bytes": 18885,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:36+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Dec-2022/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "84935fcd155553379225b1ffebecd4d540cdaa4aa83253996be05b86191c5130",
       "bytes": 297420,
       "media_type": "text/html; charset=utf-8",
@@ -4567,6 +5071,30 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2024"
+      ]
+    },
+    {
+      "hash": "884a949ab55db13100f95ee21bc4d47f60731ceb867f6d0f9839da17b3dee201",
+      "bytes": 17536,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:34+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Aug-2022/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -5317,6 +5845,30 @@
       ]
     },
     {
+      "hash": "a3771a5757490953896ad9c1e0a66d8135bd941114d91a43e81db5ccf0931d8d",
+      "bytes": 20186,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:37+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jun-2023/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "a43a45daf3f8d0d15ed2c5cfb68d1ba2959b0d8f4cc51d6ae84e079d70117ccb",
       "bytes": 133379,
       "media_type": "text/html; charset=utf-8",
@@ -5777,6 +6329,30 @@
       ]
     },
     {
+      "hash": "ad9d24d50a805079fd9984da732eba3d45572738291e52caf46c738a8f0d7112",
+      "bytes": 140469,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T21:50:21+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.wealthcompanyamc.in/knowledge-center/current-insights/",
+      "host": "wealthcompanyamc.in",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.wealthcompanyamc.in/knowledge-center/current-insights/"
+      ],
+      "urls": [
+        "https://www.wealthcompanyamc.in/knowledge-center/current-insights/"
+      ]
+    },
+    {
       "hash": "adbaded87d66e01c2f43efe7ed25b88dee6a043d02f18d35ef398e14a271689b",
       "bytes": 127450,
       "media_type": "text/html; charset=utf-8",
@@ -6194,6 +6770,30 @@
       ]
     },
     {
+      "hash": "ba352ab777d04a15958b0965113df8071e43ca187dfb73e8ac0123c27c69f25f",
+      "bytes": 20599,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:50:19+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html",
+      "host": "info.tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html"
+      ],
+      "urls": [
+        "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html"
+      ]
+    },
+    {
       "hash": "babd3d252ad522780a5d5d77a79645bda214ad61eee37ff4189326326a2bf87b",
       "bytes": 297889,
       "media_type": "text/html; charset=UTF-8",
@@ -6215,6 +6815,30 @@
       ],
       "urls": [
         "https://www.dspim.com/mandatory-disclosures/online-dispute-resolution"
+      ]
+    },
+    {
+      "hash": "bb05c415c2d45c906d3d4833957001d959a3228893d545f89ba33a96475c1452",
+      "bytes": 21854,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:38+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Sep-2023/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -6443,6 +7067,30 @@
       ]
     },
     {
+      "hash": "c2230e7461234110a9b4e794008a3e82a5692ebf19f93b7b3f6917de614ff7bc",
+      "bytes": 21066,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:36+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2023/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "c2b7e96a063c7f9d9a9308193d3947290f8421f48fd607529a6c5f354ce25592",
       "bytes": 145349,
       "media_type": "text/html; charset=utf-8",
@@ -6539,6 +7187,30 @@
       ],
       "urls": [
         "https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/FORTNIGHTLY-PORTFOLIO-REPORT-FEB-24.xls"
+      ]
+    },
+    {
+      "hash": "c50305ac8404f4f26cabd5288dbbf88f2a7ca2dfa3c084883b501fa2db599a81",
+      "bytes": 18689,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:36+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Mar-2023/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -6830,6 +7502,30 @@
       ]
     },
     {
+      "hash": "cbcad6daa0c92e339f9c4e162b11ecb92a872d3b634a4b44d55c1c60b5f0b8a6",
+      "bytes": 22738,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:31+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2021/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2021/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Nov-2021/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "cc45b0727edf45ec15e91a9bf762da5c07e21383f8d8c865e682ada19eacda7b",
       "bytes": 15082,
       "media_type": "text/html; charset=UTF-8",
@@ -7023,6 +7719,30 @@
       ]
     },
     {
+      "hash": "cfd826c394123f4f7163117bd719a54828a15811ba1ba5a1f77eefea83bb764c",
+      "bytes": 23142,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:40+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2024/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2024/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jan-2024/Fixed-Income-Market-Outlook.html"
+      ]
+    },
+    {
       "hash": "d0690913313aa22cd4da69d8b7f66d3262541708f7b7c44bf8a0ccfdf6818c82",
       "bytes": 392577,
       "media_type": "text/html; charset=utf-8",
@@ -7092,6 +7812,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/StatutoryDisclosure#scheme-financials"
+      ]
+    },
+    {
+      "hash": "d8b4f8c06c24c07e7c355160c651955ba2d11c6ee548e8d248db5d1276d5debe",
+      "bytes": 181946,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T21:50:06+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.sbimf.com/monthly-outlook-videos",
+      "host": "sbimf.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.sbimf.com/monthly-outlook-videos"
+      ],
+      "urls": [
+        "https://www.sbimf.com/monthly-outlook-videos"
       ]
     },
     {
@@ -7257,6 +8001,30 @@
       ],
       "urls": [
         "https://www.wealthcompanyamc.in/literature-forms/statutory-disclosures/disclosure-on-group-companies/"
+      ]
+    },
+    {
+      "hash": "df17945a4a5cf0fa98ba4d3acbe0b0d8d41b268755563567f962382d0a790f7f",
+      "bytes": 19179,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:38+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2023/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2023/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Jul-2023/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
@@ -7579,6 +8347,30 @@
       ],
       "urls": [
         "https://www.dspim.com/downloads?category=Information%20Documents&sub_category=Factsheets"
+      ]
+    },
+    {
+      "hash": "e93c9a3cfb6de1780022d56334c521ce2e82f99057721aa07a44c5877697ee90",
+      "bytes": 26573,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T21:52:32+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2022/Fixed-Income-Market-Outlook.html",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2022/Fixed-Income-Market-Outlook.html"
+      ],
+      "urls": [
+        "https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/Feb-2022/Fixed-Income-Market-Outlook.html"
       ]
     },
     {
