@@ -1,8 +1,156 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after Edelweiss/Franklin first-party communication recovery and successful production deployment.
+Updated: 2026-09-26, after Groww/HSBC first-party communication recovery and successful production deployment.
 
-## Latest completed batch: recover Edelweiss and Franklin AMC communications
+## Latest completed batch: recover Groww and HSBC AMC communications
+
+**Groww Small Cap Fund and HSBC Small Cap Fund are no longer in the missing-communication-source queue.** Both now have dedicated first-party communication collectors that retain explicit source dates and originals without treating monthly fund factsheets as news.
+
+### Groww evidence and collector
+
+Read-only diagnostic PR **#198** merged as commit `2434f72026f1c07c0016e0491fc3eee25b4b06cf` and established that Groww's distributor portal exposes a real, server-readable market-intelligence route:
+
+- `https://www.growwmf.in/distributor/knowledge-hub/publications`
+- page identity: **Reports & newsletters**
+- description: disciplined market commentary, archived date-wise
+- the page embeds a structured Next.js payload binding each report's:
+  - heading
+  - report type
+  - explicit report date
+  - exact PDF URL
+  - PDF MIME type
+
+The live payload contained three current reports:
+
+- **Daily Market Pulse** — **2026-09-21**
+- **Weekly Market Pulse** — **2026-09-19**
+- **Fixed Income Weekly Wrap Up** — **2026-09-18**
+
+The exact Daily Market Pulse source retained by the release gate is:
+
+`https://cms-resources.growwmf.in/uploads/daily_report_4_c7907e5e42.pdf`
+
+The collector accepts Groww publication binaries only from the observed first-party publication asset host `cms-resources.growwmf.in` and requires HTTPS, `/uploads/`, PDF MIME identity and a `.pdf` path. It does not infer market-view coverage from the ordinary monthly factsheet even though Groww factsheets also contain CIO Desk / Market Outlook sections.
+
+### HSBC evidence and collector
+
+The production probe confirmed a dedicated, server-readable first-party **Local Market Commentary** index:
+
+`https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D`
+
+The page exposed current and historical commentary links including RBI policy reviews, Macro Sphere notes, valuation commentary and budget/fixed-income perspectives.
+
+The collector:
+
+- follows only same-domain HSBC `/en/mutual-funds/news-and-insights/<article>` children from the Local Market Commentary source;
+- fetches each candidate without archiving it first;
+- retains it only when the article itself contains the explicit **Local Market Commentary** category;
+- binds the publication date to the text immediately following the article's in-page `H1`, preventing older dates cited inside the commentary body from being mistaken for publication dates;
+- archives only validated article HTML as the communication original.
+
+Current release-gating article:
+
+- **RBI Monetary Policy Review - August 2026**
+- `https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2026`
+- explicit page publication date: **2026-08-11**
+- origin: **HSBC Asset Management / HSBC Mutual Fund**
+- kind: `market view`
+- original HTML: **archived**
+
+### Implementation
+
+PR **#199** merged as commit `117fa704625f9ebe5bc0219910f7d40bdbaf22e0`.
+
+It added:
+
+- `tracker/groww_communications.py`
+- `tracker/hsbc_communications.py`
+- `scripts/refresh_groww_hsbc_communications.py`
+- dedicated routing from `tracker/disclosures.py`
+- the Groww publication asset-host boundary
+- communication-audit recognition for `Local Market Commentary`
+- regression coverage for structured Groww payload identity, exact PDF ownership, HSBC category/date validation, source routing, audit registration and idempotent production recovery
+- replacement/removal of the temporary Groww/HSBC diagnostic step.
+
+No third-party news, factsheet-as-news substitution, guessed URLs, inferred dates, portfolio changes or financial-data changes were introduced.
+
+### Production verification
+
+Final production workflow **36244239818** completed successfully at **2026-09-26T13:12:49Z**.
+
+Live recovery evidence:
+
+- **Groww communications:** **3**
+- Groww Daily Market Pulse:
+  - `published_at=2026-09-21`
+  - **1 archived original**
+- Groww source result: **3 market-intelligence PDFs retained / 0 download-parser gaps**
+- **HSBC communications:** **20**
+- HSBC RBI Monetary Policy Review - August 2026:
+  - `published_at=2026-08-11`
+  - **1 archived original**
+- HSBC source result: **20 Local Market Commentary articles retained / 0 download-parser gaps**
+
+Full validation:
+
+- build: **success**
+- full regression suite: **414 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10907230385** is **233,713,762 bytes** with digest `sha256:fec46c38d2300382a66a10ed5813e42d3c2584aa4d225b6ce3f179f324b3678c`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T13:12:19Z**:
+
+- funds with at least one retained AMC communication: **23 / 36** (was 21)
+- funds with no retained AMC communication: **13**
+- retained communication documents: **210**
+- archived communication originals: **162**
+- market/newsletter/CIO/product-view documents: **188**
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **49**
+- funds with a registered communication-oriented source: **17**
+
+**Groww final state:** **3 market views / 3 archived originals / 3 explicit dates**, latest **2026-09-21**, with no communication-audit issue.
+
+**HSBC final state:** **20 market views / 20 archived originals / 20 explicit dates**, latest **2026-08-11**, with no communication-audit issue.
+
+### Next backend/data-retrieval task
+
+Continue bounded first-party communication-source discovery for the remaining **13** funds:
+
+1. **ICICI Prudential Small Cap Fund**
+2. **Invesco India Small Cap Fund**
+3. Kotak Small Cap Fund
+4. Mirae Asset Small Cap Fund
+5. PGIM India Small Cap Fund
+6. Quant Small Cap Fund
+7. SBI Small Cap Fund
+8. Sundaram Small Cap Fund
+9. Tata Small Cap Fund
+10. The Wealth Company Small Cap Fund
+11. TRUSTMF Small Cap Fund
+12. UTI Small Cap Fund
+13. Union Small Cap Fund
+
+Start with **ICICI Prudential**, then **Invesco India**.
+
+Promising first-party candidates have already been identified for the next run but are **not yet production-retained communication sources** and must be validated before registration:
+
+- ICICI Prudential: the first-party Prudent Fact Sheet / market-review surface and the AMC's SEBI-repository Monthly Market Outlook mailers.
+- Invesco India: first-party Market Outlook presentation PDFs under `invescomutualfund.com/docs/default-source/presentations-pdf/`.
+
+For both funds, establish either a durable dynamic catalog or a narrowly justified exact-current anchor; retain explicit source dates only and add a production recovery gate before marking coverage complete.
+
+The `repair_unarchived_communication_documents` queue remains **Franklin India, LIC MF, Nippon India and Samco**. Franklin remains a known policy-limited case: metadata is first-party and dated, while Widen originals stay link-only under robots restrictions.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**. Do not estimate censored holdings or re-probe blocked portfolio transports without a retained source-change signal.
+
+## Previous completed batch: recover Edelweiss and Franklin AMC communications
 
 **Edelweiss Small Cap Fund and Franklin India Small Cap Fund are no longer in the missing-communication-source queue.** The two AMCs require different evidence models, and the backend now preserves that distinction instead of weakening access controls.
 
