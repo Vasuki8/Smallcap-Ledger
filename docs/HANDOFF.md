@@ -1,8 +1,141 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after ICICI Prudential/Invesco first-party communication recovery and successful production deployment.
+Updated: 2026-09-26, after Kotak/Mirae Asset first-party communication recovery and successful production deployment.
 
-## Latest completed batch: recover ICICI Prudential and Invesco AMC communications
+## Latest completed batch: recover Kotak and Mirae Asset AMC communications
+
+**Kotak Small Cap Fund and Mirae Asset Small Cap Fund are no longer in the missing-communication-source queue.** The final implementation preserves two different source-access realities rather than weakening crawler policy.
+
+### Kotak evidence and dynamic collector
+
+Read-only diagnostic PR **#201** merged as commit `4669ddd911ee761fa7d8376d440ad5e5e3198459` and established that Kotak's first-party page:
+
+`https://www.kotakmf.com/monthly-market-update`
+
+is server-readable and embeds structured page state containing:
+
+- page identity: **Monthly Market Update**;
+- exact current download endpoint in `_sfilelink`;
+- `allPdfData` rows with report ID, title, year/month and explicit `publishedDate`;
+- September 2026 current record:
+  - title: **Monthly Outlook PPT sept 2026**
+  - report id: **6125**
+  - published date: **2026-09-09**
+  - exact site-supplied download URL: `https://www.kotakmf.com/kotakmf/reportupload/download/Monthly/6125/2026/8`.
+
+The collector does **not** guess Kotak asset URLs. It parses the exact site-supplied current link, extracts its ID/year/month, and requires that identity to match exactly one structured report row.
+
+PR **#202** merged as commit `78e2c02383f91ffddec95095f7bad3742b314a7b` and added the initial collector/recovery gate.
+
+Two production findings were then corrected:
+
+1. PR **#203**, commit `a477fd433663ea9888f74182cf3b4f4b7ccfa7b9`, made the site-supplied current link the primary record identity instead of assuming the maximum `publishedDate` row is always active.
+2. PR **#204**, commit `d5336a12f72e4fc4fb874fde0dc48ab77c80a74e`, added a narrow Kotak-specific title rule for `Monthly Outlook PPT ... <year>`; those valid titles do not contain the literal word `market`, so the generic classifier alone was too strict.
+3. The next production run established that robots policy allows the listing page but disallows automatic retrieval of the current download endpoint. PR **#205**, commit `d569ff648c278f78a5965ddcbf411f0df8c6d3f4`, therefore preserved the current communication as **dated link-only evidence** instead of bypassing robots.
+
+Final Kotak evidence model:
+
+- first-party listing HTML: **archived**
+- current communication: **Monthly Outlook PPT sept 2026**
+- `published_at`: **2026-09-09**
+- current download URL: retained exactly as supplied by Kotak
+- individual PDF original: **not archived / link-only because robots policy disallows automatic retrieval**
+- no inferred dates and no robots bypass.
+
+### Mirae Asset evidence
+
+Registered first-party source:
+
+`https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf`
+
+The document itself identifies **Mirae Asset Mutual Fund** and **Annual Market Outlook 2026**.
+
+Final state:
+
+- kind: `market view`
+- original PDF: **archived**
+- explicit `published_at`: **null**
+
+The source establishes the 2026 outlook identity but not an exact publication day, so the tracker preserves the date gap.
+
+### Production verification
+
+Final production workflow **36248366374** completed successfully at **2026-09-26T14:26:43Z**.
+
+Live recovery evidence:
+
+- **Kotak**
+  - archived Monthly Market Update source-page snapshot: **1**
+  - current market-view record: **1**
+  - current title: **Monthly Outlook PPT sept 2026**
+  - `published_at=2026-09-09`
+  - individual original versions: **0**
+  - status: **link-only under robots policy**
+  - source result: **0 download/parser gaps**
+
+- **Mirae Asset**
+  - Annual Market Outlook 2026 records: **1**
+  - archived originals: **1**
+  - PDF identity: **true**
+  - `published_at`: **null**
+  - source result: **1 document archived / 0 download-parser gaps**
+
+Full validation:
+
+- build: **success**
+- full regression suite: **428 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10908556275** is **233,720,580 bytes** with digest `sha256:632a5bb0cb6e99bb365e0f7bac12178a1651b388fa580e71cd438f11317f16fb`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T14:26:11Z**:
+
+- funds with at least one retained AMC communication: **27 / 36** (was 25)
+- funds with no retained AMC communication: **9**
+- retained communication documents: **216**
+- archived communication originals: **167**
+- market/newsletter/CIO/product-view documents: **194**
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **51**
+- funds with a registered communication-oriented source: **21**
+
+**Kotak final state:** **1 market view / 0 archived individual originals / 1 explicit date**. The archived listing is its provenance. The audit intentionally flags `communication_document_not_archived`.
+
+**Mirae Asset final state:** **1 market view / 1 archived original / 0 explicit dates**. Its remaining issue is `publication_date_missing`.
+
+### Next backend/data-retrieval task
+
+Continue bounded first-party communication-source discovery for the remaining **9** funds:
+
+1. **PGIM India Small Cap Fund**
+2. **Quant Small Cap Fund**
+3. SBI Small Cap Fund
+4. Sundaram Small Cap Fund
+5. Tata Small Cap Fund
+6. The Wealth Company Small Cap Fund
+7. TRUSTMF Small Cap Fund
+8. UTI Small Cap Fund
+9. Union Small Cap Fund
+
+Start with **PGIM India**, then **Quant**.
+
+Promising first-party candidates already identified for validation:
+
+- **PGIM India:** `https://www.pgimindia.com/mutual-funds/domestic-insights`, which exposes dedicated **CEO Letters** and **Outlooks & Economy** content with dated 2026 articles.
+- **Quant:** `https://www.quantmutual.com/downloads/investment_outlook`, a dedicated **Investment Outlook** archive containing Predictive Analytics / VLRT outlook material.
+
+For each, prefer a durable dynamic source and retain exact source dates/originals only when the first-party page supplies them. Do not use general factsheets as communication coverage merely because they contain market-review sections.
+
+The `repair_unarchived_communication_documents` queue now contains **Franklin India, Kotak, LIC MF, Nippon India and Samco**. Kotak and Franklin are known policy-limited cases with first-party provenance retained but original binaries unavailable to automated collection.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**.
+
+## Previous completed batch: recover ICICI Prudential and Invesco AMC communications
 
 **ICICI Prudential Small Cap Fund and Invesco India Small Cap Fund are no longer in the missing-communication-source queue.** This batch used narrowly scoped first-party communication anchors and did not promote general factsheets into the news/communication surface.
 
