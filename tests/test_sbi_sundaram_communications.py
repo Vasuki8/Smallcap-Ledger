@@ -125,7 +125,7 @@ class SbiSundaramCommunicationTests(unittest.TestCase):
             raise AssertionError(url)
         home_response=(sundaram_home(),None,"text/html")
         with patch("tracker.sbi_sundaram_communications.providers.can_crawl",return_value=None):
-            result=comm.ingest_sundaram(fetch_fn=fake_fetch)
+            result=comm.ingest_sundaram(fetch_fn=fake_fetch,today=date(2026,9,26))
         self.assertEqual(result["retained"],3)
         row=db.one("""SELECT d.kind,d.published_at,COUNT(v.id) versions
                       FROM documents d LEFT JOIN document_versions v ON v.document_id=d.id
@@ -135,6 +135,25 @@ class SbiSundaramCommunicationTests(unittest.TestCase):
         self.assertEqual(row["kind"],"market view")
         self.assertIsNone(row["published_at"])
         self.assertEqual(row["versions"],1)
+
+    def test_sundaram_js_shell_falls_back_to_reviewed_recent_month_pattern(self):
+        shell=b"<html><body><h1>Knowledge Hub</h1><p>Sundaram Mutual Fund</p></body></html>"
+        pdf=b"%PDF-1.7 Sundaram outlook"
+        requested=[]
+        def fake_fetch(url,**kwargs):
+            requested.append(url)
+            if url==comm.SUNDARAM_HUB:
+                return self.archived(sundaram_hub(),"text/html")
+            if url==comm.SUNDARAM_HOME:
+                return shell,None,"text/html"
+            if url.startswith(comm.SUNDARAM_PDF_PREFIX):
+                return self.archived(pdf,"application/pdf")
+            raise AssertionError(url)
+        with patch("tracker.sbi_sundaram_communications.providers.can_crawl",return_value=None):
+            result=comm.ingest_sundaram(fetch_fn=fake_fetch,today=date(2026,9,26))
+        self.assertEqual(result["retained"],6)
+        self.assertIn(comm.sundaram_outlook_url("September",2026),requested)
+        self.assertIn(comm.sundaram_outlook_url("April",2026),requested)
 
     def test_disclosures_routes_both_dedicated_sources(self):
         with patch("tracker.sbi_sundaram_communications.ingest_sbi",
