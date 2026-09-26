@@ -1,5 +1,77 @@
 # Smallcap Ledger backend handoff
 
+Updated: 2026-09-26, after ICICI Prudential complete monthly portfolio recovery and successful production deployment.
+
+## Latest completed batch: recover ICICI Prudential complete monthly portfolios
+
+**ICICI Prudential Small Cap Fund is no longer in the incomplete-portfolio recovery queue.** The tracker now retains two consecutive, first-party, complete month-end portfolio snapshots from ICICI Prudential's public downloads service, with exact source URLs, source hashes, reporting dates and constituent weights.
+
+### What changed
+
+The AMC's canonical `/downloads/...` ZIP URL still redirects to the retired/unreachable `archive.icicipruamc.com` host. Investigation found that the same exact public monthly ZIPs are served by ICICI Prudential through the working first-party `/blob/downloads/...` delivery route.
+
+The collector now:
+
+- resolves the exact `Other Scheme Disclosures -> Monthly Portfolio Disclosures` records from ICICI Prudential's public downloads API rather than guessing filenames;
+- selects the newest two closed month-end ZIPs;
+- preserves the exact first-party ZIP URL and archived content hash as provenance;
+- safely opens the omnibus ZIP and accepts only the two exact Small Cap workbook spellings observed first-party: `ICICI Prudential Small Cap Fund.xlsx` and `ICICI Prudential Smallcap Fund.xlsx`;
+- treats ICICI's published numeric section-total rows as structural subtotals rather than duplicate holdings;
+- retains the explicit `Cash Margin - Derivatives` leaf so the disclosed portfolio reconciles exactly;
+- uses source-specific parser version `icici-portfolios-2026-09-v2`, forcing already-observed source hashes through the corrected parser;
+- keeps ICICI discovery in the nightly AMC-report collector;
+- fails the push recovery gate instead of silently publishing if both current/prior closed-month snapshots are not verified complete.
+
+No constituent weight was estimated or inferred to close the portfolio.
+
+### Production evidence
+
+Final implementation PR **#176** merged as commit `736ad748aa6b22a9ed126ea55b82d936f8044db8`.
+
+Final production workflow **36217849535** completed successfully:
+
+- build: **success**
+- full regression suite: **377 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- GitHub Pages deployment: **success**
+
+Recovered snapshots:
+
+- **31-Aug-2026** — source `https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip`; hash `345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb`; **125 positions**; complete; disclosed weight sum **99.99999999936607%**.
+- **31-Jul-2026** — source `https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip`; hash `fcfe2f11e922eac7bcb9d871d4b7087344b056aaa2607e975e6ddfb250c61c8d`; **136 positions**; complete; disclosed weight sum **99.99999999931627%**.
+
+The implementation was developed through PRs **#174**, **#175** and **#176**. The temporary layout diagnostic used to establish the July/August evidence boundary was removed from the production workflow after the parser repair.
+
+### Portfolio-recovery queue after this batch
+
+The generated queue at **2026-09-26T04:30:01Z** moved from **7 items to 6**:
+
+- items: **6**
+- actionable now: **0**
+- source changes detected: **0**
+- stale partial: **1**
+- missing: **1**
+
+Current order:
+
+1. **Union Small Cap Fund** — missing; blocked on first-party transport; retry only after the official Downloads/portfolio transport recovers or an exact first-party attachment appears.
+2. **Bajaj Finserv Small Cap Fund** — stale partial; current AMC factsheet names only a subset; Downloads and the tested first-party media-catalog routes remain blocked from the production runner.
+3. **Edelweiss Small Cap Fund** — current partial; current AMC factsheet names only Top 10 holdings; statutory portfolio source has not exposed a usable exact monthly attachment.
+4. **Bandhan Small Cap Fund** — current partial only because the AMC publishes one or more exact weights as `<0.01%`; do not estimate them.
+5. **Sundaram Small Cap Fund** — current partial because a written-off holding is disclosed only as `<0.01%`; do not estimate it.
+6. **UTI Small Cap Fund** — current partial because the AMC censors at least one tiny security weight and omits an exact NAV percentage for short-term deposits; do not estimate them.
+
+Authoritative queue files remain `docs/PORTFOLIO-RECOVERY-QUEUE.json` and `docs/PORTFOLIO-RECOVERY-QUEUE.md`.
+
+### Next data-retrieval task
+
+**There is no portfolio recovery item that is actionable now without violating the first-party/no-estimation boundary.** Do not repeatedly re-probe blocked routes or invent alternate attachment URLs.
+
+Continue from the first newly retained source-change signal, in queue order: **Union -> Bajaj Finserv -> Edelweiss**. When a watch changes, review the new first-party evidence first and only then implement recovery. Until such a signal exists, keep Bandhan, Sundaram and UTI partial rather than estimating censored weights.
+
+The older storage-retention work below remains separately approval-gated and should not displace this data-retrieval priority unless the owner explicitly moves back to storage work.
+
 ## Source-retention audit — NO deletion authorized (2026-09-25 UTC)
 
 The owner approved classification and savings analysis BEFORE deleting anything. Completed report: `docs/SOURCE-RETENTION-AUDIT.md`; per-hash CSV/JSON inventories and summary are adjacent. Final review run **36093073121** passed **299 tests**. Source-pack measurement run **36092819677** checked all **95** packs against release digests. The exact production checkpoint is unchanged, with **629,225 rows** and **2,519 originals**.
@@ -17,7 +89,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-26, after refreshed 696-hash historical retention simulation.
+Prior storage-retention section updated: 2026-09-26, after refreshed 696-hash historical retention simulation.
 
 
 
