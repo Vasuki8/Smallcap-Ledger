@@ -1,65 +1,73 @@
-"""Read-only probe for Franklin article/search endpoint configuration."""
+"""Read-only live probe for Franklin's public article API."""
 from pathlib import Path
-import json,re,sys
-from urllib.parse import urljoin
-from bs4 import BeautifulSoup
+import json,sys
+import httpx
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from tracker import providers
 
-SHELL="https://www.franklintempletonindia.com/sebi-circular/current"
-MAIN="https://www.franklintempletonindia.com/main.290c50984c6d19c0.js"
-
-def show(label,text):
-    print(label,repr(text[:16000]),flush=True)
+ENDPOINT="https://www.franklintempletonindia.com/api/articleApi"
 
 def main():
-    raw,_,_=providers.fetch(MAIN,archive=False,max_bytes=6*1024*1024)
-    text=raw.decode("utf-8","ignore")
-    print("ARTICLE_BUNDLE_BYTES",len(raw),flush=True)
+    providers.public_url(ENDPOINT)
+    try:
+        providers.can_crawl(ENDPOINT)
+    except Exception as exc:
+        print("ARTICLE_API_ROBOTS_ERROR",(str(exc) or type(exc).__name__)[:1000],flush=True)
+        return
 
-    patterns=(
-        r'getFTIArticleListUrl\(\)\{[^}]{0,2500}\}',
-        r'getFTIArticleListUrl[^;]{0,2500}',
-        r'ftiApiDomain[^;]{0,2500}',
-        r'searchArticleContent[^;]{0,2500}',
-        r'articleApi[^;]{0,2500}',
-        r'articleList[^;]{0,2500}',
-    )
-    for pat in patterns:
-        seen=set()
-        for m in re.finditer(pat,text,re.I):
-            chunk=m.group(0)
-            if chunk in seen:continue
-            seen.add(chunk)
-            show("ARTICLE_REGEX "+pat+" @"+str(m.start()),chunk)
-
-    strings=set()
-    for m in re.finditer(r'["\']([^"\']{1,500})["\']',text):
-        value=m.group(1)
-        low=value.lower()
-        if any(k in low for k in ("article","search","api")) and (
-            value.startswith(("http://","https://","/")) or
-            "article" in low or "search" in low):
-            strings.add(value)
-    for value in sorted(strings):
-        if any(k in value.lower() for k in ("article","search","fti")):
-            print("ARTICLE_STRING",repr(value[:800]),flush=True)
-
-    shell,_,_=providers.fetch(SHELL,archive=False,max_bytes=8*1024*1024)
-    soup=BeautifulSoup(shell,"html.parser")
-    for tag in soup.find_all(True):
-        for name,val in tag.attrs.items():
-            vals=val if isinstance(val,list) else [val]
-            for item in vals:
-                if not isinstance(item,str):continue
-                if item.endswith(".json") or "config" in item.lower() or "environment" in item.lower():
-                    print("ARTICLE_SHELL_ATTR",tag.name,name,repr(item[:1000]),flush=True)
-    for script in soup.select("script"):
-        raw=(script.string or script.get_text() or "")
-        if "config" in raw.lower() or "environment" in raw.lower():
-            show("ARTICLE_SHELL_INLINE",raw)
+    filters=json.dumps([
+        {"fieldName":"documentType.exact","fieldValue":["INDVideoArticles","INDArticleDetails"]},
+        {"fieldName":"pageType","fieldValue":["latest-commentaries"]},
+    ],separators=(",",":"))
+    form={
+        "query":"*",
+        "audience":"investor",
+        "locale":"en-in-new",
+        "filters":filters,
+        "collection":"pages",
+        "start":"0",
+        "number":"40",
+        "loggedIn":"n",
+        "articleType":"",
+        "env":"prod",
+    }
+    headers={
+        "User-Agent":providers.USER_AGENT,
+        "Accept":"*/*",
+        "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8",
+        "Referer":"https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries",
+    }
+    try:
+        with httpx.Client(timeout=httpx.Timeout(30,connect=15),follow_redirects=False,headers=headers) as client:
+            r=client.post(ENDPOINT,data=form)
+        print("ARTICLE_API_HTTP",r.status_code,len(r.content),r.headers.get("content-type",""),flush=True)
+        if r.is_redirect:
+            print("ARTICLE_API_REDIRECT",r.headers.get("location",""),flush=True)
+            return
+        r.raise_for_status()
+        obj=r.json()
+        print("ARTICLE_API_TOP",repr(list(obj) if isinstance(obj,dict) else type(obj).__name__),flush=True)
+        hits=(((obj.get("results") or {}).get("response") or {}).get("hits") or {}).get("hits") or []
+        print("ARTICLE_API_HITS",len(hits),flush=True)
+        for hit in hits[:40]:
+            src=hit.get("_source") or {}
+            print("ARTICLE_API_HIT",json.dumps({
+                "title":src.get("title") or src.get("pageTitle"),
+                "pageTitle":src.get("pageTitle"),
+                "pageType":src.get("pageType"),
+                "documentType":src.get("documentType"),
+                "articleType":src.get("articleType"),
+                "referenceDate":src.get("referenceDate"),
+                "publishDate":src.get("publishDate"),
+                "pdfURL":src.get("pdfURL"),
+                "documentPath":src.get("documentPath"),
+                "navigationUrl":src.get("navigationUrl"),
+                "widenAssetJson":src.get("widenAssetJson"),
+            },ensure_ascii=False,sort_keys=True)[:7000],flush=True)
+    except Exception as exc:
+        print("ARTICLE_API_ERROR",(str(exc) or type(exc).__name__).splitlines()[0][:1500],flush=True)
 
 if __name__=="__main__":
     main()
