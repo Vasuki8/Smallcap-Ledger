@@ -1,28 +1,21 @@
 # Portfolio recovery queue
 
-Prepared: 2026-09-26T04:23:36+00:00
+Prepared: 2026-09-26T04:30:01+00:00
 
 **Read-only:** this queue ranks retained evidence only. It does not fetch sources, retry blocked hosts, estimate missing weights, or mutate portfolio data.
 
-## Next actionable recovery target
-
-**ICICI Prudential Small Cap Fund** — `review_source_change`
-
-Review the newly retained first-party source/transport evidence before retrying portfolio recovery; do not assume the prior blocker is resolved.
-
 ## Queue
 
-Items: **7** · actionable now: **1** · source changes: **1** · stale partial: **1** · missing: **1**
+Items: **6** · actionable now: **0** · source changes: **0** · stale partial: **1** · missing: **1**
 
 | Rank | Fund | State | Action | Source change | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | ICICI Prudential Small Cap Fund | partial_current | review_source_change | new_first_party_portfolio_document | 2026-08-31 | partial_reason_unclassified | https://www.icicipruamc.com/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip | fetch ok · 2026-09-26T04:21:11+00:00; source page Limited · 2026-09-25T22:10:44+00:00 | Review the newly retained first-party source/transport evidence before retrying portfolio recovery; do not assume the prior blocker is resolved. |
-| 2 | Union Small Cap Fund | missing | retry_after_source_change | none | Gap | upstream_source_unavailable | https://www.unionmf.com/about-us/downloads/monthly-portfolio | source page Gap · 2026-09-25T22:13:23+00:00 | Retry only after Union's official Downloads/portfolio transport is reachable from the production collection network or an exact first-party attachment is exposed. |
-| 3 | Bajaj Finserv Small Cap Fund | partial_stale | retry_after_source_change | none | 2026-07-31 | named_subset_only | https://www.bajajamc.com/downloads | fetch ok · 2026-09-25T22:08:55+00:00; source page Checked · 2026-09-25T22:09:01+00:00 | Retry only when the AMC Downloads transport becomes usable from the production runner or an exact current monthly Small Cap attachment URL is exposed first-party. |
-| 4 | Edelweiss Small Cap Fund | partial_current | retry_after_source_change | none | 2026-08-31 | named_subset_only | https://www.edelweissmf.com/statutory/portfolio-of-schemes | fetch ok · 2026-09-25T22:00:45+00:00; source page Limited · 2026-09-25T22:10:36+00:00 | Retry only when the statutory portfolio route/static application transport becomes reachable again or it exposes an exact monthly portfolio attachment. |
-| 5 | Bandhan Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx | fetch ok · 2026-09-25T21:52:53+00:00; source page Limited · 2026-09-25T22:10:28+00:00 | Revisit only when the AMC publishes exact numeric NAV weights for positions currently disclosed with a less-than-0.01% marker. |
-| 6 | Sundaram Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx | fetch ok · 2026-09-25T21:54:39+00:00; source page Limited · 2026-09-25T22:11:02+00:00 | Revisit only when the AMC publishes an exact numeric weight for the written-off holding currently disclosed only as less than 0.01%. |
-| 7 | UTI Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16 | fetch ok · 2026-09-09T20:01:32+00:00; source page Checked · 2026-09-25T21:55:47+00:00 | Revisit only when the AMC publishes exact numeric NAV weights for the censored tiny security and short-term deposits. |
+| 1 | Union Small Cap Fund | missing | retry_after_source_change | none | Gap | upstream_source_unavailable | https://www.unionmf.com/about-us/downloads/monthly-portfolio | source page Gap · 2026-09-25T22:13:23+00:00 | Retry only after Union's official Downloads/portfolio transport is reachable from the production collection network or an exact first-party attachment is exposed. |
+| 2 | Bajaj Finserv Small Cap Fund | partial_stale | retry_after_source_change | none | 2026-07-31 | named_subset_only | https://www.bajajamc.com/downloads | fetch ok · 2026-09-25T22:08:55+00:00; source page Checked · 2026-09-25T22:09:01+00:00 | Retry only when the AMC Downloads transport becomes usable from the production runner or an exact current monthly Small Cap attachment URL is exposed first-party. |
+| 3 | Edelweiss Small Cap Fund | partial_current | retry_after_source_change | none | 2026-08-31 | named_subset_only | https://www.edelweissmf.com/statutory/portfolio-of-schemes | fetch ok · 2026-09-25T22:00:45+00:00; source page Limited · 2026-09-25T22:10:36+00:00 | Retry only when the statutory portfolio route/static application transport becomes reachable again or it exposes an exact monthly portfolio attachment. |
+| 4 | Bandhan Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx | fetch ok · 2026-09-25T21:52:53+00:00; source page Limited · 2026-09-25T22:10:28+00:00 | Revisit only when the AMC publishes exact numeric NAV weights for positions currently disclosed with a less-than-0.01% marker. |
+| 5 | Sundaram Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/SMILE.xlsx | fetch ok · 2026-09-25T21:54:39+00:00; source page Limited · 2026-09-25T22:11:02+00:00 | Revisit only when the AMC publishes an exact numeric weight for the written-off holding currently disclosed only as less than 0.01%. |
+| 6 | UTI Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_1.zip?VersionId=HDm7fGngbSbB9olwo6wnStXgJC1XWJ16 | fetch ok · 2026-09-09T20:01:32+00:00; source page Checked · 2026-09-25T21:55:47+00:00 | Revisit only when the AMC publishes exact numeric NAV weights for the censored tiny security and short-term deposits. |
 
 ## Notes
 

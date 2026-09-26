@@ -5,8 +5,8 @@ Reviewed **273** hashes added after the original audited inventory.
 
 | Classification | Files | Raw bytes |
 | --- | ---: | ---: |
-| retain_evidence | 68 | 172,655,546 |
-| retain_latest_or_review | 200 | 114,437,116 |
+| retain_evidence | 69 | 197,920,633 |
+| retain_latest_or_review | 199 | 89,172,029 |
 | link_only_candidate | 5 | 3,851,376 |
 | unclassified | 0 | 0 |
 
