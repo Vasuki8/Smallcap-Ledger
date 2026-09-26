@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T22:44:05+00:00",
+  "built_at": "2026-09-26T22:48:29+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -20,7 +20,7 @@
     "documents_with_published_date": 52,
     "funds_with_registered_communication_sources": 29,
     "issue_counts": {
-      "communication_archive_limitation": 3,
+      "communication_archive_limitation": 4,
       "communication_document_not_archived": 4,
       "communication_source_limitation": 1,
       "no_amc_communications_collected": 4,
@@ -55,18 +55,10 @@
       "affected_funds": [
         "Franklin India Small Cap Fund",
         "Kotak Small Cap Fund",
+        "LIC Mf Small Cap Fund",
         "Samco Small Cap Fund"
       ],
-      "reason": "The original AMC communication asset is intentionally retained as link-only because robots policy disallows automatic retrieval; keep the metadata/source link and do not treat this as a repairable fetch failure."
-    },
-    {
-      "priority": 3,
-      "code": "repair_unarchived_communication_documents",
-      "actionable": true,
-      "affected_funds": [
-        "LIC Mf Small Cap Fund"
-      ],
-      "reason": "AMC communication metadata is retained but one or more original document versions are not archived."
+      "reason": "The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure."
     }
   ],
   "funds": [
@@ -655,9 +647,13 @@
         }
       ],
       "source_limitation": null,
-      "archive_limitation": null,
+      "archive_limitation": {
+        "code": "first_party_asset_returns_empty_response",
+        "reason": "LIC Mutual Fund's current Market Update page still lists the retained 2025 Monthly Market Outlooks, but their exact first-party PDF endpoints return application/pdf responses with zero bytes under reviewed automated retrieval, including with the Market Update page as same-site referer."
+      },
       "issues": [
         "communication_document_not_archived",
+        "communication_archive_limitation",
         "publication_date_missing"
       ]
     },
@@ -930,7 +926,7 @@
           "url": "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html",
           "label": "Equity Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:40:45+00:00",
+          "last_checked": "2026-09-26T22:45:09+00:00",
           "detail": "1 Tata Equity Market Outlook page retained; source reports as on 2026-08-31; publication day not inferred; 0 download/parser gaps"
         }
       ],
@@ -1003,7 +999,7 @@
           "url": "https://www.utimf.com/learn",
           "label": "Leadership Desk / Market Insights",
           "status": "Partial",
-          "last_checked": "2026-09-26T22:41:53+00:00",
+          "last_checked": "2026-09-26T22:46:18+00:00",
           "detail": "UTI Learn / Fund House insight source identity changed"
         }
       ],
@@ -1029,7 +1025,7 @@
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
           "status": "Partial",
-          "last_checked": "2026-09-26T22:41:51+00:00",
+          "last_checked": "2026-09-26T22:46:16+00:00",
           "detail": "[Errno 111] Connection refused"
         }
       ],
@@ -1046,7 +1042,7 @@
     "Factsheets, scheme documents, portfolios and generic disclosures remain available on fund pages but do not satisfy communication coverage.",
     "A missing published_at value is reported as missing metadata; first_seen is never substituted as the publication date.",
     "Documented source limitations remain visible as zero communication coverage and are not silently promoted from excluded source classes.",
-    "Robots-blocked originals remain visible as link-only archive limitations and are not queued as ordinary repairable download failures.",
+    "Unavailable originals remain visible as link-only archive limitations when reviewed automated retrieval is blocked or the first-party endpoint returns no document bytes; they are not queued as ordinary repairable download failures.",
     "The audit is read-only and performs no source fetch, document mutation or UI change."
   ]
 }

@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-26T22:44:05+00:00
+Prepared: 2026-09-26T22:48:29+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -19,15 +19,13 @@ Prepared: 2026-09-26T22:44:05+00:00
 | ---: | --- | --- | ---: | --- |
 | 1 | review_registered_communication_sources | yes | 3 | A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund. |
 | 2 | documented_communication_source_limitation | no | 1 | The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears. |
-| 3 | documented_communication_archive_limitation | no | 3 | The original AMC communication asset is intentionally retained as link-only because robots policy disallows automatic retrieval; keep the metadata/source link and do not treat this as a repairable fetch failure. |
-| 3 | repair_unarchived_communication_documents | yes | 1 | AMC communication metadata is retained but one or more original document versions are not archived. |
+| 3 | documented_communication_archive_limitation | no | 4 | The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure. |
 
 ### Affected funds
 
 - **review_registered_communication_sources:** The Wealth Company Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
 - **documented_communication_source_limitation:** Trustmf Small Cap Fund
-- **documented_communication_archive_limitation:** Franklin India Small Cap Fund, Kotak Small Cap Fund, Samco Small Cap Fund
-- **repair_unarchived_communication_documents:** LIC Mf Small Cap Fund
+- **documented_communication_archive_limitation:** Franklin India Small Cap Fund, Kotak Small Cap Fund, LIC Mf Small Cap Fund, Samco Small Cap Fund
 
 ## Per-fund audit
 
@@ -53,7 +51,7 @@ Prepared: 2026-09-26T22:44:05+00:00
 | Iti Small Cap Fund | 3 | 3 | 0 | 3 | 0 | Gap | 3 | publication_date_missing |
 | Jm Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 0 | publication_date_missing |
 | Kotak Small Cap Fund | 1 | 1 | 0 | 0 | 1 | 2026-09-09 | 1 | communication_document_not_archived, communication_archive_limitation |
-| LIC Mf Small Cap Fund | 19 | 19 | 0 | 14 | 0 | Gap | 1 | communication_document_not_archived, publication_date_missing |
+| LIC Mf Small Cap Fund | 19 | 19 | 0 | 14 | 0 | Gap | 1 | communication_document_not_archived, communication_archive_limitation, publication_date_missing |
 | Mahindra Manulife Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Mirae Asset Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Motilal Oswal Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 2 | publication_date_missing |
@@ -77,5 +75,5 @@ Prepared: 2026-09-26T22:44:05+00:00
 - Factsheets, scheme documents, portfolios and generic disclosures remain available on fund pages but do not satisfy communication coverage.
 - A missing published_at value is reported as missing metadata; first_seen is never substituted as the publication date.
 - Documented source limitations remain visible as zero communication coverage and are not silently promoted from excluded source classes.
-- Robots-blocked originals remain visible as link-only archive limitations and are not queued as ordinary repairable download failures.
+- Unavailable originals remain visible as link-only archive limitations when reviewed automated retrieval is blocked or the first-party endpoint returns no document bytes; they are not queued as ordinary repairable download failures.
 - The audit is read-only and performs no source fetch, document mutation or UI change.
