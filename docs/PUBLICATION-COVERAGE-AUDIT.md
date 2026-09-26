@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-26T04:41:30+00:00
+Prepared: 2026-09-26T04:45:39+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -11,20 +11,20 @@ Prepared: 2026-09-26T04:41:30+00:00
 - Retained communication documents: **154**; archived originals: **116**.
 - Market/newsletter/CIO/product-view documents: **132**; letters to unitholders: **22**.
 - Communication documents with an explicit published date: **0**.
-- Funds with a registered communication-oriented source page: **10**.
+- Funds with a registered communication-oriented source page: **9**.
 
 ## Repair priorities
 
 | Priority | Repair | Actionable | Affected funds | Reason |
 | ---: | --- | --- | ---: | --- |
-| 1 | review_registered_communication_sources | yes | 3 | A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund. |
-| 2 | discover_first_party_communication_sources | yes | 20 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
+| 1 | review_registered_communication_sources | yes | 2 | A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund. |
+| 2 | discover_first_party_communication_sources | yes | 21 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
 | 3 | repair_unarchived_communication_documents | yes | 3 | AMC communication metadata is retained but one or more original document versions are not archived. |
 
 ### Affected funds
 
-- **review_registered_communication_sources:** Iti Small Cap Fund, Kotak Small Cap Fund, Mahindra Manulife Small Cap Fund
-- **discover_first_party_communication_sources:** Abakkus Small Cap Fund, Axis Small Cap Fund, Bajaj Finserv Small Cap Fund, Bandhan Small Cap Fund, Edelweiss Small Cap Fund, Franklin India Small Cap Fund, Groww Small Cap Fund, HSBC Small Cap Fund, ICICI Prudential Small Cap Fund, Invesco India Small Cap Fund, Mirae Asset Small Cap Fund, Pgim India Small Cap Fund, Quant Small Cap Fund, SBI Small Cap Fund, Sundaram Small Cap Fund, Tata Small Cap Fund, The Wealth Company Small Cap Fund, Trustmf Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
+- **review_registered_communication_sources:** Iti Small Cap Fund, Mahindra Manulife Small Cap Fund
+- **discover_first_party_communication_sources:** Abakkus Small Cap Fund, Axis Small Cap Fund, Bajaj Finserv Small Cap Fund, Bandhan Small Cap Fund, Edelweiss Small Cap Fund, Franklin India Small Cap Fund, Groww Small Cap Fund, HSBC Small Cap Fund, ICICI Prudential Small Cap Fund, Invesco India Small Cap Fund, Kotak Small Cap Fund, Mirae Asset Small Cap Fund, Pgim India Small Cap Fund, Quant Small Cap Fund, SBI Small Cap Fund, Sundaram Small Cap Fund, Tata Small Cap Fund, The Wealth Company Small Cap Fund, Trustmf Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
 - **repair_unarchived_communication_documents:** LIC Mf Small Cap Fund, Nippon India Small Cap Fund, Samco Small Cap Fund
 
 ## Per-fund audit
@@ -50,7 +50,7 @@ Prepared: 2026-09-26T04:41:30+00:00
 | Invesco India Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | Iti Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 3 | no_amc_communications_collected |
 | Jm Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 0 | publication_date_missing |
-| Kotak Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected |
+| Kotak Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | LIC Mf Small Cap Fund | 19 | 19 | 0 | 14 | 0 | Gap | 1 | communication_document_not_archived, publication_date_missing |
 | Mahindra Manulife Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected |
 | Mirae Asset Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |

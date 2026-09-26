@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T04:41:30+00:00",
+  "built_at": "2026-09-26T04:45:39+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -18,7 +18,7 @@
     "market_views": 132,
     "unitholder_letters": 22,
     "documents_with_published_date": 0,
-    "funds_with_registered_communication_sources": 10,
+    "funds_with_registered_communication_sources": 9,
     "issue_counts": {
       "communication_document_not_archived": 3,
       "no_amc_communications_collected": 23,
@@ -32,7 +32,6 @@
       "actionable": true,
       "affected_funds": [
         "Iti Small Cap Fund",
-        "Kotak Small Cap Fund",
         "Mahindra Manulife Small Cap Fund"
       ],
       "reason": "A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund."
@@ -52,6 +51,7 @@
         "HSBC Small Cap Fund",
         "ICICI Prudential Small Cap Fund",
         "Invesco India Small Cap Fund",
+        "Kotak Small Cap Fund",
         "Mirae Asset Small Cap Fund",
         "Pgim India Small Cap Fund",
         "Quant Small Cap Fund",
@@ -450,16 +450,7 @@
       "published_date_count": 0,
       "latest_published_at": null,
       "latest_observed_at": null,
-      "registered_communication_sources": [
-        {
-          "amc_match": "Mahindra",
-          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Outlook.html",
-          "label": "Market Outlook",
-          "status": "Partial",
-          "last_checked": "2026-09-25T21:47:36+00:00",
-          "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 2 documents without extracted tables; 2 download/parser gaps"
-        }
-      ],
+      "registered_communication_sources": [],
       "issues": [
         "no_amc_communications_collected"
       ]
