@@ -32,7 +32,7 @@ jobs:
         run: |
           uv run --frozen python -m compileall -q tracker scripts tests
           uv run --frozen python -m unittest tests.test_retention_repack_simulation tests.test_github_state -v
-      - name: Run isolated replacement-pack simulation
+      - name: Run isolated replacement-pack simulation for currently eligible reviewed hashes
         run: uv run --frozen python scripts/simulate_retention_repack.py
       - name: Persist review artifacts only
         run: |
