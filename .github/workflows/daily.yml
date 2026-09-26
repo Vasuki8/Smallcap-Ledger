@@ -64,10 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
-      - name: Diagnose retained AMC communication evidence
+      - name: Apply retained AMC communication recovery
         if: github.event_name == 'push'
         timeout-minutes: 3
-        run: uv run --frozen python scripts/diagnose_communication_evidence.py
+        run: uv run --frozen python scripts/refresh_amc_communications.py
       - name: Apply ICICI monthly portfolio recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
