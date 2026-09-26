@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T04:01:26+00:00",
+  "reviewed_at": "2026-09-26T04:22:56+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 271,
+  "new_hashes_reviewed": 273,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_latest_or_review": 199,
-    "retain_evidence": 67,
+    "retain_latest_or_review": 200,
+    "retain_evidence": 68,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_latest_or_review": 89172029,
-    "retain_evidence": 147277130,
+    "retain_latest_or_review": 114437116,
+    "retain_evidence": 172655546,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -1325,6 +1325,36 @@
       ],
       "urls": [
         "https://www.kotakmf.com/factsheet/July_2026/kotak/SMALL-CAP.html"
+      ]
+    },
+    {
+      "hash": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
+      "bytes": 25378416,
+      "media_type": "application/x-zip-compressed",
+      "first_seen": "2026-09-26T04:21:11+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip",
+      "host": "icicipruamc.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "exact_financial_source_url:metrics,portfolios",
+        "historical_or_current_metrics_hash",
+        "historical_or_current_portfolios_hash",
+        "successful_historical_extraction_including_pruned_portfolio_history"
+      ],
+      "evidence_reasons": [
+        "exact_financial_source_url:metrics,portfolios",
+        "historical_or_current_metrics_hash",
+        "historical_or_current_portfolios_hash",
+        "successful_historical_extraction_including_pruned_portfolio_history"
+      ],
+      "latest_for_urls": [
+        "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip"
+      ],
+      "urls": [
+        "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip"
       ]
     },
     {
@@ -6579,6 +6609,32 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us"
+      ]
+    },
+    {
+      "hash": "fcfe2f11e922eac7bcb9d871d4b7087344b056aaa2607e975e6ddfb250c61c8d",
+      "bytes": 25265087,
+      "media_type": "application/x-zip-compressed",
+      "first_seen": "2026-09-26T04:21:53+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip",
+      "host": "icicipruamc.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url",
+        "original_publication_or_unknown_binary",
+        "unresolved_extraction_requires_review"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip"
+      ],
+      "urls": [
+        "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/July/Monthly-Portfolio-Disclosure-July-2026.zip"
       ]
     },
     {
