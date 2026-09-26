@@ -71,9 +71,15 @@ def repair(fetch_fn=providers.fetch,can_crawl_fn=providers.can_crawl):
                 continue
             try:
                 can_crawl_fn(url)
-                body,h,typ=fetch_fn(url,archive=True,max_bytes=20*1024*1024)
+                body,_,typ=fetch_fn(url,archive=False,max_bytes=20*1024*1024)
                 if not _looks_valid(url,body,typ):
                     raise ValueError("response did not validate as an expected document/page")
+                h=db.archive(body,typ)
+                with db.connect() as conn:
+                    conn.execute(
+                        "INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",
+                        (url,db.now(),"ok",h),
+                    )
                 providers.doc_version(row["id"],h)
                 repaired.append({"url":url,"hash":h})
             except Exception as exc:
