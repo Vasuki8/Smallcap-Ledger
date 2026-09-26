@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from tracker import db, disclosures
 from tracker import providers
+from scripts import refresh_abakkus_axis_communications as upgrade
 
 
 ABAKKUS_TAG="https://insights.abakkusinvest.com/tag/market-outlook/"
@@ -137,6 +138,40 @@ class CommunicationSourceDiscoveryTests(unittest.TestCase):
         )
         self.assertIsNone(disclosures.dated_communication_source_kind(
             "Market Outlook",ABAKKUS_TAG))
+
+
+    def test_recovery_gate_requires_both_dynamic_catalogs_and_is_idempotent(self):
+        def store(family,title,url,kind,published=None):
+            digest=db.archive((family+url).encode(),"text/html")
+            did=providers.save_document(
+                family,title,url,kind,"AMC",published=published,origin="AMC")
+            providers.doc_version(did,digest)
+
+        def fake_ingest(source):
+            url=source["url"]
+            if url==ABAKKUS_TAG:
+                store("Abakkus Small Cap Fund","Market Outlook",url,"source page")
+                store("Abakkus Small Cap Fund","Market Outlook - August 2026",
+                      ABAKKUS_AUG,"market view","2026-08-11")
+            elif url==ABAKKUS_AUG:
+                store("Abakkus Small Cap Fund","Market Outlook - August 2026",
+                      url,"market view","2026-08-11")
+            elif url==AXIS_TAG:
+                store("Axis Small Cap Fund","Market Outlook",url,"source page")
+                store("Axis Small Cap Fund","Budget market view",
+                      AXIS_ARTICLE,"market view","2026-02-11")
+            elif url==AXIS_OUTLOOK:
+                store("Axis Small Cap Fund","Annual Equity Outlook 2026",
+                      url,"market view")
+            else:
+                raise AssertionError(url)
+            return "1 relevant links; 1 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
+
+        with patch("tracker.disclosures.ingest_source",side_effect=fake_ingest) as ingest:
+            self.assertTrue(upgrade.run())
+            self.assertTrue(upgrade.run())
+            self.assertEqual(ingest.call_count,4)
+        self.assertTrue(db.setting(upgrade.UPGRADE_KEY,False))
 
 
 if __name__=="__main__":
