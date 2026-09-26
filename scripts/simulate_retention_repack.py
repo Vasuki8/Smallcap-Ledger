@@ -27,7 +27,10 @@ from tracker import db
 from scripts import github_state
 
 INVENTORY=ROOT/'docs'/'SOURCE-RETENTION-INVENTORY.json'
+NEW_DELTA=ROOT/'docs'/'SOURCE-RETENTION-NEW-CANDIDATES.json'
 QUEUE=ROOT/'docs'/'PORTFOLIO-RECOVERY-QUEUE.json'
+EXPECTED_HISTORICAL_ELIGIBLE=696
+EXPECTED_NEW_DELTA=5
 
 
 def sha256(path):
@@ -47,6 +50,48 @@ def load_candidates():
     if len({r['hash'] for r in candidates})!=len(candidates):
         raise ValueError('Candidate inventory contains duplicate hashes')
     return candidates
+
+
+def load_new_delta_candidates():
+    payload=json.loads(NEW_DELTA.read_text(encoding='utf-8'))
+    rows=payload.get('candidates') or []
+    if payload.get('count')!=len(rows):
+        raise ValueError('Post-audit candidate delta count does not match rows')
+    if len(rows)!=EXPECTED_NEW_DELTA:
+        raise ValueError(f'Expected exactly {EXPECTED_NEW_DELTA} post-audit candidates, found {len(rows)}')
+    if len({r['hash'] for r in rows})!=len(rows):
+        raise ValueError('Post-audit candidate delta contains duplicate hashes')
+    return rows
+
+
+def validate_simulation_candidate_boundary(reviewed_candidates,candidates,excluded_reviewed,new_delta_candidates):
+    reviewed_hashes={r['hash'] for r in reviewed_candidates}
+    candidate_hashes={r['hash'] for r in candidates}
+    excluded_hashes={r['hash'] for r in excluded_reviewed}
+    delta_hashes={r['hash'] for r in new_delta_candidates}
+    if len(candidate_hashes)!=EXPECTED_HISTORICAL_ELIGIBLE:
+        raise ValueError(
+            f'Expected exactly {EXPECTED_HISTORICAL_ELIGIBLE} currently eligible historical candidates, '
+            f'found {len(candidate_hashes)}')
+    if candidate_hashes|excluded_hashes!=reviewed_hashes or candidate_hashes&excluded_hashes:
+        raise ValueError('Historical candidate/exclusion partition is inconsistent')
+    if len(delta_hashes)!=EXPECTED_NEW_DELTA:
+        raise ValueError(
+            f'Expected exactly {EXPECTED_NEW_DELTA} post-audit candidates, found {len(delta_hashes)}')
+    overlap=candidate_hashes&delta_hashes
+    if overlap:
+        raise ValueError('New post-audit candidate delta leaked into historical migration proposal')
+    reviewed_delta_overlap=reviewed_hashes&delta_hashes
+    if reviewed_delta_overlap:
+        raise ValueError('Post-audit candidate delta overlaps original reviewed candidate set')
+    return {
+        'historical_reviewed_candidate_count':len(reviewed_hashes),
+        'historical_candidate_count':len(candidate_hashes),
+        'excluded_reviewed_candidate_count':len(excluded_hashes),
+        'post_audit_delta_candidate_count':len(delta_hashes),
+        'post_audit_delta_overlap_count':0,
+        'post_audit_delta_excluded':True,
+    }
 
 
 def ensure_no_actionable_portfolio_change():
@@ -369,6 +414,8 @@ def markdown(report):
         f"- historical reviewed candidates: **{report['historical_reviewed_candidate_count']}**",
         f"- currently eligible candidates simulated metadata-only: **{report['candidate_count']}**",
         f"- reviewed hashes excluded because current evidence strengthened them: **{report['excluded_reviewed_candidate_count']}**",
+        f"- separate post-audit candidate delta excluded: **{report['post_audit_delta_candidate_count']}**",
+        f"- overlap with post-audit delta: **{report['post_audit_delta_overlap_count']}**",
         f"- candidate raw source bytes: **{s['candidate_raw_bytes']:,}**",
         f"- candidate compressed payload bytes from reviewed pack audit: **{s['candidate_compressed_payload_bytes']:,}**",
         f"- affected active source packs: **{report['affected_pack_count']}**",
@@ -406,6 +453,8 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
     queue_summary=ensure_no_actionable_portfolio_change()
     reviewed_candidates=load_candidates()
     reviewed_candidate_hashes={r['hash'] for r in reviewed_candidates}
+    new_delta_candidates=load_new_delta_candidates()
+    new_delta_hashes={r['hash'] for r in new_delta_candidates}
     repo=os.environ.get('GITHUB_REPOSITORY','')
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo):
         raise ValueError('GITHUB_REPOSITORY is required for the simulation')
@@ -443,9 +492,20 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             raise ValueError('Reviewed candidate hash missing from active checkpoint database')
 
         candidates,excluded_reviewed=current_eligible_candidates(sim_db,reviewed_candidates)
+        boundary=validate_simulation_candidate_boundary(
+            reviewed_candidates,candidates,excluded_reviewed,new_delta_candidates)
         candidate_hashes={r['hash'] for r in candidates}
-        if not candidate_hashes:
-            raise ValueError('No reviewed link-only candidates remain currently eligible')
+        missing_delta=sorted(new_delta_hashes-set(live_rows))
+        if missing_delta:
+            raise ValueError('Post-audit delta hash is absent from active checkpoint: '+missing_delta[0])
+        delta_states,delta_missing=reviewed_candidate_states(sim_db,new_delta_hashes)
+        if delta_missing:
+            raise ValueError('Post-audit delta hash missing retention state: '+delta_missing[0])
+        ineligible_delta=sorted(
+            h for h,state in delta_states.items()
+            if state['classification']!='link_only_candidate' or state['binary_state']!='retained')
+        if ineligible_delta:
+            raise ValueError('Post-audit delta candidate is no longer a retained link-only candidate: '+ineligible_delta[0])
         reviewed_payload=sum(int(r.get('compressed_payload_bytes') or 0) for r in candidates)
 
         before=simulate_database(sim_db,sorted(candidate_hashes),copy_live=False)
@@ -534,6 +594,10 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'historical_reviewed_candidate_count':len(reviewed_candidates),
             'current_eligible_candidate_count':len(candidates),
             'excluded_reviewed_candidate_count':len(excluded_reviewed),
+            'post_audit_delta_candidate_count':boundary['post_audit_delta_candidate_count'],
+            'post_audit_delta_overlap_count':boundary['post_audit_delta_overlap_count'],
+            'post_audit_delta_excluded':boundary['post_audit_delta_excluded'],
+            'post_audit_delta_hashes_sha256':json_sha(sorted(new_delta_hashes)),
             'count':len(candidates),
             'raw_bytes':sum(int(live_rows[h]['bytes']) for h in candidate_hashes),
             'excluded_reviewed_candidates':excluded_reviewed,
@@ -559,6 +623,10 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'historical_reviewed_candidate_count':len(reviewed_candidates),
             'candidate_count':len(candidate_hashes),
             'excluded_reviewed_candidate_count':len(excluded_reviewed),
+            'post_audit_delta_candidate_count':boundary['post_audit_delta_candidate_count'],
+            'post_audit_delta_overlap_count':boundary['post_audit_delta_overlap_count'],
+            'post_audit_delta_excluded':boundary['post_audit_delta_excluded'],
+            'post_audit_delta_hashes_sha256':json_sha(sorted(new_delta_hashes)),
             'candidate_hashes_sha256':json_sha(sorted(candidate_hashes)),
             'excluded_reviewed_hashes_sha256':json_sha([x['hash'] for x in excluded_reviewed]),
             'retained_hash_count':len(retained_hashes),
@@ -583,6 +651,10 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'candidate_count':len(candidate_hashes),
             'excluded_reviewed_candidate_count':len(excluded_reviewed),
             'excluded_reviewed_candidates':excluded_reviewed,
+            'post_audit_delta_candidate_count':boundary['post_audit_delta_candidate_count'],
+            'post_audit_delta_overlap_count':boundary['post_audit_delta_overlap_count'],
+            'post_audit_delta_excluded':boundary['post_audit_delta_excluded'],
+            'post_audit_delta_hashes':sorted(new_delta_hashes),
             'retained_hash_count':len(retained_hashes),
             'affected_pack_count':len(affected),
             'replacement_pack_count':sum(not p.get('reuse',False) for p in proposed_packs),
