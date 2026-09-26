@@ -64,6 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
+      - name: Diagnose Franklin official communication index
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/diagnose_franklin_official_index.py
       - name: Apply Edelweiss and Franklin communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
