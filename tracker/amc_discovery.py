@@ -110,8 +110,12 @@ def store_report(amc,family,url,title='Official report'):
     sbi_workbook=(amc=='SBI' and family=='SBI Small Cap Fund' and workbook)
     bandhan_workbook=(amc=='Bandhan' and family=='Bandhan Small Cap Fund' and workbook)
     axis_workbook=(amc=='Axis' and family=='Axis Small Cap Fund' and workbook)
+    icici_zip=(amc=='ICICI' and family=='ICICI Prudential Small Cap Fund'
+               and urlparse(url).path.lower().endswith('.zip'))
     if (sbi_workbook or bandhan_workbook or axis_workbook) and not body.startswith((b'PK',b'\xd0\xcf')):
         raise ValueError(f'{amc} monthly workbook returned non-spreadsheet content')
+    if icici_zip and not body.startswith(b'PK'):
+        raise ValueError('ICICI monthly portfolio returned non-ZIP content')
     kind=providers.classify(title,url)
     did=providers.save_document(family,title,url,kind,'Fund',origin='AMC');providers.doc_version(did,h)
     if sbi_workbook:
@@ -123,6 +127,9 @@ def store_report(amc,family,url,title='Official report'):
     if axis_workbook:
         from .axis_portfolios import PARSER_VERSION
         return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
+    if icici_zip:
+        from .icici_portfolios import PARSER_VERSION
+        return amc_reports.extract(body,family,url,h,parser_version=PARSER_VERSION)
     return amc_reports.extract(body,family,url,h)
 
 def discover(amc):
@@ -133,6 +140,9 @@ def discover(amc):
     elif amc=='Axis':
         from .axis_portfolios import discover as axis_discover
         yield from axis_discover(read)
+    elif amc=='ICICI':
+        from .icici_portfolios import discover as icici_discover
+        yield from icici_discover(read)
     elif amc=='Baroda':
         family='Baroda Bnp Paribas Small Cap Fund'
         page='https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme'
@@ -818,5 +828,5 @@ def update(progress=lambda _:None):
         with db.connect() as c:c.execute('INSERT INTO jobs(kind,started_at,finished_at,status,detail) VALUES(?,?,?,?,?)',('amc-reports',db.now(),db.now(),'partial' if fail else 'ok',amc+': '+detail))
         progress(amc+': '+detail)
         return amc+': '+detail
-    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Axis','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','JM Financial','LIC','Union','UTI','Bandhan','ITI','Invesco','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
+    with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(collect,['Abakkus','Aditya Birla','Axis','Bank of India','Baroda','Canara','DSP','Franklin','Groww','HSBC','ICICI','JM Financial','LIC','Union','UTI','Bandhan','ITI','Invesco','Mahindra','Mirae','PGIM','Samco','SBI','quant Mutual','Tata','TRUST','Sundaram','The Wealth']))
     return '; '.join(results)
