@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T05:06:23+00:00",
+  "reviewed_at": "2026-09-26T05:53:24+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 273,
+  "new_hashes_reviewed": 289,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_latest_or_review": 199,
-    "retain_evidence": 69,
+    "retain_latest_or_review": 201,
+    "retain_evidence": 83,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_latest_or_review": 89172029,
-    "retain_evidence": 197920633,
+    "retain_latest_or_review": 89351540,
+    "retain_evidence": 203573239,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -284,6 +284,30 @@
       ],
       "urls": [
         "https://www.boimf.in/siddisclosures/scheme-expense-ratio"
+      ]
+    },
+    {
+      "hash": "0abd250c478bba44515511029a03b27f991ffaa0f5389c42f9d5eeec6decaf31",
+      "bytes": 1449975,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:16+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles/everything-you-need-to-know-about-axis-greater-china-fund-of-fund",
+      "host": "axismf.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles/everything-you-need-to-know-about-axis-greater-china-fund-of-fund"
+      ],
+      "urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles/everything-you-need-to-know-about-axis-greater-china-fund-of-fund"
       ]
     },
     {
@@ -1034,6 +1058,30 @@
       ]
     },
     {
+      "hash": "2598a3471b604f3d03ed51498dae3d11027545871ea5034528ab8877df8a36d0",
+      "bytes": 21750,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:09+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-january/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-january/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-january/"
+      ]
+    },
+    {
       "hash": "26c0b166da7383c12264543bb2849b005747e6432c8b6c3b49f4105ec5b8eab0",
       "bytes": 795708,
       "media_type": "text/html; charset=utf-8",
@@ -1505,6 +1553,30 @@
       ]
     },
     {
+      "hash": "3b3356e85846b40221bb2f983e5f9630b8465c22d820a2314ac8d37a6493cf0b",
+      "bytes": 21601,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:08+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-march-2026-2/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-march-2026-2/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-march-2026-2/"
+      ]
+    },
+    {
       "hash": "3b5145382a30475701704e4534f170dc1aabb88e249997ed76058ab65990459b",
       "bytes": 15665307,
       "media_type": "application/pdf",
@@ -1683,6 +1755,30 @@
       ],
       "urls": [
         "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-19&to_date=2026-09-25"
+      ]
+    },
+    {
+      "hash": "40e2a58995c1634e6074ead3b6a4a48a1569c61dd52f32530083e69ce8fc94ad",
+      "bytes": 21034,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:08+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-may-2026/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-may-2026/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-may-2026/"
       ]
     },
     {
@@ -2799,6 +2895,54 @@
       ]
     },
     {
+      "hash": "6657282ed93881a0dd6a6002f79c336234e976cf42a22302cce5553a9c0d769c",
+      "bytes": 19259,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:07+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/tag/market-outlook/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/tag/market-outlook/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/tag/market-outlook/"
+      ]
+    },
+    {
+      "hash": "683398f885ff3b6cdf0f1371578cde94a4082c879dbc04c21c6c08b1ba9881eb",
+      "bytes": 370688,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T05:52:10+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/content/files/2026/08/Market-Overview-Outlook-by-Abakkus--Aug-26.pdf",
+      "host": "insights.abakkusinvest.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/content/files/2026/08/Market-Overview-Outlook-by-Abakkus--Aug-26.pdf"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/content/files/2026/08/Market-Overview-Outlook-by-Abakkus--Aug-26.pdf"
+      ]
+    },
+    {
       "hash": "6845d6c1374eb336e14aa42752efa43d67dc0f663c3e2db446821937e6a5a2a5",
       "bytes": 111920,
       "media_type": "text/html; charset=utf-8",
@@ -3407,6 +3551,30 @@
       ],
       "urls": [
         "https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?id=158853"
+      ]
+    },
+    {
+      "hash": "7b0bea5a174854ce3a67d19d1dcda07ab3bbcee2e3121c99b7340545a3effd9d",
+      "bytes": 160252,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:13+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook",
+      "host": "axismf.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook"
+      ],
+      "urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook"
       ]
     },
     {
@@ -4306,6 +4474,30 @@
       ]
     },
     {
+      "hash": "9e7c409d50f6658a56cc4f066e106331e53cb4b7b7bb1b507308c20451a90f2e",
+      "bytes": 21576,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:08+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-july-2026/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-july-2026/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-july-2026/"
+      ]
+    },
+    {
       "hash": "9ebe4f2e1e9367bcc6d62861d4ae19bc522e3d023f3a537e88bc22fe7c5157ab",
       "bytes": 416017,
       "media_type": "text/html; charset=utf-8",
@@ -4375,6 +4567,54 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/portfolio-management-services"
+      ]
+    },
+    {
+      "hash": "a33ddac8f5d847e2ba9373a178fface77fc589e0ef6279416b6bde0d6d068970",
+      "bytes": 21749,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:09+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-february-2026/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-february-2026/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-february-2026/"
+      ]
+    },
+    {
+      "hash": "a4ad2bf6937bb5aae07a3eca2e8aa9cefa896ab19099fd3eb15a98172b4b593c",
+      "bytes": 2181671,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T05:52:20+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.axismf.com/cms/sites/default/files/pdf-factsheets/Axis%20MF_%20Annual%20Equity%20Outlook%202026.pdf",
+      "host": "axismf.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.axismf.com/cms/sites/default/files/pdf-factsheets/Axis%20MF_%20Annual%20Equity%20Outlook%202026.pdf"
+      ],
+      "urls": [
+        "https://www.axismf.com/cms/sites/default/files/pdf-factsheets/Axis%20MF_%20Annual%20Equity%20Outlook%202026.pdf"
       ]
     },
     {
@@ -4740,6 +4980,30 @@
       "latest_for_urls": [],
       "urls": [
         "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth"
+      ]
+    },
+    {
+      "hash": "afd836e2f827fa6a165c5b735d67940b9d44fd801ece75ec9005059045d2b7b8",
+      "bytes": 21021,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:08+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-august-2026/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-august-2026/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-august-2026/"
       ]
     },
     {
@@ -5361,6 +5625,30 @@
       ]
     },
     {
+      "hash": "c6ce40899e08332c39fadabe4906576365425d53fd48604f77c97b1394281c57",
+      "bytes": 21989,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:09+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-march-2026/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-march-2026/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-march-2026/"
+      ]
+    },
+    {
       "hash": "c77936f74e601aeceba67675988ff4fb9c791aa3299f10eeb60fcf633ead94ae",
       "bytes": 105113,
       "media_type": "text/html; charset=UTF-8",
@@ -5603,6 +5891,30 @@
       ]
     },
     {
+      "hash": "cf49aa4ce7f87923a1183dabe22bd9f41c8967953e16617f320749dca4fcc904",
+      "bytes": 21644,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:08+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-june-2026/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-june-2026/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-june-2026/"
+      ]
+    },
+    {
       "hash": "cf6bdfedf6f7144859b44327443fd425c9400a63fff7d82679105b54c4a5da14",
       "bytes": 78353,
       "media_type": "text/html; charset=utf-8",
@@ -5696,6 +6008,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/StatutoryDisclosure#scheme-financials"
+      ]
+    },
+    {
+      "hash": "d8c483be07b4f13e61bd265e7c93c08f7fd52a61e393317829a9a5bef0164ddd",
+      "bytes": 1435807,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:17+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles/union-budget-2026-impact-on-mutual-funds",
+      "host": "axismf.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles/union-budget-2026-impact-on-mutual-funds"
+      ],
+      "urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles/union-budget-2026-impact-on-mutual-funds"
       ]
     },
     {
@@ -5989,6 +6325,30 @@
       "urls": [
         "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformance?maturityType=1&category=1&subCategory=6&mfid=0&reportDate=24-Sep-2026",
         "https://www.amfiindia.com/otherdata/fund-performance"
+      ]
+    },
+    {
+      "hash": "e863ac0884d9fa7da92f9957c794f315e56a0fafe8d7da486c0878561a483556",
+      "bytes": 21042,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:09+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/things-falling-in-place-indian-equity-outlook/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/things-falling-in-place-indian-equity-outlook/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/things-falling-in-place-indian-equity-outlook/"
       ]
     },
     {
@@ -6587,6 +6947,30 @@
       ],
       "urls": [
         "https://cmsnew.bandhanmutual.com/wp-json/finance-api/v1/posts/disclosures?id=155405"
+      ]
+    },
+    {
+      "hash": "faf8ba46f2dc9b6ac5fb603c78b3775057f3322660d2667c1b5a1477f02fccd7",
+      "bytes": 21059,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T05:52:10+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://insights.abakkusinvest.com/market-outlook-december/",
+      "host": "insights.abakkusinvest.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://insights.abakkusinvest.com/market-outlook-december/"
+      ],
+      "urls": [
+        "https://insights.abakkusinvest.com/market-outlook-december/"
       ]
     },
     {
