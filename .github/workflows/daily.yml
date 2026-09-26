@@ -64,10 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
-      - name: Diagnose Bajaj and Bandhan communication sources
+      - name: Apply Bajaj and Bandhan communication source recovery
         if: github.event_name == 'push'
-        timeout-minutes: 5
-        run: uv run --frozen python scripts/diagnose_bajaj_bandhan_communications.py
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/refresh_bajaj_bandhan_communications.py
       - name: Apply retained AMC communication recovery
         if: github.event_name == 'push'
         timeout-minutes: 3
