@@ -68,6 +68,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 3
         run: uv run --frozen python scripts/refresh_amc_communications.py
+      - name: Apply Abakkus and Axis communication source recovery
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/refresh_abakkus_axis_communications.py
       - name: Apply ICICI monthly portfolio recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
