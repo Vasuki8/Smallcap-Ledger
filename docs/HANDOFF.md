@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-26, after post-audit retention hash classification and self-protection repair.
+Updated: 2026-09-26, after refreshed 696-hash historical retention simulation.
 
 
 
@@ -25,6 +25,135 @@ Updated: 2026-09-26, after post-audit retention hash classification and self-pro
 
 
 
+
+## Latest completed batch: refresh historical retention simulation at exactly 696 hashes
+
+**The isolated replacement-pack simulation is now refreshed against the corrected historical candidate set: 696 currently eligible hashes from the original 700-hash review, with all 5 newer post-audit candidates explicitly excluded. No production storage mutation occurred.**
+
+PR **#159** merged as commit `97ecf0d434bdbaabb27bda37e0ec6157ad777ab7`.
+
+The simulator now has a hard boundary gate:
+
+- historical reviewed candidates: **700**
+- historical candidates simulated metadata-only: **696**
+- historical candidates strengthened/protected: **4**
+- separate post-audit delta candidates: **5**
+- overlap between historical migration and post-audit delta: **0**
+
+If any of those counts or the zero-overlap condition changes, the simulation aborts instead of emitting a proposal.
+
+Regression coverage was added for the exact **696 / 4 / 5 / 0-overlap** partition.
+
+### Successful isolated run
+
+Workflow **36208730633** completed successfully at **2026-09-26T01:33:38Z**.
+
+Pinned checkpoint:
+
+- active manifest created: **2026-09-26T01:21:17Z**
+- database asset: `database-36208080152-1.zip`
+- archive hashes: **2,790**
+- active source packs: **101**
+
+Artifact commit: `8416fc7d0bcd0003f515c02ad222006d92af73ee`.
+
+PR **#160** merged as commit `e65011ee52f7b6d64d723a45c79aecbb4bf43e86` and removed the completed one-time simulation workflow. The normal daily pipeline contains no retention simulation step.
+
+The implementation push's ordinary tracker workflow **#519 / run 36208730698** also completed successfully, including site generation, cumulative-history publication and Pages upload/deployment.
+
+### Refreshed exact historical proposal
+
+- historical candidates: **696**
+- candidate raw bytes: **403,410,385**
+- candidate compressed payload bytes: **34,144,511**
+- retained hashes in the simulated checkpoint: **2,094**
+- affected packs: **50**
+- replacement packs: **25**
+- packs fully retired: **25**
+- proposed steady-state pack count: **76**
+
+Measured assets:
+
+- current source-pack assets: **1,540,491,329 bytes**
+- proposed source-pack assets: **1,506,182,012 bytes**
+- exact source-pack savings: **34,309,317 bytes**
+- current database ZIP: **7,920,465 bytes**
+- simulated database ZIP: **7,921,495 bytes**
+- exact active-set savings: **34,308,287 bytes**
+
+Actual reclaimed production bytes remain **0**.
+
+### Validation
+
+The refreshed simulation proves:
+
+- non-retention database fingerprints unchanged;
+- exact retained-hash manifest coverage;
+- duplicate proposed hashes: **0**;
+- all **1,051** protected evidence hashes retained;
+- metadata-only materialization blocked;
+- retained replacement member checksum restoration passed;
+- AMC replay gaps: **0**;
+- metadata-only archive download blocked;
+- metadata-only saved document version hidden;
+- full simulated static-site generation/validation passed;
+- metadata-only candidates published in simulated site: **0**;
+- active packs/database preserved as rollback.
+
+Production mutations:
+
+- release uploads: **0**
+- release deletions: **0**
+- active manifest switch: **false**
+- production binary-state changes: **0**
+- source-file deletions: **0**
+- legacy ZIP retirement: **false**
+
+The authoritative current historical review artifacts are:
+
+- `deployment/retention-pack-simulation.json`
+- `docs/RETENTION-PROPOSED-MANIFEST.json`
+- `docs/RETENTION-MIGRATION-CANDIDATES.json`
+- `docs/RETENTION-REPLACEMENT-SIMULATION.md`
+
+### Approval boundary
+
+**Do not execute the 696-hash binary reduction without explicit owner approval.** It is now technically simulated and review-ready, but the destructive migration remains separately approval-gated.
+
+The **5 post-audit link-only candidates / 3,851,376 raw bytes** remain a separate delta and are not part of the 696-hash proposal.
+
+Current full retention classification remains:
+
+- retain_evidence: **1,051**
+- retain_latest_or_review: **1,038**
+- link_only_candidate: **701**
+- unclassified: **0**
+- binary retained: **2,790 / 2,790**
+
+Current portfolio queue remains **7 items / 0 actionable_now / 0 source changes detected**. BSE TRI remains non-actionable under the free first-party-source constraint.
+
+### Next backend task
+
+**Perform a source-by-source manual evidence review of the 5 new post-audit link-only candidates and produce a separate delta-only simulation if all remain eligible. Do not merge them into the 696-hash proposal.**
+
+Review these exact first-party discovery pages:
+
+1. SAMCO Mutual Fund — statutory-disclosure page;
+2. Baroda BNP Paribas — September 2026 Small Cap e-factsheet HTML;
+3. Kotak Small Cap — September 2026 factsheet HTML;
+4. Kotak Small Cap — July 2026 factsheet HTML;
+5. Quantum Small Cap Fund — fund page.
+
+For each hash:
+
+- verify it is truly superseded by a newer retained response for every associated URL;
+- confirm no financial metric, portfolio, successful extraction, current document version, replay path or fragile-transport dependency uses the hash;
+- keep binary state `retained`;
+- record an explicit reviewed decision and evidence;
+- if all 5 remain link-only candidates, run a **separate 5-hash isolated pack simulation** and report only its incremental savings;
+- do not combine the 5-hash delta with the 696-hash historical proposal and do not execute either migration.
+
+If any portfolio source-change watch becomes actionable first, pause retention work and resume that first-party data repair.
 
 ## Latest completed batch: classify 271 post-audit retention hashes and repair self-protection
 
