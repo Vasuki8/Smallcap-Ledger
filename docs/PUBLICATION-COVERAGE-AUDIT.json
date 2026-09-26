@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T11:32:59+00:00",
+  "built_at": "2026-09-26T12:16:29+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,18 +11,18 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 19,
-    "funds_without_amc_communications": 17,
-    "communication_documents": 176,
-    "archived_communication_documents": 138,
-    "market_views": 154,
+    "funds_with_amc_communications": 21,
+    "funds_without_amc_communications": 15,
+    "communication_documents": 187,
+    "archived_communication_documents": 139,
+    "market_views": 165,
     "unitholder_letters": 22,
-    "documents_with_published_date": 16,
-    "funds_with_registered_communication_sources": 13,
+    "documents_with_published_date": 26,
+    "funds_with_registered_communication_sources": 15,
     "issue_counts": {
-      "communication_document_not_archived": 3,
-      "no_amc_communications_collected": 17,
-      "publication_date_missing": 17
+      "communication_document_not_archived": 4,
+      "no_amc_communications_collected": 15,
+      "publication_date_missing": 18
     }
   },
   "repair_priorities": [
@@ -31,8 +31,6 @@
       "code": "discover_first_party_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "Edelweiss Small Cap Fund",
-        "Franklin India Small Cap Fund",
         "Groww Small Cap Fund",
         "HSBC Small Cap Fund",
         "ICICI Prudential Small Cap Fund",
@@ -56,6 +54,7 @@
       "code": "repair_unarchived_communication_documents",
       "actionable": true,
       "affected_funds": [
+        "Franklin India Small Cap Fund",
         "LIC Mf Small Cap Fund",
         "Nippon India Small Cap Fund",
         "Samco Small Cap Fund"
@@ -309,31 +308,57 @@
     {
       "family": "Edelweiss Small Cap Fund",
       "amc": "Edelweiss Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 1,
+      "archived_communication_count": 1,
+      "market_view_count": 1,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "latest_observed_at": "2026-09-26T12:14:46+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "Edelweiss",
+          "url": "https://www.edelweissmf.com/investor-insights/fund-market/curve",
+          "label": "Debt Market Update - Curve",
+          "status": "Pending",
+          "last_checked": null,
+          "detail": null
+        },
+        {
+          "amc_match": "Edelweiss",
+          "url": "https://www.edelweissmf.com/investor-insights/fund-market",
+          "label": "Fund & Market Insights",
+          "status": "Pending",
+          "last_checked": null,
+          "detail": null
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {
       "family": "Franklin India Small Cap Fund",
       "amc": "Franklin Templeton Mutual Fund",
-      "communication_count": 0,
+      "communication_count": 10,
       "archived_communication_count": 0,
-      "market_view_count": 0,
+      "market_view_count": 10,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
+      "published_date_count": 10,
+      "latest_published_at": "2026-09-18",
       "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "registered_communication_sources": [
+        {
+          "amc_match": "Franklin",
+          "url": "https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries",
+          "label": "Latest Commentaries / Market Insights",
+          "status": "Checked",
+          "last_checked": "2026-09-26T12:14:47+00:00",
+          "detail": "10 Franklin market-commentary metadata records retained from first-party article API; original Widen binaries remain link-only because automatic access is disallowed by robots policy; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "communication_document_not_archived"
       ]
     },
     {

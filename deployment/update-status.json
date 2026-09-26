@@ -1,23 +1,29 @@
 {
-  "built_at": "2026-09-26T11:32:51+00:00",
+  "built_at": "2026-09-26T12:16:19+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
     "nav_points": 281584,
     "benchmark_points": 5330,
     "portfolios": 134,
-    "documents": 2059,
-    "archive_bytes": 2459663846,
-    "archive_binary_files": 2814,
+    "documents": 2061,
+    "archive_bytes": 2459967138,
+    "archive_binary_files": 2816,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 75755520,
-    "total_storage_bytes": 2535419366,
+    "database_bytes": 75812864,
+    "total_storage_bytes": 2535780002,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-09-25"
   },
   "recent_jobs": [
+    {
+      "kind": "amc-communications",
+      "started_at": "2026-09-26T12:14:44+00:00",
+      "finished_at": "2026-09-26T12:14:47+00:00",
+      "status": "ok"
+    },
     {
       "kind": "amc-communications",
       "started_at": "2026-09-26T06:19:57+00:00",
@@ -35,12 +41,6 @@
       "started_at": "2026-09-26T05:05:19+00:00",
       "finished_at": "2026-09-26T05:05:19+00:00",
       "status": "ok"
-    },
-    {
-      "kind": "amc-reports",
-      "started_at": "2026-09-26T04:27:06+00:00",
-      "finished_at": "2026-09-26T04:28:27+00:00",
-      "status": "ok"
     }
   ],
   "schedule": {
@@ -51,7 +51,7 @@
     "cron": "30 18 * * *",
     "scheduled_time_is_not_guaranteed": true,
     "publication_file_budget_bytes": 262144000,
-    "publication_files_included": 144,
-    "publication_bytes_included": 262142566
+    "publication_files_included": 140,
+    "publication_bytes_included": 262143109
   }
 }

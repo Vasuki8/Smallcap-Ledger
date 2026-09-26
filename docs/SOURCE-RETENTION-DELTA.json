@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T11:32:18+00:00",
+  "reviewed_at": "2026-09-26T12:15:48+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 295,
+  "new_hashes_reviewed": 297,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_latest_or_review": 203,
-    "retain_evidence": 87,
+    "retain_latest_or_review": 204,
+    "retain_evidence": 88,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_latest_or_review": 89382295,
-    "retain_evidence": 203910507,
+    "retain_latest_or_review": 89454259,
+    "retain_evidence": 204141835,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -236,6 +236,30 @@
       ],
       "urls": [
         "https://www.quantumamc.com/portfolio/combined/-1/1/0/0"
+      ]
+    },
+    {
+      "hash": "08f1a0487003512e764b2f8afdaee1a4fd1568f4592ecd48fcd618b70d629b91",
+      "bytes": 231328,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T12:14:45+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.edelweissmf.com/Files/Insigths/viewpoint/EMF_Factor_Investing_Outlook_2026_01012026_060107_PM.pdf",
+      "host": "edelweissmf.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.edelweissmf.com/Files/Insigths/viewpoint/EMF_Factor_Investing_Outlook_2026_01012026_060107_PM.pdf"
+      ],
+      "urls": [
+        "https://www.edelweissmf.com/Files/Insigths/viewpoint/EMF_Factor_Investing_Outlook_2026_01012026_060107_PM.pdf"
       ]
     },
     {
@@ -5743,6 +5767,31 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.samcomf.com/mutual-funds/samco-small-cap-fund-direct-growth/scdgg"
+      ]
+    },
+    {
+      "hash": "c676203e141bac590942294c4512855385128809ba673f5f59692a1a4937aa49",
+      "bytes": 71964,
+      "media_type": "application/json;charset=UTF-8",
+      "first_seen": "2026-09-26T12:14:47+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.franklintempletonindia.com/api/articleApi",
+      "host": "franklintempletonindia.com",
+      "kind": "json",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url",
+        "request_parameters_or_data_semantics_require_review"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.franklintempletonindia.com/api/articleApi"
+      ],
+      "urls": [
+        "https://www.franklintempletonindia.com/api/articleApi"
       ]
     },
     {

@@ -1,29 +1,29 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-26T11:32:59+00:00
+Prepared: 2026-09-26T12:16:29+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
 ## Summary
 
-- Funds with at least one retained AMC communication: **19 / 36**.
-- Funds with no retained AMC communication: **17**.
-- Retained communication documents: **176**; archived originals: **138**.
-- Market/newsletter/CIO/product-view documents: **154**; letters to unitholders: **22**.
-- Communication documents with an explicit published date: **16**.
-- Funds with a registered communication-oriented source page: **13**.
+- Funds with at least one retained AMC communication: **21 / 36**.
+- Funds with no retained AMC communication: **15**.
+- Retained communication documents: **187**; archived originals: **139**.
+- Market/newsletter/CIO/product-view documents: **165**; letters to unitholders: **22**.
+- Communication documents with an explicit published date: **26**.
+- Funds with a registered communication-oriented source page: **15**.
 
 ## Repair priorities
 
 | Priority | Repair | Actionable | Affected funds | Reason |
 | ---: | --- | --- | ---: | --- |
-| 2 | discover_first_party_communication_sources | yes | 17 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
-| 3 | repair_unarchived_communication_documents | yes | 3 | AMC communication metadata is retained but one or more original document versions are not archived. |
+| 2 | discover_first_party_communication_sources | yes | 15 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
+| 3 | repair_unarchived_communication_documents | yes | 4 | AMC communication metadata is retained but one or more original document versions are not archived. |
 
 ### Affected funds
 
-- **discover_first_party_communication_sources:** Edelweiss Small Cap Fund, Franklin India Small Cap Fund, Groww Small Cap Fund, HSBC Small Cap Fund, ICICI Prudential Small Cap Fund, Invesco India Small Cap Fund, Kotak Small Cap Fund, Mirae Asset Small Cap Fund, Pgim India Small Cap Fund, Quant Small Cap Fund, SBI Small Cap Fund, Sundaram Small Cap Fund, Tata Small Cap Fund, The Wealth Company Small Cap Fund, Trustmf Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
-- **repair_unarchived_communication_documents:** LIC Mf Small Cap Fund, Nippon India Small Cap Fund, Samco Small Cap Fund
+- **discover_first_party_communication_sources:** Groww Small Cap Fund, HSBC Small Cap Fund, ICICI Prudential Small Cap Fund, Invesco India Small Cap Fund, Kotak Small Cap Fund, Mirae Asset Small Cap Fund, Pgim India Small Cap Fund, Quant Small Cap Fund, SBI Small Cap Fund, Sundaram Small Cap Fund, Tata Small Cap Fund, The Wealth Company Small Cap Fund, Trustmf Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
+- **repair_unarchived_communication_documents:** Franklin India Small Cap Fund, LIC Mf Small Cap Fund, Nippon India Small Cap Fund, Samco Small Cap Fund
 
 ## Per-fund audit
 
@@ -38,8 +38,8 @@ Prepared: 2026-09-26T11:32:59+00:00
 | Baroda Bnp Paribas Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
 | Canara Robeco Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 2 | publication_date_missing |
 | DSP Small Cap Fund | 13 | 0 | 13 | 13 | 0 | Gap | 0 | publication_date_missing |
-| Edelweiss Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
-| Franklin India Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
+| Edelweiss Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 2 | publication_date_missing |
+| Franklin India Small Cap Fund | 10 | 10 | 0 | 0 | 10 | 2026-09-18 | 1 | communication_document_not_archived |
 | Groww Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | HDFC Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 2 | publication_date_missing |
 | HSBC Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
