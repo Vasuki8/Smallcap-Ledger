@@ -13,12 +13,14 @@ from tracker import providers
 PAGE='https://www.edelweissmf.com/statutory'
 FALLBACK_BUNDLE='https://www.edelweissmf.com/main.0411e4933dfdb2cb.js'
 
-def get(url,params=None,max_bytes=20*1024*1024):
+def get(url,params=None,max_bytes=20*1024*1024,headers=None):
     host=(urlparse(url).hostname or '').lower()
     if not (host.endswith('edelweissmf.com') or 'edelweiss' in host):
         raise ValueError('Refusing non-Edelweiss diagnostic host: '+host)
+    request_headers={'User-Agent':'Mozilla/5.0'}
+    request_headers.update(headers or {})
     with httpx.Client(timeout=httpx.Timeout(30,read=60),follow_redirects=True,
-                      headers={'User-Agent':'Mozilla/5.0'}) as client:
+                      headers=request_headers) as client:
         r=client.get(url,params=params);r.raise_for_status()
         body=r.content
     if len(body)>max_bytes:raise ValueError('response too large')
@@ -61,6 +63,17 @@ def main():
         return
     api=api.rstrip('/')+'/'
     print('EDELWEISS_API_BASE '+api,flush=True)
+    for label,pattern in (
+        ('x_api_key',r'x[-_ ]?api[-_ ]?key'),
+        ('subscription',r'subscription[-_ ]?key|ocp-apim'),
+        ('client_key',r'x[-_ ]?(?:client|app)[-_ ]?(?:id|key)'),
+        ('interceptor',r'interceptor'),
+    ):
+        matches=list(re.finditer(pattern,js,re.I))
+        print(f'EDELWEISS_API_HEADER_TERM {label} count={len(matches)}',flush=True)
+        for idx,m in enumerate(matches[:8]):
+            ctx=re.sub(r'\s+',' ',js[max(0,m.start()-700):m.end()+1200])
+            print(f'EDELWEISS_API_HEADER_CONTEXT {label} {idx} '+ctx[:1900],flush=True)
     api_host=(urlparse(api).hostname or '').lower()
     if not (api_host.endswith('edelweissmf.com') or 'edelweiss' in api_host):
         print('EDELWEISS_API_BASE_UNVERIFIED_HOST '+api_host,flush=True)
@@ -72,13 +85,26 @@ def main():
        {'type':'Statutory','fundType':'MF','menuName':'Portfolio of scheme(s)'}),
       ('legacy_menu','third-party/getStatutoryMenu',None),
     ]
+    profiles=[
+        ('bare',{}),
+        ('browser',{
+            'Accept':'application/json, text/plain, */*',
+            'Origin':'https://www.edelweissmf.com',
+            'Referer':'https://www.edelweissmf.com/statutory',
+            'Sec-Fetch-Site':'same-site',
+            'Sec-Fetch-Mode':'cors',
+            'Sec-Fetch-Dest':'empty',
+        }),
+    ]
     for label,path,params in tests:
-        try:
-            b,mime,final=get(urljoin(api,path),params=params,max_bytes=12*1024*1024)
-            txt=b.decode('utf-8','ignore')
-            print(f'EDELWEISS_API_RESPONSE {label} status=ok bytes={len(b)} mime={mime} final={final}',flush=True)
-            print(f'EDELWEISS_API_PAYLOAD {label} '+re.sub(r'\s+',' ',txt)[:50000],flush=True)
-        except Exception as exc:
-            print(f'EDELWEISS_API_ERROR {label} {(str(exc) or type(exc).__name__).splitlines()[0][:700]}',flush=True)
+        for profile,headers in profiles:
+            try:
+                b,mime,final=get(urljoin(api,path),params=params,max_bytes=12*1024*1024,
+                                 headers=headers)
+                txt=b.decode('utf-8','ignore')
+                print(f'EDELWEISS_API_RESPONSE {label} profile={profile} status=ok bytes={len(b)} mime={mime} final={final}',flush=True)
+                print(f'EDELWEISS_API_PAYLOAD {label} profile={profile} '+re.sub(r'\s+',' ',txt)[:50000],flush=True)
+            except Exception as exc:
+                print(f'EDELWEISS_API_ERROR {label} profile={profile} {(str(exc) or type(exc).__name__).splitlines()[0][:700]}',flush=True)
 
 if __name__=='__main__':main()
