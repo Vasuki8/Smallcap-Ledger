@@ -85,10 +85,14 @@ def dated_communication_source_kind(title,url):
     kind=classify(title,url)
     if kind not in ('market view','unitholder letter'):return None
     parsed=urlparse(url);path=unquote(parsed.path)
+    host=(parsed.hostname or '').lower()
     if re.fullmatch(r'/.*digital-?factsheet/[A-Za-z]+-?\d{4}/[^/]+\.html',path,re.I):
         return kind
-    if ((parsed.hostname or '').lower()=='insights.abakkusinvest.com'
+    if (host=='insights.abakkusinvest.com'
         and re.fullmatch(r'/market-outlook-[A-Za-z]+-20\d{2}/?',path,re.I)):
+        return kind
+    if (host=='cmsnew.bandhanmutual.com'
+        and re.fullmatch(r'/market_outlook/market-outlook-(?:equity|debt)-[A-Za-z]+-20\d{2}/?',path,re.I)):
         return kind
     return None
 
@@ -139,6 +143,10 @@ def explicit_publication_date(content,media_type=''):
     text=' '.join(soup.stripped_strings)
     m=re.search(r'Last\s+updated\s+on\s+(\d{1,2}\s+[A-Za-z]+\s+20\d{2})',text,re.I)
     if m:candidates.append(m.group(1))
+    # Bandhan's first-party CMS renders the post date in visible copy as
+    # "By <author> / September 11, 2026". Accept only that explicit marker.
+    m=re.search(r'\bBy\b[^/]{0,120}/\s*([A-Za-z]+\s+\d{1,2},\s*20\d{2})',text,re.I)
+    if m:candidates.append(m.group(1))
     for raw in candidates:
         value=str(raw).strip()
         if re.match(r'^20\d{2}-\d{2}-\d{2}T',value):value=value[:10]
@@ -146,6 +154,35 @@ def explicit_publication_date(content,media_type=''):
         except ValueError:continue
         if day<=date.today().isoformat():return day
     return None
+
+
+def bajaj_outlook_candidates(soup,source):
+    """Parse exact first-party outlook cards from Bajaj's dedicated Outlook catalog."""
+    if str(source.get('amc_match') or '').lower()!='bajaj':return []
+    parsed=urlparse(source.get('url') or '')
+    if ((parsed.hostname or '').lower()!='cobranding.bajajamc.com'
+        or parsed.path.lower()!='/marketing/cobrandingmarketingmaterial'
+        or parse_qs(parsed.query).get('LId')!=['51']):
+        return []
+    out=[];seen=set()
+    for card in soup.select('div.bx-main'):
+        heading=card.find('h5')
+        link=card.select_one('a.lnk[href]')
+        dated=card.select_one('span.dte')
+        title=heading.get_text(' ',strip=True) if heading else ''
+        target=link.get('href','').strip() if link else ''
+        raw_date=dated.get_text(' ',strip=True) if dated else ''
+        if not title or not target or not raw_date:continue
+        if classify(title,target)!='market view':continue
+        if not re.fullmatch(r'(?:EQUITY|DEBT|MARKET)\s+OUTLOOK(?:\s+.*)?',title,re.I):continue
+        if not target.startswith(('https://','http://')):continue
+        if not official_publication_url(target,'Bajaj'):continue
+        try:day=iso(raw_date)
+        except ValueError:continue
+        if day>date.today().isoformat():continue
+        key=(title,target,day)
+        if key not in seen:out.append(key);seen.add(key)
+    return out
 
 
 def same_fund_title(value,family):
@@ -511,6 +548,21 @@ def ingest_source(source):
                     AND kind IN ('source page','factsheet','disclosure')""",
                           (page_kind,page_id))
         doc_version(page_id,h)
+        # Bajaj's dedicated Outlook catalog renders the real title/date next to a
+        # generic "Download" link. Parse that card structure so the title, exact
+        # first-party viewer URL and explicit date stay bound together.
+        for title,target,published in bajaj_outlook_candidates(soup,source):
+            did=save_document(family,title,target,'market view','AMC',
+                              published=published,origin='AMC')
+            nlinks+=1
+            if attempted>=12:continue
+            attempted+=1
+            try:
+                can_crawl(target)
+                body,ch,typ=fetch(target)
+                doc_version(did,ch);narchive+=1
+            except Exception:
+                errors+=1
         if "hdfcfund.com/explore/" in url: hdfc(soup,family,url,h)
         from .amc_metrics import parse_page
         parse_page(content,family,url,h)
