@@ -34,6 +34,12 @@ TOKENS=(
     "/api/",
     "__NEXT_DATA__",
     "self.__next_f.push",
+    "leadership",
+    "marketInsight",
+    "investmentInsight",
+    "knowledge",
+    "article",
+    "api/",
 )
 
 
@@ -65,6 +71,37 @@ def contexts(raw):
             start=i+len(token)
             if len(out)>=40:return out
     return out
+
+
+def inspect_script(url):
+    item={"url":url}
+    try:
+        providers.can_crawl(url)
+        body,_,typ=providers.fetch(url,archive=False,max_bytes=12*1024*1024)
+        raw=body.decode("utf-8","replace")
+        item.update({
+            "ok":True,
+            "bytes":len(body),
+            "media_type":typ,
+            "contexts":contexts(raw),
+        })
+        candidates=[];seen=set()
+        for match in re.finditer(
+            r'''["']([^"'\\]{0,240}(?:leadership|market.?insight|investment.?insight|knowledge|api/)[^"'\\]{0,240})["']''',
+            raw,
+            re.I,
+        ):
+            value=match.group(1).strip()
+            if value in seen:continue
+            seen.add(value);candidates.append(value)
+            if len(candidates)>=120:break
+        item["candidate_strings"]=candidates
+    except Exception as exc:
+        item.update({
+            "ok":False,
+            "error":(str(exc) or type(exc).__name__).splitlines()[0][:1000],
+        })
+    return item
 
 
 def inspect(label,url):
@@ -106,14 +143,27 @@ def inspect(label,url):
 
 
 def main():
+    targets=[inspect(label,url) for label,url in TARGETS]
+    uti_scripts=[]
+    for item in targets:
+        if item.get("label")!="UTI" or item.get("url")!="https://www.utimf.com/learn":
+            continue
+        for src in item.get("scripts",[]):
+            parsed=urlparse(src)
+            if ((parsed.hostname or "").lower() not in ("www.utimf.com","utimf.com")
+                or not parsed.path.rsplit("/",1)[-1].startswith("main.")):
+                continue
+            uti_scripts.append(inspect_script(src))
     report={
         "prepared_at":db.now(),
         "mode":"read_only_non_fatal",
-        "targets":[inspect(label,url) for label,url in TARGETS],
+        "targets":targets,
+        "uti_scripts":uti_scripts,
         "notes":[
             "No response bytes are archived by this diagnostic.",
             "Raw contexts are bounded around known communication/API markers only.",
-            "Candidate links still require source-specific validation before collection.",
+            "UTI root main.*.js is inspected read-only for first-party content/API transport strings.",
+            "Candidate links/strings still require source-specific validation before collection.",
         ],
     }
     OUT.parent.mkdir(parents=True,exist_ok=True)
