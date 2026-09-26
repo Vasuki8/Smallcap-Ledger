@@ -25,7 +25,7 @@ def run():
         print('This AMC parser upgrade has already been applied; nightly discovery remains active.');return
     rows=json.loads((ROOT/'tracker/report_catalog.json').read_text())
     rows=[row for row in rows if amc_reports.parser_upgrade_applies(row['family'])]
-    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113','amc-reports-2026-09-v114','amc-reports-2026-09-v115','amc-reports-2026-09-v116','amc-reports-2026-09-v117','amc-reports-2026-09-v118','amc-reports-2026-09-v119','amc-reports-2026-09-v120','amc-reports-2026-09-v121','amc-reports-2026-09-v122','amc-reports-2026-09-v123','amc-reports-2026-09-v124','amc-reports-2026-09-v125','amc-reports-2026-09-v126','amc-reports-2026-09-v127','amc-reports-2026-09-v128','amc-reports-2026-09-v129'):rows=[]
+    if amc_reports.PARSER_VERSION in ('amc-reports-2026-09-v57','amc-reports-2026-09-v58','amc-reports-2026-09-v61','amc-reports-2026-09-v62','amc-reports-2026-09-v63','amc-reports-2026-09-v64','amc-reports-2026-09-v65','amc-reports-2026-09-v66','amc-reports-2026-09-v67','amc-reports-2026-09-v68','amc-reports-2026-09-v69','amc-reports-2026-09-v70','amc-reports-2026-09-v71','amc-reports-2026-09-v72','amc-reports-2026-09-v73','amc-reports-2026-09-v74','amc-reports-2026-09-v75','amc-reports-2026-09-v76','amc-reports-2026-09-v77','amc-reports-2026-09-v78','amc-reports-2026-09-v79','amc-reports-2026-09-v80','amc-reports-2026-09-v81','amc-reports-2026-09-v82','amc-reports-2026-09-v83','amc-reports-2026-09-v84','amc-reports-2026-09-v85','amc-reports-2026-09-v86','amc-reports-2026-09-v87','amc-reports-2026-09-v88','amc-reports-2026-09-v89','amc-reports-2026-09-v90','amc-reports-2026-09-v91','amc-reports-2026-09-v92','amc-reports-2026-09-v93','amc-reports-2026-09-v94','amc-reports-2026-09-v95','amc-reports-2026-09-v96','amc-reports-2026-09-v97','amc-reports-2026-09-v98','amc-reports-2026-09-v99','amc-reports-2026-09-v100','amc-reports-2026-09-v101','amc-reports-2026-09-v102','amc-reports-2026-09-v103','amc-reports-2026-09-v105','amc-reports-2026-09-v106','amc-reports-2026-09-v107','amc-reports-2026-09-v108','amc-reports-2026-09-v109','amc-reports-2026-09-v110','amc-reports-2026-09-v111','amc-reports-2026-09-v112','amc-reports-2026-09-v113','amc-reports-2026-09-v114','amc-reports-2026-09-v115','amc-reports-2026-09-v116','amc-reports-2026-09-v117','amc-reports-2026-09-v118','amc-reports-2026-09-v119','amc-reports-2026-09-v120','amc-reports-2026-09-v121','amc-reports-2026-09-v122','amc-reports-2026-09-v123','amc-reports-2026-09-v124','amc-reports-2026-09-v125','amc-reports-2026-09-v126','amc-reports-2026-09-v127','amc-reports-2026-09-v128','amc-reports-2026-09-v129','amc-reports-2026-09-v130'):rows=[]
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v50':
         current_catalog={
             'https://www.abakkusmf.com/uploads/Abakkus_Fund_Spectrum_Sep_2026_0d434fa086.pdf',
@@ -1183,6 +1183,34 @@ def run():
     # metrics collection. Parser upgrades only need to re-extract affected
     # archived/cataloged originals; do not crawl every AMC twice per push.
     checked,gaps=amc_reports.reprocess_archived()
+    if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v130':
+        from tracker import amc_discovery
+        family='Union Small Cap Fund';attempted=0;current=False;snap=None
+        try:
+            for found_family,url,title in amc_discovery.discover('Union'):
+                if found_family!=family:continue
+                attempted+=1
+                print(f'UNION_V130_CANDIDATE {attempted} {url} :: {title}',flush=True)
+                try:
+                    count=amc_discovery.store_report('Union',found_family,url,title)
+                    print(f'UNION_V130_PARSED {attempted} count={count}',flush=True)
+                except Exception as exc:
+                    print(f"::warning::Union v130 candidate {attempted}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+                snap=db.one("""SELECT p.as_of,p.complete,COUNT(h.id) positions,SUM(h.weight) weight
+                  FROM portfolios p LEFT JOIN holdings h ON h.snapshot_id=p.id
+                  WHERE p.family=? GROUP BY p.id ORDER BY p.as_of DESC,p.id DESC LIMIT 1""",(family,))
+                current=bool(snap and snap['as_of']>='2026-08-31' and snap['complete']
+                             and snap['positions']>=50 and abs(float(snap['weight'] or 0)-100)<.2)
+                if current:break
+            detail='none' if not snap else f'{snap["as_of"]}, {snap["positions"]} positions, {float(snap["weight"] or 0):.4f}% weight, complete={snap["complete"]}'
+            if current:
+                print(f'Union current complete portfolio verified: {detail}; attempted={attempted}',flush=True)
+            else:
+                print(f'::warning::Union current complete portfolio not recovered; latest={detail}; attempted={attempted}',flush=True)
+        except Exception as exc:
+            print(f"::warning::Union v130 discovery: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}",flush=True)
+        ok.append(current)
+
     if amc_reports.PARSER_VERSION=='amc-reports-2026-09-v129':
         expected_sources={
             'Edelweiss Small Cap Fund':'edelweiss_factsheet_september_2026_15092026193426.pdf',
