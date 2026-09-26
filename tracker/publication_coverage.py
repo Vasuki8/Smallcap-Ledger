@@ -34,6 +34,10 @@ _DOCUMENTED_ARCHIVE_LIMITATIONS={
         "code":"original_asset_blocked_by_robots_policy",
         "reason":"Kotak Monthly Market Update metadata and the first-party PDF URL are retained, but the original PDF remains link-only when Kotak robots policy disallows automatic retrieval.",
     },
+    "Samco Small Cap Fund":{
+        "code":"original_asset_blocked_by_robots_policy",
+        "reason":"Samco's retained Small Cap Fund scheme presentation is a qualifying AMC communication, but its media1.samco.in original remains link-only because automatic access is disallowed by robots policy.",
+    },
 }
 _COMMUNICATION_SOURCE=re.compile(
     r"newsletter|letter.*unitholder|unitholder.*letter|"

@@ -186,6 +186,9 @@ jobs:
         timeout-minutes: 40
         continue-on-error: true
         run: uv run --frozen python scripts/daily_update.py
+      - name: Repair Samco communication classification
+        timeout-minutes: 3
+        run: uv run --frozen python scripts/repair_samco_communication_classification.py
       - name: Repair retained unarchived AMC communications
         timeout-minutes: 15
         continue-on-error: true
