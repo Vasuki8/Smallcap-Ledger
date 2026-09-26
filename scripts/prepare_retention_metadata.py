@@ -172,7 +172,7 @@ def active_manifest_hashes():
     return manifest,packed
 
 
-def prepare(*,apply=False,report_path=None):
+def prepare(*,apply=False,report_path=None,delta_path=None,delta_markdown=None,candidate_delta=None):
     db.init()
     inventory=json.loads(INVENTORY.read_text(encoding='utf-8'))
     if not isinstance(inventory,list) or not inventory:
@@ -182,6 +182,7 @@ def prepare(*,apply=False,report_path=None):
         raise ValueError('Retention inventory contains duplicate hashes')
     archives={r['hash']:r for r in db.rows(
         'SELECT hash,path,bytes,media_type,first_seen FROM archives ORDER BY hash')}
+    new_hashes=set(archives)-set(audited)
     missing=sorted(set(audited)-set(archives))
     if missing:
         raise ValueError('Reviewed retention hash is absent from current archive metadata: '+missing[0])
@@ -195,29 +196,20 @@ def prepare(*,apply=False,report_path=None):
     protected_rows=[archives[h] for h in protected_hashes]
     protected_digest_before=digest_rows(protected_rows)
 
+    stored_before={r['hash']:r for r in db.rows(
+        'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
     if apply:
         stamp=db.now()
-        precedence={'unclassified':0,'link_only_candidate':1,
-                    'retain_latest_or_review':2,'retain_evidence':3}
-        current={r['hash']:r for r in db.rows(
-            'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
         records=[]
-        for h,row in audited.items():
-            reviewed=row['classification']
-            rescanned=current_items[h]['classification']
-            if reviewed not in db.RETENTION_CLASSIFICATIONS-{'unclassified'}:
-                raise ValueError('Invalid reviewed classification for '+h)
-            if rescanned not in db.RETENTION_CLASSIFICATIONS-{'unclassified'}:
-                raise ValueError('Invalid current retention classification for '+h)
-            existing=current[h]['classification']
-            strongest=max((reviewed,rescanned,existing),key=lambda x:precedence[x])
-            if strongest==existing and precedence[existing]>max(precedence[reviewed],precedence[rescanned]):
-                continue
-            reason=REASON
-            if precedence[rescanned]>precedence[reviewed]:
-                reason=('Reviewed audit classification strengthened by current dependency scan: '+
-                        ', '.join(current_items[h].get('reasons') or [rescanned])[:600])
-            records.append((strongest,reason,REVIEWED_AT,stamp,h))
+        for h in sorted(archives):
+            reviewed=audited.get(h)
+            item=current_items[h]
+            existing=stored_before[h]
+            target=choose_classification(reviewed,item,existing)
+            reason=classification_reason(target,reviewed,item,existing)
+            reviewed_at=(reviewed.get('reviewed_at') if reviewed and reviewed.get('reviewed_at')
+                         else (existing.get('reviewed_at') or REVIEWED_AT))
+            records.append((target,reason,reviewed_at,stamp,h))
         with db.connect() as c:
             c.executemany("""UPDATE archive_retention SET
               classification=?,reason=?,reviewed_at=?,updated_at=?
@@ -244,8 +236,18 @@ def prepare(*,apply=False,report_path=None):
     if invalid:raise ValueError('Unsafe archive retention state: '+invalid[0]['hash'])
     states=Counter()
     classes=Counter()
-    for row in db.rows('SELECT classification,binary_state FROM archive_retention'):
+    stored_after={r['hash']:r for r in db.rows(
+        'SELECT hash,classification,binary_state,reason,reviewed_at FROM archive_retention')}
+    for row in stored_after.values():
         states[row['binary_state']]+=1;classes[row['classification']]+=1
+
+    delta_report=None
+    if delta_path or delta_markdown or candidate_delta:
+        if not (delta_path and delta_markdown and candidate_delta):
+            raise ValueError('All delta output paths are required together')
+        delta_report=write_delta_review(
+            delta_path,delta_markdown,candidate_delta,new_hashes,current_items,
+            stored_before,stored_after,archives)
 
     manifest,packed=active_manifest_hashes()
     protected_manifest_ok=None
@@ -253,7 +255,8 @@ def prepare(*,apply=False,report_path=None):
     if packed is not None:
         protected_manifest_ok=set(protected_hashes)<=packed
         if not protected_manifest_ok:raise ValueError('Active source packs do not cover all protected evidence')
-        candidate_hashes={h for h,row in audited.items() if row['classification']=='link_only_candidate'}
+        candidate_hashes={h for h,row in stored_after.items()
+                          if row['classification']=='link_only_candidate'}
         candidate_manifest_ok=candidate_hashes<=packed
         if states['metadata_only']==0 and not candidate_manifest_ok:
             raise ValueError('Zero-deletion rollout lost a reviewed link-only candidate from active packs')
@@ -269,8 +272,11 @@ def prepare(*,apply=False,report_path=None):
             row['classification']=='link_only_candidate' for row in audited.values()),
         'historical_candidates_strengthened_by_current_scan':sum(
             row['classification']=='link_only_candidate'
-            and current_items[h]['classification']!='link_only_candidate'
+            and choose_classification(row,current_items[h],stored_before[h])!='link_only_candidate'
             for h,row in audited.items()),
+        'post_audit_hashes_reviewed':len(new_hashes),
+        'post_audit_delta':({k:v for k,v in delta_report.items() if k!='rows'}
+                            if delta_report else None),
         'current_dependency_scan_missing_hashes':len(current_missing),
         'current_archive_hashes':len(archives),
         'new_unclassified_hashes':classes['unclassified'],
@@ -312,5 +318,10 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     p.add_argument('--apply',action='store_true')
     p.add_argument('--report',type=Path)
+    p.add_argument('--delta-report',type=Path)
+    p.add_argument('--delta-markdown',type=Path)
+    p.add_argument('--candidate-delta',type=Path)
     args=p.parse_args()
-    prepare(apply=args.apply,report_path=args.report)
+    prepare(apply=args.apply,report_path=args.report,
+            delta_path=args.delta_report,delta_markdown=args.delta_markdown,
+            candidate_delta=args.candidate_delta)
