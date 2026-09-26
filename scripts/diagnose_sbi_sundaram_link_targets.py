@@ -1,84 +1,84 @@
-"""Focused read-only probe for SBI/Sundaram current communication link targets."""
+"""Focused read-only probe for SBI monthly-outlook transport and Sundaram knowledge-hub frontend data."""
 from pathlib import Path
 import re,sys
-from urllib.parse import urljoin
+from urllib.parse import urljoin,urlparse
 from bs4 import BeautifulSoup
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from tracker import providers
 
-TARGETS=(
-    ("SBI","https://www.sbimf.com/","Monthly Presentation on Economy & Markets - July 2026"),
-    ("SBI","https://www.sbimf.com/cio-desk","Monthly Presentation on Economy & Markets"),
-    ("Sundaram","https://www.sundarammutual.com/","Outlook September 2026"),
-    ("Sundaram","https://www.sundarammutual.com/knowledge-hub","Outlook September 2026"),
-    ("Sundaram","https://blog.sundarammutual.com/","Outlook September 2026"),
+SBI="https://www.sbimf.com/monthly-outlook-videos"
+SUNDARAM="https://www.sundarammutual.com/knowledge-hub"
+TOKENS=(
+    "outlook september 2026",
+    "outlook august 2026",
+    "outlook-june-2026",
+    "knowledge hub",
+    "knowledge-hub",
+    "blog.sundarammutual.com/documents",
+    "api/",
+    "outlook",
 )
 
-def attrs(node):
-    out={}
-    for k,v in getattr(node,"attrs",{}).items():
-        if k in ("href","src","onclick","data-href","data-url","data-link","data-file","data-pdf","target","class","id"):
-            out[k]=v
-    return out
+def probe_sbi():
+    print("COMM9_START SBI",SBI,flush=True)
+    providers.can_crawl(SBI)
+    body,_,typ=providers.fetch(SBI,archive=False,max_bytes=12*1024*1024)
+    soup=BeautifulSoup(body,"html.parser")
+    print("COMM9_HTTP SBI",len(body),typ,flush=True)
+    for a in soup.find_all("a",href=True):
+        href=urljoin(SBI,a.get("href",""))
+        text=a.get_text(" ",strip=True)
+        combined=(text+" "+href).lower()
+        if "monthly market outlook" in combined:
+            parent=a.parent
+            print("COMM9_SBI_ITEM",
+                  "text="+repr(text[:700]),
+                  "href="+href,
+                  "parent="+repr(parent.get_text(" ",strip=True)[:1200] if parent else ""),
+                  "html="+repr(str(parent)[:6000] if parent else ""),flush=True)
 
-def main():
-    for amc,url,needle in TARGETS:
-        print("COMM8_START",amc,url,"needle="+needle,flush=True)
+def probe_sundaram():
+    print("COMM9_START Sundaram",SUNDARAM,flush=True)
+    providers.can_crawl(SUNDARAM)
+    body,_,typ=providers.fetch(SUNDARAM,archive=False,max_bytes=12*1024*1024)
+    soup=BeautifulSoup(body,"html.parser")
+    print("COMM9_HTTP Sundaram",len(body),typ,flush=True)
+
+    scripts=[]
+    for tag in soup.find_all("script"):
+        src=tag.get("src")
+        raw=(tag.string or tag.get_text() or "")
+        if src:
+            u=urljoin(SUNDARAM,src)
+            if (urlparse(u).hostname or "").endswith("sundarammutual.com"):
+                scripts.append(u)
+                print("COMM9_SUNDARAM_SCRIPT_SRC",u,flush=True)
+        if raw:
+            low=raw.lower()
+            if any(t in low for t in TOKENS):
+                print("COMM9_SUNDARAM_INLINE",repr(raw[:12000]),flush=True)
+
+    for u in list(dict.fromkeys(scripts))[:40]:
         try:
-            providers.can_crawl(url)
-            body,_,typ=providers.fetch(url,archive=False,max_bytes=12*1024*1024)
-            soup=BeautifulSoup(body,"html.parser")
-            print("COMM8_HTTP",amc,url,len(body),typ,flush=True)
-            matches=[]
-            for node in soup.find_all(string=lambda x: x and needle.lower() in str(x).lower()):
-                matches.append(node)
-            print("COMM8_MATCHES",amc,url,len(matches),flush=True)
-            for mi,node in enumerate(matches[:8]):
-                parent=node.parent
-                for level in range(7):
-                    if parent is None:break
-                    links=[]
-                    for a in parent.find_all("a",href=True):
-                        links.append({
-                            "text":a.get_text(" ",strip=True)[:300],
-                            "href":urljoin(url,a.get("href","")),
-                            "attrs":attrs(a),
-                        })
-                    buttons=[]
-                    for b in parent.find_all(["button","div"],limit=80):
-                        at=attrs(b)
-                        if any(k.startswith("data-") for k in at) or "onclick" in at:
-                            buttons.append({"text":b.get_text(" ",strip=True)[:300],"attrs":at})
-                    print("COMM8_NODE",amc,url,f"match={mi}",f"level={level}",
-                          "tag="+str(parent.name),
-                          "attrs="+repr(attrs(parent)),
-                          "text="+repr(parent.get_text(" ",strip=True)[:1600]),
-                          "links="+repr(links[:20]),
-                          "buttons="+repr(buttons[:20]),
-                          "html="+repr(str(parent)[:14000]),flush=True)
-                    parent=parent.parent
-
-            # Global relevant hrefs/data attributes even if the visible label is elsewhere.
-            for a in soup.find_all("a",href=True):
-                text=a.get_text(" ",strip=True)
-                href=urljoin(url,a.get("href",""))
-                combined=(text+" "+href).lower()
-                if any(k in combined for k in ("outlook","economy","markets","cio","presentation")):
-                    print("COMM8_LINK",amc,url,repr(text[:500]),href,repr(attrs(a)),flush=True)
-            decoded=body.decode("utf-8","ignore")
-            low=decoded.lower()
-            for token in ("outlook september 2026","monthly presentation on economy","outlook-june-2026","outlook-september"):
-                start=0
-                for _ in range(8):
-                    i=low.find(token,start)
-                    if i<0:break
-                    print("COMM8_RAW",amc,url,"token="+token,"index="+str(i),
-                          repr(decoded[max(0,i-5000):i+10000]),flush=True)
-                    start=i+len(token)
+            raw,_,stype=providers.fetch(u,archive=False,max_bytes=8*1024*1024)
         except Exception as exc:
-            print("COMM8_ERROR",amc,url,(str(exc) or type(exc).__name__).splitlines()[0][:1200],flush=True)
+            print("COMM9_SUNDARAM_SCRIPT_ERROR",u,(str(exc) or type(exc).__name__)[:500],flush=True)
+            continue
+        text=raw.decode("utf-8","ignore")
+        low=text.lower()
+        if not any(t in low for t in TOKENS):continue
+        print("COMM9_SUNDARAM_SCRIPT_MATCH",u,len(raw),stype,flush=True)
+        for token in TOKENS:
+            start=0
+            for _ in range(12):
+                i=low.find(token,start)
+                if i<0:break
+                print("COMM9_SUNDARAM_CONTEXT",u,"token="+token,"index="+str(i),
+                      repr(text[max(0,i-3500):i+7000]),flush=True)
+                start=i+len(token)
 
 if __name__=="__main__":
-    main()
+    probe_sbi()
+    probe_sundaram()
