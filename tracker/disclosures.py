@@ -558,6 +558,14 @@ def ingest_source(source):
         and url=="https://www.kotakmf.com/monthly-market-update"):
         from .kotak_communications import ingest as kotak_ingest
         return kotak_ingest()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="pgim"
+        and url=="https://www.pgimindia.com/mutual-funds"):
+        from .pgim_communications import ingest as pgim_ingest
+        return pgim_ingest()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="quant mutual"
+        and url=="https://www.quantmutual.com/downloads/investment_outlook"):
+        from .quant_communications import ingest as quant_ingest
+        return quant_ingest()["detail"]
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
