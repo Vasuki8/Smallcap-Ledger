@@ -1,5 +1,101 @@
 # Source-retention audit — proposal only
 
+## Post-audit 271-hash review completed — all binaries still retained
+
+The **271 hashes added after the original 2,519-hash review are now conservatively classified**. No source binary was deleted or marked metadata-only.
+
+Implementation PR **#157** merged as commit `325ab240a9e7fe0629dcf65b970b1ba2273d2b3c`. Production workflow **#517 / run 36207892234** completed successfully at **2026-09-26T01:18:37Z** with **365 passing tests** and GitHub Pages deployment.
+
+### Generated-artifact self-protection regression fixed
+
+The previous readiness run had incorrectly promoted historical hashes because generated review files such as:
+
+- `RETENTION-PROPOSED-MANIFEST.json`
+- `RETENTION-MIGRATION-CANDIDATES.json`
+- `RETENTION-REPLACEMENT-SIMULATION.md`
+
+contain archive hashes by design. The conservative scanner treated those literal hashes as independent evidence dependencies.
+
+Those generated retention-review artifacts are now excluded from literal-hash dependency scanning, just like the original `SOURCE-RETENTION-*` generated inventories.
+
+The metadata preparation logic was also hardened:
+
+- the original reviewed classification is the minimum historical floor;
+- the corrected current dependency scan may strengthen that floor;
+- an independently reviewed/refetched current state may remain stronger;
+- a prior stronger state created only by the audit-import/current-scan automation can be corrected downward when the corrected scan no longer supports it;
+- binary state remains unchanged.
+
+This repairs the false self-protection without weakening genuine evidence or refetch promotions.
+
+### Review result for the 271 post-audit hashes
+
+Authoritative review artifacts:
+
+- `docs/SOURCE-RETENTION-DELTA.json`
+- `docs/SOURCE-RETENTION-DELTA.md`
+- `docs/SOURCE-RETENTION-NEW-CANDIDATES.json`
+
+Review time: **2026-09-26T01:17:22Z**.
+
+| Classification | Files | Raw bytes |
+| --- | ---: | ---: |
+| retain_evidence | 67 | 147,277,130 |
+| retain_latest_or_review | 199 | 89,172,029 |
+| link_only_candidate | 5 | 3,851,376 |
+| unclassified | 0 | 0 |
+
+Every one of the 271 remains **binary-retained**.
+
+The five new link-only candidates are a **separate candidate delta** and are explicitly **not merged into the existing approval-gated historical migration proposal**.
+
+New candidate hosts/pages are:
+
+- SAMCO Mutual Fund statutory-disclosure page;
+- Baroda BNP Paribas September 2026 Small Cap e-factsheet page;
+- Kotak Small Cap September 2026 factsheet HTML;
+- Kotak Small Cap July 2026 factsheet HTML;
+- Quantum Small Cap Fund page.
+
+Each is classified as a superseded discovery response without an identified financial/replay dependency. Raw bytes across these five: **3,851,376**.
+
+### Current full retention state
+
+Production readiness at **2026-09-26T01:17:23Z** now reports **2,790 / 2,790 binaries retained**:
+
+- `retain_evidence`: **1,051 files / 1,439,403,320 bytes**
+- `retain_latest_or_review`: **1,038 files / 556,155,122 bytes**
+- `link_only_candidate`: **701 files / 407,261,761 bytes**
+- `unclassified`: **0**
+
+Files actually deleted: **0**.  
+Bytes actually deleted: **0**.  
+Metadata-only binaries: **0**.  
+Source-pack repack performed: **false**.  
+Rollback/legacy assets retired: **false**.
+
+All non-retention table fingerprints remained unchanged during classification, and active source packs still cover every retained hash.
+
+### Historical simulation proposal is now stale
+
+After removing generated-artifact self-protection, the corrected scan shows only **4** of the original 700 historical candidates are currently strengthened. Therefore:
+
+- original historical reviewed candidates: **700**
+- currently eligible historical candidates: **696**
+- separate new post-audit candidates: **5**
+- total currently classified link-only candidates: **701**
+
+The previously simulated **695-hash** historical proposal is therefore no longer the current execution set. **Do not execute it.**
+
+The five new candidates also must not be silently appended to that prior proposal; they remain a separate review delta.
+
+### Next safe retention step
+
+Before any owner approval can be acted on, rerun the isolated replacement-pack simulation against exactly the **696 currently eligible hashes from the original 700-hash historical review**, explicitly excluding the 5 new delta candidates.
+
+That refresh remains simulation-only: no release upload/delete, no binary-state change, no active-manifest switch, no source-file deletion and no legacy-ZIP retirement.
+
+
 ## Isolated replacement-pack simulation completed — no production mutation
 
 The storage-reduction proposal has now been simulated end-to-end against an exact active checkpoint. **No production binary state changed and no release asset was uploaded, deleted, retired or switched.**
