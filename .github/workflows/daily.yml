@@ -124,7 +124,12 @@ jobs:
       - name: Recover any interrupted collection status
         run: uv run --frozen python -c "from tracker import db; db.init(recover=True)"
       - name: Prepare retention metadata without deleting binaries
-        run: uv run --frozen python scripts/prepare_retention_metadata.py --apply --report deployment/retention-readiness.json
+        run: >-
+          uv run --frozen python scripts/prepare_retention_metadata.py --apply
+          --report deployment/retention-readiness.json
+          --delta-report docs/SOURCE-RETENTION-DELTA.json
+          --delta-markdown docs/SOURCE-RETENTION-DELTA.md
+          --candidate-delta docs/SOURCE-RETENTION-NEW-CANDIDATES.json
       - name: Compact redundant database indexing
         run: uv run --frozen python scripts/compact_database.py --apply --report deployment/storage-layout-v1.json
       - name: Check archive and financial calculations
