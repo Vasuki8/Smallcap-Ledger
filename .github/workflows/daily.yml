@@ -64,6 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
+      - name: Diagnose PGIM and Quant communication sources
+        if: github.event_name == 'push'
+        timeout-minutes: 6
+        run: uv run --frozen python scripts/diagnose_pgim_quant_communications.py
       - name: Apply Kotak and Mirae communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
