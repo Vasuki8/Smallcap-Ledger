@@ -80,16 +80,26 @@ def current_publication(content):
         })
     if not rows:
         raise ValueError("Kotak Monthly Market Update exposed no valid monthly outlook rows")
-    rows.sort(key=lambda x:(x["published_at"],x["id"]),reverse=True)
-    current=rows[0]
 
     source=str(state.get("_sfilelink") or "").strip()
-    expected=DOWNLOAD_PREFIX+f'{current["id"]}/{current["year"]}/{current["month"]}'
-    if source!=expected:
-        raise ValueError("Kotak current download link does not match the latest published report identity")
     parsed=urlparse(source)
     if parsed.scheme!="https" or (parsed.hostname or "").lower()!="www.kotakmf.com":
         raise ValueError("Kotak current market update uses an unexpected download host")
+    match=re.fullmatch(
+        r"/kotakmf/reportupload/download/Monthly/(\d+)/(20\d{2})/(\d{1,2})",
+        parsed.path,
+        re.I,
+    )
+    if not match:
+        raise ValueError("Kotak current download link changed format")
+    identity=tuple(int(x) for x in match.groups())
+    matches=[
+        row for row in rows
+        if (row["id"],row["year"],row["month"])==identity
+    ]
+    if len(matches)!=1:
+        raise ValueError("Kotak current download link does not uniquely identify a published report")
+    current=matches[0]
     current["url"]=source
     return current
 
