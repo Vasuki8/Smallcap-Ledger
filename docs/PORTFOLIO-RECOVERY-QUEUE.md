@@ -1,6 +1,6 @@
 # Portfolio recovery queue
 
-Prepared: 2026-09-26T23:04:08+00:00
+Prepared: 2026-09-26T23:42:31+00:00
 
 **Read-only:** this queue ranks retained evidence only. It does not fetch sources, retry blocked hosts, estimate missing weights, or mutate portfolio data.
 
@@ -10,7 +10,7 @@ Items: **6** · actionable now: **0** · source changes: **0** · stale partial:
 
 | Rank | Fund | State | Action | Source change | Reporting date | Limitation | Exact source / recovery URL | Last retained evidence | Retry condition |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Union Small Cap Fund | missing | retry_after_source_change | none | Gap | upstream_source_unavailable | https://www.unionmf.com/about-us/downloads/monthly-portfolio | source page Partial · 2026-09-26T23:02:09+00:00 | Retry only after Union's official Downloads/portfolio transport is reachable from the production collection network or an exact first-party attachment is exposed. |
+| 1 | Union Small Cap Fund | missing | retry_after_source_change | none | Gap | upstream_source_unavailable | https://www.unionmf.com/about-us/downloads/monthly-portfolio | source page Partial · 2026-09-26T23:40:33+00:00 | Retry only after Union's official Downloads/portfolio transport is reachable from the production collection network or an exact first-party attachment is exposed. |
 | 2 | Bajaj Finserv Small Cap Fund | partial_stale | retry_after_source_change | none | 2026-07-31 | named_subset_only | https://www.bajajamc.com/downloads | fetch ok · 2026-09-25T22:08:55+00:00; source page Checked · 2026-09-25T22:09:01+00:00 | Retry only when the AMC Downloads transport becomes usable from the production runner or an exact current monthly Small Cap attachment URL is exposed first-party. |
 | 3 | Edelweiss Small Cap Fund | partial_current | retry_after_source_change | none | 2026-08-31 | named_subset_only | https://www.edelweissmf.com/statutory/portfolio-of-schemes | fetch ok · 2026-09-25T22:00:45+00:00; source page Checked · 2026-09-26T12:14:46+00:00 | Retry only when the statutory portfolio route/static application transport becomes reachable again or it exposes an exact monthly portfolio attachment. |
 | 4 | Bandhan Small Cap Fund | partial_current | requires_more_precise_amc_disclosure | none | 2026-08-31 | non_numeric_source_weight | https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/51a82e61-bandhan-small-cap-fund-31-august-2026.xlsx | fetch ok · 2026-09-25T21:52:53+00:00; source page Checked · 2026-09-26T06:20:11+00:00 | Revisit only when the AMC publishes exact numeric NAV weights for positions currently disclosed with a less-than-0.01% marker. |
