@@ -73,7 +73,8 @@ def current_publication(content):
             continue
         if not title or not published or not (2020<=year<=date.today().year and 0<=month<=11):
             continue
-        if providers.classify(title,"")!="market view":continue
+        if not re.fullmatch(r"Monthly\s+Outlook\s+PPT\b.*20\d{2}",title,re.I):
+            continue
         rows.append({
             "id":ident,"year":year,"month":month,
             "title":title,"published_at":published,
