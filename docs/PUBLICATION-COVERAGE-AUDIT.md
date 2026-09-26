@@ -1,28 +1,28 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-26T15:50:31+00:00
+Prepared: 2026-09-26T15:58:30+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
 ## Summary
 
-- Funds with at least one retained AMC communication: **27 / 36**.
-- Funds with no retained AMC communication: **9**.
-- Retained communication documents: **216**; archived originals: **167**.
-- Market/newsletter/CIO/product-view documents: **194**; letters to unitholders: **22**.
+- Funds with at least one retained AMC communication: **29 / 36**.
+- Funds with no retained AMC communication: **7**.
+- Retained communication documents: **228**; archived originals: **179**.
+- Market/newsletter/CIO/product-view documents: **206**; letters to unitholders: **22**.
 - Communication documents with an explicit published date: **51**.
-- Funds with a registered communication-oriented source page: **21**.
+- Funds with a registered communication-oriented source page: **23**.
 
 ## Repair priorities
 
 | Priority | Repair | Actionable | Affected funds | Reason |
 | ---: | --- | --- | ---: | --- |
-| 2 | discover_first_party_communication_sources | yes | 9 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
+| 2 | discover_first_party_communication_sources | yes | 7 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
 | 3 | repair_unarchived_communication_documents | yes | 5 | AMC communication metadata is retained but one or more original document versions are not archived. |
 
 ### Affected funds
 
-- **discover_first_party_communication_sources:** Pgim India Small Cap Fund, Quant Small Cap Fund, SBI Small Cap Fund, Sundaram Small Cap Fund, Tata Small Cap Fund, The Wealth Company Small Cap Fund, Trustmf Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
+- **discover_first_party_communication_sources:** SBI Small Cap Fund, Sundaram Small Cap Fund, Tata Small Cap Fund, The Wealth Company Small Cap Fund, Trustmf Small Cap Fund, UTI Small Cap Fund, Union Small Cap Fund
 - **repair_unarchived_communication_documents:** Franklin India Small Cap Fund, Kotak Small Cap Fund, LIC Mf Small Cap Fund, Nippon India Small Cap Fund, Samco Small Cap Fund
 
 ## Per-fund audit
@@ -54,8 +54,8 @@ Prepared: 2026-09-26T15:50:31+00:00
 | Mirae Asset Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Motilal Oswal Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 2 | publication_date_missing |
 | Nippon India Small Cap Fund | 103 | 103 | 0 | 75 | 0 | Gap | 1 | communication_document_not_archived, publication_date_missing |
-| Pgim India Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
-| Quant Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
+| Pgim India Small Cap Fund | 5 | 5 | 0 | 5 | 0 | Gap | 1 | publication_date_missing |
+| Quant Small Cap Fund | 7 | 7 | 0 | 7 | 0 | Gap | 1 | publication_date_missing |
 | Quantum Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
 | SBI Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | Samco Small Cap Fund | 7 | 1 | 6 | 2 | 0 | Gap | 0 | communication_document_not_archived, publication_date_missing |

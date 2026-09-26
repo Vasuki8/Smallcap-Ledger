@@ -1,25 +1,49 @@
 {
-  "reviewed_at": "2026-09-26T15:49:33+00:00",
+  "reviewed_at": "2026-09-26T15:57:33+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 327,
+  "new_hashes_reviewed": 341,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_latest_or_review": 207,
-    "retain_evidence": 115,
+    "retain_evidence": 127,
+    "retain_latest_or_review": 209,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_latest_or_review": 90005178,
-    "retain_evidence": 215284802,
+    "retain_evidence": 230791597,
+    "retain_latest_or_review": 90714937,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
   "new_link_only_candidate_raw_bytes": 3851376,
   "migration_set_policy": "delta_not_merged_into_approved_695_hash_proposal",
   "rows": [
+    {
+      "hash": "0070353407ff1303f5adfdc6771ca79ccca6e76c391693d6d6f2925030defbde",
+      "bytes": 455223,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:56:19+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/VLRT-OUTLOOK-JULY-AUGUST2021.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/VLRT-OUTLOOK-JULY-AUGUST2021.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/VLRT-OUTLOOK-JULY-AUGUST2021.pdf"
+      ]
+    },
     {
       "hash": "029c30dd1186de499287b1f88f21aa04bb1068f01b62a33952bb6de2b17651f6",
       "bytes": 293854,
@@ -430,6 +454,30 @@
       ],
       "urls": [
         "https://www.tatamutualfund.com/compensation-disclosure"
+      ]
+    },
+    {
+      "hash": "136c758c9178d66265014ed408033f6ac7973082e96b0d5485cd32ce890169cf",
+      "bytes": 634345,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:35+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.pgimindia.com/mutual-funds"
+      ],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds"
       ]
     },
     {
@@ -1448,6 +1496,30 @@
       ]
     },
     {
+      "hash": "2ead5e851c03713a5b8986410df586ed1cb33775a505e76c15459bc4b5d6adfa",
+      "bytes": 2980593,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:55:56+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/Predictive%20Analytics_June%202023_Volume%203_Issue%202.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive%20Analytics_June%202023_Volume%203_Issue%202.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive%20Analytics_June%202023_Volume%203_Issue%202.pdf"
+      ]
+    },
+    {
       "hash": "301496b513ee602764ee8a8436b23f6870bae3a3a3471780b967bb5ef748f797",
       "bytes": 15037,
       "media_type": "text/html; charset=UTF-8",
@@ -2419,6 +2491,30 @@
       ]
     },
     {
+      "hash": "4a4b5dac848a4f523b012d12e0d785fd7ddc3614c55741e5cfa770b64a2ddbe0",
+      "bytes": 2981608,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:56:13+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_September_2021_Volume_1_Issue_2.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_September_2021_Volume_1_Issue_2.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_September_2021_Volume_1_Issue_2.pdf"
+      ]
+    },
+    {
       "hash": "4addec8bf8fb9052a9f6091860f2968ef47b3a1f3d3b8f7563e6ff515b316e52",
       "bytes": 605871,
       "media_type": "text/html; charset=utf-8",
@@ -3210,6 +3306,30 @@
       ]
     },
     {
+      "hash": "64858be6509f24ada6c339e86762fcb2a3bf334631abeaed553ae4a1a594cb1d",
+      "bytes": 3998035,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:56:07+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_June_2022_Volume_2_Issue_1.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_June_2022_Volume_2_Issue_1.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_June_2022_Volume_2_Issue_1.pdf"
+      ]
+    },
+    {
       "hash": "6657282ed93881a0dd6a6002f79c336234e976cf42a22302cce5553a9c0d769c",
       "bytes": 19259,
       "media_type": "text/html; charset=utf-8",
@@ -3528,6 +3648,30 @@
       ],
       "urls": [
         "https://mf.nipponindiaim.com/InvestorServices/FactsheetsDocuments/FORTNIGHTLY-PORTFOLIO-JAN-2024.xls"
+      ]
+    },
+    {
+      "hash": "71ad0ce0d6c16b537f5657fc95d173952e24ffb48cf02f8feffffcefc02a3bc3",
+      "bytes": 426160,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:37+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Uncertainty-does-not-equal-risk",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Uncertainty-does-not-equal-risk"
+      ],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Uncertainty-does-not-equal-risk"
       ]
     },
     {
@@ -4499,6 +4643,30 @@
       ]
     },
     {
+      "hash": "8c105781dc55d8153d976d48e898eea9498e0d33330211ac04d3a8f170bc04a8",
+      "bytes": 425901,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:40+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Money-for-a-Life-in-Motion",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Money-for-a-Life-in-Motion"
+      ],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Money-for-a-Life-in-Motion"
+      ]
+    },
+    {
       "hash": "8d315d6113f0cf8e17b7826aa2ca23239b44d39d757332c87feb2bec012596cd",
       "bytes": 153121,
       "media_type": "text/html; charset=utf-8",
@@ -4839,6 +5007,30 @@
       ]
     },
     {
+      "hash": "9aa1762f3a1a0cf821d3caf619f255b21582037ed4e33069b1c56e2e9ffebd8c",
+      "bytes": 425459,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:42+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/The-Power-of-Discipline",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/The-Power-of-Discipline"
+      ],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/The-Power-of-Discipline"
+      ]
+    },
+    {
       "hash": "9bd20bd8f20d2cc6e460618aab4223db007ff4ca9a87faf991066dab63038140",
       "bytes": 1451528,
       "media_type": "application/pdf",
@@ -5026,6 +5218,30 @@
       ],
       "urls": [
         "https://www.boimf.in/siddisclosures/load-structure"
+      ]
+    },
+    {
+      "hash": "9fd1f24d2491461fb0b6bc26b9a61844d8f78acb1ca117f598db79f054337acf",
+      "bytes": 171985,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:56:22+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/VLRT_Outlook_May_June_2021.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/VLRT_Outlook_May_June_2021.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/VLRT_Outlook_May_June_2021.pdf"
       ]
     },
     {
@@ -5221,6 +5437,30 @@
       ]
     },
     {
+      "hash": "a5cd4df4e712bd938111d0d873508ecc7fd4e094d5c437e9a482193d50ab527c",
+      "bytes": 1763381,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:56:01+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_February_2023_Volume_3_Issue_1.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_February_2023_Volume_3_Issue_1.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_February_2023_Volume_3_Issue_1.pdf"
+      ]
+    },
+    {
       "hash": "a5e5a15573316ec9dde67aa99e8c4c9a3dc637298bc48e0b8c3906e3a4263750",
       "bytes": 543583,
       "media_type": "text/html",
@@ -5262,6 +5502,30 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.axismf.com/cms/get-scheme-documents"
+      ]
+    },
+    {
+      "hash": "a73a13b4d734aec996f67e116cdf4fa9d9ae90776615e601c141473ae89d3a64",
+      "bytes": 1026570,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T15:56:30+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_February_2021_Volume_1_Issue%20no_1.pdf",
+      "host": "quantmutual.com",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_February_2021_Volume_1_Issue%20no_1.pdf"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/Admin/Pdf/Predictive_Analytics_February_2021_Volume_1_Issue%20no_1.pdf"
       ]
     },
     {
@@ -5311,6 +5575,30 @@
       ],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/the-macro-sphere-monetary-policy-how-far-have-we-come"
+      ]
+    },
+    {
+      "hash": "a8396f0dcb6098104c3ed3a5b8f1efa2afeeed1507d7e9327772831d4b875082",
+      "bytes": 75414,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:50+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/downloads/investment_outlook",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.quantmutual.com/downloads/investment_outlook"
+      ],
+      "urls": [
+        "https://www.quantmutual.com/downloads/investment_outlook"
       ]
     },
     {
@@ -5559,6 +5847,30 @@
       "latest_for_urls": [],
       "urls": [
         "https://partner.growwmf.in/mutual-funds/groww-small-cap-fund-direct-growth"
+      ]
+    },
+    {
+      "hash": "afbb6222d8500d791648ac433317628f6cedf651541a0d4954122c5d48935835",
+      "bytes": 425684,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:47+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/The-Most-Critical-aspect-of-investor-decision-making",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/The-Most-Critical-aspect-of-investor-decision-making"
+      ],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/The-Most-Critical-aspect-of-investor-decision-making"
       ]
     },
     {
@@ -7067,6 +7379,30 @@
       ],
       "urls": [
         "https://www.heliosmf.in/downloads"
+      ]
+    },
+    {
+      "hash": "e3775f1b1711f2a1d404f441744bd0f377cde575f35200c8278575be67cdd81d",
+      "bytes": 426196,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T15:55:44+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Navigating-Geopolitical-Uncertainty-Staying-the-Course",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Navigating-Geopolitical-Uncertainty-Staying-the-Course"
+      ],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Navigating-Geopolitical-Uncertainty-Staying-the-Course"
       ]
     },
     {

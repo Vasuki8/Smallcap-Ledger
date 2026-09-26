@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T15:50:31+00:00",
+  "built_at": "2026-09-26T15:58:30+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,18 +11,18 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 27,
-    "funds_without_amc_communications": 9,
-    "communication_documents": 216,
-    "archived_communication_documents": 167,
-    "market_views": 194,
+    "funds_with_amc_communications": 29,
+    "funds_without_amc_communications": 7,
+    "communication_documents": 228,
+    "archived_communication_documents": 179,
+    "market_views": 206,
     "unitholder_letters": 22,
     "documents_with_published_date": 51,
-    "funds_with_registered_communication_sources": 21,
+    "funds_with_registered_communication_sources": 23,
     "issue_counts": {
       "communication_document_not_archived": 5,
-      "no_amc_communications_collected": 9,
-      "publication_date_missing": 21
+      "no_amc_communications_collected": 7,
+      "publication_date_missing": 23
     }
   },
   "repair_priorities": [
@@ -31,8 +31,6 @@
       "code": "discover_first_party_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "Pgim India Small Cap Fund",
-        "Quant Small Cap Fund",
         "SBI Small Cap Fund",
         "Sundaram Small Cap Fund",
         "Tata Small Cap Fund",
@@ -707,31 +705,49 @@
     {
       "family": "Pgim India Small Cap Fund",
       "amc": "PGIM India Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 5,
+      "archived_communication_count": 5,
+      "market_view_count": 5,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "latest_observed_at": "2026-09-26T15:55:47+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "PGIM",
+          "url": "https://www.pgimindia.com/mutual-funds",
+          "label": "CEO Letters / Outlooks & Economy",
+          "status": "Checked",
+          "last_checked": "2026-09-26T15:55:47+00:00",
+          "detail": "5 PGIM India CEO/outlook insight articles retained; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {
       "family": "Quant Small Cap Fund",
       "amc": "quant Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 7,
+      "archived_communication_count": 7,
+      "market_view_count": 7,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "latest_observed_at": "2026-09-26T15:56:30+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "quant Mutual",
+          "url": "https://www.quantmutual.com/downloads/investment_outlook",
+          "label": "Investment Outlook",
+          "status": "Checked",
+          "last_checked": "2026-09-26T15:56:30+00:00",
+          "detail": "7 quant Investment Outlook PDFs retained; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {
