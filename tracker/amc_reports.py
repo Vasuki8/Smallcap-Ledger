@@ -6,7 +6,7 @@ from datetime import date
 from urllib.parse import urlparse
 from . import db
 
-PARSER_VERSION='amc-reports-2026-09-v130'
+PARSER_VERSION='amc-reports-2026-09-v131'
 # Parser upgrades are full-catalog by default. Versions listed here changed
 # only specific family parsers and can safely avoid replaying unrelated source
 # binaries. A future unlisted version automatically falls back to all families.
@@ -120,6 +120,7 @@ PARSER_UPGRADE_FAMILIES={
         'Edelweiss Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund'
     }),
     'amc-reports-2026-09-v130':frozenset({'Union Small Cap Fund'}),
+    'amc-reports-2026-09-v131':frozenset({'ICICI Prudential Small Cap Fund'}),
 }
 
 def parser_upgrade_applies(family):
@@ -203,6 +204,9 @@ def should_reprocess_existing(family,url,h=None):
         # Union's primary single-scheme route is unreachable from GitHub Actions.
         # Replay only Union PDFs and try reviewed official fallback/alternate routes.
         return family=='Union Small Cap Fund' and path.endswith('.pdf')
+    if PARSER_VERSION=='amc-reports-2026-09-v131':
+        # v131 retrieves ICICI's current first-party monthly ZIP directly.
+        return False
     if PARSER_VERSION=='amc-reports-2026-09-v46':
         # v46 backfills benchmark identity from reviewed catalog sources only.
         # The catalog pass materializes those exact originals; do not replay the
@@ -511,6 +515,9 @@ def extract(content,family,url,h,*,parser_version=None):
         elif content.startswith(b'PK') and path.endswith('.zip') and family=='DSP Small Cap Fund':
             from .structured_reports import dsp_zip
             dsp_zip(content,family,url,h)
+        elif content.startswith(b'PK') and path.endswith('.zip') and family=='ICICI Prudential Small Cap Fund':
+            from .structured_reports import icici_zip
+            icici_zip(content,family,url,h)
         elif content.startswith((b'PK',b'\xd0\xcf')) and path.endswith(('.xls','.xlsx')):
             disclosures.spreadsheet(content,family,url,h)
         elif path.endswith('.xml'):
