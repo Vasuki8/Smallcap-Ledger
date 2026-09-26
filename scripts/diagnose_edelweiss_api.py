@@ -11,6 +11,7 @@ sys.path.insert(0,str(ROOT))
 from tracker import providers
 
 PAGE='https://www.edelweissmf.com/statutory'
+FALLBACK_BUNDLE='https://www.edelweissmf.com/main.0411e4933dfdb2cb.js'
 
 def get(url,params=None,max_bytes=20*1024*1024):
     host=(urlparse(url).hostname or '').lower()
@@ -24,15 +25,25 @@ def get(url,params=None,max_bytes=20*1024*1024):
     return body,r.headers.get('content-type',''),str(r.url)
 
 def main():
-    raw,_,_=get(PAGE)
-    soup=BeautifulSoup(raw,'html.parser')
     main_url=None
-    for tag in soup.find_all('script'):
-        src=tag.get('src')
-        if src and re.search(r'/main\.[A-Za-z0-9]+\.js(?:[?#]|$)',src,re.I):
-            main_url=urljoin(PAGE,src);break
-    if not main_url:raise ValueError('main bundle missing')
-    body,_,_=get(main_url,max_bytes=8*1024*1024)
+    try:
+        raw,_,_=get(PAGE)
+        soup=BeautifulSoup(raw,'html.parser')
+        for tag in soup.find_all('script'):
+            src=tag.get('src')
+            if src and re.search(r'/main\.[A-Za-z0-9]+\.js(?:[?#]|$)',src,re.I):
+                main_url=urljoin(PAGE,src);break
+        print('EDELWEISS_API_PAGE status=ok bundle='+(main_url or 'missing'),flush=True)
+    except Exception as exc:
+        print('EDELWEISS_API_PAGE status=unavailable detail='+
+              (str(exc) or type(exc).__name__).splitlines()[0][:500],flush=True)
+    main_url=main_url or FALLBACK_BUNDLE
+    try:
+        body,_,_=get(main_url,max_bytes=8*1024*1024)
+    except Exception as exc:
+        print('EDELWEISS_API_BUNDLE_ERROR '+
+              (str(exc) or type(exc).__name__).splitlines()[0][:700],flush=True)
+        return
     js=body.decode('utf-8','ignore')
     env=re.search(r'45312:\(.*?const i=\{(.{0,5000}?)\}\s*[,;]',js,re.S)
     scope=env.group(1) if env else js
@@ -45,9 +56,15 @@ def main():
         # fallback: find the URL directly adjacent to production/URL keys
         m=re.search(r'production:!0,URL:"(https://[^"]+)"',js)
         api=m.group(1) if m else None
-    if not api:raise ValueError('Edelweiss API base URL not resolved from live bundle')
+    if not api:
+        print('EDELWEISS_API_BASE unresolved',flush=True)
+        return
     api=api.rstrip('/')+'/'
     print('EDELWEISS_API_BASE '+api,flush=True)
+    api_host=(urlparse(api).hostname or '').lower()
+    if not (api_host.endswith('edelweissmf.com') or 'edelweiss' in api_host):
+        print('EDELWEISS_API_BASE_UNVERIFIED_HOST '+api_host,flush=True)
+        return
 
     tests=[
       ('menus','mf/statutory-menus',{'type':'Statutory','fundType':'MF'}),
