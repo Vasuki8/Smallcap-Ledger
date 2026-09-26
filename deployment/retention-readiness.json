@@ -1,5 +1,5 @@
 {
-  "prepared_at": "2026-09-26T01:52:17+00:00",
+  "prepared_at": "2026-09-26T01:56:11+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
@@ -7,7 +7,7 @@
   "historical_candidates_strengthened_by_current_scan": 4,
   "post_audit_hashes_reviewed": 271,
   "post_audit_delta": {
-    "reviewed_at": "2026-09-26T01:52:16+00:00",
+    "reviewed_at": "2026-09-26T01:56:11+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
     "new_hashes_reviewed": 271,
@@ -94,7 +94,7 @@
     },
     "documents": {
       "rows": 2027,
-      "sha256": "21723ecdcccff37c9617fd73426f36b284e477086a3df05905a471c36fde5cd3"
+      "sha256": "1e63df237751a9ed3c44b23d09c4b5836c498469640ea088dea2c60a1c6973af"
     },
     "fetches": {
       "rows": 8379,
@@ -140,7 +140,7 @@
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-26T01:49:53+00:00",
+  "active_checkpoint_created_at": "2026-09-26T01:53:01+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,
