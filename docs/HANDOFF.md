@@ -82,8 +82,6 @@ The portfolio recovery queue remains separately blocked at **6 items / 0 actiona
 
 ## Previous completed batch: recover ICICI Prudential complete monthly portfolios
 
-## Previous completed batch: recover ICICI Prudential complete monthly portfolios
-
 **ICICI Prudential Small Cap Fund is no longer in the incomplete-portfolio recovery queue.** The tracker now retains two consecutive, first-party, complete month-end portfolio snapshots from ICICI Prudential's public downloads service, with exact source URLs, source hashes, reporting dates and constituent weights.
 
 ### What changed
