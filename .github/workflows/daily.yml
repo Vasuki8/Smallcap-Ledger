@@ -68,6 +68,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 10
         run: uv run --frozen python scripts/refresh_pgim_quant_communications.py
+      - name: Apply SBI and Sundaram communication source recovery
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/refresh_sbi_sundaram_communications.py
       - name: Apply Kotak and Mirae communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
