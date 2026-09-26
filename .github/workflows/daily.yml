@@ -64,6 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
+      - name: Diagnose retained AMC communication evidence
+        if: github.event_name == 'push'
+        timeout-minutes: 3
+        run: uv run --frozen python scripts/diagnose_communication_evidence.py
       - name: Apply ICICI monthly portfolio recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
