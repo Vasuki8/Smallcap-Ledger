@@ -23,6 +23,8 @@ FAMILIES=(
 )
 PER_FAMILY_LIMIT=40
 REPORT=ROOT/"deployment"/"communication-archive-repair.json"
+LIC_FAMILY="LIC Mf Small Cap Fund"
+LIC_REFERER="https://www.licmf.com/insights/market-update"
 
 
 def missing(family):
@@ -67,6 +69,16 @@ def _looks_valid(url,body,media_type):
     return ("html" in typ and b"<" in low) or b"<html" in low
 
 
+def _response_debug(body,media_type):
+    sample=(body or b"")[:240]
+    return {
+        "media_type":str(media_type or ""),
+        "bytes":len(body or b""),
+        "prefix_hex":sample[:32].hex(),
+        "text_prefix":sample.decode("utf-8","replace"),
+    }
+
+
 def repair(fetch_fn=providers.fetch,can_crawl_fn=providers.can_crawl):
     db.init()
     report={"families":{},"repaired":0,"failed":0,"skipped":0}
@@ -78,12 +90,32 @@ def repair(fetch_fn=providers.fetch,can_crawl_fn=providers.can_crawl):
             if not official_publication_url(url,amc):
                 skipped.append({"url":url,"reason":"not a reviewed first-party AMC URL"})
                 continue
-            try:
-                request_url=canonical_fetch_url(url)
-                can_crawl_fn(request_url)
-                body,_,typ=fetch_fn(request_url,archive=False,max_bytes=20*1024*1024)
-                if not _looks_valid(url,body,typ):
-                    raise ValueError("response did not validate as an expected document/page")
+            request_url=canonical_fetch_url(url)
+            attempts=[None]
+            if family==LIC_FAMILY:
+                attempts.append({"Referer":LIC_REFERER})
+            success=None;attempt_details=[]
+            for headers in attempts:
+                try:
+                    can_crawl_fn(request_url)
+                    kwargs={"archive":False,"max_bytes":20*1024*1024}
+                    if headers:kwargs["headers"]=headers
+                    body,_,typ=fetch_fn(request_url,**kwargs)
+                    if not _looks_valid(url,body,typ):
+                        detail=_response_debug(body,typ)
+                        detail["headers"]=headers or {}
+                        detail["error"]="response did not validate as an expected document/page"
+                        attempt_details.append(detail)
+                        continue
+                    success=(body,typ,headers or {})
+                    break
+                except Exception as exc:
+                    attempt_details.append({
+                        "headers":headers or {},
+                        "error":(str(exc) or type(exc).__name__).splitlines()[0][:300],
+                    })
+            if success:
+                body,typ,used_headers=success
                 h=db.archive(body,typ)
                 with db.connect() as conn:
                     conn.execute(
@@ -91,11 +123,16 @@ def repair(fetch_fn=providers.fetch,can_crawl_fn=providers.can_crawl):
                         (request_url,db.now(),"ok",h),
                     )
                 providers.doc_version(row["id"],h)
-                repaired.append({"url":url,"request_url":request_url,"hash":h})
-            except Exception as exc:
+                repaired.append({
+                    "url":url,"request_url":request_url,"hash":h,
+                    "used_referer":bool(used_headers.get("Referer")),
+                })
+            else:
                 failed.append({
                     "url":url,
-                    "error":(str(exc) or type(exc).__name__).splitlines()[0][:300],
+                    "request_url":request_url,
+                    "error":attempt_details[-1]["error"] if attempt_details else "no fetch attempts completed",
+                    "attempts":attempt_details,
                 })
         remaining=len(missing(family))
         report["families"][family]={
