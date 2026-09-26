@@ -17,7 +17,7 @@ The owner requested unnecessary/redundant database storage cleanup. The four NAV
 The legacy cumulative ZIP `state-35791406887-1.zip` (**1,087,514,828 bytes**) remains untouched: its retirement action was blocked, so do not claim this storage was reclaimed. Source-retention policy and fund scope are unchanged. After storage publication is verified, resume the previously documented portfolio source-recovery task below.
 
 
-Updated: 2026-09-26, after isolated retention replacement-pack simulation.
+Updated: 2026-09-26, after post-audit retention hash classification and self-protection repair.
 
 
 
@@ -25,6 +25,123 @@ Updated: 2026-09-26, after isolated retention replacement-pack simulation.
 
 
 
+
+## Latest completed batch: classify 271 post-audit retention hashes and repair self-protection
+
+**All 271 hashes added after the original retention audit are now classified conservatively, every binary remains retained, and the generated-review-artifact self-protection regression is fixed.**
+
+PR **#157** merged as commit `325ab240a9e7fe0629dcf65b970b1ba2273d2b3c`.
+
+### Root-cause repair
+
+The prior simulation artifacts contained complete archive-hash lists. Because the retention scanner deliberately protects literal hash dependencies in code/handoff files, it accidentally treated generated review outputs as new evidence and promoted historical candidates to `retain_evidence`.
+
+Generated retention outputs are now excluded from that dependency class:
+
+- `RETENTION-PROPOSED-*`
+- `RETENTION-MIGRATION-*`
+- `RETENTION-REPLACEMENT-*`
+- the existing `SOURCE-RETENTION-*` exclusions remain.
+
+Regression tests prove these generated files no longer self-protect the hashes they describe.
+
+Retention preparation now derives state from:
+
+1. the original reviewed classification as a historical minimum floor;
+2. the corrected current conservative dependency scan;
+3. only genuinely independent stored promotions/reviews, such as a later refetch becoming current evidence.
+
+An automated stronger state caused only by the prior scan can therefore be repaired when the corrected scan no longer supports it. Protected evidence and genuine refetch promotions remain protected.
+
+### 271-hash post-audit review
+
+Production review time: **2026-09-26T01:17:22Z**.
+
+Results:
+
+- **67 retain_evidence** — **147,277,130 raw bytes**
+- **199 retain_latest_or_review** — **89,172,029 raw bytes**
+- **5 link_only_candidate** — **3,851,376 raw bytes**
+- **0 unclassified**
+
+Every binary remains `retained`.
+
+Review artifacts:
+
+- `docs/SOURCE-RETENTION-DELTA.json`
+- `docs/SOURCE-RETENTION-DELTA.md`
+- `docs/SOURCE-RETENTION-NEW-CANDIDATES.json`
+
+The five new candidates remain a **separate proposal delta** and are not merged into the earlier migration set.
+
+### Full current retention state
+
+`deployment/retention-readiness.json` at **2026-09-26T01:17:23Z** reports:
+
+- archive hashes: **2,790**
+- binary retained: **2,790**
+- binary metadata-only: **0**
+- retain_evidence: **1,051**
+- retain_latest_or_review: **1,038**
+- link_only_candidate: **701**
+- unclassified: **0**
+- files actually deleted: **0**
+- bytes actually deleted: **0**
+- source-pack repack: **false**
+- rollback/legacy retirement: **false**
+- protected archive metadata unchanged: **true**
+- all non-retention table fingerprints unchanged: **true**
+- current dependency scan missing hashes: **0**
+
+### Production verification
+
+Production workflow **#517 / run 36207892234** completed successfully at **2026-09-26T01:18:37Z**:
+
+- production checkpoint restore passed;
+- corrected retention classification preparation passed;
+- all normal source-upgrade steps passed;
+- database compaction passed;
+- **365 tests passed**;
+- generated site/download validation passed;
+- cumulative-history publication passed;
+- build-status recording passed;
+- GitHub Pages deployment passed.
+
+Status commit: `1012b753d8d10bebbefe6c8c141908e0d75cbf96`.
+
+Pages artifact **10894692627** is **234,247,457 bytes** with digest `sha256:b2fd805da9aef40e380e063577a2068bc26b112f99d915ef812e0fabd7a0826f`.
+
+Core fund coverage remains **36/36 AUM, fee, TER, BER and benchmark identity**. Portfolio recovery remains **7 queued items / 0 actionable_now / 0 source changes detected**.
+
+### Important effect on the previous simulation
+
+The corrected scan currently strengthens only **4** of the original 700 historical candidates.
+
+Therefore the current historical candidate set is **696**, not the previously simulated 695.
+
+Separately, this batch found **5 new post-audit candidates**.
+
+The old 695-hash migration proposal is now **stale and must not be executed**. The five new candidates must also remain separate until individually reviewed/approved.
+
+### Next backend task
+
+**Refresh the isolated replacement-pack simulation against exactly the 696 currently eligible hashes from the original historical 700-hash review. Do not include the 5 new post-audit candidates.**
+
+The refreshed simulation should:
+
+1. start from the latest exact active checkpoint;
+2. derive the original-review subset from `SOURCE-RETENTION-INVENTORY.json`;
+3. intersect that set with corrected current retention state;
+4. assert exactly **696** historical candidates before simulating;
+5. explicitly prove the 5 new delta candidates are excluded;
+6. regenerate exact replacement-pack counts and compressed savings;
+7. validate protected evidence, restore/materialization, replay, archive/download behavior and full static-site generation;
+8. preserve current active packs/database as rollback;
+9. perform **0 production mutations**.
+
+Only that refreshed simulation should be considered for any later owner approval. The existing 695-hash simulation artifacts remain historical evidence only.
+
+If a portfolio source-change watch becomes actionable first, pause storage work and resume that first-party data repair.
 
 ## Latest completed batch: isolated retention replacement-pack simulation
 
