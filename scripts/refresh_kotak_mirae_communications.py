@@ -82,6 +82,7 @@ def run():
         and kotak_doc["versions"]>=1
         and kotak_body.startswith(b"%PDF")
         and mirae_doc and mirae_doc["kind"]=="market view"
+        and mirae_doc["title"]=="Annual Outlook 2025"
         and mirae_doc["published_at"] is None
         and mirae_doc["versions"]>=1
         and mirae_body.startswith(b"%PDF")
