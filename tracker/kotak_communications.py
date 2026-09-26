@@ -113,20 +113,32 @@ def ingest(fetch_fn=providers.fetch):
     providers.doc_version(source,h)
 
     row=current_publication(content)
-    providers.can_crawl(row["url"])
-    body,ch,_=fetch_fn(row["url"],archive=True,max_bytes=20*1024*1024)
-    if not body.startswith(b"%PDF"):
-        raise ValueError("Kotak current Monthly Market Update returned non-PDF content")
     did=providers.save_document(
         FAMILY,row["title"],row["url"],"market view","AMC",
         published=row["published_at"],origin="AMC")
-    providers.doc_version(did,ch)
+
+    archived=False
+    try:
+        providers.can_crawl(row["url"])
+    except ValueError as exc:
+        if "robots policy" not in str(exc).lower():
+            raise
+    else:
+        body,ch,_=fetch_fn(row["url"],archive=True,max_bytes=20*1024*1024)
+        if not body.startswith(b"%PDF"):
+            raise ValueError("Kotak current Monthly Market Update returned non-PDF content")
+        providers.doc_version(did,ch)
+        archived=True
+
     return {
         "retained":1,
+        "archived":1 if archived else 0,
         "current":row,
         "detail":(
-            f"1 Kotak current Monthly Market Update PDF retained; "
+            f"1 Kotak current Monthly Market Update retained; "
             f"title={row['title']}; published_at={row['published_at']}; "
-            "0 download/parser gaps"
+            +("original PDF archived; " if archived else
+              "original PDF link-only because robots policy disallows automatic retrieval; ")
+            +"0 download/parser gaps"
         ),
     }
