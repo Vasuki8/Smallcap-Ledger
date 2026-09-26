@@ -586,6 +586,10 @@ def ingest_source(source):
         and url=="https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes"):
         from .union_communications import ingest as union_ingest
         return union_ingest()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="uti"
+        and url=="https://www.utimf.com/learn"):
+        from .uti_communications import ingest as uti_ingest
+        return uti_ingest()["detail"]
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
