@@ -1,5 +1,5 @@
 {
-  "simulated_at": "2026-09-26T00:45:19+00:00",
+  "simulated_at": "2026-09-26T01:33:33+00:00",
   "mode": "isolated_replacement_pack_simulation",
   "repository": "Vasuki8/Smallcap-Ledger",
   "queue_summary": {
@@ -13,12 +13,12 @@
       "requires_more_precise_amc_disclosure": 3
     }
   },
-  "active_manifest_created_at": "2026-09-25T22:17:18+00:00",
-  "active_database_asset": "database-36193281824-1.zip",
+  "active_manifest_created_at": "2026-09-26T01:21:17+00:00",
+  "active_database_asset": "database-36208080152-1.zip",
   "current_archive_hashes": 2790,
   "historical_reviewed_candidate_count": 700,
-  "candidate_count": 695,
-  "excluded_reviewed_candidate_count": 5,
+  "candidate_count": 696,
+  "excluded_reviewed_candidate_count": 4,
   "excluded_reviewed_candidates": [
     {
       "hash": "253034400136ade59abf2fca7e30b62f32321354d86409e9c4207db578c699a3",
@@ -27,16 +27,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
-    },
-    {
-      "hash": "36a9f18e7fc8b5d20c68a10233b507e154be1a9e89e7e53a254e3dbacbdc6de8",
-      "reviewed_classification": "link_only_candidate",
-      "current_classification": "retain_latest_or_review",
-      "current_binary_state": "retained",
-      "current_reason": "Promoted because identical bytes were fetched/imported again as current source evidence",
-      "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T21:54:10+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     },
     {
       "hash": "c1bcc40fcde7fff3750de27466f525ba5086af6677764714c8885f4de0581fc1",
@@ -45,7 +36,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     },
     {
       "hash": "c4f7f3175440571a0cca59c067c30ad4158290a88e4760b35ab2886a9a53592c",
@@ -54,7 +45,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     },
     {
       "hash": "d5ea0bd6ba6e79572fe37b7137a0c0aabfdcece05593da116e8ea1a15eeb36d7",
@@ -63,12 +54,22 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     }
   ],
-  "retained_hash_count": 2095,
-  "affected_pack_count": 49,
-  "replacement_pack_count": 24,
+  "post_audit_delta_candidate_count": 5,
+  "post_audit_delta_overlap_count": 0,
+  "post_audit_delta_excluded": true,
+  "post_audit_delta_hashes": [
+    "35f08cfabbf3964fcf9c907840d24a5e29bfe4d1fc5c1c837e76771e42506b53",
+    "52afb521c57586f8d39084f730526dd11dd092154cb9cb57f9721410efa251e4",
+    "9d7650af1cfa6b04a75cc0a66dc2c78097046ebfcd2956d959a43b8515d3a3ef",
+    "c7b57b9b7bd70418339fb4c0de362eb8290530ed606a259c5a955c34caef7f8b",
+    "dcce82dc892b8a68dbd915b2101d2c94f200ebfd688b1f22c042f455350e2b38"
+  ],
+  "retained_hash_count": 2094,
+  "affected_pack_count": 50,
+  "replacement_pack_count": 25,
   "fully_retired_pack_count": 25,
   "affected_active_packs": [
     "sources-2026-09-p001-6cd248e8dee29327.zip",
@@ -119,6 +120,7 @@
     "sources-2026-09-p001-ce2c1fc559dcc2bd.zip",
     "sources-2026-09-p001-3c7d49b80ee8530b.zip",
     "sources-2026-09-p001-8f4b1e2b676d2e0e.zip",
+    "sources-2026-09-p001-47e7c3737ad53a15.zip",
     "sources-2026-09-p001-b7dd7d0d076551f8.zip"
   ],
   "fully_retired_active_packs": [
@@ -149,17 +151,17 @@
     "sources-2026-09-p001-3c7d49b80ee8530b.zip"
   ],
   "savings": {
-    "candidate_raw_bytes": 403318035,
-    "candidate_compressed_payload_bytes": 34139810,
+    "candidate_raw_bytes": 403410385,
+    "candidate_compressed_payload_bytes": 34144511,
     "current_source_pack_asset_bytes": 1540491329,
-    "proposed_source_pack_asset_bytes": 1506186949,
-    "source_pack_asset_savings_bytes": 34304380,
-    "current_database_asset_bytes": 7919692,
-    "proposed_database_asset_bytes": 7920662,
-    "current_active_set_bytes": 1548411021,
-    "proposed_active_set_bytes": 1514107611,
-    "active_set_savings_bytes": 34303410,
-    "replacement_assets_to_upload_bytes_before_any_retirement": 1275531882,
+    "proposed_source_pack_asset_bytes": 1506182012,
+    "source_pack_asset_savings_bytes": 34309317,
+    "current_database_asset_bytes": 7920465,
+    "proposed_database_asset_bytes": 7921495,
+    "current_active_set_bytes": 1548411794,
+    "proposed_active_set_bytes": 1514103507,
+    "active_set_savings_bytes": 34308287,
+    "replacement_assets_to_upload_bytes_before_any_retirement": 1275702717,
     "release_bytes_reclaimed_before_retirement": 0
   },
   "validation": {
@@ -167,7 +169,7 @@
     "proposed_manifest_exact_coverage": true,
     "proposed_manifest_duplicate_hashes": 0,
     "protected_evidence_retained": true,
-    "protected_evidence_count": 984,
+    "protected_evidence_count": 1051,
     "materialization": {
       "metadata_only_candidate_blocked": true,
       "retained_replacement_hash_materialized": "4455d880efb3baf5274c87b35c69963eb9cb1d5afc8cebf4007021fe219921b3"
@@ -182,7 +184,7 @@
       "metadata_only_document_version_hidden": "319c15c28a8337f1356539a3e32301889d132647df312e5e16a7e59fb4641b0e"
     },
     "site": {
-      "site_bytes": 344503712,
+      "site_bytes": 344504353,
       "saved_archive_downloads": 137,
       "metadata_only_candidates_published": 0
     }

@@ -1,12 +1,16 @@
 {
-  "simulated_at": "2026-09-26T00:45:19+00:00",
+  "simulated_at": "2026-09-26T01:33:33+00:00",
   "classification": "link_only_candidate",
   "proposed_binary_state": "metadata_only",
   "historical_reviewed_candidate_count": 700,
-  "current_eligible_candidate_count": 695,
-  "excluded_reviewed_candidate_count": 5,
-  "count": 695,
-  "raw_bytes": 403318035,
+  "current_eligible_candidate_count": 696,
+  "excluded_reviewed_candidate_count": 4,
+  "post_audit_delta_candidate_count": 5,
+  "post_audit_delta_overlap_count": 0,
+  "post_audit_delta_excluded": true,
+  "post_audit_delta_hashes_sha256": "e9142fc531f049f87e469d0b0065cb3465310554e82fbac094698838f019e486",
+  "count": 696,
+  "raw_bytes": 403410385,
   "excluded_reviewed_candidates": [
     {
       "hash": "253034400136ade59abf2fca7e30b62f32321354d86409e9c4207db578c699a3",
@@ -15,16 +19,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
-    },
-    {
-      "hash": "36a9f18e7fc8b5d20c68a10233b507e154be1a9e89e7e53a254e3dbacbdc6de8",
-      "reviewed_classification": "link_only_candidate",
-      "current_classification": "retain_latest_or_review",
-      "current_binary_state": "retained",
-      "current_reason": "Promoted because identical bytes were fetched/imported again as current source evidence",
-      "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T21:54:10+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     },
     {
       "hash": "c1bcc40fcde7fff3750de27466f525ba5086af6677764714c8885f4de0581fc1",
@@ -33,7 +28,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     },
     {
       "hash": "c4f7f3175440571a0cca59c067c30ad4158290a88e4760b35ab2886a9a53592c",
@@ -42,7 +37,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     },
     {
       "hash": "d5ea0bd6ba6e79572fe37b7137a0c0aabfdcece05593da116e8ea1a15eeb36d7",
@@ -51,7 +46,7 @@
       "current_binary_state": "retained",
       "current_reason": "Reviewed audit classification strengthened by current dependency scan: latest_saved_response_for_at_least_one_url, no_strictly_newer_saved_response_for_every_url",
       "current_reviewed_at": "2026-09-25",
-      "current_updated_at": "2026-09-25T22:16:34+00:00"
+      "current_updated_at": "2026-09-26T01:20:39+00:00"
     }
   ],
   "candidates": [
@@ -1429,6 +1424,15 @@
       "current_pack": "sources-2026-09-p001-d69bf77851258744.zip",
       "host": "mutualfund.adityabirlacapital.com",
       "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-error-disclosures",
+      "kind": "html",
+      "classification": "link_only_candidate"
+    },
+    {
+      "hash": "36a9f18e7fc8b5d20c68a10233b507e154be1a9e89e7e53a254e3dbacbdc6de8",
+      "bytes": 92350,
+      "current_pack": "sources-2026-09-p001-47e7c3737ad53a15.zip",
+      "host": "sbimf.com",
+      "primary_url": "https://www.sbimf.com/ajaxcall/CMS/GetSchemePortfolioSheets",
       "kind": "html",
       "classification": "link_only_candidate"
     },
