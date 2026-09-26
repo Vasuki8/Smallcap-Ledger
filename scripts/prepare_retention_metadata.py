@@ -25,6 +25,115 @@ from scripts import audit_source_retention as retention_audit
 INVENTORY=ROOT/'docs'/'SOURCE-RETENTION-INVENTORY.json'
 REVIEWED_AT='2026-09-25'
 REASON='Classification imported from reviewed 2026-09-25 source-retention audit; binary state unchanged'
+SCAN_REASON_PREFIX='Reviewed audit classification strengthened by current dependency scan: '
+PRECEDENCE={'unclassified':0,'link_only_candidate':1,
+            'retain_latest_or_review':2,'retain_evidence':3}
+
+
+def independently_reviewed_existing(row):
+    """Return a stored class only when it did not come from our audit importer."""
+    if not row or row['classification']=='unclassified':
+        return None
+    reason=row.get('reason') or ''
+    if reason==REASON or reason.startswith(SCAN_REASON_PREFIX):
+        return None
+    return row['classification']
+
+
+def choose_classification(reviewed,current_item,existing):
+    choices=[current_item['classification']]
+    if reviewed:choices.append(reviewed['classification'])
+    trusted=independently_reviewed_existing(existing)
+    if trusted:choices.append(trusted)
+    return max(choices,key=lambda x:PRECEDENCE[x])
+
+
+def classification_reason(target,reviewed,current_item,existing):
+    trusted=independently_reviewed_existing(existing)
+    reviewed_class=reviewed['classification'] if reviewed else 'unclassified'
+    if trusted==target and PRECEDENCE[trusted]>=PRECEDENCE[current_item['classification']] \
+            and PRECEDENCE[trusted]>=PRECEDENCE[reviewed_class]:
+        return existing.get('reason') or 'Existing independently reviewed retention state'
+    if PRECEDENCE[current_item['classification']]>PRECEDENCE[reviewed_class]:
+        return SCAN_REASON_PREFIX+', '.join(current_item.get('reasons') or [current_item['classification']])[:600]
+    if reviewed:
+        return REASON
+    return 'Fresh post-audit classification from current conservative dependency scan: '+ \
+           ', '.join(current_item.get('reasons') or [current_item['classification']])[:600]
+
+
+def write_delta_review(path,markdown_path,candidate_path,new_hashes,current_items,before,after,archives):
+    rows=[]
+    for h in sorted(new_hashes):
+        item=current_items[h]
+        rows.append({
+            'hash':h,
+            'bytes':archives[h]['bytes'],
+            'media_type':archives[h].get('media_type'),
+            'first_seen':archives[h].get('first_seen'),
+            'classification_before':before[h]['classification'],
+            'classification_after':after[h]['classification'],
+            'binary_state_after':after[h]['binary_state'],
+            'primary_url':item.get('primary_url'),
+            'host':item.get('host'),
+            'kind':item.get('kind'),
+            'reasons':item.get('reasons') or [],
+            'evidence_reasons':item.get('evidence_reasons') or [],
+            'latest_for_urls':item.get('latest_for_urls') or [],
+            'urls':item.get('urls') or [],
+        })
+    classes=Counter(x['classification_after'] for x in rows)
+    class_bytes=Counter()
+    for x in rows:class_bytes[x['classification_after']]+=int(x['bytes'] or 0)
+    candidates=[x for x in rows if x['classification_after']=='link_only_candidate']
+    report={
+        'reviewed_at':db.now(),
+        'scope':'post_original_audit_hashes_only',
+        'original_reviewed_inventory_hashes':len(json.loads(INVENTORY.read_text(encoding='utf-8'))),
+        'new_hashes_reviewed':len(rows),
+        'binary_state_policy':'all_retained',
+        'files_deleted':0,
+        'bytes_deleted':0,
+        'classifications':dict(classes),
+        'classification_bytes':dict(class_bytes),
+        'new_link_only_candidates':len(candidates),
+        'new_link_only_candidate_raw_bytes':sum(int(x['bytes'] or 0) for x in candidates),
+        'migration_set_policy':'delta_not_merged_into_approved_695_hash_proposal',
+        'rows':rows,
+    }
+    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+    candidate_payload={
+        'reviewed_at':report['reviewed_at'],
+        'scope':'new_hash_delta_only',
+        'count':len(candidates),
+        'raw_bytes':report['new_link_only_candidate_raw_bytes'],
+        'production_binary_state_changes':0,
+        'merged_into_existing_695_hash_proposal':False,
+        'candidates':candidates,
+    }
+    cp=Path(candidate_path);cp.parent.mkdir(parents=True,exist_ok=True)
+    cp.write_text(json.dumps(candidate_payload,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+    lines=[
+        '# Source-retention post-audit delta review','',
+        f"Reviewed **{len(rows)}** hashes added after the original audited inventory.",
+        '**Every binary remains retained. Deleted files/bytes: 0 / 0.**','',
+        '| Classification | Files | Raw bytes |','| --- | ---: | ---: |',
+    ]
+    for name in ('retain_evidence','retain_latest_or_review','link_only_candidate','unclassified'):
+        lines.append(f"| {name} | {classes.get(name,0):,} | {class_bytes.get(name,0):,} |")
+    lines += [
+        '',
+        f"New link-only candidates: **{len(candidates)} files / {report['new_link_only_candidate_raw_bytes']:,} raw bytes**.",
+        'These are a separate review delta and are not merged into the existing approval-gated 695-hash migration proposal.',
+        '',
+        'Full per-hash review: SOURCE-RETENTION-DELTA.json.',
+        'Candidate-only delta: SOURCE-RETENTION-NEW-CANDIDATES.json.',
+        ''
+    ]
+    mp=Path(markdown_path);mp.parent.mkdir(parents=True,exist_ok=True)
+    mp.write_text('\n'.join(lines),encoding='utf-8')
+    return report
 
 
 def digest_rows(rows):
