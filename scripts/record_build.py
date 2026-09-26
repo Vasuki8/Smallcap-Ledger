@@ -134,7 +134,8 @@ git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md',
     'docs/RETENTION-PROPOSED-MANIFEST.json','docs/RETENTION-MIGRATION-CANDIDATES.json',
     'docs/RETENTION-REPLACEMENT-SIMULATION.md',
     'docs/SOURCE-RETENTION-DELTA.json','docs/SOURCE-RETENTION-DELTA.md',
-    'docs/SOURCE-RETENTION-NEW-CANDIDATES.json')
+    'docs/SOURCE-RETENTION-NEW-CANDIDATES.json',
+    'deployment/communication-transport-wealth-uti.json')
 if git('diff','--cached','--quiet',check=False).returncode:
     git('commit','-m','Record daily collection status and coverage [skip ci]')
     git('pull','--rebase','origin','main')
