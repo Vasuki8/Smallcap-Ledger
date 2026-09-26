@@ -56,12 +56,15 @@ def parse_article(content,url,title_hint=""):
     title=(heading.get_text(" ",strip=True) if heading else str(title_hint or "").strip())
     if not title:return None
 
-    # HSBC prints the article date directly beneath the article heading/subtitle.
-    # Limit the search to the immediate title region so dates cited in the
-    # commentary body cannot be mistaken for publication dates.
-    pos=text.find(title)
-    fragment=text[pos:pos+700] if pos>=0 else text[:700]
-    match=_DATE.search(fragment)
+    # HSBC prints the article date directly beneath the in-page H1/subtitle.
+    # Walk forward from that H1 (not the HTML <title>) so dates cited later in
+    # the commentary body cannot be mistaken for publication dates.
+    nearby=" ".join(
+        str(node).strip()
+        for node in heading.find_all_next(string=True,limit=40)
+        if str(node).strip()
+    )[:1600]
+    match=_DATE.search(nearby)
     day=_day(match.group(1)) if match else None
     if not day:
         return None
