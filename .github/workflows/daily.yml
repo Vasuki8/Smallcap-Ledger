@@ -60,6 +60,10 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
+      - name: Diagnose ICICI monthly portfolio contract
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/diagnose_icici_portfolio.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
