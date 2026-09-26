@@ -64,10 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
-      - name: Diagnose ICICI current monthly portfolio blob
+      - name: Apply ICICI monthly portfolio recovery
         if: github.event_name == 'push'
-        timeout-minutes: 5
-        run: uv run --frozen python scripts/diagnose_icici_blob_portfolio.py
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/refresh_icici_portfolios.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
