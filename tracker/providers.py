@@ -64,18 +64,21 @@ def public_url(url):
     return url
 
 
-def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024, headers=None):
+def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, headers=None):
     original=url
+    if body is not None and form is not None:
+        raise ValueError("Choose either JSON body or form data, not both")
+    is_post=body is not None or form is not None
     # Public GETs occasionally fail on slow AMC hosts. Retry only transient
     # transport failures once; never retry HTTP status errors, validation
     # failures, oversize responses, or POST requests.
     host=(urlparse(original).hostname or '').lower().removeprefix('www.')
-    read_timeouts=(60,120) if body is None and host=='unionmf.com' else (30,60)
-    attempts=len(read_timeouts) if body is None else 1
+    read_timeouts=(60,120) if not is_post and host=='unionmf.com' else (30,60)
+    attempts=len(read_timeouts) if not is_post else 1
     try:
         for attempt in range(attempts):
             current=original
-            timeout=read_timeouts[attempt] if body is None else 30
+            timeout=read_timeouts[attempt] if not is_post else 30
             try:
                 with httpx.Client(timeout=httpx.Timeout(timeout,connect=15),headers={"User-Agent":USER_AGENT,"Accept":"*/*"}, follow_redirects=False) as client:
                     for _ in range(6):
@@ -86,7 +89,9 @@ def fetch(url, *, body=None, archive=True, max_bytes=25*1024*1024, headers=None)
                         # different host.
                         if headers and (urlparse(current).hostname or '').lower()==(urlparse(original).hostname or '').lower():
                             request_headers.update(headers)
-                        with client.stream("POST" if body is not None else "GET",current,json=body,
+                        with client.stream("POST" if is_post else "GET",current,
+                                           json=body if form is None else None,
+                                           data=form if form is not None else None,
                                            headers=request_headers) as r:
                             if r.is_redirect:
                                 current=urljoin(current,r.headers.get("location",""))
