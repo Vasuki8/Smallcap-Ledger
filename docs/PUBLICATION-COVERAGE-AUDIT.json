@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T21:53:45+00:00",
+  "built_at": "2026-09-26T22:13:06+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -13,14 +13,14 @@
     "funds": 36,
     "funds_with_amc_communications": 31,
     "funds_without_amc_communications": 5,
-    "communication_documents": 230,
-    "archived_communication_documents": 209,
+    "communication_documents": 224,
+    "archived_communication_documents": 207,
     "market_views": 208,
-    "unitholder_letters": 22,
+    "unitholder_letters": 16,
     "documents_with_published_date": 52,
     "funds_with_registered_communication_sources": 29,
     "issue_counts": {
-      "communication_archive_limitation": 2,
+      "communication_archive_limitation": 3,
       "communication_document_not_archived": 4,
       "communication_source_limitation": 1,
       "no_amc_communications_collected": 5,
@@ -55,7 +55,8 @@
       "actionable": false,
       "affected_funds": [
         "Franklin India Small Cap Fund",
-        "Kotak Small Cap Fund"
+        "Kotak Small Cap Fund",
+        "Samco Small Cap Fund"
       ],
       "reason": "The original AMC communication asset is intentionally retained as link-only because robots policy disallows automatic retrieval; keep the metadata/source link and do not treat this as a repairable fetch failure."
     },
@@ -64,8 +65,7 @@
       "code": "repair_unarchived_communication_documents",
       "actionable": true,
       "affected_funds": [
-        "LIC Mf Small Cap Fund",
-        "Samco Small Cap Fund"
+        "LIC Mf Small Cap Fund"
       ],
       "reason": "AMC communication metadata is retained but one or more original document versions are not archived."
     }
@@ -859,7 +859,7 @@
           "url": "https://www.sbimf.com/monthly-outlook-videos",
           "label": "Monthly Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T21:50:09+00:00",
+          "last_checked": "2026-09-26T22:10:02+00:00",
           "detail": "1 SBI annual Outlook article(s) retained; 1 expected year URL(s) absent; 0 download/parser gaps"
         }
       ],
@@ -870,18 +870,22 @@
     {
       "family": "Samco Small Cap Fund",
       "amc": "Samco Mutual Fund",
-      "communication_count": 7,
-      "archived_communication_count": 2,
+      "communication_count": 1,
+      "archived_communication_count": 0,
       "market_view_count": 1,
-      "unitholder_letter_count": 6,
+      "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-22T21:48:22+00:00",
+      "latest_observed_at": null,
       "registered_communication_sources": [],
       "source_limitation": null,
-      "archive_limitation": null,
+      "archive_limitation": {
+        "code": "original_asset_blocked_by_robots_policy",
+        "reason": "Samco's retained Small Cap Fund scheme presentation is a qualifying AMC communication, but its media1.samco.in original remains link-only because automatic access is disallowed by robots policy."
+      },
       "issues": [
         "communication_document_not_archived",
+        "communication_archive_limitation",
         "publication_date_missing"
       ]
     },
@@ -927,7 +931,7 @@
           "url": "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html",
           "label": "Equity Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T21:50:19+00:00",
+          "last_checked": "2026-09-26T22:10:11+00:00",
           "detail": "1 Tata Equity Market Outlook page retained; source reports as on 2026-08-31; publication day not inferred; 0 download/parser gaps"
         }
       ],
@@ -1000,7 +1004,7 @@
           "url": "https://www.utimf.com/learn",
           "label": "Leadership Desk / Market Insights",
           "status": "Partial",
-          "last_checked": "2026-09-26T21:51:24+00:00",
+          "last_checked": "2026-09-26T22:11:13+00:00",
           "detail": "UTI Learn / Fund House insight source identity changed"
         }
       ],
@@ -1026,7 +1030,7 @@
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
           "status": "Partial",
-          "last_checked": "2026-09-26T21:51:23+00:00",
+          "last_checked": "2026-09-26T22:11:12+00:00",
           "detail": "[Errno 111] Connection refused"
         }
       ],
