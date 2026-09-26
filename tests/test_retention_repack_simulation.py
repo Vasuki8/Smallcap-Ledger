@@ -59,6 +59,34 @@ class RetentionRepackSimulationTests(unittest.TestCase):
             finally:
                 db.DATA=previous
 
+    def test_simulation_boundary_requires_696_historical_and_excludes_new_delta(self):
+        reviewed=[{'hash':f'{i:064x}'} for i in range(700)]
+        candidates=reviewed[:696]
+        excluded=[
+            {'hash':row['hash'],'current_classification':'retain_latest_or_review',
+             'current_binary_state':'retained'}
+            for row in reviewed[696:]
+        ]
+        delta=[{'hash':f'{1000+i:064x}'} for i in range(5)]
+        proof=sim.validate_simulation_candidate_boundary(
+            reviewed,candidates,excluded,delta)
+        self.assertEqual(proof['historical_candidate_count'],696)
+        self.assertEqual(proof['excluded_reviewed_candidate_count'],4)
+        self.assertEqual(proof['post_audit_delta_candidate_count'],5)
+        self.assertEqual(proof['post_audit_delta_overlap_count'],0)
+        self.assertTrue(proof['post_audit_delta_excluded'])
+
+        with self.assertRaisesRegex(ValueError,'Expected exactly 696'):
+            sim.validate_simulation_candidate_boundary(
+                reviewed,candidates[:-1],excluded+[{
+                    'hash':candidates[-1]['hash'],
+                    'current_classification':'retain_latest_or_review',
+                    'current_binary_state':'retained'}],delta)
+        with self.assertRaisesRegex(ValueError,'leaked'):
+            sim.validate_simulation_candidate_boundary(
+                reviewed,candidates,excluded,
+                delta[:-1]+[{'hash':candidates[0]['hash']}])
+
     def test_simulated_database_changes_only_retention_state(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);previous=db.DATA;db.DATA=root
