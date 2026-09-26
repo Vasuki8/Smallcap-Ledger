@@ -94,7 +94,7 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"does not uniquely identify"):
             kotak.current_publication(body)
 
-    def test_kotak_ingest_archives_listing_and_current_pdf(self):
+    def test_kotak_ingest_archives_pdf_when_policy_allows(self):
         page=kotak_page();pdf=b"%PDF-1.4 Kotak monthly market outlook"
         def fake_fetch(url,**kwargs):
             if url==kotak.LISTING:return self.archived(page,"text/html")
@@ -103,7 +103,7 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
         with patch("tracker.kotak_communications.providers.can_crawl",return_value=None):
             result=kotak.ingest(fetch_fn=fake_fetch)
         self.assertEqual(result["retained"],1)
-        self.assertEqual(result["current"]["published_at"],"2026-09-09")
+        self.assertEqual(result["archived"],1)
         row=db.one("""SELECT d.kind,d.published_at,COUNT(v.id) versions
                       FROM documents d LEFT JOIN document_versions v ON v.document_id=d.id
                       WHERE d.family=? AND d.url=? GROUP BY d.id""",
@@ -111,6 +111,29 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
         self.assertEqual(row["kind"],"market view")
         self.assertEqual(row["published_at"],"2026-09-09")
         self.assertEqual(row["versions"],1)
+
+    def test_kotak_ingest_keeps_dated_link_when_download_is_robots_blocked(self):
+        page=kotak_page()
+        def fake_fetch(url,**kwargs):
+            if url==kotak.LISTING:return self.archived(page,"text/html")
+            raise AssertionError("blocked download must not be fetched")
+        calls=[]
+        def crawl(url):
+            calls.append(url)
+            if url==upgrade.KOTAK_CURRENT:
+                raise ValueError("Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file")
+        with patch("tracker.kotak_communications.providers.can_crawl",side_effect=crawl):
+            result=kotak.ingest(fetch_fn=fake_fetch)
+        self.assertEqual(result["retained"],1)
+        self.assertEqual(result["archived"],0)
+        self.assertIn("link-only",result["detail"])
+        row=db.one("""SELECT d.kind,d.published_at,COUNT(v.id) versions
+                      FROM documents d LEFT JOIN document_versions v ON v.document_id=d.id
+                      WHERE d.family=? AND d.url=? GROUP BY d.id""",
+                   (kotak.FAMILY,upgrade.KOTAK_CURRENT))
+        self.assertEqual(row["kind"],"market view")
+        self.assertEqual(row["published_at"],"2026-09-09")
+        self.assertEqual(row["versions"],0)
 
     def test_kotak_listing_routes_to_special_collector(self):
         with patch("tracker.kotak_communications.ingest",
@@ -140,17 +163,23 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
         kotak_pdf=b"%PDF-1.4 Kotak outlook"
         mirae_pdf=b"%PDF-1.6 Mirae outlook"
 
-        def store(family,title,url,published,body):
-            digest=db.archive(body,"application/pdf")
+        def store(family,title,url,published,body,version=True):
             did=providers.save_document(
                 family,title,url,"market view","AMC",published=published,origin="AMC")
-            providers.doc_version(did,digest)
+            if version:
+                digest=db.archive(body,"application/pdf")
+                providers.doc_version(did,digest)
 
         def fake_ingest(source):
             url=source["url"]
             if url==upgrade.KOTAK_LISTING:
+                source_digest=db.archive(b"kotak listing evidence","text/html")
+                source_id=providers.save_document(
+                    upgrade.KOTAK_FAMILY,kotak.SOURCE_TITLE,
+                    upgrade.KOTAK_LISTING,"source page","AMC",origin="AMC")
+                providers.doc_version(source_id,source_digest)
                 store(upgrade.KOTAK_FAMILY,"Monthly Outlook PPT sept 2026",
-                      upgrade.KOTAK_CURRENT,"2026-09-09",kotak_pdf)
+                      upgrade.KOTAK_CURRENT,"2026-09-09",kotak_pdf,version=False)
             elif url==upgrade.MIRAE_OUTLOOK:
                 store(upgrade.MIRAE_FAMILY,"Annual Market Outlook 2026",
                       url,None,mirae_pdf)
