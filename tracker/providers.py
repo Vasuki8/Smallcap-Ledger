@@ -305,10 +305,16 @@ def classify(title,url):
     # portfolio itself. Keep them out of portfolio coverage and parser queues.
     if re.search(r'(?:^|[^a-z0-9])(?:press[\s_-]*release|notice|circular)(?:[^a-z0-9]|$)',title_text):return "disclosure"
     if re.search(r'\brisk[\s_-]*factors?\b',title_text):return "disclosure"
+    # Explicit first-party communication titles outrank generic directory/path
+    # words such as "digitalfactsheet". Otherwise "Equity Market Update" pages
+    # are incorrectly classified as factsheets because of their URL path.
+    if re.search(r'letter.*unitholder|unitholder.*letter',title_text):return 'unitholder letter'
+    if re.search(r"newsletter|market.*(?:view|outlook|update)|equity.*(?:outlook|update)|debt.*(?:outlook|update)|investment.view|cio.*(?:view|letter)|product.?note|presentation",title_text):
+        return "market view"
     if re.search(r"portfolio|holdings",s): return "portfolio"
     if re.search(r"factsheet|fact.sheet|fund.facts|fund.spectrum|fund.watch",s): return "factsheet"
-    if re.search(r"newsletter|market.*(?:view|outlook|update)|equity.outlook|investment.view|cio.*(?:view|letter)|product.?note|presentation",s): return "market view"
     if re.search(r'letter.*unitholder|unitholder.*letter',s):return 'unitholder letter'
+    if re.search(r"newsletter|market.*(?:view|outlook|update)|equity.*(?:outlook|update)|debt.*(?:outlook|update)|investment.view|cio.*(?:view|letter)|product.?note|presentation",s): return "market view"
     if re.search(r"(?:^|[ /_-])(?:sid|kim|ssd)(?:[ /_.-]|$)|scheme.summary|scheme information document|key information memorandum",s): return "scheme document"
     return "disclosure"
 
