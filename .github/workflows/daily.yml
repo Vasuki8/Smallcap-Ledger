@@ -72,6 +72,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 8
         run: uv run --frozen python scripts/diagnose_franklin_frontend_transport.py
+      - name: Diagnose Franklin article API signature
+        if: github.event_name == 'push'
+        timeout-minutes: 6
+        run: uv run --frozen python scripts/diagnose_franklin_article_api.py
       - name: Apply Edelweiss and Franklin communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
