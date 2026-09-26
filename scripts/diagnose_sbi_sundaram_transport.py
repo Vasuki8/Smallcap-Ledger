@@ -43,6 +43,26 @@ def probe_sbi():
         except Exception as exc:
             print("COMM9_SBI_ERROR",url,(str(exc) or type(exc).__name__)[:1200],flush=True)
 
+def probe_sundaram_js():
+    url="https://www.sundarammutual.com/Views/Knowledge_Hub.js"
+    try:
+        providers.can_crawl(url)
+        body,_,typ=providers.fetch(url,archive=False,max_bytes=5*1024*1024)
+        text=body.decode("utf-8","ignore")
+        print("COMM10_SUNDARAM_JS_HTTP",url,len(body),typ,flush=True)
+        low=text.lower()
+        for token in ("ajax","url:","knowledge","outlook","api/","getknowledge","documents/"):
+            start=0
+            for _ in range(30):
+                i=low.find(token.lower(),start)
+                if i<0:break
+                print("COMM10_SUNDARAM_JS_CONTEXT","token="+token,"index="+str(i),
+                      repr(text[max(0,i-3000):i+7000]),flush=True)
+                start=i+len(token)
+    except Exception as exc:
+        print("COMM10_SUNDARAM_JS_ERROR",(str(exc) or type(exc).__name__)[:1200],flush=True)
+
+
 def probe_sundaram():
     for url in (SUNDARAM_HOME,SUNDARAM_KH):
         try:
@@ -78,4 +98,5 @@ def probe_sundaram():
 
 if __name__=="__main__":
     probe_sbi()
+    probe_sundaram_js()
     probe_sundaram()
