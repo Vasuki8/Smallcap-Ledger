@@ -60,10 +60,6 @@ jobs:
         env:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
-      - name: Diagnose Union apex portfolio route
-        if: github.event_name == 'push'
-        timeout-minutes: 5
-        run: uv run --frozen python scripts/diagnose_union_apex.py
       - name: Apply official AMC report collector upgrade
         if: github.event_name == 'push'
         timeout-minutes: 20
