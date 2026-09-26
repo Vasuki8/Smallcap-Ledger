@@ -18,9 +18,9 @@ def tata_page():
 
 def wealth_page():
     return b"""<html><body><h1>Current Insights</h1>
-      <a href="/media/daily-wealth-recap-30-april-2026.pdf">Daily Wealth Recap - 30 April 2026</a>
-      <a href="/media/the-newsmaker-27-april-2026.pdf">The NewsMaker - 27 April 2026</a>
-      <a href="/media/nfo-flyer.pdf">The Wealth Company Mid Cap Fund NFO Flyer - 23 June 2026</a>
+      <a href="/uploads/daily-wealth-recap-30-april-2026.pdf">Daily Wealth Recap - 30 April 2026</a>
+      <a href="/uploads/the-newsmaker-27-april-2026.pdf">The NewsMaker - 27 April 2026</a>
+      <a href="/uploads/nfo-flyer.pdf">The Wealth Company Mid Cap Fund NFO Flyer - 23 June 2026</a>
     </body></html>"""
 
 
