@@ -574,6 +574,14 @@ def ingest_source(source):
         and url=="https://www.sundarammutual.com/knowledge-hub"):
         from .sbi_sundaram_communications import ingest_sundaram
         return ingest_sundaram()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="tata"
+        and url=="https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html"):
+        from .tata_wealth_communications import ingest_tata
+        return ingest_tata()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="the wealth"
+        and url=="https://www.wealthcompanyamc.in/knowledge-center/current-insights/"):
+        from .tata_wealth_communications import ingest_wealth
+        return ingest_wealth()["detail"]
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
