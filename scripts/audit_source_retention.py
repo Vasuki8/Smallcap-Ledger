@@ -188,8 +188,15 @@ def collect(connection, root=ROOT):
         if not base.exists(): continue
         for path in sorted(base.rglob('*')):
             if path.suffix not in ('.py', '.json', '.md'): continue
-            # Generated inventories must not self-protect every source on reruns.
-            if path.name.startswith(('STORAGE-', 'SOURCE-RETENTION', 'source-retention')): continue
+            # Generated storage/retention review artifacts contain archive
+            # hashes by design. They are outputs of this audit/migration process,
+            # not independent replay/evidence dependencies, so they must never
+            # self-protect the hashes they merely describe.
+            if path.name.startswith((
+                'STORAGE-','SOURCE-RETENTION','source-retention',
+                'RETENTION-PROPOSED-','RETENTION-MIGRATION-',
+                'RETENTION-REPLACEMENT-'
+            )): continue
             for h in set(re.findall(r'\b[0-9a-f]{64}\b', path.read_text(errors='replace'))):
                 if h in items: attach(h, reason='code_or_handoff_literal_hash:' + str(path.relative_to(root)))
     page_errors = set()
