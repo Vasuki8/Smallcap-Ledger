@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T06:13:19+00:00",
+  "built_at": "2026-09-26T06:22:02+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,17 +11,17 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 17,
-    "funds_without_amc_communications": 19,
-    "communication_documents": 172,
-    "archived_communication_documents": 134,
-    "market_views": 150,
+    "funds_with_amc_communications": 19,
+    "funds_without_amc_communications": 17,
+    "communication_documents": 176,
+    "archived_communication_documents": 138,
+    "market_views": 154,
     "unitholder_letters": 22,
-    "documents_with_published_date": 12,
-    "funds_with_registered_communication_sources": 11,
+    "documents_with_published_date": 16,
+    "funds_with_registered_communication_sources": 13,
     "issue_counts": {
       "communication_document_not_archived": 3,
-      "no_amc_communications_collected": 19,
+      "no_amc_communications_collected": 17,
       "publication_date_missing": 17
     }
   },
@@ -31,8 +31,6 @@
       "code": "discover_first_party_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "Bajaj Finserv Small Cap Fund",
-        "Bandhan Small Cap Fund",
         "Edelweiss Small Cap Fund",
         "Franklin India Small Cap Fund",
         "Groww Small Cap Fund",
@@ -165,32 +163,62 @@
     {
       "family": "Bajaj Finserv Small Cap Fund",
       "amc": "Bajaj Finserv Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 1,
+      "archived_communication_count": 1,
+      "market_view_count": 1,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
-      "issues": [
-        "no_amc_communications_collected"
-      ]
+      "published_date_count": 1,
+      "latest_published_at": "2026-05-21",
+      "latest_observed_at": "2026-09-26T06:20:01+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "Bajaj",
+          "url": "https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=51",
+          "label": "Market Outlook",
+          "status": "Checked",
+          "last_checked": "2026-09-26T06:20:01+00:00",
+          "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
+        }
+      ],
+      "issues": []
     },
     {
       "family": "Bandhan Small Cap Fund",
       "amc": "Bandhan Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 3,
+      "archived_communication_count": 3,
+      "market_view_count": 3,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
-      "issues": [
-        "no_amc_communications_collected"
-      ]
+      "published_date_count": 3,
+      "latest_published_at": "2026-09-11",
+      "latest_observed_at": "2026-09-26T06:20:09+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "Bandhan",
+          "url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/",
+          "label": "Market Outlook - Debt - September 2026",
+          "status": "Checked",
+          "last_checked": "2026-09-26T06:20:11+00:00",
+          "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
+        },
+        {
+          "amc_match": "Bandhan",
+          "url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/",
+          "label": "Market Outlook - Equity - September 2026",
+          "status": "Checked",
+          "last_checked": "2026-09-26T06:20:06+00:00",
+          "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
+        },
+        {
+          "amc_match": "Bandhan",
+          "url": "https://bandhanmutual.com/downloads/market-outlook",
+          "label": "Market Outlook",
+          "status": "Limited",
+          "last_checked": "2026-09-26T06:20:02+00:00",
+          "detail": "Page archived; no automatically readable fund documents found"
+        }
+      ],
+      "issues": []
     },
     {
       "family": "Bank Of India Small Cap Fund",

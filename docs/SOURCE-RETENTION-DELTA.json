@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T06:12:37+00:00",
+  "reviewed_at": "2026-09-26T06:21:14+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 289,
+  "new_hashes_reviewed": 295,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_latest_or_review": 201,
-    "retain_evidence": 83,
+    "retain_latest_or_review": 203,
+    "retain_evidence": 87,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_latest_or_review": 89351540,
-    "retain_evidence": 203573239,
+    "retain_latest_or_review": 89382295,
+    "retain_evidence": 203910507,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -358,6 +358,30 @@
       ],
       "urls": [
         "https://www.quantumamc.com/factsheets/combined/-1/0/0"
+      ]
+    },
+    {
+      "hash": "0f798659039f55be46ccb0257f3e4b7544b40396e0b1e6062a49722f111892c7",
+      "bytes": 42072,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T06:20:01+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://cobranding.bajajamc.com/Home/dynamicvideoslide/469/6jfeX8S/454",
+      "host": "cobranding.bajajamc.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://cobranding.bajajamc.com/Home/dynamicvideoslide/469/6jfeX8S/454"
+      ],
+      "urls": [
+        "https://cobranding.bajajamc.com/Home/dynamicvideoslide/469/6jfeX8S/454"
       ]
     },
     {
@@ -1882,6 +1906,30 @@
       ]
     },
     {
+      "hash": "41d2b5d4a55a0601662a36a63bb512561943bc672bce5f15ea010a14ac6869dd",
+      "bytes": 98622,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-26T06:20:06+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/",
+      "host": "cmsnew.bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/"
+      ],
+      "urls": [
+        "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/"
+      ]
+    },
+    {
       "hash": "41ee6671614f9278e9d72213b68c95c89d0860f0f27c5ab5076a21dd9644d387",
       "bytes": 15057,
       "media_type": "text/html; charset=UTF-8",
@@ -1977,6 +2025,31 @@
       ],
       "urls": [
         "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_August2025_Samco_Arbitrage_Fund_1757492701.xlsx"
+      ]
+    },
+    {
+      "hash": "44c0b2fc154b75250902a42387fe1e1d1cebd089a0c0adc1987259acab281042",
+      "bytes": 20261,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T06:20:00+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=51",
+      "host": "cobranding.bajajamc.com",
+      "kind": "html",
+      "reasons": [
+        "documented_transport_boundary",
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=51"
+      ],
+      "urls": [
+        "https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=51"
       ]
     },
     {
@@ -3116,6 +3189,30 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth"
+      ]
+    },
+    {
+      "hash": "70c6db5f6733b23f5cf2720e12537799efcdeb9e20d2f8042a0b8f1d0013bdac",
+      "bytes": 98604,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-26T06:20:09+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-august-2026/",
+      "host": "cmsnew.bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-august-2026/"
+      ],
+      "urls": [
+        "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-august-2026/"
       ]
     },
     {
@@ -5603,6 +5700,30 @@
       ]
     },
     {
+      "hash": "c587ac3881f7012670cfcffd5fde6c6e8ea3be7fde38929acae463b2e3b99043",
+      "bytes": 97970,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-09-26T06:20:05+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/",
+      "host": "cmsnew.bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/"
+      ],
+      "urls": [
+        "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/"
+      ]
+    },
+    {
       "hash": "c5fa184b5047e7a26e426c213375f180edd2ac9c61ea34f868fbe5e01b8cf32e",
       "bytes": 487622,
       "media_type": "text/html; charset=UTF-8",
@@ -5622,6 +5743,30 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.samcomf.com/mutual-funds/samco-small-cap-fund-direct-growth/scdgg"
+      ]
+    },
+    {
+      "hash": "c676c28a457d2865b6f2a448014f58edbb79eb3954b4a06a9e6c563740dbaa0d",
+      "bytes": 10494,
+      "media_type": "text/html",
+      "first_seen": "2026-09-26T06:20:02+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://bandhanmutual.com/downloads/market-outlook",
+      "host": "bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://bandhanmutual.com/downloads/market-outlook"
+      ],
+      "urls": [
+        "https://bandhanmutual.com/downloads/market-outlook"
       ]
     },
     {

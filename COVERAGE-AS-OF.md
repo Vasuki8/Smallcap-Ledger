@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-26T06:12:51+00:00
+Prepared: 2026-09-26T06:21:28+00:00
 
 **36 funds, 143 NAV series, 281,584 NAV observations. Latest included NAV: 2026-09-25.**
 
@@ -13,8 +13,8 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Abakkus Small Cap Fund | ₹ 3,167.22 · 2026-09-24 | 1.25% TER · 2026-09-25 | 68 positions · 2026-08-31 · complete · current | NIFTY SmallCap 250 TRI · 2026-09-24 | 40 |
 | Aditya Birla Sun Life Small Cap Fund | ₹ 6,197.75 · 2026-09-24 | 1.07% TER · 2026-09-24 | 89 positions · 2026-08-31 · complete · current | BSE 250 Small Cap Index TRI · 2026-07-31 | 5 |
 | Axis Small Cap Fund | ₹ 31,575.62 · 2026-09-24 | 0.71% TER · 2026-09-24 | 134 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-09-25 | 11 |
-| Bajaj Finserv Small Cap Fund | ₹ 2,782.35 · 2026-09-24 | 0.96% TER · 2026-09-25 | 13 positions · 2026-07-31 · partial · older | BSE 250 SmallCap TRI · 2026-07-31 | 1 |
-| Bandhan Small Cap Fund | ₹ 36,290.04 · 2026-09-24 | 0.61% TER · 2026-09-24 | 260 positions · 2026-08-31 · partial · current | BSE 250 SmallCap TRI · 2025-03-31 | 3 |
+| Bajaj Finserv Small Cap Fund | ₹ 2,782.35 · 2026-09-24 | 0.96% TER · 2026-09-25 | 13 positions · 2026-07-31 · partial · older | BSE 250 SmallCap TRI · 2026-07-31 | 2 |
+| Bandhan Small Cap Fund | ₹ 36,290.04 · 2026-09-24 | 0.61% TER · 2026-09-24 | 260 positions · 2026-08-31 · partial · current | BSE 250 SmallCap TRI · 2025-03-31 | 6 |
 | Bank Of India Small Cap Fund | ₹ 3,600.91 · 2026-09-24 | 0.73% TER · 2026-09-25 | 103 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-08-31 | 7 |
 | Baroda Bnp Paribas Small Cap Fund | ₹ 1,292.90 · 2026-09-24 | 1.21% TER · 2026-09-25 | 63 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-07-31 | 6 |
 | Canara Robeco Small Cap Fund | ₹ 14,293.07 · 2026-09-24 | 0.68% TER · 2026-09-25 | 91 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 Index TRI · 2026-08-31 | 6 |
