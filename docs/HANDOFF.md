@@ -1,8 +1,142 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after Abakkus/Axis first-party communication-source recovery and successful production deployment.
+Updated: 2026-09-26, after Edelweiss/Franklin first-party communication recovery and successful production deployment.
 
-## Latest completed batch: add Abakkus and Axis AMC communication sources
+## Latest completed batch: recover Edelweiss and Franklin AMC communications
+
+**Edelweiss Small Cap Fund and Franklin India Small Cap Fund are no longer in the missing-communication-source queue.** The two AMCs require different evidence models, and the backend now preserves that distinction instead of weakening access controls.
+
+### Edelweiss evidence
+
+The production runner initially recovered Edelweiss Fund & Market Insights successfully, but repeated later pushes showed the HTML insight routes returning **403 Forbidden**. The release gate was therefore narrowed to an exact first-party publication rather than bypassing the blocked pages.
+
+Release-gating source:
+
+- **Factor Investing Outlook 2026**
+- `https://www.edelweissmf.com/Files/Insigths/viewpoint/EMF_Factor_Investing_Outlook_2026_01012026_060107_PM.pdf`
+- origin: **Edelweiss Mutual Fund**
+- kind: `market view`
+- original binary: **archived**
+- explicit publication date: **not established**; `published_at` remains null
+
+The dynamic Edelweiss Fund & Market Insights / Curve / Factor Outlook HTML routes remain registered for normal future retries, but their transient 403 does not block publication when the exact first-party PDF evidence is available.
+
+### Franklin evidence and robots boundary
+
+Franklin's public Latest Commentaries page is a JavaScript shell in the production runner, and the Widen asset tenant disallows automatic retrieval under its robots policy. The tracker does **not** bypass that policy.
+
+Frontend diagnostics established that Franklin's own public site populates Latest Commentaries through the same-domain endpoint:
+
+- `https://www.franklintempletonindia.com/api/articleApi`
+- request type: `application/x-www-form-urlencoded`
+- `pageType=latest-commentaries`
+- production environment: `env=prod`
+
+The collector now uses that same first-party API contract. It:
+
+- archives the exact Franklin API JSON response as source evidence;
+- accepts only Franklin `latest-commentaries` article records with recognized market-commentary titles;
+- retains explicit `referenceDate` / `publishDate` dates supplied by Franklin;
+- stores first-party Franklin article URLs as the communication URLs;
+- preserves the Widen asset URL inside the archived API evidence;
+- does **not** fetch or claim the Widen original binary is archived when robots disallow automatic access.
+
+The former Widen viewer is removed from scheduled source seeding and any historical source-page row for it is disabled as superseded evidence, not deleted.
+
+### Implementation and release history
+
+PR **#196** merged as commit `f42549ded6795db9492d067da1a735197da3cac7` and introduced:
+
+- safe form-encoded POST support in the public fetch helper;
+- `tracker/franklin_communications.py`;
+- Franklin first-party article API ingestion;
+- Franklin API-source provenance with link-only Widen originals;
+- the v2 Edelweiss/Franklin recovery gate;
+- removal of completed Franklin diagnostics and generic Widen crawl-host permission.
+
+Its first production run correctly stopped before publication because Edelweiss's HTML insight routes had begun returning 403, even though Franklin already recovered **10** communication records successfully.
+
+PR **#197** merged as commit `54d8d571eafa57e520dd01e3d82012afc4d7dcfe` and changed the Edelweiss release gate to the exact first-party Factor Investing Outlook PDF while leaving the dynamic HTML sources registered for future retries.
+
+### Production verification
+
+Final production workflow **36241290583** completed successfully at **2026-09-26T12:16:59Z**.
+
+Live recovery evidence:
+
+- **Edelweiss:** **1** retained market-view record; exact Factor Investing Outlook PDF archived; **0 download/parser gaps**.
+- **Franklin:** **10** market-commentary records retained from the first-party article API.
+- Franklin API snapshot: **archived** as source evidence.
+- Franklin Monthly Equity Outlook:
+  - first-party article URL: `https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries/article/monthly-equity-outlook`
+  - explicit publication date: **2026-08-06**
+  - original Widen binary: **link-only / not archived**.
+- Franklin link-only originals: **10**, matching all 10 retained Franklin communication records.
+
+Full validation:
+
+- build: **success**
+- full regression suite: **406 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10906510322** is **233,533,677 bytes** with digest `sha256:9835bdf415d94eff21fd27079aa4d3bb10ba071ff41d45599ef0cbde8a311d01`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T12:16:29Z**:
+
+- funds with at least one retained AMC communication: **21 / 36** (was 19)
+- funds with no retained AMC communication: **15**
+- retained communication documents: **187**
+- archived communication originals: **139**
+- market/newsletter/CIO/product-view documents: **165**
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **26**
+- funds with a registered communication-oriented source: **15**
+
+**Edelweiss final state:** **1 market view / 1 archived original**. Its publication date remains an evidence gap.
+
+**Franklin final state:** **10 market views / 0 archived individual originals / 10 explicit dates**. Latest retained communication date is **2026-09-18**. The archived Franklin API snapshot is the retained provenance for those metadata records. The audit intentionally flags `communication_document_not_archived` for Franklin rather than pretending the robots-blocked Widen binaries were saved.
+
+### Intervening completed batch: Bajaj Finserv and Bandhan communications
+
+The repository advanced between handoff updates. PR **#187** merged as commit `c270486696bc3edba5d6d5d009bc9c2784f555b8` and successfully recovered:
+
+- **Bajaj Finserv:** dedicated first-party Outlook catalog; exact current `EQUITY OUTLOOK MAY` viewer retained with explicit date **2026-05-21**.
+- **Bandhan:** official Market Outlook landing route plus current equity/debt September 2026 CMS posts; both current posts retained with explicit date **2026-09-11**.
+
+Production workflow **36223408547** completed successfully. This batch moved communication coverage from **17 / 36 to 19 / 36** before the Edelweiss/Franklin work above.
+
+### Next backend/data-retrieval task
+
+Continue bounded first-party communication-source discovery for the remaining **15** funds with no retained AMC communication:
+
+1. **Groww Small Cap Fund**
+2. **HSBC Small Cap Fund**
+3. ICICI Prudential Small Cap Fund
+4. Invesco India Small Cap Fund
+5. Kotak Small Cap Fund
+6. Mirae Asset Small Cap Fund
+7. PGIM India Small Cap Fund
+8. Quant Small Cap Fund
+9. SBI Small Cap Fund
+10. Sundaram Small Cap Fund
+11. Tata Small Cap Fund
+12. The Wealth Company Small Cap Fund
+13. TRUSTMF Small Cap Fund
+14. UTI Small Cap Fund
+15. Union Small Cap Fund
+
+Start with **Groww communication discovery**, then **HSBC**. Prefer existing registered AMC/fund pages and first-party insight/market-view directories before adding new routes. Preserve explicit source dates only; never substitute `first_seen`.
+
+The `repair_unarchived_communication_documents` queue now contains **Franklin India, LIC MF, Nippon India and Samco**. Franklin is a known policy-limited case: its first-party metadata is retained, while original Widen binaries remain link-only until automated access is permitted or owner-supplied originals are imported.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**. Do not estimate censored holdings or re-probe blocked portfolio transports without a retained source-change signal.
+
+## Previous completed batch: add Abakkus and Axis AMC communication sources
 
 **Abakkus Small Cap Fund and Axis Small Cap Fund are no longer in the missing-communication queue.** Both now have retained first-party market-view evidence plus dedicated source routes that can be revisited by the normal documents collector.
 
