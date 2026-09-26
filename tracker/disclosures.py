@@ -4,7 +4,7 @@ import json
 import re
 import xml.etree.ElementTree as ET
 from datetime import date,datetime
-from urllib.parse import urlparse,unquote
+from urllib.parse import urlparse,unquote,parse_qs
 from bs4 import BeautifulSoup
 from . import db
 from .publications import exclusion_reason
@@ -81,12 +81,70 @@ def source_families(amc_match):
 
 
 def dated_communication_source_kind(title,url):
-    """Classify a dated monthly communication page, never a generic directory."""
+    """Classify a dated communication page, never a generic directory."""
     kind=classify(title,url)
     if kind not in ('market view','unitholder letter'):return None
-    path=unquote(urlparse(url).path)
+    parsed=urlparse(url);path=unquote(parsed.path)
     if re.fullmatch(r'/.*digital-?factsheet/[A-Za-z]+-?\d{4}/[^/]+\.html',path,re.I):
         return kind
+    if ((parsed.hostname or '').lower()=='insights.abakkusinvest.com'
+        and re.fullmatch(r'/market-outlook-[A-Za-z]+-20\d{2}/?',path,re.I)):
+        return kind
+    return None
+
+
+def source_context_communication_kind(source,target,title):
+    """Use an explicit first-party communication category without broad inference."""
+    kind=classify(title,target)
+    if kind in ('market view','unitholder letter'):return kind
+    source_kind=classify(source.get('label',''),source.get('url',''))
+    if source_kind!='market view':return None
+    base=urlparse(source.get('url',''));dest=urlparse(target)
+    if (base.hostname or '').lower()!=(dest.hostname or '').lower():return None
+    query=parse_qs(base.query)
+    if ((base.hostname or '').lower() in ('www.axismf.com','axismf.com')
+        and base.path.rstrip('/')=='/mutual-fund-knowledge-centre/articles'
+        and query.get('tag')==['Market-Outlook']
+        and dest.path.startswith('/mutual-fund-knowledge-centre/articles/')):
+        return 'market view'
+    return None
+
+
+def explicit_publication_date(content,media_type=''):
+    """Return only an explicit HTML publication/update date supplied by the AMC."""
+    if not content or ('html' not in str(media_type).lower()
+                       and not content.lstrip().startswith(b'<')):return None
+    try:soup=BeautifulSoup(content,'html.parser')
+    except Exception:return None
+    candidates=[]
+    for attrs in (
+        {'property':'article:published_time'},{'name':'article:published_time'},
+        {'name':'date'},{'name':'publish-date'},{'name':'publication_date'},
+    ):
+        tag=soup.find('meta',attrs=attrs)
+        if tag and tag.get('content'):candidates.append(tag['content'])
+    for tag in soup.find_all('time'):
+        if tag.get('datetime'):candidates.append(tag['datetime'])
+    for script in soup.select('script[type="application/ld+json"]'):
+        try:data=json.loads(script.string or script.get_text())
+        except (TypeError,ValueError):continue
+        stack=[data]
+        while stack:
+            node=stack.pop()
+            if isinstance(node,dict):
+                value=node.get('datePublished')
+                if isinstance(value,str):candidates.append(value)
+                stack.extend(v for v in node.values() if isinstance(v,(dict,list)))
+            elif isinstance(node,list):stack.extend(node)
+    text=' '.join(soup.stripped_strings)
+    m=re.search(r'Last\s+updated\s+on\s+(\d{1,2}\s+[A-Za-z]+\s+20\d{2})',text,re.I)
+    if m:candidates.append(m.group(1))
+    for raw in candidates:
+        value=str(raw).strip()
+        if re.match(r'^20\d{2}-\d{2}-\d{2}T',value):value=value[:10]
+        try:day=iso(value)
+        except ValueError:continue
+        if day<=date.today().isoformat():return day
     return None
 
 
@@ -420,15 +478,15 @@ def ingest_source(source):
     if not families: return "No matching small-cap fund yet"
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
-    content,h,_=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
+    content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
     direct=direct or content.startswith(b'%PDF')
     if direct:
         from .amc_reports import extract
-        n=0
+        n=0;kind=classify(source['label'],url)
         for f in families:
-            did=save_document(f['family'],source['label'],url,classify(source['label'],url),'AMC',origin='AMC')
+            did=save_document(f['family'],source['label'],url,kind,'AMC',origin='AMC')
             doc_version(did,h);n+=extract(content,f['family'],url,h)
-        gaps=0 if n or classify(source['label'],url)=='scheme document' else 1
+        gaps=0 if n or kind in ('scheme document','market view','unitholder letter') else 1
         return f'{n} extracted facts/holdings; 1 document archived; {gaps} download/parser gaps'
     soup=BeautifulSoup(content,"html.parser")
     links=candidate_links(soup,url)
@@ -441,7 +499,9 @@ def ingest_source(source):
         # itself an AMC communication, not merely a crawl directory. Generic
         # directories (for example /market-update) remain source pages.
         page_kind=dated_communication_source_kind(source["label"],url)
-        page_id=save_document(family,source["label"],url,page_kind or "source page","AMC",origin="AMC")
+        page_published=explicit_publication_date(content,media_type) if page_kind else None
+        page_id=save_document(family,source["label"],url,page_kind or "source page","AMC",
+                              published=page_published,origin="AMC")
         if page_kind:
             # Repair earlier rows that were saved as source-page/factsheet before
             # explicit communication titles took precedence over URL path words.
@@ -464,7 +524,8 @@ def ingest_source(source):
             # A scheme-specific page can label a UUID download simply "Latest
             # Monthly Portfolio". Keep it as a candidate; parser verifies ownership.
             if re.search(r'small[\s_\-]*cap',url,re.I) and re.search(r'latest.*(?:portfolio|factsheet)',title,re.I):specific=True
-            commentary=classify(title,target) in ('market view','unitholder letter')
+            link_kind=source_context_communication_kind(source,target,title)
+            commentary=link_kind in ('market view','unitholder letter')
             download=bool(re.search(r"\.(?:pdf|xlsx?|xml)(?:\?|$)",target,re.I))
             omnibus=download and bool(re.search(r'factsheet|fact.sheet|fund.spectrum|fund.watch|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
             directory=not download and bool(re.search(r'factsheet|fact.sheet|portfolio|disclosure|scheme.summary|newsletter|market.outlook|market.update',combined,re.I))
@@ -481,7 +542,8 @@ def ingest_source(source):
                             c.execute("INSERT OR IGNORE INTO source_pages(amc_match,url,label) VALUES(?,?,?)",(source["amc_match"],target,title[:150]))
                 continue
             if not download and len(title)<16: continue
-            did=save_document(family,title,target,classify(title,target),"Fund" if specific else "AMC",origin="AMC")
+            did=save_document(family,title,target,link_kind or classify(title,target),
+                              "Fund" if specific else "AMC",origin="AMC")
             nlinks+=1
             # Bound each page pass; remaining original links stay available, with archive status visible.
             if attempted>=12: continue
@@ -490,6 +552,12 @@ def ingest_source(source):
                 can_crawl(target)
                 body,ch,typ=fetch(target)
                 doc_version(did,ch);narchive+=1
+                if link_kind in ('market view','unitholder letter'):
+                    published=explicit_publication_date(body,typ)
+                    if published:
+                        with db.connect() as c:
+                            c.execute("""UPDATE documents SET published_at=COALESCE(published_at,?)
+                              WHERE id=? AND origin='AMC'""",(published,did))
                 ext=urlparse(target).path.lower()
                 if ext.endswith(('.xml','.xls','.xlsx','.pdf')):
                     from .amc_reports import extract
