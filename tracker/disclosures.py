@@ -100,9 +100,6 @@ def dated_communication_source_kind(title,url):
             '/investor-insights/fund-market/factor-investing-2026-outlook',
         )):
         return kind
-    if (host=='franklintempletonprod.widen.net'
-        and re.fullmatch(r'/s/[A-Za-z0-9]+/ft-monthly-equity-market-outlook/?',path,re.I)):
-        return kind
     return None
 
 
