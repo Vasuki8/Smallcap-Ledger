@@ -1,8 +1,163 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after Kotak/Mirae Asset first-party communication recovery and successful production deployment.
+Updated: 2026-09-26, after PGIM India/quant first-party communication recovery and successful production deployment.
 
-## Latest completed batch: recover Kotak and Mirae Asset AMC communications
+## Latest completed batch: recover PGIM India and quant AMC communications
+
+**PGIM India Small Cap Fund and Quant Small Cap Fund are no longer in the missing-communication-source queue.** Both now have durable first-party communication collectors with retained original evidence and explicit no-inference date handling.
+
+### PGIM India evidence and collector
+
+The first production probe established that the previously identified route:
+
+`https://www.pgimindia.com/mutual-funds/domestic-insights`
+
+now returns a first-party **Page Not Found / 404** shell to the production runner, even though older public indexing still exposes its historical content. That route was therefore **not** registered as the communication source.
+
+The live dynamic source is instead:
+
+`https://www.pgimindia.com/mutual-funds`
+
+Source label: **CEO Letters / Outlooks & Economy**.
+
+The collector follows only same-domain article paths matching PGIM's reviewed domestic-insight categories:
+
+- `/mutual-funds/domestic-insights/CEO-Letters/article/...`
+- `/mutual-funds/domestic-insights/Outlooks.../article/...`
+
+It rejects ordinary fund/factsheet links, validates the article page and title, and archives the validated HTML before retaining it as `market view`.
+
+Release-gating anchor:
+
+`https://www.pgimindia.com/mutual-funds/domestic-insights/CEO-Letters/article/Money-for-a-Life-in-Motion`
+
+Final production result:
+
+- retained PGIM communications: **5**
+- archived originals: **5**
+- download/parser gaps: **0**
+- anchor original: **archived**
+- explicit `published_at` values: **0**
+
+PGIM currently displays month/year reading labels such as **Jun 2026 - 3 mins read**, but no exact publication day is established for these retained articles. The tracker therefore keeps `published_at` null rather than inventing a day.
+
+### quant Mutual evidence and collector
+
+Registered dynamic source:
+
+`https://www.quantmutual.com/downloads/investment_outlook`
+
+Source label: **Investment Outlook**.
+
+The production source is directly readable and exposes first-party research PDFs under `/Admin/Pdf/`. The collector accepts only files whose first-party identity is explicitly one of:
+
+- **Predictive Analytics**
+- **VLRT Outlook**
+- **Investment Outlook**
+
+It explicitly excludes unrelated material such as **Returns of schemes by same Fund Managers / Explanation-for-Returns**.
+
+PDF URLs are canonicalized without changing their source identity, and every retained communication must resolve to a real PDF original.
+
+Release-gating anchor:
+
+`https://www.quantmutual.com/Admin/Pdf/Predictive%20Analytics_June%202023_Volume%203_Issue%202.pdf`
+
+Final production result:
+
+- retained quant communications: **7**
+- archived originals: **7**
+- anchor PDF identity: **true**
+- download/parser gaps: **0**
+- explicit `published_at` values: **0**
+
+The current dedicated Investment Outlook archive is **historical**: its newest eligible retained outlook is the June 2023 Predictive Analytics issue. The dynamic source remains registered so a future first-party update will be discoverable automatically. Month/year text in titles is not converted into a fabricated exact day.
+
+### Implementation
+
+PR **#208** merged as commit `44748850cf22cdea21b8ceec4f024489c31cc00e`.
+
+It added:
+
+- `tracker/pgim_communications.py`
+- `tracker/quant_communications.py`
+- `scripts/refresh_pgim_quant_communications.py`
+- dedicated routing from `tracker/disclosures.py`
+- first-party source registrations for PGIM and quant
+- communication-audit recognition for **CEO Letters / Outlooks & Economy** and **Investment Outlook**
+- regression coverage for PGIM source boundaries/article validation, quant PDF filtering/canonicalization, routing, source registration and idempotent recovery
+- replacement/removal of the temporary PGIM/quant diagnostic workflow step.
+
+No third-party news, factsheet-as-news substitution, inferred publication days, portfolio changes or financial-data changes were introduced.
+
+### Production verification
+
+Final production workflow **36253598718** completed successfully at **2026-09-26T15:59:06Z**.
+
+Live recovery evidence:
+
+- **PGIM India**
+  - market-view communications: **5**
+  - archived originals: **5**
+  - anchor: **Money for a Life in Motion**
+  - anchor archived version: **1**
+  - source result: **5 CEO/outlook insight articles retained / 0 download-parser gaps**
+
+- **quant Mutual**
+  - market-view communications: **7**
+  - archived originals: **7**
+  - anchor: **Predictive Analytics_June 2023_Volume 3_Issue 2**
+  - anchor archived version: **1**
+  - anchor original: valid **PDF**
+  - source result: **7 Investment Outlook PDFs retained / 0 download-parser gaps**
+
+Full validation:
+
+- build: **success**
+- full regression suite: **436 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10910102624** is **232,543,746 bytes** with digest `sha256:1db32df294fad604c98de70b959272e01ba21b10084c44b1bdc21cc43a8b7f48`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T15:58:30Z**:
+
+- funds with at least one retained AMC communication: **29 / 36** (was 27)
+- funds with no retained AMC communication: **7**
+- retained communication documents: **228**
+- archived communication originals: **179**
+- market/newsletter/CIO/product-view documents: **206**
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **51**
+- funds with a registered communication-oriented source: **23**
+
+**PGIM India final state:** **5 market views / 5 archived originals / 0 explicit dates**. Its remaining audit issue is `publication_date_missing`.
+
+**Quant final state:** **7 market views / 7 archived originals / 0 explicit dates**. Its remaining audit issue is `publication_date_missing`.
+
+### Next backend/data-retrieval task
+
+Continue bounded first-party communication-source discovery for the remaining **7** funds:
+
+1. **SBI Small Cap Fund**
+2. **Sundaram Small Cap Fund**
+3. Tata Small Cap Fund
+4. The Wealth Company Small Cap Fund
+5. TRUSTMF Small Cap Fund
+6. UTI Small Cap Fund
+7. Union Small Cap Fund
+
+Start with **SBI**, then **Sundaram**. Prefer dedicated first-party market-outlook, investment-view, CIO/CEO-view, newsletter or unitholder-letter surfaces. Do not count general factsheets merely because they contain a market-review section.
+
+The `repair_unarchived_communication_documents` queue remains **Franklin India, Kotak, LIC MF, Nippon India and Samco**. Franklin and Kotak remain known policy-limited cases where first-party provenance is retained but individual originals are unavailable to automated collection.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**.
+
+## Previous completed batch: recover Kotak and Mirae Asset AMC communications
 
 **Kotak Small Cap Fund and Mirae Asset Small Cap Fund are no longer in the missing-communication-source queue.** The final implementation preserves two different source-access realities rather than weakening crawler policy.
 
