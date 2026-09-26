@@ -96,6 +96,32 @@ def inspect_script(url):
             seen.add(value);candidates.append(value)
             if len(candidates)>=120:break
         item["candidate_strings"]=candidates
+        exact={}
+        patterns={
+            "cms_urls":r'''cmsUrl\s*:\s*["']([^"']+)["']''',
+            "knowledge_center_getters":r'''get\s+knowledgeCenter\(\)\{return([^}]{0,600})\}''',
+            "knowledge_center_refs":r'''knowledgeCenter[^,;}{]{0,500}''',
+            "cms_api_literals":r'''["']([^"']*/api/[^"']*(?:knowledge|learn|leadership|insight)[^"']*)["']''',
+        }
+        for name,pattern in patterns.items():
+            values=[];matched=set()
+            for m in re.finditer(pattern,raw,re.I):
+                value=(m.group(1) if m.groups() else m.group(0)).strip()
+                if value in matched:continue
+                matched.add(value);values.append(value)
+                if len(values)>=40:break
+            exact[name]=values
+        for needle in ("get knowledgeCenter","knowledgeCenter(){return","_urls.knowledgeCenter",
+                       "field_knowledge_hub_category","cmsUrl"):
+            hits=[];start=0
+            low=raw.lower()
+            while len(hits)<20:
+                idx=low.find(needle.lower(),start)
+                if idx<0:break
+                hits.append({"index":idx,"context":raw[max(0,idx-1000):idx+2600]})
+                start=idx+len(needle)
+            exact[needle]=hits
+        item["exact_transport"]=exact
     except Exception as exc:
         item.update({
             "ok":False,
