@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T13:01:49+00:00",
+  "built_at": "2026-09-26T13:12:19+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,17 +11,17 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 21,
-    "funds_without_amc_communications": 15,
-    "communication_documents": 187,
-    "archived_communication_documents": 139,
-    "market_views": 165,
+    "funds_with_amc_communications": 23,
+    "funds_without_amc_communications": 13,
+    "communication_documents": 210,
+    "archived_communication_documents": 162,
+    "market_views": 188,
     "unitholder_letters": 22,
-    "documents_with_published_date": 26,
-    "funds_with_registered_communication_sources": 15,
+    "documents_with_published_date": 49,
+    "funds_with_registered_communication_sources": 17,
     "issue_counts": {
       "communication_document_not_archived": 4,
-      "no_amc_communications_collected": 15,
+      "no_amc_communications_collected": 13,
       "publication_date_missing": 18
     }
   },
@@ -31,8 +31,6 @@
       "code": "discover_first_party_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "Groww Small Cap Fund",
-        "HSBC Small Cap Fund",
         "ICICI Prudential Small Cap Fund",
         "Invesco India Small Cap Fund",
         "Kotak Small Cap Fund",
@@ -364,17 +362,24 @@
     {
       "family": "Groww Small Cap Fund",
       "amc": "Groww Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 3,
+      "archived_communication_count": 3,
+      "market_view_count": 3,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
-      "issues": [
-        "no_amc_communications_collected"
-      ]
+      "published_date_count": 3,
+      "latest_published_at": "2026-09-21",
+      "latest_observed_at": "2026-09-26T13:10:14+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "Groww",
+          "url": "https://www.growwmf.in/distributor/knowledge-hub/publications",
+          "label": "Reports and Newsletter",
+          "status": "Checked",
+          "last_checked": "2026-09-26T13:10:14+00:00",
+          "detail": "3 Groww Reports & Newsletter market-intelligence PDFs retained; 0 download/parser gaps"
+        }
+      ],
+      "issues": []
     },
     {
       "family": "HDFC Small Cap Fund",
@@ -411,17 +416,24 @@
     {
       "family": "HSBC Small Cap Fund",
       "amc": "HSBC Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 20,
+      "archived_communication_count": 20,
+      "market_view_count": 20,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
-      "issues": [
-        "no_amc_communications_collected"
-      ]
+      "published_date_count": 20,
+      "latest_published_at": "2026-08-11",
+      "latest_observed_at": "2026-09-26T13:10:41+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "HSBC",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
+          "label": "Local Market Commentary",
+          "status": "Checked",
+          "last_checked": "2026-09-26T13:10:41+00:00",
+          "detail": "20 HSBC Local Market Commentary articles retained; 0 download/parser gaps"
+        }
+      ],
+      "issues": []
     },
     {
       "family": "Helios Small Cap Fund",

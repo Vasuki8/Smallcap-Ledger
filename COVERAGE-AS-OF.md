@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-26T13:01:27+00:00
+Prepared: 2026-09-26T13:11:52+00:00
 
 **36 funds, 143 NAV series, 281,584 NAV observations. Latest included NAV: 2026-09-25.**
 
@@ -21,9 +21,9 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | DSP Small Cap Fund | ₹ 21,559.39 · 2026-09-24 | 0.81% TER · 2026-09-25 | 86 positions · 2026-08-31 · complete · current | BSE 250 Small Cap TRI · 2026-09-25 | 15 |
 | Edelweiss Small Cap Fund | ₹ 7,124.87 · 2026-09-24 | 0.65% TER · 2026-09-25 | 10 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2026-08-31 | 3 |
 | Franklin India Small Cap Fund | ₹ 14,447.11 · 2026-09-24 | 1.07% TER · 2026-09-25 | 93 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-09-25 | 13 |
-| Groww Small Cap Fund | ₹ 942.00 · 2026-09-24 | 1.12% TER · 2026-04-30 | 62 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 10 |
+| Groww Small Cap Fund | ₹ 942.00 · 2026-09-24 | 1.12% TER · 2026-04-30 | 62 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 13 |
 | HDFC Small Cap Fund | ₹ 41,711.07 · 2026-09-24 | 0.78% TER · 2026-09-24 | 87 positions · 2026-08-31 · complete · current | BSE 250 SmallCap Index (Total Returns Index) · 2026-09-25 | 17 |
-| HSBC Small Cap Fund | ₹ 18,925.64 · 2026-09-24 | 0.77% TER · 2026-09-24 | 115 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 3 |
+| HSBC Small Cap Fund | ₹ 18,925.64 · 2026-09-24 | 0.77% TER · 2026-09-24 | 115 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 23 |
 | Helios Small Cap Fund | ₹ 1,886.36 · 2026-09-24 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | Nifty Small Cap 250 Total Return Index (TRI) · 2026-09-23 | 165 |
 | ICICI Prudential Small Cap Fund | ₹ 9,891.94 · 2026-09-24 | 1.18% TER · 2026-09-24 | 125 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 3 |
 | Invesco India Small Cap Fund | ₹ 16,363.87 · 2026-09-24 | 0.63% TER · 2026-09-24 | 72 positions · 2026-08-31 · complete · current | BSE 250 Smallcap TRI · 2026-08-31 | 5 |
