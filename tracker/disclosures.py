@@ -100,6 +100,11 @@ def dated_communication_source_kind(title,url):
             '/investor-insights/fund-market/factor-investing-2026-outlook',
         )):
         return kind
+    if (host in ('www.icicipruamc.com','icicipruamc.com')
+        and path.startswith('/blob/sebi-repo/Advertisements/')
+        and re.search(r'/Release\s+date\s+\d{2}-\d{2}-20\d{2}/',path,re.I)
+        and re.search(r'Monthly\s+Market\s+Outlook\.html$',path,re.I)):
+        return kind
     return None
 
 
@@ -129,8 +134,8 @@ def source_context_communication_kind(source,target,title):
     return None
 
 
-def explicit_publication_date(content,media_type=''):
-    """Return only an explicit HTML publication/update date supplied by the AMC."""
+def explicit_publication_date(content,media_type='',url=''):
+    """Return only an explicit publication/update date supplied by the AMC."""
     if not content or ('html' not in str(media_type).lower()
                        and not content.lstrip().startswith(b'<')):return None
     try:soup=BeautifulSoup(content,'html.parser')
@@ -162,6 +167,14 @@ def explicit_publication_date(content,media_type=''):
     # "By <author> / September 11, 2026". Accept only that explicit marker.
     m=re.search(r'\bBy\b[^/]{0,120}/\s*([A-Za-z]+\s+\d{1,2},\s*20\d{2})',text,re.I)
     if m:candidates.append(m.group(1))
+    parsed_url=urlparse(url) if url else None
+    if (parsed_url
+        and (parsed_url.hostname or '').lower() in ('www.icicipruamc.com','icicipruamc.com')):
+        path=unquote(parsed_url.path)
+        if (path.startswith('/blob/sebi-repo/Advertisements/')
+            and re.search(r'Monthly\s+Market\s+Outlook\.html$',path,re.I)):
+            m=re.search(r'/Release\s+date\s+(\d{2}-\d{2}-20\d{2})/',path,re.I)
+            if m:candidates.append(m.group(1))
     for raw in candidates:
         value=str(raw).strip()
         if re.match(r'^20\d{2}-\d{2}-\d{2}T',value):value=value[:10]
@@ -564,7 +577,7 @@ def ingest_source(source):
         # itself an AMC communication, not merely a crawl directory. Generic
         # directories (for example /market-update) remain source pages.
         page_kind=dated_communication_source_kind(source["label"],url)
-        page_published=explicit_publication_date(content,media_type) if page_kind else None
+        page_published=explicit_publication_date(content,media_type,url) if page_kind else None
         page_id=save_document(family,source["label"],url,page_kind or "source page","AMC",
                               published=page_published,origin="AMC")
         if page_kind:
