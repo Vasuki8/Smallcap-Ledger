@@ -13,6 +13,8 @@ from tracker.disclosures import official_publication_url
 
 SOURCES=(
     ("Bajaj","https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=23"),
+    ("Bajaj","https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=51"),
+    ("Bajaj","https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=58"),
     ("Bandhan","https://bandhanmutual.com/downloads/market-outlook"),
     ("Bandhan","https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/"),
     ("Bandhan","https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/"),
@@ -44,6 +46,18 @@ def main():
                           "kind="+providers.classify(label,target),
                           "label="+repr(label[:300]),
                           "url="+target,flush=True)
+            if amc=="Bajaj":
+                for node in soup.find_all(string=lambda x:isinstance(x,str) and "outlook" in x.lower()):
+                    parent=node.parent
+                    block=parent
+                    for _ in range(5):
+                        if block is None:break
+                        html=str(block)
+                        if "Download" in html or "download" in html or "OUTLOOK" in html.upper():break
+                        block=block.parent
+                    print("COMM_PROBE_BAJAJ_OUTLOOK_NODE",url,
+                          repr((block or parent).get_text(" ",strip=True)[:1200]),
+                          repr(str(block or parent)[:3500]),flush=True)
             for script in soup.find_all("script"):
                 raw=(script.string or script.get_text() or "")
                 if any(k in raw.lower() for k in ("outlook","marketingmaterial","api/","ajax","download")):
