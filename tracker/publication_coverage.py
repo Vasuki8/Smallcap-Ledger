@@ -7,6 +7,7 @@ without treating factsheets, portfolios or third-party news as communications.
 """
 from __future__ import annotations
 
+import json
 import re
 from collections import Counter
 
@@ -22,11 +23,30 @@ _COMMUNICATION_SOURCE=re.compile(
 )
 
 
+def _source_key(amc):
+    """Resolve one source-page key without substring collisions such as Kotak/Mahindra."""
+    keys={row["amc_match"] for row in db.rows("SELECT DISTINCT amc_match FROM source_pages")}
+    try:
+        keys.update(row[0] for row in json.loads((db.ROOT/"tracker"/"sources.json").read_text()))
+    except (OSError,json.JSONDecodeError,TypeError,IndexError):
+        pass
+    target=" ".join(str(amc or "").lower().split())
+    matches=[]
+    for key in keys:
+        normalized=" ".join(str(key or "").lower().split())
+        if normalized and (target==normalized or target.startswith(normalized+" ")):
+            matches.append((len(normalized),key))
+    if not matches:return None
+    matches.sort(reverse=True)
+    return matches[0][1]
+
+
 def _source_pages(amc):
+    key=_source_key(amc)
+    if not key:return []
     rows=db.rows("""SELECT amc_match,url,label,status,last_checked,detail
-      FROM source_pages WHERE enabled=1
-        AND (instr(lower(?),lower(amc_match))>0 OR instr(lower(amc_match),lower(?))>0)
-      ORDER BY COALESCE(last_checked,'' ) DESC,id DESC""",(amc,amc))
+      FROM source_pages WHERE enabled=1 AND lower(amc_match)=lower(?)
+      ORDER BY COALESCE(last_checked,'' ) DESC,id DESC""",(key,))
     return [
         row for row in rows
         if _COMMUNICATION_SOURCE.search((row.get("label") or "")+" "+(row.get("url") or ""))
