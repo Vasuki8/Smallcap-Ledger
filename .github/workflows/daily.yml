@@ -64,10 +64,6 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
-      - name: Diagnose ICICI recovery layouts
-        if: github.event_name == 'push'
-        timeout-minutes: 5
-        run: uv run --frozen python scripts/diagnose_icici_blob_portfolio.py
       - name: Apply ICICI monthly portfolio recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
