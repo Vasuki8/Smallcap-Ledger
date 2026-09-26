@@ -1,8 +1,88 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after ICICI Prudential complete monthly portfolio recovery and successful production deployment.
+Updated: 2026-09-26, after AMC communication coverage audit and source-key matching correction.
 
-## Latest completed batch: recover ICICI Prudential complete monthly portfolios
+## Latest completed batch: audit AMC-origin communication/news coverage
+
+**The backend now has a dedicated read-only audit for the tracker’s AMC-publication requirement.** It measures newsletters/market/CIO/investment views and letters to unitholders separately from factsheets, portfolios and generic disclosures, and it explicitly excludes third-party news.
+
+### What changed
+
+PR **#178** merged as commit `b202e08bc722a5f225bf931675d6c1b4fd43ba05` and added:
+
+- `tracker/publication_coverage.py` — a read-only per-fund communication coverage audit;
+- `docs/PUBLICATION-COVERAGE-AUDIT.json` — machine-readable coverage and repair priorities;
+- `docs/PUBLICATION-COVERAGE-AUDIT.md` — operator-readable summary;
+- regression coverage proving AMC-origin filtering, third-party exclusion, published-date gap handling, repair-priority grouping and read-only behavior;
+- normal successful-build publication through `scripts/record_build.py`.
+
+The first production audit exposed a fund-house matching collision: **Kotak Mahindra Mutual Fund** incorrectly inherited a **Mahindra Manulife** communication source because substring matching saw “Mahindra” in both names. PR **#179** merged as commit `a3d7116386df7e55a066b93cee26b82ef2a49f87` and corrected the audit to resolve one registered AMC source key by normalized prefix. A dedicated regression now prevents that Kotak/Mahindra collision.
+
+No source fetch, financial-data mutation, UI change, paid data, third-party news ingestion, source deletion or retention-policy change was introduced by this audit batch.
+
+### Production verification
+
+Final production workflow **36218671256** completed successfully:
+
+- build: **success**
+- full regression suite: **381 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- collection-status/audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10898346614** is **236,555,178 bytes** with digest `sha256:2bedaebf73caafae81891fd69dc03de37d2b470fda56410d4203b6855c3fc916`.
+
+Final communication audit generated at **2026-09-26T04:45:39Z**:
+
+- funds: **36**
+- funds with at least one retained AMC communication: **13**
+- funds with no retained AMC communication: **23**
+- retained communication documents: **154**
+- archived communication originals: **116**
+- market/newsletter/CIO/product-view documents: **132**
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **0**
+- funds with a correctly matched registered communication-oriented source: **9**
+
+The zero `published_at` count is an evidence gap, not permission to backdate records from collection time. `first_seen` must not be substituted for the publication date.
+
+### Actionable communication-retrieval queue
+
+Priority **1 — review already registered first-party communication sources**:
+
+1. **Iti Small Cap Fund**
+   - `https://www.itiamc.com/digitalfactsheet/July2026/CEO.html` — Market Outlook — Checked
+   - `https://www.itiamc.com/digitalfactsheet/July2026/equity-update.html` — Equity Market Update — Checked
+   - `https://www.itiamc.com/digitalfactsheet/July2026/debt-update.html` — Debt Market Update — Checked
+   - These pages already yielded archived related documents, but none are currently classified/retained as an AMC communication for the fund.
+
+2. **Mahindra Manulife Small Cap Fund**
+   - `https://www.mahindramanulife.com/digital-factsheet/july-2026/Outlook.html` — Market Outlook — Partial
+   - The retained source check found two relevant linked documents, but neither currently satisfies the communication audit.
+
+Priority **2 — discover a dedicated first-party communication source** for **21 funds**:
+Abakkus, Axis, Bajaj Finserv, Bandhan, Edelweiss, Franklin India, Groww, HSBC, ICICI Prudential, Invesco India, Kotak, Mirae Asset, PGIM India, Quant, SBI, Sundaram, Tata, The Wealth Company, TRUSTMF, UTI and Union Small Cap funds.
+
+Priority **3 — repair retained communication originals** for **LIC MF, Nippon India and Samco**. These funds already have communication metadata, but some corresponding original versions are not archived.
+
+### Next backend/data-retrieval task
+
+**Start with ITI, then Mahindra Manulife, using retained evidence before any new broad discovery.**
+
+For ITI:
+- inspect the exact documents/links already retained from the three registered market-update/outlook pages;
+- determine why they are currently classified outside `market view` / `unitholder letter`;
+- promote only documents whose first-party title/source unambiguously identifies an AMC communication;
+- retain an explicit publication date only when the source itself provides one; never substitute `first_seen`.
+
+Then apply the same evidence-first review to Mahindra Manulife’s registered Outlook page. If the existing archived links are genuine AMC outlook/communication documents, fix the narrow classifier/association and add regression coverage. If they are not communications, preserve the gap and move that fund to first-party communication-source discovery.
+
+The portfolio recovery queue remains separately blocked at **6 items / 0 actionable now**; do not re-probe Union, Bajaj or Edelweiss until their retained source-change watch changes. Bandhan, Sundaram and UTI remain precision-limited and must not be completed by estimating censored weights.
+
+## Previous completed batch: recover ICICI Prudential complete monthly portfolios
+
+## Previous completed batch: recover ICICI Prudential complete monthly portfolios
 
 **ICICI Prudential Small Cap Fund is no longer in the incomplete-portfolio recovery queue.** The tracker now retains two consecutive, first-party, complete month-end portfolio snapshots from ICICI Prudential's public downloads service, with exact source URLs, source hashes, reporting dates and constituent weights.
 
