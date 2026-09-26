@@ -1,0 +1,81 @@
+"""Bounded repair of retained unarchived AMC communication originals."""
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+from tracker import db,providers
+from scripts import repair_unarchived_communications as repair
+
+
+class CommunicationArchiveRepairTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory()
+        self.p=patch.object(db,"DATA",Path(self.tmp.name));self.p.start();db.init()
+        with db.connect() as c:
+            c.executemany(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                [
+                    (8501,"LIC Direct",repair.FAMILIES[0][0],"LIC Mutual Fund","Direct","Growth","test"),
+                    (8502,"Nippon Direct",repair.FAMILIES[1][0],"Nippon India Mutual Fund","Direct","Growth","test"),
+                    (8503,"Samco Direct",repair.FAMILIES[2][0],"Samco Mutual Fund","Direct","Growth","test"),
+                ],
+            )
+        self.urls={
+            repair.FAMILIES[0][0]:"https://www.licmf.com/insights/lic-market-outlook.pdf",
+            repair.FAMILIES[1][0]:"https://mf.nipponindiaim.com/LearnAndInvest/MarketOutlook/test.html",
+            repair.FAMILIES[2][0]:"https://media1.samco.in/samco-market-view.pdf",
+        }
+        self.ids={}
+        for family,url in self.urls.items():
+            self.ids[family]=providers.save_document(
+                family,"Market Outlook",url,"market view","AMC",origin="AMC")
+
+    def tearDown(self):
+        self.p.stop();self.tmp.cleanup()
+
+    @staticmethod
+    def archived(body,typ):
+        return body,db.archive(body,typ),typ
+
+    def test_missing_returns_only_zero_version_communications(self):
+        rows=repair.missing(repair.FAMILIES[0][0])
+        self.assertEqual([r["id"] for r in rows],[self.ids[repair.FAMILIES[0][0]]])
+        digest=db.archive(b"%PDF-1.7 existing","application/pdf")
+        providers.doc_version(self.ids[repair.FAMILIES[0][0]],digest)
+        self.assertEqual(repair.missing(repair.FAMILIES[0][0]),[])
+
+    def test_repair_archives_exact_retained_first_party_urls(self):
+        def fake_fetch(url,**kwargs):
+            if url.endswith(".html"):
+                return self.archived(b"<html><body>Nippon market outlook</body></html>","text/html")
+            return self.archived(b"%PDF-1.7 market view","application/pdf")
+        with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):
+            result=repair.repair(fetch_fn=fake_fetch,can_crawl_fn=lambda u:None)
+        self.assertEqual(result["repaired"],3)
+        for family,_ in repair.FAMILIES:
+            self.assertEqual(repair.missing(family),[])
+
+    def test_invalid_response_does_not_attach_document_version(self):
+        family=repair.FAMILIES[0][0]
+        with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):
+            result=repair.repair(
+                fetch_fn=lambda *a,**k:self.archived(b"<html>error</html>","text/html"),
+                can_crawl_fn=lambda u:None,
+            )
+        self.assertGreaterEqual(result["failed"],1)
+        self.assertEqual(len(repair.missing(family)),1)
+
+    def test_non_official_url_is_skipped_without_fetch(self):
+        family=repair.FAMILIES[0][0]
+        with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=False), \
+             patch("scripts.repair_unarchived_communications.providers.fetch") as fetch:
+            result=repair.repair(can_crawl_fn=lambda u:None)
+        self.assertGreaterEqual(result["skipped"],1)
+        fetch.assert_not_called()
+        self.assertEqual(len(repair.missing(family)),1)
+
+
+if __name__=="__main__":
+    unittest.main()
