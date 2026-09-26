@@ -99,9 +99,9 @@ def parse_article(content,url,title_hint=""):
         raise ValueError("UTI insight URL escaped reviewed first-party paths")
     soup=BeautifulSoup(content,"html.parser")
     text=" ".join(soup.stripped_strings)
-    if len(text)<150 or "UTI" not in text.upper():
-        raise ValueError("UTI insight article identity could not be validated")
     heading=soup.find("h1")
+    if not heading or "UTI" not in text.upper():
+        raise ValueError("UTI insight article identity could not be validated")
     title=(heading.get_text(" ",strip=True) if heading else str(title_hint or "").strip())
     title=re.sub(r"\s+"," ",title)
     if not title:
