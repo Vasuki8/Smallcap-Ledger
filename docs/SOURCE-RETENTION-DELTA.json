@@ -1,19 +1,19 @@
 {
-  "reviewed_at": "2026-09-26T14:12:50+00:00",
+  "reviewed_at": "2026-09-26T14:25:25+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 325,
+  "new_hashes_reviewed": 327,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_latest_or_review": 206,
-    "retain_evidence": 114,
+    "retain_latest_or_review": 207,
+    "retain_evidence": 115,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_latest_or_review": 89691498,
-    "retain_evidence": 213833274,
+    "retain_latest_or_review": 90005178,
+    "retain_evidence": 215284802,
     "link_only_candidate": 3851376
   },
   "new_link_only_candidates": 5,
@@ -4839,6 +4839,30 @@
       ]
     },
     {
+      "hash": "9bd20bd8f20d2cc6e460618aab4223db007ff4ca9a87faf991066dab63038140",
+      "bytes": 1451528,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-26T14:24:17+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf",
+      "host": "miraeassetmf.co.in",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf"
+      ],
+      "urls": [
+        "https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf"
+      ]
+    },
+    {
       "hash": "9bd8f83a41e3ce7acb0bad5769d2a4707ba57b09affacd669755c663a4ec4a83",
       "bytes": 49237,
       "media_type": "application/json; charset=utf-8",
@@ -6439,6 +6463,30 @@
       ],
       "urls": [
         "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_24092026.xls"
+      ]
+    },
+    {
+      "hash": "c8eae5c7a93c856776b6951037fa5f7ce1abb66191197268eb70f7a94db5346c",
+      "bytes": 313680,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-26T14:24:17+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_latest_or_review",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/monthly-market-update",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "latest_saved_download_for_at_least_one_document",
+        "latest_saved_response_for_at_least_one_url",
+        "no_strictly_newer_saved_response_for_every_url"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [
+        "https://www.kotakmf.com/monthly-market-update"
+      ],
+      "urls": [
+        "https://www.kotakmf.com/monthly-market-update"
       ]
     },
     {

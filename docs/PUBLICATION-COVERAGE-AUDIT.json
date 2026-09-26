@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-26T14:13:29+00:00",
+  "built_at": "2026-09-26T14:26:11+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -11,18 +11,18 @@
   },
   "summary": {
     "funds": 36,
-    "funds_with_amc_communications": 25,
-    "funds_without_amc_communications": 11,
-    "communication_documents": 214,
-    "archived_communication_documents": 166,
-    "market_views": 192,
+    "funds_with_amc_communications": 27,
+    "funds_without_amc_communications": 9,
+    "communication_documents": 216,
+    "archived_communication_documents": 167,
+    "market_views": 194,
     "unitholder_letters": 22,
-    "documents_with_published_date": 50,
-    "funds_with_registered_communication_sources": 19,
+    "documents_with_published_date": 51,
+    "funds_with_registered_communication_sources": 21,
     "issue_counts": {
-      "communication_document_not_archived": 4,
-      "no_amc_communications_collected": 11,
-      "publication_date_missing": 20
+      "communication_document_not_archived": 5,
+      "no_amc_communications_collected": 9,
+      "publication_date_missing": 21
     }
   },
   "repair_priorities": [
@@ -31,8 +31,6 @@
       "code": "discover_first_party_communication_sources",
       "actionable": true,
       "affected_funds": [
-        "Kotak Small Cap Fund",
-        "Mirae Asset Small Cap Fund",
         "Pgim India Small Cap Fund",
         "Quant Small Cap Fund",
         "SBI Small Cap Fund",
@@ -51,6 +49,7 @@
       "actionable": true,
       "affected_funds": [
         "Franklin India Small Cap Fund",
+        "Kotak Small Cap Fund",
         "LIC Mf Small Cap Fund",
         "Nippon India Small Cap Fund",
         "Samco Small Cap Fund"
@@ -554,16 +553,25 @@
     {
       "family": "Kotak Small Cap Fund",
       "amc": "Kotak Mahindra Mutual Fund",
-      "communication_count": 0,
+      "communication_count": 1,
       "archived_communication_count": 0,
-      "market_view_count": 0,
+      "market_view_count": 1,
       "unitholder_letter_count": 0,
-      "published_date_count": 0,
-      "latest_published_at": null,
+      "published_date_count": 1,
+      "latest_published_at": "2026-09-09",
       "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "registered_communication_sources": [
+        {
+          "amc_match": "Kotak",
+          "url": "https://www.kotakmf.com/monthly-market-update",
+          "label": "Monthly Market Update",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:24:17+00:00",
+          "detail": "1 Kotak current Monthly Market Update retained; title=Monthly Outlook PPT sept 2026; published_at=2026-09-09; original PDF link-only because robots policy disallows automatic retrieval; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "communication_document_not_archived"
       ]
     },
     {
@@ -618,16 +626,25 @@
     {
       "family": "Mirae Asset Small Cap Fund",
       "amc": "Mirae Asset Mutual Fund",
-      "communication_count": 0,
-      "archived_communication_count": 0,
-      "market_view_count": 0,
+      "communication_count": 1,
+      "archived_communication_count": 1,
+      "market_view_count": 1,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": null,
-      "registered_communication_sources": [],
+      "latest_observed_at": "2026-09-26T14:24:17+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "Mirae",
+          "url": "https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf",
+          "label": "Annual Market Outlook 2026",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:24:20+00:00",
+          "detail": "0 extracted facts/holdings; 1 document archived; 0 download/parser gaps"
+        }
+      ],
       "issues": [
-        "no_amc_communications_collected"
+        "publication_date_missing"
       ]
     },
     {
