@@ -73,7 +73,10 @@ def current_publication(content):
             continue
         if not title or not published or not (2020<=year<=date.today().year and 0<=month<=11):
             continue
-        if providers.classify(title,"")!="market view":continue
+        # Kotak's own report family and state identify these as Monthly Outlook
+        # publications even when the display title omits the word "Market".
+        if not re.fullmatch(r"Monthly\s+Outlook\s+PPT(?:\s+.*)?",title,re.I):
+            continue
         rows.append({
             "id":ident,"year":year,"month":month,
             "title":title,"published_at":published,
