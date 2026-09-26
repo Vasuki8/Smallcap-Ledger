@@ -83,6 +83,7 @@ class EdelweissFranklinCommunicationTests(unittest.TestCase):
         self.assertIn(("Edelweiss",upgrade.EDELWEISS_INSIGHTS,"Fund & Market Insights"),pairs)
         self.assertIn(("Edelweiss",upgrade.EDELWEISS_CURVE,"Debt Market Update - Curve"),pairs)
         self.assertIn(("Edelweiss",upgrade.EDELWEISS_FACTOR,"Factor Investing Outlook 2026"),pairs)
+        self.assertIn(("Edelweiss",upgrade.EDELWEISS_FACTOR_PDF,"Factor Investing Outlook 2026"),pairs)
         self.assertIn(("Franklin",upgrade.FRANKLIN_LATEST,"Latest Commentaries / Market Insights"),pairs)
         self.assertFalse(any(r[0]=="Franklin" and "widen.net" in r[1] for r in rows))
         self.assertFalse(disclosures.official_publication_url(
@@ -178,6 +179,22 @@ class EdelweissFranklinCommunicationTests(unittest.TestCase):
         self.assertEqual(child["kind"],"market view")
         self.assertEqual(child["versions"],1)
 
+    def test_exact_edelweiss_factor_pdf_is_valid_direct_market_view_source(self):
+        pdf=b"%PDF-1.4 exact first-party factor outlook"
+        with patch("tracker.disclosures.can_crawl",return_value=None), \
+             patch("tracker.disclosures.fetch",
+                   return_value=self.archived(pdf,"application/pdf")), \
+             patch("tracker.amc_reports.extract",return_value=0):
+            result=disclosures.ingest_source(
+                self.source("Edelweiss",upgrade.EDELWEISS_FACTOR_PDF))
+        self.assertTrue(result.endswith("0 download/parser gaps"),result)
+        row=db.one("""SELECT d.kind,COUNT(v.id) versions
+                      FROM documents d LEFT JOIN document_versions v ON v.document_id=d.id
+                      WHERE d.family='Edelweiss Small Cap Fund' AND d.url=?
+                      GROUP BY d.id""",(upgrade.EDELWEISS_FACTOR_PDF,))
+        self.assertEqual(row["kind"],"market view")
+        self.assertEqual(row["versions"],1)
+
     def test_edelweiss_fund_market_context_is_narrow(self):
         source=self.source("Edelweiss",upgrade.EDELWEISS_INSIGHTS)
         self.assertEqual(
@@ -208,14 +225,9 @@ class EdelweissFranklinCommunicationTests(unittest.TestCase):
 
         def fake_ingest(source):
             url=source["url"]
-            if url==upgrade.EDELWEISS_INSIGHTS:
-                store("Edelweiss Small Cap Fund","Fund & Market Insights",url,"source page")
-            elif url==upgrade.EDELWEISS_CURVE:
-                store("Edelweiss Small Cap Fund","Debt Market Update - Curve",url,"market view")
-            elif url==upgrade.EDELWEISS_FACTOR:
-                store("Edelweiss Small Cap Fund","Factor Investing Outlook 2026",url,"market view")
-                store("Edelweiss Small Cap Fund","Factor download",
-                      upgrade.EDELWEISS_FACTOR_PDF,"market view")
+            if url==upgrade.EDELWEISS_FACTOR_PDF:
+                store("Edelweiss Small Cap Fund","Factor Investing Outlook 2026",
+                      url,"market view")
             elif url==upgrade.FRANKLIN_LATEST:
                 store("Franklin India Small Cap Fund",franklin.SOURCE_TITLE,
                       franklin.ENDPOINT,"source page")
@@ -237,7 +249,7 @@ class EdelweissFranklinCommunicationTests(unittest.TestCase):
         with patch("tracker.disclosures.ingest_source",side_effect=fake_ingest) as ingest:
             self.assertTrue(upgrade.run())
             self.assertTrue(upgrade.run())
-            self.assertEqual(ingest.call_count,4)
+            self.assertEqual(ingest.call_count,2)
 
         self.assertTrue(db.setting(upgrade.UPGRADE_KEY,False))
         legacy=self.source("Franklin",upgrade.LEGACY_WIDEN)
