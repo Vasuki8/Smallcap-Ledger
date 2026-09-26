@@ -64,22 +64,14 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
-      - name: Diagnose SBI and Sundaram communication sources
-        if: github.event_name == 'push'
-        timeout-minutes: 6
-        run: uv run --frozen python scripts/diagnose_sbi_sundaram_communications.py
-      - name: Diagnose SBI and Sundaram current card markup
-        if: github.event_name == 'push'
-        timeout-minutes: 6
-        run: uv run --frozen python scripts/diagnose_sbi_sundaram_card_markup.py
-      - name: Diagnose SBI and Sundaram exact link targets
-        if: github.event_name == 'push'
-        timeout-minutes: 8
-        run: uv run --frozen python scripts/diagnose_sbi_sundaram_link_targets.py
       - name: Apply PGIM and quant communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
         run: uv run --frozen python scripts/refresh_pgim_quant_communications.py
+      - name: Apply SBI and Sundaram communication source recovery
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        run: uv run --frozen python scripts/refresh_sbi_sundaram_communications.py
       - name: Apply Kotak and Mirae communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
