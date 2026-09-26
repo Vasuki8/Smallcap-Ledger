@@ -64,6 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
+      - name: Diagnose Kotak and Mirae communication sources
+        if: github.event_name == 'push'
+        timeout-minutes: 6
+        run: uv run --frozen python scripts/diagnose_kotak_mirae_communications.py
       - name: Apply Groww and HSBC communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
