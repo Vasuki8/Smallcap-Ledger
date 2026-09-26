@@ -1,8 +1,119 @@
 # Smallcap Ledger backend handoff
 
-Updated: 2026-09-26, after retained ITI/Mahindra AMC communication recovery and successful production deployment.
+Updated: 2026-09-26, after Abakkus/Axis first-party communication-source recovery and successful production deployment.
 
-## Latest completed batch: recover retained ITI and Mahindra AMC communications
+## Latest completed batch: add Abakkus and Axis AMC communication sources
+
+**Abakkus Small Cap Fund and Axis Small Cap Fund are no longer in the missing-communication queue.** Both now have retained first-party market-view evidence plus dedicated source routes that can be revisited by the normal documents collector.
+
+### First-party sources added
+
+**Abakkus**
+
+- dynamic market-outlook catalog: `https://insights.abakkusinvest.com/tag/market-outlook/`
+- exact current recovery anchor: `https://insights.abakkusinvest.com/market-outlook-august-2026/`
+- source label: `Market Outlook` / `Market Outlook - August 2026`
+- the dynamic catalog is first-party Abakkus Insights and exposes monthly Market Outlook entries.
+
+**Axis**
+
+- dynamic Market-Outlook category: `https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook`
+- exact recovery anchor: `https://www.axismf.com/cms/sites/default/files/pdf-factsheets/Axis%20MF_%20Annual%20Equity%20Outlook%202026.pdf`
+- source labels: `Market Outlook` / `Annual Equity Outlook 2026`
+- the dynamic article category is treated as communication context only for child article URLs under the same Axis knowledge-centre path; unrelated Axis pages are not promoted.
+
+PR **#183** merged as commit `f52bf42e1428c717f518df82d56162a1b4d4cfe7`.
+
+### Collector changes
+
+The communication collector now:
+
+- allows explicit first-party Market-Outlook category context to classify narrowly scoped child articles as `market view`;
+- keeps ordinary article/fund pages outside that context unless their own title/URL independently establishes a communication;
+- recognizes dated Abakkus `/market-outlook-<month>-<year>/` pages as communication artifacts while leaving the generic tag archive as a source page;
+- treats direct `market view` / `unitholder letter` files as communications rather than false financial-parser gaps;
+- extracts an explicit HTML publication date only from source-provided metadata or markers:
+  - `article:published_time`
+  - HTML `time[datetime]`
+  - JSON-LD `datePublished`
+  - literal `Last updated on <date>`
+- never substitutes `first_seen`, observation time, directory month or a market-data date for publication date.
+
+### Production recovery evidence
+
+Final production workflow **36222040546** completed successfully at **2026-09-26T05:54:43Z**.
+
+The live one-time recovery gate observed:
+
+- **Abakkus dynamic catalog:** **10 relevant links / 10 documents archived / 0 download-parser gaps**
+- **Abakkus exact August outlook:** retained as `market view`, explicit `published_at=2026-08-11`, one archived version
+- **Axis dynamic Market-Outlook category:** **2 relevant links / 2 documents archived / 0 download-parser gaps**
+- **Axis Annual Equity Outlook 2026:** retained as `market view`, one archived version, **0 false parser gaps**
+- dynamic-catalog verification succeeded for both AMCs.
+
+Full production validation:
+
+- build: **success**
+- full regression suite: **392 tests passed**
+- generated-site/download validation: **success**
+- cumulative-history publication: **success**
+- communication/coverage audit publication: **success**
+- GitHub Pages deployment: **success**
+
+Pages artifact **10899359504** is **233,796,655 bytes** with digest `sha256:4963e146a2852f9ef064a374e01a353e2a36ad034757170da3e5320259db9765`.
+
+### Communication coverage after this batch
+
+Final audit generated at **2026-09-26T05:54:09Z**:
+
+- funds with at least one retained AMC communication: **17 / 36** (was 15)
+- funds with no retained AMC communication: **19** (was 21)
+- retained communication documents: **172** (was 158)
+- archived communication originals: **134** (was 120)
+- market/newsletter/CIO/product-view documents: **150** (was 136)
+- letters to unitholders: **22**
+- communication documents with an explicit `published_at`: **12** (was 0)
+- funds with a registered communication-oriented source: **11** (was 9)
+
+**Abakkus final state:** **11 market-view documents / 11 archived originals / 10 explicit publication dates**. Latest explicit publication date is **2026-08-11**. The dynamic Market Outlook catalog is `Checked`.
+
+**Axis final state:** **3 market-view documents / 3 archived originals / 2 explicit publication dates**. Latest explicit publication date is **2026-03-15**. The dynamic Market-Outlook category and annual outlook PDF are both `Checked`.
+
+Both funds still report `publication_date_missing` because at least one retained communication lacks an unambiguous publication date. Preserve that gap; do not infer one.
+
+### Next backend/data-retrieval task
+
+Continue bounded first-party communication-source discovery for the remaining **19** funds with no retained AMC communication and no dedicated communication source.
+
+Current audit order:
+
+1. **Bajaj Finserv Small Cap Fund**
+2. **Bandhan Small Cap Fund**
+3. Edelweiss Small Cap Fund
+4. Franklin India Small Cap Fund
+5. Groww Small Cap Fund
+6. HSBC Small Cap Fund
+7. ICICI Prudential Small Cap Fund
+8. Invesco India Small Cap Fund
+9. Kotak Small Cap Fund
+10. Mirae Asset Small Cap Fund
+11. PGIM India Small Cap Fund
+12. Quant Small Cap Fund
+13. SBI Small Cap Fund
+14. Sundaram Small Cap Fund
+15. Tata Small Cap Fund
+16. The Wealth Company Small Cap Fund
+17. TRUSTMF Small Cap Fund
+18. UTI Small Cap Fund
+19. Union Small Cap Fund
+
+Start with **Bajaj Finserv communication discovery**, then **Bandhan**. This is separate from Bajaj's blocked **portfolio** recovery: do not treat the portfolio transport blocker as evidence that AMC communication sources are unavailable. Use first-party communication/insight pages only and keep third-party news excluded.
+
+The separate `repair_unarchived_communication_documents` queue remains for **LIC MF, Nippon India and Samco** after the missing-source discovery priority.
+
+The portfolio recovery queue remains independently blocked at **6 items / 0 actionable now**; do not estimate censored holdings or re-probe blocked portfolio routes without a retained source-change signal.
+
+## Previous completed batch: recover retained ITI and Mahindra AMC communications
 
 **The first actionable communication-retrieval queue item is complete.** ITI Small Cap Fund and Mahindra Manulife Small Cap Fund now expose their already-retained first-party monthly outlook/update pages as AMC communications instead of leaving them misclassified as factsheets/source pages.
 
