@@ -85,6 +85,39 @@ class CommunicationArchiveRepairTests(unittest.TestCase):
         self.assertEqual(lic["repaired"],1)
         self.assertIn("%20",lic["repaired_rows"][0]["request_url"])
 
+    def test_lic_retries_invalid_asset_with_first_party_referer(self):
+        family=repair.LIC_FAMILY
+        with db.connect() as c:
+            c.execute("UPDATE documents SET url=? WHERE id=?",
+                      ("https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook March 2025.pdf",
+                       self.ids[family]))
+        calls=[]
+        def fake_fetch(url,**kwargs):
+            calls.append((url,kwargs.get("headers")))
+            if kwargs.get("headers"):
+                return b"%PDF-1.7 LIC outlook",None,"application/pdf"
+            return b"<html><body>asset shell</body></html>",None,"text/html"
+        with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):
+            result=repair.repair(fetch_fn=fake_fetch,can_crawl_fn=lambda u:None)
+        lic=result["families"][family]
+        self.assertEqual(lic["repaired"],1)
+        self.assertEqual(calls[1][1],{"Referer":repair.LIC_REFERER})
+        self.assertTrue(lic["repaired_rows"][0]["used_referer"])
+
+    def test_failed_lic_attempts_persist_response_diagnostics(self):
+        family=repair.LIC_FAMILY
+        with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):
+            result=repair.repair(
+                fetch_fn=lambda *a,**k:(b"<html><body>Not a PDF</body></html>",None,"text/html"),
+                can_crawl_fn=lambda u:None,
+            )
+        lic=result["families"][family]
+        row=lic["failed_rows"][0]
+        self.assertEqual(len(row["attempts"]),2)
+        self.assertEqual(row["attempts"][0]["media_type"],"text/html")
+        self.assertGreater(row["attempts"][0]["bytes"],0)
+        self.assertIn("Not a PDF",row["attempts"][0]["text_prefix"])
+
     def test_invalid_response_does_not_attach_document_version(self):
         family=repair.FAMILIES[0][0]
         with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):
