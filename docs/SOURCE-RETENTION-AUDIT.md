@@ -1,5 +1,103 @@
 # Source-retention audit — proposal only
 
+## Historical replacement-pack simulation refreshed at 696 hashes — no production mutation
+
+The historical migration proposal has been re-simulated after fixing generated-artifact self-protection. The authoritative historical proposal is now **696 hashes from the original 700-hash review**. The separate **5 post-audit candidates are explicitly excluded**.
+
+Implementation PR **#159** merged as commit `97ecf0d434bdbaabb27bda37e0ec6157ad777ab7`.
+
+Isolated simulation workflow **run 36208730633** completed successfully at **2026-09-26T01:33:38Z** and committed the review artifacts as commit `8416fc7d0bcd0003f515c02ad222006d92af73ee`.
+
+The one-time workflow was removed by PR **#160** / commit `e65011ee52f7b6d64d723a45c79aecbb4bf43e86`. The normal daily workflow never contained the simulation step.
+
+### Exact simulation boundary
+
+The simulator now fails closed unless all of these are true at the pinned active checkpoint:
+
+- original historical reviewed candidates: **700**
+- currently eligible historical candidates: **696**
+- strengthened/protected historical exclusions: **4**
+- separate post-audit delta candidates: **5**
+- overlap between the 696 historical set and the 5 new delta candidates: **0**
+
+The five post-audit candidates from `SOURCE-RETENTION-NEW-CANDIDATES.json` are therefore not silently added to this migration proposal.
+
+### Pinned checkpoint
+
+The successful simulation pinned:
+
+- active manifest created: **2026-09-26T01:21:17Z**
+- database asset: `database-36208080152-1.zip`
+- archive hashes: **2,790**
+- active source packs: **101**
+
+The proposed historical migration contains **696** metadata-only candidates and **2,094** retained hashes.
+
+### Exact proposed savings
+
+For the 696 historical candidates:
+
+- raw source bytes: **403,410,385**
+- compressed candidate payload bytes from the reviewed pack audit: **34,144,511**
+- affected active packs: **50**
+- proposed replacement packs: **25**
+- packs fully retired in the proposed steady state: **25**
+- proposed steady-state source packs: **76**
+
+Asset sizes:
+
+- current source-pack assets: **1,540,491,329 bytes**
+- proposed source-pack assets: **1,506,182,012 bytes**
+- exact source-pack reduction: **34,309,317 bytes**
+- current database ZIP: **7,920,465 bytes**
+- simulated database ZIP: **7,921,495 bytes**
+- exact active-set reduction: **34,308,287 bytes**
+
+The database ZIP grows by **1,030 bytes** from simulated retention-state changes, so active-set savings are 1,030 bytes lower than source-pack savings.
+
+**Actual production bytes reclaimed remain 0.**
+
+### Validation
+
+All simulation gates passed:
+
+- non-retention database fingerprints unchanged;
+- proposed manifest covers every retained hash exactly once;
+- proposed manifest duplicate hashes: **0**;
+- all **1,051** currently protected evidence hashes remain retained;
+- metadata-only selective materialization blocked;
+- retained replacement-pack member restored and checksum-verified;
+- AMC replay eligible retained hashes: **0**;
+- AMC replay gaps: **0**;
+- metadata-only archive endpoint blocked;
+- metadata-only saved document version hidden;
+- full static-site generation/validation passed;
+- simulated metadata-only candidates published on the site: **0**;
+- all **101** current active packs and the active database asset preserved as rollback.
+
+Production mutations performed by this simulation:
+
+- release uploads: **0**
+- release deletions: **0**
+- active-manifest switches: **0**
+- production binary-state changes: **0**
+- source-file deletions: **0**
+- legacy ZIP retirement: **false**
+
+Review artifacts remain:
+
+- `deployment/retention-pack-simulation.json`
+- `docs/RETENTION-PROPOSED-MANIFEST.json`
+- `docs/RETENTION-MIGRATION-CANDIDATES.json`
+- `docs/RETENTION-REPLACEMENT-SIMULATION.md`
+
+### Approval boundary
+
+The 696-hash proposal is ready for owner review but **not authorized for execution**. Do not mark those binaries metadata-only, upload replacement packs, switch `latest.json`, delete/retire active packs, or retire the legacy ZIP without explicit approval.
+
+The 5 newer post-audit candidates remain a separate unapproved delta and are not part of this 696-hash proposal.
+
+
 ## Post-audit 271-hash review completed — all binaries still retained
 
 The **271 hashes added after the original 2,519-hash review are now conservatively classified**. No source binary was deleted or marked metadata-only.
