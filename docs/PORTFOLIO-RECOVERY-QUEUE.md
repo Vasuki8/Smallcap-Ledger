@@ -1,6 +1,6 @@
 # Portfolio recovery queue
 
-Prepared: 2026-09-26T12:16:28+00:00
+Prepared: 2026-09-26T13:01:48+00:00
 
 **Read-only:** this queue ranks retained evidence only. It does not fetch sources, retry blocked hosts, estimate missing weights, or mutate portfolio data.
 
