@@ -182,6 +182,10 @@ jobs:
         timeout-minutes: 40
         continue-on-error: true
         run: uv run --frozen python scripts/daily_update.py
+      - name: Repair retained unarchived AMC communications
+        timeout-minutes: 15
+        continue-on-error: true
+        run: uv run --frozen python scripts/repair_unarchived_communications.py
       - name: Recover any interrupted collection status
         run: uv run --frozen python -c "from tracker import db; db.init(recover=True)"
       - name: Prepare retention metadata without deleting binaries
