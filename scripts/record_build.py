@@ -23,6 +23,13 @@ performance_json.write_text(json.dumps(performance_coverage,indent=2,ensure_asci
 performance_md=ROOT/'docs'/'PERFORMANCE-COVERAGE-AUDIT.md'
 performance_md.write_text(performance_coverage_markdown(performance_coverage),encoding='utf-8')
 
+from tracker.publication_coverage import report as publication_coverage_report, markdown as publication_coverage_markdown
+publication_coverage=publication_coverage_report()
+publication_json=ROOT/'docs'/'PUBLICATION-COVERAGE-AUDIT.json'
+publication_json.write_text(json.dumps(publication_coverage,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+publication_md=ROOT/'docs'/'PUBLICATION-COVERAGE-AUDIT.md'
+publication_md.write_text(publication_coverage_markdown(publication_coverage),encoding='utf-8')
+
 target=ROOT/'deployment/update-status.json';target.parent.mkdir(exist_ok=True)
 target.write_text(json.dumps({'built_at':status['server_time'],'counts':status['counts'],'recent_jobs':[{k:j[k] for k in ('kind','started_at','finished_at','status')} for j in status['jobs'][:4]],'schedule':status['hosting']},indent=2)+'\n')
 
@@ -123,6 +130,7 @@ git('config','user.name','github-actions[bot]');git('config','user.email','41898
 git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md',
     'docs/PORTFOLIO-RECOVERY-QUEUE.json','docs/PORTFOLIO-RECOVERY-QUEUE.md',
     'docs/PERFORMANCE-COVERAGE-AUDIT.json','docs/PERFORMANCE-COVERAGE-AUDIT.md',
+    'docs/PUBLICATION-COVERAGE-AUDIT.json','docs/PUBLICATION-COVERAGE-AUDIT.md',
     'docs/RETENTION-PROPOSED-MANIFEST.json','docs/RETENTION-MIGRATION-CANDIDATES.json',
     'docs/RETENTION-REPLACEMENT-SIMULATION.md',
     'docs/SOURCE-RETENTION-DELTA.json','docs/SOURCE-RETENTION-DELTA.md',
