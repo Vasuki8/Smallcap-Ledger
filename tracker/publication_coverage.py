@@ -17,7 +17,7 @@ from .disclosures import resolve_registered_amc,registered_source_rows
 COMMUNICATION_KINDS=("market view","unitholder letter")
 _COMMUNICATION_SOURCE=re.compile(
     r"newsletter|letter.*unitholder|unitholder.*letter|"
-    r"market[\s_\-]*(?:outlook|update|view|insights?)|equity[\s_\-]*outlook|"
+    r"market[\s_\-]*(?:outlook|update|view|insights?|commentar(?:y|ies))|equity[\s_\-]*outlook|"
     r"latest[\s_\-]*commentar|investment[\s_\-]*view|cio[\s_\-]*(?:letter|view)|"
     r"product[\s_\-]*note|presentation",
     re.I,
