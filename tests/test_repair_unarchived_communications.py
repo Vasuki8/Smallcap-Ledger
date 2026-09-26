@@ -67,6 +67,26 @@ class CommunicationArchiveRepairTests(unittest.TestCase):
         self.assertGreaterEqual(result["failed"],1)
         self.assertEqual(len(repair.missing(family)),1)
 
+    def test_report_persists_exact_failure_details(self):
+        result={
+            "families":{
+                "LIC Mf Small Cap Fund":{
+                    "before":1,"repaired":0,"failed":1,"skipped":0,"remaining":1,
+                    "repaired_rows":[],
+                    "failed_rows":[{"url":"https://www.licmf.com/old.pdf","error":"404 Not Found"}],
+                    "skipped_rows":[],
+                }
+            },
+            "repaired":0,"failed":1,"skipped":0,
+        }
+        target=Path(self.tmp.name)/"repair.json"
+        repair.write_report(result,target)
+        import json
+        saved=json.loads(target.read_text())
+        self.assertEqual(saved["families"]["LIC Mf Small Cap Fund"]["failed_rows"][0]["error"],"404 Not Found")
+        self.assertEqual(saved["mode"],"exact_retained_urls_best_effort")
+        self.assertIn("prepared_at",saved)
+
     def test_non_official_url_is_skipped_without_fetch(self):
         family=repair.FAMILIES[0][0]
         with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=False), \
