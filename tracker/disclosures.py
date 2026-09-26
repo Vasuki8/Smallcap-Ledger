@@ -582,6 +582,10 @@ def ingest_source(source):
         and url=="https://www.wealthcompanyamc.in/knowledge-center/current-insights/"):
         from .tata_wealth_communications import ingest_wealth
         return ingest_wealth()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="union"
+        and url=="https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes"):
+        from .union_communications import ingest as union_ingest
+        return union_ingest()["detail"]
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
