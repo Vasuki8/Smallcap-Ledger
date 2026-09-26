@@ -67,10 +67,12 @@ jobs:
       - name: Apply SBI and Sundaram communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
+        continue-on-error: true
         run: uv run --frozen python scripts/refresh_sbi_sundaram_communications.py
       - name: Apply Tata and Wealth communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
+        continue-on-error: true
         run: uv run --frozen python scripts/refresh_tata_wealth_communications.py
       - name: Diagnose Trust UTI and Union communication sources
         if: github.event_name == 'push'
@@ -80,10 +82,12 @@ jobs:
       - name: Apply Union communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
+        continue-on-error: true
         run: uv run --frozen python scripts/refresh_union_communications.py
       - name: Apply UTI communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
+        continue-on-error: true
         run: uv run --frozen python scripts/refresh_uti_communications.py
       - name: Apply PGIM and quant communication source recovery
         if: github.event_name == 'push'
