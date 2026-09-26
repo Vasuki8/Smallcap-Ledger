@@ -57,6 +57,34 @@ class CommunicationArchiveRepairTests(unittest.TestCase):
         for family,_ in repair.FAMILIES:
             self.assertEqual(repair.missing(family),[])
 
+    def test_canonical_fetch_url_encodes_spaces_without_changing_identity(self):
+        original="https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook March 2025.pdf"
+        canonical=repair.canonical_fetch_url(original)
+        self.assertEqual(
+            canonical,
+            "https://www.licmf.com/assets/pdfs/LICMF%20Monthly%20Market%20Outlook%20March%202025.pdf",
+        )
+
+    def test_repair_fetches_canonical_url_but_keeps_original_document_identity(self):
+        family=repair.FAMILIES[0][0]
+        original=self.urls[family]
+        with db.connect() as c:
+            c.execute("UPDATE documents SET url=? WHERE id=?",
+                      ("https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook March 2025.pdf",
+                       self.ids[family]))
+        requested=[]
+        def fake_fetch(url,**kwargs):
+            requested.append(url)
+            return b"%PDF-1.7 LIC outlook",None,"application/pdf"
+        with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):
+            result=repair.repair(fetch_fn=fake_fetch,can_crawl_fn=lambda u:None)
+        self.assertTrue(any("%20" in u for u in requested))
+        row=db.one("SELECT url FROM documents WHERE id=?",(self.ids[family],))
+        self.assertIn("LICMF Monthly Market Outlook March 2025.pdf",row["url"])
+        lic=result["families"][family]
+        self.assertEqual(lic["repaired"],1)
+        self.assertIn("%20",lic["repaired_rows"][0]["request_url"])
+
     def test_invalid_response_does_not_attach_document_version(self):
         family=repair.FAMILIES[0][0]
         with patch("scripts.repair_unarchived_communications.official_publication_url",return_value=True):

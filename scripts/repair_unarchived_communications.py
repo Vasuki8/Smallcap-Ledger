@@ -8,7 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 import json
 import sys
-from urllib.parse import urlparse
+from urllib.parse import quote,unquote,urlparse,urlunparse
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -38,6 +38,13 @@ def missing(family):
            LIMIT ?""",
         (family,PER_FAMILY_LIMIT),
     )
+
+
+def canonical_fetch_url(url):
+    """Encode unsafe path characters for the request without changing document identity."""
+    parsed=urlparse(url)
+    path=quote(unquote(parsed.path),safe="/._-()")
+    return urlunparse((parsed.scheme,parsed.netloc,path,parsed.params,parsed.query,parsed.fragment))
 
 
 def _looks_valid(url,body,media_type):
@@ -72,18 +79,19 @@ def repair(fetch_fn=providers.fetch,can_crawl_fn=providers.can_crawl):
                 skipped.append({"url":url,"reason":"not a reviewed first-party AMC URL"})
                 continue
             try:
-                can_crawl_fn(url)
-                body,_,typ=fetch_fn(url,archive=False,max_bytes=20*1024*1024)
+                request_url=canonical_fetch_url(url)
+                can_crawl_fn(request_url)
+                body,_,typ=fetch_fn(request_url,archive=False,max_bytes=20*1024*1024)
                 if not _looks_valid(url,body,typ):
                     raise ValueError("response did not validate as an expected document/page")
                 h=db.archive(body,typ)
                 with db.connect() as conn:
                     conn.execute(
                         "INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",
-                        (url,db.now(),"ok",h),
+                        (request_url,db.now(),"ok",h),
                     )
                 providers.doc_version(row["id"],h)
-                repaired.append({"url":url,"hash":h})
+                repaired.append({"url":url,"request_url":request_url,"hash":h})
             except Exception as exc:
                 failed.append({
                     "url":url,
