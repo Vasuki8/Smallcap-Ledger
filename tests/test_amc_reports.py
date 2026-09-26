@@ -177,6 +177,41 @@ Month End AUM: Rs. 100 Cr''')
                 'Quant Small Cap Fund',
                 'https://quantmutual.com/Admin/Factsheet/factsheet.pdf'))
 
+    def test_union_discovery_prefers_newest_closed_month_consolidated_factsheets(self):
+        from datetime import date
+        from tracker.amc_discovery import discover
+        with patch('tracker.amc_discovery.closed_month_ends',
+                   return_value=iter((date(2026,8,31),date(2026,7,31)))):
+            rows=list(discover('Union'))
+        self.assertEqual(rows[:2],[
+            (
+                'Union Small Cap Fund',
+                'https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-august-2026.pdf',
+                'Union consolidated factsheet August 2026',
+            ),
+            (
+                'Union Small Cap Fund',
+                'https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-july-2026.pdf',
+                'Union consolidated factsheet July 2026',
+            ),
+        ])
+        self.assertEqual(rows[-1][1],
+            'https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf')
+
+    def test_v130_targets_union_current_monthly_retrieval_only(self):
+        from tracker import amc_reports
+        with patch.object(amc_reports,'PARSER_VERSION','amc-reports-2026-09-v130'):
+            self.assertTrue(amc_reports.parser_upgrade_applies('Union Small Cap Fund'))
+            self.assertFalse(amc_reports.parser_upgrade_applies('Edelweiss Small Cap Fund'))
+            self.assertFalse(amc_reports.should_reprocess_existing(
+                'Union Small Cap Fund',
+                'https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-august-2026.pdf',
+                'archived'))
+        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        self.assertIn("'amc-reports-2026-09-v130'",source)
+        self.assertIn("amc_discovery.discover('Union')",source)
+        self.assertIn('UNION_V130_CANDIDATE',source)
+
     def test_v129_targets_only_explicit_tri_identity_repair(self):
         from tracker import amc_reports
         expected={'Edelweiss Small Cap Fund','Franklin India Small Cap Fund','Groww Small Cap Fund'}
