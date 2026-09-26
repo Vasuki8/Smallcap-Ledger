@@ -136,6 +136,34 @@ def dsp_zip(content,family,url,h):
             count+=disclosures.spreadsheet(body,family,url,h)
         return count
 
+def icici_zip(content,family,url,h):
+    """Parse the exact Small Cap workbook in ICICI's official monthly ZIP."""
+    import io,zipfile
+    from pathlib import PurePosixPath
+    from . import disclosures
+    expected='icici prudential small cap fund.xlsx'
+    with zipfile.ZipFile(io.BytesIO(content)) as z:
+        entries=z.infolist()
+        if len(entries)>250 or sum(i.file_size for i in entries)>100*1024*1024:
+            raise ValueError('Oversized ICICI portfolio ZIP')
+        matched=[]
+        for entry in entries:
+            p=PurePosixPath(entry.filename)
+            if p.is_absolute() or '..' in p.parts or '\\' in entry.filename or entry.flag_bits&1:
+                raise ValueError('Unsupported ICICI portfolio ZIP entry')
+            if p.name.strip().lower()==expected:
+                matched.append(entry)
+        if len(matched)!=1:
+            raise ValueError(f'Expected exactly one ICICI Small Cap workbook; found {len(matched)}')
+        entry=matched[0]
+        if not 0<entry.file_size<=5*1024*1024:
+            raise ValueError('Unexpected ICICI Small Cap workbook size')
+        with z.open(entry) as fh:body=fh.read()
+        if not body.startswith(b'PK'):
+            raise ValueError('ICICI Small Cap workbook is not XLSX content')
+        return disclosures.spreadsheet(body,family,url,h)
+
+
 def uti_zip(content,family,url,h):
     """Read the named workbook in UTI's public monthly ZIP without extracting paths."""
     import io,zipfile,openpyxl
