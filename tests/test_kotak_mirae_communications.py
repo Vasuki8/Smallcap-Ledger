@@ -83,9 +83,15 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
         self.assertEqual(row["url"],upgrade.KOTAK_CURRENT)
         self.assertEqual(row["id"],6125)
 
-    def test_kotak_state_rejects_mismatched_current_download_identity(self):
+    def test_kotak_state_uses_site_supplied_link_to_select_matching_record(self):
         body=kotak_page().replace(b"/6125/2026/8",b"/6066/2026/7",1)
-        with self.assertRaisesRegex(ValueError,"does not match"):
+        row=kotak.current_publication(body)
+        self.assertEqual(row["id"],6066)
+        self.assertEqual(row["published_at"],"2026-08-06")
+
+    def test_kotak_state_rejects_link_without_matching_report_identity(self):
+        body=kotak_page().replace(b"/6125/2026/8",b"/9999/2026/8",1)
+        with self.assertRaisesRegex(ValueError,"does not uniquely identify"):
             kotak.current_publication(body)
 
     def test_kotak_ingest_archives_listing_and_current_pdf(self):
