@@ -141,7 +141,7 @@ def ingest_sbi(fetch_fn=providers.fetch,today=None):
 
 
 def sundaram_candidates(content):
-    """Use only Outlook month/year labels that Sundaram visibly publishes."""
+    """Use Outlook month/year labels when Sundaram visibly publishes them."""
     text=" ".join(BeautifulSoup(content,"html.parser").stripped_strings)
     rows=[];seen=set()
     for match in _OUTLOOK_CARD.finditer(text):
@@ -157,12 +157,30 @@ def sundaram_candidates(content):
         })
     rows.sort(key=lambda r:r["_key"],reverse=True)
     for row in rows:row.pop("_key",None)
-    if not rows:
-        raise ValueError("Sundaram first-party site exposed no Outlook month/year cards")
     return rows
 
 
-def ingest_sundaram(fetch_fn=providers.fetch):
+def _shift_month(year,month,delta):
+    value=(year*12+(month-1))+delta
+    return value//12,(value%12)+1
+
+
+def recent_sundaram_outlooks(today=None,months=6):
+    """Recent reviewed month-pattern URLs for Sundaram's official blog PDF archive."""
+    today=today or date.today()
+    rows=[]
+    for delta in range(0,-months,-1):
+        year,month=_shift_month(today.year,today.month,delta)
+        month_name=calendar.month_name[month]
+        rows.append({
+            "title":f"Outlook {month_name} {year}",
+            "url":sundaram_outlook_url(month_name,year),
+            "published_at":None,
+        })
+    return rows
+
+
+def ingest_sundaram(fetch_fn=providers.fetch,today=None):
     providers.can_crawl(SUNDARAM_HUB)
     hub,h,_=fetch_fn(SUNDARAM_HUB,archive=True,max_bytes=10*1024*1024)
     hub_text=" ".join(BeautifulSoup(hub,"html.parser").stripped_strings)
@@ -173,9 +191,18 @@ def ingest_sundaram(fetch_fn=providers.fetch):
         "source page","AMC",origin="AMC")
     providers.doc_version(source,h)
 
-    providers.can_crawl(SUNDARAM_HOME)
-    home,_,_=fetch_fn(SUNDARAM_HOME,archive=False,max_bytes=10*1024*1024)
-    rows=sundaram_candidates(home)
+    rows=[]
+    try:
+        providers.can_crawl(SUNDARAM_HOME)
+        home,_,_=fetch_fn(SUNDARAM_HOME,archive=False,max_bytes=10*1024*1024)
+        rows=sundaram_candidates(home)
+    except Exception:
+        rows=[]
+    if not rows:
+        # Production HTML is currently a JS shell, while the first-party blog
+        # continues to publish a stable /Documents/outlook-<month>-<year>.pdf
+        # archive. That exact pattern was verified across multiple 2026 months.
+        rows=recent_sundaram_outlooks(today=today)
 
     retained=0;missing=0;errors=[];accepted=[]
     for row in rows[:6]:
