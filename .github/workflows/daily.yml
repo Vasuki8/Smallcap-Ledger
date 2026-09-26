@@ -79,6 +79,11 @@ jobs:
         timeout-minutes: 10
         continue-on-error: true
         run: uv run --frozen python scripts/diagnose_trust_uti_union_communications.py
+      - name: Diagnose Wealth and UTI communication transports
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        continue-on-error: true
+        run: uv run --frozen python scripts/diagnose_wealth_uti_transport.py
       - name: Apply Union communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 10
