@@ -24,6 +24,17 @@ def wealth_page():
     </body></html>"""
 
 
+def wealth_next_page():
+    frame='''5:["$","$L10",null,{"initialData":[{"id":264,"title":"Daily Wealth Recap","date":"2026-04-30","videoTranslations":[],"pdfTranslations":[{"language":"English","url":"https://www.wealthcompanyamc.in/uploads/English_3004_test.png"},{"language":"Hindi","url":"https://www.wealthcompanyamc.in/uploads/Hindi_3004_test.png"}]},{"id":244,"title":"The NewsMaker","date":"2026-04-27","videoTranslations":[],"pdfTranslations":[{"language":"English","url":"https://www.wealthcompanyamc.in/uploads/2704_test.pdf"}]},{"id":999,"title":"Product Presentation","date":"2026-06-25","pdfTranslations":[{"language":"English","url":"https://www.wealthcompanyamc.in/uploads/product.pdf"}]}]}]'''
+    import json
+    pushed=json.dumps([1,frame])
+    return (
+        '<html><body><h1>Current Insights</h1>'
+        '<script>self.__next_f.push('+pushed+')</script>'
+        '</body></html>'
+    ).encode()
+
+
 class TataWealthCommunicationTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory()
@@ -73,6 +84,15 @@ class TataWealthCommunicationTests(unittest.TestCase):
         self.assertEqual(doc["kind"],"market view")
         self.assertIsNone(doc["published_at"])
 
+    def test_wealth_structured_payload_keeps_english_recap_image_and_newsmaker_pdf(self):
+        rows=comm.wealth_candidates(wealth_next_page())
+        self.assertEqual(len(rows),2)
+        self.assertEqual(rows[0]["title"],"Daily Wealth Recap - 30 April 2026")
+        self.assertTrue(rows[0]["url"].endswith("English_3004_test.png"))
+        self.assertEqual(rows[0]["published_at"],"2026-04-30")
+        self.assertEqual(rows[1]["title"],"The NewsMaker - 27 April 2026")
+        self.assertTrue(rows[1]["url"].endswith("2704_test.pdf"))
+
     def test_wealth_filters_to_recap_and_newsmaker_with_explicit_dates(self):
         rows=comm.wealth_candidates(wealth_page())
         self.assertEqual(len(rows),2)
@@ -81,10 +101,12 @@ class TataWealthCommunicationTests(unittest.TestCase):
             r["title"].startswith(("Daily Wealth Recap","The NewsMaker")) for r in rows
         ))
 
-    def test_wealth_archives_only_validated_pdfs(self):
+    def test_wealth_archives_validated_pdf_and_image_assets(self):
         def fake_fetch(url,**kwargs):
-            if url==comm.WEALTH_INSIGHTS:return self.archived(wealth_page(),"text/html")
-            return self.archived(b"%PDF-1.7 Wealth insight","application/pdf")
+            if url==comm.WEALTH_INSIGHTS:return self.archived(wealth_next_page(),"text/html")
+            if url.endswith(".png"):
+                return b"\x89PNG\r\n\x1a\nwealth image",None,"image/png"
+            return b"%PDF-1.7 Wealth insight",None,"application/pdf"
         with patch("tracker.tata_wealth_communications.providers.can_crawl",return_value=None):
             result=comm.ingest_wealth(fetch_fn=fake_fetch)
         self.assertEqual(result["retained"],2)
