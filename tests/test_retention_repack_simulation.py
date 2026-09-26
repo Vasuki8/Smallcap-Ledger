@@ -34,6 +34,31 @@ class RetentionRepackSimulationTests(unittest.TestCase):
                     body=z.read('data/'+rows[h]['path'])
                     self.assertEqual(hashlib.sha256(body).hexdigest(),h)
 
+    def test_current_eligible_candidates_excludes_strengthened_reviewed_hashes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);previous=db.DATA;db.DATA=root
+            try:
+                db.init()
+                eligible=db.archive(b'old shell still superseded','text/html')
+                strengthened=db.archive(b'old shell now current','text/html')
+                db.set_archive_retention(
+                    eligible,classification='link_only_candidate',
+                    reason='reviewed old candidate',reviewed_at='2026-09-25')
+                db.set_archive_retention(
+                    strengthened,classification='retain_latest_or_review',
+                    reason='refetched as current source',reviewed_at='2026-09-25')
+                reviewed=[
+                    {'hash':eligible,'classification':'link_only_candidate','compressed_payload_bytes':10},
+                    {'hash':strengthened,'classification':'link_only_candidate','compressed_payload_bytes':20},
+                ]
+                current,excluded=sim.current_eligible_candidates(root/'ledger.sqlite3',reviewed)
+                self.assertEqual([x['hash'] for x in current],[eligible])
+                self.assertEqual([x['hash'] for x in excluded],[strengthened])
+                self.assertEqual(excluded[0]['current_classification'],'retain_latest_or_review')
+                self.assertEqual(excluded[0]['current_binary_state'],'retained')
+            finally:
+                db.DATA=previous
+
     def test_simulated_database_changes_only_retention_state(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);previous=db.DATA;db.DATA=root
