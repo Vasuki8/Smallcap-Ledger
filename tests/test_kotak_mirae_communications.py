@@ -73,7 +73,7 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
         self.assertIsNotNone(self.source("Kotak",upgrade.KOTAK_LISTING))
         self.assertIsNotNone(self.source("Mirae",upgrade.MIRAE_OUTLOOK))
         self.assertEqual(
-            providers.classify("Annual Market Outlook 2026",upgrade.MIRAE_OUTLOOK),
+            providers.classify("Annual Outlook 2025",upgrade.MIRAE_OUTLOOK),
             "market view")
 
     def test_kotak_state_binds_exact_current_download_title_and_date(self):
@@ -120,7 +120,7 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
             ingest.assert_called_once_with()
 
     def test_mirae_direct_pdf_is_archived_without_inferred_date(self):
-        pdf=b"%PDF-1.6 MIRAE ASSET Mutual Fund Annual Market Outlook 2026"
+        pdf=b"%PDF-1.6 MIRAE ASSET Mutual Fund Annual Outlook 2025"
         with patch("tracker.disclosures.can_crawl",return_value=None), \
              patch("tracker.disclosures.fetch",
                    return_value=self.archived(pdf,"application/pdf")), \
@@ -152,7 +152,7 @@ class KotakMiraeCommunicationTests(unittest.TestCase):
                 store(upgrade.KOTAK_FAMILY,"Monthly Outlook PPT sept 2026",
                       upgrade.KOTAK_CURRENT,"2026-09-09",kotak_pdf)
             elif url==upgrade.MIRAE_OUTLOOK:
-                store(upgrade.MIRAE_FAMILY,"Annual Market Outlook 2026",
+                store(upgrade.MIRAE_FAMILY,"Annual Outlook 2025",
                       url,None,mirae_pdf)
             else:
                 raise AssertionError(url)
