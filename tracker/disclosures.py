@@ -532,6 +532,15 @@ def ingest_source(source):
         and url=="https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries"):
         from .franklin_communications import ingest as franklin_ingest
         return franklin_ingest()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="groww"
+        and url=="https://www.growwmf.in/distributor/knowledge-hub/publications"):
+        from .groww_communications import ingest as groww_ingest
+        return groww_ingest()["detail"]
+    if (str(source.get("amc_match") or "").lower()=="hsbc"
+        and url.startswith("https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights")
+        and "local-market-commentary" in unquote(url).lower()):
+        from .hsbc_communications import ingest as hsbc_ingest
+        return hsbc_ingest()["detail"]
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
     content,h,media_type=fetch(url,max_bytes=(25 if direct else 8)*1024*1024)
