@@ -511,6 +511,9 @@ def extract(content,family,url,h,*,parser_version=None):
         elif content.startswith(b'PK') and path.endswith('.zip') and family=='DSP Small Cap Fund':
             from .structured_reports import dsp_zip
             dsp_zip(content,family,url,h)
+        elif content.startswith(b'PK') and path.endswith('.zip') and family=='ICICI Prudential Small Cap Fund':
+            from .icici_portfolios import extract_zip
+            extract_zip(content,family,url,h)
         elif content.startswith((b'PK',b'\xd0\xcf')) and path.endswith(('.xls','.xlsx')):
             disclosures.spreadsheet(content,family,url,h)
         elif path.endswith('.xml'):
