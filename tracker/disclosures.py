@@ -35,18 +35,59 @@ def official_publication_url(url,amc_match):
 def resolve_registered_amc(value,source_rows):
     """Resolve a reviewed catalog AMC name to one unique registered source key."""
     generic={'mutual','fund','asset','management','amc','private','pvt','limited','ltd','company'}
+    def words(text):
+        return ' '.join(re.findall(r'[a-z0-9]+',str(text).lower()))
     def tokens(text):
         return frozenset(x for x in re.findall(r'[a-z0-9]+',str(text).lower()) if x not in generic)
+    target_words=words(value)
     target=tokens(value)
     if not target:return None
     keys=list(dict.fromkeys(row[0] for row in source_rows))
     exact=[key for key in keys if tokens(key)==target]
     if len(exact)==1:return exact[0]
+    # Prefer the registered key at the start of the AMC name. This separates
+    # "Kotak" from "Mahindra" for "Kotak Mahindra Mutual Fund" while correctly
+    # mapping "Mahindra Manulife Mutual Fund" to the Mahindra source family.
+    prefixes=[key for key in keys
+              if words(key) and (target_words==words(key)
+                                 or target_words.startswith(words(key)+' '))]
+    if prefixes:
+        longest=max(len(words(key)) for key in prefixes)
+        best=[key for key in prefixes if len(words(key))==longest]
+        if len(best)==1:return best[0]
     subsets=[]
     for key in keys:
         current=tokens(key)
         if current and (current<target or target<current):subsets.append(key)
     return subsets[0] if len(subsets)==1 else None
+
+
+def registered_source_rows():
+    rows=json.loads((db.ROOT/'tracker'/'sources.json').read_text())
+    rows.extend((r['amc_match'],r['url'],r['label'])
+                for r in db.rows('SELECT amc_match,url,label FROM source_pages'))
+    return rows
+
+
+def source_families(amc_match):
+    """Return only schemes whose AMC resolves to this registered source key."""
+    rows=registered_source_rows()
+    key=str(amc_match or '').lower()
+    return [
+        {'family':r['family']}
+        for r in db.rows('SELECT DISTINCT family,amc FROM schemes ORDER BY family')
+        if str(resolve_registered_amc(r['amc'],rows) or '').lower()==key
+    ]
+
+
+def dated_communication_source_kind(title,url):
+    """Classify a dated monthly communication page, never a generic directory."""
+    kind=classify(title,url)
+    if kind not in ('market view','unitholder letter'):return None
+    path=unquote(urlparse(url).path)
+    if re.fullmatch(r'/.*digital-?factsheet/[A-Za-z]+-?\d{4}/[^/]+\.html',path,re.I):
+        return kind
+    return None
 
 
 def same_fund_title(value,family):
@@ -375,7 +416,7 @@ def ingest_source(source):
     url=source["url"]
     reason=exclusion_reason(source['amc_match'],url,source['label'])
     if reason:return 'Excluded: '+reason
-    families=db.rows("SELECT DISTINCT family FROM schemes WHERE instr(lower(amc),lower(?))>0",(source["amc_match"],))
+    families=source_families(source["amc_match"])
     if not families: return "No matching small-cap fund yet"
     can_crawl(url)
     direct=bool(re.search(r'\.(pdf|xlsx?|xml)(?:\?|$)',url,re.I))
@@ -396,7 +437,19 @@ def ingest_source(source):
     for f in families:
         family=f["family"]
         # The source page itself is versioned, so changed facts can always be audited.
-        page_id=save_document(family,source["label"],url,"source page","AMC",origin="AMC")
+        # A dated monthly page explicitly titled Market Outlook/Market Update is
+        # itself an AMC communication, not merely a crawl directory. Generic
+        # directories (for example /market-update) remain source pages.
+        page_kind=dated_communication_source_kind(source["label"],url)
+        page_id=save_document(family,source["label"],url,page_kind or "source page","AMC",origin="AMC")
+        if page_kind:
+            # Repair earlier rows that were saved as source-page/factsheet before
+            # explicit communication titles took precedence over URL path words.
+            with db.connect() as c:
+                c.execute("""UPDATE documents SET kind=?,scope='AMC'
+                  WHERE id=? AND origin='AMC'
+                    AND kind IN ('source page','factsheet','disclosure')""",
+                          (page_kind,page_id))
         doc_version(page_id,h)
         if "hdfcfund.com/explore/" in url: hdfc(soup,family,url,h)
         from .amc_metrics import parse_page
@@ -411,7 +464,7 @@ def ingest_source(source):
             # A scheme-specific page can label a UUID download simply "Latest
             # Monthly Portfolio". Keep it as a candidate; parser verifies ownership.
             if re.search(r'small[\s_\-]*cap',url,re.I) and re.search(r'latest.*(?:portfolio|factsheet)',title,re.I):specific=True
-            commentary=bool(re.search(r"newsletter|letter.*unitholder|unitholder.*letter|market[\s_\-]*(?:outlook|update|view)|equity[\s_\-]*outlook|cio[\s_\-]*(?:letter|view)",combined,re.I))
+            commentary=classify(title,target) in ('market view','unitholder letter')
             download=bool(re.search(r"\.(?:pdf|xlsx?|xml)(?:\?|$)",target,re.I))
             omnibus=download and bool(re.search(r'factsheet|fact.sheet|fund.spectrum|fund.watch|monthly.portfolio|scheme.summary',combined,re.I)) and not re.search(r'large.cap|mid.cap|liquid.fund|debt.fund|flexi.cap|multi.cap',combined,re.I)
             directory=not download and bool(re.search(r'factsheet|fact.sheet|portfolio|disclosure|scheme.summary|newsletter|market.outlook|market.update',combined,re.I))
