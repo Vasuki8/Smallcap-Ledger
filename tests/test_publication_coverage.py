@@ -88,6 +88,32 @@ class PublicationCoverageTests(unittest.TestCase):
             ["Gamma Small Cap Fund","Kotak Small Cap Fund"])
         self.assertTrue(priorities["review_registered_communication_sources"]["actionable"])
 
+    def test_documented_source_limitation_stays_visible_and_non_actionable(self):
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (9805,"Trust Direct Growth","Trustmf Small Cap Fund",
+                 "Trust Mutual Fund","Direct","Growth","test"),
+            )
+        audit=report()
+        row=next(r for r in audit["funds"] if r["family"]=="Trustmf Small Cap Fund")
+        self.assertEqual(row["communication_count"],0)
+        self.assertIn("no_amc_communications_collected",row["issues"])
+        self.assertIn("communication_source_limitation",row["issues"])
+        self.assertEqual(
+            row["source_limitation"]["code"],
+            "market_outlook_embedded_in_factsheets_only",
+        )
+        priorities={p["code"]:p for p in audit["repair_priorities"]}
+        limited=priorities["documented_communication_source_limitation"]
+        self.assertFalse(limited["actionable"])
+        self.assertEqual(limited["affected_funds"],["Trustmf Small Cap Fund"])
+        self.assertNotIn(
+            "Trustmf Small Cap Fund",
+            priorities["discover_first_party_communication_sources"]["affected_funds"],
+        )
+
     def test_missing_published_date_is_visible_without_using_first_seen(self):
         digest=db.archive(b"letter","application/pdf")
         doc=providers.save_document(

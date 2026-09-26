@@ -15,6 +15,16 @@ from .publications import exclusion_reason
 from .disclosures import resolve_registered_amc,registered_source_rows
 
 COMMUNICATION_KINDS=("market view","unitholder letter")
+_DOCUMENTED_SOURCE_LIMITATIONS={
+    "Trustmf Small Cap Fund":{
+        "code":"market_outlook_embedded_in_factsheets_only",
+        "reason":(
+            "TRUST Mutual Fund currently publishes identifiable Market Outlook commentary "
+            "inside monthly factsheets; factsheets are intentionally excluded from "
+            "communication coverage until a standalone AMC communication source is found."
+        ),
+    },
+}
 _COMMUNICATION_SOURCE=re.compile(
     r"newsletter|letter.*unitholder|unitholder.*letter|"
     r"market[\s_\-]*(?:outlook|update|view|insights?|commentar(?:y|ies))|equity[\s_\-]*outlook|"
@@ -68,7 +78,9 @@ def report():
         published=[d["published_at"] for d in docs if d.get("published_at")]
         observed=[d["latest_observed_at"] for d in docs if d.get("latest_observed_at")]
         issues=[]
+        source_limitation=_DOCUMENTED_SOURCE_LIMITATIONS.get(family)
         if not docs:issues.append("no_amc_communications_collected")
+        if not docs and source_limitation:issues.append("communication_source_limitation")
         if docs and archived<len(docs):issues.append("communication_document_not_archived")
         if docs and len(published)<len(docs):issues.append("publication_date_missing")
         row={
@@ -82,13 +94,17 @@ def report():
             "latest_published_at":max(published) if published else None,
             "latest_observed_at":max(observed) if observed else None,
             "registered_communication_sources":source_pages,
+            "source_limitation":source_limitation,
             "issues":issues,
         }
         funds.append(row)
 
     no_docs=[r for r in funds if "no_amc_communications_collected" in r["issues"]]
     with_registered=[r for r in no_docs if r["registered_communication_sources"]]
-    without_registered=[r for r in no_docs if not r["registered_communication_sources"]]
+    without_registered=[r for r in no_docs
+                        if not r["registered_communication_sources"]
+                        and not r.get("source_limitation")]
+    limited=[r for r in no_docs if r.get("source_limitation")]
     unarchived=[r for r in funds if "communication_document_not_archived" in r["issues"]]
 
     priorities=[]
@@ -107,6 +123,14 @@ def report():
             "actionable":True,
             "affected_funds":[r["family"] for r in without_registered],
             "reason":"No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered.",
+        })
+    if limited:
+        priorities.append({
+            "priority":2,
+            "code":"documented_communication_source_limitation",
+            "actionable":False,
+            "affected_funds":[r["family"] for r in limited],
+            "reason":"The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears.",
         })
     if unarchived:
         priorities.append({
@@ -144,6 +168,7 @@ def report():
             "Newsletters, CIO/investment/market outlooks and product presentations are normalized to market view by the existing document classifier.",
             "Factsheets, scheme documents, portfolios and generic disclosures remain available on fund pages but do not satisfy communication coverage.",
             "A missing published_at value is reported as missing metadata; first_seen is never substituted as the publication date.",
+            "Documented source limitations remain visible as zero communication coverage and are not silently promoted from excluded source classes.",
             "The audit is read-only and performs no source fetch, document mutation or UI change.",
         ],
     }
