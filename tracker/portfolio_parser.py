@@ -111,6 +111,21 @@ def parse_sheet(rows,formats,family):
                     and bool(re.fullmatch(r'CCIL',name,re.I)))
         if not valid_isin and not named_equity and not named_derivative and not named_repo:
             if re.search(r'\b(?:sub\s*-?\s*total|total)\b',label,re.I):continue
+            if family=='ICICI Prudential Small Cap Fund':
+                # ICICI publishes section-level market value / % NAV totals in
+                # the same numeric columns as constituent rows. They are
+                # structural subtotals, not holdings. Preserve the section
+                # context while excluding the duplicate aggregate values.
+                if re.fullmatch(r'Equity\s*&\s*Equity Related Instruments',label,re.I):
+                    asset='Equity';continue
+                if re.fullmatch(r'Listed\s*/\s*Awaiting Listing On Stock Exchanges',label,re.I):
+                    continue
+                if re.fullmatch(r'Money Market Instruments',label,re.I):
+                    asset='Money market';continue
+                if re.fullmatch(r'Treasury Bills',label,re.I):
+                    asset='Debt';continue
+                if re.fullmatch(r'Others',label,re.I):
+                    continue
             leaf=bool(re.fullmatch(r'(?:TREPS(?:\s*-\s*Tri-party Repo)?|Tri[ -]?party Repo|Reverse Repo(?: Investments)?|Net Receivables?\s*/?\s*\(?Payables?\)?|Net Current Assets|Cash(?: and Other Net Current Assets|\s*&\s*Cash Equivalents| Margin\s*-\s*CCIL)?|Margin Money(?:.*)?)\s*[*^#]?',label,re.I))
             if family in ('Aditya Birla Sun Life Small Cap Fund','SBI Small Cap Fund') and re.fullmatch(r'Margin amount for Derivative positions\s*[*^#]?',label,re.I):
                 leaf=True
@@ -121,6 +136,8 @@ def parse_sheet(rows,formats,family):
             if family=='Quant Small Cap Fund' and re.fullmatch(r'NCA\s*-\s*NET CURRENT ASSETS\s*[*^#]?',label,re.I):
                 leaf=True
             if family=='Bandhan Small Cap Fund' and re.fullmatch(r'(?:Cash Margin - Derivatives|Cash / Bank Balance)',label,re.I):
+                leaf=True
+            if family=='ICICI Prudential Small Cap Fund' and re.fullmatch(r'Cash Margin - Derivatives',label,re.I):
                 leaf=True
             if not leaf:
                 if re.search(r'\bequity\b',label,re.I):asset='Equity'
