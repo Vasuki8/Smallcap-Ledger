@@ -94,6 +94,15 @@ def dated_communication_source_kind(title,url):
     if (host=='cmsnew.bandhanmutual.com'
         and re.fullmatch(r'/market_outlook/market-outlook-(?:equity|debt)-[A-Za-z]+-20\d{2}/?',path,re.I)):
         return kind
+    if (host in ('www.edelweissmf.com','edelweissmf.com')
+        and path in (
+            '/investor-insights/fund-market/curve',
+            '/investor-insights/fund-market/factor-investing-2026-outlook',
+        )):
+        return kind
+    if (host=='franklintempletonprod.widen.net'
+        and re.fullmatch(r'/s/[A-Za-z0-9]+/ft-monthly-equity-market-outlook/?',path,re.I)):
+        return kind
     return None
 
 
@@ -111,6 +120,15 @@ def source_context_communication_kind(source,target,title):
         and query.get('tag')==['Market-Outlook']
         and dest.path.startswith('/mutual-fund-knowledge-centre/articles/')):
         return 'market view'
+    if ((base.hostname or '').lower() in ('www.edelweissmf.com','edelweissmf.com')):
+        base_path=base.path.rstrip('/')
+        if (base_path=='/investor-insights/fund-market'
+            and dest.path.startswith('/investor-insights/fund-market/')):
+            return 'market view'
+        if (base_path.startswith('/investor-insights/fund-market/')
+            and dest.path.lower().startswith('/files/insigths/viewpoint/')
+            and dest.path.lower().endswith('.pdf')):
+            return 'market view'
     return None
 
 
