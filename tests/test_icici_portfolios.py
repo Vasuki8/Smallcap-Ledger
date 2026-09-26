@@ -174,8 +174,10 @@ class IciciPortfolioTests(unittest.TestCase):
     def test_store_report_uses_icici_parser_version_and_nightly_discovery_is_wired(self):
         source = ("https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/"
                   "2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip")
+        body = zip_bytes()
+        digest = db.archive(body, "application/x-zip-compressed")
         with patch("tracker.amc_discovery.read",
-                   return_value=(zip_bytes(), "hash", "application/x-zip-compressed")), \
+                   return_value=(body, digest, "application/x-zip-compressed")), \
              patch("tracker.amc_reports.extract", return_value=3) as extract:
             self.assertEqual(
                 amc_discovery.store_report("ICICI", icici.FAMILY, source, "Monthly Portfolio Disclosure"),
