@@ -7,12 +7,12 @@ without treating factsheets, portfolios or third-party news as communications.
 """
 from __future__ import annotations
 
-import json
 import re
 from collections import Counter
 
 from . import db
 from .publications import exclusion_reason
+from .disclosures import resolve_registered_amc,registered_source_rows
 
 COMMUNICATION_KINDS=("market view","unitholder letter")
 _COMMUNICATION_SOURCE=re.compile(
@@ -24,21 +24,8 @@ _COMMUNICATION_SOURCE=re.compile(
 
 
 def _source_key(amc):
-    """Resolve one source-page key without substring collisions such as Kotak/Mahindra."""
-    keys={row["amc_match"] for row in db.rows("SELECT DISTINCT amc_match FROM source_pages")}
-    try:
-        keys.update(row[0] for row in json.loads((db.ROOT/"tracker"/"sources.json").read_text()))
-    except (OSError,json.JSONDecodeError,TypeError,IndexError):
-        pass
-    target=" ".join(str(amc or "").lower().split())
-    matches=[]
-    for key in keys:
-        normalized=" ".join(str(key or "").lower().split())
-        if normalized and (target==normalized or target.startswith(normalized+" ")):
-            matches.append((len(normalized),key))
-    if not matches:return None
-    matches.sort(reverse=True)
-    return matches[0][1]
+    """Use the collector's canonical AMC/source-key resolver."""
+    return resolve_registered_amc(amc,registered_source_rows())
 
 
 def _source_pages(amc):
