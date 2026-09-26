@@ -64,6 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
+      - name: Diagnose Groww and HSBC communication sources
+        if: github.event_name == 'push'
+        timeout-minutes: 6
+        run: uv run --frozen python scripts/diagnose_groww_hsbc_communications.py
       - name: Apply Edelweiss and Franklin communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
