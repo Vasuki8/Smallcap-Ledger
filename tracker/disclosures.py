@@ -82,10 +82,14 @@ def source_families(amc_match):
 
 def dated_communication_source_kind(title,url):
     """Classify a dated communication page, never a generic directory."""
-    kind=classify(title,url)
-    if kind not in ('market view','unitholder letter'):return None
     parsed=urlparse(url);path=unquote(parsed.path)
     host=(parsed.hostname or '').lower()
+    if (host in ('www.sbimf.com','sbimf.com')
+        and path.rstrip('/').lower()=='/learn-about-mutual-funds/2026-outlook'
+        and str(title or '').strip().lower()=='2026 outlook'):
+        return 'market view'
+    kind=classify(title,url)
+    if kind not in ('market view','unitholder letter'):return None
     if re.fullmatch(r'/.*digital-?factsheet/[A-Za-z]+-?\d{4}/[^/]+\.html',path,re.I):
         return kind
     if (host=='insights.abakkusinvest.com'
@@ -168,10 +172,15 @@ def explicit_publication_date(content,media_type='',url=''):
     m=re.search(r'\bBy\b[^/]{0,120}/\s*([A-Za-z]+\s+\d{1,2},\s*20\d{2})',text,re.I)
     if m:candidates.append(m.group(1))
     parsed_url=urlparse(url) if url else None
-    if (parsed_url
-        and (parsed_url.hostname or '').lower() in ('www.icicipruamc.com','icicipruamc.com')):
+    if parsed_url:
+        host=(parsed_url.hostname or '').lower()
         path=unquote(parsed_url.path)
-        if (path.startswith('/blob/sebi-repo/Advertisements/')
+        if (host in ('www.sbimf.com','sbimf.com')
+            and path.rstrip('/').lower()=='/learn-about-mutual-funds/2026-outlook'):
+            m=re.search(r'\bPublished\s+(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s+(20\d{2})\b',text,re.I)
+            if m:candidates.append(f"{m.group(1)} {m.group(2)} {m.group(3)}")
+        if (host in ('www.icicipruamc.com','icicipruamc.com')
+            and path.startswith('/blob/sebi-repo/Advertisements/')
             and re.search(r'Monthly\s+Market\s+Outlook\.html$',path,re.I)):
             m=re.search(r'/Release\s+date\s+(\d{2}-\d{2}-20\d{2})/',path,re.I)
             if m:candidates.append(m.group(1))
