@@ -259,10 +259,25 @@ def discover(amc):
         for _,_,url,title in sorted(pool,key=lambda x:x[1],reverse=True)[:2]:
             yield family,url,title or f'Monthly portfolio as on {newest.isoformat()}'
     elif amc=='Union':
-        # The Union fund-house homepage is slow, but the Small Cap factsheet is
-        # published at a stable first-party URL. Fetch it directly every run;
-        # downstream parsing still has to prove exact scheme ownership/date.
-        yield 'Union Small Cap Fund','https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf','Union Small Cap Fund factsheet'
+        family='Union Small Cap Fund'
+        # Union's consolidated monthly factsheets are published on a stable
+        # first-party Sitefinity path and contain the complete Small Cap
+        # portfolio. Prefer the newest two closed months so retrieval does not
+        # depend on the slower client-rendered Downloads page.
+        yielded=set()
+        for day in closed_month_ends(count=2):
+            month=calendar.month_name[day.month].lower()
+            url=(f'https://www.unionmf.com/docs/default-source/downloads/'
+                 f'scheme-disclosures/factsheets/factsheet-{month}-{day.year}.pdf')
+            if url in yielded:continue
+            yielded.add(url)
+            yield family,url,f'Union consolidated factsheet {calendar.month_name[day.month]} {day.year}'
+        # Keep the stable single-scheme factsheet as a final fallback. It is
+        # useful for facts/benchmark evidence even when the consolidated
+        # monthly source is temporarily unavailable.
+        fallback='https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf'
+        if fallback not in yielded:
+            yield family,fallback,'Union Small Cap Fund factsheet'
     elif amc=='UTI':
         for year,month,name in months():
             raw,_,_=read(f'https://www.utimf.com/api/get-fact-sheet?year={year}&month={name}')
