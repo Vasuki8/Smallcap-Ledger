@@ -94,4 +94,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    raise SystemExit(0 if run() else 1)
