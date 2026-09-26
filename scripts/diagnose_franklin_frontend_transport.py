@@ -10,18 +10,21 @@ sys.path.insert(0,str(ROOT))
 from tracker import providers
 
 URL="https://www.franklintempletonindia.com/sebi-circular/current"
-KEYS=("sebi-circular","latest-commentaries","market-insights","widen.net","api/","graphql","search")
+KEYS=("sebi-circular","latest-commentaries","market-insights","widen.net","api/","graphql","search","circular","commentary","contentapi","endpoint")
 
 def main():
     body,_,_=providers.fetch(URL,archive=False,max_bytes=8*1024*1024)
     soup=BeautifulSoup(body,"html.parser")
     print("FRONTEND_BYTES",len(body),flush=True)
+    base_tag=soup.find("base")
+    browser_base=urljoin(URL,base_tag.get("href")) if base_tag and base_tag.get("href") else URL
+    print("FRONTEND_BASE",repr(base_tag.get("href") if base_tag else None),browser_base,flush=True)
     scripts=[]
     for tag in soup.select("script"):
         src=tag.get("src")
         inline=(tag.string or tag.get_text() or "")
         if src:
-            u=urljoin(URL,src)
+            u=urljoin(browser_base,src)
             if (urlparse(u).hostname or "").endswith("franklintempletonindia.com"):
                 scripts.append(u)
                 print("FRONTEND_SCRIPT_SRC",u,flush=True)
