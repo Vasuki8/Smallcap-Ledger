@@ -71,23 +71,24 @@ def run():
         except Exception as exc:
             failures.append(f"{amc}: {(str(exc) or type(exc).__name__).splitlines()[0][:300]}")
 
+    kotak_source=_doc(KOTAK_FAMILY,KOTAK_LISTING)
     kotak_doc=_doc(KOTAK_FAMILY,KOTAK_CURRENT)
     mirae_doc=_doc(MIRAE_FAMILY,MIRAE_OUTLOOK)
-    kotak_body=_body(kotak_doc);mirae_body=_body(mirae_doc)
+    mirae_body=_body(mirae_doc)
 
     success=bool(
         not failures
+        and kotak_source and kotak_source["versions"]>=1
         and kotak_doc and kotak_doc["kind"]=="market view"
         and kotak_doc["published_at"]=="2026-09-09"
-        and kotak_doc["versions"]>=1
-        and kotak_body.startswith(b"%PDF")
+        and kotak_doc["versions"]==0
         and mirae_doc and mirae_doc["kind"]=="market view"
         and mirae_doc["published_at"] is None
         and mirae_doc["versions"]>=1
         and mirae_body.startswith(b"%PDF")
     )
     detail=(
-        f"Kotak={kotak_doc}; Kotak PDF={kotak_body.startswith(b'%PDF')}; "
+        f"Kotak source={kotak_source}; Kotak={kotak_doc}; Kotak original link-only={bool(kotak_doc and kotak_doc['versions']==0)}; "
         f"Mirae={mirae_doc}; Mirae PDF={mirae_body.startswith(b'%PDF')}; "
         +" | ".join(messages+failures)
     )
