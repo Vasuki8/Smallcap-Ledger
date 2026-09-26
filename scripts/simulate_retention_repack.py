@@ -64,6 +64,36 @@ def load_new_delta_candidates():
     return rows
 
 
+def validate_simulation_candidate_boundary(reviewed_candidates,candidates,excluded_reviewed,new_delta_candidates):
+    reviewed_hashes={r['hash'] for r in reviewed_candidates}
+    candidate_hashes={r['hash'] for r in candidates}
+    excluded_hashes={r['hash'] for r in excluded_reviewed}
+    delta_hashes={r['hash'] for r in new_delta_candidates}
+    if len(candidate_hashes)!=EXPECTED_HISTORICAL_ELIGIBLE:
+        raise ValueError(
+            f'Expected exactly {EXPECTED_HISTORICAL_ELIGIBLE} currently eligible historical candidates, '
+            f'found {len(candidate_hashes)}')
+    if candidate_hashes|excluded_hashes!=reviewed_hashes or candidate_hashes&excluded_hashes:
+        raise ValueError('Historical candidate/exclusion partition is inconsistent')
+    if len(delta_hashes)!=EXPECTED_NEW_DELTA:
+        raise ValueError(
+            f'Expected exactly {EXPECTED_NEW_DELTA} post-audit candidates, found {len(delta_hashes)}')
+    overlap=candidate_hashes&delta_hashes
+    if overlap:
+        raise ValueError('New post-audit candidate delta leaked into historical migration proposal')
+    reviewed_delta_overlap=reviewed_hashes&delta_hashes
+    if reviewed_delta_overlap:
+        raise ValueError('Post-audit candidate delta overlaps original reviewed candidate set')
+    return {
+        'historical_reviewed_candidate_count':len(reviewed_hashes),
+        'historical_candidate_count':len(candidate_hashes),
+        'excluded_reviewed_candidate_count':len(excluded_hashes),
+        'post_audit_delta_candidate_count':len(delta_hashes),
+        'post_audit_delta_overlap_count':0,
+        'post_audit_delta_excluded':True,
+    }
+
+
 def ensure_no_actionable_portfolio_change():
     queue=json.loads(QUEUE.read_text(encoding='utf-8'))
     summary=queue.get('summary') or {}
@@ -425,9 +455,6 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
     reviewed_candidate_hashes={r['hash'] for r in reviewed_candidates}
     new_delta_candidates=load_new_delta_candidates()
     new_delta_hashes={r['hash'] for r in new_delta_candidates}
-    historical_delta_overlap=reviewed_candidate_hashes&new_delta_hashes
-    if historical_delta_overlap:
-        raise ValueError('Post-audit candidate delta overlaps original reviewed candidate set')
     repo=os.environ.get('GITHUB_REPOSITORY','')
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo):
         raise ValueError('GITHUB_REPOSITORY is required for the simulation')
@@ -465,15 +492,9 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             raise ValueError('Reviewed candidate hash missing from active checkpoint database')
 
         candidates,excluded_reviewed=current_eligible_candidates(sim_db,reviewed_candidates)
+        boundary=validate_simulation_candidate_boundary(
+            reviewed_candidates,candidates,excluded_reviewed,new_delta_candidates)
         candidate_hashes={r['hash'] for r in candidates}
-        if len(candidate_hashes)!=EXPECTED_HISTORICAL_ELIGIBLE:
-            raise ValueError(
-                f'Expected exactly {EXPECTED_HISTORICAL_ELIGIBLE} currently eligible historical candidates, '
-                f'found {len(candidate_hashes)}')
-        if len(excluded_reviewed)!=(len(reviewed_candidates)-EXPECTED_HISTORICAL_ELIGIBLE):
-            raise ValueError('Historical exclusion count does not match the reviewed candidate set')
-        if candidate_hashes&new_delta_hashes:
-            raise ValueError('New post-audit candidate delta leaked into historical migration proposal')
         missing_delta=sorted(new_delta_hashes-set(live_rows))
         if missing_delta:
             raise ValueError('Post-audit delta hash is absent from active checkpoint: '+missing_delta[0])
@@ -573,9 +594,9 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'historical_reviewed_candidate_count':len(reviewed_candidates),
             'current_eligible_candidate_count':len(candidates),
             'excluded_reviewed_candidate_count':len(excluded_reviewed),
-            'post_audit_delta_candidate_count':len(new_delta_candidates),
-            'post_audit_delta_overlap_count':len(candidate_hashes&new_delta_hashes),
-            'post_audit_delta_excluded':True,
+            'post_audit_delta_candidate_count':boundary['post_audit_delta_candidate_count'],
+            'post_audit_delta_overlap_count':boundary['post_audit_delta_overlap_count'],
+            'post_audit_delta_excluded':boundary['post_audit_delta_excluded'],
             'post_audit_delta_hashes_sha256':json_sha(sorted(new_delta_hashes)),
             'count':len(candidates),
             'raw_bytes':sum(int(live_rows[h]['bytes']) for h in candidate_hashes),
@@ -602,9 +623,9 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'historical_reviewed_candidate_count':len(reviewed_candidates),
             'candidate_count':len(candidate_hashes),
             'excluded_reviewed_candidate_count':len(excluded_reviewed),
-            'post_audit_delta_candidate_count':len(new_delta_candidates),
-            'post_audit_delta_overlap_count':len(candidate_hashes&new_delta_hashes),
-            'post_audit_delta_excluded':True,
+            'post_audit_delta_candidate_count':boundary['post_audit_delta_candidate_count'],
+            'post_audit_delta_overlap_count':boundary['post_audit_delta_overlap_count'],
+            'post_audit_delta_excluded':boundary['post_audit_delta_excluded'],
             'post_audit_delta_hashes_sha256':json_sha(sorted(new_delta_hashes)),
             'candidate_hashes_sha256':json_sha(sorted(candidate_hashes)),
             'excluded_reviewed_hashes_sha256':json_sha([x['hash'] for x in excluded_reviewed]),
@@ -630,9 +651,9 @@ def simulate(report_path,manifest_path,candidates_path,markdown_path):
             'candidate_count':len(candidate_hashes),
             'excluded_reviewed_candidate_count':len(excluded_reviewed),
             'excluded_reviewed_candidates':excluded_reviewed,
-            'post_audit_delta_candidate_count':len(new_delta_candidates),
-            'post_audit_delta_overlap_count':len(candidate_hashes&new_delta_hashes),
-            'post_audit_delta_excluded':True,
+            'post_audit_delta_candidate_count':boundary['post_audit_delta_candidate_count'],
+            'post_audit_delta_overlap_count':boundary['post_audit_delta_overlap_count'],
+            'post_audit_delta_excluded':boundary['post_audit_delta_excluded'],
             'post_audit_delta_hashes':sorted(new_delta_hashes),
             'retained_hash_count':len(retained_hashes),
             'affected_pack_count':len(affected),
