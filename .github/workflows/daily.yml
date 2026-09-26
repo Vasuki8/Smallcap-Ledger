@@ -64,6 +64,10 @@ jobs:
         if: github.event_name == 'push'
         timeout-minutes: 5
         run: uv run --frozen python scripts/diagnose_bajaj_media.py
+      - name: Diagnose Edelweiss and Franklin communication sources
+        if: github.event_name == 'push'
+        timeout-minutes: 5
+        run: uv run --frozen python scripts/diagnose_edelweiss_franklin_communications.py
       - name: Apply Bajaj and Bandhan communication source recovery
         if: github.event_name == 'push'
         timeout-minutes: 8
