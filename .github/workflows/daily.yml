@@ -69,6 +69,14 @@ jobs:
           uv run --frozen python scripts/audit_midcap_identity.py
           --preview deployment/category-expansion-preview.json
           --output deployment/midcap-identity-audit.json
+      - name: Store audited Mid Cap staging data
+        timeout-minutes: 3
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/stage_midcap_import.py
+          --audit deployment/midcap-identity-audit.json
+          --preview deployment/category-expansion-preview.json
+          --report deployment/midcap-staging-status.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
