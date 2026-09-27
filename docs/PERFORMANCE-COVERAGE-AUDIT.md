@@ -1,6 +1,6 @@
 # Historical performance and benchmark coverage audit
 
-Prepared: 2026-09-27T17:30:24+00:00
+Prepared: 2026-09-27T17:39:19+00:00
 
 **Read-only:** retained NAV/benchmark evidence only; no forward-fill, return fabrication, source fetch or UI change.
 
