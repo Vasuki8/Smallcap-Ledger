@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-27T15:21:44+00:00",
+  "built_at": "2026-09-27T15:48:43+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -9,8 +9,8 @@
     "families": 34,
     "scheme_codes": 135,
     "aum": 34,
-    "ter_any": 0,
-    "direct_ter": 0,
+    "ter_any": 21,
+    "direct_ter": 21,
     "benchmark_identity": 0,
     "portfolio": 0,
     "portfolio_current": 0,
@@ -62,459 +62,1281 @@
       "amcs": 57
     },
     {
+      "kind": "ter_mid_cap_category_selector",
+      "probe_amc": "Aditya Birla Sun Life Mutual Fund",
+      "probe_family": "Aditya Birla Sun Life Midcap Fund",
+      "category_id": "17",
+      "category_label": "Equity Scheme - Mid Cap Fund",
+      "attempts": [
+        {
+          "candidate": 1,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 2,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 3,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 4,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 5,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 6,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 7,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 8,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 9,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 10,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 11,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 12,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 13,
+          "month": "09-2026",
+          "rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308",
+          "matched": false
+        },
+        {
+          "candidate": 14,
+          "month": "09-2026",
+          "rows": 25,
+          "sha256": "102e0f31e241d885d4dd5bbf58dbe97448b3f2f44ce38f6362431cd68ba87c89",
+          "matched": false
+        },
+        {
+          "candidate": 15,
+          "month": "09-2026",
+          "rows": 25,
+          "sha256": "320b1e41529974241690f50b777b1f52edbb7cd028b282735526e6824dc33236",
+          "matched": false
+        },
+        {
+          "candidate": 16,
+          "month": "09-2026",
+          "rows": 25,
+          "sha256": "5ae070c6ec7556c03c45f06490db7f7bdf25dca81b9148a6138e5b8f8c2a9288",
+          "matched": false
+        },
+        {
+          "candidate": 17,
+          "month": "09-2026",
+          "rows": 25,
+          "sha256": "63814e194ed98d9dd087e1444d14e0b0f4722503b8142635240f1ae12bea8f0d",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Aditya Birla Sun Life Mutual Fund",
+      "amfi_mf_name": "Aditya Birla Sun Life Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 25,
+          "mid_cap_rows": 25,
+          "sha256": "63814e194ed98d9dd087e1444d14e0b0f4722503b8142635240f1ae12bea8f0d"
+        }
+      ],
+      "matched_families": [
+        "Aditya Birla Sun Life Midcap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Axis Mutual Fund",
+      "amfi_mf_name": "Axis Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 25,
+          "mid_cap_rows": 25,
+          "sha256": "ea75443de411ebc1ed1b205b997cfd7795431727e48baf49bf871adf3ba984b0"
+        }
+      ],
+      "matched_families": [
+        "Axis Midcap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Bandhan Mutual Fund",
+      "amfi_mf_name": "Bandhan Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Bank of India Mutual Fund",
+      "amfi_mf_name": "Bank of India Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Baroda BNP Paribas Mutual Fund",
+      "amfi_mf_name": "Baroda BNP Paribas Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 25,
+          "mid_cap_rows": 25,
+          "sha256": "ee4daa2b955ca3b3ee4dd77f6c9f1bd657b05eb30a0d2c4242e3c6dfe1341ec2"
+        }
+      ],
+      "matched_families": [
+        "Baroda BNP Paribas Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Canara Robeco Mutual Fund",
+      "amfi_mf_name": "Canara Robeco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "DSP Mutual Fund",
+      "amfi_mf_name": "DSP Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 18,
+          "mid_cap_rows": 18,
+          "sha256": "6d2b64b4f7dfdb3b08cfdda51aeeccf1bdb1aa827fa262f46d34328fdabb615a"
+        }
+      ],
+      "matched_families": [
+        "DSP Midcap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Edelweiss Mutual Fund",
+      "amfi_mf_name": "Edelweiss Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "fb05aea4a58d316054b88dde5a63e8719c7d44fa662e4ef0d465b14c351f1be2"
+        }
+      ],
+      "matched_families": [
+        "Edelweiss Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Franklin Templeton Mutual Fund",
+      "amfi_mf_name": "Franklin Templeton Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 25,
+          "mid_cap_rows": 25,
+          "sha256": "3d40d397344050ff0134236f16a4d5b1c1f8c15d22c4adb25069d36b6b8b8bd0"
+        }
+      ],
+      "matched_families": [
+        "Franklin India Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "HDFC Mutual Fund",
+      "amfi_mf_name": "HDFC Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 24,
+          "mid_cap_rows": 24,
+          "sha256": "2a2075357abc1d6cdfb6e355f75811d97d0d92cc58be07317bf376152b43ff3a"
+        }
+      ],
+      "matched_families": [
+        "HDFC Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "HSBC Mutual Fund",
+      "amfi_mf_name": "HSBC Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Helios Mutual Fund",
+      "amfi_mf_name": "Helios Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "ICICI Prudential Mutual Fund",
+      "amfi_mf_name": "ICICI Prudential Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "ITI Mutual Fund",
+      "amfi_mf_name": "ITI Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "fc6e69a2c095c4b6b0c56ecc5bfa1ad8bb32efb7f75ed655077d8976fce2d84f"
+        }
+      ],
+      "matched_families": [
+        "ITI Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Invesco Mutual Fund",
+      "amfi_mf_name": "Invesco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "JM Financial Mutual Fund",
+      "amfi_mf_name": "JM Financial Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Kotak Mahindra Mutual Fund",
+      "amfi_mf_name": "Kotak Mahindra Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "LIC Mutual Fund",
+      "amfi_mf_name": "LIC Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "270fa1f176dbb165f3dd15ef50484ae9b3a103c1142d9cf3e038c591adf76e3b"
+        }
+      ],
+      "matched_families": [
+        "LIC MF Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Mahindra Manulife Mutual Fund",
+      "amfi_mf_name": "Mahindra Manulife Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Mirae Asset Mutual Fund",
+      "amfi_mf_name": "Mirae Asset Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Motilal Oswal Mutual Fund",
+      "amfi_mf_name": "Motilal Oswal Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 25,
+          "mid_cap_rows": 25,
+          "sha256": "a7b47f0e7bae93bf195b3dbbf72ad65652bbb9073c844e943b8d9f3c37f255b0"
+        }
+      ],
+      "matched_families": [
+        "Motilal Oswal Midcap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Nippon India Mutual Fund",
+      "amfi_mf_name": "Nippon India Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 24,
+          "mid_cap_rows": 24,
+          "sha256": "a5bdb2eabef29ff0bf6984f2557ef499b2f0e77209f01c52d3de14e7e8811238"
+        }
+      ],
+      "matched_families": [
+        "Nippon India Growth Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "PGIM India Mutual Fund",
+      "amfi_mf_name": "PGIM India Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "c2ae8357a7a43447bb1ed18ba14df93b925be900f22dfe2286481f3b4e7acd15"
+        }
+      ],
+      "matched_families": [
+        "PGIM India Midcap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "SBI Mutual Fund",
+      "amfi_mf_name": "SBI Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 24,
+          "mid_cap_rows": 24,
+          "sha256": "7e94a0ffa5eeeec3d610a1f76e7f3a3d3cb3944f309b168a205c839b9fe39bf3"
+        }
+      ],
+      "matched_families": [
+        "SBI MIDCAP FUND"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Samco Mutual Fund",
+      "amfi_mf_name": "Samco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 18,
+          "mid_cap_rows": 18,
+          "sha256": "cc954d72665bbe95c550e538ba37df07a183e776a797d150e21fa78fa5cdc1d4"
+        }
+      ],
+      "matched_families": [
+        "Samco Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Sundaram Mutual Fund",
+      "amfi_mf_name": "Sundaram Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 25,
+          "mid_cap_rows": 25,
+          "sha256": "283322b8efef6f9f1c03de6729370e74d5924a2cab4b71441f53cef50bbcdc8c"
+        }
+      ],
+      "matched_families": [
+        "Sundaram Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Tata Mutual Fund",
+      "amfi_mf_name": "Tata Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 26,
+          "mid_cap_rows": 26,
+          "sha256": "054b539456cd98d2c3602eaf851f7cd47f47135badb39ee8af7215081feaef35"
+        }
+      ],
+      "matched_families": [
+        "Tata Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Taurus Mutual Fund",
+      "amfi_mf_name": "Taurus Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "fc45aa7da1f8f9afbbd689d179b437cc9be97f85cbd62f8fc721715e485b8da3"
+        }
+      ],
+      "matched_families": [
+        "Taurus Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "The Wealth Company Mutual Fund",
+      "amfi_mf_name": "The Wealth Company Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Trust Mutual Fund",
+      "amfi_mf_name": "Trust Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "2378c46e75b6798552683c46f195724b54d33e361925d5bc2bfbb23cd5e76ad6"
+        }
+      ],
+      "matched_families": [
+        "TRUSTMF MID CAP FUND"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "UTI Mutual Fund",
+      "amfi_mf_name": "UTI Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 18,
+          "mid_cap_rows": 18,
+          "sha256": "a629720f9a80b7696400ab88b2da53aa6334f0d238cab3a4a8b847e6ba06a5f0"
+        }
+      ],
+      "matched_families": [
+        "UTI - Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "Union Mutual Fund",
+      "amfi_mf_name": "Union Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "40ff3c34bec15f5d6a868aa64111e0f82af9dcdf291364f177da793fb13bae85"
+        }
+      ],
+      "matched_families": [
+        "Union Midcap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "WhiteOak Capital Mutual Fund",
+      "amfi_mf_name": "WhiteOak Capital Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "09-2026",
+      "amc": "quant Mutual Fund",
+      "amfi_mf_name": "quant Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "639d8296701e9f23e409c7b0de0166ee09c3a1009949d6e84608ebc59f856830"
+        }
+      ],
+      "matched_families": [
+        "Quant Mid Cap Fund"
+      ]
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Bandhan Mutual Fund",
+      "amfi_mf_name": "Bandhan Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Bank of India Mutual Fund",
+      "amfi_mf_name": "Bank of India Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Canara Robeco Mutual Fund",
+      "amfi_mf_name": "Canara Robeco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "HSBC Mutual Fund",
+      "amfi_mf_name": "HSBC Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Helios Mutual Fund",
+      "amfi_mf_name": "Helios Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "ICICI Prudential Mutual Fund",
+      "amfi_mf_name": "ICICI Prudential Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Invesco Mutual Fund",
+      "amfi_mf_name": "Invesco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "JM Financial Mutual Fund",
+      "amfi_mf_name": "JM Financial Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Kotak Mahindra Mutual Fund",
+      "amfi_mf_name": "Kotak Mahindra Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Mahindra Manulife Mutual Fund",
+      "amfi_mf_name": "Mahindra Manulife Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "Mirae Asset Mutual Fund",
+      "amfi_mf_name": "Mirae Asset Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "The Wealth Company Mutual Fund",
+      "amfi_mf_name": "The Wealth Company Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
+      "amc": "WhiteOak Capital Mutual Fund",
+      "amfi_mf_name": "WhiteOak Capital Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Bandhan Mutual Fund",
+      "amfi_mf_name": "Bandhan Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Bank of India Mutual Fund",
+      "amfi_mf_name": "Bank of India Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Canara Robeco Mutual Fund",
+      "amfi_mf_name": "Canara Robeco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "HSBC Mutual Fund",
+      "amfi_mf_name": "HSBC Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Helios Mutual Fund",
+      "amfi_mf_name": "Helios Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "ICICI Prudential Mutual Fund",
+      "amfi_mf_name": "ICICI Prudential Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Invesco Mutual Fund",
+      "amfi_mf_name": "Invesco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "JM Financial Mutual Fund",
+      "amfi_mf_name": "JM Financial Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Kotak Mahindra Mutual Fund",
+      "amfi_mf_name": "Kotak Mahindra Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Mahindra Manulife Mutual Fund",
+      "amfi_mf_name": "Mahindra Manulife Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "Mirae Asset Mutual Fund",
+      "amfi_mf_name": "Mirae Asset Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "The Wealth Company Mutual Fund",
+      "amfi_mf_name": "The Wealth Company Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
+      "amc": "WhiteOak Capital Mutual Fund",
+      "amfi_mf_name": "WhiteOak Capital Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
       "kind": "ter_mid_cap_contract_summary",
       "queried_amcs": 34,
       "target_families": 34,
-      "matched_families": 0,
+      "matched_families": 21,
       "unmatched_families": [
-        "Aditya Birla Sun Life Midcap Fund",
-        "Axis Midcap Fund",
         "BANDHAN MID CAP FUND",
         "BANK OF INDIA MID CAP FUND",
-        "Baroda BNP Paribas Mid Cap Fund",
         "Canara Robeco Mid Cap Fund",
-        "DSP Midcap Fund",
-        "Edelweiss Mid Cap Fund",
-        "Franklin India Mid Cap Fund",
-        "HDFC Mid Cap Fund",
         "HSBC Midcap Fund",
         "Helios Mid Cap Fund",
         "ICICI Prudential Mid Cap Fund",
-        "ITI Mid Cap Fund",
         "Invesco India Mid Cap Fund",
         "JM Mid Cap Fund",
         "Kotak Mid Cap Fund",
-        "LIC MF Mid Cap Fund",
         "Mahindra Manulife Mid Cap Fund",
         "Mirae Asset Midcap Fund",
-        "Motilal Oswal Midcap Fund",
-        "Nippon India Growth Mid Cap Fund",
-        "PGIM India Midcap Fund",
-        "Quant Mid Cap Fund",
-        "SBI MIDCAP FUND",
-        "Samco Mid Cap Fund",
-        "Sundaram Mid Cap Fund",
-        "TRUSTMF MID CAP FUND",
-        "Tata Mid Cap Fund",
-        "Taurus Mid Cap Fund",
         "The Wealth Company Mid Cap Fund",
-        "UTI - Mid Cap Fund",
-        "Union Midcap Fund",
         "WhiteOak Capital Mid Cap Fund"
       ],
-      "contract": "one AMC x month; strCat=-1; strType=1; page=1; pageSize=10000"
+      "category_id": "17",
+      "category_label": "Equity Scheme - Mid Cap Fund",
+      "contract": "resolve exact Mid Cap strCat from official AMFI response, then query one AMC x month with bounded pagination"
     }
   ],
-  "source_errors": [
-    {
-      "source": "AMFI TER · Aditya Birla Sun Life Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Axis Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Bandhan Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Bank of India Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Baroda BNP Paribas Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Canara Robeco Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · DSP Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Edelweiss Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Franklin Templeton Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · HDFC Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · HSBC Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Helios Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · ICICI Prudential Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · ITI Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Invesco Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · JM Financial Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Kotak Mahindra Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · LIC Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Mahindra Manulife Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Mirae Asset Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Motilal Oswal Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Nippon India Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · PGIM India Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · SBI Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Samco Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Sundaram Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Tata Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Taurus Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · The Wealth Company Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Trust Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · UTI Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Union Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · WhiteOak Capital Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · quant Mutual Fund · 09-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Aditya Birla Sun Life Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Axis Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Bandhan Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Bank of India Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Baroda BNP Paribas Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Canara Robeco Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · DSP Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Edelweiss Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Franklin Templeton Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · HDFC Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · HSBC Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Helios Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · ICICI Prudential Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · ITI Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Invesco Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · JM Financial Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Kotak Mahindra Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · LIC Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Mahindra Manulife Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Mirae Asset Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Motilal Oswal Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Nippon India Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · PGIM India Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · SBI Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Samco Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Sundaram Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Tata Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Taurus Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · The Wealth Company Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Trust Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · UTI Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Union Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · WhiteOak Capital Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · quant Mutual Fund · 08-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Aditya Birla Sun Life Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Axis Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Bandhan Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Bank of India Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Baroda BNP Paribas Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Canara Robeco Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · DSP Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Edelweiss Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Franklin Templeton Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · HDFC Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · HSBC Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Helios Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · ICICI Prudential Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · ITI Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Invesco Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · JM Financial Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Kotak Mahindra Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · LIC Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Mahindra Manulife Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Mirae Asset Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Motilal Oswal Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Nippon India Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · PGIM India Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · SBI Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Samco Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Sundaram Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Tata Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Taurus Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · The Wealth Company Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Trust Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · UTI Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · Union Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · WhiteOak Capital Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    },
-    {
-      "source": "AMFI TER · quant Mutual Fund · 07-2026",
-      "error": "AMFI AMC TER response exceeded one bounded page"
-    }
-  ],
+  "source_errors": [],
   "unmatched_mid_cap_aum_names": [],
   "unmatched_mid_cap_ter_names": [],
   "families": [
@@ -543,8 +1365,21 @@
         "scheme_name": "Aditya Birla Sun Life Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Aditya Birla Sun Life MIDCAP Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.23,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.02,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -631,7 +1466,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -662,8 +1496,21 @@
         "scheme_name": "Axis Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Axis Midcap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.84,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.79,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -696,7 +1543,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -959,8 +1805,21 @@
         "scheme_name": "Baroda BNP Paribas Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Baroda BNP Paribas Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.78,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.21,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -1041,7 +1900,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -1191,8 +2049,21 @@
         "scheme_name": "DSP Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "DSP Midcap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.83,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.73,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -1261,7 +2132,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -1292,8 +2162,21 @@
         "scheme_name": "Edelweiss Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "Edelweiss Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.68,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.87,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -1362,7 +2245,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -1393,8 +2275,21 @@
         "scheme_name": "Franklin India Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Franklin India Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.15,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.91,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -1439,7 +2334,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -1470,8 +2364,21 @@
         "scheme_name": "HDFC Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-24",
+        "scheme_name": "HDFC Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.76,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.31,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -1546,7 +2453,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -1963,8 +2869,21 @@
         "scheme_name": "ITI Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "ITI Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.91,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.42,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -2033,7 +2952,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -2296,8 +3214,21 @@
         "scheme_name": "LIC MF Mid cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "LIC MF Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.77,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.86,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -2372,7 +3303,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -2629,8 +3559,21 @@
         "scheme_name": "Motilal Oswal Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Motilal Oswal Midcap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.93,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.64,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -2687,7 +3630,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -2722,8 +3664,21 @@
         "scheme_name": "Nippon India Growth Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-24",
+        "scheme_name": "Nippon India Growth Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.79,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.54,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -2798,7 +3753,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -2829,8 +3783,21 @@
         "scheme_name": "PGIM India Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "PGIM India Midcap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.74,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.92,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -2905,7 +3872,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -2936,8 +3902,21 @@
         "scheme_name": "Quant Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "Quant Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.18,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.21,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3012,7 +3991,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3040,8 +4018,21 @@
         "scheme_name": "Samco Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Samco Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.58,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 3.0,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3104,7 +4095,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3135,8 +4125,21 @@
         "scheme_name": "SBI Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-24",
+        "scheme_name": "SBI Midcap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.05,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.8,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3199,7 +4202,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3230,8 +4232,21 @@
         "scheme_name": "Sundaram Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Sundaram Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.06,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.86,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3324,7 +4339,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3355,8 +4369,21 @@
         "scheme_name": "Tata Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "TATA MID CAP FUND",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 0.86,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.03,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3437,7 +4464,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3468,8 +4494,21 @@
         "scheme_name": "Taurus Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "Taurus Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 2.36,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.8,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3477,7 +4516,6 @@
       "shared_live_amc": false,
       "amc_source_candidates": [],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3612,8 +4650,21 @@
         "scheme_name": "TRUSTMF Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "TRUSTMF Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.9,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 3.52,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3640,7 +4691,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3671,8 +4721,21 @@
         "scheme_name": "Union Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-27",
+        "scheme_name": "Union Midcap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.1,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 2.41,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3713,11 +4776,10 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-27T12:09:04+00:00"
+          "last_checked": "2026-09-27T15:38:38+00:00"
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3748,8 +4810,21 @@
         "scheme_name": "UTI Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "UTI - Mid Cap Fund",
+        "category": "Equity Scheme - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+        "direct": {
+          "value": 1.25,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 1.95,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -3772,11 +4847,10 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-27T12:09:07+00:00"
+          "last_checked": "2026-09-27T15:38:41+00:00"
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -3827,8 +4901,7 @@
     "mid_cap_registry_stage_is_staged",
     "mid_cap_direct_ter_coverage_incomplete",
     "mid_cap_benchmark_identity_coverage_incomplete",
-    "mid_cap_portfolio_current_coverage_incomplete",
-    "mid_cap_source_audit_fetch_errors"
+    "mid_cap_portfolio_current_coverage_incomplete"
   ],
   "source_coverage_ready": false,
   "mid_cap_launch_ready": false,
