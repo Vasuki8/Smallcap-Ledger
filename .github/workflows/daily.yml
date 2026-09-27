@@ -62,6 +62,13 @@ jobs:
           uv run --frozen python scripts/preview_category_expansion.py
           --fetch-amfi
           --output deployment/category-expansion-preview.json
+      - name: Audit staged Mid Cap identities
+        timeout-minutes: 3
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/audit_midcap_identity.py
+          --preview deployment/category-expansion-preview.json
+          --output deployment/midcap-identity-audit.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
