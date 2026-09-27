@@ -14,6 +14,17 @@ from tracker.categories import identity_issues
 
 MFAPI=providers.MFAPI
 
+# Reviewed first-party exception: the current AMFI/MFAPI records expose only the
+# common Motilal Oswal Midcap Fund name for these legacy AMFI codes. Motilal's
+# own scheme page / Scheme Summary Document maps the codes explicitly.
+MOTILAL_MIDCAP_EVIDENCE="https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
+REVIEWED_CODE_IDENTITIES={
+    127044:{"plan":"Direct","option":"IDCW"},
+    127042:{"plan":"Direct","option":"Growth"},
+    127040:{"plan":"Regular","option":"IDCW"},
+    127039:{"plan":"Regular","option":"Growth"},
+}
+
 
 def resolve_metadata(row,fetch_fn=providers.fetch):
     code=int(row["code"])
@@ -74,14 +85,23 @@ def audit(preview,retained_rows,fetch_fn=providers.fetch):
 
         resolution=None
         if plan=="Unspecified" or option=="Other":
-            try:
-                resolution=resolve_metadata(row,fetch_fn=fetch_fn)
+            reviewed=REVIEWED_CODE_IDENTITIES.get(code)
+            if reviewed and row["amc"]=="Motilal Oswal Mutual Fund" and official_family=="Motilal Oswal Midcap Fund":
+                plan=reviewed["plan"];option=reviewed["option"]
+                resolution={
+                    "code":code,"resolved":True,"method":"reviewed_first_party_code_mapping",
+                    "plan":plan,"option":option,"evidence_url":MOTILAL_MIDCAP_EVIDENCE,
+                }
                 metadata_resolutions.append(resolution)
-                if resolution["resolved"]:
-                    plan=resolution["plan"];option=resolution["option"]
-            except Exception as exc:
-                resolution={"code":code,"resolved":False,"error":(str(exc) or type(exc).__name__)[:300]}
-                metadata_resolutions.append(resolution)
+            else:
+                try:
+                    resolution=resolve_metadata(row,fetch_fn=fetch_fn)
+                    metadata_resolutions.append(resolution)
+                    if resolution["resolved"]:
+                        plan=resolution["plan"];option=resolution["option"]
+                except Exception as exc:
+                    resolution={"code":code,"resolved":False,"error":(str(exc) or type(exc).__name__)[:300]}
+                    metadata_resolutions.append(resolution)
         proposal={
             "code":code,"category":"mid-cap","family":official_family,"amc":row["amc"],
             "plan":plan,"option":option,"isin":row.get("isin"),
