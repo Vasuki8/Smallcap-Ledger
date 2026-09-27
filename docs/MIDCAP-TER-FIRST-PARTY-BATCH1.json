@@ -1,0 +1,235 @@
+{
+  "built_at": "2026-09-27T17:45:34+00:00",
+  "staged_category": "mid-cap",
+  "targets": 7,
+  "recovered": 7,
+  "failed": 0,
+  "results": [
+    {
+      "family": "Canara Robeco Mid Cap Fund",
+      "amc": "Canara Robeco Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-27",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.6,
+          "brokerage": 0.0,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.0,
+          "ter": 2.11
+        },
+        "Direct": {
+          "base_expense_ratio": 0.52,
+          "brokerage": 0.0,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.0,
+          "ter": 0.86
+        }
+      },
+      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-13&to_date=2026-09-27",
+      "sha256": "26fb71feaa2837c508f21101a3e54f1212ebe5c6799dea057841afe20e6ffd04",
+      "identity": {
+        "scheme_name": "Canara Robeco Mid Cap Fund",
+        "scheme_code": "MD"
+      },
+      "evidence_type": "official_amc_json",
+      "direct_ter": 0.86,
+      "regular_ter": 2.11
+    },
+    {
+      "family": "HSBC Midcap Fund",
+      "amc": "HSBC Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-24",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.43,
+          "brokerage": 0.15,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.62,
+          "ter": 2.21
+        },
+        "Direct": {
+          "base_expense_ratio": 0.53,
+          "brokerage": 0.15,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.46,
+          "ter": 1.15
+        }
+      },
+      "source": "https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx",
+      "sha256": "b73cf5b796e69e9f3407fdafdcfc3142cb7dde6cea10fafe109084a40d058936",
+      "identity": {
+        "scheme_name": "HSBC Midcap Fund",
+        "scheme_code": "HEMCPF",
+        "nsdl_scheme_code": "LTMF/O/E/MIF/04/06/0006"
+      },
+      "evidence_type": "official_amc_linked_workbook",
+      "direct_ter": 1.15,
+      "regular_ter": 2.21
+    },
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-24",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.53,
+          "brokerage": 0.01,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.3,
+          "ter": 1.84
+        },
+        "Direct": {
+          "base_expense_ratio": 0.88,
+          "brokerage": 0.01,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.2,
+          "ter": 1.09
+        }
+      },
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "sha256": "5ff342417ea16c93ccd8a75ca21d8b0b40360a405281bfa054b21c75d265074e",
+      "identity": {
+        "scheme_name": "ICICI Prudential Mid Cap Fund"
+      },
+      "evidence_type": "official_amc_workbook",
+      "direct_ter": 1.09,
+      "regular_ter": 1.84
+    },
+    {
+      "family": "Invesco India Mid Cap Fund",
+      "amc": "Invesco Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-24",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.44,
+          "brokerage": 0.07,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.37,
+          "ter": 1.88
+        },
+        "Direct": {
+          "base_expense_ratio": 0.49,
+          "brokerage": 0.07,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.22,
+          "ter": 0.78
+        }
+      },
+      "source": "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9",
+      "sha256": "9a8ee95ab82b3e2bbc54ac16e9e1046e41623bc433e4606cd5e670d8f7d8ef79",
+      "identity": {
+        "scheme_name": "Invesco India Mid Cap Fund",
+        "nsdl_scheme_code": "INVM/O/E/MIF/07/01/0006"
+      },
+      "evidence_type": "official_amc_json",
+      "direct_ter": 0.78,
+      "regular_ter": 1.88
+    },
+    {
+      "family": "JM Mid Cap Fund",
+      "amc": "JM Financial Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-27",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.84,
+          "brokerage": 0.1,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.51,
+          "ter": 2.46
+        },
+        "Direct": {
+          "base_expense_ratio": 0.54,
+          "brokerage": 0.1,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.3,
+          "ter": 0.95
+        }
+      },
+      "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
+      "sha256": "ad34ccd4df8cc4392d206221688622c445e054fddf2986e38d2bc6404c4a8b3e",
+      "identity": {
+        "scheme_name": "JM Mid Cap Fund",
+        "scheme_code": "MD",
+        "nsdl_scheme_code": "JMFI/O/E/MIF/21/09/0014"
+      },
+      "evidence_type": "official_amc_json",
+      "direct_ter": 0.95,
+      "regular_ter": 2.46
+    },
+    {
+      "family": "Mahindra Manulife Mid Cap Fund",
+      "amc": "Mahindra Manulife Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-25",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.6,
+          "brokerage": 0.06,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.36,
+          "ter": 2.02
+        },
+        "Direct": {
+          "base_expense_ratio": 0.49,
+          "brokerage": 0.06,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.2,
+          "ter": 0.75
+        }
+      },
+      "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
+      "sha256": "ab526571d195dc0a4a549efe4a06f21b14aebb11434e89174096b47c8e564f2c",
+      "identity": {
+        "scheme_name": "Mahindra Manulife Mid Cap Fund",
+        "nsdl_scheme_code": "MAHM/O/E /MIF/17/11/0006"
+      },
+      "evidence_type": "official_amc_workbook",
+      "direct_ter": 0.75,
+      "regular_ter": 2.02
+    },
+    {
+      "family": "Mirae Asset Midcap Fund",
+      "amc": "Mirae Asset Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-27",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.41,
+          "brokerage": 0.11,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.49,
+          "ter": 2.02
+        },
+        "Direct": {
+          "base_expense_ratio": 0.51,
+          "brokerage": 0.11,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.33,
+          "ter": 0.96
+        }
+      },
+      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_27092026.xls",
+      "sha256": "0ba853c8527f6aaf13944ec2bc28c9103e0fdea387463874e9dbe81f376d14c8",
+      "identity": {
+        "scheme_name": "Mirae Asset Midcap Fund",
+        "nsdl_scheme_code": "MIRA/O/E/MIF/19/05/0015"
+      },
+      "evidence_type": "official_amc_workbook",
+      "direct_ter": 0.96,
+      "regular_ter": 2.02
+    }
+  ],
+  "errors": [],
+  "production_writes": 0,
+  "public_export_enabled": false,
+  "notes": [
+    "All source requests are read-only and archive=False; this audit does not insert metrics, documents or fetch records.",
+    "A result requires the first-party source to contain the staged Mid Cap family identity and a complete Regular/Direct TER pair.",
+    "No Small Cap TER value, NSDL code or scheme code is reused for a Mid Cap fund."
+  ]
+}
