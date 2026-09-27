@@ -46,6 +46,36 @@ class MidCapSourceCoverageTests(unittest.TestCase):
         }],families,today=date(2026,9,27))
         self.assertEqual(ter["Example Mid Cap Fund"]["direct"]["value"],0.55)
 
+    def test_ter_collection_uses_exact_amc_month_contract(self):
+        from tracker.midcap_source_coverage import _fetch_midcap_ter
+        families=[staged_family()]
+        calls=[]
+        def fake_fetch(url,**kwargs):
+            calls.append(url)
+            if url.endswith('/api/populate-mf'):
+                return b'{"data":[{"mfName":"Example AMC","mfId":"77"}]}',None,'application/json'
+            self.assertIn('MF_ID=77',url)
+            self.assertIn('strCat=-1',url)
+            self.assertIn('strType=1',url)
+            self.assertIn('page=1',url)
+            payload={
+                'data':[{
+                    'Scheme_Name':'Example Mid Cap Fund',
+                    'SchemeCat_Desc':'Equity Scheme - Mid Cap Fund',
+                    'TER_Date':'2026-09-25T00:00:00',
+                    'D_TER':'0.55','R_TER':'1.50',
+                }],
+                'meta':{'totalPages':1,'pageSize':10000},
+            }
+            return __import__('json').dumps(payload).encode(),None,'application/json'
+        rows,checks,errors=_fetch_midcap_ter(
+            families,months=1,fetch_fn=fake_fetch,sleep_fn=lambda _:None)
+        self.assertEqual(errors,[])
+        self.assertEqual(len(rows),1)
+        self.assertEqual(len(calls),2)
+        summary=checks[-1]
+        self.assertEqual(summary['matched_families'],1)
+        self.assertEqual(summary['unmatched_families'],[])
     def test_non_midcap_ter_row_is_rejected(self):
         families=[staged_family()]
         ter,_=_match_ter([{
