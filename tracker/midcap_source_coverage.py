@@ -321,39 +321,51 @@ def _fetch_midcap_ter(families,months=3,fetch_fn=providers.fetch,sleep_fn=time.s
             wanted=amc_families[amc]&unresolved
             if not wanted:continue
             mf=resolved[amc]
-            url=amfi_metrics.BASE+"/api/populate-te-rdata-revised?"+urlencode({
-                "MF_ID":mf["id"],"Month":label,"strCat":"-1","strType":"1",
-                "page":1,"pageSize":10000,
-            })
             try:
-                body,payload=get_json(url)
-                records=payload.get("data",[]) if isinstance(payload,dict) else payload
-                if not isinstance(records,list):
-                    raise ValueError("AMFI expense response changed format")
-                meta=payload.get("meta",{}) if isinstance(payload,dict) else {}
-                pages=meta.get("totalPages") or meta.get("pageCount") or 1
-                if int(pages)>1:
-                    raise ValueError("AMFI AMC TER response exceeded one bounded page")
-                mid=[r for r in records if isinstance(r,dict) and _is_mid_cap_category(r.get("SchemeCat_Desc"))]
-                rows.extend(mid)
-                matched={
-                    family for family in wanted
-                    if any(amfi_metrics.normalized(r.get("Scheme_Name",""))==amfi_metrics.normalized(family)
-                           for r in mid)
-                }
+                matched=set();page=1;pages=None;page_checks=[]
+                while pages is None or page<=pages:
+                    if page>30:
+                        raise ValueError("AMFI AMC TER response exceeded 30-page safety bound")
+                    url=amfi_metrics.BASE+"/api/populate-te-rdata-revised?"+urlencode({
+                        "MF_ID":mf["id"],"Month":label,"strCat":"-1","strType":"1",
+                        "page":page,"pageSize":10000,
+                    })
+                    body,payload=get_json(url)
+                    records=payload.get("data",[]) if isinstance(payload,dict) else payload
+                    if not isinstance(records,list):
+                        raise ValueError("AMFI expense response changed format")
+                    meta=payload.get("meta",{}) if isinstance(payload,dict) else {}
+                    if pages is None:
+                        pages=int(meta.get("totalPages") or meta.get("pageCount") or 1)
+                        if pages<1:pages=1
+                    mid=[r for r in records if isinstance(r,dict) and _is_mid_cap_category(r.get("SchemeCat_Desc"))]
+                    rows.extend(mid)
+                    found={
+                        family for family in wanted
+                        if any(amfi_metrics.normalized(r.get("Scheme_Name",""))==amfi_metrics.normalized(family)
+                               for r in mid)
+                    }
+                    matched|=found
+                    page_checks.append({
+                        "page":page,"rows":len(records),"mid_cap_rows":len(mid),
+                        "sha256":hashlib.sha256(body).hexdigest(),
+                    })
+                    if matched==wanted or not records:
+                        break
+                    page+=1
                 unresolved-=matched
                 checks.append({
-                    "kind":"ter_mid_cap_by_amc","source":url,
-                    "sha256":hashlib.sha256(body).hexdigest(),"month":label,
-                    "amc":amc,"amfi_mf_name":mf["name"],"rows":len(records),
-                    "mid_cap_rows":len(mid),"matched_families":sorted(matched),
+                    "kind":"ter_mid_cap_by_amc","source":amfi_metrics.TER_PAGE,
+                    "month":label,"amc":amc,"amfi_mf_name":mf["name"],
+                    "reported_pages":pages,"pages_checked":page_checks,
+                    "matched_families":sorted(matched),
                 })
             except Exception as exc:
                 errors.append({
                     "source":"AMFI TER · "+amc+" · "+label,
                     "error":(str(exc) or type(exc).__name__)[:300],
                 })
-            sleep_fn(1)
+            sleep_fn(0.25)
 
     checks.append({
         "kind":"ter_mid_cap_contract_summary",
@@ -364,7 +376,7 @@ def _fetch_midcap_ter(families,months=3,fetch_fn=providers.fetch,sleep_fn=time.s
             family for values in amc_families.values() for family in values
         }-unresolved),
         "unmatched_families":sorted(unresolved),
-        "contract":"one AMC x month; strCat=-1; strType=1; page=1; pageSize=10000",
+        "contract":"one AMC x month; strCat=-1; strType=1; follow reported pagination with 30-page bound and stop after exact family match",
     })
     return rows,checks,errors
 
