@@ -1,0 +1,3390 @@
+{
+  "built_at": "2026-09-27T12:01:26+00:00",
+  "staged_category": "mid-cap",
+  "stage": "staged",
+  "public_export_enabled": false,
+  "production_writes": 0,
+  "portfolio_expected_as_of": "2026-08-31",
+  "counts": {
+    "families": 34,
+    "scheme_codes": 135,
+    "aum": 34,
+    "ter_any": 0,
+    "direct_ter": 0,
+    "benchmark_identity": 0,
+    "portfolio": 0,
+    "portfolio_current": 0,
+    "all_required_source_evidence": 0,
+    "shared_live_amcs": 32,
+    "amcs_with_source_candidates": 32
+  },
+  "source_checks": [
+    {
+      "kind": "aum_filters",
+      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformancefilters",
+      "sha256": "e14fdd554b7232c6ec06a0bae0a5126b3cd949d24a06588971c87848a4e3b5c4"
+    },
+    {
+      "kind": "aum_subcategories",
+      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/getsubcategory",
+      "sha256": "c9a187558b6e3c008b0774fc119483c612ae3e1455fe60204aa6b6156420efab"
+    },
+    {
+      "kind": "aum_mid_cap",
+      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformance",
+      "request": {
+        "maturityType": 1,
+        "category": 1,
+        "subCategory": 5,
+        "mfid": 0,
+        "reportDate": "25-Sep-2026"
+      },
+      "sha256": "a1c00d0752481657b86f520170fadd598b88464d9787fae38f528d5131f02b65",
+      "matched_families": 0
+    },
+    {
+      "kind": "aum_mid_cap",
+      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformance",
+      "request": {
+        "maturityType": 1,
+        "category": 1,
+        "subCategory": 5,
+        "mfid": 0,
+        "reportDate": "24-Sep-2026"
+      },
+      "sha256": "db77de6fc9f8684f21d9762a22736466d7edac127c646ca34e627c71bf5bac1b",
+      "matched_families": 34
+    }
+  ],
+  "source_errors": [
+    {
+      "source": "AMFI TER",
+      "error": "Unexpected size of the AMFI TER feed"
+    }
+  ],
+  "unmatched_mid_cap_aum_names": [],
+  "unmatched_mid_cap_ter_names": [],
+  "families": [
+    {
+      "family": "Aditya Birla Sun Life Midcap Fund",
+      "amc": "Aditya Birla Sun Life Mutual Fund",
+      "codes": [
+        101591,
+        101592,
+        119619,
+        119620
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 6682.289,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Aditya Birla Sun Life Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://mutualfund.adityabirlacapital.com/",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:15:25+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/factsheets/2026/absl-factsheet_sep-2026.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:46:19+00:00"
+        },
+        {
+          "label": "Read the Article",
+          "url": "https://mutualfund.adityabirlacapital.com/abslamc-knowledge-centre/articles/is-your-portfolio-missing-the-shine-of-gold-and-silver",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:01:55+00:00"
+        },
+        {
+          "label": "Sep 04, 2026 5 min Read Now ➜",
+          "url": "https://mutualfund.adityabirlacapital.com/blog/how-many-mutual-funds-for-diversified-portfolio",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:44+00:00"
+        },
+        {
+          "label": "Sep 01, 2026 5 min Read Now ➜",
+          "url": "https://mutualfund.adityabirlacapital.com/blog/how-to-build-a-goal-based-mutual-fund-portfolio",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:51+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Small-Cap-Fund.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:11:14+00:00"
+        },
+        {
+          "label": "Official factsheets, scheme data and disclosures",
+          "url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:07:19+00:00"
+        },
+        {
+          "label": "Disclosures",
+          "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/disclosures",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:59:48+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/factsheets",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:59:28+00:00"
+        },
+        {
+          "label": "Portfolio",
+          "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:27+00:00"
+        },
+        {
+          "label": "Tracking Difference Disclosure",
+          "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-difference-disclosures",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:05+00:00"
+        },
+        {
+          "label": "Tracking Error Disclosures",
+          "url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-error-disclosures",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:01+00:00"
+        },
+        {
+          "label": "Market Updates",
+          "url": "https://mutualfund.adityabirlacapital.com/market-update",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:21+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Axis Midcap Fund",
+      "amc": "Axis Mutual Fund",
+      "codes": [
+        114564,
+        114565,
+        120504,
+        120505
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 35090.125,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Axis Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Annual Equity Outlook 2026",
+          "url": "https://www.axismf.com/cms/sites/default/files/pdf-factsheets/Axis%20MF_%20Annual%20Equity%20Outlook%202026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-26T05:52:22+00:00"
+        },
+        {
+          "label": "Downloads",
+          "url": "https://www.axismf.com/downloads",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:25+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook",
+          "status": "Checked",
+          "last_checked": "2026-09-26T05:52:17+00:00"
+        },
+        {
+          "label": "Fund page",
+          "url": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:13:43+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "BANDHAN MID CAP FUND",
+      "amc": "Bandhan Mutual Fund",
+      "codes": [
+        150401,
+        150402,
+        150403,
+        150404
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 2624.4946,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Bandhan Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Disclosures",
+          "url": "https://bandhanmutual.com/downloads/disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:27+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:28+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://bandhanmutual.com/downloads/market-outlook",
+          "status": "Limited",
+          "last_checked": "2026-09-26T06:20:02+00:00"
+        },
+        {
+          "label": "Fund page",
+          "url": "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:27+00:00"
+        },
+        {
+          "label": "Official small cap fund CMS page",
+          "url": "https://cmsnew.bandhanmutual.com/bandhan-small-cap-fund/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:51+00:00"
+        },
+        {
+          "label": "Official factsheet archive",
+          "url": "https://cmsnew.bandhanmutual.com/category/factsheet/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:48+00:00"
+        },
+        {
+          "label": "Factsheet – Passive Scheme",
+          "url": "https://cmsnew.bandhanmutual.com/category/factsheet/factsheet-passive-scheme/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:44+00:00"
+        },
+        {
+          "label": "Factsheet – Passive – 2025",
+          "url": "https://cmsnew.bandhanmutual.com/factsheet-passive-2025/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:45+00:00"
+        },
+        {
+          "label": "Factsheet – Passive – 2026",
+          "url": "https://cmsnew.bandhanmutual.com/factsheet-passive/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:46+00:00"
+        },
+        {
+          "label": "Market Outlook - Debt - September 2026",
+          "url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/",
+          "status": "Checked",
+          "last_checked": "2026-09-26T06:20:11+00:00"
+        },
+        {
+          "label": "Market Outlook - Equity - September 2026",
+          "url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/",
+          "status": "Checked",
+          "last_checked": "2026-09-26T06:20:06+00:00"
+        },
+        {
+          "label": "Official August 2026 portfolio disclosure",
+          "url": "https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-small-cap-fund-31-august-2026/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:52+00:00"
+        },
+        {
+          "label": "Official monthly factsheets 2026",
+          "url": "https://cmsnew.bandhanmutual.com/monthly-factsheets-2026/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:50+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "BANK OF INDIA MID CAP FUND",
+      "amc": "Bank of India Mutual Fund",
+      "codes": [
+        153726,
+        153727,
+        153728,
+        153729
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 740.83,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Bank of India Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.boimf.in/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:32+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.boimf.in/docs/default-source/investorcorner/factsheets/factsheet-july-2026.pdf?sfvrsn=ecfba920_3",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:45+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.boimf.in/docs/default-source/productnote/boi-axa-small-cap-fund/product-presentation_bank-of-india-small-cap-fund_july-2026.pdf?sfvrsn=c36848b_5",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:54:24+00:00"
+        },
+        {
+          "label": "Bank of India Small Cap Fund",
+          "url": "https://www.boimf.in/products/equity-funds/bank-of-india-small-cap-fund",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:59:40+00:00"
+        },
+        {
+          "label": "Scheme Differentiation",
+          "url": "https://www.boimf.in/siddisclosures/Item with ID: '2754E504-1F05-40DA-9BBE-71BCD942657D' was not found!",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:13+00:00"
+        },
+        {
+          "label": "Additional Scheme Related Disclosures",
+          "url": "https://www.boimf.in/siddisclosures/additional-scheme-related-disclosures-2",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:59+00:00"
+        },
+        {
+          "label": "Definitions/ interpretation",
+          "url": "https://www.boimf.in/siddisclosures/definitions-interpretation",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:15+00:00"
+        },
+        {
+          "label": "Load Structure",
+          "url": "https://www.boimf.in/siddisclosures/load-structure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:14+00:00"
+        },
+        {
+          "label": "Penalties and Pending Litigation",
+          "url": "https://www.boimf.in/siddisclosures/penalties-and-pending-litigation-or-proceedings",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:19+00:00"
+        },
+        {
+          "label": "SID Related Disclosures",
+          "url": "https://www.boimf.in/siddisclosures/scheme-differentiation",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:59:50+00:00"
+        },
+        {
+          "label": "Scheme Expense Ratio",
+          "url": "https://www.boimf.in/siddisclosures/scheme-expense-ratio",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:59+00:00"
+        },
+        {
+          "label": "Weblink",
+          "url": "https://www.boimf.in/siddisclosures/weblink",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:17+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Baroda BNP Paribas Mid Cap Fund",
+      "amc": "Baroda BNP Paribas Mutual Fund",
+      "codes": [
+        150209,
+        150210,
+        150211,
+        150212
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 2565.23,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Baroda BNP Paribas Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.barodabnpparibasmf.in/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:37+00:00"
+        },
+        {
+          "label": "Download Factsheet",
+          "url": "https://www.barodabnpparibasmf.in/downloads/monthly-factsheet",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:03+00:00"
+        },
+        {
+          "label": "Monthly portfolio disclosures",
+          "url": "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:10+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.barodabnpparibasmf.in/efactsheet/Aug2026/Innerpages/Small-cap.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:35+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.barodabnpparibasmf.in/efactsheet/Jul2026/Innerpages/Small-cap.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:56:29+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.barodabnpparibasmf.in/efactsheet/Jun2026/BBNPP_MF_Fund_Facts_June_2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:56:28+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:15+00:00"
+        },
+        {
+          "label": "Mandatory Disclosures",
+          "url": "https://www.barodabnpparibasmf.in/mandatory-disclosures",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:50:31+00:00"
+        },
+        {
+          "label": "Average Assets Under Management (AAUM) Disclosure",
+          "url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/average-assets-under-management-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:04+00:00"
+        },
+        {
+          "label": "Distributor Commission Disclosure",
+          "url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/distributor-commission-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:08+00:00"
+        },
+        {
+          "label": "Disclosure of Transaction in debt and money market securities",
+          "url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/transaction-and-money-market-securities",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:06+00:00"
+        },
+        {
+          "label": "Unclaimed Redemption and Dividend Details",
+          "url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/unclaimed-redemption-and-dividend-details",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:14+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Canara Robeco Mid Cap Fund",
+      "amc": "Canara Robeco Mutual Fund",
+      "codes": [
+        150816,
+        150817,
+        150818,
+        150819
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 5111.4253,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Canara Robeco Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Monthly factsheet",
+          "url": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/Factsheet.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:05:45+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://digitalassets.canararobeco.com/digital-factsheet/2026/july/Scheme/Factsheet.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:06:20+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://digitalassets.canararobeco.com/digital-factsheet/2026/september/Scheme/Factsheet.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:05:28+00:00"
+        },
+        {
+          "label": "Fund house",
+          "url": "https://www.canararobeco.com/",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:10:34+00:00"
+        },
+        {
+          "label": "Daily Market Update",
+          "url": "https://www.canararobeco.com/daily-market-updates/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:24+00:00"
+        },
+        {
+          "label": "Disclosure Related To Offer Documents",
+          "url": "https://www.canararobeco.com/documents/forms-downloads/disclosure-related-to-offer-documents/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:22+00:00"
+        },
+        {
+          "label": "Key Disclosure",
+          "url": "https://www.canararobeco.com/documents/forms-downloads/key-disclosures/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:25+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://www.canararobeco.com/documents/news-insights/market-outlook/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:25+00:00"
+        },
+        {
+          "label": "Disclosure of AAUM",
+          "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-aaum-aum/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:27+00:00"
+        },
+        {
+          "label": "Statutory Disclosure",
+          "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-aaum-aum/disclosure-of-aaum/?searchyear=2024-25",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:24+00:00"
+        },
+        {
+          "label": "Disclosure of Investments made by Schemes of Canara Robeco Mutual Fund",
+          "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-investments-made-by-schemes-of-canara-robeco-mutual-fund/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:26+00:00"
+        },
+        {
+          "label": "Disclosure of Risk adjusted Return - Information Ratio",
+          "url": "https://www.canararobeco.com/documents/statutory-disclosures/disclosure-of-risk-adjusted-return-information-ratio-ir/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:00:26+00:00"
+        },
+        {
+          "label": "Canara Robeco Small Cap Fund",
+          "url": "https://www.canararobeco.com/our-schemes/fund-details?amfiCode=146130",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:23+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "DSP Midcap Fund",
+      "amc": "DSP Mutual Fund",
+      "codes": [
+        104481,
+        104482,
+        119070,
+        119071
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 20062.275,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "DSP Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.dspim.com/",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:10:42+00:00"
+        },
+        {
+          "label": "Archive",
+          "url": "https://www.dspim.com/downloads?category=Information%20Documents&sub_category=Factsheets",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:56+00:00"
+        },
+        {
+          "label": "Digital Factsheet",
+          "url": "https://www.dspim.com/factsheets",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:51+00:00"
+        },
+        {
+          "label": "Lumpsum & SIP",
+          "url": "https://www.dspim.com/factsheets/comparative-performance",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:48+00:00"
+        },
+        {
+          "label": "Instructions",
+          "url": "https://www.dspim.com/factsheets/how-to-read-factsheet",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:58+00:00"
+        },
+        {
+          "label": "Monthly & Quarterly",
+          "url": "https://www.dspim.com/factsheets/idcw-history",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:50:00+00:00"
+        },
+        {
+          "label": "Small Cap Fund",
+          "url": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/small-cap-fund/dspmc-direct-growth",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:11:07+00:00"
+        },
+        {
+          "label": "Mandatory Disclosures",
+          "url": "https://www.dspim.com/mandatory-disclosures",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:01:23+00:00"
+        },
+        {
+          "label": "Online Dispute Resolution (ODR)",
+          "url": "https://www.dspim.com/mandatory-disclosures/online-dispute-resolution",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:57+00:00"
+        },
+        {
+          "label": "SEBI Registration Details",
+          "url": "https://www.dspim.com/mandatory-disclosures/sebi-registration-details",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:55+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Edelweiss Mid Cap Fund",
+      "amc": "Edelweiss Mutual Fund",
+      "codes": [
+        140225,
+        140226,
+        140227,
+        140228
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 19588.254,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Edelweiss Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.edelweissmf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:36+00:00"
+        },
+        {
+          "label": "Factor Investing Outlook 2026",
+          "url": "https://www.edelweissmf.com/Files/Insigths/viewpoint/EMF_Factor_Investing_Outlook_2026_01012026_060107_PM.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-26T12:14:46+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.edelweissmf.com/Files/MF/Downloads/FACTSHEETS/FACTSHEETS/Edelweiss_Factsheet_August__2026_10082026160011.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:08:39+00:00"
+        },
+        {
+          "label": "Factsheet",
+          "url": "https://www.edelweissmf.com/downloads/factsheets",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:00:45+00:00"
+        },
+        {
+          "label": "Scheme Summary Document",
+          "url": "https://www.edelweissmf.com/downloads/scheme-summary-document",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:31+00:00"
+        },
+        {
+          "label": "Fund & Market Insights",
+          "url": "https://www.edelweissmf.com/investor-insights/fund-market",
+          "status": "Pending",
+          "last_checked": null
+        },
+        {
+          "label": "Debt Market Update - Curve",
+          "url": "https://www.edelweissmf.com/investor-insights/fund-market/curve",
+          "status": "Pending",
+          "last_checked": null
+        },
+        {
+          "label": "Factor Investing Outlook 2026",
+          "url": "https://www.edelweissmf.com/investor-insights/fund-market/factor-investing-2026-outlook",
+          "status": "Pending",
+          "last_checked": null
+        },
+        {
+          "label": "Statutory",
+          "url": "https://www.edelweissmf.com/statutory/financials-portfolios",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:31+00:00"
+        },
+        {
+          "label": "Other Disclosures",
+          "url": "https://www.edelweissmf.com/statutory/other-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:31+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Franklin India Mid Cap Fund",
+      "amc": "Franklin Templeton Mutual Fund",
+      "codes": [
+        100472,
+        100473,
+        118532,
+        118533
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 12506.37,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Franklin India Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.franklintempletonindia.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:36+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.franklintempletonindia.com/download/en-in/fund-leaflet/be9ba27b-4f44-4fc6-8980-6be18e665c7a/fiscf-4373-leaflet.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:53:48+00:00"
+        },
+        {
+          "label": "Latest Commentaries / Market Insights",
+          "url": "https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries",
+          "status": "Checked",
+          "last_checked": "2026-09-26T12:14:47+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Smaller-Companies-Fund.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:55:35+00:00"
+        },
+        {
+          "label": "click here",
+          "url": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/product-label.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:44+00:00"
+        },
+        {
+          "label": "index.html",
+          "url": "https://www.franklintempletonindia.com/static/factsheet/index.html",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:48:42+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "HDFC Mid Cap Fund",
+      "amc": "HDFC Mutual Fund",
+      "codes": [
+        105757,
+        105758,
+        118988,
+        118989
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 104533.91,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "HDFC Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Official factsheets, scheme data and disclosures",
+          "url": "https://files.hdfcfund.com/s3fs-public/scheme_summary/2026-08/HDFCSMALLF_1786689291.xml",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:05:13+00:00"
+        },
+        {
+          "label": "Forms & Disclosures",
+          "url": "https://www.hdfcfund.com/distributor-corner/forms-disclosure/forms",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:56:45+00:00"
+        },
+        {
+          "label": "Fund data and downloads",
+          "url": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:10:35+00:00"
+        },
+        {
+          "label": "HDFC Small Cap Fund 10Y : 18.11%",
+          "url": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct?utm_source=website&utm_medium=performance_ticker&utm_campaign=smallcap",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:11:01+00:00"
+        },
+        {
+          "label": "regular",
+          "url": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/regular",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:11:06+00:00"
+        },
+        {
+          "label": "Market Update",
+          "url": "https://www.hdfcfund.com/learn/macros-markets-more/market-review",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:56:44+00:00"
+        },
+        {
+          "label": "Market updates",
+          "url": "https://www.hdfcfund.com/market-update",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:09:36+00:00"
+        },
+        {
+          "label": "Factsheet",
+          "url": "https://www.hdfcfund.com/mutual-funds/factsheets",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:56:39+00:00"
+        },
+        {
+          "label": "Statutory Disclosures (MF/ AIF/ PMS)",
+          "url": "https://www.hdfcfund.com/statutory-disclosure",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:57:22+00:00"
+        },
+        {
+          "label": "Portfolio disclosures",
+          "url": "https://www.hdfcfund.com/statutory-disclosure/portfolio",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:09:41+00:00"
+        },
+        {
+          "label": "Total Expense Ratio (TER)",
+          "url": "https://www.hdfcfund.com/statutory-disclosure/total-expense-ratio-of-mutual-fund-schemes/reports",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:56:47+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Helios Mid Cap Fund",
+      "amc": "Helios Mutual Fund",
+      "codes": [
+        153324,
+        153325,
+        153326,
+        153327
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 2372.8389,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Helios Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.heliosmf.in/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:50+00:00"
+        },
+        {
+          "label": "June 2026",
+          "url": "https://www.heliosmf.in/digital-factsheet/2026/june/Index.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:03+00:00"
+        },
+        {
+          "label": "Official factsheets, scheme data and disclosures",
+          "url": "https://www.heliosmf.in/downloads",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:12:51+00:00"
+        },
+        {
+          "label": "KNOW MORE",
+          "url": "https://www.heliosmf.in/helios-small-cap-fund",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:01:11+00:00"
+        },
+        {
+          "label": "Portfolio Construction",
+          "url": "https://www.heliosmf.in/portfolio-construction",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:54+00:00"
+        },
+        {
+          "label": "Portfolio Disclosure",
+          "url": "https://www.heliosmf.in/portfolio-disclosure",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:03:50+00:00"
+        },
+        {
+          "label": "Click Here",
+          "url": "https://www.heliosmf.in/portfolio-disclosure/",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:02:43+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.heliosmf.in/wp-content/uploads/2026/08/helios-mutual-fund-factsheet-jul26.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:08:52+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.heliosmf.in/wp-content/uploads/2026/08/helios-small-cap-fund-monthly-portfolio-as-on-31st-july-2026.xlsx",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:08:42+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.heliosmf.in/wp-content/uploads/2026/08/performance-helios-factsheet-jul26.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:08:45+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "HSBC Midcap Fund",
+      "amc": "HSBC Mutual Fund",
+      "codes": [
+        151033,
+        151034,
+        151035,
+        151036
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 17029.158,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "HSBC Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.assetmanagement.hsbc.co.in/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:38+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-august-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:13+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-july-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:09:34+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.assetmanagement.hsbc.co.in/-/media/Files/attachments/india/mutual-funds/factsheet/the-asset-september-2026.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:48:53+00:00"
+        },
+        {
+          "label": "Official factsheets, scheme data and disclosures",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:05:15+00:00"
+        },
+        {
+          "label": "Local Market Commentary",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
+          "status": "Checked",
+          "last_checked": "2026-09-26T13:10:41+00:00"
+        },
+        {
+          "label": "Get started",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:52+00:00"
+        },
+        {
+          "label": "About us",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:54+00:00"
+        },
+        {
+          "label": "Our governance",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/our-governance",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:56+00:00"
+        },
+        {
+          "label": "Portfolio management services",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/portfolio-management-services",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:57+00:00"
+        },
+        {
+          "label": "Responsible Investing explained",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/responsible-investing",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:58+00:00"
+        },
+        {
+          "label": "Investment Approach",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:00+00:00"
+        },
+        {
+          "label": "Find out more",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy/active-equities",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:58+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "codes": [
+        102528,
+        102529,
+        120380,
+        120381
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 8130.6025,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "ICICI Prudential Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.icicipruamc.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:44+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-complete/Complete.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:59:31+00:00"
+        },
+        {
+          "label": "Monthly Market Outlook - August 2026",
+          "url": "https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:05:10+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Invesco India Mid Cap Fund",
+      "amc": "Invesco Mutual Fund",
+      "codes": [
+        105503,
+        105504,
+        120402,
+        120403
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 16120.95,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Invesco India Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://invescomutualfund.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:44+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://invescomutualfund.com/literature-forms/factsheets",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:02+00:00"
+        },
+        {
+          "label": "Statutory Disclosures",
+          "url": "https://invescomutualfund.com/statutory-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:00:59+00:00"
+        },
+        {
+          "label": "Voting Policy",
+          "url": "https://invescomutualfund.com/statutory-disclosures/voting-policy",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:03+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:06:09+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-july-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:06:35+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-september-2026.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:05:30+00:00"
+        },
+        {
+          "label": "Market Outlook - April 2026",
+          "url": "https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:05:15+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://www.invescomutualfund.com/literature-forms/factsheets",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:14+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-small-cap-fund/scgp",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:55+00:00"
+        },
+        {
+          "label": "Statutory Disclosures",
+          "url": "https://www.invescomutualfund.com/statutory-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:14+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "ITI Mid Cap Fund",
+      "amc": "ITI Mutual Fund",
+      "codes": [
+        148731,
+        148732,
+        148733,
+        148734
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 1483.44,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "ITI Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.itiamc.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:46+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Small-Cap.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:15:54+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/CEO.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:52:22+00:00"
+        },
+        {
+          "label": "Debt Market Update",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/debt-update.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:52:43+00:00"
+        },
+        {
+          "label": "Equity Market Update",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/equity-update.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:52:29+00:00"
+        },
+        {
+          "label": "ITI Large Cap Fund",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Large-Cap.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:52:52+00:00"
+        },
+        {
+          "label": "ITI ELSS Tax Saver Fund (formerly known as ITI Long Term Equity Fund)",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Long-Term.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:52:54+00:00"
+        },
+        {
+          "label": "ITI Multi Cap Fund",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Multi-Cap.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:52:45+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.itiamc.com/digitalfactsheet/July2026/innerpages/Small-Cap.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:16:08+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.itiamc.com/digitalfactsheet/September2026/innerpages/Small-Cap.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:13:04+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "JM Mid Cap Fund",
+      "amc": "JM Financial Mutual Fund",
+      "codes": [
+        150812,
+        150813,
+        150814,
+        150815
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 1356.5657,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "JM Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.jmfinancialmf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:47+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20August%202026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:12+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20July%202026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:32+00:00"
+        },
+        {
+          "label": "Monthly factsheet",
+          "url": "https://www.jmfinancialmf.com/CMS/downloads/Factsheet/Factsheet/Factsheet%20September%202026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:34+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.jmfinancialmf.com/products/Equity/JM-Small-Cap-Fund/J647/Direct-Plan-Growth-Option",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:00+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Kotak Mid Cap Fund",
+      "amc": "Kotak Mahindra Mutual Fund",
+      "codes": [
+        104907,
+        104908,
+        119774,
+        119775
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 69941.18,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Kotak Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.kotakmf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:49+00:00"
+        },
+        {
+          "label": "Corporate",
+          "url": "https://www.kotakmf.com/Information/corporate-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:12+00:00"
+        },
+        {
+          "label": "Statutory Disclosure",
+          "url": "https://www.kotakmf.com/Information/statutory-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:13+00:00"
+        },
+        {
+          "label": "Small cap monthly factsheet",
+          "url": "https://www.kotakmf.com/factsheet/August_2026/kotak/SMALL-CAP.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:28+00:00"
+        },
+        {
+          "label": "Factsheet",
+          "url": "https://www.kotakmf.com/factsheet/July_2026/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:05+00:00"
+        },
+        {
+          "label": "Small cap monthly factsheet",
+          "url": "https://www.kotakmf.com/factsheet/July_2026/kotak/SMALL-CAP.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:46+00:00"
+        },
+        {
+          "label": "Small cap monthly factsheet",
+          "url": "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:21+00:00"
+        },
+        {
+          "label": "Account Statement Get your detailed portfolio of your investments",
+          "url": "https://www.kotakmf.com/investor/user/statement/postlogin-statements#account-statement",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:05+00:00"
+        },
+        {
+          "label": "Monthly Market Update",
+          "url": "https://www.kotakmf.com/monthly-market-update",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:24:17+00:00"
+        },
+        {
+          "label": "Kotak Small Cap Fund |",
+          "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-smallcap-fund/dir-g",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:11:08+00:00"
+        },
+        {
+          "label": "Fund house",
+          "url": "https://www.mahindramanulife.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:51+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:16:32+00:00"
+        },
+        {
+          "label": "Mahindra Manulife Mid Cap Fund",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Mid-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:48:33+00:00"
+        },
+        {
+          "label": "Mahindra Manulife Multi Cap Fund",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Multi-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:48:33+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Small-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:16:24+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Outlook.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:47:36+00:00"
+        },
+        {
+          "label": "index.html",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/index.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:51:15+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/september-2026/Equity-funds/Small-Cap-Fund.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:12:52+00:00"
+        },
+        {
+          "label": "https://www.mahindramanulife.com/downloads#mandatory-disclosures",
+          "url": "https://www.mahindramanulife.com/downloads#mandatory-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:52:37+00:00"
+        },
+        {
+          "label": "Mahindra-Manulife-Small-Cap-Fund-Growth-Regular",
+          "url": "https://www.mahindramanulife.com/funds/Mahindra-Manulife-Small-Cap-Fund-Growth-Regular",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:52:38+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "LIC MF Mid Cap Fund",
+      "amc": "LIC Mutual Fund",
+      "codes": [
+        151999,
+        152000,
+        152001,
+        152002
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 378.21027,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "LIC MF Mid cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.licmf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:48+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/06/lic-mf-factsheet-31st-may-2026.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:55:48+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.licmf.com/assets/downloads/monthly_fact_sheet/2026-2027/09/lic-mf-factsheet-31st-august-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:46:39+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://www.licmf.com/downloads/factsheet",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:57:44+00:00"
+        },
+        {
+          "label": "Monthly Portfolio / Fortnightly Portfolio",
+          "url": "https://www.licmf.com/downloads/monthly-portfolio",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:28+00:00"
+        },
+        {
+          "label": "Risk-O-Meter Disclosure",
+          "url": "https://www.licmf.com/downloads/risk-o-meter-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:39+00:00"
+        },
+        {
+          "label": "Market Update",
+          "url": "https://www.licmf.com/insights/market-update",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:53:45+00:00"
+        },
+        {
+          "label": "Scheme Summary Document",
+          "url": "https://www.licmf.com/investor/downloads/Scheme-Summary-Document",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:15+00:00"
+        },
+        {
+          "label": "Fund Details",
+          "url": "https://www.licmf.com/investor/snapshot/All/licmf-small-cap-fund",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:41+00:00"
+        },
+        {
+          "label": "Statutory Disclosure",
+          "url": "https://www.licmf.com/statutory-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:46+00:00"
+        },
+        {
+          "label": "Archive",
+          "url": "https://www.licmf.com/statutory-disclosure-archive",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:14+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Mahindra Manulife Mid Cap Fund",
+      "amc": "Mahindra Manulife Mutual Fund",
+      "codes": [
+        142107,
+        142108,
+        142109,
+        142110
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 5199.15,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Mahindra Manulife Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.mahindramanulife.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:51+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/august-2026/Equity-funds/Small-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:16:32+00:00"
+        },
+        {
+          "label": "Mahindra Manulife Mid Cap Fund",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Mid-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:48:33+00:00"
+        },
+        {
+          "label": "Mahindra Manulife Multi Cap Fund",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Multi-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:48:33+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Equity-funds/Small-Cap-Fund.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:16:24+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Outlook.html",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:47:36+00:00"
+        },
+        {
+          "label": "index.html",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/index.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:51:15+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.mahindramanulife.com/digital-factsheet/september-2026/Equity-funds/Small-Cap-Fund.html",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:12:52+00:00"
+        },
+        {
+          "label": "https://www.mahindramanulife.com/downloads#mandatory-disclosures",
+          "url": "https://www.mahindramanulife.com/downloads#mandatory-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:52:37+00:00"
+        },
+        {
+          "label": "Mahindra-Manulife-Small-Cap-Fund-Growth-Regular",
+          "url": "https://www.mahindramanulife.com/funds/Mahindra-Manulife-Small-Cap-Fund-Growth-Regular",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:52:38+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Mirae Asset Midcap Fund",
+      "amc": "Mirae Asset Mutual Fund",
+      "codes": [
+        147445,
+        147478,
+        147479,
+        147480
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 20024.938,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Mirae Asset Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.miraeassetmf.co.in/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:50+00:00"
+        },
+        {
+          "label": "Monthly active factsheet",
+          "url": "https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---august-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:54:09+00:00"
+        },
+        {
+          "label": "Monthly active factsheet",
+          "url": "https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---july-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:54:29+00:00"
+        },
+        {
+          "label": "Monthly active factsheet",
+          "url": "https://www.miraeassetmf.co.in/docs/default-source/fachsheet/active-factsheet---september-2026.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:52:56+00:00"
+        },
+        {
+          "label": "Annual Market Outlook 2026",
+          "url": "https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-26T14:24:20+00:00"
+        },
+        {
+          "label": "Factsheet",
+          "url": "https://www.miraeassetmf.co.in/downloads/factsheet",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:01:27+00:00"
+        },
+        {
+          "label": "Portfolio",
+          "url": "https://www.miraeassetmf.co.in/downloads/portfolio",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:31+00:00"
+        },
+        {
+          "label": "Addendum",
+          "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/addendum",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:29+00:00"
+        },
+        {
+          "label": "Financials",
+          "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/financials",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:33+00:00"
+        },
+        {
+          "label": "Issuer Wise Disclosure",
+          "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/issuer-wise-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:02:47+00:00"
+        },
+        {
+          "label": "Other Disclosures",
+          "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/other-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:02:45+00:00"
+        },
+        {
+          "label": "Total Expense ratio",
+          "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/total-expense-ratio",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:37+00:00"
+        },
+        {
+          "label": "Transaction Details",
+          "url": "https://www.miraeassetmf.co.in/downloads/statutory-disclosure/transaction-details",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:35+00:00"
+        },
+        {
+          "label": "Remuneration Disclosure",
+          "url": "https://www.miraeassetmf.co.in/investor-hub/remuneration-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:16+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Motilal Oswal Midcap Fund",
+      "amc": "Motilal Oswal Mutual Fund",
+      "codes": [
+        127039,
+        127040,
+        127042,
+        127044
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 41037.65,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Motilal Oswal Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.motilaloswalmf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:50+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.motilaloswalmf.com/content/dam/motilal-mf/downloads/mf/leafletsbrochures/2026/aug/Motilal%20Oswal%20Small%20Cap%20Fund.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:53:38+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.motilaloswalmf.com/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_July_2026/YO46.xlsx",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:53:41+00:00"
+        },
+        {
+          "label": "Monthly factsheets",
+          "url": "https://www.motilaloswalmf.com/downloads/factsheets",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:52:45+00:00"
+        },
+        {
+          "label": "Read Now",
+          "url": "https://www.motilaloswalmf.com/motilal-oswal-edge/articles/monthly-market-outlook-august-2026-by-prateek-agrawal",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:02:43+00:00"
+        },
+        {
+          "label": "Read Now",
+          "url": "https://www.motilaloswalmf.com/motilal-oswal-edge/articles/monthly-market-outlook-september-2026-by-prateek-agrawal",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:01:37+00:00"
+        },
+        {
+          "label": "Portfolio",
+          "url": "https://www.motilaloswalmf.com/mutual-funds/custom-tab",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:47:25+00:00"
+        },
+        {
+          "label": "Small cap fund reports and monthly portfolio",
+          "url": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-small-cap-fund",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:53:15+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Nippon India Growth Mid Cap Fund",
+      "amc": "Nippon India Mutual Fund",
+      "codes": [
+        100375,
+        100376,
+        100377,
+        106260,
+        118665,
+        118666,
+        118668
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Bonus",
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 51412.367,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Nippon India Growth Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund page and downloads",
+          "url": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:10:24+00:00"
+        },
+        {
+          "label": "Sign In",
+          "url": "https://mf.nipponindiaim.com/InvestorServices/_layouts/15/Authenticate.aspx?Source=%2Finvestor%2Dservice%2Fdownloads%2Ffactsheet%2Dportfolio%2Dand%2Dother%2Ddisclosures",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:57:25+00:00"
+        },
+        {
+          "label": "Investor charter and Disclosure of complaints",
+          "url": "https://mf.nipponindiaim.com/investor-service/customer-service/investor-charter-and-disclosure-of-complaints",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:41+00:00"
+        },
+        {
+          "label": "Dividend Summary",
+          "url": "https://mf.nipponindiaim.com/investor-service/disclosures/dividend-summary",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:43+00:00"
+        },
+        {
+          "label": "Valuation Policies",
+          "url": "https://mf.nipponindiaim.com/investor-service/disclosures/valuation-policies",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:44+00:00"
+        },
+        {
+          "label": "Disclosure requirement for AMC pursuant to SEBI Circular dated Aug 25 2022",
+          "url": "https://mf.nipponindiaim.com/investor-service/downloads/disclosure-requirement-for-amc-pursuant-to-sebi-circular-dated-aug-25-2022",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:36+00:00"
+        },
+        {
+          "label": "Distributor Disclosures",
+          "url": "https://mf.nipponindiaim.com/investor-service/downloads/distributor-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:40+00:00"
+        },
+        {
+          "label": "Portfolio disclosures",
+          "url": "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:16:10+00:00"
+        },
+        {
+          "label": "Scheme summary documents",
+          "url": "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:27+00:00"
+        },
+        {
+          "label": "Official factsheets, scheme data and disclosures",
+          "url": "https://mf.nipponindiaim.com/investor-services/downloads/factsheets",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:10:25+00:00"
+        },
+        {
+          "label": "Market Outlook",
+          "url": "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:57:52+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "PGIM India Midcap Fund",
+      "amc": "PGIM India Mutual Fund",
+      "codes": [
+        125301,
+        125305,
+        125306,
+        125307
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 10943.412,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "PGIM India Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Official report archive",
+          "url": "https://www.pgimindia.com/api/v1/brochure/about-us/image/Factsheet%20-%20August%202026.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:46:16+00:00"
+        },
+        {
+          "label": "ZIP Scheme Summary Document",
+          "url": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM India Small Cap Fund.zip",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:39+00:00"
+        },
+        {
+          "label": "CEO Letters / Outlooks & Economy",
+          "url": "https://www.pgimindia.com/mutual-funds",
+          "status": "Checked",
+          "last_checked": "2026-09-26T15:55:47+00:00"
+        },
+        {
+          "label": "Disclosures",
+          "url": "https://www.pgimindia.com/mutual-funds/disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:38+00:00"
+        },
+        {
+          "label": "Expense Ratio",
+          "url": "https://www.pgimindia.com/mutual-funds/disclosures/Other-Disclosures/Fund/Expenses",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:36+00:00"
+        },
+        {
+          "label": "contact-us",
+          "url": "https://www.pgimindia.com/mutual-funds/disclosures/Other-Disclosures/Fund/contact-us",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:44+00:00"
+        },
+        {
+          "label": "MONEYAVATAR",
+          "url": "https://www.pgimindia.com/mutual-funds/disclosures/Other-Disclosures/Fund/money-avatar",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:42+00:00"
+        },
+        {
+          "label": "RETIREMANTRA",
+          "url": "https://www.pgimindia.com/mutual-funds/disclosures/Other-Disclosures/Fund/retiremantra",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:41+00:00"
+        },
+        {
+          "label": "Monthly portfolio disclosures",
+          "url": "https://www.pgimindia.com/mutual-funds/disclosures/Portfolios/Monthly-Portfolio",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:54+00:00"
+        },
+        {
+          "label": "Small cap fund",
+          "url": "https://www.pgimindia.com/mutual-funds/equity-funds/small-cap-fund",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:54:33+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://www.pgimindia.com/mutual-funds/forms-and-product-updates/Fund-Factsheet",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:54:13+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Quant Mid Cap Fund",
+      "amc": "quant Mutual Fund",
+      "codes": [
+        101065,
+        101066,
+        120840,
+        120841
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 7829.7725,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Quant Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house and disclosures",
+          "url": "https://quantmutual.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:31+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://quantmutual.com/Admin/Factsheet/quant_Factsheet_-_September_2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T22:09:59+00:00"
+        },
+        {
+          "label": "Disclosure of Monthly/Fortnightly Statement of Scheme Portfolios",
+          "url": "https://quantmutual.com/ETF/Statement-of-Scheme-Portfolios.aspx",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:48:57+00:00"
+        },
+        {
+          "label": "Tracking Disclosure",
+          "url": "https://quantmutual.com/ETF/Tracking.aspx",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:47+00:00"
+        },
+        {
+          "label": "Disclosure of Monthly/Fortnightly Statement of Scheme Portfolios",
+          "url": "https://quantmutual.com/Statement-of-Scheme-Portfolios.aspx",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:58:07+00:00"
+        },
+        {
+          "label": "Notice of Monthly & Fortnightly Portfolio",
+          "url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:58:08+00:00"
+        },
+        {
+          "label": "Notice of Monthly & Fortnightly Portfolio",
+          "url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio.aspx",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:58:05+00:00"
+        },
+        {
+          "label": "Disclosure of Monthly/Fortnightly Statement of Scheme Portfolios",
+          "url": "https://quantmutual.com/downloads/Statement-of-Scheme-Portfolios.aspx",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:48:56+00:00"
+        },
+        {
+          "label": "Factsheet",
+          "url": "https://quantmutual.com/downloads/factsheet",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:04:01+00:00"
+        },
+        {
+          "label": "Statutory Disclosures |",
+          "url": "https://quantmutual.com/statutory-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:58:08+00:00"
+        },
+        {
+          "label": "Investment Outlook",
+          "url": "https://www.quantmutual.com/downloads/investment_outlook",
+          "status": "Checked",
+          "last_checked": "2026-09-26T15:56:30+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Samco Mid Cap Fund",
+      "amc": "Samco Mutual Fund",
+      "codes": [
+        154114,
+        154115
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 76.84,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Samco Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.samcomf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:53+00:00"
+        },
+        {
+          "label": "Statutory Disclosures",
+          "url": "https://www.samcomf.com/StatutoryDisclosure",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:05:26+00:00"
+        },
+        {
+          "label": "Scheme Financials",
+          "url": "https://www.samcomf.com/StatutoryDisclosure#scheme-financials",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:04:39+00:00"
+        },
+        {
+          "label": "AnnualDisclosureonRisk-o-meterlevelofschemes_1745573779.docx",
+          "url": "https://www.samcomf.com/amc-document-download/AnnualDisclosureonRisk-o-meterlevelofschemes_1745573779.docx",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:50:01+00:00"
+        },
+        {
+          "label": "AnnualDisclosureonRisk-o-meterlevelofschemes_1776234406.docx",
+          "url": "https://www.samcomf.com/amc-document-download/AnnualDisclosureonRisk-o-meterlevelofschemes_1776234406.docx",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:49:59+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.samcomf.com/amc-document-download/Factsheet-August2026_1788525518.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:09:08+00:00"
+        },
+        {
+          "label": "Full Portfolio Holding PDF",
+          "url": "https://www.samcomf.com/download-holding-pdf/SCDGG",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:46:22+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://www.samcomf.com/downloads/#Factsheet",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:06:10+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.samcomf.com/mutual-funds/samco-small-cap-fund-direct-growth/scdgg",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:14+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "SBI MIDCAP FUND",
+      "amc": "SBI Mutual Fund",
+      "codes": [
+        102941,
+        102942,
+        119715,
+        119716
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 23888.502,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "SBI Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Disclosures",
+          "url": "https://www.sbimf.com/disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:23+00:00"
+        },
+        {
+          "label": "Small cap monthly factsheet",
+          "url": "https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-august-2026.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:53:31+00:00"
+        },
+        {
+          "label": "Small cap monthly factsheet",
+          "url": "https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-july-2026.pdf",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:53:33+00:00"
+        },
+        {
+          "label": "Small cap monthly factsheet",
+          "url": "https://www.sbimf.com/docs/default-source/scheme-factsheets/sbi-small-cap-fund-factsheet-september-2026.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:52:58+00:00"
+        },
+        {
+          "label": "Factsheets",
+          "url": "https://www.sbimf.com/factsheets",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:09:52+00:00"
+        },
+        {
+          "label": "Monthly Market Outlook",
+          "url": "https://www.sbimf.com/monthly-outlook-videos",
+          "status": "Checked",
+          "last_checked": "2026-09-26T22:31:12+00:00"
+        },
+        {
+          "label": "Portfolios",
+          "url": "https://www.sbimf.com/portfolios",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:09:44+00:00"
+        },
+        {
+          "label": "Portfolio Advisory",
+          "url": "https://www.sbimf.com/sbimf-portfolio-advisory",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:57:07+00:00"
+        },
+        {
+          "label": "Fund page",
+          "url": "https://www.sbimf.com/sbimf-scheme-details/sbi-small-cap-fund-329",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:09:43+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Sundaram Mid Cap Fund",
+      "amc": "Sundaram Mutual Fund",
+      "codes": [
+        101538,
+        101539,
+        119581,
+        119582
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 14207.98,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Sundaram Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.sundarammutual.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:11:02+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Jul/Equity/SMILE.xlsx",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:51+00:00"
+        },
+        {
+          "label": "Small cap fund insights",
+          "url": "https://www.sundarammutual.com/Report/OSSMILE",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:53:30+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:55:41+00:00"
+        },
+        {
+          "label": "Sundaram Mid Cap Fund",
+          "url": "https://www.sundarammutual.com/digital-factsheet/MIDCAP-MC",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:04:49+00:00"
+        },
+        {
+          "label": "Sundaram Large and Mid Cap Fund",
+          "url": "https://www.sundarammutual.com/digital-factsheet/MULTIP-LM",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:04:54+00:00"
+        },
+        {
+          "label": "Sundaram Small Cap Fund",
+          "url": "https://www.sundarammutual.com/digital-factsheet/SMILE-SC",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:05:06+00:00"
+        },
+        {
+          "label": "Sundaram Multi Cap Fund",
+          "url": "https://www.sundarammutual.com/digital-factsheet/SPMUCF-MG",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:05:11+00:00"
+        },
+        {
+          "label": "Sundaram Large Cap Fund",
+          "url": "https://www.sundarammutual.com/digital-factsheet/SUNBCF-BC",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:04:59+00:00"
+        },
+        {
+          "label": "Sundaram Multi-Factor Fund",
+          "url": "https://www.sundarammutual.com/digital-factsheet/SUNMFF-ML",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:04:41+00:00"
+        },
+        {
+          "label": "Small Cap Fund",
+          "url": "https://www.sundarammutual.com/fund/small-cap-fund",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:04:12+00:00"
+        },
+        {
+          "label": "Small Cap Fund",
+          "url": "https://www.sundarammutual.com/fund/sundaram-small-cap-fund",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:04:26+00:00"
+        },
+        {
+          "label": "Factsheet",
+          "url": "https://www.sundarammutual.com/fundwise-factsheet",
+          "status": "Partial",
+          "last_checked": "2026-09-25T22:04:52+00:00"
+        },
+        {
+          "label": "Market Outlook / Knowledge Hub",
+          "url": "https://www.sundarammutual.com/knowledge-hub",
+          "status": "Checked",
+          "last_checked": "2026-09-26T22:31:53+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Tata Mid Cap Fund",
+      "amc": "Tata Mutual Fund",
+      "codes": [
+        102326,
+        102328,
+        119177,
+        119178
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 6014.75,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Tata Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Equity Market Outlook",
+          "url": "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html",
+          "status": "Checked",
+          "last_checked": "2026-09-26T22:49:28+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://info.tatamutualfund.com/combined/TATA/Small-Cap-Fund.html",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:48:41+00:00"
+        },
+        {
+          "label": "Fund house",
+          "url": "https://www.tatamutualfund.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:55+00:00"
+        },
+        {
+          "label": "Disclosure of Compensation mandatorily invested in schemes of Tata Mutual Fund",
+          "url": "https://www.tatamutualfund.com/compensation-disclosure",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:51:13+00:00"
+        },
+        {
+          "label": "Fund figures and publications",
+          "url": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:13:02+00:00"
+        },
+        {
+          "label": "Portfolios",
+          "url": "https://www.tatamutualfund.com/schemes-related/portfolio",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:51:12+00:00"
+        },
+        {
+          "label": "Scheme Factsheet",
+          "url": "https://www.tatamutualfund.com/schemes-related/scheme-factsheet",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:47:23+00:00"
+        },
+        {
+          "label": "Scheme Summary",
+          "url": "https://www.tatamutualfund.com/schemes-related/scheme-summary",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:19+00:00"
+        },
+        {
+          "label": "TER Notices",
+          "url": "https://www.tatamutualfund.com/statutory-disclosures/expense-ratio/expense-ratio/ter-notice",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:46:39+00:00"
+        },
+        {
+          "label": "TER Notices",
+          "url": "https://www.tatamutualfund.com/statutory-disclosures/expense-ratio/ter-notice",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:47:16+00:00"
+        },
+        {
+          "label": "Valuation Update of Commodity",
+          "url": "https://www.tatamutualfund.com/statutory-disclosures/other-statutory-disclosures",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:51:10+00:00"
+        },
+        {
+          "label": "Voting Policy",
+          "url": "https://www.tatamutualfund.com/statutory-disclosures/voting-policy",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:51:00+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Taurus Mid Cap Fund",
+      "amc": "Taurus Mutual Fund",
+      "codes": [
+        100477,
+        111642,
+        118872,
+        118873
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 139.50714,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Taurus Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": false,
+      "amc_source_candidates": [],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "The Wealth Company Mid Cap Fund",
+      "amc": "The Wealth Company Mutual Fund",
+      "codes": [
+        154479,
+        154481,
+        154483,
+        154484
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 174.48251,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "The Wealth Company Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.wealthcompanyamc.in/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:54:34+00:00"
+        },
+        {
+          "label": "Market Insights / Current Insights",
+          "url": "https://www.wealthcompanyamc.in/knowledge-center/current-insights/",
+          "status": "Checked",
+          "last_checked": "2026-09-26T22:49:42+00:00"
+        },
+        {
+          "label": "Fortnightly",
+          "url": "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/fortnightly/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:40+00:00"
+        },
+        {
+          "label": "Half Yearly",
+          "url": "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/half-yearly/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:42+00:00"
+        },
+        {
+          "label": "Monthly portfolios",
+          "url": "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/monthly/",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:54:55+00:00"
+        },
+        {
+          "label": "Notice for Declaration for Portfolio disclosure",
+          "url": "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/notice-for-declaration-for-portfolio-disclosures/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:43+00:00"
+        },
+        {
+          "label": "Statutory Disclosures",
+          "url": "https://www.wealthcompanyamc.in/literature-forms/statutory-disclosures/disclosure-on-group-companies/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:41+00:00"
+        },
+        {
+          "label": "Financials",
+          "url": "https://www.wealthcompanyamc.in/literature-forms/statutory-disclosures/financial_statements/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T21:48:44+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.wealthcompanyamc.in/our-nfos/nfo/the-wealth-company-small-cap-fund/",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:49:15+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.wealthcompanyamc.in/uploads/Monthly_portfolio_Small_Cap_2683583497.xlsx",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:46+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.wealthcompanyamc.in/uploads/Monthly_portfolio_Small_Cap_9b9b8051ed.xlsx",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:47+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "TRUSTMF MID CAP FUND",
+      "amc": "Trust Mutual Fund",
+      "codes": [
+        154210,
+        154211
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 684.63,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "TRUSTMF Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Fund house",
+          "url": "https://www.trustmf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:56+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.trustmf.com/trustmfsys/wp-content/uploads/2025/06/TRUSTMF-Factsheet-May-2025.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:46:47+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.trustmf.com/trustmfsys/wp-content/uploads/2025/07/TRUSTMF-Factsheet-June-2025-2.pdf",
+          "status": "Partial",
+          "last_checked": "2026-09-25T21:46:47+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "Union Midcap Fund",
+      "amc": "Union Mutual Fund",
+      "codes": [
+        148071,
+        148072,
+        148073,
+        148074
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 1942.1859,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "Union Midcap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Official report archive",
+          "url": "https://unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf?sfvrsn=81b290a9_1",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:46:47+00:00"
+        },
+        {
+          "label": "Fund house",
+          "url": "https://www.unionmf.com/",
+          "status": "Gap",
+          "last_checked": "2026-09-25T22:13:23+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.unionmf.com/docs/default-source/downloads/scheme-disclosures/factsheets/factsheet-march-2026.pdf?sfvrsn=3ddcc4de_5",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:47:26+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:57:06+00:00"
+        },
+        {
+          "label": "Official report archive",
+          "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/fund-factsheets/union-small-cap-fund.pdf?sfvrsn=81b290a9_1",
+          "status": "Gap",
+          "last_checked": "2026-09-25T21:47:05+00:00"
+        },
+        {
+          "label": "Research Notes / Market Outlook",
+          "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
+          "status": "Partial",
+          "last_checked": "2026-09-27T11:40:22+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "UTI - Mid Cap Fund",
+      "amc": "UTI Mutual Fund",
+      "codes": [
+        102393,
+        102394,
+        120726,
+        120727
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 12167.749,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "UTI Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": true,
+      "amc_source_candidates": [
+        {
+          "label": "Official report archive",
+          "url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/uti_fund_watch_active_august_2026_rv2.pdf?VersionId=B2XKeBTyWsZMGfHUqI3nbdnzhATN16Ax",
+          "status": "Checked",
+          "last_checked": "2026-09-25T21:55:47+00:00"
+        },
+        {
+          "label": "Fund house",
+          "url": "https://www.utimf.com/",
+          "status": "Limited",
+          "last_checked": "2026-09-25T22:10:57+00:00"
+        },
+        {
+          "label": "Leadership Desk / Market Insights",
+          "url": "https://www.utimf.com/learn",
+          "status": "Partial",
+          "last_checked": "2026-09-27T11:40:25+00:00"
+        }
+      ],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    },
+    {
+      "family": "WhiteOak Capital Mid Cap Fund",
+      "amc": "WhiteOak Capital Mutual Fund",
+      "codes": [
+        150582,
+        150583,
+        150584,
+        150585
+      ],
+      "plans": [
+        "Direct",
+        "Regular"
+      ],
+      "options": [
+        "Growth",
+        "IDCW"
+      ],
+      "nav_history_checked": "2026-09-27T11:31:56+00:00",
+      "aum": {
+        "as_of": "2026-09-24",
+        "value": 7609.7,
+        "unit": "₹ crore · daily scheme AUM",
+        "scheme_name": "WhiteOak Capital Mid Cap Fund",
+        "source": "https://www.amfiindia.com/otherdata/fund-performance"
+      },
+      "ter": null,
+      "direct_ter_available": false,
+      "benchmark_identity": null,
+      "portfolio": null,
+      "portfolio_current": false,
+      "exact_amc_documents": 0,
+      "shared_live_amc": false,
+      "amc_source_candidates": [],
+      "coverage_gaps": [
+        "direct_ter",
+        "benchmark_identity",
+        "current_portfolio"
+      ],
+      "all_required_source_evidence": false
+    }
+  ],
+  "remaining_gates": [
+    "mid_cap_registry_stage_is_staged",
+    "mid_cap_direct_ter_coverage_incomplete",
+    "mid_cap_benchmark_identity_coverage_incomplete",
+    "mid_cap_portfolio_current_coverage_incomplete",
+    "mid_cap_source_audit_fetch_errors"
+  ],
+  "source_coverage_ready": false,
+  "mid_cap_launch_ready": false,
+  "notes": [
+    "This audit is read-only: it does not insert Mid Cap metrics, portfolios, documents, schemes, or NAVs.",
+    "AUM and TER are matched only to the exact staged Mid Cap family identity; TER rows must also carry the exact Mid Cap category.",
+    "Benchmark and portfolio coverage require exact retained family evidence. Shared-AMC collectors are reported only as operational candidates, never as proof of Mid Cap data coverage.",
+    "Direct TER is the expense-ratio gate because the current public Small Cap experience uses a Direct-plan fee figure.",
+    "Portfolio freshness uses the same regulatory month-end expectation as the live coverage report.",
+    "A staged category remains ineligible for public export regardless of source coverage."
+  ]
+}
