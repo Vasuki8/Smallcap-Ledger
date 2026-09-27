@@ -1,8 +1,8 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-27T17:52:38+00:00
+Prepared: 2026-09-27T18:00:48+00:00
 
-Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · remaining: **6**.
+Direct TER evidence: **27 / 34** · AMFI: **21** · first-party AMC: **6** · remaining: **7**.
 
 | Family | AMC | Direct TER | Regular TER | As of | Evidence | Source |
 | --- | --- | ---: | ---: | --- | --- | --- |
@@ -18,7 +18,7 @@ Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · re
 | HDFC Mid Cap Fund | HDFC Mutual Fund | 0.7600% | 1.3100% | 2026-09-24 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-24 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
 | Helios Mid Cap Fund | Helios Mutual Fund | Gap | Gap | Gap | Gap | Gap |
-| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.0900% | 1.8400% | 2026-09-24 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap | Gap | Gap | Gap |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-24 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
 | JM Mid Cap Fund | JM Financial Mutual Fund | 0.9500% | 2.4600% | 2026-09-27 | first_party_amc | https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest |
@@ -46,6 +46,7 @@ Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · re
 - BANDHAN MID CAP FUND
 - BANK OF INDIA MID CAP FUND
 - Helios Mid Cap Fund
+- ICICI Prudential Mid Cap Fund
 - Kotak Mid Cap Fund
 - The Wealth Company Mid Cap Fund
 - WhiteOak Capital Mid Cap Fund
