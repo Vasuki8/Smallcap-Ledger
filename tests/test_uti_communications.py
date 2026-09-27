@@ -1,4 +1,5 @@
 """UTI Mutual Fund first-party communication recovery checks."""
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,30 +10,40 @@ from tracker import uti_communications as comm
 from tracker.publication_coverage import report as publication_report
 
 
-def learn_page():
-    return b"""<html><body><h1>Knowledge Centre</h1>
-      <div>From The Fund House</div>
-      <a href="/leadership-desk">Leadership Desk</a>
-      <a href="/investment-insights">Investment Insights</a>
-      <a href="/market-insights">Market Insights</a>
-    </body></html>"""
+def cms_payload(category="Market Insights"):
+    return json.dumps([
+        {
+            "nid":"91239",
+            "title":"Market Insight - Equity | September 2026",
+            "field_knowledge_hub_category":category,
+            "field_asset_type":"Investor App web, Buddy, App, Investor Web",
+            "field_date_of_publication":"2026-09-10",
+            "pdf":"https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_equity_sep_2026_fp_revised.pdf?VersionId=test",
+            "s3pdf":"",
+            "view_node":"/market-insight-equity-september-2026",
+        },
+        {
+            "nid":"999",
+            "title":"Generic education",
+            "field_knowledge_hub_category":"Articles",
+            "field_date_of_publication":"2026-09-09",
+            "pdf":"https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/article.pdf",
+        },
+    ]).encode()
 
 
-def category_page():
-    return b"""<html><body>
-      <a href="/leadership-desk/seeking-opportunity-uncrowded-market-segments">
-        Seeking Opportunity in Uncrowded Market Segments
-      </a>
-      <a href="https://example.com/news">External News</a>
-    </body></html>"""
-
-
-def article(title="Seeking Opportunity in Uncrowded Market Segments"):
-    return f"""<html><head>
-      <meta property="article:published_time" content="2026-06-12T08:00:00+05:30">
-      </head><body><div>UTI Mutual Fund</div><h1>{title}</h1>
-      <p>Fund House investment perspective on markets and portfolio construction.</p>
-    </body></html>""".encode()
+def cio_payload():
+    return json.dumps([
+        {
+            "nid":"91014",
+            "title":"Two Scoreboards, One Playbook",
+            "field_knowledge_hub_category":"From the CIOs Desk",
+            "field_asset_type":"Investor App web, Buddy, App",
+            "field_kc_posted_date":"2026-09-03",
+            "pdf":"https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/from_the_leadership_desk_september_2026_revised.pdf?VersionId=test",
+            "view_node":"/two-scoreboards-one-playbook",
+        }
+    ]).encode()
 
 
 class UtiCommunicationTests(unittest.TestCase):
@@ -49,10 +60,6 @@ class UtiCommunicationTests(unittest.TestCase):
     def tearDown(self):
         self.p.stop();self.tmp.cleanup()
 
-    @staticmethod
-    def archived(body,typ):
-        return body,db.archive(body,typ),typ
-
     def source(self):
         return db.one("""SELECT * FROM source_pages
                          WHERE lower(amc_match)=lower(?) AND url=?""",
@@ -60,59 +67,48 @@ class UtiCommunicationTests(unittest.TestCase):
 
     def test_source_registered_and_audit_recognizes_it(self):
         self.assertIsNotNone(self.source())
-        audit=publication_report()
-        row={x["family"]:x for x in audit["funds"]}[comm.FAMILY]
+        row={x["family"]:x for x in publication_report()["funds"]}[comm.FAMILY]
         self.assertEqual(len(row["registered_communication_sources"]),1)
 
-    def test_discovery_keeps_only_first_party_fund_house_articles(self):
-        def fake_fetch(url,**kwargs):
-            if url.rstrip("/") in (
-                "https://www.utimf.com/leadership-desk",
-                "https://www.utimf.com/investment-insights",
-                "https://www.utimf.com/market-insights",
-            ):
-                return category_page(),None,"text/html"
-            raise AssertionError(url)
-        with patch("tracker.uti_communications.providers.can_crawl",return_value=None):
-            rows=comm.discover(learn_page(),fetch_fn=fake_fetch)
-        urls=[url for url,_ in rows]
-        self.assertIn(
-            "https://www.utimf.com/leadership-desk/seeking-opportunity-uncrowded-market-segments",
-            urls)
-        self.assertFalse(any("example.com" in x for x in urls))
-
-    def test_article_keeps_explicit_source_date_only(self):
-        row=comm.parse_article(
-            article(),
-            "https://www.utimf.com/leadership-desk/seeking-opportunity-uncrowded-market-segments",
-            "fallback",
-        )
-        self.assertEqual(row["published_at"],"2026-06-12")
+    def test_cms_rows_keep_only_reviewed_category_and_official_cdn_pdf(self):
+        rows=comm.cms_rows(cms_payload(),"Market Insights")
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["title"],"Market Insight - Equity | September 2026")
+        self.assertEqual(rows[0]["published_at"],"2026-09-10")
+        self.assertEqual(rows[0]["category"],"Market Insights")
+        bad=json.dumps([{
+            "title":"Market Insight",
+            "field_knowledge_hub_category":"Market Insights",
+            "pdf":"https://example.com/market.pdf",
+        }]).encode()
         with self.assertRaises(ValueError):
-            comm.parse_article(article(),"https://example.com/article","bad")
+            comm.cms_rows(bad,"Market Insights")
 
-    def test_ingest_archives_validated_articles(self):
+    def test_missing_explicit_date_remains_null(self):
+        payload=json.dumps([{
+            "title":"Market Insight - Equity | September 2026",
+            "field_knowledge_hub_category":"Market Insights",
+            "pdf":"https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market.pdf",
+        }]).encode()
+        self.assertIsNone(comm.cms_rows(payload,"Market Insights")[0]["published_at"])
+
+    def test_ingest_archives_market_and_cio_pdfs(self):
         def fake_fetch(url,**kwargs):
-            if url==comm.LISTING:
-                return self.archived(learn_page(),"text/html")
-            if url.rstrip("/") in (
-                "https://www.utimf.com/leadership-desk",
-                "https://www.utimf.com/investment-insights",
-                "https://www.utimf.com/market-insights",
-            ):
-                return category_page(),None,"text/html"
-            return self.archived(article(),"text/html")
+            if url==comm.CMS_ENDPOINTS[0][0]:
+                return cms_payload(),None,"application/json"
+            if url==comm.CMS_ENDPOINTS[1][0]:
+                return cio_payload(),None,"application/json"
+            return b"%PDF-1.7 UTI first party CMS asset",None,"application/pdf"
         with patch("tracker.uti_communications.providers.can_crawl",return_value=None):
             result=comm.ingest(fetch_fn=fake_fetch)
-        self.assertGreaterEqual(result["retained"],1)
-        row=db.one("""SELECT d.kind,d.published_at,COUNT(v.id) versions
-                      FROM documents d LEFT JOIN document_versions v ON v.document_id=d.id
-                      WHERE d.family=? AND d.url=? GROUP BY d.id""",
-                   (comm.FAMILY,
-                    "https://www.utimf.com/leadership-desk/seeking-opportunity-uncrowded-market-segments"))
-        self.assertEqual(row["kind"],"market view")
-        self.assertEqual(row["published_at"],"2026-06-12")
-        self.assertEqual(row["versions"],1)
+        self.assertEqual(result["retained"],2)
+        rows=db.rows("""SELECT d.title,d.kind,d.published_at,COUNT(v.id) versions
+                        FROM documents d LEFT JOIN document_versions v ON v.document_id=d.id
+                        WHERE d.family=? AND d.kind='market view'
+                        GROUP BY d.id ORDER BY d.title""",(comm.FAMILY,))
+        self.assertEqual(len(rows),2)
+        self.assertTrue(all(r["kind"]=="market view" and r["versions"]==1 for r in rows))
+        self.assertEqual({r["published_at"] for r in rows},{"2026-09-03","2026-09-10"})
 
     def test_disclosures_routes_source(self):
         with patch("tracker.uti_communications.ingest",
