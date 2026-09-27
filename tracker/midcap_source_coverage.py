@@ -6,6 +6,7 @@ from datetime import date,timedelta
 import hashlib
 import json
 import re
+import time
 from urllib.parse import urlencode
 
 import httpx
@@ -271,32 +272,101 @@ def _month_label(today,offset):
     return f"{month:02d}-{year}"
 
 
-def _fetch_midcap_ter(months=3):
-    rows=[];checks=[];today=date.today()
+def _fetch_midcap_ter(families,months=3,fetch_fn=providers.fetch,sleep_fn=time.sleep):
+    """Read AMFI TER by AMC×month; never sweep the full industry in one query."""
+    def get_json(url):
+        last=None
+        for attempt in range(3):
+            try:
+                body,_,_=fetch_fn(url,archive=False,max_bytes=16*1024*1024)
+                return body,json.loads(body)
+            except (json.JSONDecodeError,UnicodeDecodeError) as exc:
+                last=exc
+                if attempt<2:sleep_fn(2**attempt)
+        raise ValueError("AMFI TER response was not valid JSON after bounded retries") from last
+
+    rows=[];checks=[];errors=[];today=date.today()
+    amc_families=defaultdict(set)
+    for item in families:
+        amc_families[item["amc"]].add(item["family"])
+
+    mf_url=amfi_metrics.BASE+"/api/populate-mf"
+    body,payload=get_json(mf_url)
+    mf_rows=payload.get("data",payload) if isinstance(payload,dict) else payload
+    if not isinstance(mf_rows,list):
+        raise ValueError("AMFI mutual-fund selector response changed format")
+    mf_by_name={}
+    for row in mf_rows:
+        if not isinstance(row,dict):continue
+        name=str(row.get("mfName") or "").strip()
+        mfid=str(row.get("mfId") or "").strip()
+        if name and mfid:
+            mf_by_name[amfi_metrics.normalized(name)]={"name":name,"id":mfid}
+    checks.append({
+        "kind":"ter_mutual_fund_selector","source":mf_url,
+        "sha256":hashlib.sha256(body).hexdigest(),"amcs":len(mf_by_name),
+    })
+
+    resolved={}
+    for amc in amc_families:
+        match=mf_by_name.get(amfi_metrics.normalized(amc))
+        if match:resolved[amc]=match
+        else:errors.append({"source":"AMFI TER selector","error":"No exact AMC selector match for "+amc})
+
+    unresolved={family for values in amc_families.values() for family in values}
     for offset in range(months):
-        label=_month_label(today,offset);page=1
-        while True:
+        if not unresolved:break
+        label=_month_label(today,offset)
+        for amc in sorted(resolved):
+            wanted=amc_families[amc]&unresolved
+            if not wanted:continue
+            mf=resolved[amc]
             url=amfi_metrics.BASE+"/api/populate-te-rdata-revised?"+urlencode({
-                "MF_ID":"All","Month":label,"strCat":"-1","strType":"1",
-                "page":page,"pageSize":5000,
+                "MF_ID":mf["id"],"Month":label,"strCat":"-1","strType":"1",
+                "page":1,"pageSize":10000,
             })
-            body,_,_=providers.fetch(url,archive=False,max_bytes=16*1024*1024)
-            payload=json.loads(body)
-            records=payload.get("data",[]) if isinstance(payload,dict) else payload
-            if not isinstance(records,list):raise ValueError("AMFI expense response has changed")
-            mid=[r for r in records if isinstance(r,dict) and _is_mid_cap_category(r.get("SchemeCat_Desc"))]
-            rows.extend(mid)
-            checks.append({
-                "kind":"ter_mid_cap","source":url,"sha256":hashlib.sha256(body).hexdigest(),
-                "month":label,"page":page,"mid_cap_rows":len(mid),
-            })
-            meta=payload.get("meta",{}) if isinstance(payload,dict) else {}
-            pages=meta.get("totalPages") or meta.get("pageCount")
-            page_size=int(meta.get("pageSize") or 5000)
-            if not records or (pages and page>=int(pages)) or (not pages and len(records)<page_size):break
-            page+=1
-            if page>20:raise ValueError("Unexpected size of the AMFI TER feed")
-    return rows,checks
+            try:
+                body,payload=get_json(url)
+                records=payload.get("data",[]) if isinstance(payload,dict) else payload
+                if not isinstance(records,list):
+                    raise ValueError("AMFI expense response changed format")
+                meta=payload.get("meta",{}) if isinstance(payload,dict) else {}
+                pages=meta.get("totalPages") or meta.get("pageCount") or 1
+                if int(pages)>1:
+                    raise ValueError("AMFI AMC TER response exceeded one bounded page")
+                mid=[r for r in records if isinstance(r,dict) and _is_mid_cap_category(r.get("SchemeCat_Desc"))]
+                rows.extend(mid)
+                matched={
+                    family for family in wanted
+                    if any(amfi_metrics.normalized(r.get("Scheme_Name",""))==amfi_metrics.normalized(family)
+                           for r in mid)
+                }
+                unresolved-=matched
+                checks.append({
+                    "kind":"ter_mid_cap_by_amc","source":url,
+                    "sha256":hashlib.sha256(body).hexdigest(),"month":label,
+                    "amc":amc,"amfi_mf_name":mf["name"],"rows":len(records),
+                    "mid_cap_rows":len(mid),"matched_families":sorted(matched),
+                })
+            except Exception as exc:
+                errors.append({
+                    "source":"AMFI TER · "+amc+" · "+label,
+                    "error":(str(exc) or type(exc).__name__)[:300],
+                })
+            sleep_fn(1)
+
+    checks.append({
+        "kind":"ter_mid_cap_contract_summary",
+        "queried_amcs":len(resolved),"target_families":len(unresolved)+len({
+            family for values in amc_families.values() for family in values
+        }-unresolved),
+        "matched_families":len({
+            family for values in amc_families.values() for family in values
+        }-unresolved),
+        "unmatched_families":sorted(unresolved),
+        "contract":"one AMC x month; strCat=-1; strType=1; page=1; pageSize=10000",
+    })
+    return rows,checks,errors
 
 
 def collect(today=None):
@@ -307,7 +377,8 @@ def collect(today=None):
     except Exception as exc:
         errors.append({"source":"AMFI daily AUM","error":(str(exc) or type(exc).__name__)[:300]})
     try:
-        ter_rows,ter_checks=_fetch_midcap_ter();checks.extend(ter_checks)
+        ter_rows,ter_checks,ter_errors=_fetch_midcap_ter(families)
+        checks.extend(ter_checks);errors.extend(ter_errors)
     except Exception as exc:
         errors.append({"source":"AMFI TER","error":(str(exc) or type(exc).__name__)[:300]})
     return report(aum_rows,ter_rows,source_checks=checks,source_errors=errors,today=today)
