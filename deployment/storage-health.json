@@ -1,0 +1,50 @@
+{
+  "checked_at": "2026-09-27T03:10:21+00:00",
+  "scope": "current_production_operational_health",
+  "database": {
+    "bytes": 75968512,
+    "integrity": "ok",
+    "foreign_key_violations": []
+  },
+  "archive": {
+    "files": 2910,
+    "bytes": 2498478753,
+    "metadata_only_files": 0,
+    "metadata_only_bytes": 0,
+    "retention_by_binary_state": {
+      "retained": {
+        "files": 2910,
+        "bytes": 2498478753
+      }
+    }
+  },
+  "publication": {
+    "hard_budget_bytes": 262144000,
+    "reserve_bytes": 5242880,
+    "selection_limit_bytes": 256901120,
+    "selected_files": 217,
+    "selected_bytes": 256901086,
+    "headroom_to_selection_limit_bytes": 34,
+    "headroom_to_hard_budget_bytes": 5242914
+  },
+  "coverage": {
+    "funds": 36,
+    "aum": 36,
+    "fee": 36,
+    "ter": 36,
+    "base_expense_ratio": 36,
+    "portfolio": 35,
+    "portfolio_complete": 30,
+    "portfolio_fresh": 34,
+    "portfolio_fresh_complete": 30,
+    "portfolio_partial": 5,
+    "benchmark_identity": 36
+  },
+  "safety": {
+    "all_archive_binaries_retained": true,
+    "publication_within_selection_limit": true,
+    "database_integrity_ok": true,
+    "foreign_keys_ok": true
+  },
+  "historical_evidence_note": "docs/STORAGE-AUDIT.json, docs/STORAGE-VALIDATION.json and deployment/storage-live-verification.json are historical migration/verification artifacts and are intentionally not overwritten by this current-health report."
+}
