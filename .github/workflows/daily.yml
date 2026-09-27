@@ -121,6 +121,13 @@ jobs:
         run: >-
           uv run --frozen python scripts/diagnose_midcap_ter_final6.py
           --output deployment/midcap-ter-final6-source-diagnostic.json
+      - name: Inspect four concrete Mid Cap TER files
+        if: github.event_name == 'push'
+        timeout-minutes: 6
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/diagnose_midcap_ter_final4_files.py
+          --output deployment/midcap-ter-final4-file-diagnostic.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
