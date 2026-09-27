@@ -98,6 +98,13 @@ jobs:
           --source-audit docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json
           --json docs/MIDCAP-TER-GAP-AUDIT.json
           --markdown docs/MIDCAP-TER-GAP-AUDIT.md
+      - name: Audit staged Mid Cap first-party TER batch
+        timeout-minutes: 8
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/audit_midcap_ter_first_party.py
+          --json docs/MIDCAP-TER-FIRST-PARTY-BATCH1.json
+          --markdown docs/MIDCAP-TER-FIRST-PARTY-BATCH1.md
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
