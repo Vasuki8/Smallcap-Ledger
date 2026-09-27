@@ -55,7 +55,6 @@ class MidCapSourceCoverageTests(unittest.TestCase):
             if url.endswith('/api/populate-mf'):
                 return b'{"data":[{"mfName":"Example AMC","mfId":"77"}]}',None,'application/json'
             self.assertIn('MF_ID=77',url)
-            self.assertIn('strCat=-1',url)
             self.assertIn('strType=1',url)
             self.assertIn('page=1',url)
             payload={
@@ -72,7 +71,9 @@ class MidCapSourceCoverageTests(unittest.TestCase):
             families,months=1,fetch_fn=fake_fetch,sleep_fn=lambda _:None)
         self.assertEqual(errors,[])
         self.assertEqual(len(rows),1)
-        self.assertEqual(len(calls),2)
+        self.assertEqual(len(calls),3)
+        selector=next(x for x in checks if x.get('kind')=='ter_mid_cap_category_selector')
+        self.assertEqual(selector['category_id'],'1')
         summary=checks[-1]
         self.assertEqual(summary['matched_families'],1)
         self.assertEqual(summary['unmatched_families'],[])
@@ -85,18 +86,28 @@ class MidCapSourceCoverageTests(unittest.TestCase):
             if url.endswith('/api/populate-mf'):
                 return b'{"data":[{"mfName":"Example AMC","mfId":"77"}]}',None,'application/json'
             page='2' if 'page=2' in url else '1'
-            payload={
-                'data':([{'Scheme_Name':'Other Fund','SchemeCat_Desc':'Equity Scheme - Large Cap Fund','TER_Date':'25-Sep-2026','D_TER':'0.4'}]
-                        if page=='1' else
-                        [{'Scheme_Name':'Example Mid Cap Fund','SchemeCat_Desc':'Equity Scheme - Mid Cap Fund','TER_Date':'25-Sep-2026','D_TER':'0.55','R_TER':'1.50'}]),
-                'meta':{'totalPages':3,'pageSize':10},
-            }
+            # Discovery finds category 7 on page 1. The real category query then
+            # requires page 2 before the exact family appears.
+            if 'strCat=7' not in url:
+                payload={'data':[],'meta':{'totalPages':1,'pageSize':10}}
+            elif len([x for x in calls if 'strCat=7' in x])==1:
+                payload={'data':[{'Scheme_Name':'Example Mid Cap Fund','SchemeCat_Desc':'Equity Scheme - Mid Cap Fund','TER_Date':'25-Sep-2026','D_TER':'0.55'}],
+                         'meta':{'totalPages':3,'pageSize':10}}
+            else:
+                payload={
+                    'data':([{'Scheme_Name':'Other Fund','SchemeCat_Desc':'Equity Scheme - Large Cap Fund','TER_Date':'25-Sep-2026','D_TER':'0.4'}]
+                            if page=='1' else
+                            [{'Scheme_Name':'Example Mid Cap Fund','SchemeCat_Desc':'Equity Scheme - Mid Cap Fund','TER_Date':'25-Sep-2026','D_TER':'0.55','R_TER':'1.50'}]),
+                    'meta':{'totalPages':3,'pageSize':10},
+                }
             return __import__('json').dumps(payload).encode(),None,'application/json'
         rows,checks,errors=_fetch_midcap_ter(
             families,months=1,fetch_fn=fake_fetch,sleep_fn=lambda _:None)
         self.assertEqual(errors,[])
         self.assertEqual(len(rows),1)
-        self.assertEqual(len(calls),3)
+        self.assertGreaterEqual(len(calls),10)
+        selector=next(x for x in checks if x.get('kind')=='ter_mid_cap_category_selector')
+        self.assertEqual(selector['category_id'],'7')
         entry=next(x for x in checks if x.get('kind')=='ter_mid_cap_by_amc')
         self.assertEqual(len(entry['pages_checked']),2)
         self.assertEqual(entry['matched_families'],['Example Mid Cap Fund'])
