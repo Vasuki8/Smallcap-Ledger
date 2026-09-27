@@ -4,6 +4,21 @@ Updated: 2026-09-27, after closing the actionable AMC communication-source queue
 
 ## Current backend state and next-task gate
 
+### Latest completed operational batch: Pages publication-budget reserve
+
+PR #239 merged as commit \`30f41210944ae6aebc0238768ecd98c17b93b222\`. Production run \`36286920886\` passed source collection, archive repair, retention preparation, full regressions, static-site generation/validation, cumulative archive save and status recording.
+
+Before this batch, the Pages publication selector had greedily filled **262,143,477 / 262,144,000 bytes**, leaving only **523 bytes** of hard-budget headroom. The exporter now keeps a **5 MiB reserve** inside the existing 250 MiB publication-file budget:
+- hard budget: **262,144,000 bytes**
+- reserve: **5,242,880 bytes**
+- selection limit: **256,901,120 bytes**
+- production selected: **256,901,086 bytes**
+- hard-budget headroom: **5,242,914 bytes**
+
+This changes only which latest publication binaries are materialized into GitHub Pages. The cumulative source archive remains authoritative and unchanged by this policy: **2,910 archive binaries retained; 0 files deleted; 0 bytes deleted; deletion disabled**.
+
+Do not remove the reserve merely to increase the number of directly downloadable historical publication files. If future publication pressure approaches the selection limit, preserve retained originals/source packs and adjust publication-selection policy rather than deleting evidence.
+
 The latest production audit is the authority for the next pass. Do **not** resume the obsolete missing-AUM or communication-source priorities from older handoff sections below.
 
 ### Communication coverage milestone closed
