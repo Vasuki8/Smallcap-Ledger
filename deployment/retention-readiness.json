@@ -1,5 +1,5 @@
 {
-  "prepared_at": "2026-09-27T01:15:37+00:00",
+  "prepared_at": "2026-09-27T01:48:39+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
@@ -7,7 +7,7 @@
   "historical_candidates_strengthened_by_current_scan": 4,
   "post_audit_hashes_reviewed": 391,
   "post_audit_delta": {
-    "reviewed_at": "2026-09-27T01:15:37+00:00",
+    "reviewed_at": "2026-09-27T01:48:38+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
     "new_hashes_reviewed": 391,
@@ -94,19 +94,19 @@
     },
     "documents": {
       "rows": 2132,
-      "sha256": "9f16da2eb0c17257576abb101697a24b562a80aa05e31d31d9a5b5ed440493fc"
+      "sha256": "351b76112c1dc0666b2b04d7d88f9fdd77526b06d0bc3c9c5854f1b65483b9a0"
     },
     "fetches": {
-      "rows": 8549,
-      "sha256": "8fd860ca6524e95f117d24377a6632c2f95bf73c54737887db68fb8ec4773195"
+      "rows": 8555,
+      "sha256": "ccea5d19eed9015fd76515fa9f75646e5fab66f73b1ffb356bc4a8b252ba51aa"
     },
     "holdings": {
       "rows": 8339,
       "sha256": "56043d8ee4da5f7a33742e19990ae78f14ed9bcb5e71c0a034dce4145aa1f52d"
     },
     "jobs": {
-      "rows": 918,
-      "sha256": "d5425f0e4efb791ff5c115d9da1c036a1fe99c6e2992262803365be824fdf54d"
+      "rows": 921,
+      "sha256": "7dbdd948034b5d579be1f93f898b6cf9e802a0ee27deec92b4b8469548931b48"
     },
     "metrics": {
       "rows": 26580,
@@ -134,13 +134,13 @@
     },
     "source_pages": {
       "rows": 352,
-      "sha256": "330e138d08a842eaae2d765ab155f7250f556f4a443e7073dd9362eb1961d1bf"
+      "sha256": "b57df920a5989f68eb70fef449cacbc9a62d34a942b17210278f7f07e3d21a29"
     }
   },
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-27T01:12:40+00:00",
+  "active_checkpoint_created_at": "2026-09-27T01:16:18+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,
