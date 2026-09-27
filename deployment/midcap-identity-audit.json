@@ -47,115 +47,38 @@
   "metadata_resolutions": [
     {
       "code": 127044,
-      "url": "https://api.mfapi.in/mf/127044",
-      "scheme_name": "Motilal Oswal Midcap Fund",
-      "scheme_category": "Equity Scheme - Mid Cap Fund",
-      "scheme_type": "Open Ended Schemes",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolved": false
+      "resolved": true,
+      "method": "reviewed_first_party_code_mapping",
+      "plan": "Direct",
+      "option": "IDCW",
+      "evidence_url": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
     },
     {
       "code": 127042,
-      "url": "https://api.mfapi.in/mf/127042",
-      "scheme_name": "Motilal Oswal Midcap Fund",
-      "scheme_category": "Equity Scheme - Mid Cap Fund",
-      "scheme_type": "Open Ended Schemes",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolved": false
+      "resolved": true,
+      "method": "reviewed_first_party_code_mapping",
+      "plan": "Direct",
+      "option": "Growth",
+      "evidence_url": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
     },
     {
       "code": 127040,
-      "url": "https://api.mfapi.in/mf/127040",
-      "scheme_name": "Motilal Oswal Midcap Fund",
-      "scheme_category": "Equity Scheme - Mid Cap Fund",
-      "scheme_type": "Open Ended Schemes",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolved": false
+      "resolved": true,
+      "method": "reviewed_first_party_code_mapping",
+      "plan": "Regular",
+      "option": "IDCW",
+      "evidence_url": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
     },
     {
       "code": 127039,
-      "url": "https://api.mfapi.in/mf/127039",
-      "scheme_name": "Motilal Oswal Midcap Fund",
-      "scheme_category": "Equity Scheme - Mid Cap Fund",
-      "scheme_type": "Open Ended Schemes",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolved": false
+      "resolved": true,
+      "method": "reviewed_first_party_code_mapping",
+      "plan": "Regular",
+      "option": "Growth",
+      "evidence_url": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
     }
   ],
-  "unresolved_plan_option": [
-    {
-      "code": 127044,
-      "family": "Motilal Oswal Midcap Fund",
-      "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolution": {
-        "code": 127044,
-        "url": "https://api.mfapi.in/mf/127044",
-        "scheme_name": "Motilal Oswal Midcap Fund",
-        "scheme_category": "Equity Scheme - Mid Cap Fund",
-        "scheme_type": "Open Ended Schemes",
-        "plan": "Unspecified",
-        "option": "Other",
-        "resolved": false
-      }
-    },
-    {
-      "code": 127042,
-      "family": "Motilal Oswal Midcap Fund",
-      "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolution": {
-        "code": 127042,
-        "url": "https://api.mfapi.in/mf/127042",
-        "scheme_name": "Motilal Oswal Midcap Fund",
-        "scheme_category": "Equity Scheme - Mid Cap Fund",
-        "scheme_type": "Open Ended Schemes",
-        "plan": "Unspecified",
-        "option": "Other",
-        "resolved": false
-      }
-    },
-    {
-      "code": 127040,
-      "family": "Motilal Oswal Midcap Fund",
-      "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolution": {
-        "code": 127040,
-        "url": "https://api.mfapi.in/mf/127040",
-        "scheme_name": "Motilal Oswal Midcap Fund",
-        "scheme_category": "Equity Scheme - Mid Cap Fund",
-        "scheme_type": "Open Ended Schemes",
-        "plan": "Unspecified",
-        "option": "Other",
-        "resolved": false
-      }
-    },
-    {
-      "code": 127039,
-      "family": "Motilal Oswal Midcap Fund",
-      "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
-      "resolution": {
-        "code": 127039,
-        "url": "https://api.mfapi.in/mf/127039",
-        "scheme_name": "Motilal Oswal Midcap Fund",
-        "scheme_category": "Equity Scheme - Mid Cap Fund",
-        "scheme_type": "Open Ended Schemes",
-        "plan": "Unspecified",
-        "option": "Other",
-        "resolved": false
-      }
-    }
-  ],
+  "unresolved_plan_option": [],
   "proposals": [
     {
       "code": 119620,
@@ -666,8 +589,8 @@
       "category": "mid-cap",
       "family": "Motilal Oswal Midcap Fund",
       "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
+      "plan": "Direct",
+      "option": "IDCW",
       "isin": "INF247L01460",
       "reinvestment_isin": "INF247L01452",
       "nav_date": "2026-09-25",
@@ -680,8 +603,8 @@
       "category": "mid-cap",
       "family": "Motilal Oswal Midcap Fund",
       "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
+      "plan": "Direct",
+      "option": "Growth",
       "isin": "INF247L01445",
       "reinvestment_isin": null,
       "nav_date": "2026-09-25",
@@ -694,8 +617,8 @@
       "category": "mid-cap",
       "family": "Motilal Oswal Midcap Fund",
       "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
+      "plan": "Regular",
+      "option": "IDCW",
       "isin": "INF247L01437",
       "reinvestment_isin": "INF247L01429",
       "nav_date": "2026-09-25",
@@ -708,8 +631,8 @@
       "category": "mid-cap",
       "family": "Motilal Oswal Midcap Fund",
       "amc": "Motilal Oswal Mutual Fund",
-      "plan": "Unspecified",
-      "option": "Other",
+      "plan": "Regular",
+      "option": "Growth",
       "isin": "INF247L01411",
       "reinvestment_isin": null,
       "nav_date": "2026-09-25",
@@ -2049,7 +1972,7 @@
     }
   ],
   "production_writes": 0,
-  "mid_cap_import_ready": false,
+  "mid_cap_import_ready": true,
   "notes": [
     "This audit is read-only and does not insert schemes or NAVs.",
     "Family identity preserves the official AMFI Scheme Name.",
