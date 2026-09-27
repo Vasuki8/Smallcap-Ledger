@@ -83,8 +83,16 @@ def _match_ter(rows,families,today=None):
         if not family:
             if name:unmatched.add(name)
             continue
-        try:day=providers.iso(str(row.get("TER_Date") or "")[:10])
-        except ValueError:continue
+        raw_day=str(row.get("TER_Date") or "").strip()
+        day=None
+        for candidate in (raw_day,raw_day[:10]):
+            if not candidate:continue
+            try:
+                day=providers.iso(candidate)
+                break
+            except ValueError:
+                pass
+        if not day:continue
         if day>today.isoformat():continue
         evidence={
             "as_of":day,"scheme_name":name,"category":row.get("SchemeCat_Desc"),
