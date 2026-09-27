@@ -489,13 +489,26 @@ Do not weaken source identity, content-signature, date, or reconciliation checks
 **Fresh partial**:
 Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 
+### Latest completed category-expansion batch — isolated Mid Cap historical NAV staging
+
+**Mid Cap now has a production-backed historical NAV staging layer, but remains non-public.**
+
+- PR **#248** (`9d5b3fced03280293063ea3465369294a6044a99`) extends the isolated Mid Cap store only; the live Small Cap `schemes` and `nav` tables are not written by this path.
+- The staging pipeline validates exact scheme code and Mid Cap category before accepting historical provider data. An already-staged current AMFI observation wins on same-date conflicts, so historical backfill cannot overwrite the authoritative current AMFI value.
+- Staged NAV rows now retain source URL and SHA-256 provenance. Staged schemes retain history check/status/source metadata.
+- Healthy histories use a bounded **30-day refresh cadence**; new/error histories retry. The workflow step is `continue-on-error`, so a Mid Cap staging-source problem cannot block the existing Small Cap publication.
+- Production run **#606** succeeded end-to-end, including syntax, regression tests, site generation/validation, cumulative archive publication, status recording and Pages deployment.
+- Production result: **135 / 135 Mid Cap scheme codes succeeded**, **0 failures**, **353,153 staged NAV observations**, spanning **2006-04-02 through 2026-09-25**.
+- Safety result remains explicit: **live_writes=0** and **public_export_enabled=false**. No Mid Cap pages, AUM/TER, benchmark, portfolio, or public claims have been enabled.
+- Machine-readable evidence is retained in `deployment/midcap-history-status.json`.
+
 ### Recommended next backend work
 
-1. **Quant Small Cap Fund next.** It remains at the July 31 partial snapshot while the official September factsheet already provides August benchmark evidence. Inspect the current first-party portfolio/disclosure source and recover August holdings only from concrete official data.
-2. Then handle **SBI Small Cap Fund** as the next stale-partial target. Bajaj remains a confirmed official-source access blocker and should not be retried without a genuinely new first-party route.
-3. Prefer structured official monthly portfolios when available. First try exact AMC disclosure/workbook/API discovery; only use a factsheet partial when the AMC does not expose the full holdings. Never promote a partial snapshot to complete without 100% reconciliation.
-4. **Bandhan and Union remain the only zero-portfolio gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
-5. After stale partial freshness is improved, revisit the **fresh partial** funds (Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF and UTI) for complete structured sources where available.
+1. **Keep Mid Cap staged and add a read-only metric/source coverage audit next.** Before any public exposure, measure which of the 34 Mid Cap families have exact first-party AUM, TER, benchmark identity and current portfolio evidence. Do not reuse Small Cap family metrics merely because an AMC is shared.
+2. Keep benchmark work evidence-driven: record each Mid Cap fund's reported benchmark from first-party scheme/factsheet evidence before adding any comparison series. Do not assign a default benchmark by category.
+3. **Quant Small Cap Fund remains the next Small Cap portfolio freshness repair.** It is still at the July 31 partial snapshot; recover August holdings only from concrete official data. Then handle SBI. Bajaj remains a confirmed source-access blocker.
+4. **Bandhan and Union remain the only zero-portfolio Small Cap gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
+5. Mid Cap remains `stage=staged` and `public_export_enabled=false` until the source-coverage audit is reviewed and the public exporter/API/UI are explicitly made category-aware. No implicit promotion from staged tables to live tables.
 6. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
