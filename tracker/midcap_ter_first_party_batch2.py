@@ -82,7 +82,7 @@ def kotak(today=None):
     body,_,_=providers.fetch(KOTAK_URL,archive=False,max_bytes=20*1024*1024)
     book=openpyxl.load_workbook(io.BytesIO(body),data_only=True,read_only=True)
     try:
-        matches=defaultdict(list);ids=set()
+        matches=defaultdict(list);nsdl_codes=set()
         for name in book.sheetnames:
             sh=book[name]
             for row in sh.iter_rows(min_row=3,values_only=True):
@@ -90,17 +90,19 @@ def kotak(today=None):
                 try:d=datetime.strptime(str(row[1]).strip(),"%d/%m/%Y").date()
                 except ValueError:continue
                 if d<=today:
-                    ids.add((str(row[0]).strip(),str(row[12]).strip()))
+                    nsdl=str(row[12] or "").strip()
+                    if not nsdl:raise ValueError("Kotak exact Mid Cap row is missing NSDL code")
+                    nsdl_codes.add(nsdl)
                     matches[d.isoformat()].append(row)
-        if len(ids)!=1:raise ValueError("Kotak exact identity not unique")
+        if len(nsdl_codes)!=1:raise ValueError("Kotak exact identity has multiple NSDL codes")
         day,row=_latest(matches,"Kotak TER")
         plans={
           "Regular":{"base_expense_ratio":_num(row[2],"BER"),"brokerage":_num(row[3],"brokerage"),"transaction_cost":_num(row[4],"txn"),"statutory_levies":_num(row[5],"levies"),"ter":_num(row[6],"TER")},
           "Direct":{"base_expense_ratio":_num(row[7],"BER"),"brokerage":_num(row[8],"brokerage"),"transaction_cost":_num(row[9],"txn"),"statutory_levies":_num(row[10],"levies"),"ter":_num(row[11],"TER")},
         }
         _validate(plans,"Kotak")
-        name,nsdl=next(iter(ids))
-        return {"family":KOTAK_FAMILY,"status":"recovered","as_of":day,"plans":plans,"direct_ter":plans["Direct"]["ter"],"regular_ter":plans["Regular"]["ter"],"source":KOTAK_URL,"sha256":hashlib.sha256(body).hexdigest(),"identity":{"scheme_name":name,"nsdl_scheme_code":nsdl}}
+        nsdl=next(iter(nsdl_codes));published_name=str(row[0] or "").strip()
+        return {"family":KOTAK_FAMILY,"status":"recovered","as_of":day,"plans":plans,"direct_ter":plans["Direct"]["ter"],"regular_ter":plans["Regular"]["ter"],"source":KOTAK_URL,"sha256":hashlib.sha256(body).hexdigest(),"identity":{"scheme_name":published_name,"nsdl_scheme_code":nsdl}}
     finally:book.close()
 
 
