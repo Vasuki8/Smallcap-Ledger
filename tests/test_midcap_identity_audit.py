@@ -52,6 +52,29 @@ class MidCapIdentityAuditTests(unittest.TestCase):
         self.assertFalse(result["mid_cap_import_ready"])
         self.assertEqual(result["unresolved_plan_option"][0]["code"],3)
 
+
+    def test_reviewed_motilal_codes_resolve_without_guessing(self):
+        expected={
+            127044:("Direct","IDCW"),
+            127042:("Direct","Growth"),
+            127040:("Regular","IDCW"),
+            127039:("Regular","Growth"),
+        }
+        rows=[
+            row(code,name="Motilal Oswal Midcap Fund",amc="Motilal Oswal Mutual Fund",plan="",option="")
+            for code in expected
+        ]
+        result=audit(preview(rows),[])
+        self.assertTrue(result["mid_cap_import_ready"])
+        self.assertEqual(result["unresolved_plan_option"],[])
+        actual={p["code"]:(p["plan"],p["option"]) for p in result["proposals"]}
+        self.assertEqual(actual,expected)
+        self.assertTrue(all(
+            r["method"]=="reviewed_first_party_code_mapping"
+            and r["evidence_url"].startswith("https://www.motilaloswalmf.com/")
+            for r in result["metadata_resolutions"]
+        ))
+
     def test_exact_code_metadata_can_resolve_missing_plan_option(self):
         candidate=row(4,name="Example Mid Cap Fund",amc="Example AMC",plan="",option="")
         def fake_fetch(url,**kwargs):
