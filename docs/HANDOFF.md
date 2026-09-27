@@ -4,6 +4,24 @@ Updated: 2026-09-27, after closing the actionable AMC communication-source queue
 
 ## Current backend state and next-task gate
 
+### Latest completed operational batch: current storage-health evidence
+
+PR #241 merged as commit \`6b6e0f5e60235fd02a0b439e383180973def32a9\`. Production status commit \`aa1c48575a2e8d9575f1e63ba03c24bf3f989b6c\` created \`deployment/storage-health.json\` at **2026-09-27T03:10:21Z**.
+
+The report is the current operational storage-health source. Historical \`docs/STORAGE-AUDIT.json\`, \`docs/STORAGE-VALIDATION.json\`, and \`deployment/storage-live-verification.json\` remain immutable migration/verification evidence from 2026-09-25 and should not be mistaken for current state.
+
+Current health:
+- SQLite integrity: **ok**
+- foreign-key violations: **0**
+- archive: **2,910 files / 2,498,478,753 bytes**
+- archive metadata-only files: **0**
+- retained binary state: **2,910 / 2,910**
+- Pages publication hard-budget headroom: **5,242,914 bytes**
+- safety checks: **all_archive_binaries_retained=true, publication_within_selection_limit=true, database_integrity_ok=true, foreign_keys_ok=true**
+- current coverage: **36/36 AUM, 36/36 fee, 36/36 TER, 36/36 BER, 35/36 portfolio present, 30 complete, 34 current, 30 current+complete, 36/36 benchmark identity**
+
+The publication selector intentionally packs close to its **245 MiB selection limit**; the separate 5 MiB reserve is the deployment safety margin. Do not add nested arbitrary reserves unless real artifact-overhead evidence shows the 5 MiB margin is insufficient.
+
 ### Latest completed operational batch: Pages publication-budget reserve
 
 PR #239 merged as commit \`30f41210944ae6aebc0238768ecd98c17b93b222\`. Production run \`36286920886\` passed source collection, archive repair, retention preparation, full regressions, static-site generation/validation, cumulative archive save and status recording.
