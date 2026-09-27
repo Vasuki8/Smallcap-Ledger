@@ -1,5 +1,76 @@
 # Smallcap Ledger backend handoff
 
+Updated: 2026-09-27, after closing the actionable AMC communication-source queue and verifying current core coverage.
+
+## Current backend state and next-task gate
+
+The latest production audit is the authority for the next pass. Do **not** resume the obsolete missing-AUM or communication-source priorities from older handoff sections below.
+
+### Communication coverage milestone closed
+
+PR #237 (\`77427c06f07c71b9881c9fba2c87671c3c6bd22d\`) replaced UTI's obsolete Angular-shell scraper with the reviewed first-party CMS endpoints. Production retained **6 UTI Market Insight / CIO Desk PDFs, all 6 archived, with 0 download/parser gaps**. Three records have explicit CMS publication dates; the other three deliberately keep \`published_at=null\`.
+
+PR #236 (\`8103e82c22d860b113d21bbc527f22ee31e97d06\`) records Union Mutual Fund's repeated production-runner connection refusal as an explicit first-party transport limitation. The official Research Notes source remains registered and visible; no document is fabricated or imported from a third party.
+
+Production audit built **2026-09-27T01:16:21Z** now has **zero actionable communication repair priorities**. Remaining communication gaps are explicit non-actionable limitations:
+- source/transport: TRUSTMF, Union
+- original archive access: Franklin India, Kotak, LIC MF, Samco
+
+### Core coverage is no longer an AUM/fee gap
+
+Latest \`COVERAGE-AS-OF.json\`:
+- funds: **36**
+- AUM: **36/36**
+- dated Direct fee: **36/36**
+- TER: **36/36**
+- base expense ratio: **36/36**
+- benchmark identity: **36/36**
+- portfolio present: **35/36**
+- complete portfolios: **30/36**
+- current portfolios: **34/36**
+- current + complete portfolios: **30/36**
+
+Therefore do **not** spend the next pass looking for the old 15 missing AUM funds. That backlog is closed.
+
+### Portfolio recovery queue: no actionable source repair today
+
+\`docs/PORTFOLIO-RECOVERY-QUEUE.json\` built **2026-09-27T01:16:20Z** contains 6 evidence-limited items and reports **actionable_now=0** / \`next_recovery_target=null\`.
+
+- Union: missing; retry only after first-party host transport changes or an exact attachment becomes reachable.
+- Bajaj Finserv: stale named-subset factsheet; retry only after a new usable first-party portfolio route/attachment appears.
+- Edelweiss: current named-subset factsheet; retry only after statutory portfolio transport exposes an exact monthly attachment.
+- Bandhan: current workbook contains a published \`<0.01%\`-style non-numeric weight; requires more precise AMC disclosure.
+- Sundaram: current workbook contains a written-off holding disclosed only as less than 0.01%; requires more precise AMC disclosure.
+- UTI: current workbook censors a tiny security weight / short-term-deposit exact NAV percentage; requires more precise AMC disclosure.
+
+Do not estimate censored weights or manufacture balancing positions to turn these partials into complete portfolios.
+
+### Performance/benchmark-series frontier is source-access constrained
+
+\`docs/PERFORMANCE-COVERAGE-AUDIT.json\` built **2026-09-27T01:16:21Z** reports:
+- growth plans: **72**
+- reported TRI ready: **52**
+- reported TRI series missing: **20**
+- retained Nifty Smallcap 250 TRI: **2005-04-01 → 2026-09-25, 5,330 observations, no >7-day gaps**
+- only repair priority: **BSE 250 SmallCap TRI**, affecting 20 growth plans / 10 fund families
+
+That BSE TRI priority is explicitly **actionable=false** because the reviewed first-party daily-history route is currently subscription-distributed. Do not substitute Nifty automatically for funds whose reported benchmark is BSE 250 SmallCap TRI, and do not use an unlicensed/third-party history merely to improve the coverage number.
+
+### Next backend action
+
+There is currently **no evidence-backed source-repair task that is actionable without a source/access change** across communications, portfolio recovery, or reported benchmark history.
+
+On the next pass:
+1. Re-read current \`main\`, this top handoff section, \`COVERAGE-AS-OF.json\`, \`PORTFOLIO-RECOVERY-QUEUE.json\`, and \`PERFORMANCE-COVERAGE-AUDIT.json\`.
+2. Check whether any watched first-party portfolio/source transport changed. Only resume a blocked recovery when the retained watch evidence says it changed.
+3. Check whether an authorized/licensed BSE 250 SmallCap TRI history source became available. Do not bypass subscription/licensing constraints.
+4. Otherwise focus on correctness/operational maintenance (freshness semantics, regression coverage, retention/storage health) rather than inventing new data-repair work.
+5. Continue backend/data work only unless UI changes are explicitly requested.
+
+Preserve exact source URL/hash/report date, units, nulls, conflicts and original archive bytes. Never invent an exact number, date, holding or benchmark series merely to improve completeness.
+
+---
+
 Updated: 2026-09-26, after PGIM India/quant first-party communication recovery and successful production deployment.
 
 ## Latest completed batch: recover PGIM India and quant AMC communications
