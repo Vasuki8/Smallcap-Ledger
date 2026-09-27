@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-27T12:07:56+00:00
+Prepared: 2026-09-27T15:21:44+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
@@ -55,7 +55,108 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 
 ## Source fetch errors
 
-- AMFI TER: Unexpected size of the AMFI TER feed
+- AMFI TER · Aditya Birla Sun Life Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Axis Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Bandhan Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Bank of India Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Baroda BNP Paribas Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Canara Robeco Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · DSP Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Edelweiss Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Franklin Templeton Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · HDFC Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · HSBC Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Helios Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · ICICI Prudential Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · ITI Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Invesco Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · JM Financial Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Kotak Mahindra Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · LIC Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Mahindra Manulife Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Mirae Asset Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Motilal Oswal Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Nippon India Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · PGIM India Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · SBI Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Samco Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Sundaram Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Tata Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Taurus Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · The Wealth Company Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Trust Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · UTI Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Union Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · WhiteOak Capital Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · quant Mutual Fund · 09-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Aditya Birla Sun Life Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Axis Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Bandhan Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Bank of India Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Baroda BNP Paribas Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Canara Robeco Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · DSP Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Edelweiss Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Franklin Templeton Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · HDFC Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · HSBC Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Helios Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · ICICI Prudential Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · ITI Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Invesco Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · JM Financial Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Kotak Mahindra Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · LIC Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Mahindra Manulife Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Mirae Asset Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Motilal Oswal Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Nippon India Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · PGIM India Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · SBI Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Samco Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Sundaram Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Tata Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Taurus Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · The Wealth Company Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Trust Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · UTI Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Union Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · WhiteOak Capital Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · quant Mutual Fund · 08-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Aditya Birla Sun Life Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Axis Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Bandhan Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Bank of India Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Baroda BNP Paribas Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Canara Robeco Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · DSP Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Edelweiss Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Franklin Templeton Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · HDFC Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · HSBC Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Helios Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · ICICI Prudential Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · ITI Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Invesco Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · JM Financial Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Kotak Mahindra Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · LIC Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Mahindra Manulife Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Mirae Asset Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Motilal Oswal Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Nippon India Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · PGIM India Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · SBI Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Samco Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Sundaram Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Tata Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Taurus Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · The Wealth Company Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Trust Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · UTI Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · Union Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · WhiteOak Capital Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
+- AMFI TER · quant Mutual Fund · 07-2026: AMFI AMC TER response exceeded one bounded page
 
 ## Notes
 

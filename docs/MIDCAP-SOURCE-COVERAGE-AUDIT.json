@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-27T12:07:56+00:00",
+  "built_at": "2026-09-27T15:21:44+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -54,12 +54,465 @@
       },
       "sha256": "db77de6fc9f8684f21d9762a22736466d7edac127c646ca34e627c71bf5bac1b",
       "matched_families": 34
+    },
+    {
+      "kind": "ter_mutual_fund_selector",
+      "source": "https://www.amfiindia.com/api/populate-mf",
+      "sha256": "0877d807460d2d24e1f53718d6ac83de56cdee50641839a7debb0709579dac69",
+      "amcs": 57
+    },
+    {
+      "kind": "ter_mid_cap_contract_summary",
+      "queried_amcs": 34,
+      "target_families": 34,
+      "matched_families": 0,
+      "unmatched_families": [
+        "Aditya Birla Sun Life Midcap Fund",
+        "Axis Midcap Fund",
+        "BANDHAN MID CAP FUND",
+        "BANK OF INDIA MID CAP FUND",
+        "Baroda BNP Paribas Mid Cap Fund",
+        "Canara Robeco Mid Cap Fund",
+        "DSP Midcap Fund",
+        "Edelweiss Mid Cap Fund",
+        "Franklin India Mid Cap Fund",
+        "HDFC Mid Cap Fund",
+        "HSBC Midcap Fund",
+        "Helios Mid Cap Fund",
+        "ICICI Prudential Mid Cap Fund",
+        "ITI Mid Cap Fund",
+        "Invesco India Mid Cap Fund",
+        "JM Mid Cap Fund",
+        "Kotak Mid Cap Fund",
+        "LIC MF Mid Cap Fund",
+        "Mahindra Manulife Mid Cap Fund",
+        "Mirae Asset Midcap Fund",
+        "Motilal Oswal Midcap Fund",
+        "Nippon India Growth Mid Cap Fund",
+        "PGIM India Midcap Fund",
+        "Quant Mid Cap Fund",
+        "SBI MIDCAP FUND",
+        "Samco Mid Cap Fund",
+        "Sundaram Mid Cap Fund",
+        "TRUSTMF MID CAP FUND",
+        "Tata Mid Cap Fund",
+        "Taurus Mid Cap Fund",
+        "The Wealth Company Mid Cap Fund",
+        "UTI - Mid Cap Fund",
+        "Union Midcap Fund",
+        "WhiteOak Capital Mid Cap Fund"
+      ],
+      "contract": "one AMC x month; strCat=-1; strType=1; page=1; pageSize=10000"
     }
   ],
   "source_errors": [
     {
-      "source": "AMFI TER",
-      "error": "Unexpected size of the AMFI TER feed"
+      "source": "AMFI TER · Aditya Birla Sun Life Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Axis Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Bandhan Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Bank of India Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Baroda BNP Paribas Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Canara Robeco Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · DSP Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Edelweiss Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Franklin Templeton Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · HDFC Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · HSBC Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Helios Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · ICICI Prudential Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · ITI Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Invesco Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · JM Financial Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Kotak Mahindra Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · LIC Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Mahindra Manulife Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Mirae Asset Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Motilal Oswal Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Nippon India Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · PGIM India Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · SBI Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Samco Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Sundaram Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Tata Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Taurus Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · The Wealth Company Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Trust Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · UTI Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Union Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · WhiteOak Capital Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · quant Mutual Fund · 09-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Aditya Birla Sun Life Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Axis Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Bandhan Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Bank of India Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Baroda BNP Paribas Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Canara Robeco Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · DSP Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Edelweiss Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Franklin Templeton Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · HDFC Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · HSBC Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Helios Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · ICICI Prudential Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · ITI Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Invesco Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · JM Financial Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Kotak Mahindra Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · LIC Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Mahindra Manulife Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Mirae Asset Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Motilal Oswal Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Nippon India Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · PGIM India Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · SBI Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Samco Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Sundaram Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Tata Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Taurus Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · The Wealth Company Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Trust Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · UTI Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Union Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · WhiteOak Capital Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · quant Mutual Fund · 08-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Aditya Birla Sun Life Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Axis Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Bandhan Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Bank of India Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Baroda BNP Paribas Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Canara Robeco Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · DSP Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Edelweiss Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Franklin Templeton Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · HDFC Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · HSBC Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Helios Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · ICICI Prudential Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · ITI Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Invesco Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · JM Financial Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Kotak Mahindra Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · LIC Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Mahindra Manulife Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Mirae Asset Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Motilal Oswal Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Nippon India Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · PGIM India Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · SBI Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Samco Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Sundaram Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Tata Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Taurus Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · The Wealth Company Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Trust Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · UTI Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · Union Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · WhiteOak Capital Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
+    },
+    {
+      "source": "AMFI TER · quant Mutual Fund · 07-2026",
+      "error": "AMFI AMC TER response exceeded one bounded page"
     }
   ],
   "unmatched_mid_cap_aum_names": [],
@@ -3260,7 +3713,7 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-27T12:02:19+00:00"
+          "last_checked": "2026-09-27T12:09:04+00:00"
         }
       ],
       "coverage_gaps": [
@@ -3319,7 +3772,7 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-27T12:02:22+00:00"
+          "last_checked": "2026-09-27T12:09:07+00:00"
         }
       ],
       "coverage_gaps": [
