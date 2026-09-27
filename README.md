@@ -502,34 +502,33 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 - Safety result remains explicit: **live_writes=0** and **public_export_enabled=false**. No Mid Cap pages, AUM/TER, benchmark, portfolio, or public claims have been enabled.
 - Machine-readable evidence is retained in `deployment/midcap-history-status.json`.
 
-### Latest completed category-expansion batch — first-party Mid Cap TER recovery
+### Latest completed category-expansion batch — Mid Cap TER recovery and final blockers
 
-**Staged Mid Cap Direct TER readiness is now 28 / 34 and remains non-public.**
+**Staged Mid Cap Direct TER readiness is now 31 / 34 and remains non-public.**
 
-- PR **#259** added a read-only first-party TER recovery batch for seven AMCs whose existing Small Cap collectors already had verified TER transports. It reuses transport/schema logic only; it does **not** reuse Small Cap values.
-- Production run **#615** passed the full release gate and Pages deployment.
-- All **7 / 7** targeted Mid Cap families were recovered with exact first-party scheme identity and a complete Regular/Direct TER pair:
-  - Canara Robeco Mid Cap Fund — Direct **0.86%**, as of **2026-09-27**
-  - HSBC Midcap Fund — Direct **1.15%**, as of **2026-09-24**
-  - ICICI Prudential Mid Cap Fund — Direct **1.09%**, as of **2026-09-24**
-  - Invesco India Mid Cap Fund — Direct **0.78%**, as of **2026-09-24**
-  - JM Mid Cap Fund — Direct **0.95%**, as of **2026-09-27**
-  - Mahindra Manulife Mid Cap Fund — Direct **0.75%**, as of **2026-09-25**
-  - Mirae Asset Midcap Fund — Direct **0.96%**, as of **2026-09-27**
-- Source evidence includes exact scheme names plus AMC scheme/NSDL codes where published. No first-party target failed.
-- PR **#260** reconciles the original AMFI audit with the verified first-party batch. Production run **#616** passed and now reports **28 / 34 Direct TER coverage**: **21 via AMFI + 7 via first-party AMC sources**.
-- The only remaining TER gaps are **Bandhan, Bank of India, Helios, Kotak, The Wealth Company and WhiteOak Capital Mid Cap funds**.
+- PR **#259** recovered seven exact first-party Mid Cap TER families; PR **#260** reconciled those with the original AMFI evidence.
+- PR **#264** added a second read-only first-party batch. Production recovered:
+  - **Helios Mid Cap Fund** — Direct **0.97%**, Regular **2.43%**, as of **2026-09-27**, NSDL `HELI/O/E/MIF/24/08/0006`.
+  - **The Wealth Company Mid Cap Fund** — Direct **3.01%**, Regular **5.01%**, as of **2026-09-27**, NSDL `TWCF/O/E/MIF/26/06/0012`.
+- PR **#265** fixed Kotak workbook identity normalization while still requiring a single exact NSDL code. Production then recovered **Kotak Mid Cap Fund** — Direct **0.5352%**, Regular **1.4952%**, as of **2026-09-26**, NSDL `KOTM/O/E/MIF/06/09/0018`.
+- The reconciled readiness view now reports **31 / 34 Direct TER coverage**: **21 via AMFI + 10 via exact first-party AMC evidence**.
+- Production runs for the second TER batch, Kotak identity fix, and the final targeted source diagnostics all passed the full release gate and Pages deployment.
+- Only **three TER gaps remain**:
+  - **Bandhan Mid Cap Fund** — the exact first-party CMS/WordPress search endpoints return **401 Unauthorized** from the GitHub runner; the public disclosure pages expose no usable server-side TER asset.
+  - **Bank of India Mid Cap Fund** — the official product page exposes a September 2026 TER file URL, but the downloaded workbook is structurally unusable for exact row extraction in the current runner, while the current product page sends users back to the TER portal. Do not infer from the stale/invalid workbook.
+  - **WhiteOak Capital Mid Cap Fund** — the exact published `/WOC/regulatory-disclosures/total-expense-ratio` routes return **403 Forbidden** from the GitHub runner; the alternate historical hostname does not resolve.
+- These three are now explicit **source-access/transport blockers**, not unresolved scheme-identity gaps. Do not weaken source checks or substitute third-party TER data merely to reach 34 / 34.
 - Exact retained Mid Cap benchmark identity remains **0 / 34** and current Mid Cap portfolio evidence remains **0 / 34**.
 - Safety remains unchanged: **production_writes=0**, **public_export_enabled=false**, registry stage remains `staged`, and `mid_cap_launch_ready=false`.
-- Evidence is retained in `docs/MIDCAP-TER-FIRST-PARTY-BATCH1.{json,md}` and the reconciled readiness view in `docs/MIDCAP-TER-READINESS.{json,md}`.
+- Evidence is retained in `docs/MIDCAP-TER-FIRST-PARTY-BATCH1.{json,md}`, `docs/MIDCAP-TER-FIRST-PARTY-BATCH2.{json,md}`, `docs/MIDCAP-TER-READINESS.{json,md}`, and `deployment/midcap-ter-final3-targeted.json`.
 
 ### Recommended next backend work
 
-1. **Recover first-party TER for the final six Mid Cap gaps:** Bandhan, Bank of India, Helios, Kotak, The Wealth Company and WhiteOak Capital. Require exact Mid Cap scheme identity and a current Regular/Direct pair before counting coverage.
-2. Prioritize **WhiteOak Capital** source registration/discovery because it is both a remaining TER gap and one of the two new AMC families not already represented in the Small Cap collector set.
-3. After TER recovery, add Mid Cap-specific first-party source discovery for **reported benchmark identity and current monthly portfolios**. Reuse shared-AMC transport/parsers only after exact Mid Cap scheme identity is proven; do not reuse Small Cap records.
-4. Add/verify source registration for **Taurus Mutual Fund** and **WhiteOak Capital Mutual Fund** before claiming category-wide document coverage.
-5. **Quant Small Cap Fund remains the next Small Cap freshness repair** once this Mid Cap readiness slice is complete; then SBI. Bajaj remains a confirmed first-party access blocker.
+1. **Move the Mid Cap readiness program to reported benchmark identity and current monthly portfolio evidence.** TER is now 31 / 34 with the final three blocked by first-party transport/access issues; do not spend another cycle repeatedly probing the same blocked TER routes without a genuinely new official path.
+2. Start with AMCs where the existing Small Cap collectors already have proven factsheet/portfolio transports, but require exact Mid Cap scheme identity before retaining any benchmark or holding. Do not reuse Small Cap benchmark/portfolio records.
+3. Add/verify source registration for **Taurus Mutual Fund** and **WhiteOak Capital Mutual Fund** before claiming category-wide document coverage. WhiteOak remains an access blocker and should stay explicitly marked as such.
+4. Keep **Bandhan, Bank of India, and WhiteOak TER** on source-access watch only. Revisit them if the AMC exposes a new downloadable workbook/API route or the GitHub runner gains access.
+5. **Quant Small Cap Fund remains the next Small Cap freshness repair** once the current Mid Cap readiness slice is complete; then SBI. Bajaj remains a confirmed first-party access blocker.
 6. Mid Cap remains `stage=staged` and `public_export_enabled=false` until AUM, Direct TER, reported benchmark identity and current portfolio evidence reach an explicitly reviewed launch threshold and the public exporter/API/UI are deliberately made category-aware.
 7. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
