@@ -17,7 +17,27 @@ from tracker import db
 from tracker.app import funds,fund,holdings,documents,status
 
 PUBLIC_PUBLICATION_BUDGET=250*1024*1024
+# Keep deterministic headroom for publication metadata, routing files and archive
+# growth between selection and artifact packaging. This changes only what Pages
+# materializes; cumulative originals remain retained in source packs.
+PUBLIC_PUBLICATION_RESERVE=5*1024*1024
+PUBLIC_PUBLICATION_SELECTION_LIMIT=PUBLIC_PUBLICATION_BUDGET-PUBLIC_PUBLICATION_RESERVE
 SITE_SIZE_LIMIT=400*1024*1024
+
+
+def select_publication_candidates(candidates,limit=PUBLIC_PUBLICATION_SELECTION_LIMIT):
+    selected=set();total=0
+    for item in sorted(candidates,key=lambda x:(x['priority'],x['date']),reverse=True):
+        h=item['hash']
+        if h in selected:
+            item['doc']['versions']=[item['version']]
+            continue
+        size=max(0,int(item.get('bytes') or 0))
+        if total+size>limit:
+            continue
+        selected.add(h);total+=size
+        item['doc']['versions']=[item['version']]
+    return selected,total
 
 
 def export(output:Path,repository=''):
@@ -68,17 +88,7 @@ def export(output:Path,repository=''):
                         'doc':d,'version':latest})
             communication_payloads.append((family_id,docs))
             csv_file(Path('downloads')/f'metrics-{family_id}.csv',detail['metric_history'],['metric','plan','as_of','value','unit','source','observed_at'])
-    published_publication_bytes=0
-    for item in sorted(publication_candidates,key=lambda x:(x['priority'],x['date']),reverse=True):
-        h=item['hash']
-        if h in hashes:
-            item['doc']['versions']=[item['version']]
-            continue
-        size=max(0,item['bytes'])
-        if published_publication_bytes+size>PUBLIC_PUBLICATION_BUDGET:
-            continue
-        hashes.add(h);published_publication_bytes+=size
-        item['doc']['versions']=[item['version']]
+    hashes,published_publication_bytes=select_publication_candidates(publication_candidates)
     for family_id,docs in communication_payloads:
         write(Path('communications')/f'{family_id}.json',docs)
     for sid in snapshot_ids:
@@ -118,6 +128,8 @@ def export(output:Path,repository=''):
     report['counts']['fee_funds']=len({s['family'] for s in index['funds'] if s.get('available_expenses') or any(s['metrics'].get(k) for k in ('ter','ter_observed','base_expense_ratio','expense_ratio'))})
     report['counts']['latest_nav_date']=db.one('SELECT MAX(date) last FROM nav')['last']
     report['hosting']['publication_file_budget_bytes']=PUBLIC_PUBLICATION_BUDGET
+    report['hosting']['publication_file_reserve_bytes']=PUBLIC_PUBLICATION_RESERVE
+    report['hosting']['publication_selection_limit_bytes']=PUBLIC_PUBLICATION_SELECTION_LIMIT
     report['hosting']['publication_files_included']=len(hashes)
     report['hosting']['publication_bytes_included']=published_publication_bytes
     write('status.json',report)
