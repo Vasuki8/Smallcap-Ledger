@@ -62,7 +62,7 @@ def stage(audit,preview):
                   isin=excluded.isin,reinvestment_isin=excluded.reinvestment_isin,
                   source_sha256=excluded.source_sha256,source_line=excluded.source_line,
                   last_seen=excluded.last_seen,metadata_json=excluded.metadata_json""",
-                (code,"mid-cap",proposal["family"],proposal["family"],proposal["amc"],
+                (code,"mid-cap",row["name"],proposal["family"],proposal["amc"],
                  proposal["plan"],proposal["option"],proposal.get("isin"),
                  proposal.get("reinvestment_isin"),source_hash,proposal.get("source_line"),
                  observed,observed,json.dumps(metadata,separators=(",",":"))))
