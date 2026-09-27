@@ -1,18 +1,18 @@
 {
-  "reviewed_at": "2026-09-26T23:41:48+00:00",
+  "reviewed_at": "2026-09-27T01:11:56+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
-  "new_hashes_reviewed": 385,
+  "new_hashes_reviewed": 391,
   "binary_state_policy": "all_retained",
   "files_deleted": 0,
   "bytes_deleted": 0,
   "classifications": {
-    "retain_evidence": 168,
+    "retain_evidence": 174,
     "retain_latest_or_review": 212,
     "link_only_candidate": 5
   },
   "classification_bytes": {
-    "retain_evidence": 237762970,
+    "retain_evidence": 240822559,
     "retain_latest_or_review": 91285150,
     "link_only_candidate": 3851376
   },
@@ -526,6 +526,30 @@
       ],
       "urls": [
         "https://cobranding.bajajamc.com/Home/dynamicvideoslide/469/6jfeX8S/454"
+      ]
+    },
+    {
+      "hash": "11ba9939a2ef4b0fbc391cd2c7c1d23744109572cef974d2e1ed74b4e11853bb",
+      "bytes": 991988,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-27T01:10:34+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_equity_sep_2026_fp_revised.pdf?VersionId=S1xux1mcpJMEbfts1he1UWsTUfxdNrtz",
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_equity_sep_2026_fp_revised.pdf?VersionId=S1xux1mcpJMEbfts1he1UWsTUfxdNrtz"
+      ],
+      "urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_equity_sep_2026_fp_revised.pdf?VersionId=S1xux1mcpJMEbfts1he1UWsTUfxdNrtz"
       ]
     },
     {
@@ -5024,6 +5048,30 @@
       ]
     },
     {
+      "hash": "8203a92c8370f4f6ff5eb014edf35cf85ee4c21aa9c405435cd45d75644ae95f",
+      "bytes": 265953,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-27T01:10:41+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/from_the_leadership_desk_august_2026.pdf?VersionId=VOG1i4_Ys3LEZ6IYxTLa.fFSC5L7wHsO",
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/from_the_leadership_desk_august_2026.pdf?VersionId=VOG1i4_Ys3LEZ6IYxTLa.fFSC5L7wHsO"
+      ],
+      "urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/from_the_leadership_desk_august_2026.pdf?VersionId=VOG1i4_Ys3LEZ6IYxTLa.fFSC5L7wHsO"
+      ]
+    },
+    {
       "hash": "82a121fdec59cfa0e00e6c9c35de296c402bff2785d958cd5e569224e95f6833",
       "bytes": 259621,
       "media_type": "text/html; charset=utf-8",
@@ -5215,6 +5263,30 @@
       ],
       "urls": [
         "https://www.wealthcompanyamc.in/literature-forms/portfolio-documents/notice-for-declaration-for-portfolio-disclosures/"
+      ]
+    },
+    {
+      "hash": "87757d9447cf90c60c051fab6302423f1520fe31a465e79129a732c2bfa96d77",
+      "bytes": 549784,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-27T01:10:35+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_fixed_income_sep_26.pdf?VersionId=ZGZWaFJVeZdaVU4_uahOsGSB2twrEbg1",
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_fixed_income_sep_26.pdf?VersionId=ZGZWaFJVeZdaVU4_uahOsGSB2twrEbg1"
+      ],
+      "urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/market_insight_fixed_income_sep_26.pdf?VersionId=ZGZWaFJVeZdaVU4_uahOsGSB2twrEbg1"
       ]
     },
     {
@@ -5748,6 +5820,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_September2025_Samco_ELSS_Tax_Saver_Fund_1760012154.xlsx"
+      ]
+    },
+    {
+      "hash": "9935ed6f1f3242f9aef4223bf893ff34d8e8c9eba0f8e61e77f43f33aa563abc",
+      "bytes": 242525,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-27T01:10:42+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-07/from_the_leadership_desk_july_2026.pdf?VersionId=1czc5bYuSkhvF4UjA2rtSZXCqFpNA_E2",
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-07/from_the_leadership_desk_july_2026.pdf?VersionId=1czc5bYuSkhvF4UjA2rtSZXCqFpNA_E2"
+      ],
+      "urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-07/from_the_leadership_desk_july_2026.pdf?VersionId=1czc5bYuSkhvF4UjA2rtSZXCqFpNA_E2"
       ]
     },
     {
@@ -8006,6 +8102,30 @@
       ]
     },
     {
+      "hash": "d0d42cebeef9d793bf4d56807c0b39ef7789cf71b4c03f259a54c619b4835fab",
+      "bytes": 281580,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-27T01:10:39+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/from_the_leadership_desk_september_2026_revised.pdf?VersionId=AVsYBQO9j3lc4LOasRFGrw6M.AChs3UT",
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/from_the_leadership_desk_september_2026_revised.pdf?VersionId=AVsYBQO9j3lc4LOasRFGrw6M.AChs3UT"
+      ],
+      "urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/from_the_leadership_desk_september_2026_revised.pdf?VersionId=AVsYBQO9j3lc4LOasRFGrw6M.AChs3UT"
+      ]
+    },
+    {
       "hash": "d153db0c5b88f4e887601042f14c6a471f2b81ed3bce7c5a31de148d03a4738c",
       "bytes": 208541,
       "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -8028,6 +8148,30 @@
       ],
       "urls": [
         "https://www.samcomf.com/amc-document-download/IN_MF_MONTHLY_PORTFOLIO_July2025_SamcoLargeMidCapFund_1754647504.xlsx"
+      ]
+    },
+    {
+      "hash": "d2684836751ef645f883e5fdd3c03badb292d557cea8532276276dd7826b4b09",
+      "bytes": 727759,
+      "media_type": "application/pdf",
+      "first_seen": "2026-09-27T01:10:37+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "retain_evidence",
+      "binary_state_after": "retained",
+      "primary_url": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/market_insight_fixed_income_aug_26.pdf?VersionId=D0l13Q4a9BurDvc6KZVxnlZP.DsAgT8t",
+      "host": "d3ce1o48hc5oli.cloudfront.net",
+      "kind": "publication_or_data_file",
+      "reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "evidence_reasons": [
+        "dated_or_narrative_amc_publication"
+      ],
+      "latest_for_urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/market_insight_fixed_income_aug_26.pdf?VersionId=D0l13Q4a9BurDvc6KZVxnlZP.DsAgT8t"
+      ],
+      "urls": [
+        "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-08/market_insight_fixed_income_aug_26.pdf?VersionId=D0l13Q4a9BurDvc6KZVxnlZP.DsAgT8t"
       ]
     },
     {

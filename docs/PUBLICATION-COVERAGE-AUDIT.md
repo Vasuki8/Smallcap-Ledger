@@ -1,29 +1,29 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-26T23:42:32+00:00
+Prepared: 2026-09-27T01:12:44+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
 ## Summary
 
-- Funds with at least one retained AMC communication: **33 / 36**.
-- Funds with no retained AMC communication: **3**.
-- Retained communication documents: **235**; archived originals: **218**.
-- Market/newsletter/CIO/product-view documents: **219**; letters to unitholders: **16**.
-- Communication documents with an explicit published date: **57**.
+- Funds with at least one retained AMC communication: **34 / 36**.
+- Funds with no retained AMC communication: **2**.
+- Retained communication documents: **241**; archived originals: **224**.
+- Market/newsletter/CIO/product-view documents: **225**; letters to unitholders: **16**.
+- Communication documents with an explicit published date: **60**.
 - Funds with a registered communication-oriented source page: **29**.
 
 ## Repair priorities
 
 | Priority | Repair | Actionable | Affected funds | Reason |
 | ---: | --- | --- | ---: | --- |
-| 1 | review_registered_communication_sources | yes | 2 | A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund. |
+| 1 | review_registered_communication_sources | yes | 1 | A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund. |
 | 2 | documented_communication_source_limitation | no | 1 | The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears. |
 | 3 | documented_communication_archive_limitation | no | 4 | The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure. |
 
 ### Affected funds
 
-- **review_registered_communication_sources:** UTI Small Cap Fund, Union Small Cap Fund
+- **review_registered_communication_sources:** Union Small Cap Fund
 - **documented_communication_source_limitation:** Trustmf Small Cap Fund
 - **documented_communication_archive_limitation:** Franklin India Small Cap Fund, Kotak Small Cap Fund, LIC Mf Small Cap Fund, Samco Small Cap Fund
 
@@ -65,7 +65,7 @@ Prepared: 2026-09-26T23:42:32+00:00
 | Tata Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | The Wealth Company Small Cap Fund | 5 | 5 | 0 | 5 | 5 | 2026-04-30 | 1 | none |
 | Trustmf Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected, communication_source_limitation |
-| UTI Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected |
+| UTI Small Cap Fund | 6 | 6 | 0 | 6 | 3 | 2026-09-10 | 1 | publication_date_missing |
 | Union Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected |
 
 ## Notes

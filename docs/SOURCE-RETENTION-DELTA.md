@@ -1,11 +1,11 @@
 # Source-retention post-audit delta review
 
-Reviewed **385** hashes added after the original audited inventory.
+Reviewed **391** hashes added after the original audited inventory.
 **Every binary remains retained. Deleted files/bytes: 0 / 0.**
 
 | Classification | Files | Raw bytes |
 | --- | ---: | ---: |
-| retain_evidence | 168 | 237,762,970 |
+| retain_evidence | 174 | 240,822,559 |
 | retain_latest_or_review | 212 | 91,285,150 |
 | link_only_candidate | 5 | 3,851,376 |
 | unclassified | 0 | 0 |

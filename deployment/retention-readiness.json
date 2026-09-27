@@ -1,26 +1,26 @@
 {
-  "prepared_at": "2026-09-26T23:41:48+00:00",
+  "prepared_at": "2026-09-27T01:11:56+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
   "historical_link_only_candidates": 700,
   "historical_candidates_strengthened_by_current_scan": 4,
-  "post_audit_hashes_reviewed": 385,
+  "post_audit_hashes_reviewed": 391,
   "post_audit_delta": {
-    "reviewed_at": "2026-09-26T23:41:48+00:00",
+    "reviewed_at": "2026-09-27T01:11:56+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
-    "new_hashes_reviewed": 385,
+    "new_hashes_reviewed": 391,
     "binary_state_policy": "all_retained",
     "files_deleted": 0,
     "bytes_deleted": 0,
     "classifications": {
-      "retain_evidence": 168,
+      "retain_evidence": 174,
       "retain_latest_or_review": 212,
       "link_only_candidate": 5
     },
     "classification_bytes": {
-      "retain_evidence": 237762970,
+      "retain_evidence": 240822559,
       "retain_latest_or_review": 91285150,
       "link_only_candidate": 3851376
     },
@@ -29,7 +29,7 @@
     "migration_set_policy": "delta_not_merged_into_approved_695_hash_proposal"
   },
   "current_dependency_scan_missing_hashes": 0,
-  "current_archive_hashes": 2904,
+  "current_archive_hashes": 2910,
   "new_unclassified_hashes": 0,
   "retention_groups": [
     {
@@ -41,8 +41,8 @@
     {
       "classification": "retain_evidence",
       "binary_state": "retained",
-      "files": 1156,
-      "bytes": 1529921234
+      "files": 1162,
+      "bytes": 1532980823
     },
     {
       "classification": "retain_latest_or_review",
@@ -52,11 +52,11 @@
     }
   ],
   "binary_states": {
-    "retained": 2904
+    "retained": 2910
   },
   "classifications": {
     "retain_latest_or_review": 1047,
-    "retain_evidence": 1156,
+    "retain_evidence": 1162,
     "link_only_candidate": 701
   },
   "protected_archive_metadata_sha256_before": "47b10cbf4ee07427db21adc6d24b1447dcea3747f5d6fad2cea51ce5b3d94f39",
@@ -65,8 +65,8 @@
   "non_retention_table_fingerprints_unchanged": true,
   "non_retention_table_fingerprints": {
     "archives": {
-      "rows": 2904,
-      "sha256": "313d0b1ad1e974d27d0ce35b0157635331977235a2547986422fe30f787ea5fd"
+      "rows": 2910,
+      "sha256": "7197f17b54d2a24b10782b24f11e9ffe3b09a7232a548e9372eec8596c8916f8"
     },
     "benchmark": {
       "rows": 5330,
@@ -89,24 +89,24 @@
       "sha256": "9c16a5d2ddd7c93a3e877747a2d2b79e4fe884766ea65d48a784df795e77294d"
     },
     "document_versions": {
-      "rows": 2150,
-      "sha256": "4ac8a2b17224baec9aa6dea00cfece8bea1e6ae20121fd91750d182b9e601885"
+      "rows": 2156,
+      "sha256": "95cda3943dcadcd7f6a633abd0803f9491862ba2c965629eb30bcb293e62c015"
     },
     "documents": {
-      "rows": 2125,
-      "sha256": "18dc8abfe032269ddc9e29adfd316d35e00b6a62c1635a5bedb5eb8215e00894"
+      "rows": 2132,
+      "sha256": "112c6093b1dda8cc091c59372f69071834dbd32ada9e3b6c8fc24ad741878f2b"
     },
     "fetches": {
-      "rows": 8537,
-      "sha256": "35c412f64b11082098b90974c1a4415f2a31ca5263decc6692b7254e95298a0f"
+      "rows": 8543,
+      "sha256": "52632e9adb496b28f33f0adb5c0e317dac915ee378bb8583c0eb469f91911a64"
     },
     "holdings": {
       "rows": 8339,
       "sha256": "56043d8ee4da5f7a33742e19990ae78f14ed9bcb5e71c0a034dce4145aa1f52d"
     },
     "jobs": {
-      "rows": 912,
-      "sha256": "fea4ce9f91c3d83b1831b743c6254f3590377e985e24878a00de7f99d614df87"
+      "rows": 915,
+      "sha256": "34cf11cab33977272c08b5df62761de929b624d1137053b8f2788c4a29967512"
     },
     "metrics": {
       "rows": 26580,
@@ -134,13 +134,13 @@
     },
     "source_pages": {
       "rows": 352,
-      "sha256": "17c6003c0189893e85777a826ad840d1b1418cc2099157b965eab6fb94f0144f"
+      "sha256": "e123d0c6de989e3237cecc32adb4a767c4ee10f9388cbfe074bceaa75225099f"
     }
   },
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-26T23:04:06+00:00",
+  "active_checkpoint_created_at": "2026-09-26T23:42:29+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,

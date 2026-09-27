@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-26T23:42:04+00:00
+Prepared: 2026-09-27T01:12:12+00:00
 
 **36 funds, 143 NAV series, 281,584 NAV observations. Latest included NAV: 2026-09-25.**
 
@@ -44,14 +44,14 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 | Tata Small Cap Fund | ₹ 13,421.46 · 2026-09-24 | 0.51% TER · 2026-09-23 | 67 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 6 |
 | The Wealth Company Small Cap Fund | ₹ 142.07 · 2026-09-24 | 2.05% TER · 2026-09-25 | 59 positions · 2026-08-31 · complete · current | NIFTY SmallCap 250 TRI · 2026-09-25 | 27 |
 | Trustmf Small Cap Fund | ₹ 3,854.11 · 2026-09-24 | 1.54% TER · 2026-09-25 | 73 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2024-11-27 | 5 |
-| UTI Small Cap Fund | ₹ 5,342.58 · 2026-09-24 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2023-08-31 | 8 |
+| UTI Small Cap Fund | ₹ 5,342.58 · 2026-09-24 | 0.86% TER · 2026-07-31 | 108 positions · 2026-08-31 · partial · current | Nifty Smallcap 250 TRI · 2023-08-31 | 14 |
 | Union Small Cap Fund | ₹ 2,748.08 · 2026-09-24 | 1.08% TER · 2026-09-25 | Gap | BSE 250 SmallCap Index (TRI) · 2026-09-23 | 2 |
 
 ## Portfolio gap diagnosis
 
 | Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
 | --- | --- | --- | --- | --- |
-| Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Partial · 2026-09-26 · [Errno 111] Connection refused |
+| Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Partial · 2026-09-27 · [Errno 111] Connection refused |
 
 ## Notes
 
