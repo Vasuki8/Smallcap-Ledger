@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-09-27T18:00:48+00:00",
+  "built_at": "2026-09-27T20:49:09+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 27,
+    "direct_ter": 28,
     "amfi": 21,
-    "first_party_amc": 6,
-    "remaining": 7
+    "first_party_amc": 7,
+    "remaining": 6
   },
   "families": [
     {
@@ -151,13 +151,15 @@
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 1.09,
+      "regular_ter": 1.84,
+      "as_of": "2026-09-24",
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "ICICI Prudential Mid Cap Fund"
+      }
     },
     {
       "family": "ITI Mid Cap Fund",
@@ -408,7 +410,6 @@
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
     "Helios Mid Cap Fund",
-    "ICICI Prudential Mid Cap Fund",
     "Kotak Mid Cap Fund",
     "The Wealth Company Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
