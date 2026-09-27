@@ -51,6 +51,19 @@ def init(recover=False):
           code INTEGER NOT NULL, date TEXT NOT NULL, value REAL NOT NULL,
           source TEXT NOT NULL, observed_at TEXT NOT NULL,
           PRIMARY KEY(code,date,value,source)) WITHOUT ROWID;
+        CREATE TABLE IF NOT EXISTS category_staged_schemes(
+          code INTEGER PRIMARY KEY, category TEXT NOT NULL, name TEXT NOT NULL,
+          family TEXT NOT NULL, amc TEXT NOT NULL, plan TEXT NOT NULL, option TEXT NOT NULL,
+          isin TEXT, reinvestment_isin TEXT, source_sha256 TEXT NOT NULL,
+          source_line INTEGER, first_seen TEXT NOT NULL, last_seen TEXT NOT NULL,
+          metadata_json TEXT NOT NULL DEFAULT '{}');
+        CREATE INDEX IF NOT EXISTS idx_category_staged_family
+          ON category_staged_schemes(category,family);
+        CREATE TABLE IF NOT EXISTS category_staged_nav(
+          code INTEGER NOT NULL REFERENCES category_staged_schemes(code),
+          date TEXT NOT NULL, value REAL NOT NULL CHECK(value>0),
+          source_sha256 TEXT NOT NULL, observed_at TEXT NOT NULL,
+          PRIMARY KEY(code,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS archives(
           hash TEXT PRIMARY KEY, path TEXT NOT NULL, bytes INTEGER NOT NULL,
           media_type TEXT, first_seen TEXT NOT NULL);
