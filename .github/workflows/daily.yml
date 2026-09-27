@@ -77,6 +77,12 @@ jobs:
           --audit deployment/midcap-identity-audit.json
           --preview deployment/category-expansion-preview.json
           --report deployment/midcap-staging-status.json
+      - name: Backfill staged Mid Cap NAV history
+        timeout-minutes: 12
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/backfill_midcap_history.py
+          --report deployment/midcap-history-status.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:

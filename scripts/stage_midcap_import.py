@@ -66,12 +66,14 @@ def stage(audit,preview):
                  proposal["plan"],proposal["option"],proposal.get("isin"),
                  proposal.get("reinvestment_isin"),source_hash,proposal.get("source_line"),
                  observed,observed,json.dumps(metadata,separators=(",",":"))))
-            conn.execute("""INSERT INTO category_staged_nav(code,date,value,source_sha256,observed_at)
-                VALUES(?,?,?,?,?)
+            conn.execute("""INSERT INTO category_staged_nav(
+                code,date,value,source_url,source_sha256,observed_at)
+                VALUES(?,?,?,?,?,?)
                 ON CONFLICT(code,date) DO UPDATE SET
-                  value=excluded.value,source_sha256=excluded.source_sha256,
-                  observed_at=excluded.observed_at""",
-                (code,row["date"],float(nav),source_hash,observed))
+                  value=excluded.value,source_url=excluded.source_url,
+                  source_sha256=excluded.source_sha256,observed_at=excluded.observed_at""",
+                (code,row["date"],float(nav),row.get("source_url") or "https://www.amfiindia.com/spages/NAVAll.txt",
+                 source_hash,observed))
 
     staged=db.one("""SELECT COUNT(*) schemes,COUNT(DISTINCT family) families,
         COUNT(DISTINCT amc) amcs FROM category_staged_schemes WHERE category='mid-cap'""")
