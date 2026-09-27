@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-27T01:12:44+00:00
+Prepared: 2026-09-27T01:16:21+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -17,14 +17,12 @@ Prepared: 2026-09-27T01:12:44+00:00
 
 | Priority | Repair | Actionable | Affected funds | Reason |
 | ---: | --- | --- | ---: | --- |
-| 1 | review_registered_communication_sources | yes | 1 | A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund. |
-| 2 | documented_communication_source_limitation | no | 1 | The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears. |
+| 2 | documented_communication_source_limitation | no | 2 | A qualifying first-party communication source is known, but current collection is limited by an explicit source/transport constraint; retain the visible gap and retry only when that constraint changes. |
 | 3 | documented_communication_archive_limitation | no | 4 | The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure. |
 
 ### Affected funds
 
-- **review_registered_communication_sources:** Union Small Cap Fund
-- **documented_communication_source_limitation:** Trustmf Small Cap Fund
+- **documented_communication_source_limitation:** Trustmf Small Cap Fund, Union Small Cap Fund
 - **documented_communication_archive_limitation:** Franklin India Small Cap Fund, Kotak Small Cap Fund, LIC Mf Small Cap Fund, Samco Small Cap Fund
 
 ## Per-fund audit
@@ -66,7 +64,7 @@ Prepared: 2026-09-27T01:12:44+00:00
 | The Wealth Company Small Cap Fund | 5 | 5 | 0 | 5 | 5 | 2026-04-30 | 1 | none |
 | Trustmf Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected, communication_source_limitation |
 | UTI Small Cap Fund | 6 | 6 | 0 | 6 | 3 | 2026-09-10 | 1 | publication_date_missing |
-| Union Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected |
+| Union Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected, communication_source_limitation |
 
 ## Notes
 

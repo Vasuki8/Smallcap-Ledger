@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-27T01:12:44+00:00",
+  "built_at": "2026-09-27T01:16:21+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -22,29 +22,21 @@
     "issue_counts": {
       "communication_archive_limitation": 4,
       "communication_document_not_archived": 4,
-      "communication_source_limitation": 1,
+      "communication_source_limitation": 2,
       "no_amc_communications_collected": 2,
       "publication_date_missing": 26
     }
   },
   "repair_priorities": [
     {
-      "priority": 1,
-      "code": "review_registered_communication_sources",
-      "actionable": true,
-      "affected_funds": [
-        "Union Small Cap Fund"
-      ],
-      "reason": "A registered first-party communication/news source exists, but no AMC communication document has been retained for the fund."
-    },
-    {
       "priority": 2,
       "code": "documented_communication_source_limitation",
       "actionable": false,
       "affected_funds": [
-        "Trustmf Small Cap Fund"
+        "Trustmf Small Cap Fund",
+        "Union Small Cap Fund"
       ],
-      "reason": "The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears."
+      "reason": "A qualifying first-party communication source is known, but current collection is limited by an explicit source/transport constraint; retain the visible gap and retry only when that constraint changes."
     },
     {
       "priority": 3,
@@ -995,7 +987,7 @@
           "url": "https://www.utimf.com/learn",
           "label": "Leadership Desk / Market Insights",
           "status": "Partial",
-          "last_checked": "2026-09-27T01:10:42+00:00",
+          "last_checked": "2026-09-27T01:14:24+00:00",
           "detail": "6 UTI Market Insight/CIO Desk PDF(s) retained from first-party CMS; 0 download/parser gaps"
         }
       ],
@@ -1021,14 +1013,18 @@
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
           "status": "Partial",
-          "last_checked": "2026-09-27T01:10:30+00:00",
+          "last_checked": "2026-09-27T01:14:14+00:00",
           "detail": "[Errno 111] Connection refused"
         }
       ],
-      "source_limitation": null,
+      "source_limitation": {
+        "code": "first_party_host_connection_refused_from_runner",
+        "reason": "Union Mutual Fund publishes qualifying first-party Research Notes / State of the Market & Outlook documents, but repeated reviewed GitHub production-runner requests to unionmf.com fail at connection establishment. Keep the registered source visible and retry in future runs without treating the current transport failure as missing source discovery."
+      },
       "archive_limitation": null,
       "issues": [
-        "no_amc_communications_collected"
+        "no_amc_communications_collected",
+        "communication_source_limitation"
       ]
     }
   ],
