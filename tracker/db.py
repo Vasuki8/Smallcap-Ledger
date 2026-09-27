@@ -56,13 +56,14 @@ def init(recover=False):
           family TEXT NOT NULL, amc TEXT NOT NULL, plan TEXT NOT NULL, option TEXT NOT NULL,
           isin TEXT, reinvestment_isin TEXT, source_sha256 TEXT NOT NULL,
           source_line INTEGER, first_seen TEXT NOT NULL, last_seen TEXT NOT NULL,
+          history_checked TEXT, history_status TEXT, history_source TEXT,
           metadata_json TEXT NOT NULL DEFAULT '{}');
         CREATE INDEX IF NOT EXISTS idx_category_staged_family
           ON category_staged_schemes(category,family);
         CREATE TABLE IF NOT EXISTS category_staged_nav(
           code INTEGER NOT NULL REFERENCES category_staged_schemes(code),
           date TEXT NOT NULL, value REAL NOT NULL CHECK(value>0),
-          source_sha256 TEXT NOT NULL, observed_at TEXT NOT NULL,
+          source_url TEXT NOT NULL, source_sha256 TEXT NOT NULL, observed_at TEXT NOT NULL,
           PRIMARY KEY(code,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS archives(
           hash TEXT PRIMARY KEY, path TEXT NOT NULL, bytes INTEGER NOT NULL,
@@ -149,6 +150,7 @@ def init(recover=False):
             c.execute("UPDATE jobs SET status='interrupted',finished_at=?,detail='Application stopped before this update finished; the next run resumes retained history.' WHERE status='running'", (now(),))
     migrate_portfolio_completeness()
     migrate_holding_quantity()
+    migrate_category_staged_history_metadata()
     prune_portfolio_history()
 
 
@@ -177,6 +179,20 @@ def migrate_holding_quantity():
         columns={row['name'] for row in c.execute('PRAGMA table_info(holdings)').fetchall()}
         if 'quantity' not in columns:
             c.execute('ALTER TABLE holdings ADD COLUMN quantity REAL')
+
+
+def migrate_category_staged_history_metadata():
+    """Add staged history/provenance fields without touching live fund tables."""
+    with connect() as c:
+        scheme_columns={row['name'] for row in c.execute(
+            'PRAGMA table_info(category_staged_schemes)').fetchall()}
+        for name in ('history_checked','history_status','history_source'):
+            if name not in scheme_columns:
+                c.execute(f'ALTER TABLE category_staged_schemes ADD COLUMN {name} TEXT')
+        nav_columns={row['name'] for row in c.execute(
+            'PRAGMA table_info(category_staged_nav)').fetchall()}
+        if 'source_url' not in nav_columns:
+            c.execute("ALTER TABLE category_staged_nav ADD COLUMN source_url TEXT NOT NULL DEFAULT ''")
 
 
 def prune_portfolio_history(family=None):
