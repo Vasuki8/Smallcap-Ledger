@@ -114,6 +114,40 @@ class PublicationCoverageTests(unittest.TestCase):
             priorities["discover_first_party_communication_sources"]["affected_funds"],
         )
 
+    def test_registered_source_transport_limitation_is_non_actionable(self):
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (9809,"Union Direct Growth","Union Small Cap Fund",
+                 "Union Mutual Fund","Direct","Growth","test"),
+            )
+            c.execute(
+                """INSERT INTO source_pages(amc_match,url,label,status,detail)
+                   VALUES(?,?,?,?,?)""",
+                ("Union",
+                 "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
+                 "Research Notes / Market Outlook","Partial","[Errno 111] Connection refused"),
+            )
+        audit=report()
+        row=next(r for r in audit["funds"] if r["family"]=="Union Small Cap Fund")
+        self.assertEqual(row["communication_count"],0)
+        self.assertEqual(len(row["registered_communication_sources"]),1)
+        self.assertIn("communication_source_limitation",row["issues"])
+        self.assertEqual(
+            row["source_limitation"]["code"],
+            "first_party_host_connection_refused_from_runner",
+        )
+        priorities={p["code"]:p for p in audit["repair_priorities"]}
+        self.assertIn(
+            "Union Small Cap Fund",
+            priorities["documented_communication_source_limitation"]["affected_funds"],
+        )
+        self.assertNotIn(
+            "Union Small Cap Fund",
+            priorities.get("review_registered_communication_sources",{}).get("affected_funds",[]),
+        )
+
     def test_robots_blocked_archives_are_non_actionable_limitations(self):
         with db.connect() as c:
             c.executemany(

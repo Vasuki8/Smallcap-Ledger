@@ -24,6 +24,16 @@ _DOCUMENTED_SOURCE_LIMITATIONS={
             "communication coverage until a standalone AMC communication source is found."
         ),
     },
+    "Union Small Cap Fund":{
+        "code":"first_party_host_connection_refused_from_runner",
+        "reason":(
+            "Union Mutual Fund publishes qualifying first-party Research Notes / State of the "
+            "Market & Outlook documents, but repeated reviewed GitHub production-runner "
+            "requests to unionmf.com fail at connection establishment. Keep the registered "
+            "source visible and retry in future runs without treating the current transport "
+            "failure as missing source discovery."
+        ),
+    },
 }
 _DOCUMENTED_ARCHIVE_LIMITATIONS={
     "Franklin India Small Cap Fund":{
@@ -122,7 +132,9 @@ def report():
         funds.append(row)
 
     no_docs=[r for r in funds if "no_amc_communications_collected" in r["issues"]]
-    with_registered=[r for r in no_docs if r["registered_communication_sources"]]
+    with_registered=[r for r in no_docs
+                     if r["registered_communication_sources"]
+                     and not r.get("source_limitation")]
     without_registered=[r for r in no_docs
                         if not r["registered_communication_sources"]
                         and not r.get("source_limitation")]
@@ -156,7 +168,7 @@ def report():
             "code":"documented_communication_source_limitation",
             "actionable":False,
             "affected_funds":[r["family"] for r in limited],
-            "reason":"The AMC communication is currently identifiable only inside a source class intentionally excluded from communication coverage; retain the gap until a standalone first-party communication source appears.",
+            "reason":"A qualifying first-party communication source is known, but current collection is limited by an explicit source/transport constraint; retain the visible gap and retry only when that constraint changes.",
         })
     if archive_limited:
         priorities.append({
