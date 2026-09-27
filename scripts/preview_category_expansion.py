@@ -36,7 +36,11 @@ def build_preview(content,*,family_name,plan_type,option_type,legacy_parse_amfi,
     summaries={}
     for category in catalogue["category_ids"]:
         rows=[row for row in catalogue["rows"] if row["category"]==category]
-        groups={(row["amc"],family_name(row["name"])) for row in rows}
+        # AMFI already exposes Scheme Name separately from Plan/Option for the
+        # current feed. Preserve that official scheme identity instead of running
+        # the legacy option-stripping normalizer, which can truncate legitimate
+        # names such as "Nippon India Growth Mid Cap Fund".
+        groups={(row["amc"]," ".join(row["name"].split())) for row in rows}
         amcs=sorted({row["amc"] for row in rows})
         summaries[category]={
             "scheme_codes":len(rows),
