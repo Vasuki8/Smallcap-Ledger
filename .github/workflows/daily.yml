@@ -114,6 +114,13 @@ jobs:
           --first-party docs/MIDCAP-TER-FIRST-PARTY-BATCH1.json
           --json docs/MIDCAP-TER-READINESS.json
           --markdown docs/MIDCAP-TER-READINESS.md
+      - name: Diagnose final six Mid Cap TER sources
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/diagnose_midcap_ter_final6.py
+          --output deployment/midcap-ter-final6-source-diagnostic.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
