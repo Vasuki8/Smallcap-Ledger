@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-27T21:12:09+00:00",
+  "built_at": "2026-09-27T21:22:51+00:00",
   "staged_category": "mid-cap",
   "targets": 3,
-  "recovered": 2,
-  "failed": 1,
+  "recovered": 3,
+  "failed": 0,
   "results": [
     {
       "family": "Helios Mid Cap Fund",
@@ -35,6 +35,35 @@
       }
     },
     {
+      "family": "Kotak Mid Cap Fund",
+      "status": "recovered",
+      "as_of": "2026-09-26",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.16,
+          "brokerage": 0.0323,
+          "transaction_cost": 0.0029,
+          "statutory_levies": 0.3,
+          "ter": 1.4952
+        },
+        "Direct": {
+          "base_expense_ratio": 0.35,
+          "brokerage": 0.0323,
+          "transaction_cost": 0.0029,
+          "statutory_levies": 0.15,
+          "ter": 0.5352
+        }
+      },
+      "direct_ter": 0.5352,
+      "regular_ter": 1.4952,
+      "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
+      "sha256": "931d2f56e19b0211aea4a4015634276d9961bf5751bb3f2f8446c848824f6990",
+      "identity": {
+        "scheme_name": "Kotak Mid Cap Fund",
+        "nsdl_scheme_code": "KOTM/O/E/MIF/06/09/0018"
+      }
+    },
+    {
       "family": "The Wealth Company Mid Cap Fund",
       "status": "recovered",
       "as_of": "2026-09-27",
@@ -57,19 +86,14 @@
       "direct_ter": 3.0100000000000002,
       "regular_ter": 5.01,
       "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
-      "sha256": "5e2cd685ab5e0df609446e0c7bd7e31eb121162b9d669fcc0cd03fb9291198ce",
+      "sha256": "d39a79f84c650935031b0190d7c6a649bcb32ddb089e8d20305aebe20bd781c0",
       "identity": {
         "scheme_name": "THE WEALTH COMPANY MID  CAP FUND",
         "nsdl_scheme_code": "TWCF/O/E/MIF/26/06/0012"
       }
     }
   ],
-  "errors": [
-    {
-      "family": "Kotak Mid Cap Fund",
-      "error": "Kotak exact identity not unique"
-    }
-  ],
+  "errors": [],
   "production_writes": 0,
   "public_export_enabled": false
 }

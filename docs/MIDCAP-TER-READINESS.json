@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-09-27T21:11:20+00:00",
+  "built_at": "2026-09-27T21:22:03+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 30,
+    "direct_ter": 31,
     "amfi": 21,
-    "first_party_amc": 9,
-    "remaining": 4
+    "first_party_amc": 10,
+    "remaining": 3
   },
   "families": [
     {
@@ -207,13 +207,16 @@
     {
       "family": "Kotak Mid Cap Fund",
       "amc": "Kotak Mahindra Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 0.5352,
+      "regular_ter": 1.4952,
+      "as_of": "2026-09-26",
+      "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "Kotak Mid Cap Fund",
+        "nsdl_scheme_code": "KOTM/O/E/MIF/06/09/0018"
+      }
     },
     {
       "family": "LIC MF Mid Cap Fund",
@@ -415,7 +418,6 @@
   "remaining_families": [
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
-    "Kotak Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
   "production_writes": 0,
