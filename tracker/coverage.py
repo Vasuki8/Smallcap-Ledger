@@ -64,7 +64,7 @@ def _portfolio_gap_audit(family,amc,official_publications):
 
 def report():
     rows=[];expected=expected_portfolio_as_of()
-    for scheme in db.rows('SELECT DISTINCT family,amc FROM schemes ORDER BY family'):
+    for scheme in db.rows('SELECT DISTINCT family,amc,category FROM schemes ORDER BY category,family'):
         family=scheme['family'];row=dict(scheme)
         for key in ('aum','ter','ter_observed','base_expense_ratio','expense_ratio','benchmark'):
             if key in FEE_METRICS:
@@ -101,7 +101,15 @@ def report():
             reason=row['portfolio_gap']['reason'];gap_reasons[reason]=gap_reasons.get(reason,0)+1
         if row.get('portfolio_limitation'):
             code=row['portfolio_limitation']['code'];limitation_reasons[code]=limitation_reasons.get(code,0)+1
-    return {'built_at':db.now(),'portfolio_expected_as_of':expected,'funds':rows,'portfolio_gap_reasons':gap_reasons,
+    category_counts={}
+    for row in rows:
+        category=row.get('category') or 'unknown'
+        bucket=category_counts.setdefault(category,{'funds':0,'aum':0,'fee':0,'portfolio':0,'portfolio_complete':0,'portfolio_fresh':0,'benchmark_identity':0})
+        bucket['funds']+=1
+        bucket['aum']+=bool(row['aum']);bucket['fee']+=bool(row['fee']);bucket['portfolio']+=bool(row['portfolio'])
+        bucket['portfolio_complete']+=row['portfolio_complete'];bucket['portfolio_fresh']+=row['portfolio_fresh']
+        bucket['benchmark_identity']+=bool(row['benchmark'])
+    return {'built_at':db.now(),'portfolio_expected_as_of':expected,'funds':rows,'category_counts':category_counts,'portfolio_gap_reasons':gap_reasons,
             'portfolio_limitation_reasons':limitation_reasons,'counts':{
         'funds':len(rows),'aum':sum(bool(r['aum']) for r in rows),
         'fee':sum(bool(r['fee']) for r in rows),
