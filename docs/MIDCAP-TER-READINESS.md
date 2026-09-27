@@ -1,8 +1,8 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-27T20:59:35+00:00
+Prepared: 2026-09-27T21:11:20+00:00
 
-Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · remaining: **6**.
+Direct TER evidence: **30 / 34** · AMFI: **21** · first-party AMC: **9** · remaining: **4**.
 
 | Family | AMC | Direct TER | Regular TER | As of | Evidence | Source |
 | --- | --- | ---: | ---: | --- | --- | --- |
@@ -17,7 +17,7 @@ Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · re
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | 1.1500% | 1.9100% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | 0.7600% | 1.3100% | 2026-09-24 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-24 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
-| Helios Mid Cap Fund | Helios Mutual Fund | Gap | Gap | Gap | Gap | Gap |
+| Helios Mid Cap Fund | Helios Mutual Fund | 0.9700% | 2.4300% | 2026-09-27 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.0900% | 1.8400% | 2026-09-24 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-24 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
@@ -36,7 +36,7 @@ Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · re
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | 1.9000% | 3.5200% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Tata Mid Cap Fund | Tata Mutual Fund | 0.8600% | 2.0300% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Taurus Mid Cap Fund | Taurus Mutual Fund | 2.3600% | 2.8000% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | Gap | Gap | Gap | Gap | Gap |
+| The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | 3.0100% | 5.0100% | 2026-09-27 | first_party_amc | https://www.wealthcompanyamc.in/api/ter-values/year/2026/export |
 | UTI - Mid Cap Fund | UTI Mutual Fund | 1.2500% | 1.9500% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Union Midcap Fund | Union Mutual Fund | 1.1000% | 2.4100% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | Gap | Gap | Gap | Gap | Gap |
@@ -45,9 +45,7 @@ Direct TER evidence: **28 / 34** · AMFI: **21** · first-party AMC: **7** · re
 
 - BANDHAN MID CAP FUND
 - BANK OF INDIA MID CAP FUND
-- Helios Mid Cap Fund
 - Kotak Mid Cap Fund
-- The Wealth Company Mid Cap Fund
 - WhiteOak Capital Mid Cap Fund
 
 ## Notes

@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-09-27T20:59:35+00:00",
+  "built_at": "2026-09-27T21:11:20+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 28,
+    "direct_ter": 30,
     "amfi": 21,
-    "first_party_amc": 7,
-    "remaining": 6
+    "first_party_amc": 9,
+    "remaining": 4
   },
   "families": [
     {
@@ -140,13 +140,16 @@
     {
       "family": "Helios Mid Cap Fund",
       "amc": "Helios Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 0.97,
+      "regular_ter": 2.43,
+      "as_of": "2026-09-27",
+      "source": "https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "Helios Mid Cap Fund",
+        "nsdl_scheme_code": "HELI/O/E/MIF/24/08/0006"
+      }
     },
     {
       "family": "ICICI Prudential Mid Cap Fund",
@@ -364,13 +367,16 @@
     {
       "family": "The Wealth Company Mid Cap Fund",
       "amc": "The Wealth Company Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 3.0100000000000002,
+      "regular_ter": 5.01,
+      "as_of": "2026-09-27",
+      "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "THE WEALTH COMPANY MID  CAP FUND",
+        "nsdl_scheme_code": "TWCF/O/E/MIF/26/06/0012"
+      }
     },
     {
       "family": "UTI - Mid Cap Fund",
@@ -409,9 +415,7 @@
   "remaining_families": [
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
-    "Helios Mid Cap Fund",
     "Kotak Mid Cap Fund",
-    "The Wealth Company Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
   "production_writes": 0,

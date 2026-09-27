@@ -1,0 +1,75 @@
+{
+  "built_at": "2026-09-27T21:12:09+00:00",
+  "staged_category": "mid-cap",
+  "targets": 3,
+  "recovered": 2,
+  "failed": 1,
+  "results": [
+    {
+      "family": "Helios Mid Cap Fund",
+      "status": "recovered",
+      "as_of": "2026-09-27",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.72,
+          "brokerage": 0.13,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.57,
+          "ter": 2.43
+        },
+        "Direct": {
+          "base_expense_ratio": 0.49,
+          "brokerage": 0.13,
+          "transaction_cost": 0.01,
+          "statutory_levies": 0.34,
+          "ter": 0.97
+        }
+      },
+      "direct_ter": 0.97,
+      "regular_ter": 2.43,
+      "source": "https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls",
+      "sha256": "f20897ece862914d89e0988d2ede3448e5a7c6c4a8e8b207af8b8fa9d142d4a2",
+      "identity": {
+        "scheme_name": "Helios Mid Cap Fund",
+        "nsdl_scheme_code": "HELI/O/E/MIF/24/08/0006"
+      }
+    },
+    {
+      "family": "The Wealth Company Mid Cap Fund",
+      "status": "recovered",
+      "as_of": "2026-09-27",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 2.1,
+          "brokerage": 0.78,
+          "transaction_cost": 0.04,
+          "statutory_levies": 2.09,
+          "ter": 5.01
+        },
+        "Direct": {
+          "base_expense_ratio": 0.4,
+          "brokerage": 0.78,
+          "transaction_cost": 0.04,
+          "statutory_levies": 1.79,
+          "ter": 3.0100000000000002
+        }
+      },
+      "direct_ter": 3.0100000000000002,
+      "regular_ter": 5.01,
+      "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
+      "sha256": "5e2cd685ab5e0df609446e0c7bd7e31eb121162b9d669fcc0cd03fb9291198ce",
+      "identity": {
+        "scheme_name": "THE WEALTH COMPANY MID  CAP FUND",
+        "nsdl_scheme_code": "TWCF/O/E/MIF/26/06/0012"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "family": "Kotak Mid Cap Fund",
+      "error": "Kotak exact identity not unique"
+    }
+  ],
+  "production_writes": 0,
+  "public_export_enabled": false
+}
