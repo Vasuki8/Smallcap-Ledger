@@ -90,6 +90,14 @@ jobs:
           uv run --frozen python scripts/audit_midcap_source_coverage.py
           --json docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json
           --markdown docs/MIDCAP-SOURCE-COVERAGE-AUDIT.md
+      - name: Classify staged Mid Cap TER gaps
+        timeout-minutes: 2
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/classify_midcap_ter_gaps.py
+          --source-audit docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json
+          --json docs/MIDCAP-TER-GAP-AUDIT.json
+          --markdown docs/MIDCAP-TER-GAP-AUDIT.md
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
