@@ -36,6 +36,66 @@ target.write_text(json.dumps({'built_at':status['server_time'],'counts':status['
 coverage_json=ROOT/'COVERAGE-AS-OF.json'
 coverage_json.write_text(json.dumps(coverage,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
 
+# Current operational storage health. Historical STORAGE-AUDIT / STORAGE-VALIDATION
+# files remain immutable evidence of the 2026-09-25 migration.
+from tracker import db
+db.init()
+with db.connect() as connection:
+    integrity=connection.execute('PRAGMA integrity_check').fetchone()[0]
+    foreign_keys=[dict(row) for row in connection.execute('PRAGMA foreign_key_check').fetchall()]
+retention_rows=db.rows("""SELECT binary_state,COUNT(*) files,COALESCE(SUM(a.bytes),0) bytes
+    FROM archive_retention r JOIN archives a ON a.hash=r.hash
+    GROUP BY binary_state ORDER BY binary_state""")
+retention_by_state={row['binary_state']:{'files':row['files'],'bytes':row['bytes']}
+                    for row in retention_rows}
+hosting=status['hosting']
+hard_budget=int(hosting.get('publication_file_budget_bytes') or 0)
+selected_bytes=int(hosting.get('publication_bytes_included') or 0)
+selection_limit=int(hosting.get('publication_selection_limit_bytes') or hard_budget)
+storage_health={
+    'checked_at':status['server_time'],
+    'scope':'current_production_operational_health',
+    'database':{
+        'bytes':int(status['counts'].get('database_bytes') or 0),
+        'integrity':integrity,
+        'foreign_key_violations':foreign_keys,
+    },
+    'archive':{
+        'files':int(status['counts'].get('archive_binary_files') or 0),
+        'bytes':int(status['counts'].get('archive_bytes') or 0),
+        'metadata_only_files':int(status['counts'].get('archive_metadata_only_files') or 0),
+        'metadata_only_bytes':int(status['counts'].get('archive_metadata_only_bytes') or 0),
+        'retention_by_binary_state':retention_by_state,
+    },
+    'publication':{
+        'hard_budget_bytes':hard_budget,
+        'reserve_bytes':int(hosting.get('publication_file_reserve_bytes') or 0),
+        'selection_limit_bytes':selection_limit,
+        'selected_files':int(hosting.get('publication_files_included') or 0),
+        'selected_bytes':selected_bytes,
+        'headroom_to_selection_limit_bytes':selection_limit-selected_bytes,
+        'headroom_to_hard_budget_bytes':hard_budget-selected_bytes,
+    },
+    'coverage':coverage['counts'],
+    'safety':{
+        'all_archive_binaries_retained':(
+            int(status['counts'].get('archive_metadata_only_files') or 0)==0
+            and retention_by_state.get('retained',{}).get('files',0)
+                ==int(status['counts'].get('archive_binary_files') or 0)
+        ),
+        'publication_within_selection_limit':selected_bytes<=selection_limit,
+        'database_integrity_ok':integrity=='ok',
+        'foreign_keys_ok':not foreign_keys,
+    },
+    'historical_evidence_note':(
+        'docs/STORAGE-AUDIT.json, docs/STORAGE-VALIDATION.json and '
+        'deployment/storage-live-verification.json are historical migration/verification '
+        'artifacts and are intentionally not overwritten by this current-health report.'
+    ),
+}
+storage_health_path=ROOT/'deployment'/'storage-health.json'
+storage_health_path.write_text(json.dumps(storage_health,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+
 def esc(value):
     return str(value or '').replace('|','\\|').replace('\n',' ')
 
