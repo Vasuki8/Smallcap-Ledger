@@ -13,12 +13,17 @@ def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--source-audit",type=Path,required=True)
     p.add_argument("--first-party",type=Path,required=True)
+    p.add_argument("--first-party-extra",type=Path)
     p.add_argument("--json",type=Path,required=True)
     p.add_argument("--markdown",type=Path,required=True)
     args=p.parse_args(argv)
+    first=json.loads(args.first_party.read_text(encoding="utf-8"))
+    if args.first_party_extra and args.first_party_extra.exists():
+        extra=json.loads(args.first_party_extra.read_text(encoding="utf-8"))
+        first={**first,"results":[*(first.get("results") or []),*(extra.get("results") or [])]}
     result=reconcile(
         json.loads(args.source_audit.read_text(encoding="utf-8")),
-        json.loads(args.first_party.read_text(encoding="utf-8")),
+        first,
     )
     args.json.write_text(json.dumps(result,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     args.markdown.write_text(markdown(result),encoding="utf-8")
