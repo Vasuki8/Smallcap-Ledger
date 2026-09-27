@@ -15,6 +15,7 @@ sys.path.insert(0,str(ROOT))
 os.environ['SMALLCAP_NO_SCHEDULER']='1'
 from tracker import db
 from tracker.app import funds,fund,holdings,documents,status
+from tracker.categories import assert_publication_scope
 
 PUBLIC_PUBLICATION_BUDGET=250*1024*1024
 # Keep deterministic headroom for publication metadata, routing files and archive
@@ -43,6 +44,11 @@ def select_publication_candidates(candidates,limit=PUBLIC_PUBLICATION_SELECTION_
 def export(output:Path,repository=''):
     output=output.resolve()
     if output==ROOT or output==db.DATA or output==ROOT/'dist':raise ValueError('Choose a separate generated site folder')
+    db.init()
+    # Fail before deleting/replacing the last known-good output if a staged or
+    # ambiguous category ever reaches the retained scheme table.
+    publication_rows=db.rows("SELECT code,family,amc,category FROM schemes ORDER BY code")
+    assert_publication_scope(publication_rows)
     if output.exists():shutil.rmtree(output)
     shutil.copytree(ROOT/'dist',output)
     data=output/'data';data.mkdir()
@@ -54,7 +60,6 @@ def export(output:Path,repository=''):
         p=data/path;p.parent.mkdir(parents=True,exist_ok=True)
         with p.open('w',encoding='utf-8-sig',newline='') as f:
             w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(rows)
-    db.init()
     index=funds();write('funds.json',index)
     from tracker.coverage import report as coverage_report
     write('coverage.json',coverage_report())
