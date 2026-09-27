@@ -1,5 +1,5 @@
 {
-  "prepared_at": "2026-09-27T04:21:24+00:00",
+  "prepared_at": "2026-09-27T04:25:10+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
@@ -7,7 +7,7 @@
   "historical_candidates_strengthened_by_current_scan": 4,
   "post_audit_hashes_reviewed": 391,
   "post_audit_delta": {
-    "reviewed_at": "2026-09-27T04:21:23+00:00",
+    "reviewed_at": "2026-09-27T04:25:09+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
     "new_hashes_reviewed": 391,
@@ -76,6 +76,14 @@
       "rows": 5330,
       "sha256": "53b1927eab61b9f56c49a46b9b037d35efb214be7c3bf1c75338849f32a6933f"
     },
+    "category_staged_nav": {
+      "rows": 135,
+      "sha256": "8bedf7ebe32be1db56764ba6970799148190ff59ce24d1dbb1d6bd0b05e0a800"
+    },
+    "category_staged_schemes": {
+      "rows": 135,
+      "sha256": "eea0116cd551e0d162d9528d1b317305ab5ca29592723a78defbeb08bb2fea2c"
+    },
     "distribution_coverage": {
       "rows": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -94,19 +102,19 @@
     },
     "documents": {
       "rows": 2132,
-      "sha256": "f9ca3481bbb94fcb98c576928e9a2a01887966fa84a4c1e741879421838ffb53"
+      "sha256": "a41d6a448162ec639108d3bcc0c3ae91750ab934b042a03bdd1a48147b3e2b75"
     },
     "fetches": {
-      "rows": 8603,
-      "sha256": "cb50043f4394d5026980ae07087f0044bec7e29c4d35855fdfc3999935678a3b"
+      "rows": 8609,
+      "sha256": "49190994d3aeed0acfb724cf4142926612d841a2ab2cafe4822456fe5ca0cbb2"
     },
     "holdings": {
       "rows": 8339,
       "sha256": "56043d8ee4da5f7a33742e19990ae78f14ed9bcb5e71c0a034dce4145aa1f52d"
     },
     "jobs": {
-      "rows": 945,
-      "sha256": "39057f056a9597f2357165eb60629b37af4d7f8f31fa3049acb50966861be61e"
+      "rows": 948,
+      "sha256": "346add7766d9481a3e7631d2c3c37f405554a777b5052b6f58b1cb632069ddf6"
     },
     "metrics": {
       "rows": 26580,
@@ -134,13 +142,13 @@
     },
     "source_pages": {
       "rows": 352,
-      "sha256": "8a06ff79c7967cde3634cd942677795090152a2965d91a35b587b7b1ae0cd544"
+      "sha256": "3738f2fac12b116bfabc2e1721a963ce5b7423cc653b630df2394bace56863be"
     }
   },
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-27T04:17:41+00:00",
+  "active_checkpoint_created_at": "2026-09-27T04:22:03+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,
