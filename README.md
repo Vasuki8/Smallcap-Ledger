@@ -502,13 +502,26 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
 - Safety result remains explicit: **live_writes=0** and **public_export_enabled=false**. No Mid Cap pages, AUM/TER, benchmark, portfolio, or public claims have been enabled.
 - Machine-readable evidence is retained in `deployment/midcap-history-status.json`.
 
+### Latest completed category-expansion batch — Mid Cap source coverage audit
+
+**Mid Cap source readiness is now measured explicitly and remains non-public.**
+
+- PR **#250** added a read-only coverage audit for the 34 staged Mid Cap families; PR **#251** fixed TER date parsing so the release gate passes.
+- Production run **#608** passed the full release gate and Pages deployment after the fix.
+- Official AMFI daily AUM coverage is **34 / 34 Mid Cap families** as of **2026-09-24**.
+- Exact retained Mid Cap benchmark identity is **0 / 34** and current Mid Cap portfolio evidence is **0 / 34**. No Small Cap family data is reused merely because an AMC is shared.
+- AMFI TER remains **unresolved**, not a confirmed 0 / 34 data gap: the current broad TER query hit an `Unexpected size of the AMFI TER feed` pagination/selector limit. The audit records this as a source-fetch error and does not convert it into fabricated missing values.
+- **32 / 34 Mid Cap AMCs** already have at least one retained Small Cap-era AMC source candidate; Taurus and WhiteOak are the two new AMC source families requiring fresh source discovery.
+- Safety remains unchanged: **production_writes=0**, **public_export_enabled=false**, registry stage remains `staged`, and `mid_cap_launch_ready=false`.
+- Machine-readable evidence is retained in `docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json`; the human-readable companion is `docs/MIDCAP-SOURCE-COVERAGE-AUDIT.md`.
+
 ### Recommended next backend work
 
-1. **Keep Mid Cap staged and add a read-only metric/source coverage audit next.** Before any public exposure, measure which of the 34 Mid Cap families have exact first-party AUM, TER, benchmark identity and current portfolio evidence. Do not reuse Small Cap family metrics merely because an AMC is shared.
-2. Keep benchmark work evidence-driven: record each Mid Cap fund's reported benchmark from first-party scheme/factsheet evidence before adding any comparison series. Do not assign a default benchmark by category.
-3. **Quant Small Cap Fund remains the next Small Cap portfolio freshness repair.** It is still at the July 31 partial snapshot; recover August holdings only from concrete official data. Then handle SBI. Bajaj remains a confirmed source-access blocker.
-4. **Bandhan and Union remain the only zero-portfolio Small Cap gaps.** Keep them on source-access/discovery watch rather than weakening parser or source-identity checks.
-5. Mid Cap remains `stage=staged` and `public_export_enabled=false` until the source-coverage audit is reviewed and the public exporter/API/UI are explicitly made category-aware. No implicit promotion from staged tables to live tables.
+1. **Resolve the AMFI Mid Cap TER selector/pagination contract next.** Determine the exact official category/filter request for Mid Cap and prove it returns a plausible category-wide response before storing any TER. Keep this read-only until the selector is verified.
+2. After TER is understood, add Mid Cap-specific first-party source discovery for benchmark identity and current monthly portfolios. Reuse shared-AMC transport/parsers only after exact Mid Cap scheme identity is proven; do not reuse Small Cap records.
+3. Add source registrations for the two new AMCs, **Taurus Mutual Fund** and **WhiteOak Capital Mutual Fund**, before claiming category-wide document coverage.
+4. **Quant Small Cap Fund remains the next Small Cap freshness repair** once the current Mid Cap readiness slice is complete; then SBI. Bajaj remains a confirmed first-party access blocker.
+5. Mid Cap remains `stage=staged` and `public_export_enabled=false` until AUM, Direct TER, reported benchmark identity and current portfolio evidence reach an explicitly reviewed launch threshold and the public exporter/API/UI are deliberately made category-aware.
 6. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
