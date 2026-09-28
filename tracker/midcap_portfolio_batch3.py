@@ -330,38 +330,45 @@ def _uti(expected,fetch_fn):
         raise ValueError("UTI API returned a non-HTTPS portfolio URL")
     content,_,typ=fetch_fn(source,archive=False,max_bytes=120*1024*1024)
     import openpyxl
+    parsed=[]
+    workbook_bytes=None
+    entry_name=None
     with _safe_zip(content,"UTI consolidated portfolio",max_entries=100,max_total=120*1024*1024) as archive:
-        matches=[
+        spreadsheet_entries=[
             entry for entry in archive.infolist()
-            if re.fullmatch(r"Sebi Exposure as on .+_final\.xlsx",
-                            PurePosixPath(entry.filename).name,re.I)
+            if PurePosixPath(entry.filename).suffix.lower()==".xlsx"
+            and 0<entry.file_size<=30*1024*1024
         ]
-        if len(matches)!=1:
-            raise ValueError(f"UTI consolidated ZIP exposed {len(matches)} SEBI Exposure workbooks")
-        entry=matches[0]
-        with archive.open(entry) as handle:
-            workbook=handle.read()
-    if not workbook.startswith(b"PK"):
-        raise ValueError("UTI SEBI Exposure workbook is not a valid XLSX package")
-    book=openpyxl.load_workbook(io.BytesIO(workbook),data_only=True,read_only=True)
-    try:
-        parsed=[]
-        for sheet in book.worksheets:
-            row=_uti_midcap_rows(list(sheet.values),expected)
-            if row:
-                row["sheet"]=sheet.title
-                parsed.append(row)
-    finally:
-        book.close()
+        if not spreadsheet_entries:
+            raise ValueError("UTI consolidated ZIP exposed no supported XLSX workbooks")
+        for entry in spreadsheet_entries:
+            with archive.open(entry) as handle:
+                candidate=handle.read()
+            if not candidate.startswith(b"PK"):
+                continue
+            try:
+                book=openpyxl.load_workbook(io.BytesIO(candidate),data_only=True,read_only=True)
+            except Exception:
+                continue
+            try:
+                for sheet in book.worksheets:
+                    row=_uti_midcap_rows(list(sheet.values),expected)
+                    if row:
+                        row["sheet"]=sheet.title
+                        parsed.append((entry.filename,candidate,row))
+            finally:
+                book.close()
     if len(parsed)!=1:
-        raise ValueError(f"UTI SEBI Exposure workbook exposed {len(parsed)} exact current Mid Cap blocks")
-    row=parsed[0]
+        raise ValueError(
+            f"UTI consolidated ZIP exposed {len(parsed)} exact current Mid Cap blocks "
+            f"across {len(spreadsheet_entries)} XLSX workbooks")
+    entry_name,workbook_bytes,row=parsed[0]
     return {
         "family":"UTI - Mid Cap Fund","amc":"UTI Mutual Fund","status":"recovered",
         **row,"scope":"structured_monthly_portfolio",
-        "source":source,"source_title":title,"zip_entry":entry.filename,
+        "source":source,"source_title":title,"zip_entry":entry_name,
         "source_sha256":__import__("hashlib").sha256(content).hexdigest(),
-        "workbook_sha256":__import__("hashlib").sha256(workbook).hexdigest(),
+        "workbook_sha256":__import__("hashlib").sha256(workbook_bytes).hexdigest(),
         "source_content_type":typ,
     }
 
