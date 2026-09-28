@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tracker import db
-from tracker.midcap_source_coverage import report,_match_aum,_match_ter
+from tracker.midcap_source_coverage import collect,report,_match_aum,_match_ter
 
 
 def staged_family():
@@ -129,6 +129,55 @@ class MidCapSourceCoverageTests(unittest.TestCase):
         self.assertFalse(result["public_export_enabled"])
         self.assertEqual(result["production_writes"],0)
         self.assertFalse(result["mid_cap_launch_ready"])
+
+    def test_live_aum_fetch_failure_uses_retained_evidence_but_keeps_source_error(self):
+        retained={
+            "schema_version":1,
+            "retained_from_audit_built_at":"2026-09-26T12:00:00+00:00",
+            "source":"https://www.amfiindia.com/otherdata/fund-performance",
+            "evidence_kind":"last_verified_mid_cap_aum",
+            "rows":[{
+                "schemeName":"Example Mid Cap Fund",
+                "dailyAUM":123.45,
+                "navDate":"2026-09-25",
+            }],
+        }
+        with patch("tracker.midcap_source_coverage._fetch_midcap_aum",side_effect=RuntimeError("502")), \
+             patch("tracker.midcap_source_coverage._fetch_midcap_ter",return_value=([],[],[])):
+            result=collect(today=date(2026,9,28),retained_aum=retained)
+        self.assertEqual(result["counts"]["aum"],1)
+        self.assertEqual(result["families"][0]["aum"]["value"],123.45)
+        self.assertEqual(result["families"][0]["aum"]["as_of"],"2026-09-25")
+        self.assertEqual(result["aum_evidence"]["mode"],"retained_last_verified")
+        self.assertFalse(result["aum_evidence"]["current_fetch_ok"])
+        self.assertEqual(result["source_errors"][0]["source"],"AMFI daily AUM")
+
+    def test_current_aum_fetch_wins_over_retained_evidence(self):
+        retained={
+            "schema_version":1,
+            "retained_from_audit_built_at":"2026-09-26T12:00:00+00:00",
+            "source":"https://www.amfiindia.com/otherdata/fund-performance",
+            "evidence_kind":"last_verified_mid_cap_aum",
+            "rows":[{"schemeName":"Example Mid Cap Fund","dailyAUM":123.45,"navDate":"2026-09-25"}],
+        }
+        live=[{"schemeName":"Example Mid Cap Fund","dailyAUM":150.0,"navDate":"2026-09-28"}]
+        with patch("tracker.midcap_source_coverage._fetch_midcap_aum",return_value=(live,[{"kind":"aum_mid_cap"}])), \
+             patch("tracker.midcap_source_coverage._fetch_midcap_ter",return_value=([],[],[])):
+            result=collect(today=date(2026,9,28),retained_aum=retained)
+        self.assertEqual(result["families"][0]["aum"]["value"],150.0)
+        self.assertEqual(result["aum_evidence"]["mode"],"current_fetch")
+        self.assertTrue(result["aum_evidence"]["current_fetch_ok"])
+        self.assertEqual(result["source_errors"],[])
+
+    def test_invalid_retained_aum_does_not_hide_live_fetch_failure(self):
+        retained={"schema_version":99,"rows":[]}
+        with patch("tracker.midcap_source_coverage._fetch_midcap_aum",side_effect=RuntimeError("502")), \
+             patch("tracker.midcap_source_coverage._fetch_midcap_ter",return_value=([],[],[])):
+            result=collect(today=date(2026,9,28),retained_aum=retained)
+        self.assertEqual(result["counts"]["aum"],0)
+        self.assertEqual(result["aum_evidence"]["mode"],"unavailable")
+        self.assertEqual([x["source"] for x in result["source_errors"]],
+                         ["AMFI daily AUM","Retained Mid Cap AUM"])
 
     def test_exact_retained_family_evidence_counts(self):
         with db.connect() as conn:
