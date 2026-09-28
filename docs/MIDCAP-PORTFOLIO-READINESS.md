@@ -1,6 +1,6 @@
 # Mid Cap current portfolio readiness
 
-Current evidence: **14 / 34** · complete current portfolios: **3** · remaining: **20**.
+Current evidence: **15 / 34** · complete current portfolios: **3** · remaining: **19**.
 
 | Family | AMC | As of | Positions | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
@@ -22,7 +22,7 @@ Current evidence: **14 / 34** · complete current portfolios: **3** · remaining
 | JM Mid Cap Fund | JM Financial Mutual Fund | 2026-08-31 | 72 | structured_monthly_portfolio | false | https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Aug%2031,%202026.xlsx |
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | Gap | 0 | Gap | false | Gap |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | 0 | Gap | false | Gap |
-| Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Gap | 0 | Gap | false | Gap |
+| Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 2026-08-31 | 59 | first_party_current_factsheet | false | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 2026-08-31 | 68 | structured_monthly_portfolio | true | https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | 0 | Gap | false | Gap |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | 0 | Gap | false | Gap |
