@@ -244,6 +244,74 @@ def _tata(expected,fetch_fn):
     }
 
 
+def _uti_midcap_rows(rows,expected):
+    """Parse the UTI all-scheme SEBI Exposure block for the staged Mid Cap fund."""
+    target=re.sub(r"[^a-z0-9]+","", "UTI - Mid Cap Fund".casefold())
+    begin=None
+    published_name=None
+    for i,row in enumerate(rows):
+        label=str(row[0] or "").strip() if row else ""
+        if not re.match(r"^SCHEME\s*:",label,re.I):
+            continue
+        candidate=re.sub(r"^SCHEME\s*:\s*","",label,flags=re.I).strip()
+        if re.sub(r"[^a-z0-9]+","",candidate.casefold())==target:
+            begin=i;published_name=candidate;break
+    if begin is None:
+        return None
+
+    block=[];total=None
+    for row in rows[begin+1:]:
+        label=str(row[0] or "").strip() if row else ""
+        normalized=re.sub(r"[^a-z0-9]+","",label.casefold())
+        if normalized==re.sub(r"[^a-z0-9]+","",("TOTAL : "+published_name).casefold()):
+            try:total=providers.number(row[3])
+            except (ValueError,IndexError):return None
+            break
+        if re.match(r"^SCHEME(?:\s*:|\s+CODE)",label,re.I):
+            return None
+        block.append(row)
+    if total is None or not 0<total/100<10_000_000:
+        return None
+
+    prefix=" ".join(str(v) for row in block[:5] for v in row if v)
+    if not re.search(r"Market\s+value\s+in\s+Lacs",prefix,re.I):
+        return None
+    day=disclosures.report_date(prefix)
+    if day!=expected:
+        return None
+
+    header=next((r for r in block[:8] if len(r)>7 and str(r[7] or "").strip().upper()=="ISIN"),None)
+    if header is None or "% TO NAV" not in str(header[4] or "").upper():
+        return None
+
+    positions=[]
+    for row in block:
+        if len(row)<=7:continue
+        isin=str(row[7] or "").strip()
+        if not re.fullmatch(r"[A-Z]{2}[A-Z0-9]{10}",isin):
+            continue
+        try:weight=providers.number(row[4])
+        except ValueError:continue
+        if not 0<=weight<=100:return None
+        name=re.sub(r"^EQ\s*-\s*","",str(row[0] or "").strip())
+        asset="Equity" if str(row[0] or "").strip().upper().startswith("EQ -") else "Unclassified"
+        positions.append({
+            "isin":isin,"name":name,"sector":str(row[1] or "").strip() or None,
+            "weight":weight,"asset_type":asset,
+        })
+    if len(positions)<5 or sum(x["weight"] for x in positions)>100.5:
+        return None
+    return {
+        "as_of":day,
+        "positions_observed":len(positions),
+        "positions":positions,
+        "complete":False,
+        "unknown_rows":[],
+        "aum":round(total/100,6),
+        "published_scheme_name":published_name,
+    }
+
+
 def _uti(expected,fetch_fn):
     d=date.fromisoformat(expected)
     api=f"{UTI_API}?year={d.year}&month={calendar.month_name[d.month]}"
@@ -261,12 +329,37 @@ def _uti(expected,fetch_fn):
     if urlparse(source).scheme!="https":
         raise ValueError("UTI API returned a non-HTTPS portfolio URL")
     content,_,typ=fetch_fn(source,archive=False,max_bytes=120*1024*1024)
-    entry,workbook,parsed=_scan_zip_for_family(
-        content,"UTI - Mid Cap Fund",expected,"UTI consolidated portfolio")
+    import openpyxl
+    with _safe_zip(content,"UTI consolidated portfolio",max_entries=100,max_total=120*1024*1024) as archive:
+        matches=[
+            entry for entry in archive.infolist()
+            if re.fullmatch(r"Sebi Exposure as on .+_final\.xlsx",
+                            PurePosixPath(entry.filename).name,re.I)
+        ]
+        if len(matches)!=1:
+            raise ValueError(f"UTI consolidated ZIP exposed {len(matches)} SEBI Exposure workbooks")
+        entry=matches[0]
+        with archive.open(entry) as handle:
+            workbook=handle.read()
+    if not workbook.startswith(b"PK"):
+        raise ValueError("UTI SEBI Exposure workbook is not a valid XLSX package")
+    book=openpyxl.load_workbook(io.BytesIO(workbook),data_only=True,read_only=True)
+    try:
+        parsed=[]
+        for sheet in book.worksheets:
+            row=_uti_midcap_rows(list(sheet.values),expected)
+            if row:
+                row["sheet"]=sheet.title
+                parsed.append(row)
+    finally:
+        book.close()
+    if len(parsed)!=1:
+        raise ValueError(f"UTI SEBI Exposure workbook exposed {len(parsed)} exact current Mid Cap blocks")
+    row=parsed[0]
     return {
         "family":"UTI - Mid Cap Fund","amc":"UTI Mutual Fund","status":"recovered",
-        **parsed,"scope":"structured_monthly_portfolio",
-        "source":source,"source_title":title,"zip_entry":entry,
+        **row,"scope":"structured_monthly_portfolio",
+        "source":source,"source_title":title,"zip_entry":entry.filename,
         "source_sha256":__import__("hashlib").sha256(content).hexdigest(),
         "workbook_sha256":__import__("hashlib").sha256(workbook).hexdigest(),
         "source_content_type":typ,

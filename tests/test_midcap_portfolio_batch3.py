@@ -17,6 +17,25 @@ class MidCapPortfolioBatch3Tests(unittest.TestCase):
         self.assertIn("sbi-midcap-fund-monthly",source)
         self.assertEqual(title,"SBI MIDCAP FUND MONTHLY PORTFOLIO - AUGUST 2026")
 
+    def test_uti_midcap_rows_accepts_exact_all_scheme_block(self):
+        from tracker.midcap_portfolio_batch3 import _uti_midcap_rows
+        rows=[
+            ["SCHEME: UTI MID CAP FUND",None,None,None,None,None,None,None],
+            ["Portfolio as on 31/08/2026","Market value in Lacs",None,None,None,None,None,None],
+            ["Name","Industry",None,"Market Value","% TO NAV",None,None,"ISIN"],
+            ["EQ - Alpha Limited","Industrials",None,100,2.5,None,None,"INE000A01001"],
+            ["EQ - Beta Limited","Banks",None,90,2.0,None,None,"INE000A01002"],
+            ["EQ - Gamma Limited","IT",None,80,1.8,None,None,"INE000A01003"],
+            ["EQ - Delta Limited","Finance",None,70,1.6,None,None,"INE000A01004"],
+            ["EQ - Epsilon Limited","Retail",None,60,1.4,None,None,"INE000A01005"],
+            ["TOTAL : UTI MID CAP FUND",None,None,123456,None,None,None,None],
+        ]
+        result=_uti_midcap_rows(rows,"2026-08-31")
+        self.assertIsNotNone(result)
+        self.assertEqual(result["positions_observed"],5)
+        self.assertFalse(result["complete"])
+        self.assertEqual(result["published_scheme_name"],"UTI MID CAP FUND")
+
     def test_zip_scan_requires_one_strong_exact_family(self):
         import io,zipfile
         content=io.BytesIO()
