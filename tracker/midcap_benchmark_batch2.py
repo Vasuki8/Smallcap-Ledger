@@ -4,6 +4,7 @@ from __future__ import annotations
 from . import db
 from . import midcap_benchmark_documents as documents
 from . import midcap_benchmark_labels as labeled
+from . import midcap_benchmark_invesco as invesco
 from .midcap_benchmark_first_party import inspect_family
 
 
@@ -21,11 +22,13 @@ SOURCES={
 def collect(fetch_fn=None):
     from . import providers
     fetch_fn=fetch_fn or providers.fetch
+    # Dated Invesco URLs are resolved per collection, not frozen at module import.
+    sources = {**SOURCES, **invesco.sources()}
     staged={r["family"]:r["amc"] for r in db.rows(
         "SELECT DISTINCT family,amc FROM category_staged_schemes WHERE category='mid-cap'"
     )}
     results=[];errors=[]
-    for family,url in SOURCES.items():
+    for family,url in sources.items():
         if family not in staged:
             errors.append({"family":family,"source":url,"error":"staged family identity missing"})
             continue
@@ -35,6 +38,7 @@ def collect(fetch_fn=None):
                 if family in labeled.SOURCES
                 else documents.AMCS.get(family)
                 if family in documents.SOURCES
+                else invesco.AMC if family == invesco.FAMILY
                 else None
             )
             if registered_amc is not None and staged[family] != registered_amc:
@@ -43,6 +47,8 @@ def collect(fetch_fn=None):
                 inspector = labeled.inspect_family
             elif family in documents.SOURCES:
                 inspector = documents.inspect_family
+            elif family == invesco.FAMILY:
+                inspector = invesco.inspect_family
             else:
                 inspector = inspect_family
             row=inspector(family,url,fetch_fn=fetch_fn)
@@ -53,13 +59,14 @@ def collect(fetch_fn=None):
                            "error":(str(exc) or type(exc).__name__)[:300]})
     return {
         "built_at":db.now(),"staged_category":"mid-cap","families":len(staged),
-        "targets":len(SOURCES),"recovered":len(results),"failed":len(errors),
+        "targets":len(sources),"recovered":len(results),"failed":len(errors),
         "results":results,"errors":errors,
         "production_writes":0,"public_export_enabled":False,
         "notes":[
-            "Batch 2 uses exact current first-party fund pages, factsheets or scheme documents only.",
+            "Batch 2 uses exact first-party fund pages, factsheets or scheme documents only; their original periods stay explicit.",
             "No benchmark is inferred from category membership.",
-            "Axis, Mirae, Aditya Birla Sun Life and SBI use reviewed fund-specific primary labels; additional comparators and effective dates remain separate.",
+            "Axis, Mirae, Aditya Birla Sun Life, SBI and Invesco use reviewed fund-specific primary labels; additional comparators and effective dates remain separate.",
+            "Invesco requires the latest closed month's dated factsheet and two agreeing primary fields; performance comparators are not collected by this reader.",
             "A published benchmark identity does not prove that its benchmark series is available to the tracker.",
         ],
     }
