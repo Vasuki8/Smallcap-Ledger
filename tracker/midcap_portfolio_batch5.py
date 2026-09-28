@@ -115,7 +115,17 @@ def _jm_source(fetch_fn,expected):
         title=" ".join(str(row.get("Title") or "").split())
         if target not in _norm(title):continue
         if "smallcap" in _norm(title) or "largeandmidcap" in _norm(title):continue
-        explicit=disclosures.report_date(title)
+        explicit=None
+        match=re.search(r"([A-Za-z]+)\s+(\d{1,2}),?\s+(20\d{2})\s*$",title,re.I)
+        if match:
+            for fmt in ("%B %d %Y","%b %d %Y"):
+                try:
+                    explicit=datetime.strptime(
+                        f"{match.group(1)} {match.group(2)} {match.group(3)}",fmt
+                    ).date().isoformat()
+                    break
+                except ValueError:
+                    pass
         if explicit!=expected:continue
         path=str(row.get("FileName") or "").strip()
         ext=str(row.get("FileEXT") or "").strip().casefold()
