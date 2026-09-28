@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-28T15:07:28+00:00
+Prepared: 2026-09-28T16:08:22+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
@@ -14,7 +14,7 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | Axis Midcap Fund | Axis Mutual Fund | ₹ 34402.43 Cr · 2026-09-25 | 0.8400% · 2026-09-25 | Gap | Gap | 4 | benchmark_identity, current_portfolio |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | ₹ 2624.49 Cr · 2026-09-25 | Gap | Gap | Gap | 13 | direct_ter, benchmark_identity, current_portfolio |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | ₹ 737.14 Cr · 2026-09-25 | Gap | Gap | Gap | 12 | direct_ter, benchmark_identity, current_portfolio |
-| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | ₹ 2560.14 Cr · 2026-09-25 | 0.7800% · 2026-09-25 | Gap | Gap | 12 | benchmark_identity, current_portfolio |
+| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | ₹ 2560.14 Cr · 2026-09-25 | 0.7800% · 2026-09-27 | Gap | Gap | 12 | benchmark_identity, current_portfolio |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | ₹ 5102.37 Cr · 2026-09-25 | Gap | Gap | Gap | 13 | direct_ter, benchmark_identity, current_portfolio |
 | DSP Midcap Fund | DSP Mutual Fund | ₹ 20036.98 Cr · 2026-09-25 | 0.8300% · 2026-09-25 | Gap | Gap | 10 | benchmark_identity, current_portfolio |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | ₹ 19585.04 Cr · 2026-09-25 | 0.6800% · 2026-09-27 | Gap | Gap | 10 | benchmark_identity, current_portfolio |

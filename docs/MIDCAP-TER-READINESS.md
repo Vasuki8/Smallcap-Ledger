@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-28T15:07:28+00:00
+Prepared: 2026-09-28T16:08:22+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -10,7 +10,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Axis Midcap Fund | Axis Mutual Fund | 0.8400% | 1.7900% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap | Gap | Gap | Gap |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Gap | Gap | Gap | Gap | Gap |
-| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | 0.7800% | 2.2100% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
+| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | 0.7800% | 2.2100% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | 0.8600% | 2.1100% | 2026-09-27 | first_party_amc | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-14&to_date=2026-09-28 |
 | DSP Midcap Fund | DSP Mutual Fund | 0.8300% | 1.7300% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | 0.6800% | 1.8700% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |

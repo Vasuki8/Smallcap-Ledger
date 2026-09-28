@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T15:07:28+00:00",
+  "built_at": "2026-09-28T16:08:22+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -276,9 +276,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 25,
-          "mid_cap_rows": 25,
-          "sha256": "ee4daa2b955ca3b3ee4dd77f6c9f1bd657b05eb30a0d2c4242e3c6dfe1341ec2"
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "0e90c85c91a41b62cc9bcfbd9c39e41d281db56b57b067ba02a9b8bb6e8070f0"
         }
       ],
       "matched_families": [
@@ -1349,7 +1349,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "bdc42aad40797d2d070c038af788a97204cb763fd4a80589aefdde2ad7f04b40",
-      "observed_at": "2026-09-28T15:07:26.610191+00:00",
+      "observed_at": "2026-09-28T16:08:20.084939+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1372,7 +1372,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-      "observed_at": "2026-09-28T15:07:27.636961+00:00",
+      "observed_at": "2026-09-28T16:08:21.233090+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1395,7 +1395,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
       "sha256": "1458364ed9bc1dd67e96797e29f0d5001c05ce238bc074e075edd422361bfe51",
-      "observed_at": "2026-09-28T15:07:28.571806+00:00",
+      "observed_at": "2026-09-28T16:08:22.257103+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1922,7 +1922,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-25",
+        "as_of": "2026-09-27",
         "scheme_name": "Baroda BNP Paribas Mid Cap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4148,7 +4148,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-        "source_observed_at": "2026-09-28T15:07:27.636961+00:00",
+        "source_observed_at": "2026-09-28T16:08:21.233090+00:00",
         "source_row": 44,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -4921,7 +4921,7 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-28T14:28:36+00:00"
+          "last_checked": "2026-09-28T15:11:24+00:00"
         }
       ],
       "coverage_gaps": [
@@ -4992,7 +4992,7 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-28T14:28:39+00:00"
+          "last_checked": "2026-09-28T15:11:27+00:00"
         }
       ],
       "coverage_gaps": [
