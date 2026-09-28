@@ -1,0 +1,54 @@
+{
+  "built_at": "2026-09-28T01:04:19+00:00",
+  "staged_category": "mid-cap",
+  "portfolio_expected_as_of": "2026-08-31",
+  "targets": 2,
+  "recovered": 2,
+  "failed": 0,
+  "results": [
+    {
+      "family": "HDFC Mid Cap Fund",
+      "amc": "HDFC Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
+      "as_of": "2026-08-31",
+      "positions_observed": 81,
+      "complete": true,
+      "unknown_rows": [],
+      "aum": 108324.5467,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://files.hdfcfund.com/s3fs-public/2026-09/Monthly%20HDFC%20Mid%20Cap%20Fund%20-%2031%20August%202026.xlsx",
+      "source_sha256": "767a0a0025e82d8f74df9f31159f51bbc233b4085a1b7ae30f6e965db3574ea0",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T01:04:17+00:00"
+    },
+    {
+      "family": "DSP Midcap Fund",
+      "amc": "DSP Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
+      "as_of": "2026-08-31",
+      "positions_observed": 65,
+      "complete": false,
+      "unknown_rows": [
+        "TREPS / Reverse Repo Investments"
+      ],
+      "aum": 21018.5385,
+      "scope": "structured_monthly_portfolio",
+      "zip_entry": "DSP EquityFOF ISIN Portfolio as on 31 Aug 2026.xlsx",
+      "source": "https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/8a6dbe504f-1789452169/dsp-monthend-portfolio-as-on-31-aug-2026.zip",
+      "source_sha256": "7be409861d36404640a8d3a5635b83758b464f982b766444090245cc62f07963",
+      "workbook_sha256": "e6d2c0000cd0b055c285e502a429a934cf165063e893998a5c38d2222bb9a42c",
+      "source_content_type": "application/zip",
+      "observed_at": "2026-09-28T01:04:19+00:00"
+    }
+  ],
+  "errors": [],
+  "production_writes": 0,
+  "public_export_enabled": false,
+  "notes": [
+    "This audit downloads official current month-end disclosure files but performs no portfolio, holding, metric, document or fetch writes.",
+    "Both sources are parsed through the existing exact-family structured portfolio parser in memory.",
+    "Completeness is reported exactly as the parser proves it; no balancing cash or missing rows are invented."
+  ]
+}
