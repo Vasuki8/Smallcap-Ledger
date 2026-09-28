@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-09-28T05:13:19+00:00",
+  "built_at": "2026-09-28T05:59:20+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 30,
-    "amfi": 20,
+    "direct_ter": 31,
+    "amfi": 21,
     "first_party_amc": 10,
-    "remaining": 4
+    "remaining": 3
   },
   "families": [
     {
@@ -315,13 +315,41 @@
     {
       "family": "Samco Mid Cap Fund",
       "amc": "Samco Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 1.58,
+      "regular_ter": 3.0,
+      "as_of": "2026-09-25",
+      "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
+      "evidence_channel": "amfi",
+      "identity": {
+        "scheme_name": "Samco Mid Cap Fund",
+        "amc": "Samco Mutual Fund",
+        "amfi_mf_id": "74",
+        "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
+      },
+      "source_sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
+      "source_observed_at": "2026-09-28T05:59:19.600100+00:00",
+      "source_row": 44,
+      "published_row": {
+        "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
+        "Scheme_Name": "Samco Mid Cap Fund",
+        "SchemeType_Desc": "Open Ended",
+        "SchemeCat_Desc": "Equity Schemes - Mid Cap Fund",
+        "TER_Year": "2026-2027",
+        "TER_Date": "2026-09-25T00:00:00.000Z",
+        "R_BER": "2.1000",
+        "R_BrokerageCost": "0.1000",
+        "R_TransactionCost": "0.0100",
+        "R_StatutoryLevies": "0.7900",
+        "R_TER": "3.0000",
+        "D_BER": "0.8100",
+        "D_BrokerageCost": "0.1000",
+        "D_TransactionCost": "0.0100",
+        "D_StatutoryLevies": "0.6600",
+        "D_TER": "1.5800",
+        "MF_ID": 74,
+        "Month": "09-2026"
+      }
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -418,7 +446,6 @@
   "remaining_families": [
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
-    "Samco Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
   "production_writes": 0,

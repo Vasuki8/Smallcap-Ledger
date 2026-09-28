@@ -1,13 +1,13 @@
 {
-  "built_at": "2026-09-28T05:13:19+00:00",
+  "built_at": "2026-09-28T05:59:20+00:00",
   "staged_category": "mid-cap",
   "official_ter_category_selector": {
     "category_id": "17",
     "category_label": "Equity Scheme - Mid Cap Fund"
   },
-  "gap_families": 14,
+  "gap_families": 13,
   "classification_counts": {
-    "amfi_exact_amc_category_no_rows": 14
+    "amfi_exact_amc_category_no_rows": 13
   },
   "families": [
     {
@@ -766,76 +766,6 @@
           "month": "07-2026",
           "amc": "Mirae Asset Mutual Fund",
           "amfi_mf_name": "Mirae Asset Mutual Fund",
-          "category_id": "17",
-          "reported_pages": 1,
-          "pages_checked": [
-            {
-              "page": 1,
-              "rows": 0,
-              "mid_cap_rows": 0,
-              "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
-            }
-          ],
-          "matched_families": []
-        }
-      ]
-    },
-    {
-      "family": "Samco Mid Cap Fund",
-      "amc": "Samco Mutual Fund",
-      "classification": "amfi_exact_amc_category_no_rows",
-      "next_action": "seek_exact_first_party_amc_ter",
-      "months_checked": [
-        "09-2026",
-        "08-2026",
-        "07-2026"
-      ],
-      "amfi_rows": 0,
-      "amfi_mid_cap_rows": 0,
-      "exact_family_matches": 0,
-      "source_checks": [
-        {
-          "kind": "ter_mid_cap_by_amc",
-          "source": "https://www.amfiindia.com/ter-of-mf-schemes",
-          "month": "09-2026",
-          "amc": "Samco Mutual Fund",
-          "amfi_mf_name": "Samco Mutual Fund",
-          "category_id": "17",
-          "reported_pages": 1,
-          "pages_checked": [
-            {
-              "page": 1,
-              "rows": 0,
-              "mid_cap_rows": 0,
-              "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
-            }
-          ],
-          "matched_families": []
-        },
-        {
-          "kind": "ter_mid_cap_by_amc",
-          "source": "https://www.amfiindia.com/ter-of-mf-schemes",
-          "month": "08-2026",
-          "amc": "Samco Mutual Fund",
-          "amfi_mf_name": "Samco Mutual Fund",
-          "category_id": "17",
-          "reported_pages": 1,
-          "pages_checked": [
-            {
-              "page": 1,
-              "rows": 0,
-              "mid_cap_rows": 0,
-              "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
-            }
-          ],
-          "matched_families": []
-        },
-        {
-          "kind": "ter_mid_cap_by_amc",
-          "source": "https://www.amfiindia.com/ter-of-mf-schemes",
-          "month": "07-2026",
-          "amc": "Samco Mutual Fund",
-          "amfi_mf_name": "Samco Mutual Fund",
           "category_id": "17",
           "reported_pages": 1,
           "pages_checked": [

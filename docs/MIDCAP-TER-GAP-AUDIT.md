@@ -1,8 +1,8 @@
 # Mid Cap TER gap classification
 
-Prepared: 2026-09-28T05:13:19+00:00
+Prepared: 2026-09-28T05:59:20+00:00
 
-Unresolved Direct TER families: **14**.
+Unresolved Direct TER families: **13**.
 
 | Family | AMC | Classification | Months checked | AMFI rows | Mid Cap rows | Next action |
 | --- | --- | --- | --- | ---: | ---: | --- |
@@ -17,13 +17,12 @@ Unresolved Direct TER families: **14**.
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | amfi_exact_amc_category_no_rows | 09-2026, 08-2026, 07-2026 | 0 | 0 | seek_exact_first_party_amc_ter |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | amfi_exact_amc_category_no_rows | 09-2026, 08-2026, 07-2026 | 0 | 0 | seek_exact_first_party_amc_ter |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | amfi_exact_amc_category_no_rows | 09-2026, 08-2026, 07-2026 | 0 | 0 | seek_exact_first_party_amc_ter |
-| Samco Mid Cap Fund | Samco Mutual Fund | amfi_exact_amc_category_no_rows | 09-2026, 08-2026, 07-2026 | 0 | 0 | seek_exact_first_party_amc_ter |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | amfi_exact_amc_category_no_rows | 09-2026, 08-2026, 07-2026 | 0 | 0 | seek_exact_first_party_amc_ter |
 | WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | amfi_exact_amc_category_no_rows | 09-2026, 08-2026, 07-2026 | 0 | 0 | seek_exact_first_party_amc_ter |
 
 ## Classification counts
 
-- amfi_exact_amc_category_no_rows: 14
+- amfi_exact_amc_category_no_rows: 13
 
 ## Notes
 

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T05:13:19+00:00",
+  "built_at": "2026-09-28T05:59:20+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -9,8 +9,8 @@
     "families": 34,
     "scheme_codes": 135,
     "aum": 34,
-    "ter_any": 20,
-    "direct_ter": 20,
+    "ter_any": 21,
+    "direct_ter": 21,
     "benchmark_identity": 0,
     "portfolio": 0,
     "portfolio_current": 0,
@@ -1359,10 +1359,92 @@
       "matched_families": []
     },
     {
+      "kind": "ter_samco_amc_page",
+      "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
+      "sha256": "bdc42aad40797d2d070c038af788a97204cb763fd4a80589aefdde2ad7f04b40",
+      "observed_at": "2026-09-28T05:59:05.083119+00:00",
+      "request": {
+        "MF_ID": "74",
+        "Month": "09-2026",
+        "strCat": "-1",
+        "strType": "1",
+        "page": 1,
+        "pageSize": 1000
+      },
+      "amc": "Samco Mutual Fund",
+      "page": 1,
+      "rows": 100,
+      "pagination": {
+        "page": 1,
+        "pageSize": 100,
+        "total": 243,
+        "pageCount": 3
+      }
+    },
+    {
+      "kind": "ter_samco_amc_page",
+      "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
+      "sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
+      "observed_at": "2026-09-28T05:59:19.600100+00:00",
+      "request": {
+        "MF_ID": "74",
+        "Month": "09-2026",
+        "strCat": "-1",
+        "strType": "1",
+        "page": 2,
+        "pageSize": 1000
+      },
+      "amc": "Samco Mutual Fund",
+      "page": 2,
+      "rows": 100,
+      "pagination": {
+        "page": 2,
+        "pageSize": 100,
+        "total": 243,
+        "pageCount": 3
+      }
+    },
+    {
+      "kind": "ter_samco_amc_page",
+      "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
+      "sha256": "1458364ed9bc1dd67e96797e29f0d5001c05ce238bc074e075edd422361bfe51",
+      "observed_at": "2026-09-28T05:59:20.468497+00:00",
+      "request": {
+        "MF_ID": "74",
+        "Month": "09-2026",
+        "strCat": "-1",
+        "strType": "1",
+        "page": 3,
+        "pageSize": 1000
+      },
+      "amc": "Samco Mutual Fund",
+      "page": 3,
+      "rows": 43,
+      "pagination": {
+        "page": 3,
+        "pageSize": 100,
+        "total": 243,
+        "pageCount": 3
+      }
+    },
+    {
+      "kind": "ter_samco_fallback_summary",
+      "amc": "Samco Mutual Fund",
+      "month": "09-2026",
+      "complete": true,
+      "total_rows": 243,
+      "pages_checked": 3,
+      "matched_families": [
+        "Samco Mid Cap Fund"
+      ],
+      "exact_daily_observations": 18,
+      "latest_reporting_date": "2026-09-25"
+    },
+    {
       "kind": "ter_mid_cap_contract_summary",
       "queried_amcs": 34,
       "target_families": 34,
-      "matched_families": 20,
+      "matched_families": 21,
       "unmatched_families": [
         "BANDHAN MID CAP FUND",
         "BANK OF INDIA MID CAP FUND",
@@ -1375,13 +1457,12 @@
         "Kotak Mid Cap Fund",
         "Mahindra Manulife Mid Cap Fund",
         "Mirae Asset Midcap Fund",
-        "Samco Mid Cap Fund",
         "The Wealth Company Mid Cap Fund",
         "WhiteOak Capital Mid Cap Fund"
       ],
       "category_id": "17",
       "category_label": "Equity Scheme - Mid Cap Fund",
-      "contract": "resolve exact Mid Cap strCat from official AMFI response, then query one AMC x month with bounded pagination"
+      "contract": "resolve official Mid Cap category and query AMC x month; unresolved Samco only uses a complete, exact-identity AMC-scoped fallback"
     }
   ],
   "source_errors": [],
@@ -4066,8 +4147,50 @@
         "scheme_name": "Samco Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": null,
-      "direct_ter_available": false,
+      "ter": {
+        "as_of": "2026-09-25",
+        "scheme_name": "Samco Mid Cap Fund",
+        "category": "Equity Schemes - Mid Cap Fund",
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
+        "direct": {
+          "value": 1.58,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "regular": {
+          "value": 3.0,
+          "unit": "% p.a. · AMC-reported via AMFI"
+        },
+        "source_sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
+        "source_observed_at": "2026-09-28T05:59:19.600100+00:00",
+        "source_row": 44,
+        "published_row": {
+          "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
+          "Scheme_Name": "Samco Mid Cap Fund",
+          "SchemeType_Desc": "Open Ended",
+          "SchemeCat_Desc": "Equity Schemes - Mid Cap Fund",
+          "TER_Year": "2026-2027",
+          "TER_Date": "2026-09-25T00:00:00.000Z",
+          "R_BER": "2.1000",
+          "R_BrokerageCost": "0.1000",
+          "R_TransactionCost": "0.0100",
+          "R_StatutoryLevies": "0.7900",
+          "R_TER": "3.0000",
+          "D_BER": "0.8100",
+          "D_BrokerageCost": "0.1000",
+          "D_TransactionCost": "0.0100",
+          "D_StatutoryLevies": "0.6600",
+          "D_TER": "1.5800",
+          "MF_ID": 74,
+          "Month": "09-2026"
+        },
+        "identity": {
+          "scheme_name": "Samco Mid Cap Fund",
+          "amc": "Samco Mutual Fund",
+          "amfi_mf_id": "74",
+          "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
+        }
+      },
+      "direct_ter_available": true,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -4130,7 +4253,6 @@
         }
       ],
       "coverage_gaps": [
-        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -4812,7 +4934,7 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-28T04:44:35+00:00"
+          "last_checked": "2026-09-28T05:16:49+00:00"
         }
       ],
       "coverage_gaps": [
@@ -4883,7 +5005,7 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-28T04:44:38+00:00"
+          "last_checked": "2026-09-28T05:16:52+00:00"
         }
       ],
       "coverage_gaps": [
