@@ -39,6 +39,7 @@ coverage_json.write_text(json.dumps(coverage,indent=2,ensure_ascii=False)+'\n',e
 # Current operational storage health. Historical STORAGE-AUDIT / STORAGE-VALIDATION
 # files remain immutable evidence of the 2026-09-25 migration.
 from tracker import db
+from tracker.release_health import release_health
 db.init()
 with db.connect() as connection:
     integrity=connection.execute('PRAGMA integrity_check').fetchone()[0]
@@ -52,6 +53,7 @@ hosting=status['hosting']
 hard_budget=int(hosting.get('publication_file_budget_bytes') or 0)
 selected_bytes=int(hosting.get('publication_bytes_included') or 0)
 selection_limit=int(hosting.get('publication_selection_limit_bytes') or hard_budget)
+release_archive=release_health()
 storage_health={
     'checked_at':status['server_time'],
     'scope':'current_production_operational_health',
@@ -67,6 +69,7 @@ storage_health={
         'metadata_only_bytes':int(status['counts'].get('archive_metadata_only_bytes') or 0),
         'retention_by_binary_state':retention_by_state,
     },
+    'release_archive':release_archive,
     'publication':{
         'hard_budget_bytes':hard_budget,
         'reserve_bytes':int(hosting.get('publication_file_reserve_bytes') or 0),

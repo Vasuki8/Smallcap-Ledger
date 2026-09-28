@@ -9,4 +9,6 @@ def test_record_build_defines_current_storage_health_report():
     assert "PRAGMA foreign_key_check" in source
     assert "headroom_to_hard_budget_bytes" in source
     assert "all_archive_binaries_retained" in source
+    assert "release_archive=release_health()" in source
+    assert "'release_archive':release_archive" in source
     assert "historical migration/verification" in source
