@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from copy import deepcopy
 from datetime import date,timedelta
 import hashlib
 import json
@@ -14,11 +15,14 @@ import httpx
 from . import amfi_metrics,db,providers
 from .categories import REGISTRY
 from .coverage import expected_portfolio_as_of
+from .midcap_samco_ter import (
+    AMC as SAMCO_AMC, FAMILY as SAMCO_FAMILY, SamcoTERError, fetch_samco_ter,
+)
 
 
 def _is_mid_cap_category(value):
     text=re.sub(r"\s+"," ",str(value or "").strip())
-    return bool(re.fullmatch(r"(?:Equity Scheme\s*-\s*)?Mid\s*Cap\s*Fund",text,re.I))
+    return bool(re.fullmatch(r"(?:Equity Schemes?\s*-\s*)?Mid\s*Cap\s*Fund",text,re.I))
 
 
 def _family_map():
@@ -99,6 +103,10 @@ def _match_ter(rows,families,today=None):
             "as_of":day,"scheme_name":name,"category":row.get("SchemeCat_Desc"),
             "source":amfi_metrics.TER_PAGE,"direct":None,"regular":None,
         }
+        # The bounded Samco fallback validates this proof before returning rows.
+        # Keep the publisher's category/row wording and original response identity.
+        if row.get("_amfi_source_evidence"):
+            evidence.update(deepcopy(row["_amfi_source_evidence"]))
         for prefix,key in (("D","direct"),("R","regular")):
             raw=row.get(prefix+"_TER")
             if raw is None or str(raw).strip() in ("","-","NA","N/A"):continue
@@ -413,6 +421,26 @@ def _fetch_midcap_ter(families,months=3,fetch_fn=providers.fetch,sleep_fn=time.s
                 })
             sleep_fn(0.1)
 
+    # AMFI's category selector omits Samco even though its exact AMC-scoped
+    # feed reports the same fund under the published plural category spelling.
+    # Do not sweep other AMCs or accept partial pagination/name-only matches.
+    if (SAMCO_FAMILY in unresolved
+            and SAMCO_FAMILY in amc_families.get(SAMCO_AMC,set())
+            and SAMCO_AMC in resolved):
+        try:
+            fallback_rows,fallback_checks=fetch_samco_ter(
+                resolved[SAMCO_AMC],fetch_fn=fetch_fn,today=today)
+            checks.extend(fallback_checks)
+            if fallback_rows:
+                rows.extend(fallback_rows)
+                unresolved.discard(SAMCO_FAMILY)
+        except SamcoTERError as exc:
+            checks.extend(exc.checks)
+            errors.append({
+                "source":"AMFI TER exact Samco fallback",
+                "error":(str(exc) or type(exc).__name__)[:300],
+            })
+
     total={family for values in amc_families.values() for family in values}
     checks.append({
         "kind":"ter_mid_cap_contract_summary",
@@ -420,7 +448,7 @@ def _fetch_midcap_ter(families,months=3,fetch_fn=providers.fetch,sleep_fn=time.s
         "matched_families":len(total-unresolved),
         "unmatched_families":sorted(unresolved),
         "category_id":category_id,"category_label":category_label,
-        "contract":"resolve exact Mid Cap strCat from official AMFI response, then query one AMC x month with bounded pagination",
+        "contract":"resolve official Mid Cap category and query AMC x month; unresolved Samco only uses a complete, exact-identity AMC-scoped fallback",
     })
     return rows,checks,errors
 

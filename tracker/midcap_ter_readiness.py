@@ -1,5 +1,6 @@
 """Reconcile staged Mid Cap TER readiness across AMFI and verified first-party evidence."""
 from __future__ import annotations
+from copy import deepcopy
 
 
 def reconcile(source_audit, first_party):
@@ -13,11 +14,17 @@ def reconcile(source_audit, first_party):
         as_of=None
         source=None
         identity=None
+        source_proof={}
         if row.get("ter"):
             direct=(row["ter"].get("direct") or {}).get("value")
             regular=(row["ter"].get("regular") or {}).get("value")
             as_of=row["ter"].get("as_of")
             source=row["ter"].get("source")
+            if evidence=="amfi":
+                identity=deepcopy(row["ter"].get("identity"))
+                source_proof={key:deepcopy(row["ter"][key]) for key in (
+                    "source_sha256","source_observed_at","source_row","published_row"
+                ) if key in row["ter"]}
         if not evidence and family in fp:
             item=fp[family]
             evidence="first_party_amc"
@@ -36,6 +43,7 @@ def reconcile(source_audit, first_party):
             "source":source,
             "evidence_channel":evidence,
             "identity":identity,
+            **source_proof,
         })
     counts={
         "families":len(rows),
