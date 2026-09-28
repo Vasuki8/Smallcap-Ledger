@@ -1,0 +1,40 @@
+# Mid Cap benchmark readiness
+
+Benchmark identity: **12 / 34** · remaining: **22**.
+
+| Family | AMC | Benchmark | Source |
+| --- | --- | --- | --- |
+| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | Gap |
+| Axis Midcap Fund | Axis Mutual Fund | Gap | Gap |
+| BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap |
+| BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
+| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Nifty Midcap 150 TRI | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
+| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | BSE 150 Mid Cap TRI | https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html |
+| DSP Midcap Fund | DSP Mutual Fund | Nifty Midcap 150 TRI | https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth |
+| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Gap | Gap |
+| Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Gap | Gap |
+| HDFC Mid Cap Fund | HDFC Mutual Fund | NIFTY Midcap 150 Index (Total Returns Index) | https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular |
+| HSBC Midcap Fund | HSBC Mutual Fund | Gap | Gap |
+| Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap |
+| ITI Mid Cap Fund | ITI Mutual Fund | Gap | Gap |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | Gap | Gap |
+| JM Mid Cap Fund | JM Financial Mutual Fund | Gap | Gap |
+| Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | NIFTY Midcap 150 TRI | https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html |
+| LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | Gap |
+| Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Nifty Midcap 150 TRI | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | Gap | Gap |
+| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | Gap |
+| Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | Gap |
+| PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
+| Quant Mid Cap Fund | quant Mutual Fund | Gap | Gap |
+| SBI MIDCAP FUND | SBI Mutual Fund | Gap | Gap |
+| Samco Mid Cap Fund | Samco Mutual Fund | Gap | Gap |
+| Sundaram Mid Cap Fund | Sundaram Mutual Fund | Nifty Midcap 150 TRI | https://www.sundarammutual.com/Sundaram-Mid-Cap-Fund |
+| TRUSTMF MID CAP FUND | Trust Mutual Fund | Gap | Gap |
+| Tata Mid Cap Fund | Tata Mutual Fund | Nifty Midcap 150 TRI | https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth |
+| Taurus Mid Cap Fund | Taurus Mutual Fund | Gap | Gap |
+| The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | NIFTY Midcap 150 TRI | https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/ |
+| UTI - Mid Cap Fund | UTI Mutual Fund | Gap | Gap |
+| Union Midcap Fund | Union Mutual Fund | Gap | Gap |
+| WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | Gap | Gap |
