@@ -1,8 +1,8 @@
 {
   "families": 34,
-  "current_portfolio_evidence": 12,
-  "current_complete_portfolios": 2,
-  "remaining": 22,
+  "current_portfolio_evidence": 15,
+  "current_complete_portfolios": 3,
+  "remaining": 19,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -133,20 +133,20 @@
     {
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
-      "complete": false,
-      "source": null
+      "as_of": "2026-08-31",
+      "positions_observed": 43,
+      "scope": "structured_monthly_portfolio",
+      "complete": true,
+      "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0"
     },
     {
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 72,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Aug%2031,%202026.xlsx"
     },
     {
       "family": "Kotak Mid Cap Fund",
@@ -169,11 +169,11 @@
     {
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 63,
+      "scope": "first_party_current_factsheet",
       "complete": false,
-      "source": null
+      "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html"
     },
     {
       "family": "Mirae Asset Midcap Fund",
@@ -319,11 +319,8 @@
     "HSBC Midcap Fund",
     "Helios Mid Cap Fund",
     "ITI Mid Cap Fund",
-    "Invesco India Mid Cap Fund",
-    "JM Mid Cap Fund",
     "Kotak Mid Cap Fund",
     "LIC MF Mid Cap Fund",
-    "Mahindra Manulife Mid Cap Fund",
     "Motilal Oswal Midcap Fund",
     "Nippon India Growth Mid Cap Fund",
     "Quant Mid Cap Fund",
@@ -353,6 +350,14 @@
       "amc": "HDFC Mutual Fund",
       "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
       "error": "Only 0 named current holdings were visible; need at least 5"
+    },
+    {
+      "family": "Kotak Mid Cap Fund",
+      "error": "First-party page does not contain the exact staged Mid Cap family identity"
+    },
+    {
+      "family": "Sundaram Mid Cap Fund",
+      "error": "Sundaram fund-card row is not current: unknown"
     }
   ],
   "production_writes": 0,
@@ -362,5 +367,5 @@
     "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
     "Current evidence and complete portfolio coverage are reported separately."
   ],
-  "built_at": "2026-09-28T03:07:38+00:00"
+  "built_at": "2026-09-28T03:55:19+00:00"
 }
