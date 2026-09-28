@@ -1,0 +1,52 @@
+name: Isolated Mid Cap benchmark contract diagnostic
+on:
+  push:
+    branches: ['diag/midcap-benchmark-contracts-20260928']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Read official page labels without retaining financial records
+        run: |
+          uv run --frozen python - <<'PY'
+          import hashlib,json,re
+          from unittest.mock import patch
+          from bs4 import BeautifulSoup
+          from tracker import providers,db
+          urls={
+            'Mirae':'https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund',
+            'Axis':'https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular',
+            'ABSL':'https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html',
+            'Invesco':'https://www.invescomutualfund.com/our-funds/fund/equity/invesco-india-mid-cap-fund/211G',
+          }
+          for name,url in urls.items():
+            try:
+              with patch.object(db,'connect',side_effect=AssertionError('database forbidden')):
+                body,_,typ=providers.fetch(url,archive=False,max_bytes=6*1024*1024)
+              soup=BeautifulSoup(body,'html.parser')
+              for tag in soup(['script','style','nav','footer']):tag.decompose()
+              headings=[str(x)[:600] for x in soup.find_all(re.compile('^h[1-4]$')) if re.search('mid.?cap|benchmark|fund facts',x.get_text(' ',strip=True),re.I)][:18]
+              found=[]
+              for node in soup.find_all(string=re.compile('benchmark',re.I)):
+                if len(node.strip())>200:continue
+                parent=node.parent
+                while parent.parent and len(parent.get_text(' ',strip=True))<90:parent=parent.parent
+                found.append(str(parent)[:2000])
+                if len(found)>=12:break
+              print(json.dumps({'name':name,'source':url,'bytes':len(body),'type':typ,'sha256':hashlib.sha256(body).hexdigest(),'headings':headings,'benchmark_blocks':found},ensure_ascii=False))
+            except Exception as exc:print(json.dumps({'name':name,'source':url,'error':str(exc)[:300]}))
+          PY
