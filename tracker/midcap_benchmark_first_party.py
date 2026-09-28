@@ -28,6 +28,8 @@ HOSTS={
     "digitalassets.canararobeco.com","www.kotakmf.com","www.wealthcompanyamc.in",
     "www.boimf.in","www.pgimindia.com","www.franklintempletonindia.com",
     "www.utimf.com","www.hdfcfund.com","www.dspim.com","www.heliosmf.in",
+    "www.mahindramanulife.com","www.tatamutualfund.com","www.sundarammutual.com",
+    "www.jmfinancialmf.com","www.barodabnpparibasmf.in",
 }
 
 INDEX_PATTERNS=(
