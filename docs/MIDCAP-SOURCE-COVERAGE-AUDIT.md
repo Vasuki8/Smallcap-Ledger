@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-28T17:35:52+00:00
+Prepared: 2026-09-28T19:56:46+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
@@ -10,15 +10,15 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 
 | Family | AMC | AUM | Direct TER | Benchmark identity | Current portfolio | AMC source candidates | Gaps |
 | --- | --- | --- | --- | --- | --- | ---: | --- |
-| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | 1.2300% · 2026-09-25 | Gap | Gap | 13 | aum, benchmark_identity, current_portfolio |
+| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | 1.2300% · 2026-09-27 | Gap | Gap | 13 | aum, benchmark_identity, current_portfolio |
 | Axis Midcap Fund | Axis Mutual Fund | Gap | 0.8400% · 2026-09-25 | Gap | Gap | 4 | aum, benchmark_identity, current_portfolio |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap | Gap | Gap | 13 | aum, direct_ter, benchmark_identity, current_portfolio |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Gap | Gap | Gap | Gap | 12 | aum, direct_ter, benchmark_identity, current_portfolio |
-| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Gap | 0.7800% · 2026-09-27 | Gap | Gap | 12 | aum, benchmark_identity, current_portfolio |
+| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Gap | 0.7800% · 2026-09-28 | Gap | Gap | 12 | aum, benchmark_identity, current_portfolio |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | Gap | Gap | Gap | Gap | 13 | aum, direct_ter, benchmark_identity, current_portfolio |
-| DSP Midcap Fund | DSP Mutual Fund | Gap | 0.8300% · 2026-09-25 | Gap | Gap | 10 | aum, benchmark_identity, current_portfolio |
-| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Gap | 0.6800% · 2026-09-27 | Gap | Gap | 10 | aum, benchmark_identity, current_portfolio |
-| Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Gap | 1.1500% · 2026-09-25 | Gap | Gap | 6 | aum, benchmark_identity, current_portfolio |
+| DSP Midcap Fund | DSP Mutual Fund | Gap | 0.8300% · 2026-09-28 | Gap | Gap | 10 | aum, benchmark_identity, current_portfolio |
+| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Gap | 0.6800% · 2026-09-28 | Gap | Gap | 10 | aum, benchmark_identity, current_portfolio |
+| Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Gap | 1.1600% · 2026-09-28 | Gap | Gap | 6 | aum, benchmark_identity, current_portfolio |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | Gap | 0.7600% · 2026-09-24 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
 | Helios Mid Cap Fund | Helios Mutual Fund | Gap | Gap | Gap | Gap | 10 | aum, direct_ter, benchmark_identity, current_portfolio |
 | HSBC Midcap Fund | HSBC Mutual Fund | Gap | Gap | Gap | Gap | 13 | aum, direct_ter, benchmark_identity, current_portfolio |
@@ -27,11 +27,11 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | ITI Mid Cap Fund | ITI Mutual Fund | Gap | 0.9100% · 2026-09-28 | Gap | Gap | 10 | aum, benchmark_identity, current_portfolio |
 | JM Mid Cap Fund | JM Financial Mutual Fund | Gap | Gap | Gap | Gap | 5 | aum, direct_ter, benchmark_identity, current_portfolio |
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | Gap | Gap | Gap | Gap | 20 | aum, direct_ter, benchmark_identity, current_portfolio |
-| LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | 1.7700% · 2026-09-27 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
+| LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | 1.7700% · 2026-09-28 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Gap | Gap | Gap | Gap | 10 | aum, direct_ter, benchmark_identity, current_portfolio |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | Gap | Gap | Gap | Gap | 14 | aum, direct_ter, benchmark_identity, current_portfolio |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | 0.9300% · 2026-09-25 | Gap | Gap | 8 | aum, benchmark_identity, current_portfolio |
-| Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | 0.7900% · 2026-09-24 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
+| Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | 0.7900% · 2026-09-28 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | Gap | 0.7400% · 2026-09-28 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
 | Quant Mid Cap Fund | quant Mutual Fund | Gap | 1.1800% · 2026-09-28 | Gap | Gap | 11 | aum, benchmark_identity, current_portfolio |
 | Samco Mid Cap Fund | Samco Mutual Fund | Gap | 1.5800% · 2026-09-28 | Gap | Gap | 9 | aum, benchmark_identity, current_portfolio |

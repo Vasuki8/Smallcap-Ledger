@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-09-28T17:40:57+00:00",
+  "checked_at": "2026-09-28T20:01:23+00:00",
   "scope": "current_production_operational_health",
   "database": {
-    "bytes": 132055040,
+    "bytes": 131887104,
     "integrity": "ok",
     "foreign_key_violations": []
   },
@@ -17,6 +17,16 @@
         "bytes": 2498478753
       }
     }
+  },
+  "release_archive": {
+    "status": "ok",
+    "tag": "tracker-history",
+    "asset_count": 117,
+    "compressed_bytes": 2734002965,
+    "review_threshold_assets": 750,
+    "remaining_to_review_threshold": 633,
+    "review_due": false,
+    "policy": "review_only_no_automatic_deletion"
   },
   "publication": {
     "hard_budget_bytes": 262144000,
