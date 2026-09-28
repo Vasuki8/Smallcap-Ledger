@@ -3,7 +3,7 @@
   "audited_on": "2026-09-28",
   "repository": "Vasuki8/Smallcap-Ledger",
   "main_sha": "3c98b579a7ef612441babd84c19ddea2f215fbfa",
-  "destructive_actions_taken": false,
+  "destructive_actions_taken": true,
   "criteria": {
     "high_confidence_candidate": "Branch has no open PR, has a merged PR to main, and current branch tip SHA exactly equals that merged PR head SHA.",
     "hold_post_merge_or_moved": "Branch has merge evidence but current tip differs from the merged PR head; it may contain post-merge work.",
@@ -2344,8 +2344,32 @@
     ]
   },
   "notes": [
-    "This report is read-only. No branch was deleted or moved.",
-    "A merged PR alone is not enough for the high-confidence list; exact current tip equality prevents silently deleting branches with commits added after merge.",
-    "Deletion remains a destructive owner action and requires explicit approval."
-  ]
+    "The original classification evidence is preserved in this file.",
+    "On 2026-09-28 the repository owner explicitly approved deletion of the 299 high-confidence merged-tip candidates only.",
+    "Execution revalidated current branch tips and open PRs immediately before deletion; all 299 were exact matches, with zero skips or failures.",
+    "Post-cleanup verification found zero approved-candidate survivors. Review-required and newer branches were not deleted.",
+    "The one-time execution workflow is removed after recording this result."
+  ],
+  "execution": {
+    "owner_approval_recorded": true,
+    "workflow_run_id": 36477739743,
+    "workflow_commit": "785918d57610daeb0f50522a9efcf06e651cbf3a",
+    "completed_at": "2026-09-28T20:16:46Z",
+    "expected_candidates": 299,
+    "eligible_exact_matches": 299,
+    "deleted": 299,
+    "skipped_missing": 0,
+    "skipped_moved": 0,
+    "skipped_open_pr": 0,
+    "failures": 0,
+    "post_cleanup_verification": {
+      "total_branches": 60,
+      "approved_candidate_survivors": 0
+    },
+    "production_verification": {
+      "run_number": 662,
+      "run_id": 36477739739,
+      "conclusion": "success"
+    }
+  }
 }
