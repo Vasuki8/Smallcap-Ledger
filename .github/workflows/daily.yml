@@ -55,6 +55,8 @@ jobs:
         run: uv run --frozen python scripts/github_state.py restore
       - name: Load reviewed retention classifications
         run: uv run --frozen python scripts/prepare_retention_metadata.py --apply
+      - name: Establish staged audit generation boundary
+        run: echo "MIDCAP_AUDIT_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: Preview staged Mid Cap universe
         timeout-minutes: 3
         continue-on-error: true
