@@ -1,0 +1,43 @@
+name: Isolated benchmark role contract check
+on:
+  push:
+    branches: ['diag/midcap-benchmark-role-20260928']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Inspect exact registered sources without database or archive writes
+        run: |
+          uv run --frozen python - <<'PY'
+          import hashlib,json,re
+          from unittest.mock import patch
+          from bs4 import BeautifulSoup
+          from tracker import db,providers
+          from tracker import midcap_benchmark_documents as d
+          with patch.object(db,'connect',side_effect=AssertionError('DB forbidden')):
+              for family,url in d.SOURCES.items():
+                  body,_,typ=providers.fetch(url,archive=False,max_bytes=d.MAX_BYTES)
+                  print(json.dumps({'family':family,'source':url,'sha256':hashlib.sha256(body).hexdigest(),'content_type':typ}))
+                  if family.startswith('Aditya'):
+                      soup=BeautifulSoup(body.decode('utf-8'),'html.parser')
+                      for tag in soup.find_all(string=re.compile(r'Benchmark\s*:|Fund Snapshot',re.I)):
+                          print('LABEL_PARENT',str(tag.parent)[:3000])
+                          print('LABEL_GRANDPARENT',str(tag.parent.parent)[:5000])
+                      for h in soup.find_all(['h1','h2']):
+                          if 'Midcap Fund' in h.get_text(): print('HEADING_PARENT',str(h.parent)[:4500])
+                  else:
+                      print('SBI_FIRST_PAGE_TEXT',repr(d._pdf_first_page_text(body)))
+          PY
