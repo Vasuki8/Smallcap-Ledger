@@ -1,17 +1,17 @@
 {
   "families": 34,
-  "current_portfolio_evidence": 9,
-  "current_complete_portfolios": 1,
-  "remaining": 25,
+  "current_portfolio_evidence": 12,
+  "current_complete_portfolios": 2,
+  "remaining": 22,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
       "amc": "Aditya Birla Sun Life Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 78,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip"
     },
     {
       "family": "Axis Midcap Fund",
@@ -178,11 +178,11 @@
     {
       "family": "Mirae Asset Midcap Fund",
       "amc": "Mirae Asset Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
-      "complete": false,
-      "source": null
+      "as_of": "2026-08-31",
+      "positions_observed": 68,
+      "scope": "structured_monthly_portfolio",
+      "complete": true,
+      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx"
     },
     {
       "family": "Motilal Oswal Midcap Fund",
@@ -205,11 +205,11 @@
     {
       "family": "PGIM India Midcap Fund",
       "amc": "PGIM India Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 109,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx"
     },
     {
       "family": "Quant Mid Cap Fund",
@@ -312,7 +312,6 @@
     }
   ],
   "remaining_families": [
-    "Aditya Birla Sun Life Midcap Fund",
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
     "Edelweiss Mid Cap Fund",
@@ -325,10 +324,8 @@
     "Kotak Mid Cap Fund",
     "LIC MF Mid Cap Fund",
     "Mahindra Manulife Mid Cap Fund",
-    "Mirae Asset Midcap Fund",
     "Motilal Oswal Midcap Fund",
     "Nippon India Growth Mid Cap Fund",
-    "PGIM India Midcap Fund",
     "Quant Mid Cap Fund",
     "Samco Mid Cap Fund",
     "Sundaram Mid Cap Fund",
@@ -365,5 +362,5 @@
     "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
     "Current evidence and complete portfolio coverage are reported separately."
   ],
-  "built_at": "2026-09-28T02:44:12+00:00"
+  "built_at": "2026-09-28T02:57:27+00:00"
 }

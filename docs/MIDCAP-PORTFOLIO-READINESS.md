@@ -1,10 +1,10 @@
 # Mid Cap current portfolio readiness
 
-Current evidence: **9 / 34** · complete current portfolios: **1** · remaining: **25**.
+Current evidence: **12 / 34** · complete current portfolios: **2** · remaining: **22**.
 
 | Family | AMC | As of | Positions | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
-| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | 0 | Gap | false | Gap |
+| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | 2026-08-31 | 78 | structured_monthly_portfolio | false | https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip |
 | Axis Midcap Fund | Axis Mutual Fund | 2026-08-31 | 90 | structured_monthly_portfolio | false | https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | 0 | Gap | false | Gap |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Gap | 0 | Gap | false | Gap |
@@ -23,10 +23,10 @@ Current evidence: **9 / 34** · complete current portfolios: **1** · remaining:
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | Gap | 0 | Gap | false | Gap |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | 0 | Gap | false | Gap |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Gap | 0 | Gap | false | Gap |
-| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | Gap | 0 | Gap | false | Gap |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 2026-08-31 | 68 | structured_monthly_portfolio | true | https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | 0 | Gap | false | Gap |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | 0 | Gap | false | Gap |
-| PGIM India Midcap Fund | PGIM India Mutual Fund | Gap | 0 | Gap | false | Gap |
+| PGIM India Midcap Fund | PGIM India Mutual Fund | 2026-08-31 | 109 | structured_monthly_portfolio | false | https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx |
 | Quant Mid Cap Fund | quant Mutual Fund | Gap | 0 | Gap | false | Gap |
 | SBI MIDCAP FUND | SBI Mutual Fund | 2026-08-31 | 61 | structured_monthly_portfolio | false | https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2 |
 | Samco Mid Cap Fund | Samco Mutual Fund | Gap | 0 | Gap | false | Gap |

@@ -1,0 +1,60 @@
+{
+  "staged_category": "mid-cap",
+  "families": 34,
+  "policy": {
+    "aum": "100% of staged families",
+    "direct_ter": "at least 90% of staged families; remaining gaps must stay explicit",
+    "benchmark_identity": "at least 90% exact first-party reported benchmark identity",
+    "current_portfolio_evidence": "at least 80% current regulatory month-end evidence",
+    "portfolio_completeness": "tracked separately; not a launch gate when partial coverage is explicitly labelled",
+    "public_surface": "category-aware exporter/API/UI dry run must pass before the switch is enabled"
+  },
+  "required": {
+    "aum": 34,
+    "direct_ter": 31,
+    "benchmark_identity": 31,
+    "current_portfolio_evidence": 28
+  },
+  "actual": {
+    "aum": 34,
+    "direct_ter": 31,
+    "benchmark_identity": 12,
+    "current_portfolio_evidence": 12,
+    "current_complete_portfolios": 2
+  },
+  "remaining_to_data_gate": {
+    "aum": 0,
+    "direct_ter": 0,
+    "benchmark_identity": 19,
+    "current_portfolio_evidence": 16
+  },
+  "history": {
+    "scheme_codes": 135,
+    "nav_scheme_codes": 135,
+    "history_failed": 0
+  },
+  "gates": {
+    "scheme_nav_identity": true,
+    "aum": true,
+    "direct_ter": true,
+    "benchmark_identity": false,
+    "current_portfolio_evidence": false,
+    "source_fetch_health": true,
+    "category_aware_public_surface": false
+  },
+  "data_ready": false,
+  "launch_ready": false,
+  "blockers": [
+    "benchmark_identity",
+    "current_portfolio_evidence",
+    "category_aware_public_surface"
+  ],
+  "recommended_action": "continue_source_coverage",
+  "public_export_enabled": false,
+  "production_writes": 0,
+  "notes": [
+    "These thresholds are a product-quality launch policy for this tracker, not a regulatory rule.",
+    "Missing data remains visibly unavailable; thresholds never authorize inferred or third-party substitutions.",
+    "The launch gate cannot itself enable Mid Cap. Publication requires a separate reviewed category-aware exporter/API/UI change."
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "built_at": "2026-09-28T02:57:27+00:00",
+  "staged_category": "mid-cap",
+  "portfolio_expected_as_of": "2026-08-31",
+  "targets": 3,
+  "recovered": 3,
+  "failed": 0,
+  "results": [
+    {
+      "family": "Aditya Birla Sun Life Midcap Fund",
+      "amc": "Aditya Birla Sun Life Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
+      "as_of": "2026-08-31",
+      "positions_observed": 78,
+      "complete": false,
+      "unknown_rows": [
+        "Margin amount for Derivative positions"
+      ],
+      "aum": 6966.2854,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip",
+      "source_title": "Monthly Portfolios as on August 31, 2026",
+      "zip_entry": "31082026_ABSLMF_MonthlyDisclosure.xls",
+      "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
+      "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
+      "source_content_type": "application/x-zip-compressed",
+      "observed_at": "2026-09-28T02:57:21+00:00"
+    },
+    {
+      "family": "PGIM India Midcap Fund",
+      "amc": "PGIM India Mutual Fund",
+      "status": "recovered",
+      "sheet": "Mid Cap",
+      "as_of": "2026-08-31",
+      "positions_observed": 109,
+      "complete": false,
+      "unknown_rows": [
+        "Clearing Corporation of India Ltd."
+      ],
+      "aum": 11217.6728,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx",
+      "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
+      "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T02:57:24+00:00"
+    },
+    {
+      "family": "Mirae Asset Midcap Fund",
+      "amc": "Mirae Asset Mutual Fund",
+      "status": "recovered",
+      "sheet": "MAMCF",
+      "as_of": "2026-08-31",
+      "positions_observed": 68,
+      "complete": true,
+      "unknown_rows": [],
+      "aum": 20891.685,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx",
+      "source_title": "Portfolio Details as on 31st August 2026 for Mirae Asset Midcap Fund",
+      "source_sha256": "f35304f2c9cf880e753ea44811b51fd2a3f06d5251c9a8a7667c76244e21d0bc",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T02:57:27+00:00"
+    }
+  ],
+  "errors": [],
+  "production_writes": 0,
+  "public_export_enabled": false,
+  "notes": [
+    "Batch 4 reuses only proven first-party transport/schema logic and exact staged Mid Cap identity.",
+    "Every source is current-month validated and parsed in memory; no live holdings or metrics are written.",
+    "Completeness is whatever the existing structured parser proves; partial evidence is never promoted."
+  ]
+}
