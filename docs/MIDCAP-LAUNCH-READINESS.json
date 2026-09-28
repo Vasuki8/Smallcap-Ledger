@@ -1,13 +1,17 @@
 {
+  "schema_version": 2,
+  "built_at": "2026-09-28T05:15:45.442468+00:00",
+  "evaluated_at": "2026-09-28T05:15:45.442468+00:00",
   "staged_category": "mid-cap",
   "families": 34,
+  "portfolio_expected_as_of": "2026-08-31",
   "policy": {
     "aum": "100% of staged families",
-    "direct_ter": "at least 90% of staged families; remaining gaps must stay explicit",
+    "direct_ter": "at least 90% of staged families; remaining gaps stay explicit",
     "benchmark_identity": "at least 90% exact first-party reported benchmark identity",
     "current_portfolio_evidence": "at least 80% current regulatory month-end evidence",
-    "portfolio_completeness": "tracked separately; not a launch gate when partial coverage is explicitly labelled",
-    "public_surface": "category-aware exporter/API/UI dry run must pass before the switch is enabled"
+    "portfolio_completeness": "tracked separately; partial records are not relabelled",
+    "public_surface": "category-aware exporter/API/UI dry run must pass separately"
   },
   "required": {
     "aum": 34,
@@ -17,14 +21,14 @@
   },
   "actual": {
     "aum": 34,
-    "direct_ter": 31,
+    "direct_ter": 30,
     "benchmark_identity": 12,
     "current_portfolio_evidence": 16,
     "current_complete_portfolios": 4
   },
   "remaining_to_data_gate": {
     "aum": 0,
-    "direct_ter": 0,
+    "direct_ter": 1,
     "benchmark_identity": 19,
     "current_portfolio_evidence": 12
   },
@@ -33,18 +37,135 @@
     "nav_scheme_codes": 135,
     "history_failed": 0
   },
+  "input_health": [
+    {
+      "path": "docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json",
+      "sha256": "764197f770267a93d04c0cb96567d1cb1aa8cd5d4b877507ce47b8478206ad7a",
+      "built_at": "2026-09-28T05:13:19+00:00",
+      "ok": true,
+      "error": null,
+      "name": "source_audit"
+    },
+    {
+      "path": "docs/MIDCAP-TER-READINESS.json",
+      "sha256": "5fd176cabd664f298a2f9fde84dce03614f57346f5a867764bc7016a6849d6eb",
+      "built_at": "2026-09-28T05:13:19+00:00",
+      "ok": true,
+      "error": null,
+      "name": "ter"
+    },
+    {
+      "path": "docs/MIDCAP-BENCHMARK-READINESS.json",
+      "sha256": "260de539580e62b09863d371b56144afd39e5e492e6661c251dd19e043ef016e",
+      "built_at": "2026-09-28T05:14:15+00:00",
+      "ok": true,
+      "error": null,
+      "name": "benchmark"
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-READINESS.json",
+      "sha256": "f71c8bc61b72cacca14212ac5161eedf2c0d9e163c870f9ec66cacf47c2ee73f",
+      "built_at": "2026-09-28T05:15:45.365686+00:00",
+      "ok": true,
+      "error": null,
+      "name": "portfolio"
+    },
+    {
+      "path": "deployment/midcap-history-status.json",
+      "sha256": "18254503eb82d6635b865edaa8477aab7239990275f33254f56e016a340c9212",
+      "built_at": "2026-09-28T05:09:13+00:00",
+      "ok": true,
+      "error": null,
+      "name": "history"
+    },
+    {
+      "path": "docs/MIDCAP-TER-FIRST-PARTY-BATCH1.json",
+      "sha256": "f418d2c979533c51c9ace25922358d1a01f0a5df954149ab1efeb0790ae4063d",
+      "built_at": "2026-09-28T05:13:47+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-TER-FIRST-PARTY-BATCH1.json"
+    },
+    {
+      "path": "docs/MIDCAP-TER-FIRST-PARTY-BATCH2.json",
+      "sha256": "0cf89649773c5367474e72662ae2ff5616fdd5d86c37c589f68503a4dc4349e9",
+      "built_at": "2026-09-28T05:13:52+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-TER-FIRST-PARTY-BATCH2.json"
+    },
+    {
+      "path": "docs/MIDCAP-BENCHMARK-BATCH1.json",
+      "sha256": "ab8a8fd7d939bcf947236e2215f007d825b22d23ddcaf501bd1d6d4a7908e751",
+      "built_at": "2026-09-28T05:14:06+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-BENCHMARK-BATCH1.json"
+    },
+    {
+      "path": "docs/MIDCAP-BENCHMARK-BATCH2.json",
+      "sha256": "eb9857c740a407005d503de555f6be0f17e8d13991bd4736052221e6daacd43f",
+      "built_at": "2026-09-28T05:14:15+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-BENCHMARK-BATCH2.json"
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH1.json",
+      "sha256": "da0dddd61e4003a4ad8f39478479f5bf0629f36b2442b29d2e10a6523aa24e96",
+      "built_at": "2026-09-28T05:14:20+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-PORTFOLIO-BATCH1.json"
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH2.json",
+      "sha256": "497fa247aa4257b54f2c7dae9950dcde42c7b75807c9e271f547e6f5f7588704",
+      "built_at": "2026-09-28T05:14:23+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-PORTFOLIO-BATCH2.json"
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH3.json",
+      "sha256": "8f6c8c6b124bb4061eb4b9541e791d2a465d2b5786c86297da3060b873f0a3d6",
+      "built_at": "2026-09-28T05:15:18+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-PORTFOLIO-BATCH3.json"
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH4.json",
+      "sha256": "9b96cf527c53c872c439e621faee4e374d30ed53c48cb70a2020c13c91091895",
+      "built_at": "2026-09-28T05:15:31+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-PORTFOLIO-BATCH4.json"
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH5.json",
+      "sha256": "24e6e998d0e39c547207a0d8cab1e9f78fa8e7a6ed13320c7a8a8c5c223b225d",
+      "built_at": "2026-09-28T05:15:45+00:00",
+      "ok": true,
+      "error": null,
+      "name": "MIDCAP-PORTFOLIO-BATCH5.json"
+    }
+  ],
+  "input_issues": [],
   "gates": {
     "scheme_nav_identity": true,
     "aum": true,
-    "direct_ter": true,
+    "direct_ter": false,
     "benchmark_identity": false,
     "current_portfolio_evidence": false,
     "source_fetch_health": true,
+    "audit_input_integrity": true,
     "category_aware_public_surface": false
   },
   "data_ready": false,
   "launch_ready": false,
   "blockers": [
+    "direct_ter",
     "benchmark_identity",
     "current_portfolio_evidence",
     "category_aware_public_surface"
@@ -53,8 +174,9 @@
   "public_export_enabled": false,
   "production_writes": 0,
   "notes": [
-    "These thresholds are a product-quality launch policy for this tracker, not a regulatory rule.",
-    "Missing data remains visibly unavailable; thresholds never authorize inferred or third-party substitutions.",
-    "The launch gate cannot itself enable Mid Cap. Publication requires a separate reviewed category-aware exporter/API/UI change."
+    "Thresholds are product-quality policy, not regulatory rules, and are unchanged.",
+    "Current portfolio counts are independently re-evaluated from source evidence at this clock.",
+    "Benchmark identity is not benchmark-series availability; the dry run must show the correct series or its absence.",
+    "No silent Small Cap comparator, inferred values or automatic public-category promotion is authorized."
   ]
 }

@@ -1,8 +1,8 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-28T04:40:45+00:00
+Prepared: 2026-09-28T05:13:19+00:00
 
-Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
+Direct TER evidence: **30 / 34** · AMFI: **20** · first-party AMC: **10** · remaining: **4**.
 
 | Family | AMC | Direct TER | Regular TER | As of | Evidence | Source |
 | --- | --- | ---: | ---: | --- | --- | --- |
@@ -31,7 +31,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | PGIM India Midcap Fund | PGIM India Mutual Fund | 0.7400% | 1.9200% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Quant Mid Cap Fund | quant Mutual Fund | 1.1800% | 2.2100% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | SBI MIDCAP FUND | SBI Mutual Fund | 1.0500% | 1.8000% | 2026-09-24 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| Samco Mid Cap Fund | Samco Mutual Fund | 1.5800% | 3.0000% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
+| Samco Mid Cap Fund | Samco Mutual Fund | Gap | Gap | Gap | Gap | Gap |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | 1.0600% | 1.8600% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | 1.9000% | 3.5200% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Tata Mid Cap Fund | Tata Mutual Fund | 0.8600% | 2.0300% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
@@ -45,6 +45,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 
 - BANDHAN MID CAP FUND
 - BANK OF INDIA MID CAP FUND
+- Samco Mid Cap Fund
 - WhiteOak Capital Mid Cap Fund
 
 ## Notes

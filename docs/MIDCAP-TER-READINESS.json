@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-09-28T04:40:45+00:00",
+  "built_at": "2026-09-28T05:13:19+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 31,
-    "amfi": 21,
+    "direct_ter": 30,
+    "amfi": 20,
     "first_party_amc": 10,
-    "remaining": 3
+    "remaining": 4
   },
   "families": [
     {
@@ -315,12 +315,12 @@
     {
       "family": "Samco Mid Cap Fund",
       "amc": "Samco Mutual Fund",
-      "direct_ter_available": true,
-      "direct_ter": 1.58,
-      "regular_ter": 3.0,
-      "as_of": "2026-09-25",
-      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
-      "evidence_channel": "amfi",
+      "direct_ter_available": false,
+      "direct_ter": null,
+      "regular_ter": null,
+      "as_of": null,
+      "source": null,
+      "evidence_channel": null,
       "identity": null
     },
     {
@@ -418,6 +418,7 @@
   "remaining_families": [
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
+    "Samco Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
   "production_writes": 0,

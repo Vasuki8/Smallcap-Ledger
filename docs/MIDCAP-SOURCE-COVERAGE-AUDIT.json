@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T04:40:45+00:00",
+  "built_at": "2026-09-28T05:13:19+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -9,8 +9,8 @@
     "families": 34,
     "scheme_codes": 135,
     "aum": 34,
-    "ter_any": 21,
-    "direct_ter": 21,
+    "ter_any": 20,
+    "direct_ter": 20,
     "benchmark_identity": 0,
     "portfolio": 0,
     "portfolio_current": 0,
@@ -671,14 +671,12 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 18,
-          "mid_cap_rows": 18,
-          "sha256": "cc954d72665bbe95c550e538ba37df07a183e776a797d150e21fa78fa5cdc1d4"
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
         }
       ],
-      "matched_families": [
-        "Samco Mid Cap Fund"
-      ]
+      "matched_families": []
     },
     {
       "kind": "ter_mid_cap_by_amc",
@@ -1058,6 +1056,24 @@
       "kind": "ter_mid_cap_by_amc",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "month": "08-2026",
+      "amc": "Samco Mutual Fund",
+      "amfi_mf_name": "Samco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "08-2026",
       "amc": "The Wealth Company Mutual Fund",
       "amfi_mf_name": "The Wealth Company Mutual Fund",
       "category_id": "17",
@@ -1292,6 +1308,24 @@
       "kind": "ter_mid_cap_by_amc",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "month": "07-2026",
+      "amc": "Samco Mutual Fund",
+      "amfi_mf_name": "Samco Mutual Fund",
+      "category_id": "17",
+      "reported_pages": 1,
+      "pages_checked": [
+        {
+          "page": 1,
+          "rows": 0,
+          "mid_cap_rows": 0,
+          "sha256": "0ddf746cc199ec92af9fda334cae90bd5c727bea58428176d8c43ca7b5f1c308"
+        }
+      ],
+      "matched_families": []
+    },
+    {
+      "kind": "ter_mid_cap_by_amc",
+      "source": "https://www.amfiindia.com/ter-of-mf-schemes",
+      "month": "07-2026",
       "amc": "The Wealth Company Mutual Fund",
       "amfi_mf_name": "The Wealth Company Mutual Fund",
       "category_id": "17",
@@ -1328,7 +1362,7 @@
       "kind": "ter_mid_cap_contract_summary",
       "queried_amcs": 34,
       "target_families": 34,
-      "matched_families": 21,
+      "matched_families": 20,
       "unmatched_families": [
         "BANDHAN MID CAP FUND",
         "BANK OF INDIA MID CAP FUND",
@@ -1341,6 +1375,7 @@
         "Kotak Mid Cap Fund",
         "Mahindra Manulife Mid Cap Fund",
         "Mirae Asset Midcap Fund",
+        "Samco Mid Cap Fund",
         "The Wealth Company Mid Cap Fund",
         "WhiteOak Capital Mid Cap Fund"
       ],
@@ -4031,21 +4066,8 @@
         "scheme_name": "Samco Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
-      "ter": {
-        "as_of": "2026-09-25",
-        "scheme_name": "Samco Mid Cap Fund",
-        "category": "Equity Scheme - Mid Cap Fund",
-        "source": "https://www.amfiindia.com/ter-of-mf-schemes",
-        "direct": {
-          "value": 1.58,
-          "unit": "% p.a. · AMC-reported via AMFI"
-        },
-        "regular": {
-          "value": 3.0,
-          "unit": "% p.a. · AMC-reported via AMFI"
-        }
-      },
-      "direct_ter_available": true,
+      "ter": null,
+      "direct_ter_available": false,
       "benchmark_identity": null,
       "portfolio": null,
       "portfolio_current": false,
@@ -4108,6 +4130,7 @@
         }
       ],
       "coverage_gaps": [
+        "direct_ter",
         "benchmark_identity",
         "current_portfolio"
       ],
@@ -4789,7 +4812,7 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-28T04:28:04+00:00"
+          "last_checked": "2026-09-28T04:44:35+00:00"
         }
       ],
       "coverage_gaps": [
@@ -4860,7 +4883,7 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-28T04:28:06+00:00"
+          "last_checked": "2026-09-28T04:44:38+00:00"
         }
       ],
       "coverage_gaps": [

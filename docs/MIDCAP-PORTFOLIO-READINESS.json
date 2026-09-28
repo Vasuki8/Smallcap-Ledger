@@ -1,4 +1,9 @@
 {
+  "schema_version": 2,
+  "staged_category": "mid-cap",
+  "built_at": "2026-09-28T05:15:45.365686+00:00",
+  "evaluated_at": "2026-09-28T05:15:45.365686+00:00",
+  "portfolio_expected_as_of": "2026-08-31",
   "families": 34,
   "current_portfolio_evidence": 16,
   "current_complete_portfolios": 4,
@@ -7,308 +12,1729 @@
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
       "amc": "Aditya Birla Sun Life Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
       "as_of": "2026-08-31",
       "positions_observed": 78,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip"
+      "unknown_rows": [
+        "Margin amount for Derivative positions"
+      ],
+      "aum": 6966.2854,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip",
+      "source_title": "Monthly Portfolios as on August 31, 2026",
+      "zip_entry": "31082026_ABSLMF_MonthlyDisclosure.xls",
+      "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
+      "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
+      "source_content_type": "application/x-zip-compressed",
+      "observed_at": "2026-09-28T05:15:28+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Axis Midcap Fund",
       "amc": "Axis Mutual Fund",
+      "status": "recovered",
+      "sheet": "AXISMCF",
       "as_of": "2026-08-31",
       "positions_observed": 90,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx"
+      "unknown_rows": [
+        "Clearing Corporation of India Ltd",
+        "Clearing Corporation of India Ltd"
+      ],
+      "aum": 35425.0678,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx",
+      "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
+      "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:11+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "BANDHAN MID CAP FUND",
       "amc": "Bandhan Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "BANK OF INDIA MID CAP FUND",
       "amc": "Bank of India Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Baroda BNP Paribas Mid Cap Fund",
-      "amc": "Baroda BNP Paribas Mutual Fund",
+      "status": "recovered",
       "as_of": "2026-08-31",
       "positions_observed": 5,
+      "positions": [
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 3.33
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 2.76
+        },
+        {
+          "name": "PB Fintech Limited",
+          "weight": 2.46
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 2.37
+        },
+        {
+          "name": "IPCA Laboratories Limited",
+          "weight": 2.23
+        }
+      ],
       "scope": "top_5",
       "complete": false,
-      "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth"
+      "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
+      "source_sha256": "b431a2fd0a0a25d4f35037060fe49714ab225353133e9299ee2779d12c78830e",
+      "source_content_type": "text/html; charset=UTF-8",
+      "observed_at": "2026-09-28T05:14:20+00:00",
+      "amc": "Baroda BNP Paribas Mutual Fund",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Canara Robeco Mid Cap Fund",
-      "amc": "Canara Robeco Mutual Fund",
+      "status": "recovered",
       "as_of": "2026-08-31",
       "positions_observed": 59,
+      "positions": [
+        {
+          "name": "Lenskart Solutions Ltd",
+          "weight": 2.78
+        },
+        {
+          "name": "Eternal Ltd",
+          "weight": 2.38
+        },
+        {
+          "name": "Info Edge (India) Ltd",
+          "weight": 1.61
+        },
+        {
+          "name": "Swiggy Ltd",
+          "weight": 1.59
+        },
+        {
+          "name": "Vishal Mega Mart Ltd",
+          "weight": 1.34
+        },
+        {
+          "name": "Meesho Ltd",
+          "weight": 0.77
+        },
+        {
+          "name": "Bharat Heavy Electricals Ltd",
+          "weight": 2.72
+        },
+        {
+          "name": "Apar Industries Ltd",
+          "weight": 2.27
+        },
+        {
+          "name": "Premier Energies Ltd",
+          "weight": 2.21
+        },
+        {
+          "name": "Ge Vernova T&D India Ltd",
+          "weight": 1.71
+        },
+        {
+          "name": "Thermax Ltd",
+          "weight": 1.49
+        },
+        {
+          "name": "Multi Commodity Exchange Of India Ltd",
+          "weight": 3.13
+        },
+        {
+          "name": "360 One Wam Ltd",
+          "weight": 1.94
+        },
+        {
+          "name": "HDFC Asset Management Co Ltd",
+          "weight": 1.81
+        },
+        {
+          "name": "Billionbrains Garage Ventures Ltd",
+          "weight": 1.76
+        },
+        {
+          "name": "ICICI Prudential Asset Management Co Ltd",
+          "weight": 0.48
+        },
+        {
+          "name": "Federal Bank Ltd",
+          "weight": 2.58
+        },
+        {
+          "name": "Bank Of Maharashtra",
+          "weight": 2.21
+        },
+        {
+          "name": "IndusInd Bank Ltd",
+          "weight": 1.44
+        },
+        {
+          "name": "Coforge Ltd",
+          "weight": 2.67
+        },
+        {
+          "name": "Persistent Systems Ltd",
+          "weight": 2.21
+        },
+        {
+          "name": "Shriram Finance Ltd",
+          "weight": 2.36
+        },
+        {
+          "name": "L&T Finance Ltd",
+          "weight": 2.08
+        },
+        {
+          "name": "SRF Ltd",
+          "weight": 1.7
+        },
+        {
+          "name": "Solar Industries India Ltd",
+          "weight": 1.55
+        },
+        {
+          "name": "Linde India Ltd",
+          "weight": 1.02
+        },
+        {
+          "name": "Global Health Ltd",
+          "weight": 2.65
+        },
+        {
+          "name": "Max Healthcare Institute Ltd",
+          "weight": 1.26
+        },
+        {
+          "name": "Ajanta Pharma Ltd",
+          "weight": 1.56
+        },
+        {
+          "name": "Biocon Ltd",
+          "weight": 1.31
+        },
+        {
+          "name": "Abbott India Ltd",
+          "weight": 0.89
+        },
+        {
+          "name": "Uno Minda Ltd",
+          "weight": 1.4
+        },
+        {
+          "name": "MRF Ltd",
+          "weight": 0.94
+        },
+        {
+          "name": "Schaeffler India Ltd",
+          "weight": 0.77
+        },
+        {
+          "name": "Phoenix Mills Ltd",
+          "weight": 1.93
+        },
+        {
+          "name": "Prestige Estates Projects Ltd",
+          "weight": 1.14
+        },
+        {
+          "name": "Cochin Shipyard Ltd",
+          "weight": 1.51
+        },
+        {
+          "name": "Indo Mim Ltd",
+          "weight": 1.3
+        },
+        {
+          "name": "Radico Khaitan Ltd",
+          "weight": 1.68
+        },
+        {
+          "name": "Varun Beverages Ltd",
+          "weight": 0.84
+        },
+        {
+          "name": "NHPC Ltd",
+          "weight": 1.4
+        },
+        {
+          "name": "Torrent Power Ltd",
+          "weight": 1.11
+        },
+        {
+          "name": "J.K. Cement Ltd",
+          "weight": 1.28
+        },
+        {
+          "name": "Dalmia Bharat Ltd",
+          "weight": 1.15
+        },
+        {
+          "name": "One 97 Communications Ltd",
+          "weight": 2.39
+        },
+        {
+          "name": "Max Financial Services Ltd",
+          "weight": 2.33
+        },
+        {
+          "name": "Dixon Technologies (India) Ltd",
+          "weight": 1.44
+        },
+        {
+          "name": "Voltas Ltd",
+          "weight": 0.46
+        },
+        {
+          "name": "Blue Star Ltd",
+          "weight": 0.42
+        },
+        {
+          "name": "Indus Towers Ltd",
+          "weight": 1.22
+        },
+        {
+          "name": "Bharti Hexacom Ltd",
+          "weight": 0.9
+        },
+        {
+          "name": "Delhivery Ltd",
+          "weight": 1.08
+        },
+        {
+          "name": "Interglobe Aviation Ltd",
+          "weight": 0.87
+        },
+        {
+          "name": "Mahindra & Mahindra Ltd",
+          "weight": 1.83
+        },
+        {
+          "name": "Hindustan Petroleum Corporation Ltd",
+          "weight": 1.8
+        },
+        {
+          "name": "Chalet Hotels Ltd",
+          "weight": 1.73
+        },
+        {
+          "name": "L&T Technology Services Ltd",
+          "weight": 1.72
+        },
+        {
+          "name": "KEI Industries Ltd",
+          "weight": 1.54
+        },
+        {
+          "name": "Physicswallah Ltd",
+          "weight": 1.49
+        }
+      ],
       "scope": "full_page_portfolio",
       "complete": false,
-      "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html"
+      "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html",
+      "source_sha256": "1ab0d04dbf8cf7070e7502966af758780ff9d38c5e9378d7dea9870c46c13160",
+      "source_content_type": "text/html",
+      "observed_at": "2026-09-28T05:14:16+00:00",
+      "amc": "Canara Robeco Mutual Fund",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "DSP Midcap Fund",
       "amc": "DSP Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
       "as_of": "2026-08-31",
       "positions_observed": 65,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/8a6dbe504f-1789452169/dsp-monthend-portfolio-as-on-31-aug-2026.zip"
+      "unknown_rows": [
+        "TREPS / Reverse Repo Investments"
+      ],
+      "aum": 21018.5385,
+      "scope": "structured_monthly_portfolio",
+      "zip_entry": "DSP EquityFOF ISIN Portfolio as on 31 Aug 2026.xlsx",
+      "source": "https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/8a6dbe504f-1789452169/dsp-monthend-portfolio-as-on-31-aug-2026.zip",
+      "source_sha256": "7be409861d36404640a8d3a5635b83758b464f982b766444090245cc62f07963",
+      "workbook_sha256": "e6d2c0000cd0b055c285e502a429a934cf165063e893998a5c38d2222bb9a42c",
+      "source_content_type": "application/zip",
+      "observed_at": "2026-09-28T05:14:23+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Edelweiss Mid Cap Fund",
       "amc": "Edelweiss Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Franklin India Mid Cap Fund",
       "amc": "Franklin Templeton Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "HDFC Mid Cap Fund",
       "amc": "HDFC Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
       "as_of": "2026-08-31",
       "positions_observed": 81,
-      "scope": "structured_monthly_portfolio",
       "complete": true,
-      "source": "https://files.hdfcfund.com/s3fs-public/2026-09/Monthly%20HDFC%20Mid%20Cap%20Fund%20-%2031%20August%202026.xlsx"
+      "unknown_rows": [],
+      "aum": 108324.5467,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://files.hdfcfund.com/s3fs-public/2026-09/Monthly%20HDFC%20Mid%20Cap%20Fund%20-%2031%20August%202026.xlsx",
+      "source_sha256": "767a0a0025e82d8f74df9f31159f51bbc233b4085a1b7ae30f6e965db3574ea0",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:14:21+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "HSBC Midcap Fund",
       "amc": "HSBC Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Helios Mid Cap Fund",
       "amc": "Helios Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
       "as_of": "2026-08-31",
       "positions_observed": 81,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip"
+      "unknown_rows": [
+        "Equity & Equity Related Instruments",
+        "Listed / Awaiting Listing On Stock Exchanges",
+        "CRISIL Ltd.",
+        "GSPL India Transco Ltd",
+        "Others",
+        "Cash Margin - Derivatives"
+      ],
+      "aum": 8403.29876,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip",
+      "source_title": "Monthly Portfolio Disclosure August 2026",
+      "zip_entry": "ICICI Prudential Mid Cap Fund.xlsx",
+      "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
+      "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
+      "source_content_type": "application/x-zip-compressed",
+      "observed_at": "2026-09-28T05:15:09+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "ITI Mid Cap Fund",
       "amc": "ITI Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
+      "status": "recovered",
+      "sheet": "Mid cap  Fund",
       "as_of": "2026-08-31",
       "positions_observed": 43,
-      "scope": "structured_monthly_portfolio",
       "complete": true,
-      "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0"
+      "unknown_rows": [],
+      "aum": 15905.311,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0",
+      "source_title": "Complete monthly holdings 08/26",
+      "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:40+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
+      "status": "recovered",
+      "sheet": "JM Mid cap Fund",
       "as_of": "2026-08-31",
       "positions_observed": 72,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Aug%2031,%202026.xlsx"
+      "unknown_rows": [
+        "CCIL"
+      ],
+      "aum": 1360.291815,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Aug%2031,%202026.xlsx",
+      "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
+      "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:37+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Kotak Mid Cap Fund",
       "amc": "Kotak Mahindra Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "LIC MF Mid Cap Fund",
       "amc": "LIC Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
+      "status": "recovered",
       "as_of": "2026-08-31",
       "positions_observed": 59,
-      "scope": "factsheet_equity_only",
+      "positions": [
+        {
+          "name": "UNO Minda Limited",
+          "weight": 2.03,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Tube Investments of India Limited",
+          "weight": 1.84,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Belrise Industries Ltd.",
+          "weight": 1.75,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Minda Corporation Limited",
+          "weight": 1.4,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "CEAT Limited",
+          "weight": 1.36,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Schaeffler India Limited",
+          "weight": 1.0,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "KEI Industries Limited",
+          "weight": 2.56,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "AIA Engineering Limited",
+          "weight": 2.04,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Cochin Shipyard Limited",
+          "weight": 2.0,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "APL Apollo Tubes Limited",
+          "weight": 1.93,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 1.76,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Astral Limited",
+          "weight": 1.71,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Triveni Turbine Limited",
+          "weight": 1.36,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Elecon Engineering Company Limited",
+          "weight": 1.06,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Kirloskar Brothers Limited",
+          "weight": 0.94,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Garden Reach Shipbuilders & Engineers Limited",
+          "weight": 0.87,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Carborundum Universal Limited",
+          "weight": 0.66,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "SRF Limited",
+          "weight": 1.63,
+          "sector": "Chemicals",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Solar Industries India Limited",
+          "weight": 1.47,
+          "sector": "Chemicals",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Larsen & Toubro Limited",
+          "weight": 1.48,
+          "sector": "Construction",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "KEC International Limited",
+          "weight": 0.96,
+          "sector": "Construction",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "JK Cement Limited",
+          "weight": 1.74,
+          "sector": "Construction Materials",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Dalmia Bharat Limited",
+          "weight": 0.81,
+          "sector": "Construction Materials",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Blue Star Limited",
+          "weight": 1.59,
+          "sector": "Consumer Durables",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Kajaria Ceramics Limited",
+          "weight": 0.88,
+          "sector": "Consumer Durables",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "LG Electronics India Ltd",
+          "weight": 0.81,
+          "sector": "Consumer Durables",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "ITC Hotels Limited",
+          "weight": 0.85,
+          "sector": "Consumer Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Radico Khaitan Limited",
+          "weight": 1.93,
+          "sector": "Fast Moving Consumer Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Marico Limited",
+          "weight": 1.9,
+          "sector": "Fast Moving Consumer Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Varun Beverages Limited",
+          "weight": 1.19,
+          "sector": "Fast Moving Consumer Goods",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "The Federal Bank Limited",
+          "weight": 3.6,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "IndusInd Bank Limited",
+          "weight": 3.37,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Aditya Birla Capital Limited",
+          "weight": 2.81,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "L&T Finance Limited",
+          "weight": 2.79,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Nippon Life India Asset Management Limited",
+          "weight": 2.53,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "PB Fintech Limited",
+          "weight": 2.52,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "IDFC First Bank Limited",
+          "weight": 2.13,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Max Financial Services Limited",
+          "weight": 2.05,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Bank of Maharashtra",
+          "weight": 2.0,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Karur Vysya Bank Limited",
+          "weight": 1.64,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "360 One WAM Limited",
+          "weight": 1.54,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Shriram Finance Limited",
+          "weight": 1.45,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Equitas Small Finance Bank Limited",
+          "weight": 1.37,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "SBI Cards and Payment Services Limited",
+          "weight": 0.99,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Piramal Finance Limited",
+          "weight": 0.27,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Glenmark Pharmaceuticals Limited",
+          "weight": 2.59,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Anthem Biosciences Limited",
+          "weight": 2.1,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Fortis Healthcare Limited",
+          "weight": 2.09,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Biocon Limited",
+          "weight": 1.71,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Aster DM Quality Care Limited",
+          "weight": 1.21,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Coforge Limited",
+          "weight": 2.81,
+          "sector": "Information Technology",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Mphasis Limited",
+          "weight": 1.69,
+          "sector": "Information Technology",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "NMDC Limited",
+          "weight": 1.32,
+          "sector": "Metals & Mining",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Vedanta Aluminium Metal Limited",
+          "weight": 0.46,
+          "sector": "Metals & Mining",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "JSW Energy Limited",
+          "weight": 1.9,
+          "sector": "Power",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Godrej Properties Limited",
+          "weight": 1.4,
+          "sector": "Realty",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "JSW Infrastructure Ltd",
+          "weight": 1.68,
+          "sector": "Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Container Corporation of India Limited",
+          "weight": 0.99,
+          "sector": "Services",
+          "asset_type": "Equity"
+        },
+        {
+          "name": "Bharti Hexacom Limited",
+          "weight": 1.19,
+          "sector": "Telecommunication",
+          "asset_type": "Equity"
+        }
+      ],
       "complete": false,
-      "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html"
+      "scope": "factsheet_equity_only",
+      "completeness_note": "Sector and equity subtotals reconcile; non-equity assets are excluded.",
+      "equity_weight_sum": 97.71,
+      "sectors_checked": 16,
+      "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html",
+      "source_sha256": "53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640",
+      "source_content_type": "text/html",
+      "parser_version": "mahindra-midcap-issuer-rows-v2",
+      "validation_version": "sector-equity-reconciliation-v1",
+      "observed_at": "2026-09-28T05:15:38+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Mirae Asset Midcap Fund",
       "amc": "Mirae Asset Mutual Fund",
+      "status": "recovered",
+      "sheet": "MAMCF",
       "as_of": "2026-08-31",
       "positions_observed": 68,
-      "scope": "structured_monthly_portfolio",
       "complete": true,
-      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx"
+      "unknown_rows": [],
+      "aum": 20891.685,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx",
+      "source_title": "Portfolio Details as on 31st August 2026 for Mirae Asset Midcap Fund",
+      "source_sha256": "f35304f2c9cf880e753ea44811b51fd2a3f06d5251c9a8a7667c76244e21d0bc",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:31+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Motilal Oswal Midcap Fund",
       "amc": "Motilal Oswal Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Nippon India Growth Mid Cap Fund",
       "amc": "Nippon India Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "PGIM India Midcap Fund",
       "amc": "PGIM India Mutual Fund",
+      "status": "recovered",
+      "sheet": "Mid Cap",
       "as_of": "2026-08-31",
       "positions_observed": 109,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx"
+      "unknown_rows": [
+        "Clearing Corporation of India Ltd."
+      ],
+      "aum": 11217.6728,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx",
+      "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
+      "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:30+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Quant Mid Cap Fund",
       "amc": "quant Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "SBI MIDCAP FUND",
       "amc": "SBI Mutual Fund",
+      "status": "recovered",
+      "sheet": "SMIDCAP",
       "as_of": "2026-08-31",
       "positions_observed": 61,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2"
+      "unknown_rows": [
+        "Allied Blenders And Distillers Ltd.",
+        "Manpasand Beverages Ltd.",
+        "Margin amount for Derivative positions"
+      ],
+      "aum": 24518.3185,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2",
+      "source_title": "Download",
+      "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:14+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Samco Mid Cap Fund",
       "amc": "Samco Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Sundaram Mid Cap Fund",
       "amc": "Sundaram Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
       "as_of": "2026-08-31",
       "positions_observed": 79,
-      "scope": "structured_monthly_portfolio",
       "complete": true,
-      "source": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx"
+      "unknown_rows": [],
+      "aum": 14863.42933,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx",
+      "source_sha256": "7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "discovery_source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json",
+      "discovery_source_sha256": "c207757ae71d6f60ac9314a3f8bcf7c2f2fb0bd2ddc1aad4adaf65cf2a816c82",
+      "publisher_scheme_code": "MC",
+      "card_aum_as_of_raw": "31-Jul-2026",
+      "observed_at": "2026-09-28T05:15:45+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "TRUSTMF MID CAP FUND",
       "amc": "Trust Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Tata Mid Cap Fund",
       "amc": "Tata Mutual Fund",
+      "status": "recovered",
+      "sheet": "TINR",
       "as_of": "2026-08-31",
       "positions_observed": 61,
-      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx"
+      "unknown_rows": [
+        "I) REPO",
+        "NET CURRENT LIABILITIES",
+        "NET ASSETS"
+      ],
+      "aum": null,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx",
+      "source_title": "Portfolio as on 31st August, 2026",
+      "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T05:15:16+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Taurus Mid Cap Fund",
       "amc": "Taurus Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "The Wealth Company Mid Cap Fund",
       "amc": "The Wealth Company Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "UTI - Mid Cap Fund",
       "amc": "UTI Mutual Fund",
+      "status": "recovered",
       "as_of": "2026-08-31",
       "positions_observed": 80,
-      "scope": "structured_monthly_portfolio",
+      "positions": [
+        {
+          "isin": "INE591G01025",
+          "name": "COFORGE LTD",
+          "sector": "IT - Software",
+          "weight": 3.26,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE417T01026",
+          "name": "PB FINTECH LTD",
+          "sector": "Financial Technology (Fintech)",
+          "weight": 3.08,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE949L01017",
+          "name": "AU SMALL FINANCE BANK LTD",
+          "sector": "Banks",
+          "weight": 2.76,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE702C01027",
+          "name": "APL APOLLO TUBES LTD",
+          "sector": "Industrial Products",
+          "weight": 2.43,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE158A01026",
+          "name": "HERO MOTOCORP LTD.",
+          "sector": "Automobiles",
+          "weight": 2.17,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE406A01037",
+          "name": "AUROBINDO PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 2.15,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE171A01029",
+          "name": "FEDERAL BANK LTD.",
+          "sector": "Banks",
+          "weight": 2.08,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE031B01049",
+          "name": "AJANTA PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 2.07,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE455K01017",
+          "name": "POLYCAB INDIA LTD",
+          "sector": "Industrial Products",
+          "weight": 2.07,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE721A01047",
+          "name": "SHRIRAM FINANCE LTD",
+          "sector": "Finance",
+          "weight": 2.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE180A01020",
+          "name": "MAX FINANCIAL SERVICES LTD.",
+          "sector": "Insurance",
+          "weight": 1.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE663F01032",
+          "name": "INFO-EDGE (INDIA) LTD.",
+          "sector": "Retailing",
+          "weight": 1.92,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE040H01021",
+          "name": "SUZLON ENERGY LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.89,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE211B01039",
+          "name": "PHOENIX MILLS LTD",
+          "sector": "Realty",
+          "weight": 1.78,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE257A01026",
+          "name": "BHARAT HEAVY ELECTRICALS LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.76,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE823G01014",
+          "name": "J.K.CEMENT LTD",
+          "sector": "Cement & Cement Products",
+          "weight": 1.56,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE00H001014",
+          "name": "SWIGGY LTD",
+          "sector": "Retailing",
+          "weight": 1.54,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE114A01011",
+          "name": "STEEL AUTHORITY OF INDIA LTD.",
+          "sector": "Ferrous Metals",
+          "weight": 1.48,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE466L01038",
+          "name": "360 ONE WAM LIMITED",
+          "sector": "Capital Markets",
+          "weight": 1.47,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE513A01022",
+          "name": "SCHAEFFLER INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 1.44,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE262H01021",
+          "name": "PERSISTENT SYSTEMS LTD.",
+          "sector": "IT - Software",
+          "weight": 1.42,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE343G01021",
+          "name": "BHARTI HEXACOM LTD",
+          "sector": "Telecom - Services",
+          "weight": 1.41,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE092T01019",
+          "name": "IDFC FIRST BANK LTD",
+          "sector": "Banks",
+          "weight": 1.41,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE540H01012",
+          "name": "VOLTAMP TRANSFORMERS LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.41,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE562A01011",
+          "name": "INDIAN BANK",
+          "sector": "Banks",
+          "weight": 1.4,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0CZ201020",
+          "name": "ANTHEM BIOSCIENCES LTD",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.4,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE813H01021",
+          "name": "TORRENT POWER LTD.",
+          "sector": "Power",
+          "weight": 1.33,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE472A01039",
+          "name": "BLUE STAR LIMITED",
+          "sector": "Consumer Durables",
+          "weight": 1.32,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE956O01016",
+          "name": "LENSKART SOLUTIONS LTD",
+          "sector": "Retailing",
+          "weight": 1.29,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE745G01043",
+          "name": "MULTI COMMODITY EXCHANGE OF IN",
+          "sector": "Capital Markets",
+          "weight": 1.29,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE118H01025",
+          "name": "BSE LTD",
+          "sector": "Capital Markets",
+          "weight": 1.28,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE674K01013",
+          "name": "ADITYA BIRLA CAPITAL LTD",
+          "sector": "Finance",
+          "weight": 1.28,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE913H01037",
+          "name": "ENDURANCE TECHNOLOGIES LTD",
+          "sector": "Auto Components",
+          "weight": 1.27,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE791I01019",
+          "name": "BRIGADE ENTERPRISES LTD.",
+          "sector": "Realty",
+          "weight": 1.2,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE647A01010",
+          "name": "SRF LTD.",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 1.2,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE176B01034",
+          "name": "HAVELLS INDIA LTD.",
+          "sector": "Consumer Durables",
+          "weight": 1.19,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE536A01023",
+          "name": "GRINDWELL NORTON LTD.",
+          "sector": "Industrial Products",
+          "weight": 1.19,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE208A01029",
+          "name": "ASHOK LEYLAND LTD",
+          "sector": "Agricultural, Commercial & Construction Vehicles",
+          "weight": 1.17,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE474Q01031",
+          "name": "GLOBAL HEALTH LTD.",
+          "sector": "Healthcare Services",
+          "weight": 1.16,
+          "asset_type": "Unclassified"
+        },
+        {
+          "isin": "INE356A01018",
+          "name": "MPHASIS LTD",
+          "sector": "IT - Software",
+          "weight": 1.14,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE274J01014",
+          "name": "OIL INDIA LTD.",
+          "sector": "Oil",
+          "weight": 1.13,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE068V01023",
+          "name": "GLAND PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.11,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE343H01029",
+          "name": "SOLAR INDUSTRIES INDIA LTD.",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 1.02,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE121A01024",
+          "name": "CHOLAMANDALAM INVESTMENT & FIN",
+          "sector": "Finance",
+          "weight": 1.02,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE600L01024",
+          "name": "DR LAL PATHLABS LTD.",
+          "sector": "Healthcare Services",
+          "weight": 1.01,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE325A01013",
+          "name": "TIMKEN INDIA LTD.",
+          "sector": "Industrial Products",
+          "weight": 1.01,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE572E01012",
+          "name": "PNB HOUSING FINANCE LTD.",
+          "sector": "Finance",
+          "weight": 1.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE01EA01019",
+          "name": "VISHAL MEGA MART LTD",
+          "sector": "Retailing",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE220G01021",
+          "name": "JINDAL STAINLESS LTD.",
+          "sector": "Ferrous Metals",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE006I01046",
+          "name": "ASTRAL LTD.",
+          "sector": "Industrial Products",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE347G01014",
+          "name": "PETRONET LNG LTD.",
+          "sector": "Gas",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE048G01026",
+          "name": "NAVIN FLUORINE INTERNATIONAL L",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 0.98,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE463A01038",
+          "name": "BERGER PAINTS INDIA LTD.",
+          "sector": "Consumer Durables",
+          "weight": 0.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE263A01024",
+          "name": "BHARAT ELECTRONICS LTD.",
+          "sector": "Aerospace & Defense",
+          "weight": 0.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE036D01028",
+          "name": "KARUR VYSYA BANK LTD.",
+          "sector": "Banks",
+          "weight": 0.96,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE741K01010",
+          "name": "CREDITACCESS GRAMEEN LTD",
+          "sector": "Finance",
+          "weight": 0.96,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE324D01010",
+          "name": "LG ELECTRONICS INDIA LTD",
+          "sector": "Consumer Durables",
+          "weight": 0.93,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE169A01031",
+          "name": "COROMANDEL INTERNATIONAL LTD.",
+          "sector": "Fertilizers & Agrochemicals",
+          "weight": 0.93,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE148O01028",
+          "name": "DELHIVERY LTD.",
+          "sector": "Transport Services",
+          "weight": 0.93,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE217B01036",
+          "name": "KAJARIA CERAMICS LTD.",
+          "sector": "Consumer Durables",
+          "weight": 0.92,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE326A01037",
+          "name": "LUPIN LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.92,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE379A01028",
+          "name": "ITC HOTELS LTD.",
+          "sector": "Leisure Services",
+          "weight": 0.88,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE935A01035",
+          "name": "GLENMARK PHARMACEUTICALS LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.87,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE182A01018",
+          "name": "PFIZER LIMITED",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.86,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE974X01010",
+          "name": "TUBE INVESTMENTS OF INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.71,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE127D01025",
+          "name": "HDFC ASSET MANAGEMENT COMPANY",
+          "sector": "Capital Markets",
+          "weight": 0.69,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0VDM01015",
+          "name": "MEESHO LTD",
+          "sector": "Retailing",
+          "weight": 0.68,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0FS801015",
+          "name": "MOTHERSON SUMI WIRING INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.66,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE152M01016",
+          "name": "TRIVENI TURBINE LTD",
+          "sector": "Electrical Equipment",
+          "weight": 0.64,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE342J01019",
+          "name": "ZF COMMERCIAL VEHICLE CONTROL SYSTEMS INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.63,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE787D01026",
+          "name": "BALKRISHNA INDUSTRIES LTD.",
+          "sector": "Auto Components",
+          "weight": 0.63,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE317I01021",
+          "name": "METRO BRANDS LTD",
+          "sector": "Consumer Durables",
+          "weight": 0.63,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE00E101023",
+          "name": "BIKAJI FOODS INTERNATIONAL LTD.",
+          "sector": "Food Products",
+          "weight": 0.59,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE459N01021",
+          "name": "MANIPAL HEALTH ENTERPRISES LIMITED",
+          "sector": "Healthcare Services",
+          "weight": 0.53,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE146L01010",
+          "name": "KIRLOSKAR OIL ENGINES LTD",
+          "sector": "Industrial Products",
+          "weight": 0.51,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0HOQ01053",
+          "name": "BILLIONBRAINS GARAGE VENTURES LTD",
+          "sector": "Capital Markets",
+          "weight": 0.45,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE571A01038",
+          "name": "IPCA LABORATORIES LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.32,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE151A01013",
+          "name": "TATA COMMUNICATIONS LTD.",
+          "sector": "Telecom - Services",
+          "weight": 0.06,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE041025011",
+          "name": "REIT- EMBASSY OFFICE PARKS",
+          "sector": "-",
+          "weight": 0.51,
+          "asset_type": "Unclassified"
+        },
+        {
+          "isin": "INE2OVN25015",
+          "name": "REIT - BAGMANE PRIME OFFICE",
+          "sector": "-",
+          "weight": 0.5,
+          "asset_type": "Unclassified"
+        }
+      ],
       "complete": false,
-      "source": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9"
+      "unknown_rows": [],
+      "aum": 12795.441,
+      "published_scheme_name": "UTI - Mid Cap Fund",
+      "sheet": "EXPOSURE",
+      "scope": "structured_monthly_portfolio",
+      "source": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9",
+      "source_title": "Consolidated Portfolio August 2026",
+      "zip_entry": "Sebi Exposure as on 31 Aug 2026_final_REVISED.xlsx",
+      "source_sha256": "8e938ad0ab0fd14f315dc8f8657e718e13170039cdb36aec9864c5c5d8ee90b4",
+      "workbook_sha256": "bc3e8ed96a0fdf477387da8efbacc29820c265c699e864d7bfaef0a9c5838555",
+      "source_content_type": "application/zip",
+      "observed_at": "2026-09-28T05:15:18+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Union Midcap Fund",
       "amc": "Union Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "WhiteOak Capital Mid Cap Fund",
       "amc": "WhiteOak Capital Mutual Fund",
+      "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
       "scope": null,
       "complete": false,
-      "source": null
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     }
   ],
   "remaining_families": [
@@ -355,12 +1781,52 @@
       "error": "Factsheet lacks the exact staged scheme heading"
     }
   ],
+  "input_issues": [],
+  "excluded_evidence": [],
+  "input_reports": [
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH1.json",
+      "sha256": "da0dddd61e4003a4ad8f39478479f5bf0629f36b2442b29d2e10a6523aa24e96",
+      "built_at": "2026-09-28T05:14:20+00:00",
+      "ok": true,
+      "error": null
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH2.json",
+      "sha256": "497fa247aa4257b54f2c7dae9950dcde42c7b75807c9e271f547e6f5f7588704",
+      "built_at": "2026-09-28T05:14:23+00:00",
+      "ok": true,
+      "error": null
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH3.json",
+      "sha256": "8f6c8c6b124bb4061eb4b9541e791d2a465d2b5786c86297da3060b873f0a3d6",
+      "built_at": "2026-09-28T05:15:18+00:00",
+      "ok": true,
+      "error": null
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH4.json",
+      "sha256": "9b96cf527c53c872c439e621faee4e374d30ed53c48cb70a2020c13c91091895",
+      "built_at": "2026-09-28T05:15:31+00:00",
+      "ok": true,
+      "error": null
+    },
+    {
+      "path": "docs/MIDCAP-PORTFOLIO-BATCH5.json",
+      "sha256": "24e6e998d0e39c547207a0d8cab1e9f78fa8e7a6ed13320c7a8a8c5c223b225d",
+      "built_at": "2026-09-28T05:15:45+00:00",
+      "ok": true,
+      "error": null
+    }
+  ],
+  "inputs_healthy": true,
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [
-    "This combines read-only evidence only; no Mid Cap portfolio or holding is inserted into the live database.",
-    "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
-    "Current evidence and complete portfolio coverage are reported separately."
-  ],
-  "built_at": "2026-09-28T04:43:43+00:00"
+    "Reporting date precedes completeness and position count; ties retain all alternate evidence.",
+    "The existing 10-day grace policy is unchanged. Stale rows remain visible but do not count as current.",
+    "Source hashes, source identity, observation times and partial flags are retained without retimestamping.",
+    "Malformed/failed/retained inputs remain diagnostic evidence and cannot make the launch gate green."
+  ]
 }

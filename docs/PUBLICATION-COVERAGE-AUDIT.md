@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-28T04:46:44+00:00
+Prepared: 2026-09-28T05:19:04+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
