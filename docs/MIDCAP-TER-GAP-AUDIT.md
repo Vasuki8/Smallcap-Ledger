@@ -1,6 +1,6 @@
 # Mid Cap TER gap classification
 
-Prepared: 2026-09-28T20:36:50+00:00
+Prepared: 2026-09-28T20:51:28+00:00
 
 Unresolved Direct TER families: **13**.
 

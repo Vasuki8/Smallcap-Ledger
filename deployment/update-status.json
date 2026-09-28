@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T20:41:16+00:00",
+  "built_at": "2026-09-28T20:56:09+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
@@ -11,8 +11,8 @@
     "archive_binary_files": 2910,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 131887104,
-    "total_storage_bytes": 2630365857,
+    "database_bytes": 131891200,
+    "total_storage_bytes": 2630369953,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-09-25"
@@ -34,6 +34,12 @@
   "recent_jobs": [
     {
       "kind": "amc-communication-archive-repair",
+      "started_at": "2026-09-28T20:55:05+00:00",
+      "finished_at": "2026-09-28T20:55:05+00:00",
+      "status": "partial"
+    },
+    {
+      "kind": "amc-communication-archive-repair",
       "started_at": "2026-09-28T20:40:21+00:00",
       "finished_at": "2026-09-28T20:40:21+00:00",
       "status": "partial"
@@ -48,12 +54,6 @@
       "kind": "amc-communication-archive-repair",
       "started_at": "2026-09-28T20:00:20+00:00",
       "finished_at": "2026-09-28T20:00:20+00:00",
-      "status": "partial"
-    },
-    {
-      "kind": "amc-communication-archive-repair",
-      "started_at": "2026-09-28T17:39:53+00:00",
-      "finished_at": "2026-09-28T17:39:53+00:00",
       "status": "partial"
     }
   ],
