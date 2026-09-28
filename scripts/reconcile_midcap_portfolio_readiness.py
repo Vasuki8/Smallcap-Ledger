@@ -31,15 +31,20 @@ def main(argv=None):
     p=argparse.ArgumentParser()
     p.add_argument("--batch1",type=Path,required=True)
     p.add_argument("--batch2",type=Path,required=True)
+    p.add_argument("--batch3",type=Path)
     p.add_argument("--json",type=Path,required=True)
     p.add_argument("--markdown",type=Path,required=True)
     a=p.parse_args(argv);db.init()
     staged={x["family"]:x["amc"] for x in db.rows(
         "SELECT DISTINCT family,amc FROM category_staged_schemes WHERE category='mid-cap'"
     )}
-    r=reconcile(staged,
+    batches=[
         json.loads(a.batch1.read_text(encoding="utf-8")),
-        json.loads(a.batch2.read_text(encoding="utf-8")))
+        json.loads(a.batch2.read_text(encoding="utf-8")),
+    ]
+    if a.batch3 and a.batch3.exists():
+        batches.append(json.loads(a.batch3.read_text(encoding="utf-8")))
+    r=reconcile(staged,*batches)
     r["built_at"]=db.now()
     a.json.write_text(json.dumps(r,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     a.markdown.write_text(markdown(r),encoding="utf-8")
