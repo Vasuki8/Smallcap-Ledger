@@ -1,0 +1,21 @@
+name: Samco read-only investigation
+on:
+  push:
+    branches: ['fix/samco-ter-investigation-20260928']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Observe exact public Samco contract without database access
+        run: uv run --frozen python scripts/diagnose_samco_ter.py
