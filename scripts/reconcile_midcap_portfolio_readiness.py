@@ -33,6 +33,7 @@ def main(argv=None):
     p.add_argument("--batch2",type=Path,required=True)
     p.add_argument("--batch3",type=Path)
     p.add_argument("--batch4",type=Path)
+    p.add_argument("--batch5",type=Path)
     p.add_argument("--json",type=Path,required=True)
     p.add_argument("--markdown",type=Path,required=True)
     a=p.parse_args(argv);db.init()
@@ -47,6 +48,8 @@ def main(argv=None):
         batches.append(json.loads(a.batch3.read_text(encoding="utf-8")))
     if a.batch4 and a.batch4.exists():
         batches.append(json.loads(a.batch4.read_text(encoding="utf-8")))
+    if a.batch5 and a.batch5.exists():
+        batches.append(json.loads(a.batch5.read_text(encoding="utf-8")))
     r=reconcile(staged,*batches)
     r["built_at"]=db.now()
     a.json.write_text(json.dumps(r,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
