@@ -1,8 +1,11 @@
 # Branch cleanup audit
 
-Prepared: 2026-09-28
+Prepared: 2026-09-28  
+Executed: 2026-09-28T20:16:46Z
 
-This is a **non-destructive** repository audit. No branches were deleted or moved.
+The original branch classification is preserved below. The repository owner explicitly approved deletion of the **299 high-confidence merged-tip candidates only**. GitHub Actions run **36477739743** revalidated current branch tips and open PRs immediately before deletion, deleted all **299 / 299** exact matches, and reported **0 missing, 0 moved, 0 open-PR skips, and 0 failures**.
+
+Independent post-cleanup verification found **0 approved-candidate survivors** and **60 total branches**. The review-required and newer branches were not deleted. Production run **#662 / 36477739739** completed successfully after the cleanup.
 
 ## Summary
 
@@ -94,7 +97,7 @@ A branch is a high-confidence candidate only when its **current tip SHA exactly 
 
 ## High-confidence merged-tip candidates
 
-These are candidates only; **do not delete them without explicit owner approval**.
+These were the approved deletion set. All **299** listed branches were deleted after exact-tip/open-PR revalidation on 2026-09-28. The rows remain below as execution evidence.
 
 | Branch | PR | Merged at | Tip |
 | --- | ---: | --- | --- |
