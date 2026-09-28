@@ -92,7 +92,9 @@ def _parse_absl(body):
     # A month printed in the scheme banner is a document period, not an
     # invented effective date or a date borrowed from the NAV/AUM table.
     periods = []
-    for paragraph in headings[0].parent.find_all("p", recursive=False):
+    banner = headings[0].parent
+    paragraphs = banner.find_all("p", recursive=False) if banner.name == "div" else []
+    for paragraph in paragraphs:
         label = _clean(paragraph.get_text(" ", strip=True))
         if re.fullmatch(r"[A-Za-z]+ 20\d{2}", label):
             try:
