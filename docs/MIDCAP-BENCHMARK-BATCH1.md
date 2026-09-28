@@ -1,6 +1,6 @@
 # Mid Cap benchmark identity audit — batch 1
 
-Prepared: 2026-09-28T01:21:30+00:00
+Prepared: 2026-09-28T01:40:26+00:00
 
 Targets: **10** · recovered: **8** · failed: **2** · staged families: **34**.
 
@@ -17,7 +17,8 @@ Targets: **10** · recovered: **8** · failed: **2** · staged families: **34**.
 
 ## Errors
 
-- Franklin India Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity
+- Franklin India Mid Cap Fund: Server error '500 Internal Server Error' for url 'https://www.franklintempletonindia.com/fund-details/fund-overview/4615/franklin-india-mid-cap-fund-erstwhile-franklin-india-prima-fund'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
 - UTI - Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity
 
 ## Notes
