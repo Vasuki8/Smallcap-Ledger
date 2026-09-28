@@ -1,0 +1,2351 @@
+{
+  "schema_version": 1,
+  "audited_on": "2026-09-28",
+  "repository": "Vasuki8/Smallcap-Ledger",
+  "main_sha": "3c98b579a7ef612441babd84c19ddea2f215fbfa",
+  "destructive_actions_taken": false,
+  "criteria": {
+    "high_confidence_candidate": "Branch has no open PR, has a merged PR to main, and current branch tip SHA exactly equals that merged PR head SHA.",
+    "hold_post_merge_or_moved": "Branch has merge evidence but current tip differs from the merged PR head; it may contain post-merge work.",
+    "hold_closed_unmerged": "Branch maps to a closed PR that was not merged.",
+    "hold_no_pr_evidence": "No PR record was found for the branch in the repository PR history."
+  },
+  "counts": {
+    "total_branches": 344,
+    "main": 1,
+    "high_confidence_candidates": 299,
+    "open_pr_branches": 0,
+    "post_merge_or_moved": 2,
+    "closed_unmerged": 8,
+    "no_pr_evidence": 34
+  },
+  "candidate_prefix_counts": {
+    "audit": 1,
+    "backend": 135,
+    "cleanup": 2,
+    "diag": 46,
+    "docs": 42,
+    "(root)": 4,
+    "feature": 3,
+    "fix": 36,
+    "ops": 8,
+    "storage": 7,
+    "ui": 14,
+    "work": 1
+  },
+  "high_confidence_candidates": [
+    {
+      "branch": "audit/source-retention-20260925",
+      "tip_sha": "631df53ef8e1677f4aaf1fe95e4890f6aa8b759d",
+      "pr_number": 109,
+      "title": "Audit source retention and report link-only candidates without deleting files",
+      "merged_at": "2026-09-25T04:08:10Z"
+    },
+    {
+      "branch": "backend/abakkus-axis-communication-sources-20260926",
+      "tip_sha": "4466e6132298aeddc9c982395426778cc31c6d74",
+      "pr_number": 183,
+      "title": "Add Abakkus and Axis AMC communication sources",
+      "merged_at": "2026-09-26T05:51:40Z"
+    },
+    {
+      "branch": "backend/absl-complete-portfolio",
+      "tip_sha": "281ddd2e18af582237fd5bfd4c165d160175467e",
+      "pr_number": 56,
+      "title": "Recover complete ABSL Small Cap portfolio",
+      "merged_at": "2026-09-23T14:28:12Z"
+    },
+    {
+      "branch": "backend/amc-communication-coverage-audit-20260926",
+      "tip_sha": "053316444f74776c067041173d562e08bd75d85a",
+      "pr_number": 178,
+      "title": "Add AMC communication coverage audit",
+      "merged_at": "2026-09-26T04:39:23Z"
+    },
+    {
+      "branch": "backend/amfi-expense-coverage-v130",
+      "tip_sha": "90754ea5f270502c2ab9c6e129d3961a38c5b53e",
+      "pr_number": 94,
+      "title": "Recover Canara Small Cap TER from official AMC API",
+      "merged_at": "2026-09-24T21:36:41Z"
+    },
+    {
+      "branch": "backend/axis-expense-recovery-20260925",
+      "tip_sha": "e98255459e5c649103fb8aee9b8a63850531a785",
+      "pr_number": 119,
+      "title": "Recover Axis Small Cap explicit BER and Total TER",
+      "merged_at": "2026-09-25T06:06:54Z"
+    },
+    {
+      "branch": "backend/axis-full-portfolio-20260925",
+      "tip_sha": "30342d550d56be658b6323bff9c3c875057166c3",
+      "pr_number": 117,
+      "title": "Recover Axis Small Cap complete monthly portfolio",
+      "merged_at": "2026-09-25T05:16:01Z"
+    },
+    {
+      "branch": "backend/backfill-retained-portfolio-quantities",
+      "tip_sha": "964249feb127faf5a5ac7be0fcc81cf26ed2f3ab",
+      "pr_number": 51,
+      "title": "Backfill quantities for retained portfolio months",
+      "merged_at": "2026-09-23T04:34:45Z"
+    },
+    {
+      "branch": "backend/bajaj-bandhan-communication-recovery-20260926-v2",
+      "tip_sha": "20de3b4ef984a837e7ba88f832caad184a1d066b",
+      "pr_number": 187,
+      "title": "Recover Bajaj and Bandhan AMC communications",
+      "merged_at": "2026-09-26T06:19:30Z"
+    },
+    {
+      "branch": "backend/bajaj-complete-portfolio-v2",
+      "tip_sha": "63dce82fd3dd60dc8fb1a415dcd82322fdb0b98b",
+      "pr_number": 13,
+      "title": "Recover complete Bajaj Small Cap portfolios",
+      "merged_at": "2026-09-22T21:10:47Z"
+    },
+    {
+      "branch": "backend/bandhan-public-disclosure-v129b",
+      "tip_sha": "8185f77133445ebc029a5dff9a02ef35616a69d9",
+      "pr_number": 92,
+      "title": "Recover current Bandhan portfolios from public disclosure API",
+      "merged_at": "2026-09-24T18:35:18Z"
+    },
+    {
+      "branch": "backend/bandhan-wp-portfolio-attachments",
+      "tip_sha": "513062e8d4502c91885f27a8d77ab1fc013c063c",
+      "pr_number": 74,
+      "title": "Resolve Bandhan Small Cap portfolio attachments",
+      "merged_at": "2026-09-23T17:40:40Z"
+    },
+    {
+      "branch": "backend/benchmark-identity-tri-repair-20260925",
+      "tip_sha": "a18b8ad14ca3b7ce4577c8c94ed78a1e6d02aefd",
+      "pr_number": 125,
+      "title": "Repair explicit Nifty TRI benchmark identities",
+      "merged_at": "2026-09-25T16:25:20Z"
+    },
+    {
+      "branch": "backend/boi-complete-portfolio",
+      "tip_sha": "2e405e557fe5d14b1ce903531b43d75233294f6e",
+      "pr_number": 32,
+      "title": "Recover complete Bank of India Small Cap portfolio",
+      "merged_at": "2026-09-22T23:54:54Z"
+    },
+    {
+      "branch": "backend/boi-layout-text-fallback",
+      "tip_sha": "936d141e9fada95289a459acb2efa4b884ac55f3",
+      "pr_number": 36,
+      "title": "Use layout text for Bank of India portfolios",
+      "merged_at": "2026-09-23T00:45:43Z"
+    },
+    {
+      "branch": "backend/boi-official-top-holdings",
+      "tip_sha": "84e31cba70ab6acaa01891a1cc049aaf7be68f0c",
+      "pr_number": 39,
+      "title": "Collect BOI official top holdings",
+      "merged_at": "2026-09-23T02:06:36Z"
+    },
+    {
+      "branch": "backend/boi-pdf-reprocess",
+      "tip_sha": "55a25ea8996010a311aa73f63e1e54f4c826e778",
+      "pr_number": 35,
+      "title": "Reprocess archived Bank of India factsheet PDFs",
+      "merged_at": "2026-09-23T00:03:15Z"
+    },
+    {
+      "branch": "backend/boi-real-four-column-portfolio",
+      "tip_sha": "5359a6cb9932e74ab89eb6a72191cbaea3723dde",
+      "pr_number": 71,
+      "title": "Recover complete Bank of India Small Cap portfolio",
+      "merged_at": "2026-09-23T17:05:28Z"
+    },
+    {
+      "branch": "backend/bse-tri-source-audit-20260925",
+      "tip_sha": "41ed1cbbfe7c24ca340ef7d29273f388dd3074fc",
+      "pr_number": 124,
+      "title": "Document BSE 250 SmallCap TRI source blocker",
+      "merged_at": "2026-09-25T16:12:36Z"
+    },
+    {
+      "branch": "backend/classify-absl-idcw-nav-gap-20260925",
+      "tip_sha": "91f499a4dd2c25636e0dd13c0e8899b697407b14",
+      "pr_number": 144,
+      "title": "Classify ABSL Regular IDCW official NAV gap",
+      "merged_at": "2026-09-25T20:27:36Z"
+    },
+    {
+      "branch": "backend/classify-official-nav-gaps-20260925",
+      "tip_sha": "3003bc26adda096eb35060b533666054c1d98a7f",
+      "pr_number": 135,
+      "title": "Classify verified official NAV history gaps",
+      "merged_at": "2026-09-25T18:50:49Z"
+    },
+    {
+      "branch": "backend/communication-archive-limitations-20260926",
+      "tip_sha": "3b64ed1c1b0b8b23d023cd4283a6144b160a4838",
+      "pr_number": 221,
+      "title": "Separate robots-blocked communication archive limitations",
+      "merged_at": "2026-09-26T21:24:47Z"
+    },
+    {
+      "branch": "backend/current-portfolio-share-deltas",
+      "tip_sha": "3fd47b3c0127093f2e21b4f6c10ebcc601547269",
+      "pr_number": 50,
+      "title": "Keep rolling portfolios and show share changes",
+      "merged_at": "2026-09-23T04:29:27Z"
+    },
+    {
+      "branch": "backend/current-storage-health-20260927",
+      "tip_sha": "db0b12bcef95e4fd5decc07422ca80901110229c",
+      "pr_number": 241,
+      "title": "Record current production storage health",
+      "merged_at": "2026-09-27T03:07:04Z"
+    },
+    {
+      "branch": "backend/edelweiss-current-factsheet-replay",
+      "tip_sha": "14020f1e3a93c60c83804f36efeb066f754736db",
+      "pr_number": 55,
+      "title": "Advance Edelweiss portfolio from archived September factsheet",
+      "merged_at": "2026-09-23T14:22:06Z"
+    },
+    {
+      "branch": "backend/edelweiss-franklin-communication-sources-20260926",
+      "tip_sha": "069984f1b9ce0680097cbe41d9b9eb519bc88e48",
+      "pr_number": 189,
+      "title": "Add Edelweiss and Franklin AMC communication sources",
+      "merged_at": "2026-09-26T11:37:43Z"
+    },
+    {
+      "branch": "backend/edelweiss-pdf-franklin-api-recovery-20260926",
+      "tip_sha": "9060239d6506ed2e230531360d51b5e3872c9a2f",
+      "pr_number": 197,
+      "title": "Gate Edelweiss recovery on exact outlook PDF",
+      "merged_at": "2026-09-26T12:14:21Z"
+    },
+    {
+      "branch": "backend/edelweiss-top30-portfolio",
+      "tip_sha": "2c37d3135befe556524ab090c902b19212effd5d",
+      "pr_number": 44,
+      "title": "Recover Edelweiss Small Cap Top 30 holdings",
+      "merged_at": "2026-09-23T03:41:49Z"
+    },
+    {
+      "branch": "backend/evidence-aware-performance-benchmark-20260925",
+      "tip_sha": "0e94546f95315355dbf813635efdba96add9d1a6",
+      "pr_number": 137,
+      "title": "Make performance benchmark selection evidence-aware",
+      "merged_at": "2026-09-25T19:12:12Z"
+    },
+    {
+      "branch": "backend/fix-absl-parser-orphan-tail",
+      "tip_sha": "8e80b756442bcbe9daacc8b5a37611013e0977ae",
+      "pr_number": 58,
+      "title": "Remove orphaned ABSL parser fragment",
+      "merged_at": "2026-09-23T14:33:35Z"
+    },
+    {
+      "branch": "backend/fix-absl-parser-splice",
+      "tip_sha": "913944c283f56e8cd6b86595c78f66c3d9b23288",
+      "pr_number": 57,
+      "title": "Repair ABSL parser splice",
+      "merged_at": "2026-09-23T14:30:56Z"
+    },
+    {
+      "branch": "backend/fix-amc-source-resolver-20260926",
+      "tip_sha": "3b2d8db77e0f7e12a14c4f35035556bd87fe3816",
+      "pr_number": 182,
+      "title": "Narrow Kotak Mahindra AMC source resolution",
+      "merged_at": "2026-09-26T05:04:53Z"
+    },
+    {
+      "branch": "backend/fix-amfi-probe-import",
+      "tip_sha": "a963f1f5d2e7af222a8d644fc57ba46038f72347",
+      "pr_number": 60,
+      "title": "Fix AMFI probe import path",
+      "merged_at": "2026-09-23T14:48:07Z"
+    },
+    {
+      "branch": "backend/fix-bandhan-json-test",
+      "tip_sha": "9aeaca6e0cbc8b7b158ae058322417417945e79b",
+      "pr_number": 77,
+      "title": "Fix Bandhan attachment test JSON import",
+      "merged_at": "2026-09-23T17:45:28Z"
+    },
+    {
+      "branch": "backend/fix-bandhan-wp-test",
+      "tip_sha": "ee281d2430299135bdf1fc8b7d56309e451b3cc5",
+      "pr_number": 75,
+      "title": "Fix Bandhan attachment discovery regression fixture",
+      "merged_at": "2026-09-23T17:42:36Z"
+    },
+    {
+      "branch": "backend/fix-boi-parser-syntax",
+      "tip_sha": "d9881905bfc7c6d1c295bdf1c1211ddadbbd3f09",
+      "pr_number": 33,
+      "title": "Repair Bank of India parser syntax",
+      "merged_at": "2026-09-23T00:00:48Z"
+    },
+    {
+      "branch": "backend/fix-icici-reconciliation-fixture",
+      "tip_sha": "e41c6fd04e3c2d6a2945dbfa28e98e2917dea3d2",
+      "pr_number": 68,
+      "title": "Align ICICI regression fixture with production guards",
+      "merged_at": "2026-09-23T16:52:15Z"
+    },
+    {
+      "branch": "backend/fix-jm-top25-real-layout",
+      "tip_sha": "a3cef2a9d44536416d17dee34b17e66c1b9a49e5",
+      "pr_number": 64,
+      "title": "Fix JM Top-25 parser for real factsheet layout",
+      "merged_at": "2026-09-23T15:31:02Z"
+    },
+    {
+      "branch": "backend/fix-jm-v30-fixture",
+      "tip_sha": "991eefabee062b3e9ef50627a4925a8253782f8a",
+      "pr_number": 65,
+      "title": "Align JM v30 fixture with scheme identity guard",
+      "merged_at": "2026-09-23T15:32:35Z"
+    },
+    {
+      "branch": "backend/fix-notice-filename-classification",
+      "tip_sha": "a77b75e3dba61061a9d5cf8b2a32472d8a378263",
+      "pr_number": 45,
+      "title": "Fix notice filename classification",
+      "merged_at": "2026-09-23T03:42:44Z"
+    },
+    {
+      "branch": "backend/fix-parser-upgrade-gate",
+      "tip_sha": "4ee0f5f832cf2c6ed660c03d88fd63329c1d25b0",
+      "pr_number": 37,
+      "title": "Fix AMC parser upgrade gating",
+      "merged_at": "2026-09-23T00:48:04Z"
+    },
+    {
+      "branch": "backend/fix-parser-upgrade-test-import",
+      "tip_sha": "d1c79baa6e5f8ddd872aca1c564d8ee5d95b4f97",
+      "pr_number": 38,
+      "title": "Fix parser upgrade regression test import",
+      "merged_at": "2026-09-23T01:00:27Z"
+    },
+    {
+      "branch": "backend/fix-portfolio-document-classification",
+      "tip_sha": "28fa415595cab3acd2c59fdcecc301a02be5402e",
+      "pr_number": 43,
+      "title": "Prevent portfolio notice misclassification",
+      "merged_at": "2026-09-23T03:36:19Z"
+    },
+    {
+      "branch": "backend/fix-publication-amc-source-matching-20260926",
+      "tip_sha": "e4ae17941376540af1881a56f045b645b7bb4918",
+      "pr_number": 179,
+      "title": "Fix communication audit AMC source matching",
+      "merged_at": "2026-09-26T04:43:20Z"
+    },
+    {
+      "branch": "backend/fix-quant-portfolio-filter",
+      "tip_sha": "385d71970d84522d2e8cc888ad06f608346d1c1c",
+      "pr_number": 31,
+      "title": "Fix Quant fund-wise portfolio filtering",
+      "merged_at": "2026-09-22T23:42:48Z"
+    },
+    {
+      "branch": "backend/fix-quantity-schema-tests",
+      "tip_sha": "1f3e9966b0fc675451227b8a8411f01f22b4a327",
+      "pr_number": 53,
+      "title": "Adapt legacy tests to rolling quantity schema",
+      "merged_at": "2026-09-23T04:39:21Z"
+    },
+    {
+      "branch": "backend/fix-risk-factor-historical-cleanup",
+      "tip_sha": "26c2ff2c2e3e4a28924722fe51f16574e2a2cb25",
+      "pr_number": 73,
+      "title": "Reclassify retained risk-factor factsheets",
+      "merged_at": "2026-09-23T17:11:31Z"
+    },
+    {
+      "branch": "backend/fix-union-v45-rounding-test",
+      "tip_sha": "c545fdac0696b4bf8367dbbba8f861e72aa62754",
+      "pr_number": 81,
+      "title": "Fix Union v45 rounding regression fixture",
+      "merged_at": "2026-09-23T20:18:47Z"
+    },
+    {
+      "branch": "backend/fix-v26-test-db-import",
+      "tip_sha": "c86f5ffe8327f6e2c944503f4231605a8c1970f3",
+      "pr_number": 54,
+      "title": "Fix v26 retained-source test import",
+      "merged_at": "2026-09-23T04:41:24Z"
+    },
+    {
+      "branch": "backend/fix-versioned-parser-tests",
+      "tip_sha": "982c516c5e794ad79616e819a10a19ceb246de17",
+      "pr_number": 52,
+      "title": "Fix benchmark regression and versioned parser tests",
+      "merged_at": "2026-09-23T04:36:40Z"
+    },
+    {
+      "branch": "backend/franklin-api-communication-recovery-20260926",
+      "tip_sha": "edf3a0095e1032c61dc71f33fde1ff958223c0d2",
+      "pr_number": 196,
+      "title": "Recover Edelweiss and Franklin AMC communications",
+      "merged_at": "2026-09-26T12:11:41Z"
+    },
+    {
+      "branch": "backend/groww-august-portfolio-v2",
+      "tip_sha": "cde840819ce45e6ba630bb71e03b7748a009542b",
+      "pr_number": 85,
+      "title": "Refresh Groww portfolio from August monthly workbook",
+      "merged_at": "2026-09-23T22:42:17Z"
+    },
+    {
+      "branch": "backend/groww-hsbc-communication-recovery-20260926",
+      "tip_sha": "f72c840fd23b7a0e4b0a74bb6517be1437f3d415",
+      "pr_number": 199,
+      "title": "Recover Groww and HSBC AMC communications",
+      "merged_at": "2026-09-26T13:09:45Z"
+    },
+    {
+      "branch": "backend/groww-reconciled-portfolio",
+      "tip_sha": "6c330537154281863d2e122516de378853ffaea2",
+      "pr_number": 78,
+      "title": "Recover Groww Small Cap portfolio from official factsheet",
+      "merged_at": "2026-09-23T17:53:07Z"
+    },
+    {
+      "branch": "backend/harden-boi-page-parser",
+      "tip_sha": "ca3aad00d5fb32992f574753b98af7befe7565a6",
+      "pr_number": 40,
+      "title": "Harden BOI official holdings page parser",
+      "merged_at": "2026-09-23T02:30:17Z"
+    },
+    {
+      "branch": "backend/hsbc-ter-v131",
+      "tip_sha": "039ea1e4a0d79003b7c50af632b497800338ef1f",
+      "pr_number": 95,
+      "title": "Recover HSBC Small Cap TER from AMC-linked detailed workbook",
+      "merged_at": "2026-09-24T22:01:05Z"
+    },
+    {
+      "branch": "backend/icici-blob-portfolio-recovery-20260926",
+      "tip_sha": "d1253a8a89ab1e0add928040258356a186c57aea",
+      "pr_number": 174,
+      "title": "Recover ICICI complete monthly portfolios",
+      "merged_at": "2026-09-26T04:13:53Z"
+    },
+    {
+      "branch": "backend/icici-complete-portfolio-final-20260926",
+      "tip_sha": "29534f0b17c99d2021c8656a98f8bf213028fcd9",
+      "pr_number": 176,
+      "title": "Complete ICICI monthly portfolio recovery",
+      "merged_at": "2026-09-26T04:26:44Z"
+    },
+    {
+      "branch": "backend/icici-fresh-partial-portfolio",
+      "tip_sha": "67a9b460c0f020046482e3e82b9ab3a24698ad15",
+      "pr_number": 67,
+      "title": "Recover fresh ICICI Small Cap named portfolio",
+      "merged_at": "2026-09-23T15:46:23Z"
+    },
+    {
+      "branch": "backend/icici-invesco-communication-recovery-20260926",
+      "tip_sha": "d576857bf0c6da607bc14eb2dc218159066bd2f6",
+      "pr_number": 200,
+      "title": "Recover ICICI Prudential and Invesco AMC communications",
+      "merged_at": "2026-09-26T14:04:43Z"
+    },
+    {
+      "branch": "backend/icici-portfolio-recovery-fix-20260926",
+      "tip_sha": "18117bb2e2fd4662ca17822e1fe24317dc7a5ddf",
+      "pr_number": 175,
+      "title": "Inspect ICICI recovery layout differences",
+      "merged_at": "2026-09-26T04:18:38Z"
+    },
+    {
+      "branch": "backend/icici-ter-v132",
+      "tip_sha": "6f229c0c12f9f7e7f8d953ad5ac1c0ee52a4b486",
+      "pr_number": 96,
+      "title": "Recover ICICI Prudential Small Cap TER from official disclosure workbook",
+      "merged_at": "2026-09-24T23:05:06Z"
+    },
+    {
+      "branch": "backend/inspect-boi-archived-layout",
+      "tip_sha": "bc9d18a59718be408bb7a2af06cec0802e2684ea",
+      "pr_number": 69,
+      "title": "Inspect retained Bank of India factsheet layout",
+      "merged_at": "2026-09-23T16:54:38Z"
+    },
+    {
+      "branch": "backend/inspect-icici-archived-layout",
+      "tip_sha": "a345724e3b1de4e6083c4588baf9cb7259c13d94",
+      "pr_number": 66,
+      "title": "Inspect retained ICICI Small Cap factsheet layout",
+      "merged_at": "2026-09-23T15:36:52Z"
+    },
+    {
+      "branch": "backend/inspect-jm-archived-layout",
+      "tip_sha": "3b9a8f6465924cff21d06ba5d5fdc1262102e880",
+      "pr_number": 63,
+      "title": "Inspect retained JM factsheet layout",
+      "merged_at": "2026-09-23T15:24:34Z"
+    },
+    {
+      "branch": "backend/invesco-complete-portfolio-v127",
+      "tip_sha": "ed45967e745ea0cf580bd6d97e1c0f2c70e54e31",
+      "pr_number": 90,
+      "title": "Recover complete Invesco monthly portfolios from official API",
+      "merged_at": "2026-09-24T15:20:30Z"
+    },
+    {
+      "branch": "backend/invesco-ter-v132",
+      "tip_sha": "729a63debc9fad3f5022360e1aed2f3b4054862c",
+      "pr_number": 97,
+      "title": "Recover Invesco Small Cap TER from official disclosure API",
+      "merged_at": "2026-09-24T23:31:18Z"
+    },
+    {
+      "branch": "backend/iti-mahindra-communication-recovery-20260926",
+      "tip_sha": "274adead513594e54353e05384fef604a037bee7",
+      "pr_number": 181,
+      "title": "Recover retained ITI and Mahindra AMC communications",
+      "merged_at": "2026-09-26T05:02:00Z"
+    },
+    {
+      "branch": "backend/jm-complete-portfolio-v128",
+      "tip_sha": "246079107f6a4e54c6d9f68bd2e401c835deda25",
+      "pr_number": 91,
+      "title": "Recover complete JM Small Cap monthly portfolios from official API",
+      "merged_at": "2026-09-24T16:36:42Z"
+    },
+    {
+      "branch": "backend/jm-official-top-holdings",
+      "tip_sha": "c60ccf69233e1ad2d14d1f90fabd316667631e04",
+      "pr_number": 41,
+      "title": "Collect JM official visible holdings",
+      "merged_at": "2026-09-23T02:31:51Z"
+    },
+    {
+      "branch": "backend/jm-ter-v133",
+      "tip_sha": "2ce17729113c5c8caa9d8ac97000507e9ea2f2ff",
+      "pr_number": 98,
+      "title": "Recover JM Small Cap TER from official Scheme Expense Ratio API",
+      "merged_at": "2026-09-25T00:21:28Z"
+    },
+    {
+      "branch": "backend/jm-top25-factsheet",
+      "tip_sha": "2b1e058a65811490afd78bca1bfde408887ac747",
+      "pr_number": 62,
+      "title": "Recover current JM Small Cap Top 25 holdings",
+      "merged_at": "2026-09-23T14:55:27Z"
+    },
+    {
+      "branch": "backend/kotak-mirae-communication-recovery-20260926",
+      "tip_sha": "1ca2a04657bcb1064e17a6f9bd4311f0859eacab",
+      "pr_number": 202,
+      "title": "Recover Kotak and Mirae Asset AMC communications",
+      "merged_at": "2026-09-26T14:17:49Z"
+    },
+    {
+      "branch": "backend/lic-communication-url-canonicalization-20260926",
+      "tip_sha": "4d4bc54d3f895f37583d8f678d8837b02a96efdc",
+      "pr_number": 226,
+      "title": "Canonicalize LIC communication fetch URLs",
+      "merged_at": "2026-09-26T22:10:30Z"
+    },
+    {
+      "branch": "backend/lic-empty-asset-limitation-20260926",
+      "tip_sha": "4bc4a55e3413a3647bff51fa6b2a4cd19be9672e",
+      "pr_number": 230,
+      "title": "Document LIC empty-asset archive limitation",
+      "merged_at": "2026-09-26T22:42:54Z"
+    },
+    {
+      "branch": "backend/lic-referer-fallback-20260926",
+      "tip_sha": "e6adaf4c51d821a8e13d7726e31a92c598a02a2b",
+      "pr_number": 228,
+      "title": "Retry LIC outlook assets with first-party referer",
+      "merged_at": "2026-09-26T22:31:50Z"
+    },
+    {
+      "branch": "backend/mahindra-ter-v134",
+      "tip_sha": "39176a520c5fb0d7d25599d77ca22a7e15844242",
+      "pr_number": 99,
+      "title": "Recover Mahindra Manulife Small Cap TER from official disclosure workbook",
+      "merged_at": "2026-09-25T01:11:58Z"
+    },
+    {
+      "branch": "backend/midcap-benchmark-batch1-20260927",
+      "tip_sha": "9e9283578493f15c1b396ae623d47c7b20d8853e",
+      "pr_number": 268,
+      "title": "Audit first-party benchmark identity for staged Mid Cap batch 1",
+      "merged_at": "2026-09-28T00:15:44Z"
+    },
+    {
+      "branch": "backend/midcap-benchmark-batch2-20260927",
+      "tip_sha": "e54615af1ec4c4aea5ba22c15dbb238f22a4fa36",
+      "pr_number": 269,
+      "title": "Expand staged Mid Cap benchmark readiness with batch 2",
+      "merged_at": "2026-09-28T00:29:26Z"
+    },
+    {
+      "branch": "backend/midcap-history-staging-20260927",
+      "tip_sha": "d45ce051afd85cd5f08c413d0e56becce936aa3b",
+      "pr_number": 248,
+      "title": "Stage Mid Cap historical NAV without public exposure",
+      "merged_at": "2026-09-27T11:31:27Z"
+    },
+    {
+      "branch": "backend/midcap-identity-audit-20260927",
+      "tip_sha": "bd050cf51faeb17778e5b5c66388dd3e6c5de6de",
+      "pr_number": 245,
+      "title": "Audit Mid Cap identities before staged import",
+      "merged_at": "2026-09-27T04:13:53Z"
+    },
+    {
+      "branch": "backend/midcap-portfolio-batch1-20260927",
+      "tip_sha": "4cd07f3c070eb07b9eb216a79369c89d7c4dc539",
+      "pr_number": 270,
+      "title": "Audit current portfolio evidence for staged Mid Cap batch 1",
+      "merged_at": "2026-09-28T00:42:35Z"
+    },
+    {
+      "branch": "backend/midcap-portfolio-batch2-20260927",
+      "tip_sha": "4b59a09a3738dda03d857844cc387846ca58d721",
+      "pr_number": 272,
+      "title": "Recover structured HDFC and DSP Mid Cap portfolio evidence",
+      "merged_at": "2026-09-28T01:00:56Z"
+    },
+    {
+      "branch": "backend/midcap-portfolio-batch3-20260927",
+      "tip_sha": "19d9b5d6a6fbf54b9ffa2cc36e9ac9beb97e54df",
+      "pr_number": 277,
+      "title": "Recover staged Mid Cap portfolios for ICICI Axis SBI Tata and UTI",
+      "merged_at": "2026-09-28T01:48:44Z"
+    },
+    {
+      "branch": "backend/midcap-portfolio-batch4-launch-gate-20260927",
+      "tip_sha": "c7dc2fae057ef30869a39368c5e95af3f8d67520",
+      "pr_number": 281,
+      "title": "Expand Mid Cap portfolio coverage and add explicit launch gate",
+      "merged_at": "2026-09-28T02:53:10Z"
+    },
+    {
+      "branch": "backend/midcap-portfolio-batch5-20260927",
+      "tip_sha": "d9671d324f7e62ead5016c7a16373d309614c7cb",
+      "pr_number": 283,
+      "title": "Recover next five staged Mid Cap portfolios",
+      "merged_at": "2026-09-28T03:40:55Z"
+    },
+    {
+      "branch": "backend/midcap-source-coverage-audit-20260927",
+      "tip_sha": "ece55dcd06300c8d7004d46be960fb26f1e04b5a",
+      "pr_number": 250,
+      "title": "Audit staged Mid Cap source coverage before launch",
+      "merged_at": "2026-09-27T11:53:09Z"
+    },
+    {
+      "branch": "backend/midcap-staging-store-20260927",
+      "tip_sha": "71661fa314e6fcac808fd0d26424e9cbd2f228c6",
+      "pr_number": 247,
+      "title": "Add isolated Mid Cap staging store",
+      "merged_at": "2026-09-27T04:22:21Z"
+    },
+    {
+      "branch": "backend/midcap-ter-first-party-batch1-20260927",
+      "tip_sha": "79fb2a3d03f03a0ef077e5aafd99c4c322a6cdd2",
+      "pr_number": 259,
+      "title": "Audit reusable first-party TER transports for staged Mid Cap",
+      "merged_at": "2026-09-27T17:42:42Z"
+    },
+    {
+      "branch": "backend/midcap-ter-first-party-batch2-20260927",
+      "tip_sha": "bf1aad8a294757aee86c62184746818174629a4a",
+      "pr_number": 264,
+      "title": "Recover three more staged Mid Cap TER sources",
+      "merged_at": "2026-09-27T21:09:41Z"
+    },
+    {
+      "branch": "backend/midcap-ter-gap-classification-20260927",
+      "tip_sha": "89b39367d840db27687229521ef7a7a303807c31",
+      "pr_number": 257,
+      "title": "Classify unresolved Mid Cap TER gaps from retained AMFI evidence",
+      "merged_at": "2026-09-27T17:24:21Z"
+    },
+    {
+      "branch": "backend/midcap-ter-readiness-reconcile-20260927",
+      "tip_sha": "f3504a437acc2c80c71ff75b44cdca4c86cca837",
+      "pr_number": 260,
+      "title": "Reconcile staged Mid Cap TER readiness across AMFI and AMC evidence",
+      "merged_at": "2026-09-27T17:50:48Z"
+    },
+    {
+      "branch": "backend/motilal-midcap-identity-20260927",
+      "tip_sha": "957c57202cde80a58852394764cee1ef857573cb",
+      "pr_number": 246,
+      "title": "Resolve Motilal Mid Cap legacy code identities",
+      "merged_at": "2026-09-27T04:19:01Z"
+    },
+    {
+      "branch": "backend/multicategory-foundation-20260927",
+      "tip_sha": "fd3ec6af942c746129a0d408b568307a2cf4f515",
+      "pr_number": 243,
+      "title": "Add safe multi-category foundation",
+      "merged_at": "2026-09-27T03:55:58Z"
+    },
+    {
+      "branch": "backend/performance-audit-benchmark-semantics-20260925",
+      "tip_sha": "9a19cdbdda66a327a9acfd4819e34c84b7511da5",
+      "pr_number": 141,
+      "title": "Align performance audit with benchmark policy",
+      "merged_at": "2026-09-25T19:56:47Z"
+    },
+    {
+      "branch": "backend/performance-coverage-audit-20260925",
+      "tip_sha": "9fe6e2b5c890fc0aa0f7681c1cd567588353d043",
+      "pr_number": 122,
+      "title": "Add historical performance coverage audit",
+      "merged_at": "2026-09-25T15:40:26Z"
+    },
+    {
+      "branch": "backend/persist-communication-repair-report-20260926",
+      "tip_sha": "6c23002f79a61194fb6dc65e988affc8a11b93a7",
+      "pr_number": 223,
+      "title": "Persist communication archive repair results",
+      "merged_at": "2026-09-26T21:34:30Z"
+    },
+    {
+      "branch": "backend/pgim-quant-communication-recovery-20260926",
+      "tip_sha": "3862e1695800f09f3ffbce63773f82421ed18393",
+      "pr_number": 208,
+      "title": "Recover PGIM India and quant AMC communications",
+      "merged_at": "2026-09-26T15:55:04Z"
+    },
+    {
+      "branch": "backend/portfolio-gap-audit",
+      "tip_sha": "3d6513bdca9384eb2cc05c2820a3b7e0edaf5e26",
+      "pr_number": 17,
+      "title": "Add portfolio gap diagnostics",
+      "merged_at": "2026-09-22T21:36:50Z"
+    },
+    {
+      "branch": "backend/portfolio-limitations-20260925",
+      "tip_sha": "496b642f4630687cfa87d9580cde0d9cf6424683",
+      "pr_number": 112,
+      "title": "Expose machine-readable portfolio limitations",
+      "merged_at": "2026-09-25T04:34:33Z"
+    },
+    {
+      "branch": "backend/portfolio-recovery-queue-20260925",
+      "tip_sha": "f4501dfcd8f0414df9ec080e4b1ba4d62c938865",
+      "pr_number": 114,
+      "title": "Add read-only portfolio recovery queue",
+      "merged_at": "2026-09-25T04:45:14Z"
+    },
+    {
+      "branch": "backend/preflight-parser-syntax",
+      "tip_sha": "027b510515c107689c3993a4a717b256d10e51da",
+      "pr_number": 34,
+      "title": "Fail fast before AMC archive reprocessing",
+      "merged_at": "2026-09-23T00:01:37Z"
+    },
+    {
+      "branch": "backend/probe-amfi-central-portfolio-current",
+      "tip_sha": "8244fab05e3b6f3f76cf05da7559d5b9807a0fdc",
+      "pr_number": 59,
+      "title": "Probe AMFI centralized portfolio endpoint",
+      "merged_at": "2026-09-23T14:45:55Z"
+    },
+    {
+      "branch": "backend/publication-budget-reserve-20260927",
+      "tip_sha": "b9ed51336db63fbdb25396795e550f15fd55a839",
+      "pr_number": 239,
+      "title": "Reserve headroom in Pages publication bundle",
+      "merged_at": "2026-09-27T01:54:00Z"
+    },
+    {
+      "branch": "backend/quant-portfolio-discovery",
+      "tip_sha": "48659c82fee459b4f0e795719a64c80b25c88aee",
+      "pr_number": 29,
+      "title": "Discover Quant monthly portfolio disclosures",
+      "merged_at": "2026-09-22T23:38:27Z"
+    },
+    {
+      "branch": "backend/reclassify-risk-factor-docs-v2",
+      "tip_sha": "80d2a682c90936ad5e345bd952c29392bd82197d",
+      "pr_number": 72,
+      "title": "Keep risk-factor PDFs out of factsheet coverage",
+      "merged_at": "2026-09-23T17:09:30Z"
+    },
+    {
+      "branch": "backend/recover-missing-benchmarks",
+      "tip_sha": "3088acff53d677a03ee3a4f574aa1784ce67210c",
+      "pr_number": 49,
+      "title": "Recover explicit benchmark identities from AMC factsheets",
+      "merged_at": "2026-09-23T04:15:52Z"
+    },
+    {
+      "branch": "backend/recovery-source-change-watch-20260925",
+      "tip_sha": "7a4ef1761fcf2dace4cf06651aace4357c95d1a5",
+      "pr_number": 120,
+      "title": "Detect material source changes in recovery queue",
+      "merged_at": "2026-09-25T06:23:43Z"
+    },
+    {
+      "branch": "backend/refresh-696-retention-simulation-20260926",
+      "tip_sha": "a1b8cab9c6aa6194509d56decd1c5bcc6bc0e01e",
+      "pr_number": 159,
+      "title": "Refresh historical retention simulation at 696 hashes",
+      "merged_at": "2026-09-26T01:31:40Z"
+    },
+    {
+      "branch": "backend/remove-amfi-portfolio-probe",
+      "tip_sha": "28879a653bacf0e42870a462f07136e8899345f7",
+      "pr_number": 61,
+      "title": "Remove temporary AMFI portfolio probe",
+      "merged_at": "2026-09-23T14:50:46Z"
+    },
+    {
+      "branch": "backend/remove-duplicate-upgrade-discovery",
+      "tip_sha": "4718c8bb52278b9544ac469ccf22c9d1a8f928c0",
+      "pr_number": 47,
+      "title": "Avoid duplicate AMC discovery on parser upgrades",
+      "merged_at": "2026-09-23T03:50:11Z"
+    },
+    {
+      "branch": "backend/repair-unarchived-communications-20260926",
+      "tip_sha": "c6caddfbf4bc7037960f01cd97d91cebcab1bdc7",
+      "pr_number": 222,
+      "title": "Repair retained unarchived AMC communications",
+      "merged_at": "2026-09-26T21:26:46Z"
+    },
+    {
+      "branch": "backend/retention-aware-storage-plumbing-20260925",
+      "tip_sha": "bc33b60f98b7c4b01029bd2a8895c5ebd6a4453f",
+      "pr_number": 146,
+      "title": "Add non-destructive archive retention plumbing",
+      "merged_at": "2026-09-25T20:57:12Z"
+    },
+    {
+      "branch": "backend/retention-repack-simulation-20260925",
+      "tip_sha": "d466ec0bca35eb4db91590d7ad7d5f13a9795ff1",
+      "pr_number": 150,
+      "title": "Simulate retention replacement packs without mutation",
+      "merged_at": "2026-09-25T21:52:47Z"
+    },
+    {
+      "branch": "backend/review-new-retention-hashes-20260926",
+      "tip_sha": "4773e174834b1b5168881522b603a659273fc671",
+      "pr_number": 157,
+      "title": "Review post-audit retention hashes conservatively",
+      "merged_at": "2026-09-26T01:16:51Z"
+    },
+    {
+      "branch": "backend/samco-communication-classification-20260926",
+      "tip_sha": "56328fae45cfbfa4c29539627d8046ffe539986b",
+      "pr_number": 225,
+      "title": "Correct Samco communication classification",
+      "merged_at": "2026-09-26T22:09:37Z"
+    },
+    {
+      "branch": "backend/sbi-sundaram-communication-recovery-final-v3-20260926",
+      "tip_sha": "2cffdaafd88bab63bf63f5dd8b7ed71f30a65548",
+      "pr_number": 215,
+      "title": "Recover SBI and Sundaram AMC communications",
+      "merged_at": "2026-09-26T20:23:00Z"
+    },
+    {
+      "branch": "backend/stale-complete-refresh-v2",
+      "tip_sha": "028efb130855359320f5e15ac95eb560dbb92819",
+      "pr_number": 83,
+      "title": "Refresh all stale complete portfolios from official sources",
+      "merged_at": "2026-09-23T22:09:13Z"
+    },
+    {
+      "branch": "backend/sundaram-complete-portfolio-v126",
+      "tip_sha": "c2ebd33f75bda033d1d1cc8a716420b8ab7cf74b",
+      "pr_number": 89,
+      "title": "Preserve richer Sundaram portfolio without fabricating censored weight",
+      "merged_at": "2026-09-24T15:01:00Z"
+    },
+    {
+      "branch": "backend/sundaram-direct-outlook-recovery-v2-20260926",
+      "tip_sha": "ebb8b8d5cc0952e8fd1e4481a801431d0235eb5d",
+      "pr_number": 227,
+      "title": "Recover Sundaram outlooks from reviewed monthly PDF pattern",
+      "merged_at": "2026-09-26T22:30:38Z"
+    },
+    {
+      "branch": "backend/target-parser-upgrades",
+      "tip_sha": "df3f97d1b4a3d0cfc8253a40b1a87f01a72d5fc7",
+      "pr_number": 46,
+      "title": "Target fund-specific parser upgrades",
+      "merged_at": "2026-09-23T03:45:59Z"
+    },
+    {
+      "branch": "backend/tata-complete-portfolio-v124",
+      "tip_sha": "3b4acae06ba4fd0fbda954458c291954b66a4105",
+      "pr_number": 87,
+      "title": "Recover complete Tata monthly portfolio from official structured source",
+      "merged_at": "2026-09-24T07:20:11Z"
+    },
+    {
+      "branch": "backend/tata-portfolio-discovery",
+      "tip_sha": "22a6d29bffdb2cc5828b8fc6d5155eaea84cb8e7",
+      "pr_number": 42,
+      "title": "Discover Tata monthly portfolio workbooks",
+      "merged_at": "2026-09-23T03:14:48Z"
+    },
+    {
+      "branch": "backend/tata-wealth-communications-20260926",
+      "tip_sha": "6f6558ad315114f68f717ea7fbd69ff5e40a0f28",
+      "pr_number": 216,
+      "title": "Recover Tata and Wealth AMC communications",
+      "merged_at": "2026-09-26T20:33:28Z"
+    },
+    {
+      "branch": "backend/transient-source-retry",
+      "tip_sha": "dc5d7cf86728f2ee888e71ef4462b98fc3859550",
+      "pr_number": 30,
+      "title": "Retry transient AMC source timeouts",
+      "merged_at": "2026-09-22T23:41:29Z"
+    },
+    {
+      "branch": "backend/trustmf-communication-gap-audit-20260926",
+      "tip_sha": "7233485402f0093e3c9ce0fdb82d8a16f98b79d7",
+      "pr_number": 220,
+      "title": "Document TrustMF communication source limitation",
+      "merged_at": "2026-09-26T21:11:54Z"
+    },
+    {
+      "branch": "backend/trustmf-complete-portfolio-v125",
+      "tip_sha": "18e6aea4d17d71624ad038d207e2f1aa74a77fb2",
+      "pr_number": 88,
+      "title": "Recover complete TRUSTMF monthly portfolio from official workbook",
+      "merged_at": "2026-09-24T14:31:31Z"
+    },
+    {
+      "branch": "backend/union-communication-transport-limitation-20260926",
+      "tip_sha": "41a3a627457fee686cb4f450ca706f95cc5290e0",
+      "pr_number": 236,
+      "title": "Document Union communication transport limitation",
+      "merged_at": "2026-09-27T01:12:59Z"
+    },
+    {
+      "branch": "backend/union-communications-20260926",
+      "tip_sha": "98bc10a9075faf99199bad3edf7b9c28d74ec937",
+      "pr_number": 218,
+      "title": "Recover Union AMC communications",
+      "merged_at": "2026-09-26T20:54:23Z"
+    },
+    {
+      "branch": "backend/union-direct-factsheet-fetch",
+      "tip_sha": "9d95c6c98a352abef34337e91ddfc450f426c0a7",
+      "pr_number": 48,
+      "title": "Fetch Union Small Cap factsheet directly",
+      "merged_at": "2026-09-23T04:12:11Z"
+    },
+    {
+      "branch": "backend/union-monthly-factsheet-retrieval-20260926",
+      "tip_sha": "93c578c179a1592578087dcac12dc01bcb6de963",
+      "pr_number": 165,
+      "title": "Retrieve Union portfolio from consolidated monthly factsheets",
+      "merged_at": "2026-09-26T02:20:57Z"
+    },
+    {
+      "branch": "backend/union-omnibus-fallback-v45",
+      "tip_sha": "1710099345f45c860f149358b093394c4a0227b1",
+      "pr_number": 80,
+      "title": "Recover Union Small Cap from official omnibus factsheet",
+      "merged_at": "2026-09-23T20:17:12Z"
+    },
+    {
+      "branch": "backend/uti-cms-communications-20260927",
+      "tip_sha": "f2fc29139e649dfaa0c9bed460cd03081b5df0c2",
+      "pr_number": 237,
+      "title": "Recover UTI Fund House communications from first-party CMS",
+      "merged_at": "2026-09-27T01:08:26Z"
+    },
+    {
+      "branch": "backend/uti-communications-20260926",
+      "tip_sha": "c77a9685a5942c4957786f726f9711433f52339f",
+      "pr_number": 219,
+      "title": "Recover UTI AMC communications",
+      "merged_at": "2026-09-26T21:10:40Z"
+    },
+    {
+      "branch": "backend/uti-portfolio-audit-v130",
+      "tip_sha": "6c89c13b579a02fb40fd46d08eb530700ab6d777",
+      "pr_number": 93,
+      "title": "Record verified portfolio-source blockers",
+      "merged_at": "2026-09-24T21:06:25Z"
+    },
+    {
+      "branch": "backend/wealth-current-insights-structured-payload-20260926",
+      "tip_sha": "5678df90e5731bf34e96e807df32c782690d8664",
+      "pr_number": 231,
+      "title": "Recover Wealth Current Insights from structured payload",
+      "merged_at": "2026-09-26T22:46:12Z"
+    },
+    {
+      "branch": "cleanup/696-retention-simulation-workflow-20260926",
+      "tip_sha": "1efb26e13c9558824f1156be77330347a6a1fe2a",
+      "pr_number": 160,
+      "title": "Remove completed 696-hash simulation workflow",
+      "merged_at": "2026-09-26T01:34:34Z"
+    },
+    {
+      "branch": "cleanup/retention-simulation-workflow-20260926",
+      "tip_sha": "7f9ff9e38a5a5981cfe640e1485d0a86ddf7ecd0",
+      "pr_number": 155,
+      "title": "Remove completed one-time retention simulation workflow",
+      "merged_at": "2026-09-26T00:46:47Z"
+    },
+    {
+      "branch": "diag/absl-idcw-nav-gap-20260925",
+      "tip_sha": "756c3d13f55c43d16d88dc5eafc47c976a415cb1",
+      "pr_number": 143,
+      "title": "Audit ABSL Regular IDCW historical NAV gap",
+      "merged_at": "2026-09-25T20:23:01Z"
+    },
+    {
+      "branch": "diag/amc-historical-nav-sources-20260925",
+      "tip_sha": "fa307dbdd472fc92cbafa8cb88630620683d2a74",
+      "pr_number": 130,
+      "title": "Trace AMC historical NAV transports",
+      "merged_at": "2026-09-25T17:32:02Z"
+    },
+    {
+      "branch": "diag/amfi-nav-gap-audit-20260925",
+      "tip_sha": "4fc682b680c1cad9fae324fe967ca84cfa697418",
+      "pr_number": 129,
+      "title": "Audit historical NAV gaps against AMFI",
+      "merged_at": "2026-09-25T17:28:42Z"
+    },
+    {
+      "branch": "diag/amfi-portfolio-contract-20260926",
+      "tip_sha": "5586269e192664677f02b53130ae80c2a313e4a3",
+      "pr_number": 166,
+      "title": "Diagnose AMFI portfolio disclosure contract",
+      "merged_at": "2026-09-26T02:28:22Z"
+    },
+    {
+      "branch": "diag/bajaj-bandhan-communication-evidence-20260926",
+      "tip_sha": "82338af49a6e5acb83023fc1c5bcaa37c2024c15",
+      "pr_number": 184,
+      "title": "Inspect Bajaj and Bandhan communication sources",
+      "merged_at": "2026-09-26T06:04:07Z"
+    },
+    {
+      "branch": "diag/bajaj-media-portfolio-catalog-20260926",
+      "tip_sha": "727f6521a7d157cb76ee5d5ce1d981f3d3247853",
+      "pr_number": 171,
+      "title": "Probe Bajaj first-party media catalog for portfolio files",
+      "merged_at": "2026-09-26T03:52:11Z"
+    },
+    {
+      "branch": "diag/bajaj-outlook-card-transport-20260926",
+      "tip_sha": "105799a23b770a2dd5b937c9e05dfdfd84b1c5c2",
+      "pr_number": 186,
+      "title": "Inspect Bajaj Outlook card transport",
+      "merged_at": "2026-09-26T06:11:00Z"
+    },
+    {
+      "branch": "diag/bajaj-outlook-category-20260926",
+      "tip_sha": "f648f5f58716c1821066f97d4aef7ca6005d370f",
+      "pr_number": 185,
+      "title": "Inspect Bajaj Outlook categories",
+      "merged_at": "2026-09-26T06:07:42Z"
+    },
+    {
+      "branch": "diag/dsp-nav-id157-20260925",
+      "tip_sha": "25fb4ac9af2d486aeebc0b67ab485d35dce083dc",
+      "pr_number": 134,
+      "title": "Probe DSP NAV gaps with internal option id",
+      "merged_at": "2026-09-25T18:40:26Z"
+    },
+    {
+      "branch": "diag/edelweiss-api-request-contract-20260926",
+      "tip_sha": "cc7cdb9a138bb4a076b1c6ef5942898420ebb33b",
+      "pr_number": 170,
+      "title": "Trace Edelweiss public API request contract",
+      "merged_at": "2026-09-26T03:48:23Z"
+    },
+    {
+      "branch": "diag/edelweiss-canonical-portfolio-20260926",
+      "tip_sha": "bf2c1e96eefd5fad3553b1fc6ed09c46ede7c337",
+      "pr_number": 167,
+      "title": "Probe AMFI-canonical Edelweiss portfolio route",
+      "merged_at": "2026-09-26T02:33:19Z"
+    },
+    {
+      "branch": "diag/edelweiss-franklin-communications-20260926",
+      "tip_sha": "2077356ee92c4467da63330517ea9b7dd9e4a1d3",
+      "pr_number": 188,
+      "title": "Inspect Edelweiss and Franklin communication sources",
+      "merged_at": "2026-09-26T11:30:49Z"
+    },
+    {
+      "branch": "diag/edelweiss-statutory-api-20260926",
+      "tip_sha": "d987ed79789fbeabb504790d65a9087a0c3ca67f",
+      "pr_number": 168,
+      "title": "Resolve Edelweiss statutory API contract",
+      "merged_at": "2026-09-26T02:40:36Z"
+    },
+    {
+      "branch": "diag/franklin-article-api-live-20260926",
+      "tip_sha": "7d29c4edcd051c4050845978bbdf1397699b00ab",
+      "pr_number": 195,
+      "title": "Probe Franklin public article API live",
+      "merged_at": "2026-09-26T12:01:30Z"
+    },
+    {
+      "branch": "diag/franklin-article-api-signature-20260926",
+      "tip_sha": "75a587a92cbaa8113c4f08e1d695f41015771635",
+      "pr_number": 193,
+      "title": "Inspect Franklin article API signature",
+      "merged_at": "2026-09-26T11:46:32Z"
+    },
+    {
+      "branch": "diag/franklin-article-endpoint-20260926",
+      "tip_sha": "c20fbda7bedb935a17a9641a4961714f3b47d665",
+      "pr_number": 194,
+      "title": "Narrow Franklin article endpoint diagnostic",
+      "merged_at": "2026-09-26T11:59:38Z"
+    },
+    {
+      "branch": "diag/franklin-frontend-basefix-20260926",
+      "tip_sha": "154f2344ef39b598576dece0d13eb2e5c012b0aa",
+      "pr_number": 192,
+      "title": "Fix Franklin frontend transport probe",
+      "merged_at": "2026-09-26T11:44:22Z"
+    },
+    {
+      "branch": "diag/franklin-frontend-transport-20260926",
+      "tip_sha": "f817421cf2691213e25f72b41b649fc946589dcf",
+      "pr_number": 191,
+      "title": "Inspect Franklin frontend communication transport",
+      "merged_at": "2026-09-26T11:42:53Z"
+    },
+    {
+      "branch": "diag/franklin-official-communication-index-20260926",
+      "tip_sha": "a91967a2d8393371951d0b23a4a120d5a28557f1",
+      "pr_number": 190,
+      "title": "Inspect Franklin official communication index",
+      "merged_at": "2026-09-26T11:40:33Z"
+    },
+    {
+      "branch": "diag/groww-hsbc-communications-20260926",
+      "tip_sha": "2b65f578640c4d1cf41ccc4a3d6ecad2de7f5db2",
+      "pr_number": 198,
+      "title": "Inspect Groww and HSBC communication sources",
+      "merged_at": "2026-09-26T12:59:41Z"
+    },
+    {
+      "branch": "diag/icici-current-blob-portfolio-20260926",
+      "tip_sha": "5c5742bde8d87e86927eb5cb5da2c7456243b880",
+      "pr_number": 172,
+      "title": "Probe ICICI current static monthly portfolio transport",
+      "merged_at": "2026-09-26T03:54:24Z"
+    },
+    {
+      "branch": "diag/icici-media-center-portfolio-20260926",
+      "tip_sha": "443b3756601cfe3b3e7857f10e7eab2f8afe82ca",
+      "pr_number": 164,
+      "title": "Probe current ICICI portfolio route",
+      "merged_at": "2026-09-26T01:55:42Z"
+    },
+    {
+      "branch": "diag/icici-portfolio-contract-20260926",
+      "tip_sha": "4dc60974632d8365026d93eebdbe23822e61eddf",
+      "pr_number": 163,
+      "title": "Diagnose ICICI monthly portfolio contract",
+      "merged_at": "2026-09-26T01:51:44Z"
+    },
+    {
+      "branch": "diag/icici-portfolio-zip-layout-20260926",
+      "tip_sha": "8a6a065036478b5aec63ce9be273abe776ac95a4",
+      "pr_number": 173,
+      "title": "Inspect ICICI monthly portfolio ZIP structure",
+      "merged_at": "2026-09-26T03:59:09Z"
+    },
+    {
+      "branch": "diag/iti-mahindra-communication-evidence-20260926",
+      "tip_sha": "b8b54a39937e44dc17a8978ff082416fafe188f3",
+      "pr_number": 180,
+      "title": "Inspect retained ITI and Mahindra communication evidence",
+      "merged_at": "2026-09-26T04:52:56Z"
+    },
+    {
+      "branch": "diag/kotak-mirae-communications-20260926",
+      "tip_sha": "9c1822388c10eadd9bba68709f8a5fa6522dc282",
+      "pr_number": 201,
+      "title": "Inspect Kotak and Mirae communication sources",
+      "merged_at": "2026-09-26T14:11:21Z"
+    },
+    {
+      "branch": "diag/midcap-portfolio-batch1-20260927",
+      "tip_sha": "b439c0c0181e3c8fa099aa5f069e6d8cd102b3c3",
+      "pr_number": 271,
+      "title": "Diagnose first staged Mid Cap portfolio source batch",
+      "merged_at": "2026-09-28T00:53:02Z"
+    },
+    {
+      "branch": "diag/midcap-portfolio-batch3-contracts-20260927",
+      "tip_sha": "8dab7e72e8f5abe425d094da4d2df02c1bc81a61",
+      "pr_number": 274,
+      "title": "Discover Mid Cap portfolio batch 3 source contracts",
+      "merged_at": "2026-09-28T01:18:35Z"
+    },
+    {
+      "branch": "diag/midcap-ter-final3-targeted-20260927",
+      "tip_sha": "ba8de3eaa09773286b7ae3ba60a3c09104fc779a",
+      "pr_number": 266,
+      "title": "Probe final three Mid Cap TER sources precisely",
+      "merged_at": "2026-09-27T22:14:57Z"
+    },
+    {
+      "branch": "diag/midcap-ter-final4-files-20260927",
+      "tip_sha": "71605db4cd8a8fc307694a514afa7e167ef35fde",
+      "pr_number": 263,
+      "title": "Inspect concrete TER files for four remaining Mid Cap gaps",
+      "merged_at": "2026-09-27T20:57:48Z"
+    },
+    {
+      "branch": "diag/midcap-ter-final6-sources-20260927",
+      "tip_sha": "1fb483d92bdd01cc8661a942459743b410701a2d",
+      "pr_number": 262,
+      "title": "Probe final six Mid Cap TER source pages",
+      "merged_at": "2026-09-27T20:47:22Z"
+    },
+    {
+      "branch": "diag/nav-api-contracts-20260925",
+      "tip_sha": "c593d3eaa0cccfb734c92480aa2e671a64c818ad",
+      "pr_number": 131,
+      "title": "Extract historical NAV API contracts",
+      "merged_at": "2026-09-25T17:36:12Z"
+    },
+    {
+      "branch": "diag/nav-source-row-probe-20260925",
+      "tip_sha": "5e0af649a0152c35698b9f8547f01093f8495498",
+      "pr_number": 132,
+      "title": "Probe first-party AMC NAV gap rows",
+      "merged_at": "2026-09-25T17:40:11Z"
+    },
+    {
+      "branch": "diag/nav-source-row-probe-v2-20260925",
+      "tip_sha": "a4c8a93f73d4225864b6890a30449668b930692e",
+      "pr_number": 133,
+      "title": "Retry AMC historical NAV probes safely",
+      "merged_at": "2026-09-25T17:43:12Z"
+    },
+    {
+      "branch": "diag/pgim-quant-communications-20260926",
+      "tip_sha": "118a5a29d25e89cb3d3a72d402179ef639988329",
+      "pr_number": 206,
+      "title": "Inspect PGIM and quant communication sources",
+      "merged_at": "2026-09-26T15:47:56Z"
+    },
+    {
+      "branch": "diag/sbi-sundaram-card-markup-20260926",
+      "tip_sha": "723e3615b82746ce652bc97017009c9af055e36c",
+      "pr_number": 210,
+      "title": "Inspect SBI and Sundaram current communication card markup",
+      "merged_at": "2026-09-26T16:29:33Z"
+    },
+    {
+      "branch": "diag/sbi-sundaram-communications-20260926",
+      "tip_sha": "b86916cc1ae1a304803009c272bdb3d88f652b89",
+      "pr_number": 209,
+      "title": "Inspect SBI and Sundaram communication sources",
+      "merged_at": "2026-09-26T16:23:57Z"
+    },
+    {
+      "branch": "diag/sbi-sundaram-link-targets-20260926",
+      "tip_sha": "7225012e17f9350b213530e0a65438bef97d5727",
+      "pr_number": 211,
+      "title": "Inspect SBI and Sundaram exact communication link targets",
+      "merged_at": "2026-09-26T16:48:58Z"
+    },
+    {
+      "branch": "diag/sbi-sundaram-transport-20260926",
+      "tip_sha": "aafc548e7ae7c0f3c86c2ad959d7c7ff4283a9d5",
+      "pr_number": 212,
+      "title": "Inspect SBI and Sundaram communication transport",
+      "merged_at": "2026-09-26T18:25:24Z"
+    },
+    {
+      "branch": "diag/sundaram-knowledge-api-v2-20260926",
+      "tip_sha": "3c36f099f7a0c9072e4cf10e5cb8ad2a058e636e",
+      "pr_number": 214,
+      "title": "Inspect Sundaram Knowledge Hub transport",
+      "merged_at": "2026-09-26T18:32:47Z"
+    },
+    {
+      "branch": "diag/trust-uti-union-communications-20260926",
+      "tip_sha": "00936c714e3875381de953d3f54a25d69ab482c3",
+      "pr_number": 217,
+      "title": "Inspect Trust UTI and Union communication sources",
+      "merged_at": "2026-09-26T20:53:05Z"
+    },
+    {
+      "branch": "diag/union-apex-portfolio-20260926",
+      "tip_sha": "47523c6e1f2bda0d033c3c190d6653e604e4e1a6",
+      "pr_number": 162,
+      "title": "Diagnose Union apex portfolio route",
+      "merged_at": "2026-09-26T01:48:48Z"
+    },
+    {
+      "branch": "diag/uti-cms-endpoint-20260926",
+      "tip_sha": "d80e948fe8b2b7ad08e3b9e85998d5fc0d9485d9",
+      "pr_number": 233,
+      "title": "Extract exact UTI CMS endpoint contract",
+      "merged_at": "2026-09-26T22:55:55Z"
+    },
+    {
+      "branch": "diag/uti-cms-response-20260926",
+      "tip_sha": "51ef624df4de9371143cc0339b72a804485222be",
+      "pr_number": 235,
+      "title": "Probe UTI CMS response contract",
+      "merged_at": "2026-09-26T23:39:03Z"
+    },
+    {
+      "branch": "diag/uti-js-transport-20260926",
+      "tip_sha": "edf5a7a6fc3b755f6f67e81869e0d6141b9d8a81",
+      "pr_number": 232,
+      "title": "Inspect UTI first-party app transport",
+      "merged_at": "2026-09-26T22:47:29Z"
+    },
+    {
+      "branch": "diag/wealth-uti-transport-v2-20260926",
+      "tip_sha": "3458c0e848a1283f298845644679b7e01e6bedbd",
+      "pr_number": 229,
+      "title": "Inspect Wealth and UTI communication transports",
+      "merged_at": "2026-09-26T22:36:38Z"
+    },
+    {
+      "branch": "docs/696-retention-simulation-handoff-20260926",
+      "tip_sha": "671515cd3def569d321ec70f288bb858d85c2cf0",
+      "pr_number": 161,
+      "title": "Update refreshed 696-hash simulation handoff",
+      "merged_at": "2026-09-26T01:37:17Z"
+    },
+    {
+      "branch": "docs/absl-idcw-gap-handoff-20260925",
+      "tip_sha": "3b2b1eabe4a6a0f7a80b996a4c4299f995ecbcdf",
+      "pr_number": 145,
+      "title": "Update final NAV-gap classification handoff",
+      "merged_at": "2026-09-25T20:31:35Z"
+    },
+    {
+      "branch": "docs/axis-watch-handoff-20260925",
+      "tip_sha": "012ad41dab5396e86d2aaa7fe65d3cf8d463d0e7",
+      "pr_number": 121,
+      "title": "Update Axis recovery and source-change watch handoff",
+      "merged_at": "2026-09-25T06:27:31Z"
+    },
+    {
+      "branch": "docs/backend-handoff-2026-09-23",
+      "tip_sha": "900d1a1c3fe83805fb55a4eb5afe4129cb5fe95a",
+      "pr_number": 76,
+      "title": "Update backend development handoff",
+      "merged_at": "2026-09-23T17:47:46Z"
+    },
+    {
+      "branch": "docs/backend-handoff-2026-09-23-v45",
+      "tip_sha": "5e0a7a45cdf7c898b511264126e156b7fbbbd382",
+      "pr_number": 82,
+      "title": "[skip ci] Update backend handoff after Union v45 audit",
+      "merged_at": "2026-09-23T20:23:29Z"
+    },
+    {
+      "branch": "docs/current-backend-handoff-20260927",
+      "tip_sha": "14f6130f004fac4ddfc2edfdf074c6dfbe96f720",
+      "pr_number": 238,
+      "title": "Refresh backend handoff after communication milestone",
+      "merged_at": "2026-09-27T01:45:50Z"
+    },
+    {
+      "branch": "docs/edelweiss-portfolio-audit-20260925",
+      "tip_sha": "bb22bbbd16d60bcbda703cd7c1bd7028a776943a",
+      "pr_number": 107,
+      "title": "Document Edelweiss portfolio source blocker",
+      "merged_at": "2026-09-25T03:24:36Z"
+    },
+    {
+      "branch": "docs/handoff-groww-run148",
+      "tip_sha": "26cd35188832ace572aeedf80e0c7ccc5862bbab",
+      "pr_number": 79,
+      "title": "Record Groww backend handoff",
+      "merged_at": "2026-09-23T17:57:44Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-benchmark-portfolio-20260927",
+      "tip_sha": "22169a9cef33f0d606802162b4c3b7db4e9f8887",
+      "pr_number": 273,
+      "title": "Update handoff after Mid Cap benchmark and portfolio readiness",
+      "merged_at": "2026-09-28T01:10:55Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-history-20260927",
+      "tip_sha": "823cab9a00bf35cf206b6bab9e4a995e74851142",
+      "pr_number": 249,
+      "title": "Update handoff after Mid Cap history staging",
+      "merged_at": "2026-09-27T11:39:01Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-launch-gate-20260927",
+      "tip_sha": "8be4e0dcb11d39c0816009bc850ae97989764b58",
+      "pr_number": 282,
+      "title": "Update handoff with Mid Cap launch gate",
+      "merged_at": "2026-09-28T03:03:26Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-portfolio-batch3-20260927",
+      "tip_sha": "0ba56730da3cc0a3a5f5a6bb6dfa919d15a32d1c",
+      "pr_number": 280,
+      "title": "Update handoff after Mid Cap portfolio batch 3",
+      "merged_at": "2026-09-28T02:39:58Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-source-audit-20260927",
+      "tip_sha": "07115d5a25bba213ae9b2033fa699d56c8f25ef1",
+      "pr_number": 252,
+      "title": "Update handoff after Mid Cap source audit",
+      "merged_at": "2026-09-27T12:06:33Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-ter-batch1-20260927",
+      "tip_sha": "2a12a6684bd7d3a985a52129973416f1508651b4",
+      "pr_number": 261,
+      "title": "Update handoff after first-party Mid Cap TER batch",
+      "merged_at": "2026-09-27T17:58:49Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-ter-final3-20260927",
+      "tip_sha": "99ee156be43d49d3fbe9e1542b6adb25c1d3e0ec",
+      "pr_number": 267,
+      "title": "Update handoff after final Mid Cap TER diagnostics",
+      "merged_at": "2026-09-27T22:26:02Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-ter-gaps-20260927",
+      "tip_sha": "956845ca9216af18223251fd3bcace805df05f06",
+      "pr_number": 258,
+      "title": "Update handoff after Mid Cap TER gap classification",
+      "merged_at": "2026-09-27T17:33:45Z"
+    },
+    {
+      "branch": "docs/handoff-midcap-ter-selector-20260927",
+      "tip_sha": "4a2f7b6f67b4084b6ca2bcbcf63d9e254ca42bba",
+      "pr_number": 256,
+      "title": "Update handoff after Mid Cap TER selector resolution",
+      "merged_at": "2026-09-27T15:53:42Z"
+    },
+    {
+      "branch": "docs/handoff-publication-reserve-20260927",
+      "tip_sha": "f123c64c80892227e1b239072021ae51364b43d9",
+      "pr_number": 240,
+      "title": "Record publication budget reserve in handoff",
+      "merged_at": "2026-09-27T01:58:15Z"
+    },
+    {
+      "branch": "docs/handoff-storage-health-20260927",
+      "tip_sha": "9832e58b4cc86c5092c98d97fe266d817ac774fe",
+      "pr_number": 242,
+      "title": "Record current storage health in handoff",
+      "merged_at": "2026-09-27T03:11:10Z"
+    },
+    {
+      "branch": "docs/icici-portfolio-recheck-20260925",
+      "tip_sha": "2776411596e7ae583b42c8c32606c8f5448e5eb1",
+      "pr_number": 110,
+      "title": "Document ICICI portfolio transport blocker",
+      "merged_at": "2026-09-25T04:23:13Z"
+    },
+    {
+      "branch": "docs/icici-recovery-handoff-20260926",
+      "tip_sha": "40e7007dd54882e38f2f5c2372d0a520e8add694",
+      "pr_number": 177,
+      "title": "Update handoff after ICICI portfolio recovery",
+      "merged_at": "2026-09-26T04:33:34Z"
+    },
+    {
+      "branch": "docs/midcap-batch5-quality-handoff-20260927",
+      "tip_sha": "b397b199da53e54b9494e20e37782c6110fad8f1",
+      "pr_number": 288,
+      "title": "Record verified Mid Cap batch-5 correction and launch handoff",
+      "merged_at": "2026-09-28T04:33:37Z"
+    },
+    {
+      "branch": "docs/midcap-benchmark-649-handoff-20260928",
+      "tip_sha": "fa29e1cb74d8501aae68ae7bed88462a9bf88947",
+      "pr_number": 295,
+      "title": "Record verified Axis/Mirae benchmark recovery and current launch gaps",
+      "merged_at": "2026-09-28T13:34:55Z"
+    },
+    {
+      "branch": "docs/midcap-benchmark-650-handoff-20260928",
+      "tip_sha": "83371e06f9e27004f82801696e847369e69df751",
+      "pr_number": 297,
+      "title": "Record production #650 Mid Cap benchmark and portfolio checkpoint",
+      "merged_at": "2026-09-28T13:58:02Z"
+    },
+    {
+      "branch": "docs/midcap-evidence-handoff-20260928",
+      "tip_sha": "bad66b1ed855b68fa5518c117c21d5af8d411b2c",
+      "pr_number": 289,
+      "title": "Update Mid Cap handoff after verified evidence and reporting-date fixes",
+      "merged_at": "2026-09-28T04:52:39Z"
+    },
+    {
+      "branch": "docs/midcap-freshness-handoff-20260928",
+      "tip_sha": "995a7ac49e9d2aa99dd5abb3c5066c2a17d8d5ec",
+      "pr_number": 291,
+      "title": "Record verified Mid Cap freshness checkpoint and current TER blocker",
+      "merged_at": "2026-09-28T05:26:28Z"
+    },
+    {
+      "branch": "docs/midcap-invesco-653-handoff-20260928",
+      "tip_sha": "6803628dbdc2213c350c3171044c754c45386167",
+      "pr_number": 301,
+      "title": "Record verified Invesco recovery and production #653",
+      "merged_at": "2026-09-28T15:19:29Z"
+    },
+    {
+      "branch": "docs/midcap-role-652-handoff-20260928",
+      "tip_sha": "d3de21daae35503182fff3411580f67d6528a227",
+      "pr_number": 299,
+      "title": "Record verified benchmark-role repair and production #652",
+      "merged_at": "2026-09-28T14:39:39Z"
+    },
+    {
+      "branch": "docs/nav-gap-audit-handoff-20260925",
+      "tip_sha": "a667db64db29720a44edae87d156dac08e1d044f",
+      "pr_number": 136,
+      "title": "Update NAV gap audit handoff",
+      "merged_at": "2026-09-25T18:54:53Z"
+    },
+    {
+      "branch": "docs/performance-audit-policy-handoff-20260925",
+      "tip_sha": "65f71f535be15e52d11d05ae9569971bd63adbd2",
+      "pr_number": 142,
+      "title": "Update performance audit cleanup handoff",
+      "merged_at": "2026-09-25T19:59:58Z"
+    },
+    {
+      "branch": "docs/performance-benchmark-contract-handoff-20260925",
+      "tip_sha": "e88f8edd7af85fc3a00fce113b86a7e4fcb98a75",
+      "pr_number": 138,
+      "title": "Update performance benchmark API handoff",
+      "merged_at": "2026-09-25T19:15:14Z"
+    },
+    {
+      "branch": "docs/performance-coverage-handoff-20260925",
+      "tip_sha": "3300c397c7383087b27d37de0b2d08be906e5d64",
+      "pr_number": 123,
+      "title": "Update performance coverage audit handoff",
+      "merged_at": "2026-09-25T15:44:26Z"
+    },
+    {
+      "branch": "docs/portfolio-blockers-20260925-v2",
+      "tip_sha": "29350333070c68105ae5fcf84b9a2919f115b07d",
+      "pr_number": 106,
+      "title": "Update portfolio blocker handoff",
+      "merged_at": "2026-09-25T03:10:32Z"
+    },
+    {
+      "branch": "docs/portfolio-limitations-handoff-20260925",
+      "tip_sha": "25f75a76c635ea42a16f12009fa8f37e3a72f7f6",
+      "pr_number": 113,
+      "title": "Update portfolio limitation handoff",
+      "merged_at": "2026-09-25T04:38:00Z"
+    },
+    {
+      "branch": "docs/portfolio-recovery-queue-handoff-20260925",
+      "tip_sha": "7abfc181c3f111dd84a1d111e177adeb6ed8cb42",
+      "pr_number": 116,
+      "title": "Update portfolio recovery queue handoff",
+      "merged_at": "2026-09-25T04:51:49Z"
+    },
+    {
+      "branch": "docs/post-audit-retention-review-handoff-20260926",
+      "tip_sha": "ecf95b2719564c58ddf8fb5fdcae7b4d24111c7f",
+      "pr_number": 158,
+      "title": "Update post-audit retention review handoff",
+      "merged_at": "2026-09-26T01:20:15Z"
+    },
+    {
+      "branch": "docs/repository-audit-handoff-20260928",
+      "tip_sha": "2eb5f4238650f52cb739f2fc02d27ef9aa403faa",
+      "pr_number": 309,
+      "title": "Update repository audit handoff",
+      "merged_at": "2026-09-28T17:44:42Z"
+    },
+    {
+      "branch": "docs/retention-plumbing-handoff-20260925",
+      "tip_sha": "dd01eadd496d3a136afbc6e137641956e6ca0701",
+      "pr_number": 148,
+      "title": "Update retention plumbing handoff and audit",
+      "merged_at": "2026-09-25T21:02:37Z"
+    },
+    {
+      "branch": "docs/retention-simulation-handoff-20260926",
+      "tip_sha": "da4f7601a94ee3966496983f62fcfe7be0c9734c",
+      "pr_number": 156,
+      "title": "Update retention simulation handoff",
+      "merged_at": "2026-09-26T00:48:34Z"
+    },
+    {
+      "branch": "docs/split-storage-handoff-v2",
+      "tip_sha": "9b176cabb538b36a25b50d726ad43fc193ab3670",
+      "pr_number": 26,
+      "title": "Document split archive storage migration",
+      "merged_at": "2026-09-22T22:35:56Z"
+    },
+    {
+      "branch": "docs/static-benchmark-ui-handoff-20260925",
+      "tip_sha": "af8db0537b87a4edb9dad84485ea580a18d45802",
+      "pr_number": 140,
+      "title": "Update hosted benchmark integration handoff",
+      "merged_at": "2026-09-25T19:39:17Z"
+    },
+    {
+      "branch": "docs/tri-identity-handoff-20260925",
+      "tip_sha": "e720ebeeb622b54de938c9c37010a5b9e43c97ea",
+      "pr_number": 128,
+      "title": "Update TRI identity repair handoff",
+      "merged_at": "2026-09-25T17:24:36Z"
+    },
+    {
+      "branch": "expand-amc-data-coverage",
+      "tip_sha": "bf03db1045d0ea661d959d74b5beef453184ec03",
+      "pr_number": 4,
+      "title": "Expand official AUM, expenses and complete portfolio coverage",
+      "merged_at": "2026-09-09T19:58:03Z"
+    },
+    {
+      "branch": "expand-amc-disclosures",
+      "tip_sha": "f4cc84550868551f5e61e7d0367fbb305b8771df",
+      "pr_number": 1,
+      "title": "Expand official AMC factsheet and portfolio coverage",
+      "merged_at": "2026-09-07T21:08:11Z"
+    },
+    {
+      "branch": "expand-sbi-mirae-motilal",
+      "tip_sha": "550211e5a62ff1c304aca93206d69d1b537587c3",
+      "pr_number": 2,
+      "title": "Fill SBI, Mirae and Motilal data gaps from official reports",
+      "merged_at": "2026-09-08T13:32:58Z"
+    },
+    {
+      "branch": "feature/groww-ber-20260925",
+      "tip_sha": "dd3e3dac940fc4d9ddf19ae479ff01645586b702",
+      "pr_number": 101,
+      "title": "Recover Groww Small Cap Current BER",
+      "merged_at": "2026-09-25T02:27:57Z"
+    },
+    {
+      "branch": "feature/mirae-ter-20260925",
+      "tip_sha": "3e969ff087f5431c9914c923e5754ed40571c22f",
+      "pr_number": 100,
+      "title": "Recover Mirae Asset Small Cap explicit Total TER",
+      "merged_at": "2026-09-25T02:07:01Z"
+    },
+    {
+      "branch": "feature/uti-ber-20260925",
+      "tip_sha": "603cad05470c00979fa611ab1a4571fbedf27a64",
+      "pr_number": 103,
+      "title": "Recover UTI Small Cap explicit BER from YTD TER workbook",
+      "merged_at": "2026-09-25T02:47:36Z"
+    },
+    {
+      "branch": "fix-sbi-factsheet-association",
+      "tip_sha": "9f4942e9b42d42d95908e7e4af2148384c49a4d5",
+      "pr_number": 3,
+      "title": "Fix the Franklin factsheet link on SBI Small Cap",
+      "merged_at": "2026-09-08T23:45:12Z"
+    },
+    {
+      "branch": "fix/axis-preferred-complete-api-20260925",
+      "tip_sha": "29e8ddae275370d9ae17fb85904fa50250a4442d",
+      "pr_number": 118,
+      "title": "Expose recovered Axis complete portfolio in fund API",
+      "merged_at": "2026-09-25T05:21:49Z"
+    },
+    {
+      "branch": "fix/coverage-record-date-ranges-20260928",
+      "tip_sha": "8948430c53cf0713eb429d3d3b567623558f3c29",
+      "pr_number": 305,
+      "title": "Expose coverage record-date ranges",
+      "merged_at": "2026-09-28T16:45:20Z"
+    },
+    {
+      "branch": "fix/current-eligible-retention-simulation-20260925",
+      "tip_sha": "c4466a246ce76685e60b299333fedda2ba3cf254",
+      "pr_number": 154,
+      "title": "Refresh retention simulation from current eligible set",
+      "merged_at": "2026-09-26T00:43:10Z"
+    },
+    {
+      "branch": "fix/direct-fee-summary-20260925",
+      "tip_sha": "ef50835064b8d24d1f5e98988ed320b8dfe9df42",
+      "pr_number": 102,
+      "title": "Prefer Direct fee metrics in same-date coverage summaries",
+      "merged_at": "2026-09-25T02:32:53Z"
+    },
+    {
+      "branch": "fix/edelweiss-api-diagnostic-fallback-20260926",
+      "tip_sha": "8255a7d9e0b537d02e4f7226da1a9d01d5a243b5",
+      "pr_number": 169,
+      "title": "Keep Edelweiss API probe alive through statutory 403s",
+      "merged_at": "2026-09-26T03:44:17Z"
+    },
+    {
+      "branch": "fix/export-materialization-token-20260928",
+      "tip_sha": "0815c8c293c43c23ec1f1152cbad68d22fe12f07",
+      "pr_number": 306,
+      "title": "Restore scoped release access during site export",
+      "merged_at": "2026-09-28T17:06:03Z"
+    },
+    {
+      "branch": "fix/franklin-reviewed-tri-identity-20260925",
+      "tip_sha": "d628a64da707ff3f607d1e7629811639141fb9ba",
+      "pr_number": 127,
+      "title": "Record Franklin TRI identity as reviewed official evidence",
+      "merged_at": "2026-09-25T17:21:22Z"
+    },
+    {
+      "branch": "fix/franklin-tri-repair-gate-20260925",
+      "tip_sha": "8fc8bab2845d4fe90ccd12aa45f9ad0402d6a2b3",
+      "pr_number": 126,
+      "title": "Fix Franklin TRI repair and enforce v129 gate",
+      "merged_at": "2026-09-25T16:29:33Z"
+    },
+    {
+      "branch": "fix/icici-handoff-format-20260925",
+      "tip_sha": "6c1fb158fb743d4fa1b737c7c16374d69d4b9cec",
+      "pr_number": 111,
+      "title": "Repair ICICI handoff formatting",
+      "merged_at": "2026-09-25T04:25:03Z"
+    },
+    {
+      "branch": "fix/kotak-current-link-identity-20260926",
+      "tip_sha": "b4cc6def866e8d06a7634609ef4433480a12b691",
+      "pr_number": 203,
+      "title": "Fix Kotak current market update identity selection",
+      "merged_at": "2026-09-26T14:19:34Z"
+    },
+    {
+      "branch": "fix/kotak-monthly-outlook-title-20260926",
+      "tip_sha": "710a0cea9e12e1853a9f694711ede24c9d0fdb7c",
+      "pr_number": 204,
+      "title": "Recognize Kotak Monthly Outlook PPT titles",
+      "merged_at": "2026-09-26T14:21:20Z"
+    },
+    {
+      "branch": "fix/kotak-robots-link-only-20260926",
+      "tip_sha": "f190e1def84aa45d59d0d7494abae24b8f9bfb37",
+      "pr_number": 205,
+      "title": "Respect Kotak robots policy with link-only outlook evidence",
+      "merged_at": "2026-09-26T14:23:54Z"
+    },
+    {
+      "branch": "fix/midcap-batch5-evidence-quality-20260927",
+      "tip_sha": "ea3ee648c88032aac84174752705033963f8e610",
+      "pr_number": 285,
+      "title": "Correct Mid Cap factsheet holdings and Sundaram date parsing",
+      "merged_at": "2026-09-28T04:07:10Z"
+    },
+    {
+      "branch": "fix/midcap-benchmark-documents-20260928",
+      "tip_sha": "6a06af3a2f13f5847757312d3c098bfaab4446d8",
+      "pr_number": 296,
+      "title": "Recover ABSL and SBI Mid Cap benchmark identities from explicit first-party labels",
+      "merged_at": "2026-09-28T13:44:39Z"
+    },
+    {
+      "branch": "fix/midcap-benchmark-invesco-20260928",
+      "tip_sha": "22a4d46cd1d9272f7dedd344dcc248da74d256f6",
+      "pr_number": 300,
+      "title": "Recover Invesco Mid Cap benchmark from the dated AMC factsheet",
+      "merged_at": "2026-09-28T15:05:40Z"
+    },
+    {
+      "branch": "fix/midcap-benchmark-labels-20260928",
+      "tip_sha": "a7ff8732ff60517b6f8f8f157993474d77f47f1e",
+      "pr_number": 294,
+      "title": "Recover Axis and Mirae primary benchmark identities with exact source labels",
+      "merged_at": "2026-09-28T13:19:35Z"
+    },
+    {
+      "branch": "fix/midcap-benchmark-role-20260928",
+      "tip_sha": "725944fb5f3483e8dc45bc989686b0bec1c35e35",
+      "pr_number": 298,
+      "title": "Reject ambiguous primary benchmark evidence before Mid Cap expansion",
+      "merged_at": "2026-09-28T14:22:36Z"
+    },
+    {
+      "branch": "fix/midcap-evidence-20260928",
+      "tip_sha": "90adbef303ee62e6931cfa5817b4693e50f36ecb",
+      "pr_number": 287,
+      "title": "Correct Mid Cap portfolio evidence and recover Sundaram independently of AUM dates",
+      "merged_at": "2026-09-28T04:38:55Z"
+    },
+    {
+      "branch": "fix/midcap-jm-portfolio-date-20260927",
+      "tip_sha": "f7e1d7e9e14db171974a8cb2b05549bfd7e313ab",
+      "pr_number": 284,
+      "title": "Fix JM Mid Cap monthly portfolio title-date parsing",
+      "merged_at": "2026-09-28T03:50:27Z"
+    },
+    {
+      "branch": "fix/midcap-kotak-ter-identity-20260927",
+      "tip_sha": "c15c31d412504e7ec0857d2ae08dc93b3a68dba9",
+      "pr_number": 265,
+      "title": "Fix Kotak Mid Cap TER identity normalization",
+      "merged_at": "2026-09-27T21:20:15Z"
+    },
+    {
+      "branch": "fix/midcap-mahindra-table-sections-20260927",
+      "tip_sha": "64c812f4ef7e84a6a39728b154a001691389be9e",
+      "pr_number": 286,
+      "title": "Handle verified Mahindra post-total legend without weakening holdings checks",
+      "merged_at": "2026-09-28T04:22:45Z"
+    },
+    {
+      "branch": "fix/midcap-portfolio-contract-diagnostic-bootstrap-20260927",
+      "tip_sha": "27ed670f9c9cc55643a37409021fa4502afea363",
+      "pr_number": 276,
+      "title": "Fix Mid Cap portfolio contract diagnostic bootstrap",
+      "merged_at": "2026-09-28T01:37:09Z"
+    },
+    {
+      "branch": "fix/midcap-readiness-freshness-20260928",
+      "tip_sha": "0632014d2b8672f91057c5a54b0254f3bfd6dd24",
+      "pr_number": 290,
+      "title": "Make Mid Cap readiness freshness-safe before launch",
+      "merged_at": "2026-09-28T05:08:47Z"
+    },
+    {
+      "branch": "fix/midcap-samco-ter-20260928",
+      "tip_sha": "bd7a34f890a3846d9b7445af01bd90e12a0d1d8f",
+      "pr_number": 293,
+      "title": "Recover exact Samco Mid Cap TER from the AMFI AMC-scoped feed",
+      "merged_at": "2026-09-28T05:56:59Z"
+    },
+    {
+      "branch": "fix/midcap-ter-amc-contract-20260927",
+      "tip_sha": "9dc5e6c9c1ed56f4475060f8a3c97a00965fd3db",
+      "pr_number": 253,
+      "title": "Use AMFI AMC-month contract for Mid Cap TER audit",
+      "merged_at": "2026-09-27T15:17:10Z"
+    },
+    {
+      "branch": "fix/midcap-ter-category-selector-20260927",
+      "tip_sha": "3796327082791f50fd91b4910e8606a947133707",
+      "pr_number": 255,
+      "title": "Discover exact AMFI Mid Cap TER category selector",
+      "merged_at": "2026-09-27T15:44:15Z"
+    },
+    {
+      "branch": "fix/midcap-ter-date-parser-20260927",
+      "tip_sha": "d9cffea04b5ad6e73bb7b1135a4b2367ac26e693",
+      "pr_number": 251,
+      "title": "Fix Mid Cap TER audit date parsing",
+      "merged_at": "2026-09-27T11:59:46Z"
+    },
+    {
+      "branch": "fix/midcap-ter-pagination-20260927",
+      "tip_sha": "5133a711946ff9c429d3ea0a203751f18b25ab2d",
+      "pr_number": 254,
+      "title": "Follow AMFI TER pagination for staged Mid Cap audit",
+      "merged_at": "2026-09-27T15:28:44Z"
+    },
+    {
+      "branch": "fix/midcap-uti-portfolio-20260927",
+      "tip_sha": "7e0966dbef32865f1fdba8556979fe2f94d91fcc",
+      "pr_number": 278,
+      "title": "Recover UTI Mid Cap from consolidated SEBI Exposure workbook",
+      "merged_at": "2026-09-28T02:17:52Z"
+    },
+    {
+      "branch": "fix/midcap-uti-portfolio-entry-scan-20260927",
+      "tip_sha": "0f84edaf24d05028eb6be03d6ca663262407760f",
+      "pr_number": 279,
+      "title": "Scan UTI Mid Cap by exact block instead of workbook filename",
+      "merged_at": "2026-09-28T02:28:11Z"
+    },
+    {
+      "branch": "fix/package-manifest-20260928",
+      "tip_sha": "fcfa23c8d634593896be932fbfce5af7fb8e5465",
+      "pr_number": 304,
+      "title": "Fix portable package manifest integrity",
+      "merged_at": "2026-09-28T16:31:03Z"
+    },
+    {
+      "branch": "fix/persist-midcap-portfolio-batch3-contracts-20260927",
+      "tip_sha": "984758df612749cf483dc56f51c6807ff3bf1002",
+      "pr_number": 275,
+      "title": "Persist Mid Cap portfolio batch 3 contract diagnostic",
+      "merged_at": "2026-09-28T01:27:28Z"
+    },
+    {
+      "branch": "fix/recovery-queue-record-build-import-20260925",
+      "tip_sha": "7499d02ecb2bc3e0ff56bfcdd9d8f1ee5cae8a56",
+      "pr_number": 115,
+      "title": "Fix recovery queue status recorder import",
+      "merged_at": "2026-09-25T04:48:16Z"
+    },
+    {
+      "branch": "fix/retention-plumbing-regression-20260925",
+      "tip_sha": "4bb221dc847c7a460881d5cf35dbf67a786161ba",
+      "pr_number": 147,
+      "title": "Fix retention plumbing regression gate",
+      "merged_at": "2026-09-25T20:58:53Z"
+    },
+    {
+      "branch": "fix/retention-simulation-active-checkpoint-20260925",
+      "tip_sha": "afb2d22d4c799d861295b45c16abe8dc33f43a7a",
+      "pr_number": 151,
+      "title": "Run retention simulation from exact active checkpoint",
+      "merged_at": "2026-09-25T21:55:12Z"
+    },
+    {
+      "branch": "fix/retention-simulation-manifest-lock-20260925",
+      "tip_sha": "0cd39b8700b642308b896fdf4b9f096adb7972da",
+      "pr_number": 152,
+      "title": "Pin retention simulation to one active manifest",
+      "merged_at": "2026-09-25T22:01:41Z"
+    },
+    {
+      "branch": "ops/least-privilege-publisher-20260928",
+      "tip_sha": "dbaf3868951d0d4e7d49ae83ea9d952e022413cf",
+      "pr_number": 303,
+      "title": "Reduce publisher workflow privileges",
+      "merged_at": "2026-09-28T16:18:27Z"
+    },
+    {
+      "branch": "ops/midcap-universe-preview-20260927",
+      "tip_sha": "eff0f3c979e9814bcbe349bbab95b7dce09d1a11",
+      "pr_number": 244,
+      "title": "Persist read-only Mid Cap universe preview",
+      "merged_at": "2026-09-27T03:58:04Z"
+    },
+    {
+      "branch": "ops/nonblocking-new-communication-recovery-20260926",
+      "tip_sha": "a2249d128030adec97115df14800e6bd9943bf02",
+      "pr_number": 224,
+      "title": "Keep new communication recoveries non-blocking",
+      "merged_at": "2026-09-26T21:35:37Z"
+    },
+    {
+      "branch": "ops/pin-all-workflow-actions-20260928",
+      "tip_sha": "42a73240c3eda734b4696ce6b4ae5ec3b9457ecb",
+      "pr_number": 308,
+      "title": "Pin all GitHub Actions to immutable commits",
+      "merged_at": "2026-09-28T17:33:42Z"
+    },
+    {
+      "branch": "ops/remove-obsolete-communication-probe-20260926",
+      "tip_sha": "80aa39a58c2b772b312e7b388483334ead561966",
+      "pr_number": 234,
+      "title": "Remove obsolete broad communication diagnostic",
+      "merged_at": "2026-09-26T22:57:29Z"
+    },
+    {
+      "branch": "ops/retire-completed-push-recovery-20260928",
+      "tip_sha": "c824cab808c577925ed696a81d6c9fddf498bf39",
+      "pr_number": 307,
+      "title": "Retire completed push-only recovery hooks",
+      "merged_at": "2026-09-28T17:22:38Z"
+    },
+    {
+      "branch": "ops/run-retention-simulation-once-20260925",
+      "tip_sha": "27aceb4562ebc2d1ddd2d9dd4e9826a67e0baea1",
+      "pr_number": 153,
+      "title": "Run isolated retention simulation once",
+      "merged_at": "2026-09-25T22:03:39Z"
+    },
+    {
+      "branch": "ops/universal-pr-regression-20260928",
+      "tip_sha": "ae6036b3867dabefeeb20f788de175748581f0a1",
+      "pr_number": 302,
+      "title": "Add universal repository regression gate",
+      "merged_at": "2026-09-28T16:06:09Z"
+    },
+    {
+      "branch": "storage/activate-split-checkpoints-v2",
+      "tip_sha": "8a29245502284a77054e78ec1b56bcbc56fa2ac4",
+      "pr_number": 23,
+      "title": "Activate split database and source-pack checkpoints",
+      "merged_at": "2026-09-22T22:20:51Z"
+    },
+    {
+      "branch": "storage/delete-oldest-legacy-checkpoint",
+      "tip_sha": "a907d3a61644ca9a1f04c28ab7bcf9d184c13407",
+      "pr_number": 27,
+      "title": "Delete oldest legacy rollback checkpoint",
+      "merged_at": "2026-09-22T22:50:58Z"
+    },
+    {
+      "branch": "storage/narrow-parser-materialization-v2",
+      "tip_sha": "e301c7152842c087551bb288d633a743a7560c24",
+      "pr_number": 25,
+      "title": "Limit thin restore to parser-required source files",
+      "merged_at": "2026-09-22T22:32:12Z"
+    },
+    {
+      "branch": "storage/remove-one-time-cleanup-step",
+      "tip_sha": "44ed346d3ebf632d941370d81cccb46c2297556e",
+      "pr_number": 28,
+      "title": "Remove completed legacy cleanup step",
+      "merged_at": "2026-09-22T22:56:30Z"
+    },
+    {
+      "branch": "storage/split-checkpoint-format-v2",
+      "tip_sha": "c04b20c2cc82377abd400741bafeff65b999bea1",
+      "pr_number": 22,
+      "title": "Add backward-compatible split archive format",
+      "merged_at": "2026-09-22T22:15:46Z"
+    },
+    {
+      "branch": "storage/storage-breakdown-2026-09-22",
+      "tip_sha": "5670137df255fb79dd0f1fb5bd6f4603a223c872",
+      "pr_number": 21,
+      "title": "Report storage breakdown and compact checkpoints",
+      "merged_at": "2026-09-22T21:58:13Z"
+    },
+    {
+      "branch": "storage/thin-restore-v2",
+      "tip_sha": "0fdb64d182cfc007ef37ebe08a911b8c78f32930",
+      "pr_number": 24,
+      "title": "Use thin database restore with on-demand source files",
+      "merged_at": "2026-09-22T22:28:55Z"
+    },
+    {
+      "branch": "ui/accessibility-polish-2026-09-22",
+      "tip_sha": "4a4750cc5a57a49298f2c3e78db5527aef7ab9d3",
+      "pr_number": 9,
+      "title": "Polish accessibility and cross-site UI consistency",
+      "merged_at": "2026-09-22T18:23:22Z"
+    },
+    {
+      "branch": "ui/add-5y-cagr-2026-09-22",
+      "tip_sha": "9d562eb3d76960548d4d381fd063a49f9b646fc0",
+      "pr_number": 20,
+      "title": "Add 5Y CAGR to fund comparisons",
+      "merged_at": "2026-09-22T21:47:41Z"
+    },
+    {
+      "branch": "ui/compact-mobile-fund-cards-2026-09-22",
+      "tip_sha": "bd3d8a246b9fff88363b621e70dc139df999ccc4",
+      "pr_number": 15,
+      "title": "Compact mobile fund cards",
+      "merged_at": "2026-09-22T21:23:19Z"
+    },
+    {
+      "branch": "ui/data-updates-refresh-2026-09-22",
+      "tip_sha": "6f2bfa1ba8fe00554518501329d885c41c0e3700",
+      "pr_number": 8,
+      "title": "Redesign Data and update health pages",
+      "merged_at": "2026-09-22T18:13:48Z"
+    },
+    {
+      "branch": "ui/desktop-fund-table-2026-09-22",
+      "tip_sha": "f2eafccf4c257902377e9346eeea7db4439a1f7f",
+      "pr_number": 16,
+      "title": "Use compact fund table on desktop",
+      "merged_at": "2026-09-22T21:26:40Z"
+    },
+    {
+      "branch": "ui/fix-fund-table-header-2026-09-22",
+      "tip_sha": "905bb8f4f964d4c31a8b17e6fa082b7a9f337214",
+      "pr_number": 18,
+      "title": "Fix fund table header alignment",
+      "merged_at": "2026-09-22T21:39:57Z"
+    },
+    {
+      "branch": "ui/fund-detail-refresh-2026-09-22",
+      "tip_sha": "4814fe27eac6a033b6eead785d652512bf1c065b",
+      "pr_number": 6,
+      "title": "Improve fund detail navigation and scanning",
+      "merged_at": "2026-09-22T18:00:31Z"
+    },
+    {
+      "branch": "ui/fund-directory-refresh-2026-09-22",
+      "tip_sha": "18aba14ceb37249eb8a2072813f3858b10e41a56",
+      "pr_number": 7,
+      "title": "Streamline fund directory discovery and filtering",
+      "merged_at": "2026-09-22T18:05:32Z"
+    },
+    {
+      "branch": "ui/minimal-redesign-2026-09-22",
+      "tip_sha": "fc74f2082332a102de6dc53f3e89034dc65373d3",
+      "pr_number": 10,
+      "title": "Simplify UI for a more minimal research experience",
+      "merged_at": "2026-09-22T19:27:14Z"
+    },
+    {
+      "branch": "ui/minimal-research-tabs-2026-09-22",
+      "tip_sha": "49ea3e325a52fdf9add0b0ec64a5866225fbb775",
+      "pr_number": 11,
+      "title": "Simplify Performance Portfolio Fees and Documents",
+      "merged_at": "2026-09-22T19:39:50Z"
+    },
+    {
+      "branch": "ui/navigation-refresh-2026-09-22",
+      "tip_sha": "2274727854d930431f3f9011de95501d3fddd56f",
+      "pr_number": 5,
+      "title": "Refresh navigation and responsive fund browsing UI",
+      "merged_at": "2026-09-22T17:29:30Z"
+    },
+    {
+      "branch": "ui/remove-public-refresh-button-2026-09-22",
+      "tip_sha": "84168417347d4aa423f60c921255d843d904322f",
+      "pr_number": 19,
+      "title": "Remove public refresh button",
+      "merged_at": "2026-09-22T21:44:29Z"
+    },
+    {
+      "branch": "ui/research-desk-2026-09-25",
+      "tip_sha": "060553a537ec88dc73933f96318731cf1e9be706",
+      "pr_number": 149,
+      "title": "Redesign Smallcap Ledger as a focused fund research desk",
+      "merged_at": "2026-09-25T21:18:18Z"
+    },
+    {
+      "branch": "ui/static-benchmark-contract-20260925",
+      "tip_sha": "d4fa81d90f7af2881ef9c6dcc8e4bedc41bdfddd",
+      "pr_number": 139,
+      "title": "Align hosted performance benchmark behavior",
+      "merged_at": "2026-09-25T19:36:05Z"
+    },
+    {
+      "branch": "work/sbi-portfolio-20260924",
+      "tip_sha": "df513d475fd393698c9d2995f624d12f4759b6c8",
+      "pr_number": 86,
+      "title": "Recover complete SBI monthly portfolios and automate official discovery",
+      "merged_at": "2026-09-24T06:35:50Z"
+    }
+  ],
+  "review_required": {
+    "open_pr_branches": [],
+    "post_merge_or_moved": [
+      {
+        "branch": "maintenance/storage-cleanup-20260925",
+        "tip_sha": "d9246b03b7fb65ce9c6964c4b068e5dc73fc9b17",
+        "pr_number": 108,
+        "title": "Clean up redundant database storage without deleting financial history",
+        "merged_head_sha": "dbc634f67b9eb2857d1372fc80493cd4f90ff18e"
+      },
+      {
+        "branch": "ui/minimal-navigation-polish-2026-09-22",
+        "tip_sha": "b01863636033d39fd9db94c981f40e012e97a402",
+        "pr_number": 14,
+        "title": "Refine minimal navigation and mobile fund browsing",
+        "merged_head_sha": "e9c3d5c01a8e410f0c7c8d68f90f744585f9bb37"
+      }
+    ],
+    "closed_unmerged": [
+      {
+        "branch": "backend/bajaj-complete-portfolio",
+        "tip_sha": "a3cbbbdb70b8f98bceca42bcb7931defc0415263",
+        "pr_number": 12,
+        "title": "Recover complete Bajaj Small Cap portfolios",
+        "closed_at": "2026-09-22T21:10:34Z"
+      },
+      {
+        "branch": "backend/groww-august-portfolio",
+        "tip_sha": "acb23f0ad14f99be597fc23fa584569e973450c6",
+        "pr_number": 84,
+        "title": "Refresh Groww portfolio from August monthly workbook",
+        "closed_at": "2026-09-23T22:41:39Z"
+      },
+      {
+        "branch": "backend/reclassify-risk-factor-docs",
+        "tip_sha": "d7a87b1000154a63ac6ffe35aff1b48311514061",
+        "pr_number": 70,
+        "title": "Keep risk-factor PDFs out of factsheet coverage",
+        "closed_at": "2026-09-23T17:07:37Z"
+      },
+      {
+        "branch": "backend/union-bajaj-portfolio-20260925",
+        "tip_sha": "c50382bf63a1ca4f75d6fdb848f934af9b1dd841",
+        "pr_number": 105,
+        "title": "Document Union and Bajaj portfolio blockers",
+        "closed_at": "2026-09-25T03:09:18Z"
+      },
+      {
+        "branch": "diag/pgim-quant-communications-20260926-v2",
+        "tip_sha": "aaef2df5a872e55a3904983d7eda689f66b4b02a",
+        "pr_number": 207,
+        "title": "Inspect PGIM and Quant communication sources",
+        "closed_at": "2026-09-26T18:31:48Z"
+      },
+      {
+        "branch": "diag/sbi-sundaram-final-transport-20260926",
+        "tip_sha": "c24415437c78bd016de17344efcd3872e4c260bf",
+        "pr_number": 213,
+        "title": "Trace final SBI and Sundaram communication transports",
+        "closed_at": "2026-09-26T18:31:46Z"
+      },
+      {
+        "branch": "docs/verified-midcap-freshness-647-20260928",
+        "tip_sha": "dcb28f186d02d389df8781acd8885cf9de7f34cb",
+        "pr_number": 292,
+        "title": "Record verified Mid Cap freshness safeguards and current launch blockers",
+        "closed_at": "2026-09-28T05:27:53Z"
+      },
+      {
+        "branch": "investigate/mirae-ter-20260925",
+        "tip_sha": "a87274b947e9dafedd7d894bce1f7799d476c5a5",
+        "pr_number": 104,
+        "title": "Recover Mirae Asset official TER and BER",
+        "closed_at": "2026-09-25T03:04:50Z"
+      }
+    ],
+    "no_pr_evidence": [
+      {
+        "branch": "backend/bajaj-bandhan-communication-recovery-20260926",
+        "tip_sha": "ca6f5232de1ee9b055c11465927625b376df0360"
+      },
+      {
+        "branch": "backend/bandhan-portfolio-recovery-v129",
+        "tip_sha": "84ab21e20c8946897bca55433dce4ec7f9bdb393"
+      },
+      {
+        "branch": "backend/bandhan-portfolio-v129",
+        "tip_sha": "1702471681502abf7bc2153ff26bfa15f104f8b1"
+      },
+      {
+        "branch": "backend/bandhan-production-v129",
+        "tip_sha": "9f4f3ac8d1e2746fe115cdf343daecf1a710715d"
+      },
+      {
+        "branch": "backend/edelweiss-portfolio-20260925",
+        "tip_sha": "4a5b74c1135fd1a90368e0343d405d2e7b010b6b"
+      },
+      {
+        "branch": "backend/fix-groww-v33-release",
+        "tip_sha": "f48fe5a0ab198b0d412b378052b5120d881fc752"
+      },
+      {
+        "branch": "backend/franklin-article-api-recovery-20260926",
+        "tip_sha": "2f6e82164970d36cd2aecf21243330c78cb803f2"
+      },
+      {
+        "branch": "backend/icici-complete-portfolio-v128",
+        "tip_sha": "e1845459065130e5f1d07c98451512a5163c6c55"
+      },
+      {
+        "branch": "backend/icici-monthly-portfolio-recovery-20260926",
+        "tip_sha": "47581673130121559d9248f0058adf282e21cfd2"
+      },
+      {
+        "branch": "backend/icici-portfolio-transport-20260925",
+        "tip_sha": "85dc28a6794b81dcd8db52d3b5c16d7297c46308"
+      },
+      {
+        "branch": "backend/invesco-monthly-holdings-v127",
+        "tip_sha": "3011daad62f467b9946e54ea4e662fd4dffae76b"
+      },
+      {
+        "branch": "backend/midcap-staged-nav-history-20260927",
+        "tip_sha": "706b54508d5373315a61f8b472932dd40a88b5e9"
+      },
+      {
+        "branch": "backend/portfolio-limitations-20260925-v2",
+        "tip_sha": "4ffc9fec3e1f1d2e69c5db8e3ceb7553fbef9759"
+      },
+      {
+        "branch": "backend/probe-amfi-portfolio-feed",
+        "tip_sha": "48a128c8a68a1a9c13aec13229c04d453b2ff461"
+      },
+      {
+        "branch": "backend/sbi-sundaram-communication-final-20260926",
+        "tip_sha": "935b6558f00dd62aaaeba4d76f13416223438bde"
+      },
+      {
+        "branch": "backend/sbi-sundaram-communication-recovery-20260926",
+        "tip_sha": "c16b33a236ee48601bdff4b1dc046cbc0a8a37cc"
+      },
+      {
+        "branch": "backend/sbi-sundaram-communication-recovery-v2-20260926",
+        "tip_sha": "0a5a5642e32b9f7399c244374bbb030c28d8fcc9"
+      },
+      {
+        "branch": "backend/sundaram-direct-outlook-recovery-20260926",
+        "tip_sha": "a1fe2863d0332dfefe1b326ef7dafd96860d2fe7"
+      },
+      {
+        "branch": "backend/uti-portfolio-audit-v128",
+        "tip_sha": "fb1638246b1d616df90260efb23cab6e7990bcfc"
+      },
+      {
+        "branch": "cleanup/retention-simulation-hooks-20260925",
+        "tip_sha": "b23632bf07a042db137d0c326f4d211ee89c41da"
+      },
+      {
+        "branch": "diag/midcap-benchmark-contracts-20260928",
+        "tip_sha": "942228ae7300fa86594e256b7e2a19e7f72a2424"
+      },
+      {
+        "branch": "diag/midcap-benchmark-role-20260928",
+        "tip_sha": "bfdcc63c1a463da64985a6467d35aa98afa7dd94"
+      },
+      {
+        "branch": "diag/midcap-two-sources-20260928",
+        "tip_sha": "b782d3dfbe6f5ef62c93abaca29f1b44bd029506"
+      },
+      {
+        "branch": "diag/pgim-quant-communications-20260926-v3",
+        "tip_sha": "cb2652d1e335dda8412731aa41f79e971312c315"
+      },
+      {
+        "branch": "diag/sbi-sundaram-communications-v2-20260926",
+        "tip_sha": "4c75bb92c868d82d6a25072ad17bb30cfe63ecf2"
+      },
+      {
+        "branch": "diag/wealth-uti-transport-20260926",
+        "tip_sha": "93f9ef5b9375468fb3ecdbcadefed9ecb26d8667"
+      },
+      {
+        "branch": "docs/axis-complete-portfolio-handoff-20260925",
+        "tip_sha": "2b56cf3a741dd267be37badb2465233baf714f05"
+      },
+      {
+        "branch": "docs/midcap-samco-ter-handoff-20260928",
+        "tip_sha": "86183fbc395c872128bb19098432369904c5335a"
+      },
+      {
+        "branch": "fix/kotak-mirae-release-20260926",
+        "tip_sha": "36a5be9b88423a0890526e7d3f91dd6897ab646c"
+      },
+      {
+        "branch": "fix/samco-ter-investigation-20260928",
+        "tip_sha": "09e2b6c3cf5d48f584c9b56af66eb02f92de2465"
+      },
+      {
+        "branch": "investigate/groww-ber-20260925",
+        "tip_sha": "2a4f398fbd20646f0139107285be9a0e18f14e15"
+      },
+      {
+        "branch": "investigate/uti-ber-20260925",
+        "tip_sha": "c2a9510afb813f58b6c4f40d964eb10a4d0b1d6b"
+      },
+      {
+        "branch": "ui-compact-top-navigation",
+        "tip_sha": "5b72848f161909937c266fdb22433cc2c48700f7"
+      },
+      {
+        "branch": "work/axis-portfolio-20260924",
+        "tip_sha": "88df040a95e2fba8a33c1a811010d9620ea6dd15"
+      }
+    ]
+  },
+  "notes": [
+    "This report is read-only. No branch was deleted or moved.",
+    "A merged PR alone is not enough for the high-confidence list; exact current tip equality prevents silently deleting branches with commits added after merge.",
+    "Deletion remains a destructive owner action and requires explicit approval."
+  ]
+}
