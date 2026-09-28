@@ -30,7 +30,7 @@ AMCS = {
     "SBI MIDCAP FUND": "SBI Mutual Fund",
 }
 MAX_BYTES = 16 * 1024 * 1024
-PARSER_VERSION = "explicit-benchmark-documents-v1"
+PARSER_VERSION = "explicit-benchmark-documents-v2"
 
 
 def _clean(value):
@@ -58,32 +58,58 @@ def _parse_absl(body):
     soup = BeautifulSoup(html, "html.parser")
     for element in soup.select("script, style, nav, header, footer, aside, template, noscript"):
         element.decompose()
-    headings = [
-        _clean(tag.get_text(" ", strip=True))
-        for tag in soup.find_all(("h1", "h2"))
-        if _norm(tag.get_text(" ", strip=True)) == _norm("Aditya Birla Sun Life Midcap Fund")
-    ]
-    if len(headings) != 1:
-        raise ValueError("ABSL page lacks one exact staged Mid Cap scheme heading")
-    text = _clean(soup.get_text(" ", strip=True))
-    values = [
-        _clean(match.group(1))
-        for match in re.finditer(
-            r"\bBenchmark\s*:\s*(Nifty\s+Midcap\s+150\s+TRI)\b",
-            text,
-            re.I,
-        )
-    ]
-    primary = _one(values, "ABSL explicit Benchmark label")
+    expected = _norm("Aditya Birla Sun Life Midcap Fund")
+    headings = [tag for tag in soup.find_all(("h1", "h2"))
+                if _norm(tag.get_text(" ", strip=True)) == expected]
+    other_funds = [tag for tag in soup.find_all(("h1", "h2"))
+                   if _norm(tag.get_text()).startswith("adityabirlasunlife")
+                   and _norm(tag.get_text()) != expected]
+    if len(headings) != 1 or other_funds:
+        raise ValueError("ABSL page lacks one unambiguous exact staged scheme heading")
+
+    # Read the full value from the designated table, not an expected-name
+    # substring anywhere near the word 'Benchmark'. Unknown duplicates matter.
+    headers = [cell for cell in soup.find_all("td")
+               if _clean(cell.get_text(" ", strip=True)).casefold() == "fund snapshot"]
+    if len(headers) != 1 or headers[0].find_parent("table") is None:
+        raise ValueError("ABSL requires one Fund Snapshot table")
+    table = headers[0].find_parent("table")
+    values, excerpts = [], []
+    for cell in table.find_all("td"):
+        if cell.find_parent("table") is not table:
+            continue
+        text = _clean(cell.get_text(" ", strip=True))
+        match = re.fullmatch(r"Benchmark\s*:\s*(.*)", text, re.I)
+        if not match:
+            continue
+        value = _clean(match[1])
+        if not re.fullmatch(r"Nifty\s+Midcap\s+150\s+TRI", value, re.I):
+            raise ValueError("ABSL primary value is missing or outside the reviewed contract")
+        values.append(value)
+        excerpts.append(text)
+    primary = _one(values, "ABSL Fund Snapshot primary label")
+
+    # A month printed in the scheme banner is a document period, not an
+    # invented effective date or a date borrowed from the NAV/AUM table.
+    periods = []
+    for paragraph in headings[0].parent.find_all("p", recursive=False):
+        label = _clean(paragraph.get_text(" ", strip=True))
+        if re.fullmatch(r"[A-Za-z]+ 20\d{2}", label):
+            try:
+                periods.append(datetime.strptime(label, "%B %Y").strftime("%Y-%m"))
+            except ValueError as exc:
+                raise ValueError("ABSL scheme-banner period is malformed") from exc
+    period = _one(periods, "ABSL scheme-banner period") if periods else None
     return {
         "primary_benchmark": primary,
         "reported_benchmarks": [primary],
         "additional_benchmarks": [],
         "benchmark_role": "primary",
         "return_variant": "total_return",
-        "source_heading": headings[0],
-        "source_locator": "scheme heading; Fund Snapshot Benchmark:",
-        "evidence_excerpt": f"Benchmark: {primary}",
+        "source_heading": _clean(headings[0].get_text(" ", strip=True)),
+        "source_locator": "Fund Snapshot table; complete Benchmark: cell",
+        "evidence_excerpt": " | ".join(dict.fromkeys(excerpts)),
+        "source_document_period": period,
         "source_data_as_of": None,
         "benchmark_effective_as_of": None,
         "source_kind": "digital_factsheet_page",
@@ -103,10 +129,9 @@ def _pdf_first_page_text(body):
         text = reader.pages[0].extract_text()
     except Exception as exc:
         raise ValueError("SBI benchmark PDF first page text could not be extracted") from exc
-    text = _clean(text)
-    if not text:
+    if not isinstance(text, str) or not text.strip():
         raise ValueError("SBI benchmark PDF first page has no extractable text")
-    return text
+    return text.strip()
 
 
 def _sbi_document_date(text):
@@ -128,20 +153,35 @@ def _sbi_document_date(text):
 
 def _parse_sbi(body, *, pdf_text_fn=None):
     text = (pdf_text_fn or _pdf_first_page_text)(body)
-    if not re.search(r"\bKIM\s*[-–—]\s*SBI\s+Midcap\s+Fund\b", text, re.I):
-        raise ValueError("SBI KIM does not identify the exact Midcap Fund")
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("SBI KIM has no extractable first-page text")
+    headers = [_clean(line) for line in text.splitlines()
+               if re.match(r"KIM\s*[-–—]", _clean(line), re.I)]
+    if len(headers) != 1 or not re.fullmatch(r"KIM\s*[-–—]\s*SBI Midcap Fund", headers[0], re.I):
+        raise ValueError("SBI KIM requires one exact full scheme heading")
     if not re.search(r"\bKEY\s+INFORMATION\s+MEMORANDUM\b", text, re.I):
         raise ValueError("SBI source is not identified as the Key Information Memorandum")
-    values = [
-        _clean(match.group(1))
-        for match in re.finditer(
-            r"\bTier\s*I\s+Benchmark\s+i\.?\s*e\.?\s*"
-            r"(Nifty\s+Midcap\s+150\s+Index\s+TRI)\b",
-            text,
-            re.I,
-        )
-    ]
-    primary = _one(values, "SBI Tier-I benchmark")
+
+    # Bound the primary value by the actual first-page riskometer and investor
+    # footnote. Count every Tier-I label before looking at any index value.
+    roles = list(re.finditer(r"\bTier\s+I\s+Benchmark\b", text, re.I))
+    if len(roles) != 1:
+        raise ValueError("SBI KIM requires exactly one Tier-I benchmark block")
+    role = roles[0]
+    line_start = text.rfind("\n", 0, role.start()) + 1
+    if text[line_start:role.start()].strip():
+        raise ValueError("SBI Tier-I role has an unreviewed prefix")
+    if not re.search(r"Benchmark\s+Riskometer\b", text[:role.start()], re.I):
+        raise ValueError("SBI Tier-I block lacks its Benchmark Riskometer scope")
+    tail = text[role.end():]
+    end = re.search(r"\*Investors\s+should\s+consult\b", tail, re.I)
+    if end is None:
+        raise ValueError("SBI Tier-I block lacks the reviewed investor-footnote boundary")
+    block = _clean(tail[:end.start()])
+    value_match = re.fullmatch(r"i\.?\s*e\.?\s+(.*)", block, re.I)
+    primary = _clean(value_match[1]) if value_match else ""
+    if not re.fullmatch(r"Nifty\s+Midcap\s+150\s+Index\s+TRI", primary, re.I):
+        raise ValueError("SBI full Tier-I value is missing or outside the reviewed contract")
     document_date = _sbi_document_date(text)
     return {
         "primary_benchmark": primary,
@@ -149,9 +189,10 @@ def _parse_sbi(body, *, pdf_text_fn=None):
         "additional_benchmarks": [],
         "benchmark_role": "primary",
         "return_variant": "total_return",
-        "source_heading": "KIM – SBI Midcap Fund",
-        "source_locator": "KIM first page; Tier I Benchmark i.e.",
-        "evidence_excerpt": f"Tier I Benchmark i.e. {primary}",
+        "source_heading": headers[0],
+        "source_page": 1,
+        "source_locator": "KIM page 1; Benchmark Riskometer Tier I; investor-footnote boundary",
+        "evidence_excerpt": _clean(text[role.start():role.end()] + " " + block),
         "source_data_as_of": None,
         "source_document_as_of": document_date,
         "benchmark_effective_as_of": None,

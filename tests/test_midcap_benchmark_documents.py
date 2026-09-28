@@ -15,16 +15,20 @@ NOW = datetime(2026, 9, 28, 14, 0, tzinfo=timezone.utc)
 def absl(value="Nifty Midcap 150 TRI"):
     return f"""<html><body>
     <h1>Aditya Birla Sun Life Midcap Fund</h1>
-    <section><h2>Fund Snapshot</h2><p>Benchmark: {value}</p></section>
+    <section><table><tr><td><strong>Fund Snapshot</strong></td></tr>
+    <tr><td><strong>Benchmark:</strong>{value}</td></tr></table></section>
     </body></html>""".encode()
 
 
 def sbi_text(value="Nifty Midcap 150 Index TRI"):
     return (
-        "KEY INFORMATION MEMORANDUM "
-        "KIM – SBI Midcap Fund "
-        "This Key Information Memorandum is dated 26th September, 2026 "
-        f"Tier I Benchmark i.e. {value} "
+        "KIM – SBI Midcap Fund\n"
+        "Asset Management Company: SBI Funds Management Ltd.\n"
+        "KEY INFORMATION MEMORANDUM\n"
+        "This Key Information Memorandum is dated 26th September, 2026\n"
+        "Benchmark Riskometer\n"
+        f"Tier I Benchmark i.e. {value}\n"
+        "*Investors should consult their financial advisers.\n"
         "Tier II Benchmark Nifty 50 TRI"
     )
 
@@ -61,7 +65,8 @@ class BenchmarkDocumentTests(unittest.TestCase):
             docs.parse_source(SBI, b"%PDF fixture", pdf_text_fn=lambda _: sbi_text().replace("Tier I Benchmark i.e.", "Benchmark"))
 
     def test_sbi_does_not_promote_tier_ii(self):
-        text = sbi_text().replace("Tier I Benchmark i.e. Nifty Midcap 150 Index TRI", "Tier I Benchmark i.e. Nifty Midcap 150 Index TRI Tier II Benchmark Nifty 50 TRI")
+        # The unrelated Tier-II disclosure is outside the primary riskometer block.
+        text = sbi_text()
         row = docs.parse_source(SBI, b"%PDF fixture", pdf_text_fn=lambda _: text)
         self.assertEqual(row["reported_benchmarks"], ["Nifty Midcap 150 Index TRI"])
         self.assertEqual(row["additional_benchmarks"], [])
