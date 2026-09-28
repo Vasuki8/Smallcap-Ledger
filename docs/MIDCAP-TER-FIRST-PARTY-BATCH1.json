@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T03:53:15+00:00",
+  "built_at": "2026-09-28T04:09:44+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 7,
@@ -40,7 +40,7 @@
       "family": "HSBC Midcap Fund",
       "amc": "HSBC Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-24",
+      "as_of": "2026-09-27",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.43,
@@ -58,7 +58,7 @@
         }
       },
       "source": "https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx",
-      "sha256": "b73cf5b796e69e9f3407fdafdcfc3142cb7dde6cea10fafe109084a40d058936",
+      "sha256": "82e7d8798ff95e5cc384cbb7f1432ef407b7d6a784340583938807dbdaad6886",
       "identity": {
         "scheme_name": "HSBC Midcap Fund",
         "scheme_code": "HEMCPF",
@@ -102,7 +102,7 @@
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-24",
+      "as_of": "2026-09-27",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.44,
@@ -120,7 +120,7 @@
         }
       },
       "source": "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9",
-      "sha256": "9a8ee95ab82b3e2bbc54ac16e9e1046e41623bc433e4606cd5e670d8f7d8ef79",
+      "sha256": "3abedbf1a599888f0b9792d1d829b3a088f54309df69f040428467d7d5f66245",
       "identity": {
         "scheme_name": "Invesco India Mid Cap Fund",
         "nsdl_scheme_code": "INVM/O/E/MIF/07/01/0006"

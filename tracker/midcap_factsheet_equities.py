@@ -38,7 +38,13 @@ def validate_factsheet_context(soup: BeautifulSoup, family: str, expected: str) 
     """
     if not any(normalized(text) == normalized(family) for text in soup.stripped_strings):
         raise ValueError("Factsheet lacks the exact staged scheme heading")
-    labels = DATE_LABEL.findall(soup.get_text(" ", strip=True))
+    # Match a leading, standalone Data-as-on label. For example, Kotak also
+    # prints "Folio Count data as on ..." for a different reporting period.
+    # That qualified metric date must not override the overall factsheet date.
+    texts = [clean(text) for text in soup.stripped_strings]
+    texts.extend(clean(tag.get_text(" ", strip=True))
+                 for tag in soup.find_all(["p", "span", "td", "div"]))
+    labels = [match.group(1) for text in texts if (match := DATE_LABEL.match(text))]
     dates = set()
     for raw in labels:
         token = re.sub(r"(?<=\d)(?:st|nd|rd|th)\b", "", raw, flags=re.I)
@@ -137,7 +143,7 @@ def _parse_table(table: Tag) -> list[dict] | None:
             finish_sector()
             _reconcile(total, percentage(raw_weight), len(holdings), "Equity")
             equity_total_found = True
-            break  # Explicitly leave other asset classes out of this partial view.
+            break
         if not name:
             raise ValueError("Portfolio row has a weight but no issuer or sector")
         weight = percentage(raw_weight)

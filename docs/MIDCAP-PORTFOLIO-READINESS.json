@@ -1,8 +1,8 @@
 {
   "families": 34,
-  "current_portfolio_evidence": 15,
+  "current_portfolio_evidence": 14,
   "current_complete_portfolios": 3,
-  "remaining": 19,
+  "remaining": 20,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -169,11 +169,11 @@
     {
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
-      "as_of": "2026-08-31",
-      "positions_observed": 63,
-      "scope": "first_party_current_factsheet",
+      "as_of": null,
+      "positions_observed": 0,
+      "scope": null,
       "complete": false,
-      "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html"
+      "source": null
     },
     {
       "family": "Mirae Asset Midcap Fund",
@@ -321,6 +321,7 @@
     "ITI Mid Cap Fund",
     "Kotak Mid Cap Fund",
     "LIC MF Mid Cap Fund",
+    "Mahindra Manulife Mid Cap Fund",
     "Motilal Oswal Midcap Fund",
     "Nippon India Growth Mid Cap Fund",
     "Quant Mid Cap Fund",
@@ -356,8 +357,12 @@
       "error": "First-party page does not contain the exact staged Mid Cap family identity"
     },
     {
+      "family": "Mahindra Manulife Mid Cap Fund",
+      "error": "Mahindra portfolio row no longer has name and weight columns"
+    },
+    {
       "family": "Sundaram Mid Cap Fund",
-      "error": "Sundaram fund-card row is not current: unknown"
+      "error": "Sundaram fund-card row is not current: 2026-07-31"
     }
   ],
   "production_writes": 0,
@@ -367,5 +372,5 @@
     "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
     "Current evidence and complete portfolio coverage are reported separately."
   ],
-  "built_at": "2026-09-28T03:55:19+00:00"
+  "built_at": "2026-09-28T04:11:52+00:00"
 }

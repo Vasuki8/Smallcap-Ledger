@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-28T03:52:36+00:00
+Prepared: 2026-09-28T04:09:05+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -16,11 +16,11 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | 0.6800% | 1.8700% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | 1.1500% | 1.9100% | 2026-09-25 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | 0.7600% | 1.3100% | 2026-09-24 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-24 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
+| HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-27 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
 | Helios Mid Cap Fund | Helios Mutual Fund | 0.9700% | 2.4300% | 2026-09-27 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.0900% | 1.8400% | 2026-09-24 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-24 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-27 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
 | JM Mid Cap Fund | JM Financial Mutual Fund | 0.9500% | 2.4600% | 2026-09-27 | first_party_amc | https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest |
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5352% | 1.4952% | 2026-09-26 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | 1.7700% | 2.8600% | 2026-09-27 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |

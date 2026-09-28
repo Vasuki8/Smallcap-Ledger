@@ -13,6 +13,10 @@ from bs4 import BeautifulSoup
 from . import db, disclosures, jm_portfolios, providers
 from .coverage import expected_portfolio_as_of
 from .midcap_factsheet_equities import equity_positions, validate_factsheet_context
+from .midcap_factsheet_validation import (
+    PARSER_VERSION as MAHINDRA_PARSER_VERSION,
+    mahindra_positions as _mahindra_positions,
+)
 from .midcap_portfolio_structured import _parse_workbook
 
 
@@ -37,8 +41,15 @@ def _require_html_identity_date(body,family,expected):
     return soup,soup.get_text("\n",strip=True)
 
 
-def _mahindra_positions(soup):
-    return equity_positions(soup)
+def _reconciled_mahindra_positions(soup):
+    # Keep the existing issuer/sector classifier and add structural subtotal
+    # validation. A disagreement is a source/parser gap, not extra holdings.
+    classified=_mahindra_positions(soup)
+    reconciled=equity_positions(soup)
+    signature=lambda rows: sorted((_norm(x["name"]),x["weight"]) for x in rows)
+    if signature(classified)!=signature(reconciled):
+        raise ValueError("Mahindra issuer and sector-table evidence disagree")
+    return reconciled
 
 
 def _html_result(family,amc,url,parser,fetch_fn,expected):
@@ -65,9 +76,12 @@ def _kotak_result(fetch_fn,expected):
 
 
 def _mahindra_result(fetch_fn,expected):
-    return _html_result(
+    result=_html_result(
         MAHINDRA_FAMILY,"Mahindra Manulife Mutual Fund",MAHINDRA_URL,
-        _mahindra_positions,fetch_fn,expected)
+        _reconciled_mahindra_positions,fetch_fn,expected)
+    result["parser_version"]=MAHINDRA_PARSER_VERSION
+    result["validation_version"]="sector-equity-reconciliation-v1"
+    return result
 
 
 def _jm_source(fetch_fn,expected):
@@ -199,6 +213,8 @@ def _sundaram_result(fetch_fn,expected):
     # AUMASONDATE dates a different metric. The published workbook, not the
     # card's AUM/NAV date or its URL, must prove the exact portfolio month-end.
     body,_,typ=fetch_fn(source,archive=False,max_bytes=30*1024*1024)
+    if body.startswith(b"%PDF"):
+        raise ValueError("Sundaram source requires a dedicated PDF portfolio parser")
     if not body.startswith((b"PK",b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1")):
         raise ValueError("Sundaram portfolio response is not a supported workbook")
     parsed=_parse_workbook(body,SUNDARAM_FAMILY,expected)

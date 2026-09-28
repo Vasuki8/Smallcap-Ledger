@@ -7,7 +7,7 @@ Data ready: **false** · launch ready: **false**.
 | AUM | 34 | 34 | true | 0 |
 | Direct TER | 31 | 31 | true | 0 |
 | Reported benchmark identity | 12 | 31 | false | 19 |
-| Current portfolio evidence | 15 | 28 | false | 13 |
+| Current portfolio evidence | 14 | 28 | false | 14 |
 
 - Scheme/NAV identity history gate: **true** (135 / 135 codes; 0 history failures).
 - Source-fetch health: **true**.

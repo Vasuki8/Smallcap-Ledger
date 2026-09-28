@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-09-28T03:55:18+00:00",
+  "built_at": "2026-09-28T04:11:52+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 5,
-  "recovered": 3,
-  "failed": 2,
+  "recovered": 2,
+  "failed": 3,
   "results": [
     {
       "family": "JM Mid Cap Fund",
@@ -23,274 +23,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T03:55:14+00:00"
-    },
-    {
-      "family": "Mahindra Manulife Mid Cap Fund",
-      "amc": "Mahindra Manulife Mutual Fund",
-      "status": "recovered",
-      "as_of": "2026-08-31",
-      "positions_observed": 63,
-      "positions": [
-        {
-          "name": "UNO Minda Limited",
-          "weight": 2.03
-        },
-        {
-          "name": "Tube Investments of India Limited",
-          "weight": 1.84
-        },
-        {
-          "name": "Belrise Industries Ltd.",
-          "weight": 1.75
-        },
-        {
-          "name": "Minda Corporation Limited",
-          "weight": 1.4
-        },
-        {
-          "name": "CEAT Limited",
-          "weight": 1.36
-        },
-        {
-          "name": "Schaeffler India Limited",
-          "weight": 1.0
-        },
-        {
-          "name": "KEI Industries Limited",
-          "weight": 2.56
-        },
-        {
-          "name": "AIA Engineering Limited",
-          "weight": 2.04
-        },
-        {
-          "name": "Cochin Shipyard Limited",
-          "weight": 2.0
-        },
-        {
-          "name": "APL Apollo Tubes Limited",
-          "weight": 1.93
-        },
-        {
-          "name": "GE Vernova T&D India Limited",
-          "weight": 1.76
-        },
-        {
-          "name": "Astral Limited",
-          "weight": 1.71
-        },
-        {
-          "name": "Triveni Turbine Limited",
-          "weight": 1.36
-        },
-        {
-          "name": "Elecon Engineering Company Limited",
-          "weight": 1.06
-        },
-        {
-          "name": "Kirloskar Brothers Limited",
-          "weight": 0.94
-        },
-        {
-          "name": "Garden Reach Shipbuilders & Engineers Limited",
-          "weight": 0.87
-        },
-        {
-          "name": "Carborundum Universal Limited",
-          "weight": 0.66
-        },
-        {
-          "name": "SRF Limited",
-          "weight": 1.63
-        },
-        {
-          "name": "Solar Industries India Limited",
-          "weight": 1.47
-        },
-        {
-          "name": "Larsen & Toubro Limited",
-          "weight": 1.48
-        },
-        {
-          "name": "KEC International Limited",
-          "weight": 0.96
-        },
-        {
-          "name": "JK Cement Limited",
-          "weight": 1.74
-        },
-        {
-          "name": "Dalmia Bharat Limited",
-          "weight": 0.81
-        },
-        {
-          "name": "Blue Star Limited",
-          "weight": 1.59
-        },
-        {
-          "name": "Kajaria Ceramics Limited",
-          "weight": 0.88
-        },
-        {
-          "name": "LG Electronics India Ltd",
-          "weight": 0.81
-        },
-        {
-          "name": "Consumer Services",
-          "weight": 0.85
-        },
-        {
-          "name": "ITC Hotels Limited",
-          "weight": 0.85
-        },
-        {
-          "name": "Radico Khaitan Limited",
-          "weight": 1.93
-        },
-        {
-          "name": "Marico Limited",
-          "weight": 1.9
-        },
-        {
-          "name": "Varun Beverages Limited",
-          "weight": 1.19
-        },
-        {
-          "name": "The Federal Bank Limited",
-          "weight": 3.6
-        },
-        {
-          "name": "IndusInd Bank Limited",
-          "weight": 3.37
-        },
-        {
-          "name": "Aditya Birla Capital Limited",
-          "weight": 2.81
-        },
-        {
-          "name": "L&T Finance Limited",
-          "weight": 2.79
-        },
-        {
-          "name": "Nippon Life India Asset Management Limited",
-          "weight": 2.53
-        },
-        {
-          "name": "PB Fintech Limited",
-          "weight": 2.52
-        },
-        {
-          "name": "IDFC First Bank Limited",
-          "weight": 2.13
-        },
-        {
-          "name": "Max Financial Services Limited",
-          "weight": 2.05
-        },
-        {
-          "name": "Bank of Maharashtra",
-          "weight": 2.0
-        },
-        {
-          "name": "Karur Vysya Bank Limited",
-          "weight": 1.64
-        },
-        {
-          "name": "360 One WAM Limited",
-          "weight": 1.54
-        },
-        {
-          "name": "Shriram Finance Limited",
-          "weight": 1.45
-        },
-        {
-          "name": "Equitas Small Finance Bank Limited",
-          "weight": 1.37
-        },
-        {
-          "name": "SBI Cards and Payment Services Limited",
-          "weight": 0.99
-        },
-        {
-          "name": "Piramal Finance Limited",
-          "weight": 0.27
-        },
-        {
-          "name": "Healthcare",
-          "weight": 9.7
-        },
-        {
-          "name": "Glenmark Pharmaceuticals Limited",
-          "weight": 2.59
-        },
-        {
-          "name": "Anthem Biosciences Limited",
-          "weight": 2.1
-        },
-        {
-          "name": "Fortis Healthcare Limited",
-          "weight": 2.09
-        },
-        {
-          "name": "Biocon Limited",
-          "weight": 1.71
-        },
-        {
-          "name": "Aster DM Quality Care Limited",
-          "weight": 1.21
-        },
-        {
-          "name": "Coforge Limited",
-          "weight": 2.81
-        },
-        {
-          "name": "Mphasis Limited",
-          "weight": 1.69
-        },
-        {
-          "name": "NMDC Limited",
-          "weight": 1.32
-        },
-        {
-          "name": "Vedanta Aluminium Metal Limited",
-          "weight": 0.46
-        },
-        {
-          "name": "Power",
-          "weight": 1.9
-        },
-        {
-          "name": "JSW Energy Limited",
-          "weight": 1.9
-        },
-        {
-          "name": "Godrej Properties Limited",
-          "weight": 1.4
-        },
-        {
-          "name": "Services",
-          "weight": 2.67
-        },
-        {
-          "name": "JSW Infrastructure Ltd",
-          "weight": 1.68
-        },
-        {
-          "name": "Container Corporation of India Limited",
-          "weight": 0.99
-        },
-        {
-          "name": "Bharti Hexacom Limited",
-          "weight": 1.19
-        }
-      ],
-      "complete": false,
-      "scope": "first_party_current_factsheet",
-      "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html",
-      "source_sha256": "53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640",
-      "source_content_type": "text/html",
-      "observed_at": "2026-09-28T03:55:16+00:00"
+      "observed_at": "2026-09-28T04:11:45+00:00"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -307,7 +40,7 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T03:55:16+00:00"
+      "observed_at": "2026-09-28T04:11:49+00:00"
     }
   ],
   "errors": [
@@ -316,8 +49,12 @@
       "error": "First-party page does not contain the exact staged Mid Cap family identity"
     },
     {
+      "family": "Mahindra Manulife Mid Cap Fund",
+      "error": "Mahindra portfolio row no longer has name and weight columns"
+    },
+    {
       "family": "Sundaram Mid Cap Fund",
-      "error": "Sundaram fund-card row is not current: unknown"
+      "error": "Sundaram fund-card row is not current: 2026-07-31"
     }
   ],
   "production_writes": 0,
@@ -325,6 +62,7 @@
   "notes": [
     "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
     "Kotak and Mahindra current factsheet holdings count only as partial current evidence.",
+    "Mahindra sector headings and totals are excluded; unknown rows and conflicting copies fail closed.",
     "Every result requires exact staged family identity and the current regulatory month-end; no live records are written."
   ]
 }
