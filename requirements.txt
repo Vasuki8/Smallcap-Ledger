@@ -46,7 +46,7 @@ python-multipart==0.0.32
     # via smallcap-ledger
 socksio==1.0.0
     # via httpx
-soupsieve==2.9.2
+soupsieve==2.10
     # via beautifulsoup4
 starlette==1.6.0
     # via fastapi
