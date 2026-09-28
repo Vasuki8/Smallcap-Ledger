@@ -19,28 +19,19 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Inspect bounded public catalogue contract
+      - name: Inspect published scheme-specific PDF text
         run: |
           uv run --frozen python - <<'PY'
-          import hashlib,json,re
-          from pathlib import Path
+          import hashlib,json
+          from io import BytesIO
           from unittest.mock import patch
+          from pypdf import PdfReader
           from tracker import db,providers
-          base='https://www.invescomutualfund.com'
-          paths=['/_next/static/chunks/app/page-5577bb455604c475.js','/_next/static/chunks/4733-542e47c28f90cfb0.js','/_next/static/chunks/6007-719f81552068cb77.js','/_next/static/chunks/9428-9c4d2efd5d12871e.js']
+          url='https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf'
           with patch.object(db,'connect',side_effect=AssertionError('Database forbidden')):
-            for path in paths:
-              try:
-                body,_,typ=providers.fetch(base+path,archive=False,max_bytes=8*1024*1024)
-                text=body.decode('utf-8')
-                print('SOURCE',path,len(body),hashlib.sha256(body).hexdigest())
-                for m in list(re.finditer(r'factsheet|fact-sheet|FactSheet|literatureandforms|CompleteMonthlyHoldings',text,re.I))[:25]:
-                  print('CONTRACT',text[max(0,m.start()-200):m.end()+550])
-              except Exception as exc: print('ERROR',path,str(exc)[:250])
-          print('EXISTING_CONTRACTS')
-          for path in Path('tracker').glob('*.py'):
-            text=path.read_text()
-            if 'invesco' not in text.lower(): continue
-            for line in text.splitlines():
-              if re.search(r'api/|invesco.*factsheet|factsheet.*invesco',line,re.I): print(str(path),line[:600])
+            body,_,typ=providers.fetch(url,archive=False,max_bytes=16*1024*1024)
+            r=PdfReader(BytesIO(body))
+            print('SOURCE',json.dumps({'source':url,'sha256':hashlib.sha256(body).hexdigest(),'bytes':len(body),'content_type':typ,'pages':len(r.pages)}))
+            print('COVER',repr(r.pages[0].extract_text()[:1800]))
+            print('MIDCAP_PAGE_11',repr(r.pages[10].extract_text()))
           PY
