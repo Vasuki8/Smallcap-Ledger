@@ -98,7 +98,7 @@ Until that ruleset is enabled, follow the PR workflow voluntarily and do not pus
 ### Next repository-maintenance priority
 
 The remaining audit work is lower priority than the P0 items above:
-- audit the large historical branch backlog and prepare a **non-destructive** deletion candidate list; do not delete branches without explicit owner approval;
+- branch backlog audit is complete in `docs/BRANCH-CLEANUP-AUDIT.json` / `.md`: **299** exact merged-tip cleanup candidates, **2** post-merge/moved branches, **8** closed/unmerged PR branches, **34** branches with no PR evidence, and **0** open-PR branches. **No deletion has been performed; branch deletion still requires explicit owner approval.**
 - reduce handoff/documentation sprawl after preserving a concise current-state section;
 - consider moving known maintenance/backlog items into GitHub Issues so they are not discoverable only through long handoff history.
 
