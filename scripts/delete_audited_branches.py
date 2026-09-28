@@ -149,6 +149,8 @@ def delete_branch(repository, branch, token):
 
 def run(audit_path, repository, token, expected_count, apply=False):
     audit = json.loads(Path(audit_path).read_text(encoding="utf-8"))
+    if audit.get("destructive_actions_taken"):
+        raise RuntimeError("Branch cleanup audit is already marked as executed")
     current_heads, open_pr_heads = live_repository_state(repository, token)
     plan = plan_cleanup(audit, current_heads, open_pr_heads, expected_count)
     result = {
