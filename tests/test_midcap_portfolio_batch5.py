@@ -19,7 +19,6 @@ class MidCapPortfolioBatch5Tests(unittest.TestCase):
         self.assertIn("08/26",title)
 
     def test_jm_source_ignores_smallcap_and_large_midcap(self):
-        import json
         listing=[
             {"CategoryID":2,"SubCategoryID":9,"SubCategoryName":"Monthly Portfolio of Schemes",
              "Title":"Monthly Portfolio - JM Small Cap Fund - August 31, 2026",
@@ -40,13 +39,16 @@ class MidCapPortfolioBatch5Tests(unittest.TestCase):
 
     def test_mahindra_parser_excludes_sector_totals(self):
         from bs4 import BeautifulSoup
+        # Use the publisher's actual sector/holding distinction and a coherent
+        # synthetic subtotal; an unbalanced fragment must no longer pass.
         html="""<table><tr><th>Company / Issuer</th><th>% of Net Assets</th></tr>
-        <tr><td>Financial Services</td><td>31.06%</td></tr>
-        <tr><td>IndusInd Bank Limited</td><td>3.37%</td></tr>
-        <tr><td>L&T Finance Limited</td><td>2.79%</td></tr>
+        <tr style="font-weight:bold"><td>Financial Services</td><td>12.73%</td></tr>
+        <tr style="f ont-weight:bold"><td>IndusInd Bank Limited</td><td>3.37%</td></tr>
+        <tr><td>L&amp;T Finance Limited</td><td>2.79%</td></tr>
         <tr><td>PB Fintech Limited</td><td>2.52%</td></tr>
         <tr><td>Max Financial Services Limited</td><td>2.05%</td></tr>
-        <tr><td>Bank of Maharashtra</td><td>2.00%</td></tr></table>"""
+        <tr><td>Bank of Maharashtra</td><td>2.00%</td></tr>
+        <tr><td>Equity and Equity Related Total</td><td>12.73%</td></tr></table>"""
         rows=_mahindra_positions(BeautifulSoup(html,"html.parser"))
         self.assertEqual(len(rows),5)
         self.assertNotIn("Financial Services",{x["name"] for x in rows})

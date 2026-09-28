@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import calendar
 import hashlib
-import io
 import json
 import re
 from datetime import date, datetime
@@ -13,9 +12,7 @@ from bs4 import BeautifulSoup
 
 from . import db, disclosures, jm_portfolios, providers
 from .coverage import expected_portfolio_as_of
-from .midcap_portfolio_first_party import (
-    CORPORATE_HINT, _add_position, _clean, _explicit_dates, _kotak, _percent, _table_rows
-)
+from .midcap_factsheet_equities import equity_positions, validate_factsheet_context
 from .midcap_portfolio_structured import _parse_workbook
 
 
@@ -36,27 +33,12 @@ def _norm(value):
 
 def _require_html_identity_date(body,family,expected):
     soup=BeautifulSoup(body,"html.parser")
-    text=soup.get_text("\n",strip=True)
-    if _norm(family) not in _norm(text):
-        raise ValueError("First-party page does not contain the exact staged Mid Cap family identity")
-    if expected not in _explicit_dates(text):
-        raise ValueError(f"First-party page does not explicitly report current portfolio date {expected}")
-    return soup,text
+    validate_factsheet_context(soup,family,expected)
+    return soup,soup.get_text("\n",strip=True)
 
 
 def _mahindra_positions(soup):
-    out=[]
-    for table,rows in _table_rows(soup):
-        context=_clean(table.get_text(" ",strip=True))
-        if not re.search(r"Company\s*/\s*Issuer|%\s*of\s*Net\s*Assets",context,re.I):
-            continue
-        for cells in rows:
-            if len(cells)<2:continue
-            name=next((x for x in cells if x and _percent(x) is None),None)
-            weight=next((_percent(x) for x in reversed(cells) if _percent(x) is not None),None)
-            if not name or not CORPORATE_HINT.search(name):continue
-            _add_position(out,name,weight)
-    return out
+    return equity_positions(soup)
 
 
 def _html_result(family,amc,url,parser,fetch_fn,expected):
@@ -68,7 +50,10 @@ def _html_result(family,amc,url,parser,fetch_fn,expected):
     return {
         "family":family,"amc":amc,"status":"recovered","as_of":expected,
         "positions_observed":len(positions),"positions":positions,
-        "complete":False,"scope":"first_party_current_factsheet",
+        "complete":False,"scope":"factsheet_equity_only",
+        "completeness_note":"Sector and equity subtotals reconcile; non-equity assets are excluded.",
+        "equity_weight_sum":round(sum(x["weight"] for x in positions),8),
+        "sectors_checked":len({x["sector"] for x in positions}),
         "source":url,"source_sha256":hashlib.sha256(body).hexdigest(),
         "source_content_type":typ,
     }
@@ -76,7 +61,7 @@ def _html_result(family,amc,url,parser,fetch_fn,expected):
 
 def _kotak_result(fetch_fn,expected):
     return _html_result(
-        KOTAK_FAMILY,"Kotak Mahindra Mutual Fund",KOTAK_URL,_kotak,fetch_fn,expected)
+        KOTAK_FAMILY,"Kotak Mahindra Mutual Fund",KOTAK_URL,equity_positions,fetch_fn,expected)
 
 
 def _mahindra_result(fetch_fn,expected):
@@ -102,7 +87,7 @@ def _jm_source(fetch_fn,expected):
     rows=jm_portfolios._decrypt(listing)
     if not isinstance(rows,list):
         raise ValueError("JM monthly portfolio response is not a list")
-    d=date.fromisoformat(expected);found={}
+    found={}
     target=_norm(JM_FAMILY)
     for row in rows:
         if not isinstance(row,dict):continue
@@ -201,32 +186,31 @@ def _sundaram_result(fetch_fn,expected):
     if len(matches)!=1:
         raise ValueError(f"Sundaram fund-card data exposed {len(matches)} exact Mid Cap rows")
     row=matches[0]
-    dated_value=str(row.get("AUMASONDATE") or "").strip()
-    day=disclosures.report_date(dated_value)
-    if day!=expected:
-        raise ValueError(f"Sundaram fund-card row is not current: {day or 'unknown'}")
-    source=urljoin("https://www.sundarammutual.com",str(row.get("PORTFOLIO_PATH") or "").strip())
-    if not source or not disclosures.official_publication_url(source,"Sundaram"):
-        raise ValueError("Sundaram current portfolio path is not an approved first-party URL")
+    if str(row.get("FUNDGROUP_ID") or "").strip()!="MC" or _norm(row.get("FUND_CATEGORY"))!="midcap":
+        raise ValueError("Sundaram Mid Cap fund-card scheme code/category is not verified")
+    path=str(row.get("PORTFOLIO_PATH") or "").strip()
+    source=urljoin("https://www.sundarammutual.com",path)
+    parsed_url=urlparse(source)
+    if (not path or parsed_url.scheme!="https"
+        or parsed_url.hostname not in ("www.sundarammutual.com","sundarammutual.com")
+        or not parsed_url.path.casefold().endswith((".xls",".xlsx"))
+        or not disclosures.official_publication_url(source,"Sundaram")):
+        raise ValueError("Sundaram portfolio path is not an approved first-party workbook")
+    # AUMASONDATE dates a different metric. The published workbook, not the
+    # card's AUM/NAV date or its URL, must prove the exact portfolio month-end.
     body,_,typ=fetch_fn(source,archive=False,max_bytes=30*1024*1024)
-    if body.startswith((b"PK",b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1")):
-        parsed=_parse_workbook(body,SUNDARAM_FAMILY,expected)
-        return {
-            "family":SUNDARAM_FAMILY,"amc":"Sundaram Mutual Fund","status":"recovered",
-            **parsed,"scope":"structured_monthly_portfolio",
-            "source":source,"source_sha256":hashlib.sha256(body).hexdigest(),
-            "source_content_type":typ,
-        }
-    soup,_=_require_html_identity_date(body,SUNDARAM_FAMILY,expected)
-    positions=_mahindra_positions(soup)
-    if len(positions)<5:
-        raise ValueError(f"Sundaram current portfolio source exposed only {len(positions)} named holdings")
+    if not body.startswith((b"PK",b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1")):
+        raise ValueError("Sundaram portfolio response is not a supported workbook")
+    parsed=_parse_workbook(body,SUNDARAM_FAMILY,expected)
+    if parsed.get("as_of")!=expected:
+        raise ValueError("Sundaram workbook did not prove the current portfolio date")
     return {
         "family":SUNDARAM_FAMILY,"amc":"Sundaram Mutual Fund","status":"recovered",
-        "as_of":expected,"positions_observed":len(positions),"positions":positions,
-        "complete":False,"scope":"first_party_current_portfolio",
+        **parsed,"scope":"structured_monthly_portfolio",
         "source":source,"source_sha256":hashlib.sha256(body).hexdigest(),
-        "source_content_type":typ,
+        "source_content_type":typ,"discovery_source":SUNDARAM_CARD,
+        "discovery_source_sha256":hashlib.sha256(raw).hexdigest(),
+        "publisher_scheme_code":"MC","card_aum_as_of_raw":row.get("AUMASONDATE"),
     }
 
 
@@ -258,7 +242,8 @@ def collect(fetch_fn=providers.fetch,today=None):
         "results":results,"errors":errors,"production_writes":0,"public_export_enabled":False,
         "notes":[
             "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
-            "Kotak and Mahindra current factsheet holdings count only as partial current evidence.",
+            "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
+            "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
             "Every result requires exact staged family identity and the current regulatory month-end; no live records are written.",
         ],
     }

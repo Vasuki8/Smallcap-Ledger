@@ -1,53 +1,53 @@
-"""Inspect batch-5 public evidence without restoring or writing production data."""
+"""Exercise real batch-5 sources without restoring or accessing any database."""
 from __future__ import annotations
 
 import hashlib
 import json
-import re
+from datetime import date
 from pathlib import Path
 import sys
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from bs4 import BeautifulSoup
 from tracker import providers
-from tracker.midcap_portfolio_batch5 import KOTAK_URL, MAHINDRA_URL, SUNDARAM_CARD
+from tracker.coverage import expected_portfolio_as_of
+from tracker.midcap_portfolio_batch5 import _kotak_result, _mahindra_result, _sundaram_result
 
 
 def main():
-    report = {"production_writes": 0, "public_export_enabled": False, "sources": []}
-    for label, url in (("Mahindra", MAHINDRA_URL), ("Sundaram", SUNDARAM_CARD), ("Kotak", KOTAK_URL)):
-        item = {"label": label, "source": url}
-        try:
-            body, _, media = providers.fetch(url, archive=False, max_bytes=12 * 1024 * 1024)
-            item.update(bytes=len(body), content_type=media, sha256=hashlib.sha256(body).hexdigest())
-            if label == "Sundaram":
-                rows = json.loads(body)
-                item["scheme_rows"] = [r for r in rows if re.sub(r"[^a-z0-9]", "", str(r.get("GROUP_NAME", "")).lower()) == "sundarammidcapfund"]
-            else:
-                soup = BeautifulSoup(body, "html.parser")
-                item["headings"] = [x.get_text(" ", strip=True) for x in soup.select("h1,h2,h3")][:12]
-                item["text_start"] = soup.get_text(" ", strip=True)[:300]
-                item["tables"] = []
-                for table in soup.find_all("table"):
-                    text = table.get_text(" ", strip=True)
-                    if not re.search(r"Company\s*/\s*Issuer|Issuer/Instrument", text, re.I):
-                        continue
-                    selected = []
-                    for tr in table.find_all("tr"):
-                        cells = tr.find_all(["th", "td"], recursive=False)
-                        values = [c.get_text(" ", strip=True) for c in cells]
-                        selected.append({"values": values, "row_attrs": tr.attrs,
-                                         "cell_attrs": [c.attrs for c in cells],
-                                         "emphasis": [bool(c.find(["b", "strong"])) for c in cells]})
-                    item["tables"].append(selected[:40])
-                item["tables"] = item["tables"][:2]
-        except Exception as exc:
-            item["error"] = str(exc)[:500]
-        report["sources"].append(item)
+    expected = expected_portfolio_as_of(date.today())
+    report = {"expected": expected, "database_access_forbidden": True,
+              "production_writes": 0, "public_export_enabled": False, "results": [], "errors": []}
+    requests = []
+    def read(url, **kwargs):
+        if kwargs.get("archive") is not False:
+            raise AssertionError("Evidence preflight attempted an archival write")
+        body, digest, media = providers.fetch(url, **kwargs)
+        requests.append({"url": url, "sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)})
+        return body, digest, media
+    with patch("tracker.db.connect", side_effect=AssertionError("Database access is forbidden in source preflight")):
+        for label, collector in (("Mahindra", _mahindra_result), ("Sundaram", _sundaram_result), ("Kotak", _kotak_result)):
+            try:
+                row = collector(read, expected)
+                if row["as_of"] != expected or row["positions_observed"] < 5:
+                    raise AssertionError("Source did not prove current named portfolio evidence")
+                if label in ("Mahindra", "Kotak"):
+                    names = {x["name"] for x in row["positions"]}
+                    if names & {"Healthcare", "Information Technology", "Power", "Realty", "Financial Services"}:
+                        raise AssertionError("Sector subtotal leaked into holdings")
+                    if row["complete"] is not False:
+                        raise AssertionError("Equity-only evidence was marked complete")
+                report["results"].append({key: row.get(key) for key in (
+                    "family", "as_of", "positions_observed", "complete", "scope", "equity_weight_sum",
+                    "sectors_checked", "source", "source_sha256", "card_aum_as_of_raw", "unknown_rows")})
+            except Exception as exc:
+                report["errors"].append({"source": label, "error": str(exc)[:500]})
+    report["requests"] = requests
     print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 1 if report["errors"] else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
