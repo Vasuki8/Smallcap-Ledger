@@ -196,6 +196,13 @@ jobs:
         run: >-
           uv run --frozen python scripts/diagnose_midcap_portfolio_batch1.py
           --output deployment/midcap-portfolio-batch1-diagnostic.json
+      - name: Diagnose staged Mid Cap portfolio batch 3 contracts
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/diagnose_midcap_portfolio_batch3_contracts.py
+          --output deployment/midcap-portfolio-batch3-contracts.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
