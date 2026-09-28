@@ -1,5 +1,5 @@
 {
-  "prepared_at": "2026-09-28T20:19:05+00:00",
+  "prepared_at": "2026-09-28T20:40:26+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
@@ -7,7 +7,7 @@
   "historical_candidates_strengthened_by_current_scan": 4,
   "post_audit_hashes_reviewed": 391,
   "post_audit_delta": {
-    "reviewed_at": "2026-09-28T20:19:05+00:00",
+    "reviewed_at": "2026-09-28T20:40:25+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
     "new_hashes_reviewed": 391,
@@ -78,11 +78,11 @@
     },
     "category_staged_nav": {
       "rows": 353288,
-      "sha256": "ef36ad70e3f0571dfe78c0af5371f0a4d8618ccb046f1b0d1c05b12eeafaaf6c"
+      "sha256": "8b795b48c99612ee5f938c43576ea63b7620a8828cb09aeb14f72f69ea23edfc"
     },
     "category_staged_schemes": {
       "rows": 135,
-      "sha256": "f1bb3c60bc48da87f19c6bcd4fb4f47aacc269176f467959d8bf1663a3730bc8"
+      "sha256": "fa5c2ac75974d8d556a4850e5360c7d02afee4751a86a995b1fa34ae169859c5"
     },
     "distribution_coverage": {
       "rows": 0,
@@ -113,8 +113,8 @@
       "sha256": "56043d8ee4da5f7a33742e19990ae78f14ed9bcb5e71c0a034dce4145aa1f52d"
     },
     "jobs": {
-      "rows": 1099,
-      "sha256": "33e16147a97f6483292cc058dd04688153fdf7ca37c7b030fccb796a2385d731"
+      "rows": 1100,
+      "sha256": "98f8d8328cc64c78ff0c5b0ef7ab40e0c34d66082de74815872c10904827bd6a"
     },
     "metrics": {
       "rows": 26580,
@@ -148,7 +148,7 @@
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-28T20:01:30+00:00",
+  "active_checkpoint_created_at": "2026-09-28T20:19:54+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,
