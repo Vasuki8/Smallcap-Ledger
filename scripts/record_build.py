@@ -1,5 +1,6 @@
 """Commit the deployed collection and coverage audits after each successful build."""
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -24,6 +25,7 @@ performance_md=ROOT/'docs'/'PERFORMANCE-COVERAGE-AUDIT.md'
 performance_md.write_text(performance_coverage_markdown(performance_coverage),encoding='utf-8')
 
 from tracker.publication_coverage import report as publication_coverage_report, markdown as publication_coverage_markdown
+from tracker.publication_provenance import push_generated_status_commit
 publication_coverage=publication_coverage_report()
 publication_json=ROOT/'docs'/'PUBLICATION-COVERAGE-AUDIT.json'
 publication_json.write_text(json.dumps(publication_coverage,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
@@ -224,5 +226,7 @@ git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md',
     'deployment/communication-transport-wealth-uti.json')
 if git('diff','--cached','--quiet',check=False).returncode:
     git('commit','-m','Record daily collection status and coverage [skip ci]')
-    git('pull','--rebase','origin','main')
-    git('push','origin','HEAD:main')
+    expected_build_sha=os.environ.get('SMALLCAP_BUILD_SHA','').strip()
+    if not expected_build_sha:
+        raise RuntimeError('SMALLCAP_BUILD_SHA is required for automated status publication')
+    push_generated_status_commit(ROOT,expected_build_sha)
