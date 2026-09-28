@@ -394,6 +394,8 @@ jobs:
       - name: Check archive and financial calculations
         run: uv run --frozen python -m unittest discover -s tests -v
       - name: Generate GitHub Pages site
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: uv run --frozen python scripts/export_site.py
       - name: Validate generated data and downloads
         run: uv run --frozen python scripts/validate_site.py site
