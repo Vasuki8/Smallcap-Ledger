@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T16:33:14+00:00",
+  "built_at": "2026-09-28T17:09:55+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -832,9 +832,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 27,
-          "mid_cap_rows": 27,
-          "sha256": "639d8296701e9f23e409c7b0de0166ee09c3a1009949d6e84608ebc59f856830"
+          "rows": 28,
+          "mid_cap_rows": 28,
+          "sha256": "8599d8ffdc43b5cf3d4420ba59e724ef8f613db4a0f827c4d0f61f7f8c653cd2"
         }
       ],
       "matched_families": [
@@ -1348,8 +1348,8 @@
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
-      "sha256": "bdc42aad40797d2d070c038af788a97204cb763fd4a80589aefdde2ad7f04b40",
-      "observed_at": "2026-09-28T16:33:09.044976+00:00",
+      "sha256": "c157f91b69463e6e9cb5d115398192b76db108d32ad0f3a4f10b500b275b9dd1",
+      "observed_at": "2026-09-28T17:09:53.790757+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1364,15 +1364,15 @@
       "pagination": {
         "page": 1,
         "pageSize": 100,
-        "total": 243,
+        "total": 255,
         "pageCount": 3
       }
     },
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
-      "sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-      "observed_at": "2026-09-28T16:33:13.325445+00:00",
+      "sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
+      "observed_at": "2026-09-28T17:09:54.802582+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1387,15 +1387,15 @@
       "pagination": {
         "page": 2,
         "pageSize": 100,
-        "total": 243,
+        "total": 255,
         "pageCount": 3
       }
     },
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
-      "sha256": "1458364ed9bc1dd67e96797e29f0d5001c05ce238bc074e075edd422361bfe51",
-      "observed_at": "2026-09-28T16:33:14.202414+00:00",
+      "sha256": "4e76cad5931fb9f399aec4b3fe0c56d835de62f656bd132bd22cbc0672121410",
+      "observed_at": "2026-09-28T17:09:55.701906+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1406,11 +1406,11 @@
       },
       "amc": "Samco Mutual Fund",
       "page": 3,
-      "rows": 43,
+      "rows": 55,
       "pagination": {
         "page": 3,
         "pageSize": 100,
-        "total": 243,
+        "total": 255,
         "pageCount": 3
       }
     },
@@ -1419,13 +1419,13 @@
       "amc": "Samco Mutual Fund",
       "month": "09-2026",
       "complete": true,
-      "total_rows": 243,
+      "total_rows": 255,
       "pages_checked": 3,
       "matched_families": [
         "Samco Mid Cap Fund"
       ],
-      "exact_daily_observations": 18,
-      "latest_reporting_date": "2026-09-25"
+      "exact_daily_observations": 19,
+      "latest_reporting_date": "2026-09-28"
     },
     {
       "kind": "ter_mid_cap_contract_summary",
@@ -4019,7 +4019,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-27",
+        "as_of": "2026-09-28",
         "scheme_name": "Quant Mid Cap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4135,7 +4135,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-25",
+        "as_of": "2026-09-28",
         "scheme_name": "Samco Mid Cap Fund",
         "category": "Equity Schemes - Mid Cap Fund",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
@@ -4147,16 +4147,16 @@
           "value": 3.0,
           "unit": "% p.a. · AMC-reported via AMFI"
         },
-        "source_sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-        "source_observed_at": "2026-09-28T16:33:13.325445+00:00",
-        "source_row": 44,
+        "source_sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
+        "source_observed_at": "2026-09-28T17:09:54.802582+00:00",
+        "source_row": 52,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
           "Scheme_Name": "Samco Mid Cap Fund",
           "SchemeType_Desc": "Open Ended",
           "SchemeCat_Desc": "Equity Schemes - Mid Cap Fund",
           "TER_Year": "2026-2027",
-          "TER_Date": "2026-09-25T00:00:00.000Z",
+          "TER_Date": "2026-09-28T00:00:00.000Z",
           "R_BER": "2.1000",
           "R_BrokerageCost": "0.1000",
           "R_TransactionCost": "0.0100",
@@ -4921,7 +4921,7 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-28T16:24:53+00:00"
+          "last_checked": "2026-09-28T16:37:19+00:00"
         }
       ],
       "coverage_gaps": [
@@ -4992,7 +4992,7 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-28T16:24:57+00:00"
+          "last_checked": "2026-09-28T16:37:27+00:00"
         }
       ],
       "coverage_gaps": [

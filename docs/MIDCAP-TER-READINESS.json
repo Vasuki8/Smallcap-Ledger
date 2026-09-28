@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T16:33:14+00:00",
+  "built_at": "2026-09-28T17:09:55+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
@@ -141,9 +141,9 @@
       "family": "Helios Mid Cap Fund",
       "amc": "Helios Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 0.97,
+      "direct_ter": 0.98,
       "regular_ter": 2.43,
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "source": "https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -194,8 +194,8 @@
       "amc": "JM Financial Mutual Fund",
       "direct_ter_available": true,
       "direct_ter": 0.95,
-      "regular_ter": 2.46,
-      "as_of": "2026-09-27",
+      "regular_ter": 2.47,
+      "as_of": "2026-09-28",
       "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -235,7 +235,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.75,
       "regular_ter": 2.02,
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -296,7 +296,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.18,
       "regular_ter": 2.21,
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -318,7 +318,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.58,
       "regular_ter": 3.0,
-      "as_of": "2026-09-25",
+      "as_of": "2026-09-28",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "evidence_channel": "amfi",
       "identity": {
@@ -327,16 +327,16 @@
         "amfi_mf_id": "74",
         "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
       },
-      "source_sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-      "source_observed_at": "2026-09-28T16:33:13.325445+00:00",
-      "source_row": 44,
+      "source_sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
+      "source_observed_at": "2026-09-28T17:09:54.802582+00:00",
+      "source_row": 52,
       "published_row": {
         "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
         "Scheme_Name": "Samco Mid Cap Fund",
         "SchemeType_Desc": "Open Ended",
         "SchemeCat_Desc": "Equity Schemes - Mid Cap Fund",
         "TER_Year": "2026-2027",
-        "TER_Date": "2026-09-25T00:00:00.000Z",
+        "TER_Date": "2026-09-28T00:00:00.000Z",
         "R_BER": "2.1000",
         "R_BrokerageCost": "0.1000",
         "R_TransactionCost": "0.0100",
@@ -401,7 +401,7 @@
       "direct_ter_available": true,
       "direct_ter": 3.0100000000000002,
       "regular_ter": 5.01,
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
       "evidence_channel": "first_party_amc",
       "identity": {

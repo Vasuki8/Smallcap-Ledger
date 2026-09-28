@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-28T16:33:14+00:00
+Prepared: 2026-09-28T17:09:55+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
@@ -33,8 +33,8 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | ₹ 40942.21 Cr · 2026-09-25 | 0.9300% · 2026-09-25 | Gap | Gap | 8 | benchmark_identity, current_portfolio |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | ₹ 51272.36 Cr · 2026-09-25 | 0.7900% · 2026-09-24 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | ₹ 10788.84 Cr · 2026-09-25 | 0.7400% · 2026-09-27 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
-| Quant Mid Cap Fund | quant Mutual Fund | ₹ 7752.05 Cr · 2026-09-25 | 1.1800% · 2026-09-27 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
-| Samco Mid Cap Fund | Samco Mutual Fund | ₹ 76.81 Cr · 2026-09-25 | 1.5800% · 2026-09-25 | Gap | Gap | 9 | benchmark_identity, current_portfolio |
+| Quant Mid Cap Fund | quant Mutual Fund | ₹ 7752.05 Cr · 2026-09-25 | 1.1800% · 2026-09-28 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
+| Samco Mid Cap Fund | Samco Mutual Fund | ₹ 76.81 Cr · 2026-09-25 | 1.5800% · 2026-09-28 | Gap | Gap | 9 | benchmark_identity, current_portfolio |
 | SBI MIDCAP FUND | SBI Mutual Fund | ₹ 23817.62 Cr · 2026-09-25 | 1.0500% · 2026-09-27 | Gap | Gap | 9 | benchmark_identity, current_portfolio |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | ₹ 14201.73 Cr · 2026-09-25 | 1.0600% · 2026-09-27 | Gap | Gap | 14 | benchmark_identity, current_portfolio |
 | Tata Mid Cap Fund | Tata Mutual Fund | ₹ 5996.36 Cr · 2026-09-25 | 0.8600% · 2026-09-27 | Gap | Gap | 12 | benchmark_identity, current_portfolio |

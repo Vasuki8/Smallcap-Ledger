@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T16:33:40+00:00",
+  "built_at": "2026-09-28T17:10:36+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 7,
@@ -133,14 +133,14 @@
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "plans": {
         "Regular": {
-          "base_expense_ratio": 1.84,
+          "base_expense_ratio": 1.85,
           "brokerage": 0.1,
           "transaction_cost": 0.01,
           "statutory_levies": 0.51,
-          "ter": 2.46
+          "ter": 2.47
         },
         "Direct": {
           "base_expense_ratio": 0.54,
@@ -151,7 +151,7 @@
         }
       },
       "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
-      "sha256": "ad34ccd4df8cc4392d206221688622c445e054fddf2986e38d2bc6404c4a8b3e",
+      "sha256": "9cc8e3c36fe2730b5dbdf9de27ee25685307db6b8841e77664a2ff348a365f7f",
       "identity": {
         "scheme_name": "JM Mid Cap Fund",
         "scheme_code": "MD",
@@ -159,13 +159,13 @@
       },
       "evidence_type": "official_amc_json",
       "direct_ter": 0.95,
-      "regular_ter": 2.46
+      "regular_ter": 2.47
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.6,
@@ -183,7 +183,7 @@
         }
       },
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
-      "sha256": "40f197f018be4ca7fb07567e906744c31104ec77545685edf49052f51c68047e",
+      "sha256": "e55b41a01beb1152227ebfb2a6de3d95586737ca00e673e277bad6882d5eb549",
       "identity": {
         "scheme_name": "Mahindra Manulife Mid Cap Fund",
         "nsdl_scheme_code": "MAHM/O/E /MIF/17/11/0006"

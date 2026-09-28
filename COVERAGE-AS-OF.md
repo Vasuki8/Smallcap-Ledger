@@ -1,12 +1,14 @@
 # Included data coverage
 
-Prepared: 2026-09-28T16:39:05+00:00
+Prepared: 2026-09-28T17:15:54+00:00
 
 **36 funds, 143 NAV series, 281,584 NAV observations. Latest included NAV: 2026-09-25.**
 
 AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **35 / 36 any**, **30 complete**, **34 current**, **30 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **36 / 36 funds**.
 
-Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
+Selected record dates — AUM: **2026-09-24**; Direct fee: **2026-04-30 → 2026-09-25**; reported benchmark identity: **2023-08-31 → 2026-09-25**.
+
+Coverage counts mean a selected dated record exists. The ranges above are reporting/effective dates, not source-check timestamps; an older effective date can remain current until superseded. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.
 
 | Fund | AUM · ₹ Cr / date | Direct fee / date | Latest parsed portfolio | Reported benchmark / date | AMC publications |
 | --- | --- | --- | --- | --- | ---: |
@@ -56,6 +58,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 ## Notes
 
 - Coverage means at least one dated record, not necessarily the latest reporting month.
+- Top-line record-date ranges describe the selected reporting/effective dates; they are not source-check timestamps, and an older effective date does not by itself prove the value is stale.
 - Portfolio freshness uses 2026-08-31 as the current expected month-end, with a 10-day grace at the start of a new month.
 - The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.
 - Base expense ratio and total expense ratio are distinct.

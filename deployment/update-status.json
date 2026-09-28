@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T16:39:26+00:00",
+  "built_at": "2026-09-28T17:16:21+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
@@ -11,35 +11,49 @@
     "archive_binary_files": 2910,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 131907584,
-    "total_storage_bytes": 2630386337,
+    "database_bytes": 132067328,
+    "total_storage_bytes": 2630546081,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-09-25"
   },
+  "record_dates": {
+    "aum": {
+      "earliest": "2026-09-24",
+      "latest": "2026-09-24"
+    },
+    "direct_fee": {
+      "earliest": "2026-04-30",
+      "latest": "2026-09-25"
+    },
+    "benchmark_identity": {
+      "earliest": "2023-08-31",
+      "latest": "2026-09-25"
+    }
+  },
   "recent_jobs": [
+    {
+      "kind": "amc-communication-archive-repair",
+      "started_at": "2026-09-28T17:15:28+00:00",
+      "finished_at": "2026-09-28T17:15:28+00:00",
+      "status": "partial"
+    },
+    {
+      "kind": "amc-communications",
+      "started_at": "2026-09-28T17:14:18+00:00",
+      "finished_at": "2026-09-28T17:14:20+00:00",
+      "status": "partial"
+    },
+    {
+      "kind": "amc-communications",
+      "started_at": "2026-09-28T17:14:00+00:00",
+      "finished_at": "2026-09-28T17:14:18+00:00",
+      "status": "partial"
+    },
     {
       "kind": "amc-communication-archive-repair",
       "started_at": "2026-09-28T16:38:41+00:00",
       "finished_at": "2026-09-28T16:38:41+00:00",
-      "status": "partial"
-    },
-    {
-      "kind": "amc-communications",
-      "started_at": "2026-09-28T16:37:25+00:00",
-      "finished_at": "2026-09-28T16:37:27+00:00",
-      "status": "partial"
-    },
-    {
-      "kind": "amc-communications",
-      "started_at": "2026-09-28T16:37:00+00:00",
-      "finished_at": "2026-09-28T16:37:19+00:00",
-      "status": "partial"
-    },
-    {
-      "kind": "amc-communication-archive-repair",
-      "started_at": "2026-09-28T16:26:07+00:00",
-      "finished_at": "2026-09-28T16:26:07+00:00",
       "status": "partial"
     }
   ],

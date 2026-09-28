@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T16:39:05+00:00",
+  "built_at": "2026-09-28T17:15:54+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -2061,7 +2061,7 @@
           "title": "Union Small Cap Fund Scheme Information Document",
           "kind": "factsheet",
           "url": "https://www.unionmf.com/docs/default-source/funddetail-downloads/sid/union-small-cap-fund.pdf",
-          "last_seen": "2026-09-28T16:37:34+00:00",
+          "last_seen": "2026-09-28T17:14:22+00:00",
           "hash": null,
           "observed_at": null
         },
@@ -2070,7 +2070,7 @@
           "amc_match": "Union",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
-          "last_checked": "2026-09-28T16:37:19+00:00",
+          "last_checked": "2026-09-28T17:14:18+00:00",
           "status": "Partial",
           "detail": "[Errno 111] Connection refused"
         }
@@ -2096,6 +2096,20 @@
       "benchmark_identity": 36
     }
   },
+  "record_dates": {
+    "aum": {
+      "earliest": "2026-09-24",
+      "latest": "2026-09-24"
+    },
+    "direct_fee": {
+      "earliest": "2026-04-30",
+      "latest": "2026-09-25"
+    },
+    "benchmark_identity": {
+      "earliest": "2023-08-31",
+      "latest": "2026-09-25"
+    }
+  },
   "portfolio_gap_reasons": {
     "document_not_archived": 1
   },
@@ -2119,6 +2133,7 @@
   },
   "notes": [
     "Coverage means at least one dated record, not necessarily the latest reporting month.",
+    "Top-line record-date ranges describe the selected reporting/effective dates; they are not source-check timestamps, and an older effective date does not by itself prove the value is stale.",
     "Portfolio freshness uses 2026-08-31 as the current expected month-end, with a 10-day grace at the start of a new month.",
     "The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.",
     "Base expense ratio and total expense ratio are distinct.",
