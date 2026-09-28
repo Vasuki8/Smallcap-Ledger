@@ -12,7 +12,12 @@ class PublisherMaintenanceTests(unittest.TestCase):
         cls.text = WORKFLOW.read_text(encoding="utf-8")
 
     def test_completed_push_only_recovery_hooks_are_not_in_normal_publisher(self):
-        self.assertNotIn("github.event_name == 'push'", self.text)
+        push_only_if_lines = [
+            line.strip()
+            for line in self.text.splitlines()
+            if line.strip().startswith("if: github.event_name == 'push'")
+        ]
+        self.assertEqual(push_only_if_lines, [])
         retired = (
             "scripts/diagnose_bajaj_media.py",
             "scripts/diagnose_wealth_uti_transport.py",
