@@ -11,7 +11,7 @@ import re
 
 from bs4 import BeautifulSoup, Tag
 
-PARSER_VERSION = "mahindra-midcap-issuer-rows-v1"
+PARSER_VERSION = "mahindra-midcap-issuer-rows-v2"
 
 # Published sector labels in the AMC's August 2026 Mid Cap portfolio table.
 # These labels are classification evidence, not inferred holdings or weights.
@@ -92,6 +92,14 @@ def mahindra_positions(soup: BeautifulSoup) -> list[dict]:
             name, raw_weight = cells
             weight = _weight(raw_weight)
             key = _norm(name)
+            if key == "grandtotal":
+                if abs(weight - Decimal("100")) > Decimal("0.01"):
+                    raise ValueError("Mahindra grand total is not 100%")
+                # The reviewed table appends a colspan footnote after its
+                # Grand Total. That footer is not an issuer row. Only this
+                # explicit validated total terminates the portfolio table;
+                # malformed rows before it still fail closed.
+                break
             if key in _SECTORS or key in _SUMMARIES:
                 continue
             if not _ISSUER.search(name):
