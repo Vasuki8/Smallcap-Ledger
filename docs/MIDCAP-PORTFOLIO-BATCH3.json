@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-09-28T02:22:07+00:00",
+  "built_at": "2026-09-28T02:32:19+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 5,
-  "recovered": 4,
-  "failed": 1,
+  "recovered": 5,
+  "failed": 0,
   "results": [
     {
       "family": "ICICI Prudential Mid Cap Fund",
@@ -30,7 +30,7 @@
       "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
       "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-09-28T02:21:55+00:00"
+      "observed_at": "2026-09-28T02:32:06+00:00"
     },
     {
       "family": "Axis Midcap Fund",
@@ -50,7 +50,7 @@
       "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
       "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T02:22:00+00:00"
+      "observed_at": "2026-09-28T02:32:11+00:00"
     },
     {
       "family": "SBI MIDCAP FUND",
@@ -71,7 +71,7 @@
       "source_title": "Download",
       "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T02:22:03+00:00"
+      "observed_at": "2026-09-28T02:32:13+00:00"
     },
     {
       "family": "Tata Mid Cap Fund",
@@ -92,15 +92,592 @@
       "source_title": "Portfolio as on 31st August, 2026",
       "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T02:22:05+00:00"
-    }
-  ],
-  "errors": [
+      "observed_at": "2026-09-28T02:32:17+00:00"
+    },
     {
       "family": "UTI - Mid Cap Fund",
-      "error": "UTI consolidated ZIP exposed 0 SEBI Exposure workbooks"
+      "amc": "UTI Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-08-31",
+      "positions_observed": 80,
+      "positions": [
+        {
+          "isin": "INE591G01025",
+          "name": "COFORGE LTD",
+          "sector": "IT - Software",
+          "weight": 3.26,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE417T01026",
+          "name": "PB FINTECH LTD",
+          "sector": "Financial Technology (Fintech)",
+          "weight": 3.08,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE949L01017",
+          "name": "AU SMALL FINANCE BANK LTD",
+          "sector": "Banks",
+          "weight": 2.76,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE702C01027",
+          "name": "APL APOLLO TUBES LTD",
+          "sector": "Industrial Products",
+          "weight": 2.43,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE158A01026",
+          "name": "HERO MOTOCORP LTD.",
+          "sector": "Automobiles",
+          "weight": 2.17,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE406A01037",
+          "name": "AUROBINDO PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 2.15,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE171A01029",
+          "name": "FEDERAL BANK LTD.",
+          "sector": "Banks",
+          "weight": 2.08,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE031B01049",
+          "name": "AJANTA PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 2.07,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE455K01017",
+          "name": "POLYCAB INDIA LTD",
+          "sector": "Industrial Products",
+          "weight": 2.07,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE721A01047",
+          "name": "SHRIRAM FINANCE LTD",
+          "sector": "Finance",
+          "weight": 2.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE180A01020",
+          "name": "MAX FINANCIAL SERVICES LTD.",
+          "sector": "Insurance",
+          "weight": 1.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE663F01032",
+          "name": "INFO-EDGE (INDIA) LTD.",
+          "sector": "Retailing",
+          "weight": 1.92,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE040H01021",
+          "name": "SUZLON ENERGY LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.89,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE211B01039",
+          "name": "PHOENIX MILLS LTD",
+          "sector": "Realty",
+          "weight": 1.78,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE257A01026",
+          "name": "BHARAT HEAVY ELECTRICALS LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.76,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE823G01014",
+          "name": "J.K.CEMENT LTD",
+          "sector": "Cement & Cement Products",
+          "weight": 1.56,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE00H001014",
+          "name": "SWIGGY LTD",
+          "sector": "Retailing",
+          "weight": 1.54,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE114A01011",
+          "name": "STEEL AUTHORITY OF INDIA LTD.",
+          "sector": "Ferrous Metals",
+          "weight": 1.48,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE466L01038",
+          "name": "360 ONE WAM LIMITED",
+          "sector": "Capital Markets",
+          "weight": 1.47,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE513A01022",
+          "name": "SCHAEFFLER INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 1.44,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE262H01021",
+          "name": "PERSISTENT SYSTEMS LTD.",
+          "sector": "IT - Software",
+          "weight": 1.42,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE343G01021",
+          "name": "BHARTI HEXACOM LTD",
+          "sector": "Telecom - Services",
+          "weight": 1.41,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE092T01019",
+          "name": "IDFC FIRST BANK LTD",
+          "sector": "Banks",
+          "weight": 1.41,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE540H01012",
+          "name": "VOLTAMP TRANSFORMERS LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.41,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE562A01011",
+          "name": "INDIAN BANK",
+          "sector": "Banks",
+          "weight": 1.4,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0CZ201020",
+          "name": "ANTHEM BIOSCIENCES LTD",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.4,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE813H01021",
+          "name": "TORRENT POWER LTD.",
+          "sector": "Power",
+          "weight": 1.33,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE472A01039",
+          "name": "BLUE STAR LIMITED",
+          "sector": "Consumer Durables",
+          "weight": 1.32,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE956O01016",
+          "name": "LENSKART SOLUTIONS LTD",
+          "sector": "Retailing",
+          "weight": 1.29,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE745G01043",
+          "name": "MULTI COMMODITY EXCHANGE OF IN",
+          "sector": "Capital Markets",
+          "weight": 1.29,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE118H01025",
+          "name": "BSE LTD",
+          "sector": "Capital Markets",
+          "weight": 1.28,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE674K01013",
+          "name": "ADITYA BIRLA CAPITAL LTD",
+          "sector": "Finance",
+          "weight": 1.28,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE913H01037",
+          "name": "ENDURANCE TECHNOLOGIES LTD",
+          "sector": "Auto Components",
+          "weight": 1.27,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE791I01019",
+          "name": "BRIGADE ENTERPRISES LTD.",
+          "sector": "Realty",
+          "weight": 1.2,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE647A01010",
+          "name": "SRF LTD.",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 1.2,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE176B01034",
+          "name": "HAVELLS INDIA LTD.",
+          "sector": "Consumer Durables",
+          "weight": 1.19,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE536A01023",
+          "name": "GRINDWELL NORTON LTD.",
+          "sector": "Industrial Products",
+          "weight": 1.19,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE208A01029",
+          "name": "ASHOK LEYLAND LTD",
+          "sector": "Agricultural, Commercial & Construction Vehicles",
+          "weight": 1.17,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE474Q01031",
+          "name": "GLOBAL HEALTH LTD.",
+          "sector": "Healthcare Services",
+          "weight": 1.16,
+          "asset_type": "Unclassified"
+        },
+        {
+          "isin": "INE356A01018",
+          "name": "MPHASIS LTD",
+          "sector": "IT - Software",
+          "weight": 1.14,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE274J01014",
+          "name": "OIL INDIA LTD.",
+          "sector": "Oil",
+          "weight": 1.13,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE068V01023",
+          "name": "GLAND PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.11,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE343H01029",
+          "name": "SOLAR INDUSTRIES INDIA LTD.",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 1.02,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE121A01024",
+          "name": "CHOLAMANDALAM INVESTMENT & FIN",
+          "sector": "Finance",
+          "weight": 1.02,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE600L01024",
+          "name": "DR LAL PATHLABS LTD.",
+          "sector": "Healthcare Services",
+          "weight": 1.01,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE325A01013",
+          "name": "TIMKEN INDIA LTD.",
+          "sector": "Industrial Products",
+          "weight": 1.01,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE572E01012",
+          "name": "PNB HOUSING FINANCE LTD.",
+          "sector": "Finance",
+          "weight": 1.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE01EA01019",
+          "name": "VISHAL MEGA MART LTD",
+          "sector": "Retailing",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE220G01021",
+          "name": "JINDAL STAINLESS LTD.",
+          "sector": "Ferrous Metals",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE006I01046",
+          "name": "ASTRAL LTD.",
+          "sector": "Industrial Products",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE347G01014",
+          "name": "PETRONET LNG LTD.",
+          "sector": "Gas",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE048G01026",
+          "name": "NAVIN FLUORINE INTERNATIONAL L",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 0.98,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE463A01038",
+          "name": "BERGER PAINTS INDIA LTD.",
+          "sector": "Consumer Durables",
+          "weight": 0.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE263A01024",
+          "name": "BHARAT ELECTRONICS LTD.",
+          "sector": "Aerospace & Defense",
+          "weight": 0.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE036D01028",
+          "name": "KARUR VYSYA BANK LTD.",
+          "sector": "Banks",
+          "weight": 0.96,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE741K01010",
+          "name": "CREDITACCESS GRAMEEN LTD",
+          "sector": "Finance",
+          "weight": 0.96,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE324D01010",
+          "name": "LG ELECTRONICS INDIA LTD",
+          "sector": "Consumer Durables",
+          "weight": 0.93,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE169A01031",
+          "name": "COROMANDEL INTERNATIONAL LTD.",
+          "sector": "Fertilizers & Agrochemicals",
+          "weight": 0.93,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE148O01028",
+          "name": "DELHIVERY LTD.",
+          "sector": "Transport Services",
+          "weight": 0.93,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE217B01036",
+          "name": "KAJARIA CERAMICS LTD.",
+          "sector": "Consumer Durables",
+          "weight": 0.92,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE326A01037",
+          "name": "LUPIN LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.92,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE379A01028",
+          "name": "ITC HOTELS LTD.",
+          "sector": "Leisure Services",
+          "weight": 0.88,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE935A01035",
+          "name": "GLENMARK PHARMACEUTICALS LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.87,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE182A01018",
+          "name": "PFIZER LIMITED",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.86,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE974X01010",
+          "name": "TUBE INVESTMENTS OF INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.71,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE127D01025",
+          "name": "HDFC ASSET MANAGEMENT COMPANY",
+          "sector": "Capital Markets",
+          "weight": 0.69,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0VDM01015",
+          "name": "MEESHO LTD",
+          "sector": "Retailing",
+          "weight": 0.68,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0FS801015",
+          "name": "MOTHERSON SUMI WIRING INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.66,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE152M01016",
+          "name": "TRIVENI TURBINE LTD",
+          "sector": "Electrical Equipment",
+          "weight": 0.64,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE342J01019",
+          "name": "ZF COMMERCIAL VEHICLE CONTROL SYSTEMS INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.63,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE787D01026",
+          "name": "BALKRISHNA INDUSTRIES LTD.",
+          "sector": "Auto Components",
+          "weight": 0.63,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE317I01021",
+          "name": "METRO BRANDS LTD",
+          "sector": "Consumer Durables",
+          "weight": 0.63,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE00E101023",
+          "name": "BIKAJI FOODS INTERNATIONAL LTD.",
+          "sector": "Food Products",
+          "weight": 0.59,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE459N01021",
+          "name": "MANIPAL HEALTH ENTERPRISES LIMITED",
+          "sector": "Healthcare Services",
+          "weight": 0.53,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE146L01010",
+          "name": "KIRLOSKAR OIL ENGINES LTD",
+          "sector": "Industrial Products",
+          "weight": 0.51,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0HOQ01053",
+          "name": "BILLIONBRAINS GARAGE VENTURES LTD",
+          "sector": "Capital Markets",
+          "weight": 0.45,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE571A01038",
+          "name": "IPCA LABORATORIES LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 0.32,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE151A01013",
+          "name": "TATA COMMUNICATIONS LTD.",
+          "sector": "Telecom - Services",
+          "weight": 0.06,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE041025011",
+          "name": "REIT- EMBASSY OFFICE PARKS",
+          "sector": "-",
+          "weight": 0.51,
+          "asset_type": "Unclassified"
+        },
+        {
+          "isin": "INE2OVN25015",
+          "name": "REIT - BAGMANE PRIME OFFICE",
+          "sector": "-",
+          "weight": 0.5,
+          "asset_type": "Unclassified"
+        }
+      ],
+      "complete": false,
+      "unknown_rows": [],
+      "aum": 12795.441,
+      "published_scheme_name": "UTI - Mid Cap Fund",
+      "sheet": "EXPOSURE",
+      "scope": "structured_monthly_portfolio",
+      "source": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9",
+      "source_title": "Consolidated Portfolio August 2026",
+      "zip_entry": "Sebi Exposure as on 31 Aug 2026_final_REVISED.xlsx",
+      "source_sha256": "8e938ad0ab0fd14f315dc8f8657e718e13170039cdb36aec9864c5c5d8ee90b4",
+      "workbook_sha256": "bc3e8ed96a0fdf477387da8efbacc29820c265c699e864d7bfaef0a9c5838555",
+      "source_content_type": "application/zip",
+      "observed_at": "2026-09-28T02:32:19+00:00"
     }
   ],
+  "errors": [],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [

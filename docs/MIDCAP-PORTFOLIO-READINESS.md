@@ -1,6 +1,6 @@
 # Mid Cap current portfolio readiness
 
-Current evidence: **8 / 34** · complete current portfolios: **1** · remaining: **26**.
+Current evidence: **9 / 34** · complete current portfolios: **1** · remaining: **25**.
 
 | Family | AMC | As of | Positions | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
@@ -35,6 +35,6 @@ Current evidence: **8 / 34** · complete current portfolios: **1** · remaining:
 | Tata Mid Cap Fund | Tata Mutual Fund | 2026-08-31 | 61 | structured_monthly_portfolio | false | https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx |
 | Taurus Mid Cap Fund | Taurus Mutual Fund | Gap | 0 | Gap | false | Gap |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | Gap | 0 | Gap | false | Gap |
-| UTI - Mid Cap Fund | UTI Mutual Fund | Gap | 0 | Gap | false | Gap |
+| UTI - Mid Cap Fund | UTI Mutual Fund | 2026-08-31 | 80 | structured_monthly_portfolio | false | https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9 |
 | Union Midcap Fund | Union Mutual Fund | Gap | 0 | Gap | false | Gap |
 | WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | Gap | 0 | Gap | false | Gap |

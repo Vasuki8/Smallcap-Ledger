@@ -1,8 +1,8 @@
 {
   "families": 34,
-  "current_portfolio_evidence": 8,
+  "current_portfolio_evidence": 9,
   "current_complete_portfolios": 1,
-  "remaining": 26,
+  "remaining": 25,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -286,11 +286,11 @@
     {
       "family": "UTI - Mid Cap Fund",
       "amc": "UTI Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 80,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9"
     },
     {
       "family": "Union Midcap Fund",
@@ -335,7 +335,6 @@
     "TRUSTMF MID CAP FUND",
     "Taurus Mid Cap Fund",
     "The Wealth Company Mid Cap Fund",
-    "UTI - Mid Cap Fund",
     "Union Midcap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
@@ -357,10 +356,6 @@
       "amc": "HDFC Mutual Fund",
       "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
       "error": "Only 0 named current holdings were visible; need at least 5"
-    },
-    {
-      "family": "UTI - Mid Cap Fund",
-      "error": "UTI consolidated ZIP exposed 0 SEBI Exposure workbooks"
     }
   ],
   "production_writes": 0,
@@ -370,5 +365,5 @@
     "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
     "Current evidence and complete portfolio coverage are reported separately."
   ],
-  "built_at": "2026-09-28T02:22:07+00:00"
+  "built_at": "2026-09-28T02:32:19+00:00"
 }

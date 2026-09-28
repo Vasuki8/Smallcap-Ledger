@@ -1,8 +1,8 @@
 # Mid Cap structured current portfolio evidence — batch 3
 
-Prepared: 2026-09-28T02:22:07+00:00
+Prepared: 2026-09-28T02:32:19+00:00
 
-Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · failed: **1**.
+Expected month-end: **2026-08-31** · targets: **5** · recovered: **5** · failed: **0**.
 
 | Family | AMC | As of | Positions | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- |
@@ -10,10 +10,7 @@ Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · fail
 | Axis Midcap Fund | Axis Mutual Fund | 2026-08-31 | 90 | false | https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx |
 | SBI MIDCAP FUND | SBI Mutual Fund | 2026-08-31 | 61 | false | https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2 |
 | Tata Mid Cap Fund | Tata Mutual Fund | 2026-08-31 | 61 | false | https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx |
-
-## Errors
-
-- UTI - Mid Cap Fund: UTI consolidated ZIP exposed 0 SEBI Exposure workbooks
+| UTI - Mid Cap Fund | UTI Mutual Fund | 2026-08-31 | 80 | false | https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9 |
 
 ## Notes
 
