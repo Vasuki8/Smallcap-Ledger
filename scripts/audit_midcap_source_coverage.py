@@ -68,7 +68,10 @@ def main(argv=None):
     if args.aum_last_verified.exists():
         raw=args.aum_last_verified.read_bytes()
         retained_sha256=hashlib.sha256(raw).hexdigest()
-        retained=json.loads(raw)
+        try:
+            retained=json.loads(raw)
+        except (json.JSONDecodeError,UnicodeDecodeError):
+            retained={"schema_version":None,"evidence_kind":"invalid_retained_aum_artifact","rows":[]}
     result=collect(retained_aum=retained)
     result["aum_evidence"]["retained_artifact_path"]=str(args.aum_last_verified.relative_to(ROOT) if args.aum_last_verified.is_relative_to(ROOT) else args.aum_last_verified)
     result["aum_evidence"]["retained_artifact_sha256"]=retained_sha256
@@ -98,6 +101,7 @@ def main(argv=None):
                 "Using this retained evidence never clears source fetch errors or source_fetch_health.",
             ],
         }
+        args.aum_last_verified.parent.mkdir(parents=True,exist_ok=True)
         args.aum_last_verified.write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
         result["aum_evidence"]["retained_artifact_sha256"]=hashlib.sha256(args.aum_last_verified.read_bytes()).hexdigest()
     args.json.parent.mkdir(parents=True,exist_ok=True)
