@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from . import db
+from . import midcap_benchmark_labels as labeled
 from .midcap_benchmark_first_party import inspect_family
 
 
@@ -11,6 +12,7 @@ SOURCES={
     "Sundaram Mid Cap Fund":"https://www.sundarammutual.com/Sundaram-Mid-Cap-Fund",
     "JM Mid Cap Fund":"https://www.jmfinancialmf.com/products/Equity/JM-Midcap-Fund/J644/Regular-Growth-Option",
     "Baroda BNP Paribas Mid Cap Fund":"https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
+    **labeled.SOURCES,
 }
 
 
@@ -26,7 +28,10 @@ def collect(fetch_fn=None):
             errors.append({"family":family,"source":url,"error":"staged family identity missing"})
             continue
         try:
-            row=inspect_family(family,url,fetch_fn=fetch_fn)
+            if family in labeled.SOURCES and staged[family] != labeled.AMCS[family]:
+                raise ValueError("Staged AMC ownership does not match the registered benchmark source")
+            inspector = labeled.inspect_family if family in labeled.SOURCES else inspect_family
+            row=inspector(family,url,fetch_fn=fetch_fn)
             row["amc"]=staged[family]
             results.append(row)
         except Exception as exc:
@@ -40,5 +45,6 @@ def collect(fetch_fn=None):
         "notes":[
             "Batch 2 uses exact current first-party fund/factsheet pages only.",
             "No benchmark is inferred from category membership.",
+            "Axis and Mirae use reviewed fund-specific primary labels; additional comparators and effective dates remain separate.",
         ],
     }
