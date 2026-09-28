@@ -4,14 +4,14 @@ Use this handoff with the latest generated reports and the exact code/workflow c
 
 ## Latest verified checkpoint
 
-- Latest code: **PR #294**, exact primary benchmark-label recovery for Axis and Mirae. Merge: `f64ce9e8c8ac07f793a9a0820990e2fbf7550adb`. The existing Samco repair in **PR #293** and freshness safeguards in **PR #290** are preserved; do not repeat those completed tasks from an older handoff.
-- Tested head: `a7ff8732ff60517b6f8f8f157993474d77f47f1e`. [Branch verification 36427288099](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36427288099) passed syntax, **687 full repository tests**, and the actual two-source preflight. Job 108944267193 logged `Ran 687 tests in 12.350s` / `OK`. This adds 30 tests beyond main's 657-test Samco checkpoint.
-- Both [PR regression 36427676746](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36427676746) and [Research UI checks 36427676753](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36427676753) passed before merge. Unrelated batch-5 and Samco source preflights were not rerun for this benchmark branch.
-- Production: [run #649 / 36427820049](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36427820049), **build and deploy completed successfully on 2026-09-28**. Build job 108946047304 passed all staged audit steps, repository regressions, generated-site validation, archive publication and status recording. Deploy job 108949383232 completed successfully at **13:30:11 UTC**. The individual Invesco portfolio source failed as documented below; overall workflow success does not erase that gap.
-- Refreshed evidence commit: `c516a97799bbb3005ca407477bd417ff5bea399a`. Benchmark batch 2 built at **2026-09-28T13:22:55+00:00**; launch evaluated at **2026-09-28T13:24:35.217505+00:00**. Portfolio reporting month-end: **2026-08-31**. Original source observations and hashes remain separate from report generation and deployment times.
-- Latest input integrity: **14/14 required input checks passed; `input_issues=[]` and `audit_input_integrity=true`**. A successful artifact-generation or deployment check does not mean every fund source is covered.
+- Latest code: **PR #296**, exact first-party primary benchmark recovery for Aditya Birla Sun Life and SBI. Squash merge: `50056ef4b87ddc90bb25a2b40716efc6117a4e71`. The Axis/Mirae repair in **PR #294**, Samco TER repair in **PR #293**, and freshness safeguards in **PR #290** remain in place.
+- Tested head: `6a06af3a2f13f5847757312d3c098bfaab4446d8`. [Branch verification 36430545254](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36430545254) passed syntax, **693 full repository tests**, and the actual four-source benchmark preflight. The first full-head run exposed one test-selection assertion bug; after that test was corrected, all 693 tests passed.
+- Both [PR regression 36430707700](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36430707700) and [Research UI checks 36430707642](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36430707642) passed before merge. The pull-request run did not repeat the push-only source preflight; the successful exact-head branch run is the source-preflight evidence.
+- Production: [run #650 / 36430789202](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36430789202), **build and deploy completed successfully on 2026-09-28**. Build job 108956132153 passed the staged audits, full repository regressions, generated-site validation, cumulative archive publication and status recording. Deploy job 108959611299 also completed successfully.
+- Refreshed evidence commit: `a4d968ea5484635a026dc21273ce3b71afa910a3`. Benchmark batch 2 built at **2026-09-28T13:47:49+00:00**; portfolio readiness at **2026-09-28T13:49:30.864567+00:00**; launch readiness at **2026-09-28T13:49:30.938880+00:00**. Portfolio reporting month-end remains **2026-08-31**.
+- Latest input integrity: **14/14 required input checks passed; `input_issues=[]` and `audit_input_integrity=true`**. A successful workflow still does not imply every family/source has coverage.
 
-Verification scope: 30 focused local red-to-green tests, final source/diff review, full repository CI, actual read-only Axis/Mirae responses, and the exact production reports and terminal deployment above. The local scratch tests used dependency shims only at legacy/database boundaries; those shims are not in the repository and the local set is not the full suite. No new browser-level visual/mobile pass is claimed. No public UI or Mid Cap publication switch changed.
+Verification scope: source-specific parser tests, full repository CI, actual read-only first-party responses, refreshed production reports and terminal Pages deployment. No public Mid Cap UI, live financial records, launch thresholds or publication switch changed.
 
 ## Current staged readiness
 
@@ -20,17 +20,41 @@ Verification scope: 30 focused local red-to-green tests, final source/diff revie
 | Scheme/NAV history | 135 / 135 codes; 0 history failures | All staged codes |
 | AUM | 34 / 34 | 34 / 34 |
 | Direct TER | 31 / 34 | At least 31 / 34 |
-| Reported benchmark identity | 14 / 34 | At least 31 / 34 |
-| Current portfolio evidence | 15 / 34 | At least 28 / 34 |
-| Complete current portfolios | 3 / 34 | Separate measure; never relabel partials |
+| Reported benchmark identity | **16 / 34** | At least 31 / 34 |
+| Current portfolio evidence | **16 / 34** | At least 28 / 34 |
+| Complete current portfolios | **4 / 34** | Separate measure; never relabel partials |
 
-The two new benchmark identities are accepted in production: batch 2 recovered **6/7** targets, with the existing JM exact-page identity failure remaining explicit. Combined benchmark coverage increased from 12 to **14/34**. Samco's prior repair remains effective and TER coverage is **31/34**.
+Benchmark batch 2 now recovers **8/9** targets. The remaining batch-2 error is **JM Mid Cap Fund**, whose current registered product page still fails the exact staged-family identity gate. Combined benchmark coverage increased from 14 to **16/34**. The two new verified identities are **Aditya Birla Sun Life Midcap Fund — Nifty Midcap 150 TRI** and **SBI MIDCAP FUND — Nifty Midcap 150 Index TRI**.
 
-**Do not repeat the earlier 16/34 portfolio and 4/34 complete counts as current.** In this run Invesco's official `api/CompleteMonthlyHoldings?year=2026&classification=equity` endpoint returned **502 Bad Gateway**; batch 5 recovered JM, Mahindra and Sundaram (3/5) and also retained Kotak's exact-heading failure. Current portfolio evidence is **15/34**, with **HDFC, Mirae Asset and Sundaram** the three complete portfolios. All accepted current rows report August 31. The older Invesco 43-position complete snapshot remains historical evidence, not a successful current-run observation. #294 changes no portfolio collector; no root cause beyond the observed upstream HTTP response or permanent outage is claimed.
+The earlier Invesco HTTP 502 did **not** repeat. Run #650 recovered **Invesco India Mid Cap Fund** from the official complete-monthly-holdings workbook with **43 positions**, `complete=true`, reporting date **2026-08-31**, source SHA-256 `7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe`, observed at **2026-09-28T13:49:25+00:00**. Treat the #649 502 as a transient observed upstream failure, not a permanent outage or parser defect. The four current complete portfolios are now **HDFC, Mirae Asset, Invesco India and Sundaram**.
 
-The launch report remains **`data_ready=false`**, **`launch_ready=false`**, and **`public_export_enabled=false`**. The numerical deficits are **17 reported benchmark identities** and **13 current portfolio-evidence families**; AUM/NAV/TER gates pass. The separate category-aware public-surface dry run is still required after those data gates pass. These are tracker product-quality thresholds, not regulatory rules. Counts and benchmark names alone do not establish available comparison series or exportable holdings/metrics.
+The launch report remains **`data_ready=false`**, **`launch_ready=false`**, and **`public_export_enabled=false`**. AUM, NAV/history and Direct TER gates pass. The remaining numerical deficits are **15 reported benchmark identities** and **12 current portfolio-evidence families**, followed by the separate category-aware public-surface dry run. These thresholds are product-quality policy, not regulatory rules.
 
-## Completed: two additional explicit primary benchmark sources
+## Completed: Aditya Birla Sun Life and SBI primary benchmark recovery
+
+PR #296 extends the **existing benchmark batch 2** and therefore keeps the existing daily artifact names and **14-file input-integrity contract** unchanged. New source-specific parsers fail closed rather than broaden legacy name/proximity matching.
+
+### Aditya Birla Sun Life Midcap Fund
+
+Registered source: `https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html`.
+
+The parser requires one exact scheme heading and the explicit Fund Snapshot `Benchmark:` label. Production reports **Nifty Midcap 150 TRI** as the primary benchmark. Unlabelled nearby indices, an altered scheme heading, a missing TRI statement or an ambiguous label do not qualify.
+
+Production source SHA-256: `c21d367231006606430cdb2bb34970a44fca211115b31a93b5d39a15c8b67c14`. Parser: `explicit-benchmark-documents-v1`. `benchmark_effective_as_of` remains null and `benchmark_series_verified=false`.
+
+### SBI MIDCAP FUND
+
+Registered source: `https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0`.
+
+The parser reads the official KIM first page and requires the exact SBI Midcap Fund KIM identity plus the explicit **Tier I Benchmark** role. Production reports **Nifty Midcap 150 Index TRI**. Tier-II or other comparison indices are not promoted.
+
+The KIM itself is dated **2025-10-31**; that date is retained separately as `source_document_as_of` and is **not** treated as a benchmark effective date or a current market observation. Production source SHA-256: `1340f3e97b4c90c9efd0a0623468c81011d4c2532a7ecb223335b1e6b5db66e6`. `benchmark_effective_as_of` remains null and `benchmark_series_verified=false`.
+
+### Evidence and boundaries
+
+The exact-head push preflight recovered Axis, Mirae, ABSL and SBI **4/4 with `errors=[]`**, while `db.connect` was forbidden and every source request used `archive=False`. This is read-only source validation, not a claim of benchmark-series availability. Publisher wording, source URL/hash/content type, observation time, source locator, evidence excerpt, primary role and parser version are retained.
+
+## Completed earlier: Axis and Mirae explicit primary benchmark sources
 
 PR #294 extends **existing benchmark batch 2**, not a new producing batch. Daily artifact paths and the existing **14-file input-integrity contract** are unchanged. Only the new registrations use the stricter fund-specific label parser; legacy readers are preserved, not retrospectively revalidated.
 
@@ -80,7 +104,7 @@ When a future change adds a producing batch, update its CLI and `tracker/midcap_
 
 ## Portfolio corrections and limitations retained
 
-The preceding verified portfolio checkpoint has JM **72** positions (partial), Mahindra **59** (equity-only partial), Invesco **43** (complete) and Sundaram **79** (complete) in batch 5. Kotak's isolated preflight once found 68 issuers but the production response failed exact scheme identity; do not copy a preflight into current coverage. Use current batch outcomes if a later source varies.
+The current verified portfolio checkpoint has JM **72** positions (partial), Mahindra **59** (equity-only partial), Invesco **43** (complete) and Sundaram **79** (complete) in batch 5. Run #650 re-established Invesco as current after #649's transient 502. Kotak's isolated preflight once found 68 issuers but production continues to fail the exact scheme-identity contract; do not copy a preflight into current coverage. Use current batch outcomes if a later source varies.
 
 **Sundaram:** the older discovery card's `AUMASONDATE=31-Jul-2026` does not date the portfolio. Exact scheme/code **MC**, category and approved workbook URL are checked, then the workbook itself must prove its portfolio date. The earlier complete August source was `https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx`, SHA-256 `7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0`. Stale/malformed workbooks still fail even with current-looking AUM/NAV metadata.
 
@@ -88,15 +112,13 @@ The preceding verified portfolio checkpoint has JM **72** positions (partial), M
 
 ## Next coherent task
 
-First **recheck the newly failed Invesco monthly portfolio endpoint** against its exact source contract and latest error. The recorded failure is HTTP 502, not an identity/parser failure; confirm whether a normal subsequent official fetch recovers before changing code. A bounded transport repair needs an observed repeatable failure and regression evidence, not retimestamping the last-good workbook or relaxing date/identity gates. Do not introduce another long-running diagnostic on every production push.
+Continue **exact first-party reported benchmark recovery** for a small verified group from the current `remaining_families` list. Start with **ICICI Prudential and Invesco** using fund-specific factsheet/API/document contracts that explicitly identify the primary benchmark; the earlier Invesco product-page HTML did not expose a usable exact benchmark block, so do not reuse that failed route. Then address **Franklin, UTI and JM** with explicit scheme-name aliases or alternate official documents only when the publisher's source proves the same staged scheme and primary role. ABSL and SBI are complete; do not repeat them.
 
-Then continue **exact first-party reported benchmark recovery** for a small, verified group of still-missing families. Start with fund-specific **ICICI Prudential and Invesco** factsheet/API contracts, then ABSL, SBI, Franklin, UTI and JM according to the latest `remaining_families` list. Do not repeat Axis/Mirae recovery, Samco fallback or freshness work from an older handoff.
+Keep benchmark identity separate from benchmark-series availability. Preserve primary versus additional roles, TRI/PRI wording, document/reporting/effective dates as distinct fields, source hashes and observation times. Never infer the category's usual benchmark, borrow a NAV/AUM/performance date as a benchmark effective date, or treat a KIM/factsheet identity as proof that a usable historical index series is already imported.
 
-The latest exploratory boundary is recorded in `docs/superpowers/plans/2026-09-28-midcap-benchmark-labels.md`: ABSL's discovered empower factsheet was older, and the returned Invesco product-page HTML exposed no usable exact benchmark block. Neither was counted in #294. Use a genuinely new official factsheet/API route, not a broader name match or presumed category benchmark. Preserve explicit primary/additional roles, price/total-return variants, unknown effective dates and source evidence. No result from these exploratory pages was promoted into the live tables.
+In parallel, continue **current portfolio source coverage** toward 28/34, but do not modify Invesco merely because #649 returned one 502: #650 recovered the exact official August workbook normally. Prioritize currently unavailable families and dependable Kotak recovery only when a repeatable official contract is observed. Preserve the freshness-safe current-run gate and never retimestamp a retained prior snapshot.
 
-Continue current portfolio coverage and dependable Kotak source recovery after each source batch's full tests and exact production verification. Verify Taurus/WhiteOak source registration before claiming category-wide AMC document coverage. Keep known access blockers explicit and do not repeat unchanged blocked TER routes without a new official path.
-
-Only after data coverage and input integrity pass should the separate **category-aware public exporter/static JSON/API/UI dry run** begin. Validate actual exportable financial records, correct series or explicit series absence, source/freshness/partial/unavailable labels, routing, and Small Cap non-regression. An audit count is not a public fund page and the launch report never flips the switch.
+Only after the benchmark and current-portfolio data gates pass should the separate **category-aware public exporter/static JSON/API/UI dry run** begin. Validate actual exportable metrics/holdings, correct benchmark series or explicit series absence, source/freshness/partial/unavailable labels, category routing, and Small Cap non-regression. The launch report itself never enables Mid Cap.
 
 ## Safety and operations
 
