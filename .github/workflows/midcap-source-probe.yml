@@ -1,16 +1,10 @@
 name: Mid Cap source contract probe
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/midcap-source-probe.yml'
-      - 'scripts/diagnose_mahindra_midcap_table.py'
-      - 'tracker/midcap_factsheet_validation.py'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   probe:
-    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'fix/midcap-mahindra-table-sections-20260927'
     runs-on: ubuntu-latest
     timeout-minutes: 3
     env:
