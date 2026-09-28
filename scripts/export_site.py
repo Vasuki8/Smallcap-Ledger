@@ -62,7 +62,8 @@ def export(output:Path,repository=''):
             w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(rows)
     index=funds();write('funds.json',index)
     from tracker.coverage import report as coverage_report
-    write('coverage.json',coverage_report())
+    coverage=coverage_report()
+    write('coverage.json',coverage)
     done=set();snapshot_ids=set();hashes=set();communication_payloads=[];publication_candidates=[]
     for s in index['funds']:
         code=s['code'];detail=fund(code);family_id=hashlib.sha256(s['family'].encode()).hexdigest()[:20];detail['family_id']=family_id
@@ -129,9 +130,10 @@ def export(output:Path,repository=''):
     write('downloads.json',downloads)
     report=status();report['running']={};report['data_location']='Daily GitHub archive';report['jobs']=[j for j in report['jobs'] if j['kind']!='news']
     report['hosting']={'provider':'GitHub Pages','repository':repository,'timezone':'Asia/Kolkata','schedule':'00:00 IST daily','cron':'30 18 * * *','scheduled_time_is_not_guaranteed':True}
-    report['counts']['aum_funds']=len({s['family'] for s in index['funds'] if s['metrics'].get('aum')})
-    report['counts']['fee_funds']=len({s['family'] for s in index['funds'] if s.get('available_expenses') or any(s['metrics'].get(k) for k in ('ter','ter_observed','base_expense_ratio','expense_ratio'))})
+    report['counts']['aum_funds']=coverage['counts']['aum']
+    report['counts']['fee_funds']=coverage['counts']['fee']
     report['counts']['latest_nav_date']=db.one('SELECT MAX(date) last FROM nav')['last']
+    report['record_dates']=coverage.get('record_dates',{})
     report['hosting']['publication_file_budget_bytes']=PUBLIC_PUBLICATION_BUDGET
     report['hosting']['publication_file_reserve_bytes']=PUBLIC_PUBLICATION_RESERVE
     report['hosting']['publication_selection_limit_bytes']=PUBLIC_PUBLICATION_SELECTION_LIMIT

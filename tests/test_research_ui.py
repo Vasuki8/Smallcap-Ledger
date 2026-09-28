@@ -33,6 +33,16 @@ class ResearchUIAssets(unittest.TestCase):
         self.assertIn('?v=', tags.styles[0]['href'])
         self.assertIn('?v=', tags.scripts[-1]['src'])
 
+    def test_hosted_coverage_distinguishes_presence_from_record_dates(self):
+        app=(DIST/'app.js').read_text(encoding='utf-8')
+        research=(DIST/'research.js').read_text(encoding='utf-8')
+        for source in (app,research):
+            self.assertIn('record_dates',source)
+            self.assertIn('reporting/effective dates',source)
+            self.assertIn('source-check timestamps',source)
+        self.assertIn('recordDateSpan(dates.aum)',app)
+        self.assertIn('recordDateSpan(dates.direct_fee)',research)
+
     @unittest.skipUnless(shutil.which('node'), 'Node is needed for client syntax checks')
     def test_client_syntax(self):
         for name in ('research.js', 'app.js', 'analytics.js', 'static-data.js'):

@@ -31,7 +31,7 @@ publication_md=ROOT/'docs'/'PUBLICATION-COVERAGE-AUDIT.md'
 publication_md.write_text(publication_coverage_markdown(publication_coverage),encoding='utf-8')
 
 target=ROOT/'deployment/update-status.json';target.parent.mkdir(exist_ok=True)
-target.write_text(json.dumps({'built_at':status['server_time'],'counts':status['counts'],'recent_jobs':[{k:j[k] for k in ('kind','started_at','finished_at','status')} for j in status['jobs'][:4]],'schedule':status['hosting']},indent=2)+'\n')
+target.write_text(json.dumps({'built_at':status['server_time'],'counts':status['counts'],'record_dates':status.get('record_dates',{}),'recent_jobs':[{k:j[k] for k in ('kind','started_at','finished_at','status')} for j in status['jobs'][:4]],'schedule':status['hosting']},indent=2)+'\n')
 
 coverage_json=ROOT/'COVERAGE-AS-OF.json'
 coverage_json.write_text(json.dumps(coverage,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
@@ -126,13 +126,20 @@ def benchmark_cell(row):
     if not x:return 'Gap'
     return f"{esc(x.get('value'))} · {esc(x.get('as_of'))}"
 
-counts=coverage['counts'];c=status['counts']
+counts=coverage['counts'];c=status['counts'];record_dates=coverage.get('record_dates',{})
+def record_date_text(key):
+    span=record_dates.get(key) or {}
+    first=span.get('earliest');last=span.get('latest')
+    if not first or not last:return 'Gap'
+    return esc(last) if first==last else f"{esc(first)} → {esc(last)}"
+
 lines=[
     '# Included data coverage','',
     f"Prepared: {coverage['built_at']}",'',
     f"**{counts['funds']} funds, {c['plans']} NAV series, {c['nav_points']:,} NAV observations. Latest included NAV: {c.get('latest_nav_date','Gap')}.**",'',
     f"AUM: **{counts['aum']} / {counts['funds']} funds**. Direct fee figure: **{counts.get('fee',0)} / {counts['funds']} funds**. Portfolio: **{counts['portfolio']} / {counts['funds']} any**, **{counts.get('portfolio_complete',0)} complete**, **{counts.get('portfolio_fresh',0)} current**, **{counts.get('portfolio_fresh_complete',0)} current + complete** (expected month-end {coverage.get('portfolio_expected_as_of','Gap')}). Reported benchmark identity: **{counts['benchmark_identity']} / {counts['funds']} funds**.",'',
-    'Values retain their own reporting or observation dates. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.','',
+    f"Selected record dates — AUM: **{record_date_text('aum')}**; Direct fee: **{record_date_text('direct_fee')}**; reported benchmark identity: **{record_date_text('benchmark_identity')}**.",'',
+    'Coverage counts mean a selected dated record exists. The ranges above are reporting/effective dates, not source-check timestamps; an older effective date can remain current until superseded. AUM is fund-wide in ₹ crore; do not add Direct and Regular rows together. TER, BER and an unqualified expense-ratio observation are distinct and remain labelled separately. A gap means no verified record has been collected, not zero.','',
     '| Fund | AUM · ₹ Cr / date | Direct fee / date | Latest parsed portfolio | Reported benchmark / date | AMC publications |',
     '| --- | --- | --- | --- | --- | ---: |',
 ]

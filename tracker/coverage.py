@@ -62,6 +62,16 @@ def _portfolio_gap_audit(family,amc,official_publications):
     return {'reason':reason,'document':document,'extraction':extraction,'source_page':source_page}
 
 
+def _record_date_range(rows,field):
+    """Summarize selected record dates without inferring source freshness."""
+    dates=sorted(
+        str(row[field]['as_of'])
+        for row in rows
+        if row.get(field) and row[field].get('as_of')
+    )
+    return {'earliest':dates[0] if dates else None,'latest':dates[-1] if dates else None}
+
+
 def report():
     rows=[];expected=expected_portfolio_as_of()
     for scheme in db.rows('SELECT DISTINCT family,amc,category FROM schemes ORDER BY category,family'):
@@ -109,7 +119,12 @@ def report():
         bucket['aum']+=bool(row['aum']);bucket['fee']+=bool(row['fee']);bucket['portfolio']+=bool(row['portfolio'])
         bucket['portfolio_complete']+=row['portfolio_complete'];bucket['portfolio_fresh']+=row['portfolio_fresh']
         bucket['benchmark_identity']+=bool(row['benchmark'])
-    return {'built_at':db.now(),'portfolio_expected_as_of':expected,'funds':rows,'category_counts':category_counts,'portfolio_gap_reasons':gap_reasons,
+    record_dates={
+        'aum':_record_date_range(rows,'aum'),
+        'direct_fee':_record_date_range(rows,'fee'),
+        'benchmark_identity':_record_date_range(rows,'benchmark'),
+    }
+    return {'built_at':db.now(),'portfolio_expected_as_of':expected,'funds':rows,'category_counts':category_counts,'record_dates':record_dates,'portfolio_gap_reasons':gap_reasons,
             'portfolio_limitation_reasons':limitation_reasons,'counts':{
         'funds':len(rows),'aum':sum(bool(r['aum']) for r in rows),
         'fee':sum(bool(r['fee']) for r in rows),
@@ -121,6 +136,7 @@ def report():
         'portfolio_partial':sum(bool(r['portfolio']) and not r['portfolio_complete'] for r in rows),
         'benchmark_identity':sum(bool(r['benchmark']) for r in rows)},
         'notes':['Coverage means at least one dated record, not necessarily the latest reporting month.',
+                 'Top-line record-date ranges describe the selected reporting/effective dates; they are not source-check timestamps, and an older effective date does not by itself prove the value is stale.',
                  f'Portfolio freshness uses {expected} as the current expected month-end, with a 10-day grace at the start of a new month.',
                  'The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.',
                  'Base expense ratio and total expense ratio are distinct.',
