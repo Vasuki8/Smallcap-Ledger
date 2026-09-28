@@ -518,19 +518,37 @@ Axis, ICICI Prudential, Invesco India, JM, Sundaram, Tata, TRUSTMF, and UTI.
   - **Bank of India Mid Cap Fund** — the official product page exposes a September 2026 TER file URL, but the downloaded workbook is structurally unusable for exact row extraction in the current runner, while the current product page sends users back to the TER portal. Do not infer from the stale/invalid workbook.
   - **WhiteOak Capital Mid Cap Fund** — the exact published `/WOC/regulatory-disclosures/total-expense-ratio` routes return **403 Forbidden** from the GitHub runner; the alternate historical hostname does not resolve.
 - These three are now explicit **source-access/transport blockers**, not unresolved scheme-identity gaps. Do not weaken source checks or substitute third-party TER data merely to reach 34 / 34.
-- Exact retained Mid Cap benchmark identity remains **0 / 34** and current Mid Cap portfolio evidence remains **0 / 34**.
+- Subsequent read-only readiness batches now report **12 / 34 exact benchmark identities** and **4 / 34 current portfolio-evidence families**; see the next handoff section. TER remains **31 / 34**.
 - Safety remains unchanged: **production_writes=0**, **public_export_enabled=false**, registry stage remains `staged`, and `mid_cap_launch_ready=false`.
 - Evidence is retained in `docs/MIDCAP-TER-FIRST-PARTY-BATCH1.{json,md}`, `docs/MIDCAP-TER-FIRST-PARTY-BATCH2.{json,md}`, `docs/MIDCAP-TER-READINESS.{json,md}`, and `deployment/midcap-ter-final3-targeted.json`.
 
+### Latest completed category-expansion batch — Mid Cap benchmark and portfolio readiness
+
+**Benchmark readiness is now 12 / 34; current portfolio evidence is 4 / 34, including one fully reconciled current portfolio. Mid Cap remains non-public.**
+
+- PR **#268** added the first exact first-party benchmark batch. Production recovered **8 / 10** targeted families: Canara Robeco, Kotak, The Wealth Company, Bank of India, PGIM India, HDFC, DSP and Helios. Franklin and UTI failed closed because the GitHub-runner page response did not expose the exact staged family identity.
+- PR **#269** added benchmark batch 2 plus a combined readiness view. Production run **#628** recovered **4 / 5** additional targets: Mahindra Manulife, Tata, Sundaram and Baroda BNP Paribas. JM failed closed for the same exact-family response issue.
+- Combined benchmark readiness is therefore **12 / 34**. Publisher wording is retained and TRI is never inferred when a source does not explicitly state it. Evidence is in `docs/MIDCAP-BENCHMARK-BATCH1.{json,md}`, `docs/MIDCAP-BENCHMARK-BATCH2.{json,md}` and `docs/MIDCAP-BENCHMARK-READINESS.{json,md}`.
+- PR **#270** added a current portfolio-evidence audit requiring exact staged family identity, the regulatory current month-end (**2026-08-31**), and at least five named holdings with reported weights. Production run **#629** recovered:
+  - **Canara Robeco Mid Cap Fund** — **59** named positions from the August digital factsheet; intentionally `complete=false` until a separate full reconciliation is proven.
+  - **Baroda BNP Paribas Mid Cap Fund** — explicit **Top 5** August holdings; intentionally partial.
+- PR **#272** moved HDFC and DSP from product-page summaries to their exact official August month-end disclosure files and parses them in memory through the existing structured portfolio parser. Production run **#631** recovered both with **0 failures**:
+  - **HDFC Mid Cap Fund** — **81 positions**, **complete=true**, as of **2026-08-31**, from the exact HDFC monthly workbook.
+  - **DSP Midcap Fund** — **65 positions**, **complete=false**, as of **2026-08-31**, from the official DSP month-end ZIP and exact Mid Cap sheet.
+- Combined current portfolio readiness is now **4 / 34** with **1 / 34 complete current portfolio**. Current evidence and complete coverage remain separate signals; no partial snapshot is promoted to complete.
+- The one-time TER and portfolio diagnostics are now **manual-only**, so settled source blockers are no longer re-probed on every push.
+- Safety remains explicit: **production_writes=0**, **public_export_enabled=false**, registry stage remains `staged`, and `mid_cap_launch_ready=false`. No Mid Cap benchmark, portfolio or holding has been inserted into the live production tables.
+
 ### Recommended next backend work
 
-1. **Move the Mid Cap readiness program to reported benchmark identity and current monthly portfolio evidence.** TER is now 31 / 34 with the final three blocked by first-party transport/access issues; do not spend another cycle repeatedly probing the same blocked TER routes without a genuinely new official path.
-2. Start with AMCs where the existing Small Cap collectors already have proven factsheet/portfolio transports, but require exact Mid Cap scheme identity before retaining any benchmark or holding. Do not reuse Small Cap benchmark/portfolio records.
-3. Add/verify source registration for **Taurus Mutual Fund** and **WhiteOak Capital Mutual Fund** before claiming category-wide document coverage. WhiteOak remains an access blocker and should stay explicitly marked as such.
-4. Keep **Bandhan, Bank of India, and WhiteOak TER** on source-access watch only. Revisit them if the AMC exposes a new downloadable workbook/API route or the GitHub runner gains access.
-5. **Quant Small Cap Fund remains the next Small Cap freshness repair** once the current Mid Cap readiness slice is complete; then SBI. Bajaj remains a confirmed first-party access blocker.
-6. Mid Cap remains `stage=staged` and `public_export_enabled=false` until AUM, Direct TER, reported benchmark identity and current portfolio evidence reach an explicitly reviewed launch threshold and the public exporter/API/UI are deliberately made category-aware.
-7. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
+1. **Expand current structured Mid Cap portfolio coverage next.** Prioritize AMCs where the Small Cap tracker already has proven monthly portfolio transports: **ICICI Prudential, Axis, SBI, Tata and UTI**, followed by ABSL, PGIM and Mirae. Reuse transport/schema logic only after the exact Mid Cap scheme identity is proven.
+2. Keep the portfolio gate strict: current regulatory month-end, exact family identity, named holdings with source/hash, and `complete=true` only after 100% reconciliation. Do not count sector-only product pages as holding coverage.
+3. Continue benchmark identity in parallel with exact first-party sources for the remaining **22** families. For **Franklin, UTI and JM**, switch to AMC-published factsheet/API routes because the current product-page responses fail the exact-family gate; do not weaken identity matching.
+4. Add/verify source registration for **Taurus Mutual Fund** and **WhiteOak Capital Mutual Fund** before claiming category-wide document coverage. WhiteOak remains a GitHub-runner access blocker.
+5. Keep **Bandhan, Bank of India and WhiteOak TER** on source-access watch only. TER readiness remains **31 / 34** and should not be padded with third-party or inferred values.
+6. **Quant Small Cap Fund remains the next Small Cap freshness repair** once the current Mid Cap readiness slice is complete; then SBI. Bajaj remains a confirmed first-party access blocker.
+7. Mid Cap remains `stage=staged` and `public_export_enabled=false` until AUM, Direct TER, reported benchmark identity and current portfolio evidence reach an explicitly reviewed launch threshold and the public exporter/API/UI are deliberately made category-aware.
+8. Preserve standing rules: official AMC/AMFI evidence only, no invented or estimated figures, exact reporting dates, source URL/hash or explicit reviewed-source note, conflicts/revisions preserved, and no portfolio marked complete without full reconciliation.
 
 Structured portfolio storage intentionally keeps only the current month plus the immediately previous calendar month for share-change calculations; original source documents and hashes remain in cumulative history.
 
