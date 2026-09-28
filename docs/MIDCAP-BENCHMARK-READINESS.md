@@ -1,10 +1,10 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **14 / 34** · remaining: **20**.
+Benchmark identity: **16 / 34** · remaining: **18**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
-| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | Gap |
+| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Nifty Midcap 150 TRI | https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html |
 | Axis Midcap Fund | Axis Mutual Fund | BSE Midcap 150 TRI | https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
@@ -28,7 +28,7 @@ Benchmark identity: **14 / 34** · remaining: **20**.
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | Gap |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
 | Quant Mid Cap Fund | quant Mutual Fund | Gap | Gap |
-| SBI MIDCAP FUND | SBI Mutual Fund | Gap | Gap |
+| SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
 | Samco Mid Cap Fund | Samco Mutual Fund | Gap | Gap |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | Nifty Midcap 150 TRI | https://www.sundarammutual.com/Sundaram-Mid-Cap-Fund |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | Gap | Gap |
