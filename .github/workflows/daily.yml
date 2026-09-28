@@ -152,29 +152,45 @@ jobs:
           uv run --frozen python scripts/audit_midcap_portfolios.py
           --json docs/MIDCAP-PORTFOLIO-BATCH1.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH1.md
+      - name: Audit staged Mid Cap structured portfolio evidence batch 2
+        timeout-minutes: 8
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/audit_midcap_portfolios_batch2.py
+          --json docs/MIDCAP-PORTFOLIO-BATCH2.json
+          --markdown docs/MIDCAP-PORTFOLIO-BATCH2.md
+      - name: Reconcile staged Mid Cap portfolio readiness
+        timeout-minutes: 2
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/reconcile_midcap_portfolio_readiness.py
+          --batch1 docs/MIDCAP-PORTFOLIO-BATCH1.json
+          --batch2 docs/MIDCAP-PORTFOLIO-BATCH2.json
+          --json docs/MIDCAP-PORTFOLIO-READINESS.json
+          --markdown docs/MIDCAP-PORTFOLIO-READINESS.md
       - name: Diagnose final six Mid Cap TER sources
-        if: github.event_name == 'push'
+        if: github.event_name == 'workflow_dispatch'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
           uv run --frozen python scripts/diagnose_midcap_ter_final6.py
           --output deployment/midcap-ter-final6-source-diagnostic.json
       - name: Inspect four concrete Mid Cap TER files
-        if: github.event_name == 'push'
+        if: github.event_name == 'workflow_dispatch'
         timeout-minutes: 6
         continue-on-error: true
         run: >-
           uv run --frozen python scripts/diagnose_midcap_ter_final4_files.py
           --output deployment/midcap-ter-final4-file-diagnostic.json
       - name: Diagnose final three Mid Cap TER sources precisely
-        if: github.event_name == 'push'
+        if: github.event_name == 'workflow_dispatch'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
           uv run --frozen python scripts/diagnose_midcap_ter_final3_targeted.py
           --output deployment/midcap-ter-final3-targeted.json
       - name: Diagnose staged Mid Cap portfolio batch 1
-        if: github.event_name == 'push'
+        if: github.event_name == 'workflow_dispatch'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
