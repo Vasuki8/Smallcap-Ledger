@@ -1,0 +1,50 @@
+name: Mid Cap evidence regression
+
+on:
+  push:
+    branches: ['fix/midcap-evidence-*']
+  pull_request:
+    paths:
+      - 'tracker/midcap*'
+      - 'tests/test_midcap*'
+      - 'scripts/check_midcap_batch5_evidence.py'
+      - '.github/workflows/midcap-evidence.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: midcap-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --frozen
+      - name: Syntax checks
+        run: uv run --frozen python -m compileall -q tracker scripts tests
+      - name: All regression tests
+        run: |
+          if uv run --frozen python -m unittest discover -s tests > /tmp/midcap-tests.log 2>&1; then
+            tail -n 5 /tmp/midcap-tests.log
+          else
+            tail -n 100 /tmp/midcap-tests.log
+            exit 1
+          fi
+      - name: Read-only public evidence preflight
+        if: github.event_name == 'push'
+        run: uv run --frozen python scripts/check_midcap_batch5_evidence.py
