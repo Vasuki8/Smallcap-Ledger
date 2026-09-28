@@ -1,5 +1,5 @@
 {
-  "reviewed_at": "2026-09-28T01:43:08+00:00",
+  "reviewed_at": "2026-09-28T01:54:51+00:00",
   "scope": "post_original_audit_hashes_only",
   "original_reviewed_inventory_hashes": 2519,
   "new_hashes_reviewed": 391,
@@ -1988,6 +1988,7 @@
       "kind": "publication_or_data_file",
       "reasons": [
         "code_or_handoff_literal_hash:docs/HANDOFF.md",
+        "code_or_handoff_literal_hash:docs/MIDCAP-PORTFOLIO-BATCH3.json",
         "exact_financial_source_url:metrics,portfolios",
         "historical_or_current_metrics_hash",
         "historical_or_current_portfolios_hash",
@@ -1995,6 +1996,7 @@
       ],
       "evidence_reasons": [
         "code_or_handoff_literal_hash:docs/HANDOFF.md",
+        "code_or_handoff_literal_hash:docs/MIDCAP-PORTFOLIO-BATCH3.json",
         "exact_financial_source_url:metrics,portfolios",
         "historical_or_current_metrics_hash",
         "historical_or_current_portfolios_hash",

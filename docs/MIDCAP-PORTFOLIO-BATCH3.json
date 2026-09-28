@@ -1,0 +1,111 @@
+{
+  "built_at": "2026-09-28T01:52:42+00:00",
+  "staged_category": "mid-cap",
+  "portfolio_expected_as_of": "2026-08-31",
+  "targets": 5,
+  "recovered": 4,
+  "failed": 1,
+  "results": [
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
+      "as_of": "2026-08-31",
+      "positions_observed": 81,
+      "complete": false,
+      "unknown_rows": [
+        "Equity & Equity Related Instruments",
+        "Listed / Awaiting Listing On Stock Exchanges",
+        "CRISIL Ltd.",
+        "GSPL India Transco Ltd",
+        "Others",
+        "Cash Margin - Derivatives"
+      ],
+      "aum": 8403.29876,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip",
+      "source_title": "Monthly Portfolio Disclosure August 2026",
+      "zip_entry": "ICICI Prudential Mid Cap Fund.xlsx",
+      "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
+      "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
+      "source_content_type": "application/x-zip-compressed",
+      "observed_at": "2026-09-28T01:52:32+00:00"
+    },
+    {
+      "family": "Axis Midcap Fund",
+      "amc": "Axis Mutual Fund",
+      "status": "recovered",
+      "sheet": "AXISMCF",
+      "as_of": "2026-08-31",
+      "positions_observed": 90,
+      "complete": false,
+      "unknown_rows": [
+        "Clearing Corporation of India Ltd",
+        "Clearing Corporation of India Ltd"
+      ],
+      "aum": 35425.0678,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx",
+      "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
+      "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T01:52:36+00:00"
+    },
+    {
+      "family": "SBI MIDCAP FUND",
+      "amc": "SBI Mutual Fund",
+      "status": "recovered",
+      "sheet": "SMIDCAP",
+      "as_of": "2026-08-31",
+      "positions_observed": 61,
+      "complete": false,
+      "unknown_rows": [
+        "Allied Blenders And Distillers Ltd.",
+        "Manpasand Beverages Ltd.",
+        "Margin amount for Derivative positions"
+      ],
+      "aum": 24518.3185,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2",
+      "source_title": "Download",
+      "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T01:52:38+00:00"
+    },
+    {
+      "family": "Tata Mid Cap Fund",
+      "amc": "Tata Mutual Fund",
+      "status": "recovered",
+      "sheet": "TINR",
+      "as_of": "2026-08-31",
+      "positions_observed": 61,
+      "complete": false,
+      "unknown_rows": [
+        "I) REPO",
+        "NET CURRENT LIABILITIES",
+        "NET ASSETS"
+      ],
+      "aum": null,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx",
+      "source_title": "Portfolio as on 31st August, 2026",
+      "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-09-28T01:52:41+00:00"
+    }
+  ],
+  "errors": [
+    {
+      "family": "UTI - Mid Cap Fund",
+      "error": "UTI consolidated portfolio ZIP has no exact current UTI - Mid Cap Fund workbook"
+    }
+  ],
+  "production_writes": 0,
+  "public_export_enabled": false,
+  "notes": [
+    "This batch reuses first-party transport/schema logic only; no Small Cap holding is reused.",
+    "Every result is parsed in memory through the existing exact-family structured portfolio parser and must match the current regulatory month-end.",
+    "No portfolio, holding, metric, document or fetch row is written by this audit."
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "families": 34,
-  "current_portfolio_evidence": 4,
+  "current_portfolio_evidence": 8,
   "current_complete_portfolios": 1,
-  "remaining": 30,
+  "remaining": 26,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -16,11 +16,11 @@
     {
       "family": "Axis Midcap Fund",
       "amc": "Axis Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 90,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx"
     },
     {
       "family": "BANDHAN MID CAP FUND",
@@ -115,11 +115,11 @@
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 81,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip"
     },
     {
       "family": "ITI Mid Cap Fund",
@@ -223,11 +223,11 @@
     {
       "family": "SBI MIDCAP FUND",
       "amc": "SBI Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 61,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2"
     },
     {
       "family": "Samco Mid Cap Fund",
@@ -259,11 +259,11 @@
     {
       "family": "Tata Mid Cap Fund",
       "amc": "Tata Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "as_of": "2026-08-31",
+      "positions_observed": 61,
+      "scope": "structured_monthly_portfolio",
       "complete": false,
-      "source": null
+      "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx"
     },
     {
       "family": "Taurus Mid Cap Fund",
@@ -313,14 +313,12 @@
   ],
   "remaining_families": [
     "Aditya Birla Sun Life Midcap Fund",
-    "Axis Midcap Fund",
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
     "Edelweiss Mid Cap Fund",
     "Franklin India Mid Cap Fund",
     "HSBC Midcap Fund",
     "Helios Mid Cap Fund",
-    "ICICI Prudential Mid Cap Fund",
     "ITI Mid Cap Fund",
     "Invesco India Mid Cap Fund",
     "JM Mid Cap Fund",
@@ -332,11 +330,9 @@
     "Nippon India Growth Mid Cap Fund",
     "PGIM India Midcap Fund",
     "Quant Mid Cap Fund",
-    "SBI MIDCAP FUND",
     "Samco Mid Cap Fund",
     "Sundaram Mid Cap Fund",
     "TRUSTMF MID CAP FUND",
-    "Tata Mid Cap Fund",
     "Taurus Mid Cap Fund",
     "The Wealth Company Mid Cap Fund",
     "UTI - Mid Cap Fund",
@@ -361,6 +357,10 @@
       "amc": "HDFC Mutual Fund",
       "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
       "error": "Only 0 named current holdings were visible; need at least 5"
+    },
+    {
+      "family": "UTI - Mid Cap Fund",
+      "error": "UTI consolidated portfolio ZIP has no exact current UTI - Mid Cap Fund workbook"
     }
   ],
   "production_writes": 0,
@@ -370,5 +370,5 @@
     "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
     "Current evidence and complete portfolio coverage are reported separately."
   ],
-  "built_at": "2026-09-28T01:40:44+00:00"
+  "built_at": "2026-09-28T01:52:42+00:00"
 }
