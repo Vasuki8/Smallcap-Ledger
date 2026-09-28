@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-27T22:28:27+00:00",
+  "built_at": "2026-09-28T00:18:05+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
-  "recovered": 7,
-  "failed": 0,
+  "recovered": 6,
+  "failed": 1,
   "results": [
     {
       "family": "Canara Robeco Mid Cap Fund",
@@ -26,8 +26,8 @@
           "ter": 0.86
         }
       },
-      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-13&to_date=2026-09-27",
-      "sha256": "26fb71feaa2837c508f21101a3e54f1212ebe5c6799dea057841afe20e6ffd04",
+      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-14&to_date=2026-09-28",
+      "sha256": "fb383f5bfcb0fd98ef9a401a06b4b3174209c0f737c783e39e39e501339c8d65",
       "identity": {
         "scheme_name": "Canara Robeco Mid Cap Fund",
         "scheme_code": "MD"
@@ -67,36 +67,6 @@
       "evidence_type": "official_amc_linked_workbook",
       "direct_ter": 1.15,
       "regular_ter": 2.21
-    },
-    {
-      "family": "ICICI Prudential Mid Cap Fund",
-      "amc": "ICICI Prudential Mutual Fund",
-      "status": "recovered",
-      "as_of": "2026-09-24",
-      "plans": {
-        "Regular": {
-          "base_expense_ratio": 1.53,
-          "brokerage": 0.01,
-          "transaction_cost": 0.0,
-          "statutory_levies": 0.3,
-          "ter": 1.84
-        },
-        "Direct": {
-          "base_expense_ratio": 0.88,
-          "brokerage": 0.01,
-          "transaction_cost": 0.0,
-          "statutory_levies": 0.2,
-          "ter": 1.09
-        }
-      },
-      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "e119b86d555b517a09bbeec3839842d47546ec40a134ddac937ed1133fc2db5e",
-      "identity": {
-        "scheme_name": "ICICI Prudential Mid Cap Fund"
-      },
-      "evidence_type": "official_amc_workbook",
-      "direct_ter": 1.09,
-      "regular_ter": 1.84
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -224,7 +194,13 @@
       "regular_ter": 2.02
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "error": "ICICI TER workbook columns changed"
+    }
+  ],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [

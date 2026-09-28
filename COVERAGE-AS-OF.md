@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-27T22:33:28+00:00
+Prepared: 2026-09-28T00:22:02+00:00
 
 **36 funds, 143 NAV series, 281,584 NAV observations. Latest included NAV: 2026-09-25.**
 
@@ -51,7 +51,7 @@ Values retain their own reporting or observation dates. AUM is fund-wide in ₹ 
 
 | Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
 | --- | --- | --- | --- | --- |
-| Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Partial · 2026-09-27 · [Errno 111] Connection refused |
+| Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Partial · 2026-09-28 · [Errno 111] Connection refused |
 
 ## Notes
 

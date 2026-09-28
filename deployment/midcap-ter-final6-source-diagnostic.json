@@ -8,9 +8,9 @@
         {
           "url": "https://bandhanmutual.com/downloads/disclosures",
           "status": "ok",
-          "bytes": 10492,
+          "bytes": 10493,
           "content_type": "text/html",
-          "sha256": "57799fb8b5934085f5185f68a2a7cc29e12d21ff92c8303413d3806c2ae1182f",
+          "sha256": "d1ea4e5d9fd07e8c70c2c13b06b8516330a78e1ae5119900eded79c2b3409ef6",
           "candidate_links": [],
           "snippets": [],
           "api_hints": [
@@ -23,9 +23,9 @@
         {
           "url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
           "status": "ok",
-          "bytes": 10495,
+          "bytes": 10494,
           "content_type": "text/html",
-          "sha256": "6498f6c6de5a1c9e9b0e4a8f50431e40cb26d9383205f406b6669b3469592a89",
+          "sha256": "20b4082386c75a86795d1d753f93412f8928da1ace068cb6ef40b54f7f2e797b",
           "candidate_links": [],
           "snippets": [],
           "api_hints": [
@@ -128,7 +128,7 @@
           "status": "ok",
           "bytes": 68135,
           "content_type": "text/html; charset=utf-8",
-          "sha256": "c249125612701417bce1386cae756282858b952d915fa9f07f0bdd8aae413e40",
+          "sha256": "b1c114854045c29b0ef71c9e0a5817917168eb8c044e7bba83136cc89bf29693",
           "candidate_links": [
             {
               "url": "https://twitter.com/bankofindia_mf",
@@ -281,7 +281,7 @@
           "status": "ok",
           "bytes": 97631,
           "content_type": "text/html; charset=utf-8",
-          "sha256": "e45b9ddfe63102a1ac747e3350a192bc278bd1033011849ca3775328438d4306",
+          "sha256": "8110388e491cd8f3f63111001b7c7b55d774515d8cec43c0d6e6171ad3156867",
           "candidate_links": [
             {
               "url": "https://www.camsonline.com/Investors/KYCRegistration/KYCModification",
@@ -620,7 +620,7 @@
           "status": "ok",
           "bytes": 63834,
           "content_type": "text/html; charset=utf-8",
-          "sha256": "e336043afefcc1d3b1b7a21bf60370ad2d35aca77f30388147c9da933797552a",
+          "sha256": "aaa2ad44da9e9c30cc4b32ea4cc07d5315067cab459bb8cad796d5afdef4febe",
           "candidate_links": [
             {
               "url": "https://www.camsonline.com/Investors/KYCRegistration/KYCModification",
@@ -710,194 +710,30 @@
         {
           "url": "https://www.kotakmf.com/Information/TER",
           "status": "ok",
-          "bytes": 1788378,
-          "content_type": "text/html; charset=utf-8",
-          "sha256": "a6f7c30db89a7134fff7080ad7f42fa509ddcd1bd2c3b254324b1ec82bb079ac",
+          "bytes": 15059,
+          "content_type": "text/html; charset=UTF-8",
+          "sha256": "27321a4770f25250a5ecc3c1402ee34c64b8e9f71a8b1a70fa84e50a94ac0cb7",
           "candidate_links": [
             {
-              "url": "https://twitter.com/KotakMF",
-              "label": "KotakMF"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/Financial",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/TER-2020-2021.csv&q;,&q;display&q;:&q;FY",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/TER-2021-2022.xlsx&q;,&q;display&q;:&q;FY",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/TER-2022-2023.xlsx&q;,&q;display&q;:&q;FY",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/TER-2023-2024.xlsx&q;,&q;display&q;:&q;FY",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/TER-2024-2025.xlsx&q;,&q;display&q;:&q;FY",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TER/TER-2025-2026.xlsx&q;,&q;display&q;:&q;FY",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER02042026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1775131946000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER09072026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1783602484000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER09092026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1788940723000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER10062026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1781090804000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER10082026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1786343392000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER13012026.pdf&q;,&q;createdBy&q;:&q;Rajeev.Shukla@kotak.com&q;,&q;createdDt&q;:1767791734000}],&q;bannerInfo&q;:[{&q;bannerDescription&q;:null,&q;bannerName&q;:&q;Total",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER14052026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1778757185000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER15042026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1776263111000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER16012026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1768567840000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER17062026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1781704526000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER24022026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1771930868000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER24082026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1787557454000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER24092026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1790228785000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER26052026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1779799918000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER30042026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;updatedBy&q;:&q;rupesh.jadhav&q;,&q;updatedDt&q;:1777563446000,&q;createdDt&q;:1777561070000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTERR03022026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;updatedBy&q;:&q;rupesh.jadhav&q;,&q;updatedDt&q;:1770134216000,&q;createdDt&q;:1770121954000},{&q;title&q;:&q;Change",
-              "label": "embedded_url"
-            },
-            {
-              "url": "https://www.kotak.com/en/kotak-international-business.html",
-              "label": "Kotak International Business"
-            },
-            {
-              "url": "https://www.kotakalternateasset.com/",
-              "label": "Kotak Investment Advisors"
-            },
-            {
-              "url": "https://www.kotakmf.com/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js",
-              "label": "embedded_url"
-            },
-            {
               "url": "https://www.kotakmf.com/Information/TER",
-              "label": "Total Expense Ratio"
-            },
-            {
-              "url": "https://www.kotakmf.com/Information/TER&q;}},&q;data&q;:{&q;startloaderoncal&q;:true,&q;loadFinancilaYear&q;:[{&q;id&q;:15,&q;name&q;:&q;2025&q;},{&q;id&q;:14,&q;name&q;:&q;2024&q;},{&q;id&q;:13,&q;name&q;:&q;2023&q;},{&q;id&q;:12,&q;name&q;:&q;2022&q;},{&q;id&q;:8,&q;name&q;:&q;2021&q;},{&q;id&q;:9,&q;name&q;:&q;2020&q;},{&q;id&q;:10,&q;name&q;:&q;2019&q;},{&q;id&q;:11,&q;name&q;:&q;2018&q;},{&q;id&q;:16,&q;name&q;:&q;2026&q;}],&q;activeTab&q;:&q;1&q;,&q;showfiles&q;:false,&q;urliframe&q;:&q;&q;,&q;pdfFiledetails&q;:&q;&q;,&q;downloadPAth&q;:&q;&q;,&q;downloadFilename&q;:&q;&q;,&q;sftp_files&q;:[{&q;filename&q;:&q;xlsx&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx&q;,&q;display&q;:&q;FY",
               "label": "embedded_url"
-            },
-            {
-              "url": "https://www.kotakmf.com/investor/loginInvestNow",
-              "label": "Login/Register"
-            },
-            {
-              "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-large-and-mid-cap-fund/dir-g",
-              "label": "Kotak Large and Mid Cap Fund |"
-            },
-            {
-              "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-mid-cap-fund/dir-g",
-              "label": "Kotak Mid Cap Fund |"
             }
           ],
           "snippets": [
-            "ual Funds | Tax Saver Mutual Funds | Hybrid Mutual Funds | Passive Mutual Funds | FOF Mutual Funds | Most Searched Funds: Kotak Flexi Cap Fund | Kotak Multi Cap Fund | Kotak Arbitrage Fund | Kotak Small Cap Fund | Kotak Mid Cap Fund | Kotak Large and Mid Cap Fund | Kotak Balanced Advantage Fund | View All Funds | © Kotak Mutual Fund.2026 Mutual fund investments are subject to market risks, read all scheme related documents carefully. Home Our ",
-            "nds | Hybrid Mutual Funds | Passive Mutual Funds | FOF Mutual Funds | Most Searched Funds: Kotak Flexi Cap Fund | Kotak Multi Cap Fund | Kotak Arbitrage Fund | Kotak Small Cap Fund | Kotak Mid Cap Fund | Kotak Large and Mid Cap Fund | Kotak Balanced Advantage Fund | View All Funds | © Kotak Mutual Fund.2026 Mutual fund investments are subject to market risks, read all scheme related documents carefully. Home Our Funds Invest Now Insights Searc",
-            "utual Fund Calculator SIP Calculator SWP Calculator ELSS Tax Saving Calculator SIP Top Up Calculator Retirement Calculator Calculator for Dream Home Calculator for Dream Car Lumpsum Calculator CAGR Calculator Login/Register Invest Now Login/Register Our Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio o",
-            "Calculator SWP Calculator ELSS Tax Saving Calculator SIP Top Up Calculator Retirement Calculator Calculator for Dream Home Calculator for Dream Car Lumpsum Calculator CAGR Calculator Login/Register Invest Now Login/Register Our Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio of Mutual Fund Schemes Tota",
-            " Dream Home Calculator for Dream Car Lumpsum Calculator CAGR Calculator Login/Register Invest Now Login/Register Our Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio of Mutual Fund Schemes Total Expense Ratio Notice Description Download FY 2026-2027 FY 2025-2026 FY 2024-2025 FY 2023-2024 FY 2022-2023 FY",
-            "am Home Calculator for Dream Car Lumpsum Calculator CAGR Calculator Login/Register Invest Now Login/Register Our Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio of Mutual Fund Schemes Total Expense Ratio Notice Description Download FY 2026-2027 FY 2025-2026 FY 2024-2025 FY 2023-2024 FY 2022-2023 FY 202",
-            "2024 FY 2022-2023 FY 2021-2022 FY 2020-2021 FY 2019-2020 FY 2018-2019 FY 2017-2018 Frequently Asked Questions Kotak Group Companies Kotak Mahindra Bank Zurich Kotak General insurance Kotak Institutional Equities Kotak International Business Kotak Investment Advisors Kotak Investment Banking Kotak Life Insurance Kotak Mahindra Investments Kotak Mahindra Prime Kotak Securities Limited Kotak811 Follow Us On Download The App Reach Out To Us Wr",
-            "044-40229101 (Monday to Friday between 9.30am to 6.00 pm & Saturday between 9.30am to 12.30pm) Kotak Mutual Fund may contact you from numbers starting with 1600 for important service and folio-related updates. SEBI Registered Name - Kotak Mahindra Mutual Fund SEBI Registered Number - MF/038/98/1 Company Contact Us About Us Careers Corporate Disclousure Explore All Mutual Funds SIP SIP Calculator MF Calculators SWP Calculator SIF Lumpsum Ca",
-            ".00 pm & Saturday between 9.30am to 12.30pm) Kotak Mutual Fund may contact you from numbers starting with 1600 for important service and folio-related updates. SEBI Registered Name - Kotak Mahindra Mutual Fund SEBI Registered Number - MF/038/98/1 Company Contact Us About Us Careers Corporate Disclousure Explore All Mutual Funds SIP SIP Calculator MF Calculators SWP Calculator SIF Lumpsum Calculator Investors Total Expense Ratio Get NAV & I",
-            "Total Expense Ratio of Mutual Fund Schemes Our Funds Equity Funds Debt Funds Tax saver fund Hybrid Funds Fund Of Funds Passive Fund All Funds Learn Mr.SIP SIP Karo Kotak TV Plan Now SIP Systematic Transfer Plan Smart SIP Child Education Pl",
-            "Dream Car Lumpsum Calculator CAGR Calculator Login/Register Invest Now Login/Register Our Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio of Mutual Fund Schemes Total Expense Ratio Notice Description Download FY 2026-2027 FY 2025-2026 FY 2024-2025 FY 2023-2024 FY 2022-2023 FY 2021-2022 FY 2020-2021 FY 2019-2020 ",
-            " Login/Register Invest Now Login/Register Our Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio of Mutual Fund Schemes Total Expense Ratio Notice Description Download FY 2026-2027 FY 2025-2026 FY 2024-2025 FY 2023-2024 FY 2022-2023 FY 2021-2022 FY 2020-2021 FY 2019-2020 FY 2018-2019 FY 2017-2018 Frequently Asked Q",
-            "ur Funds Learn Plan Now Resources Calculators CallBack Download The App Home Home Information Information Ter Ter Slide 1 of 1 Total Expense Ratio Subscribe Previous Next Total Expense Ratio of Mutual Fund Schemes Total Expense Ratio Notice Description Download FY 2026-2027 FY 2025-2026 FY 2024-2025 FY 2023-2024 FY 2022-2023 FY 2021-2022 FY 2020-2021 FY 2019-2020 FY 2018-2019 FY 2017-2018 Frequently Asked Questions Kotak Group Companies Kotak Mahind",
-            "Mutual Fund SEBI Registered Number - MF/038/98/1 Company Contact Us About Us Careers Corporate Disclousure Explore All Mutual Funds SIP SIP Calculator MF Calculators SWP Calculator SIF Lumpsum Calculator Investors Total Expense Ratio Get NAV & IDCW Forms and Downloads Investor Service Corporate Find Distributor Important Links Mutual Fund Blogs Sitemap Privacy Policy Statutory Disclosure ESG Framework Zero Balance Folio Advisor Fund Categories: Equi"
+            "ease request unblock to site. Incident ID: 4f3e656f-cslf-4e16-816d-b17ab7933881 Please solve this CAPTCHA to request unblock to the website You reached this page when trying to access https://www.kotakmf.com/Information/TER from 135.119.132.144 on September 28 2026, 00:18:37 UTC"
           ],
           "api_hints": [
-            "&q;activeTab&q;:&q;1&q;,&q;showfiles&q;:false,&q;urliframe&q;:&q;&q;,&q;pdfFiledetails&q;:&q;&q;,&q;downloadPAth&q;:&q;&q;,&q;downloadFilename&q;:&q;&q;,&q;sftp_files&q;:[{&q;filename&q;:&q;xlsx&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx&q;,&q;display&q;:&q;FY",
-            "/Information/TER",
-            "/app-ter",
-            "/footer",
-            "/kmf-footer",
-            "/mobile-footer",
-            "/router-outlet",
-            "018-2019&q;,&q;order&q;:1},{&q;filename&q;:&q;xls&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/Financial",
-            "020-2021&q;,&q;order&q;:3},{&q;filename&q;:&q;xls&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/Financial",
-            "021-2022&q;,&q;order&q;:4},{&q;filename&q;:&q;csv&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/TER-2020-2021.csv&q;,&q;display&q;:&q;FY",
-            "0gTPtjhqQUN9rOmBJuLLpxsnM68/kc8Plcf+GM0rOpIUkW5hxh+ghCGkYq+NFpBy08mgYY7HmUBYJZKMNJYwENRkQlSwzSx0hJCptErdCU2OpHZtH55vA6lwevDPFgV8KxOJsioqslew0wLFwmwyQTC87Cjk2Di0pd8fudSU6+CRjY26w96cv/6D5mH/erdG9xRQp+O+rY1osa1et9q2atKgHX/Ye2AfxV3ez1XbnPp7AFKZmQgpdYWLlbGaSHmnjPmWVSFSAgOTU2M6gAE8kMDKV1kQSzGhhSJgO9MrMaUqlFE/d9mvcXmsU70zyKFh08PXBnoRhILXzdH7C1zp0YJ",
-            "19-2020&q;,&q;order&q;:2},{&q;filename&q;:&q;xlsx&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/Financial",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER02042026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1775131946000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER09072026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1783602484000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER09092026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1788940723000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER10062026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1781090804000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER10082026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1786343392000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER13012026.pdf&q;,&q;createdBy&q;:&q;Rajeev.Shukla@kotak.com&q;,&q;createdDt&q;:1767791734000}],&q;bannerInfo&q;:[{&q;bannerDescription&q;:null,&q;bannerName&q;:&q;Total",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER14052026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1778757185000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER15042026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1776263111000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER16012026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1768567840000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER17062026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1781704526000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER24022026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1771930868000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER24082026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1787557454000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER24092026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1790228785000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER26052026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;createdDt&q;:1779799918000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTER30042026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;updatedBy&q;:&q;rupesh.jadhav&q;,&q;updatedDt&q;:1777563446000,&q;createdDt&q;:1777561070000},{&q;title&q;:&q;Change",
-            "2026&q;,&q;contentType&q;:&q;upload&q;,&q;content&q;:&q;https://vatseelabs-s3.kotakmf.com/TerNotice/16/ChangeinTERR03022026R.pdf&q;,&q;createdBy&q;:&q;rupesh.jadhav&q;,&q;updatedBy&q;:&q;rupesh.jadhav&q;,&q;updatedDt&q;:1770134216000,&q;createdDt&q;:1770121954000},{&q;title&q;:&q;Change",
-            "22-2023&q;,&q;order&q;:5},{&q;filename&q;:&q;xlsx&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/TER-2021-2022.xlsx&q;,&q;display&q;:&q;FY",
-            "23-2024&q;,&q;order&q;:6},{&q;filename&q;:&q;xlsx&q;,&q;url&q;:&q;https://vatseelabs-s3.kotakmf.com/TER/TER-2022-2023.xlsx&q;,&q;display&q;:&q;FY"
+            "/center",
+            "https://hcaptcha.com/1/api.js?recaptchacompat=off",
+            "https://www.kotakmf.com/Information/TER"
           ]
         },
         {
           "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-mid-cap-fund/dir-g",
           "status": "ok",
-          "bytes": 15088,
+          "bytes": 15094,
           "content_type": "text/html; charset=UTF-8",
-          "sha256": "1d2b44945f78432ac4fa88121346818e36e7da7aabadbeba9fbbc06dc89cc731",
+          "sha256": "9651d81bc630b415bf18c806dba17f6ebafc66d7f627887df41f2c546b7b10a3",
           "candidate_links": [
             {
               "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-mid-cap-fund/dir-g",
@@ -913,9 +749,9 @@
         {
           "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-mid-cap-fund/reg-g",
           "status": "ok",
-          "bytes": 15088,
+          "bytes": 15094,
           "content_type": "text/html; charset=UTF-8",
-          "sha256": "b8e2214a4f33be1b4410c543906e603aab53349fa658e1f0576a8f117370b04e",
+          "sha256": "ea9c9b5c89b420496f8fd124ae5168b586ea71bfbaa4cf98280ff5cc0a19e583",
           "candidate_links": [
             {
               "url": "https://www.kotakmf.com/mutual-funds/equity-funds/kotak-mid-cap-fund/reg-g",
@@ -1154,6 +990,6 @@
     "families": 6,
     "pages_ok": 12,
     "pages_error": 2,
-    "candidate_links": 169
+    "candidate_links": 138
   }
 }
