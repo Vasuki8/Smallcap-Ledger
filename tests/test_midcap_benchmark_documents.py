@@ -107,7 +107,8 @@ class BenchmarkDocumentTests(unittest.TestCase):
         with patch.object(batch2.db, "rows", return_value=wrong):
             result = batch2.collect(fetch_fn=lambda *a, **k: (absl(), None, "text/html"))
         self.assertFalse(result["results"])
-        self.assertIn("ownership", result["errors"][0]["error"])
+        absl_error = next(item for item in result["errors"] if item["family"] == ABSL)
+        self.assertIn("ownership", absl_error["error"])
 
 
 if __name__ == "__main__":
