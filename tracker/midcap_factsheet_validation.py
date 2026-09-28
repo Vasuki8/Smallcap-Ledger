@@ -11,7 +11,7 @@ import re
 
 from bs4 import BeautifulSoup, Tag
 
-PARSER_VERSION = "mahindra-midcap-issuer-rows-v1"
+PARSER_VERSION = "mahindra-midcap-issuer-rows-v2"
 
 # Published sector labels in the AMC's August 2026 Mid Cap portfolio table.
 # These labels are classification evidence, not inferred holdings or weights.
@@ -27,6 +27,10 @@ _SUMMARY_LABELS = (
 )
 _ISSUER = re.compile(r"(?:\b(?:Limited|Ltd\.?)$|^Bank of [A-Za-z][A-Za-z &.-]+$)", re.I)
 _HEADER = ("companyissuer", "ofnetassets")
+_FOOTNOTE = re.compile(
+    r"\(\s*Top Ten Holdings\s*-\s*Issuer wise\s*\)\s*as on\s+"
+    r"[A-Za-z]+\s+\d{1,2},\s*20\d{2}", re.I,
+)
 
 
 def _clean(value: str) -> str:
@@ -84,14 +88,26 @@ def mahindra_positions(soup: BeautifulSoup) -> list[dict]:
             continue
         out = []
         seen = set()
+        closed = False
         for cells in rows[starts[0] + 1:]:
             if tuple(_norm(cell) for cell in cells) == _HEADER:
                 continue
+            # The observed issuer-marker legend is a colspan footer, not a
+            # financial row. Accept it only after a verified 100% Grand Total.
+            if closed and len(cells) == 1 and _FOOTNOTE.fullmatch(cells[0]):
+                continue
+            if closed:
+                raise ValueError("Unrecognized Mahindra row after Grand Total")
             if len(cells) != 2:
                 raise ValueError("Mahindra portfolio row no longer has name and weight columns")
             name, raw_weight = cells
             weight = _weight(raw_weight)
             key = _norm(name)
+            if key == "grandtotal":
+                if weight != Decimal("100"):
+                    raise ValueError("Mahindra Grand Total is not 100%")
+                closed = True
+                continue
             if key in _SECTORS or key in _SUMMARIES:
                 continue
             if not _ISSUER.search(name):
