@@ -1,0 +1,55 @@
+name: Isolated ICICI and Invesco benchmark discovery
+on:
+  push:
+    branches: ['diag/midcap-two-sources-20260928']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+      - run: uv sync --frozen
+      - name: Inspect official discovery documents without writes
+        run: |
+          uv run --frozen python - <<'PY'
+          import hashlib,json,re
+          from pathlib import Path
+          from unittest.mock import patch
+          from bs4 import BeautifulSoup
+          from tracker import db,providers
+          urls=[
+            'https://digitalfactsheet.icicipruamc.com/fact/icici-prudential-midcap-fund.php',
+            'https://www.invescomutualfund.com/literature-forms/factsheets',
+            'https://www.icicipruamc.com/downloads/factsheets',
+          ]
+          with patch.object(db,'connect',side_effect=AssertionError('Database forbidden')):
+            for url in urls:
+              try:
+                body,_,typ=providers.fetch(url,archive=False,max_bytes=8*1024*1024)
+                print('SOURCE',json.dumps({'url':url,'sha256':hashlib.sha256(body).hexdigest(),'type':typ,'bytes':len(body)}))
+                s=BeautifulSoup(body.decode('utf-8'),'html.parser')
+                print('HEADINGS',json.dumps([x.get_text(' ',strip=True) for x in s.find_all(['h1','h2','h3'])][:25]))
+                for a in s.find_all(['a','iframe','img','script','object']):
+                  val=str(a)
+                  if re.search(r'factsheet|fact-sheet|mid.?cap|\.pdf|\.js|\.png|\.jpg',val,re.I):
+                    if a.name=='script' and not a.get('src'): continue
+                    print('RESOURCE',val[:1300])
+                for m in list(re.finditer(r'benchmark|/api/|factsheet',body.decode('utf-8'),re.I))[:15]:
+                  print('CONTEXT',body.decode('utf-8')[max(0,m.start()-100):m.end()+400].replace('\n',' '))
+              except Exception as exc: print('ERROR',url,str(exc)[:400])
+          print('EXISTING_SOURCES')
+          data=json.loads(Path('tracker/sources.json').read_text())
+          items=data if isinstance(data,list) else data.get('sources',[])
+          for row in items:
+            if re.search(r'invesco|icici',json.dumps(row),re.I): print(json.dumps(row))
+          PY
