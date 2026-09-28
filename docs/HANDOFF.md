@@ -7,17 +7,17 @@ Updated: 2026-09-28, after repository-wide operational hardening, portable-packa
 
 ### Latest verified production checkpoint
 
-Production **run #660 / 36458995440** completed successfully on commit `181e5f038bfa61edf635f059cb672aeb2aceccd2`, followed by status commit `5ce202da5a1571251ed5a902e6c55bb2c33f5abf`.
+Production **run #661 / 36475512752** completed successfully on commit `dc68dfcd5afc726f3a53114f6ba7387b793abc44`, followed by status commit `6cbef66a1d8497e1b2d089e71270c743c7dc043d`.
 
 Verification:
-- **765 full repository tests passed** (`Ran 765 tests in 17.460s`, `OK`).
+- **770 full repository tests passed** (`Ran 770 tests in 12.037s`, `OK`).
 - static site generation and generated-data/download validation passed.
-- split historical checkpoint publication passed: `database-36458995440-1.zip` with **113 reusable source packs**.
+- split historical checkpoint publication passed: `database-36475512752-1.zip` with **113 reusable source packs**.
 - collection/status evidence was committed successfully.
 - Pages artifact upload and the dedicated `deploy` job both completed successfully.
 - no financial calculation, source-acceptance, retention, launch-threshold or public-category policy was weakened by the operational work below.
 
-Current production status built **2026-09-28T17:40:57Z**:
+Current production status built **2026-09-28T20:01:23Z**:
 - funds: **36**
 - NAV series: **143**
 - NAV observations: **281,584**
@@ -80,6 +80,21 @@ Do not interpret 36/36 presence coverage as 36/36 same-date freshness.
    - repository-wide regressions now enforce both properties.
    - production **#660 / 36458995440** succeeded.
 
+8. **Release-archive growth telemetry — PR #315 / `dc68dfcd5afc726f3a53114f6ba7387b793abc44`**
+   - `deployment/storage-health.json` now records `tracker-history` release asset count and compressed bytes;
+   - the internal review threshold is **750 assets** and is review-only: it never deletes, repacks or changes retention automatically;
+   - production #661 reports **117 assets / 2,734,002,965 compressed bytes**, **633** assets remaining to the review threshold and `review_due=false`;
+   - issue #314 was closed after production verification.
+
+9. **Handoff compaction — PR #311 / `b87ce470a97fc13604c84ff6837bf2f341a50d92`**
+   - active `docs/HANDOFF.md` was reduced from more than 3,600 lines to a concise current-state handoff;
+   - the prior chronology was preserved, without deletion, in `docs/HANDOFF-ARCHIVE.md`.
+
+10. **Dependency-update automation — PR #316 / `c3bc3cdf2c59d7dd4502a5ce16190893e2411d72`**
+   - weekly Dependabot version-update PRs now cover both immutable GitHub Actions pins and `uv` dependencies;
+   - checks run Monday at 05:00 Asia/Kolkata with at most five open version-update PRs per ecosystem;
+   - no auto-merge is configured; normal pull-request regressions remain the acceptance gate.
+
 ### Remaining P0 manual repository setting
 
 **`main` is still unprotected.** GitHub currently reports `protected=false` and the repository ruleset list is empty. The connected GitHub integration can read this state but does not expose repository-administration writes, so this cannot be completed safely from the current connector.
@@ -95,12 +110,14 @@ Owner action still required in GitHub:
 
 Until that ruleset is enabled, follow the PR workflow voluntarily and do not push development commits directly to `main`.
 
-### Next repository-maintenance priority
+### Remaining repository-maintenance gates
 
-The remaining audit work is lower priority than the P0 items above:
-- branch backlog audit is complete in `docs/BRANCH-CLEANUP-AUDIT.json` / `.md`: **299** exact merged-tip cleanup candidates, **2** post-merge/moved branches, **8** closed/unmerged PR branches, **34** branches with no PR evidence, and **0** open-PR branches. **No deletion has been performed; branch deletion still requires explicit owner approval.**
-- reduce handoff/documentation sprawl after preserving a concise current-state section;
-- consider moving known maintenance/backlog items into GitHub Issues so they are not discoverable only through long handoff history.
+Only two repository-audit items remain open, both explicitly owner-gated:
+
+- **Issue #312 — Enable main branch protection ruleset.** This requires GitHub repository-administration access; the connected integration can verify but cannot apply the ruleset.
+- **Issue #313 — Review audited branch cleanup candidates.** The audit identifies **299** exact merged-tip candidates, **2** post-merge/moved branches, **8** closed/unmerged PR branches and **34** branches with no PR evidence. No branch deletion has been performed; deleting refs still requires explicit owner approval.
+
+All other actionable findings from the repository-wide audit are now implemented and verified. Until #312 is completed, continue using pull requests voluntarily and do not push development commits directly to `main`.
 
 For Mid Cap data work, continue to use `docs/MIDCAP-HANDOFF.md` and the generated readiness artifacts as the authority. Mid Cap remains staged/non-public until its explicit launch gates pass.
 
