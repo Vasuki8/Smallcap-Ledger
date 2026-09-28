@@ -54,5 +54,12 @@ class BranchCleanupExecutionTests(unittest.TestCase):
             plan_cleanup(audit, {"merged/a": "a" * 40}, set(), expected_count=2)
 
 
+    def test_executed_audit_guard_is_present(self):
+        from pathlib import Path
+        source=(Path(__file__).resolve().parents[1]/"scripts"/"delete_audited_branches.py").read_text()
+        self.assertIn('audit.get("destructive_actions_taken")', source)
+        self.assertIn("already marked as executed", source)
+
+
 if __name__ == "__main__":
     unittest.main()
