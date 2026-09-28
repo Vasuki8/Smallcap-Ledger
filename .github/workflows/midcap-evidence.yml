@@ -2,13 +2,14 @@ name: Mid Cap evidence regression
 
 on:
   push:
-    branches: ['fix/midcap-evidence-*', 'fix/midcap-samco-*']
+    branches: ['fix/midcap-evidence-*', 'fix/midcap-samco-*', 'fix/midcap-benchmark-*']
   pull_request:
     paths:
       - 'tracker/midcap*'
       - 'tests/test_midcap*'
       - 'scripts/check_midcap_batch5_evidence.py'
       - 'scripts/check_midcap_samco_ter.py'
+      - 'scripts/check_midcap_benchmark_labels.py'
       - '.github/workflows/midcap-evidence.yml'
 
 permissions:
@@ -47,8 +48,11 @@ jobs:
             exit 1
           fi
       - name: Read-only public evidence preflight
-        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fix/midcap-samco-')
+        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fix/midcap-samco-') && !startsWith(github.ref_name, 'fix/midcap-benchmark-')
         run: uv run --frozen python scripts/check_midcap_batch5_evidence.py
       - name: Read-only exact Samco TER preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-samco-')
         run: uv run --frozen python scripts/check_midcap_samco_ter.py
+      - name: Read-only primary benchmark label preflight
+        if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-benchmark-')
+        run: uv run --frozen python scripts/check_midcap_benchmark_labels.py

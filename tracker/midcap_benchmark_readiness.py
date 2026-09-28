@@ -1,6 +1,8 @@
 """Combine staged Mid Cap benchmark evidence across read-only batches."""
 from __future__ import annotations
 
+from copy import deepcopy
+
 
 def reconcile(staged_families,*batches):
     merged={}
@@ -19,6 +21,8 @@ def reconcile(staged_families,*batches):
             "benchmark_identity":evidence.get("primary_benchmark") if evidence else None,
             "reported_benchmarks":evidence.get("reported_benchmarks") if evidence else [],
             "source":evidence.get("source") if evidence else None,
+            "source_sha256":evidence.get("source_sha256") if evidence else None,
+            "source_evidence":deepcopy(evidence) if evidence else None,
             "source_data_as_of":evidence.get("source_data_as_of") if evidence else None,
             "observed_at":evidence.get("observed_at") if evidence else None,
         })
