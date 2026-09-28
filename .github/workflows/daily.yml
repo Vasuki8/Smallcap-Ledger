@@ -173,6 +173,13 @@ jobs:
           uv run --frozen python scripts/audit_midcap_portfolios_batch4.py
           --json docs/MIDCAP-PORTFOLIO-BATCH4.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH4.md
+      - name: Audit staged Mid Cap current portfolio evidence batch 5
+        timeout-minutes: 12
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/audit_midcap_portfolios_batch5.py
+          --json docs/MIDCAP-PORTFOLIO-BATCH5.json
+          --markdown docs/MIDCAP-PORTFOLIO-BATCH5.md
       - name: Reconcile staged Mid Cap portfolio readiness
         timeout-minutes: 2
         continue-on-error: true
@@ -182,6 +189,7 @@ jobs:
           --batch2 docs/MIDCAP-PORTFOLIO-BATCH2.json
           --batch3 docs/MIDCAP-PORTFOLIO-BATCH3.json
           --batch4 docs/MIDCAP-PORTFOLIO-BATCH4.json
+          --batch5 docs/MIDCAP-PORTFOLIO-BATCH5.json
           --json docs/MIDCAP-PORTFOLIO-READINESS.json
           --markdown docs/MIDCAP-PORTFOLIO-READINESS.md
       - name: Audit staged Mid Cap launch readiness
