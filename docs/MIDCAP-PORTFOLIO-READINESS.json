@@ -1,8 +1,8 @@
 {
   "families": 34,
-  "current_portfolio_evidence": 15,
-  "current_complete_portfolios": 3,
-  "remaining": 19,
+  "current_portfolio_evidence": 16,
+  "current_complete_portfolios": 4,
+  "remaining": 18,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -171,7 +171,7 @@
       "amc": "Mahindra Manulife Mutual Fund",
       "as_of": "2026-08-31",
       "positions_observed": 59,
-      "scope": "first_party_current_factsheet",
+      "scope": "factsheet_equity_only",
       "complete": false,
       "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html"
     },
@@ -241,11 +241,11 @@
     {
       "family": "Sundaram Mid Cap Fund",
       "amc": "Sundaram Mutual Fund",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
-      "complete": false,
-      "source": null
+      "as_of": "2026-08-31",
+      "positions_observed": 79,
+      "scope": "structured_monthly_portfolio",
+      "complete": true,
+      "source": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx"
     },
     {
       "family": "TRUSTMF MID CAP FUND",
@@ -325,7 +325,6 @@
     "Nippon India Growth Mid Cap Fund",
     "Quant Mid Cap Fund",
     "Samco Mid Cap Fund",
-    "Sundaram Mid Cap Fund",
     "TRUSTMF MID CAP FUND",
     "Taurus Mid Cap Fund",
     "The Wealth Company Mid Cap Fund",
@@ -353,11 +352,7 @@
     },
     {
       "family": "Kotak Mid Cap Fund",
-      "error": "First-party page does not contain the exact staged Mid Cap family identity"
-    },
-    {
-      "family": "Sundaram Mid Cap Fund",
-      "error": "Sundaram fund-card row is not current: 2026-07-31"
+      "error": "Factsheet lacks the exact staged scheme heading"
     }
   ],
   "production_writes": 0,
@@ -367,5 +362,5 @@
     "When batches overlap, a complete snapshot is preferred; otherwise the larger exact named-position set is retained.",
     "Current evidence and complete portfolio coverage are reported separately."
   ],
-  "built_at": "2026-09-28T04:27:15+00:00"
+  "built_at": "2026-09-28T04:43:43+00:00"
 }

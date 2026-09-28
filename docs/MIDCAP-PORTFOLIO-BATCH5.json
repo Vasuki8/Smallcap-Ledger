@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-09-28T04:27:15+00:00",
+  "built_at": "2026-09-28T04:43:43+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 5,
-  "recovered": 3,
-  "failed": 2,
+  "recovered": 4,
+  "failed": 1,
   "results": [
     {
       "family": "JM Mid Cap Fund",
@@ -23,7 +23,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T04:27:09+00:00"
+      "observed_at": "2026-09-28T04:43:31+00:00"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
@@ -34,248 +34,370 @@
       "positions": [
         {
           "name": "UNO Minda Limited",
-          "weight": 2.03
+          "weight": 2.03,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
         },
         {
           "name": "Tube Investments of India Limited",
-          "weight": 1.84
+          "weight": 1.84,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
         },
         {
           "name": "Belrise Industries Ltd.",
-          "weight": 1.75
+          "weight": 1.75,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
         },
         {
           "name": "Minda Corporation Limited",
-          "weight": 1.4
+          "weight": 1.4,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
         },
         {
           "name": "CEAT Limited",
-          "weight": 1.36
+          "weight": 1.36,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
         },
         {
           "name": "Schaeffler India Limited",
-          "weight": 1.0
+          "weight": 1.0,
+          "sector": "Automobile And Auto Components",
+          "asset_type": "Equity"
         },
         {
           "name": "KEI Industries Limited",
-          "weight": 2.56
+          "weight": 2.56,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "AIA Engineering Limited",
-          "weight": 2.04
+          "weight": 2.04,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Cochin Shipyard Limited",
-          "weight": 2.0
+          "weight": 2.0,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "APL Apollo Tubes Limited",
-          "weight": 1.93
+          "weight": 1.93,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "GE Vernova T&D India Limited",
-          "weight": 1.76
+          "weight": 1.76,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Astral Limited",
-          "weight": 1.71
+          "weight": 1.71,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Triveni Turbine Limited",
-          "weight": 1.36
+          "weight": 1.36,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Elecon Engineering Company Limited",
-          "weight": 1.06
+          "weight": 1.06,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Kirloskar Brothers Limited",
-          "weight": 0.94
+          "weight": 0.94,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Garden Reach Shipbuilders & Engineers Limited",
-          "weight": 0.87
+          "weight": 0.87,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Carborundum Universal Limited",
-          "weight": 0.66
+          "weight": 0.66,
+          "sector": "Capital Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "SRF Limited",
-          "weight": 1.63
+          "weight": 1.63,
+          "sector": "Chemicals",
+          "asset_type": "Equity"
         },
         {
           "name": "Solar Industries India Limited",
-          "weight": 1.47
+          "weight": 1.47,
+          "sector": "Chemicals",
+          "asset_type": "Equity"
         },
         {
           "name": "Larsen & Toubro Limited",
-          "weight": 1.48
+          "weight": 1.48,
+          "sector": "Construction",
+          "asset_type": "Equity"
         },
         {
           "name": "KEC International Limited",
-          "weight": 0.96
+          "weight": 0.96,
+          "sector": "Construction",
+          "asset_type": "Equity"
         },
         {
           "name": "JK Cement Limited",
-          "weight": 1.74
+          "weight": 1.74,
+          "sector": "Construction Materials",
+          "asset_type": "Equity"
         },
         {
           "name": "Dalmia Bharat Limited",
-          "weight": 0.81
+          "weight": 0.81,
+          "sector": "Construction Materials",
+          "asset_type": "Equity"
         },
         {
           "name": "Blue Star Limited",
-          "weight": 1.59
+          "weight": 1.59,
+          "sector": "Consumer Durables",
+          "asset_type": "Equity"
         },
         {
           "name": "Kajaria Ceramics Limited",
-          "weight": 0.88
+          "weight": 0.88,
+          "sector": "Consumer Durables",
+          "asset_type": "Equity"
         },
         {
           "name": "LG Electronics India Ltd",
-          "weight": 0.81
+          "weight": 0.81,
+          "sector": "Consumer Durables",
+          "asset_type": "Equity"
         },
         {
           "name": "ITC Hotels Limited",
-          "weight": 0.85
+          "weight": 0.85,
+          "sector": "Consumer Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Radico Khaitan Limited",
-          "weight": 1.93
+          "weight": 1.93,
+          "sector": "Fast Moving Consumer Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Marico Limited",
-          "weight": 1.9
+          "weight": 1.9,
+          "sector": "Fast Moving Consumer Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "Varun Beverages Limited",
-          "weight": 1.19
+          "weight": 1.19,
+          "sector": "Fast Moving Consumer Goods",
+          "asset_type": "Equity"
         },
         {
           "name": "The Federal Bank Limited",
-          "weight": 3.6
+          "weight": 3.6,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "IndusInd Bank Limited",
-          "weight": 3.37
+          "weight": 3.37,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Aditya Birla Capital Limited",
-          "weight": 2.81
+          "weight": 2.81,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "L&T Finance Limited",
-          "weight": 2.79
+          "weight": 2.79,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Nippon Life India Asset Management Limited",
-          "weight": 2.53
+          "weight": 2.53,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "PB Fintech Limited",
-          "weight": 2.52
+          "weight": 2.52,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "IDFC First Bank Limited",
-          "weight": 2.13
+          "weight": 2.13,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Max Financial Services Limited",
-          "weight": 2.05
+          "weight": 2.05,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Bank of Maharashtra",
-          "weight": 2.0
+          "weight": 2.0,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Karur Vysya Bank Limited",
-          "weight": 1.64
+          "weight": 1.64,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "360 One WAM Limited",
-          "weight": 1.54
+          "weight": 1.54,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Shriram Finance Limited",
-          "weight": 1.45
+          "weight": 1.45,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Equitas Small Finance Bank Limited",
-          "weight": 1.37
+          "weight": 1.37,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "SBI Cards and Payment Services Limited",
-          "weight": 0.99
+          "weight": 0.99,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Piramal Finance Limited",
-          "weight": 0.27
+          "weight": 0.27,
+          "sector": "Financial Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Glenmark Pharmaceuticals Limited",
-          "weight": 2.59
+          "weight": 2.59,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
         },
         {
           "name": "Anthem Biosciences Limited",
-          "weight": 2.1
+          "weight": 2.1,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
         },
         {
           "name": "Fortis Healthcare Limited",
-          "weight": 2.09
+          "weight": 2.09,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
         },
         {
           "name": "Biocon Limited",
-          "weight": 1.71
+          "weight": 1.71,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
         },
         {
           "name": "Aster DM Quality Care Limited",
-          "weight": 1.21
+          "weight": 1.21,
+          "sector": "Healthcare",
+          "asset_type": "Equity"
         },
         {
           "name": "Coforge Limited",
-          "weight": 2.81
+          "weight": 2.81,
+          "sector": "Information Technology",
+          "asset_type": "Equity"
         },
         {
           "name": "Mphasis Limited",
-          "weight": 1.69
+          "weight": 1.69,
+          "sector": "Information Technology",
+          "asset_type": "Equity"
         },
         {
           "name": "NMDC Limited",
-          "weight": 1.32
+          "weight": 1.32,
+          "sector": "Metals & Mining",
+          "asset_type": "Equity"
         },
         {
           "name": "Vedanta Aluminium Metal Limited",
-          "weight": 0.46
+          "weight": 0.46,
+          "sector": "Metals & Mining",
+          "asset_type": "Equity"
         },
         {
           "name": "JSW Energy Limited",
-          "weight": 1.9
+          "weight": 1.9,
+          "sector": "Power",
+          "asset_type": "Equity"
         },
         {
           "name": "Godrej Properties Limited",
-          "weight": 1.4
+          "weight": 1.4,
+          "sector": "Realty",
+          "asset_type": "Equity"
         },
         {
           "name": "JSW Infrastructure Ltd",
-          "weight": 1.68
+          "weight": 1.68,
+          "sector": "Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Container Corporation of India Limited",
-          "weight": 0.99
+          "weight": 0.99,
+          "sector": "Services",
+          "asset_type": "Equity"
         },
         {
           "name": "Bharti Hexacom Limited",
-          "weight": 1.19
+          "weight": 1.19,
+          "sector": "Telecommunication",
+          "asset_type": "Equity"
         }
       ],
       "complete": false,
-      "scope": "first_party_current_factsheet",
+      "scope": "factsheet_equity_only",
+      "completeness_note": "Sector and equity subtotals reconcile; non-equity assets are excluded.",
+      "equity_weight_sum": 97.71,
+      "sectors_checked": 16,
       "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html",
       "source_sha256": "53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640",
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
-      "observed_at": "2026-09-28T04:27:10+00:00"
+      "validation_version": "sector-equity-reconciliation-v1",
+      "observed_at": "2026-09-28T04:43:34+00:00"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -292,25 +414,41 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T04:27:12+00:00"
+      "observed_at": "2026-09-28T04:43:38+00:00"
+    },
+    {
+      "family": "Sundaram Mid Cap Fund",
+      "amc": "Sundaram Mutual Fund",
+      "status": "recovered",
+      "sheet": "MIDCAP",
+      "as_of": "2026-08-31",
+      "positions_observed": 79,
+      "complete": true,
+      "unknown_rows": [],
+      "aum": 14863.42933,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx",
+      "source_sha256": "7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "discovery_source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json",
+      "discovery_source_sha256": "c207757ae71d6f60ac9314a3f8bcf7c2f2fb0bd2ddc1aad4adaf65cf2a816c82",
+      "publisher_scheme_code": "MC",
+      "card_aum_as_of_raw": "31-Jul-2026",
+      "observed_at": "2026-09-28T04:43:43+00:00"
     }
   ],
   "errors": [
     {
       "family": "Kotak Mid Cap Fund",
-      "error": "First-party page does not contain the exact staged Mid Cap family identity"
-    },
-    {
-      "family": "Sundaram Mid Cap Fund",
-      "error": "Sundaram fund-card row is not current: 2026-07-31"
+      "error": "Factsheet lacks the exact staged scheme heading"
     }
   ],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [
     "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
-    "Kotak and Mahindra current factsheet holdings count only as partial current evidence.",
-    "Mahindra sector headings and totals are excluded; unknown rows and conflicting copies fail closed.",
+    "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
+    "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
     "Every result requires exact staged family identity and the current regulatory month-end; no live records are written."
   ]
 }
