@@ -37,10 +37,11 @@ class WorkflowSecurityTests(unittest.TestCase):
     def test_github_token_is_step_scoped(self):
         pre_steps = self.build.split("\n    steps:\n", 1)[0]
         self.assertNotIn("GH_TOKEN:", pre_steps)
-        self.assertEqual(self.text.count("GH_TOKEN: ${{ github.token }}"), 4)
+        self.assertEqual(self.text.count("GH_TOKEN: ${{ github.token }}"), 5)
         for step in (
             "Restore cumulative history",
             "Import owner-supplied additions",
+            "Generate GitHub Pages site",
             "Save cumulative historical archive",
             "Record collection status",
         ):
