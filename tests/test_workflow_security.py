@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import unittest
 
 
@@ -58,6 +59,37 @@ class WorkflowSecurityTests(unittest.TestCase):
             "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4",
             self.deploy,
         )
+
+    def test_every_external_action_uses_an_immutable_commit_sha(self):
+        workflows = ROOT / ".github" / "workflows"
+        for path in sorted(workflows.glob("*.yml")):
+            lines = path.read_text(encoding="utf-8").splitlines()
+            for number, line in enumerate(lines, start=1):
+                match = re.search(r"\buses:\s*([^#\s]+)", line)
+                if not match:
+                    continue
+                action = match.group(1)
+                if action.startswith("./") or action.startswith("docker://"):
+                    continue
+                with self.subTest(workflow=path.name, line=number, action=action):
+                    self.assertRegex(action, r"^[^@\s]+@[0-9a-f]{40}$")
+
+    def test_checkout_never_persists_credentials(self):
+        workflows = ROOT / ".github" / "workflows"
+        for path in sorted(workflows.glob("*.yml")):
+            lines = path.read_text(encoding="utf-8").splitlines()
+            for index, line in enumerate(lines):
+                if "uses: actions/checkout@" not in line:
+                    continue
+                block = []
+                base_indent = len(line) - len(line.lstrip())
+                for following in lines[index + 1:index + 8]:
+                    indent = len(following) - len(following.lstrip())
+                    if following.strip().startswith("- ") and indent <= base_indent:
+                        break
+                    block.append(following)
+                with self.subTest(workflow=path.name, line=index + 1):
+                    self.assertIn("persist-credentials: false", "\n".join(block))
 
 
 if __name__ == "__main__":
