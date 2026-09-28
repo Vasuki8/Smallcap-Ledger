@@ -1,6 +1,6 @@
 # Mid Cap structured current portfolio evidence — batch 3
 
-Prepared: 2026-09-28T01:52:42+00:00
+Prepared: 2026-09-28T02:22:07+00:00
 
 Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · failed: **1**.
 
@@ -13,7 +13,7 @@ Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · fail
 
 ## Errors
 
-- UTI - Mid Cap Fund: UTI consolidated portfolio ZIP has no exact current UTI - Mid Cap Fund workbook
+- UTI - Mid Cap Fund: UTI consolidated ZIP exposed 0 SEBI Exposure workbooks
 
 ## Notes
 
