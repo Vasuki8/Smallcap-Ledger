@@ -7,12 +7,12 @@ Updated: 2026-09-28, after repository-wide operational hardening, portable-packa
 
 ### Latest verified production checkpoint
 
-Production **run #661 / 36475512752** completed successfully on commit `dc68dfcd5afc726f3a53114f6ba7387b793abc44`, followed by status commit `6cbef66a1d8497e1b2d089e71270c743c7dc043d`.
+Production **run #662 / 36477739739** completed successfully after the approved branch cleanup on commit `785918d57610daeb0f50522a9efcf06e651cbf3a`, followed by status commit `efe12ae9ad314a8d4e3a839b080786db3afb607f`.
 
 Verification:
-- **770 full repository tests passed** (`Ran 770 tests in 12.037s`, `OK`).
+- **776 full repository tests passed** (`Ran 776 tests in 10.764s`, `OK`).
 - static site generation and generated-data/download validation passed.
-- split historical checkpoint publication passed: `database-36475512752-1.zip` with **113 reusable source packs**.
+- split historical checkpoint publication passed: `database-36477739739-1.zip` with **113 reusable source packs**.
 - collection/status evidence was committed successfully.
 - Pages artifact upload and the dedicated `deploy` job both completed successfully.
 - no financial calculation, source-acceptance, retention, launch-threshold or public-category policy was weakened by the operational work below.
@@ -95,6 +95,14 @@ Do not interpret 36/36 presence coverage as 36/36 same-date freshness.
    - checks run Monday at 05:00 Asia/Kolkata with at most five open version-update PRs per ecosystem;
    - no auto-merge is configured; normal pull-request regressions remain the acceptance gate.
 
+11. **Approved historical branch cleanup — PR #327 / `785918d57610daeb0f50522a9efcf06e651cbf3a`**
+   - the repository owner explicitly approved deletion of the **299** high-confidence merged-tip candidates from `docs/BRANCH-CLEANUP-AUDIT.json`;
+   - cleanup run **36477739743** revalidated live branch tips and open PRs immediately before deletion;
+   - **299/299** exact matches were deleted with **0 missing, 0 moved, 0 open-PR skips and 0 failures**;
+   - independent post-cleanup verification found **0 approved-candidate survivors** and **60 total branches**;
+   - the 2 moved branches, 8 closed/unmerged PR branches, 34 no-PR-evidence branches, newer maintenance branches and Dependabot branches were not deleted;
+   - production #662 completed successfully after the cleanup.
+
 ### Remaining P0 manual repository setting
 
 **`main` is still unprotected.** GitHub currently reports `protected=false` and the repository ruleset list is empty. The connected GitHub integration can read this state but does not expose repository-administration writes, so this cannot be completed safely from the current connector.
@@ -110,12 +118,13 @@ Owner action still required in GitHub:
 
 Until that ruleset is enabled, follow the PR workflow voluntarily and do not push development commits directly to `main`.
 
-### Remaining repository-maintenance gates
+### Remaining repository-maintenance gate
 
-Only two repository-audit items remain open, both explicitly owner-gated:
+Only one repository-audit item remains open:
 
 - **Issue #312 — Enable main branch protection ruleset.** This requires GitHub repository-administration access; the connected integration can verify but cannot apply the ruleset.
-- **Issue #313 — Review audited branch cleanup candidates.** The audit identifies **299** exact merged-tip candidates, **2** post-merge/moved branches, **8** closed/unmerged PR branches and **34** branches with no PR evidence. No branch deletion has been performed; deleting refs still requires explicit owner approval.
+
+Issue #313 is complete: the owner-approved 299-branch high-confidence deletion set was executed and independently verified. Review-required branches remain untouched.
 
 All other actionable findings from the repository-wide audit are now implemented and verified. Until #312 is completed, continue using pull requests voluntarily and do not push development commits directly to `main`.
 
