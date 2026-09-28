@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: main
+          ref: ${{ github.event_name == 'push' && github.sha || 'main' }}
           fetch-depth: 0
           persist-credentials: false
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
@@ -49,6 +49,8 @@ jobs:
           enable-cache: true
       - name: Install locked dependencies
         run: uv sync --frozen
+      - name: Capture tested revision
+        run: echo "SMALLCAP_BUILD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
       - name: Preflight Python syntax
         run: uv run --frozen python -m compileall -q tracker scripts tests
       - name: Restore cumulative history
@@ -275,6 +277,15 @@ jobs:
         run: uv run --frozen python scripts/export_site.py
       - name: Validate generated data and downloads
         run: uv run --frozen python scripts/validate_site.py site
+      - name: Verify publication base is still current
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CURRENT_MAIN="$(gh api "repos/$GITHUB_REPOSITORY/branches/main" --jq '.commit.sha')"
+          if [ "$CURRENT_MAIN" != "$SMALLCAP_BUILD_SHA" ]; then
+            echo "::error::main moved from tested revision $SMALLCAP_BUILD_SHA to $CURRENT_MAIN; refusing stale publication"
+            exit 1
+          fi
       - name: Save cumulative historical archive
         env:
           GH_TOKEN: ${{ github.token }}
