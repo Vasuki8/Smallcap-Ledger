@@ -1781,6 +1781,30 @@ Total Net Assets as on 31-August-2026 100.00%
         self.assertEqual(row['base_expense_ratio']['plan'],'Regular')
         self.assertEqual(row['base_expense_ratio']['as_of'],'2026-09-24')
 
+    def test_coverage_reports_selected_record_date_ranges_without_staleness_inference(self):
+        from tracker import coverage
+        with db.connect() as c:
+            c.executemany(
+                'INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                [
+                    (999910,'Alpha Small Cap Fund','Alpha Small Cap Fund','Alpha Mutual Fund','Direct','Growth','test'),
+                    (999911,'Beta Small Cap Fund','Beta Small Cap Fund','Beta Mutual Fund','Direct','Growth','test'),
+                ],
+            )
+        db.metric('Alpha Small Cap Fund','All','aum','2026-09-23',100,'INR crore','official')
+        db.metric('Beta Small Cap Fund','All','aum','2026-09-24',200,'INR crore','official')
+        db.metric('Alpha Small Cap Fund','Direct','ter','2026-04-30',0.7,'% p.a.','official')
+        db.metric('Beta Small Cap Fund','Direct','ter','2026-09-25',0.8,'% p.a.','official')
+        db.metric('Alpha Small Cap Fund','All','benchmark','2023-08-31','Index A TRI','Reported','official')
+        db.metric('Beta Small Cap Fund','All','benchmark','2026-09-20','Index B TRI','Reported','official')
+
+        report=coverage.report()
+
+        self.assertEqual(report['record_dates']['aum'],{'earliest':'2026-09-23','latest':'2026-09-24'})
+        self.assertEqual(report['record_dates']['direct_fee'],{'earliest':'2026-04-30','latest':'2026-09-25'})
+        self.assertEqual(report['record_dates']['benchmark_identity'],{'earliest':'2023-08-31','latest':'2026-09-20'})
+        self.assertTrue(any('not source-check timestamps' in note for note in report['notes']))
+
     def test_portfolio_freshness_target_has_new_month_grace(self):
         from datetime import date
         from tracker.coverage import expected_portfolio_as_of
