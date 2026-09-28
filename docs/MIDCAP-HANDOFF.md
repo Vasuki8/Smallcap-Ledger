@@ -1,93 +1,88 @@
 # Mid Cap backend handoff
 
-Use this handoff together with the latest generated readiness reports and the exact GitHub Actions run. Older successful audits and isolated source preflights are history, not proof that the latest production collector passed.
+Use this handoff with current generated readiness artifacts and the exact GitHub Actions run. Old audits and source preflights are historical evidence, not proof of a new production recovery.
 
 ## Latest verified checkpoint
 
-- Latest code change: **PR #290**, freshness-safe portfolio reconciliation and launch-input validation. Code merge: `85642b293bd496e827eac3aa6ad50c5f59a13426`.
-- Production: [run #647 / 36380625528](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36380625528), **completed successfully on 2026-09-28**. Both build and deploy jobs passed. Verified stages include the audit-generation boundary, staged audits, regressions, site generation, generated-data/download validation, cumulative archive publication, status recording and Pages deployment.
-- Refreshed production artifacts were inspected at commit **`9a370aa85e67936d016659b7d2c1ebd5fc62d372`**. Portfolio readiness was evaluated at **2026-09-28T05:15:45.365686+00:00**; launch readiness at **2026-09-28T05:15:45.442468+00:00**. The expected portfolio reporting month-end is **2026-08-31**. `deployment/update-status.json` was built at **05:18:54 UTC**; that is a status-build timestamp, not a source observation or the terminal deployment time.
-- Final pre-merge head: `0632014d2b8672f91057c5a54b0254f3bfd6dd24`. [PR regression run 36380319806](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36380319806) passed **631 tests** and syntax checks. This is 38 additional tests beyond the prior 593-test checkpoint. The earlier 42-test local focused suite was not the full repository suite.
-- [Research UI checks 36380319795](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36380319795) also passed. The dedicated batch-5 public-source preflight was **skipped** in this PR run; do not claim it was rerun. This patch changes readiness code, tests and one workflow-boundary step, not the AMC collectors or the public UI.
-- The generated launch report has **14/14 input-health checks passing**, **`input_issues=[]`**, and **`audit_input_integrity=true`**. The five portfolio batch inputs also pass reconciliation integrity. These are current-run artifact checks, not a claim that every fund/source has coverage.
+Code PR **#293**, merge `ee24a5b27bdd81e46e2ea1372a77a7b84e5d6a6a`, repairs the Samco Mid Cap TER collection path. The tested branch head is `bd7a34f890a3846d9b7445af01bd90e12a0d1d8f`.
 
-Verification scope: repository changes, full pre-merge regressions, production workflow results, generated source/readiness evidence and terminal build/deploy success. Direct public-site/browser access failed in this environment; no fresh visual/mobile pass is claimed. Production still reports **36 Small Cap families**, **143 plans**, AUM and fee coverage **36/36**, and latest NAV **2026-09-25**. Mid Cap remains non-public.
+Pre-merge validation: all **657 repository tests** passed (631 existing plus 26 new) in branch run **36383887287**, job **108805105001**. The same job passed the actual Samco source preflight with database/archive access forbidden. PR regression **36383910860** and Research UI checks **36383910851** also passed. Local tests used a limited dependency-facade scratch harness; the full-suite claim comes from actual repository CI, not that harness.
+
+Production [run **#648 / 36384128565**](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36384128565) completed successfully on **2026-09-28 at 06:05:16 UTC**. Build job **108805815609** and deploy job **108807567741** both passed. Verified stages include staged source audits, launch evaluation, regression tests, site generation, generated-data/download validation, archive publication, status recording and Pages deployment.
+
+Refreshed artifacts were inspected at **`68774e67c80d5373d36216cc885f7ad841caef4d`**. Portfolio readiness was evaluated at **2026-09-28T06:01:48.185913+00:00** and launch readiness at **06:01:48.260975 UTC**. All **14/14 audit-input checks pass**, with **`input_issues=[]`** and **`audit_input_integrity=true`**. These are current-run artifact checks, not a claim that all fund sources are covered.
+
+## Completed Samco investigation: data existed, but collection missed it
+
+The previous verified run #647 reported 30/34 TER coverage with Samco unresolved. Investigation found two observable causes: the category-17 request returned zero rows for Samco, while the exact AMC's all-category feed returned the fund on page 2; the local validator also rejected the publisher's plural category prefix, `Equity Schemes - Mid Cap Fund`.
+
+This demonstrates an AMFI filter/label inconsistency and a local validation limitation. It does not establish AMFI's internal reason or show that Samco stopped publishing expenses. The previous zero-row diagnostic remains valid for the specific filtered requests, but cannot be interpreted as absence from every official source.
+
+The new fallback applies only to **Samco Mid Cap Fund owned by Samco Mutual Fund** when it remains unresolved after ordinary collection. The official AMC selector is resolved dynamically. The accepted NSDL identity is `SAMC/O/E/MIF/25/10/0013`; similarly named Small Cap and Large & Mid Cap schemes do not match.
+
+All reported pages must succeed within a five-page/two-megabyte-per-page bound. Every row must belong to the requested AMC/month; pagination totals must stay stable and complete. Both plans' published TER values must be finite and reconcile with their BER, brokerage, transaction-cost and statutory-levy components. Missing values, conflicts, incomplete pages and future/wrong-period data remain explicit failures, not partial success or zero fees. The current-month request rolls forward automatically.
+
+The source audit and combined TER view retain exact API URL, response SHA-256, source row, original published fields, NSDL identity and observation time. No older value is copied in to cross a threshold. No new audit file is introduced, so the existing fourteen-input integrity contract is unchanged.
+
+The actual read-only preflight examined all **243 AMC records across three pages**, retaining **18 exact daily Samco observations**. The subsequent production report independently confirms **Direct TER 1.58%**, **Regular TER 3.00%**, reporting date **2026-09-25**. Direct BER is **0.81%**, not the Direct TER.
+
+Production source observation: **2026-09-28T05:59:19.600100+00:00**. Exact source: `https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000`, response row **44**, SHA-256 **`3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66`**. The original published row, including category, NSDL, both BER values and component totals, remains in `docs/MIDCAP-TER-READINESS.json`. The September 28 observation/summary times are not substituted for the September 25 reporting date.
 
 ## Current staged readiness
 
 | Measure | Verified production count | Existing launch data policy |
 | --- | ---: | ---: |
-| Scheme/NAV history coverage | 135 / 135 codes; 0 history failures | All staged codes |
+| Scheme/NAV history | 135 / 135 codes; 0 history failures | All staged codes |
 | AUM | 34 / 34 families | 34 / 34 |
-| Direct TER | **30 / 34** | At least 31 / 34 |
+| Direct TER | **31 / 34** | At least 31 / 34 |
 | Reported benchmark identity | 12 / 34 | At least 31 / 34 |
 | Current portfolio evidence | 16 / 34 | At least 28 / 34 |
-| Complete current portfolios | 4 / 34 | Separate measure; do not relabel partials |
+| Complete current portfolios | 4 / 34 | Tracked separately |
+| Audit-input integrity | 14 / 14 verified; no input issues | All required inputs |
 
-The complete current portfolios are **HDFC, Mirae Asset, Invesco India and Sundaram**. All 16 current portfolio rows report **2026-08-31**. There are 18 families without current portfolio evidence, of which at least 12 additional families are needed to reach the existing launch threshold.
+The fee requirement passes again: **21 families via AMFI plus 10 via first-party AMC evidence**. The remaining TER gaps are **Bandhan, Bank of India and WhiteOak Capital**. This restores the previous 31/34 coverage using a newly verified Samco source observation, not a copied historical value.
 
-The launch report remains **`data_ready=false`**, **`launch_ready=false`** and **`public_export_enabled=false`**. The remaining numerical requirements are **1 more Direct TER family**, **19 more reported benchmark identities** and **12 more current portfolio-evidence families**, followed by the separate category-aware public-surface dry run. Thresholds are product-quality policy, not regulatory rules.
+The four complete portfolios remain **HDFC, Mirae Asset, Invesco India and Sundaram**. Current portfolio coverage and completeness did not expand in this TER slice. The required portfolio reporting month-end remains **2026-08-31**.
 
-### New TER gap: Samco
+Launch is still **`data_ready=false`**, **`launch_ready=false`**, **`public_export_enabled=false`**. Current blockers are reported benchmark coverage, current portfolio coverage and the separate category-aware public surface. The numerical requirements remain **19 more benchmark identities** and **12 more current portfolio-evidence families**; NAV/AUM/TER and input integrity currently pass. Thresholds were not relaxed.
 
-**Do not repeat the previous 31/34 TER count as current.** Run #647 reports **30/34**, with these four missing families: **Bandhan, Bank of India, Samco and WhiteOak Capital**. Samco is the newly missing family; both Regular and Direct TER, their reporting date and source are null in the current reconciled report.
+## Existing safeguards remain in force
 
-The dedicated first-party TER batches themselves recovered **7/7** and **3/3** targets with no recorded errors. None of those ten targets is Samco. The verified finding is a newly missing Samco TER evidence row, not a proven AMC withdrawal, transport failure or bug introduced by PR #290. The exact underlying AMFI/source cause still needs investigation. Keep the gap explicit and the TER gate false; do not copy an older observation into current coverage or lower the threshold.
+PR #290's freshness-safe portfolio reconciliation is complete and must not be reimplemented. Reporting date precedes completeness; old complete portfolios cannot defeat current partial ones. The existing ten-day publication grace and numerical thresholds are unchanged. Valid stale evidence remains visible but uncounted. Source identity, hashes, observation dates and diagnostic alternatives stay preserved.
 
-## Completed: freshness-safe readiness
+`MIDCAP_AUDIT_STARTED_AT` is set before staged collection. Five core reports and nine producing batches must belong to the run and pass input checks. Fresh summaries do not make old input files or source observations new. The launch evaluator independently recomputes current portfolio coverage. Missing/failed inputs cannot silently create a green launch signal.
 
-The previously listed reliability task is implemented and production-verified in **PR #290**. Do not re-implement it from an older handoff.
+Mid Cap remains staged, with public export disabled. These source/readiness changes do not promote fees, holdings or portfolios to live tables. Normal Small Cap/archive maintenance still writes during the publisher workflow; do not describe the whole workflow as making zero database writes. No new permissions, paid infrastructure, dependencies, public UI or automation tasks were added.
 
-1. **Reporting freshness precedes completeness.** A complete July snapshot cannot displace a valid August partial snapshot when August is required. Completeness and position count break ties only for the same reporting date. The existing 10-day grace policy is unchanged; a newer closed month may count during that grace window. Future, malformed and intramonth reporting dates do not count.
-2. **Validate source rows and preserve evidence.** Accepted portfolio evidence requires exact staged family/AMC ownership, recovered status, a valid named-position count, boolean completeness, source URL/hash and valid observation/reporting times. Valid stale records stay visible as stale; excluded and alternate records remain diagnostic evidence. Source hashes, workbook/member identity, observation timestamps, scope and partial flags are retained rather than replaced by the summary timestamp.
-3. **Verify current-run audit inputs.** `MIDCAP_AUDIT_STARTED_AT` is established before staged audits. Missing, malformed, explicitly failed or older retained input files are reported as integrity problems. An explicitly supplied missing optional batch is not silently omitted. The launch command checks five core reports and all nine producing TER/benchmark/portfolio batches.
-4. **Recalculate at the launch boundary.** The launch evaluator independently re-evaluates portfolio rows at its evaluation clock. Retained current flags, inflated summary counts, mismatched universes and unverified inputs cannot produce a green data gate. Missing or malformed core inputs produce a fresh, blocked report rather than leaving an old green report as the result.
-5. **Keep publication separate.** Existing numerical thresholds and the disabled public switch are unchanged. Reported benchmark identity is not benchmark-series availability. No silent Small Cap comparator or automatic category promotion is authorized.
+## Source corrections and limitations to retain
 
-Regression coverage includes older-complete/newer-partial precedence, stale/future/malformed dates, month/year/leap-year boundaries, the existing grace period, ownership/status/count errors, retained provenance, immutable inputs, missing or retained files, false-green summaries and file-to-launch integration. The implementation plan and completed execution ledger are in [2026-09-28-midcap-freshness.md](superpowers/plans/2026-09-28-midcap-freshness.md).
+- **Mahindra:** the original 63 positions included four sector headings; the corrected 59 issuers, 16 sector subtotals and 97.71% equity weight reconcile. It remains equity-only partial. Keep post-total-footer, duplicate, invalid-weight and responsive-table guards. Correction history remains in `docs/MIDCAP-EVIDENCE-CORRECTIONS.md`; this was a parser correction, not a trade.
+- **Sundaram:** the discovery card's old AUM date is separate from its portfolio date. The exact MC workbook independently proves August 31. Preserve fund-code/category/source checks and validate the workbook's own reporting date; never borrow AUM/NAV timestamps.
+- **Kotak:** earlier isolated preflight evidence is not current portfolio coverage. Preserve the exact heading/date checks on variable fund-page responses and use only the latest accepted production report.
+- **Bandhan, Bank of India and WhiteOak TER:** keep remaining source limitations explicit. Samco's workaround must not be generalized to other AMCs without returned-source proof and separate tests. A filtered empty response alone does not prove absence from all official channels.
 
-## Portfolio source corrections retained from PRs #285–#287
+## Next coherent task: reported benchmark identities
 
-Latest production batch 5 continues to cover **JM (72 positions, partial)**, **Mahindra (59, equity-only partial)**, **Invesco India (43, complete)** and **Sundaram (79, complete)**. Kotak remains unavailable in production portfolio readiness. The earlier isolated Kotak preflight found 68 equity positions, 23 sectors and 96.48% equity weight, but that result is not current production coverage and must not be copied into the report. Preserve the exact identity/date gates and investigate the variable fund-page response before calling Kotak recovered.
+Samco recovery is now production-verified. Resume the larger reported-benchmark coverage deficit; do not repeat the completed Samco investigation or PR #290 freshness work. Use `docs/MIDCAP-BENCHMARK-READINESS.json::remaining_families`, not assumptions based on AMC or portfolio coverage. Prioritize a coherent group of existing portfolio-covered families with exact first-party factsheet/API evidence, such as Invesco India, Mirae Asset, ICICI Prudential, Axis, ABSL, SBI and UTI where they remain missing. Franklin, UTI and JM's earlier product-page identity failures must not be bypassed by weakening matching.
 
-### Sundaram: portfolio date is independent of AUM metadata
+Keep primary benchmark identity separate from additional comparators, and TRI separate from price-return variants. Preserve the publisher's actual wording and effective/reporting dates. Never infer the usual category benchmark, supply an unavailable series, or silently reuse the Small Cap comparator.
 
-The previously verified discovery card had `AUMASONDATE=31-Jul-2026`, while its Mid Cap workbook independently reported **2026-08-31**. PR #287 validates exact scheme identity, code **MC**, category and approved first-party workbook URL, then requires the workbook itself to prove its reporting date. It does not relabel the older AUM date or borrow a newer NAV date. Stale/malformed workbooks still fail; PDF/HTML responses remain explicit parser gaps.
+Then expand remaining current portfolio evidence using the same ownership/date/completeness checks, including a dependable source for Kotak. Verify Taurus and WhiteOak registrations before claiming full category-wide document coverage. Every source-recovery slice needs full pre-merge tests, exact production evidence and an updated handoff.
 
-Verified workbook identity from the preceding source-recovery checkpoint: `https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx`, SHA-256 `7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0`. Use the latest batch artifact for the current observation and discovery hashes.
+## Launch remains a separate decision
 
-### Mahindra: sector headings are not holdings
+Data policy: all 135 scheme/NAV codes, all 34 AUM families, at least 31 Direct TER families, at least 31 reported benchmark identities, and at least 28 current portfolio-evidence families, plus healthy verified inputs. Complete portfolios remain a distinct measure; partials must stay visibly partial. These are tracker product-quality thresholds, not regulatory rules.
 
-The original 63-position result incorrectly included Consumer Services, Healthcare, Power and Services. PRs #285–#286 corrected that to **59 issuers** and accepted only the observed issuer-marker legend after an explicit 100% Grand Total. Unknown post-total text, malformed weights, duplicates and conflicting responsive copies still fail closed.
+After the data gates pass, separately validate category-aware exporter/static JSON/API/UI routing, actual exportable fee/holding data, source/freshness/partial labels, correct benchmark series or explicit absence, and Small Cap non-regression. A readiness report cannot enable the public category by itself. No browser-level visual/mobile pass is claimed for this backend task.
 
-PR #287 preserves those guards and additionally requires issuer classification and structural sector-table parsing to agree. Sixteen sector subtotals and the **97.71%** equity total reconcile. Valid CSS sector styling is distinguished from the publisher's invalid `f ont-weight`/`fo nt-weight` issuer styling without repairing those issuer styles into sectors. The result remains `factsheet_equity_only`, `complete=false`; non-equity assets are excluded.
-
-Current parser/validation versions remain `mahindra-midcap-issuer-rows-v2` and `sector-equity-reconciliation-v1`. Original source SHA-256: `53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640`. Preserve the audit and correction history in [MIDCAP-EVIDENCE-CORRECTIONS.md](MIDCAP-EVIDENCE-CORRECTIONS.md). This was a parser correction, not a trade or a publisher portfolio change.
-
-## Safety and operational boundaries
-
-Mid Cap remains `stage=staged`. Readiness/source audits do not promote Mid Cap metrics, portfolios or holdings into live tables. No public UI, category switch, financial calculations or source-access permissions were changed in PR #290. The full production workflow still performs normal Small Cap/archive maintenance; do not describe the entire workflow as making zero database writes.
-
-Read-only regression and source-contract workflows remain separate from publication. Source preflights use `archive=False` and must not be treated as production results. The owner's existing daily ChatGPT launch-readiness check is unchanged and cannot change code, merge or publish; do not create a duplicate task. Its push/email notification settings last recorded in the preceding handoff were disabled, not rechecked in this verification slice.
-
-## Next coherent task: recover the newly missing TER evidence, then benchmarks
-
-First investigate **Samco Mid Cap TER** against the latest source-audit/AMFI response and its exact family/plan/date evidence. Compare with the prior successful checkpoint without retimestamping or copying old figures. Add an exact first-party Samco source only when its scheme identity and complete Regular/Direct TER pair are independently verified. Preserve BER versus TER distinctions, source hashes and reporting/observation times. Verify the next production report before restoring a 31/34 claim. Keep the other Bandhan, Bank of India and WhiteOak limitations explicit.
-
-After that, resume first-party benchmark-identity recovery. Existing portfolio-covered families with missing benchmark identities include **Invesco India, Mirae Asset, ICICI Prudential, Axis, Aditya Birla Sun Life, SBI, Tata/UTI only where the latest benchmark report actually marks them missing**; use the machine-readable remaining-family list rather than assume every portfolio source proves a benchmark. Prefer a coherent batch with verified fund-specific AMC disclosures. Distinguish the designated primary benchmark from additional comparators and TRI from price-return variants. Retain evidence and do not infer the category's usual benchmark.
-
-Then continue the remaining current portfolio families, including the unreliable Kotak response. Every new slice must retain the current-run integrity gate, run full pre-merge regressions, verify its exact production run and update this handoff. A successful workflow is not proof that an individual source gap is resolved.
-
-## Publication still requires a separate dry run
-
-Before deliberate launch, implement and validate category-aware exporter/static JSON/API/UI routing, actual exportable holdings and metric evidence, source/freshness/partial labels, benchmark handling and Small Cap non-regression. Staged audit counts are not a substitute for financial records or usable benchmark series. The launch report itself never enables the category.
+The existing daily ChatGPT launch-readiness check is unchanged; do not create another. It cannot merge or publish. Notification channel settings were not rechecked in this slice.
 
 ## Source-of-truth artifacts
 
-- `docs/MIDCAP-LAUNCH-READINESS.json`: current threshold evaluation, 14 input checks, integrity issues and reporting/evaluation dates; never a launch switch.
-- `docs/MIDCAP-PORTFOLIO-READINESS.json` and `.md`: current/stale/unavailable rows, completeness, provenance and diagnostic alternatives.
-- `docs/MIDCAP-PORTFOLIO-BATCH1.json` through `BATCH5.json`: source-level portfolio evidence and errors.
-- `docs/MIDCAP-TER-READINESS.json`, its two first-party batches and `docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json`: current TER/AUM evidence and gaps.
-- `docs/MIDCAP-BENCHMARK-READINESS.json` and its producing batches: benchmark identities, not proof of available series.
-- `deployment/midcap-history-status.json`: staged NAV-history status.
-- `deployment/update-status.json`: build/publication status, distinct from source coverage.
+- `docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json`: AMFI source responses, fallback checks, Samco raw row, exact reporting/observation dates and hashes.
+- `docs/MIDCAP-TER-READINESS.json` and `.md`: combined current fee evidence and unresolved families.
+- `docs/MIDCAP-LAUNCH-READINESS.json`: current threshold/input-integrity evaluation, not a switch.
+- `docs/MIDCAP-PORTFOLIO-READINESS.json` and producing batches 1–5: current/stale holdings evidence, source identity and completeness.
+- `docs/MIDCAP-BENCHMARK-READINESS.json` and its two batches: reported identities, not proof of available comparison series.
+- `deployment/midcap-history-status.json` and `deployment/update-status.json`: history and publication state, separate from fund-source coverage.
+- `docs/superpowers/plans/2026-09-28-samco-ter-recovery.md`: investigation and execution ledger.
