@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-28T19:56:46+00:00
+Prepared: 2026-09-28T20:15:41+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
@@ -38,7 +38,7 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | SBI MIDCAP FUND | SBI Mutual Fund | Gap | 1.0500% · 2026-09-27 | Gap | Gap | 9 | aum, benchmark_identity, current_portfolio |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | Gap | 1.0600% · 2026-09-27 | Gap | Gap | 14 | aum, benchmark_identity, current_portfolio |
 | Tata Mid Cap Fund | Tata Mutual Fund | Gap | 0.8600% · 2026-09-27 | Gap | Gap | 12 | aum, benchmark_identity, current_portfolio |
-| Taurus Mid Cap Fund | Taurus Mutual Fund | Gap | 2.3600% · 2026-09-27 | Gap | Gap | 0 | aum, benchmark_identity, current_portfolio |
+| Taurus Mid Cap Fund | Taurus Mutual Fund | Gap | 2.3600% · 2026-09-28 | Gap | Gap | 0 | aum, benchmark_identity, current_portfolio |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | Gap | Gap | Gap | Gap | 11 | aum, direct_ter, benchmark_identity, current_portfolio |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | Gap | 1.9000% · 2026-09-28 | Gap | Gap | 3 | aum, benchmark_identity, current_portfolio |
 | Union Midcap Fund | Union Mutual Fund | Gap | 1.1100% · 2026-09-28 | Gap | Gap | 6 | aum, benchmark_identity, current_portfolio |

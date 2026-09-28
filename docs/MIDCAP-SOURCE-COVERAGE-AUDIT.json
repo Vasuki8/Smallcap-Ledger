@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T19:56:46+00:00",
+  "built_at": "2026-09-28T20:15:41+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -680,9 +680,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 27,
-          "mid_cap_rows": 27,
-          "sha256": "fc45aa7da1f8f9afbbd689d179b437cc9be97f85cbd62f8fc721715e485b8da3"
+          "rows": 28,
+          "mid_cap_rows": 28,
+          "sha256": "cef8936e52d1832f1506bff71c7240a0fa7bb3b5e05c09b2cba16c092c813625"
         }
       ],
       "matched_families": [
@@ -1313,7 +1313,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "c157f91b69463e6e9cb5d115398192b76db108d32ad0f3a4f10b500b275b9dd1",
-      "observed_at": "2026-09-28T19:56:44.328473+00:00",
+      "observed_at": "2026-09-28T20:15:39.919535+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1336,7 +1336,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-      "observed_at": "2026-09-28T19:56:45.479590+00:00",
+      "observed_at": "2026-09-28T20:15:40.938293+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1359,7 +1359,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
       "sha256": "4e76cad5931fb9f399aec4b3fe0c56d835de62f656bd132bd22cbc0672121410",
-      "observed_at": "2026-09-28T19:56:46.723812+00:00",
+      "observed_at": "2026-09-28T20:15:41.816789+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -3991,7 +3991,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-        "source_observed_at": "2026-09-28T19:56:45.479590+00:00",
+        "source_observed_at": "2026-09-28T20:15:40.938293+00:00",
         "source_row": 52,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -4463,7 +4463,7 @@
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": null,
       "ter": {
-        "as_of": "2026-09-27",
+        "as_of": "2026-09-28",
         "scheme_name": "Taurus Mid Cap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
