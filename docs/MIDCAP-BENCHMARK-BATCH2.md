@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-09-28T14:25:42+00:00
+Prepared: 2026-09-28T15:08:58+00:00
 
-Targets: **9** · recovered: **8** · failed: **1**.
+Targets: **10** · recovered: **9** · failed: **1**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -14,6 +14,7 @@ Targets: **9** · recovered: **8** · failed: **1**.
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
 | Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Nifty Midcap 150 TRI | https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html |
 | SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
 
 ## Errors
 

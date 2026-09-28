@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-28T14:25:42+00:00",
+  "built_at": "2026-09-28T15:08:58+00:00",
   "staged_category": "mid-cap",
   "families": 34,
-  "targets": 9,
-  "recovered": 8,
+  "targets": 10,
+  "recovered": 9,
   "failed": 1,
   "results": [
     {
@@ -18,7 +18,7 @@
       "source_sha256": "53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640",
       "source_content_type": "text/html",
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-09-28T14:25:25+00:00",
+      "observed_at": "2026-09-28T15:08:29+00:00",
       "amc": "Mahindra Manulife Mutual Fund"
     },
     {
@@ -30,10 +30,10 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth",
-      "source_sha256": "ec1907c5783e4d752b2d2acec7cc4841aa940e959218e060619606dfea0b7180",
+      "source_sha256": "1636ab2b71f1ceb52773767380d610ecfd20e6417c5226dd6830a7c39122fff1",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": "2026-06-30",
-      "observed_at": "2026-09-28T14:25:27+00:00",
+      "observed_at": "2026-09-28T15:08:31+00:00",
       "amc": "Tata Mutual Fund"
     },
     {
@@ -48,7 +48,7 @@
       "source_sha256": "9957a1064c8e58e715978b9704b7405a4f4aadb836515e26f22b1616569f5e98",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": null,
-      "observed_at": "2026-09-28T14:25:30+00:00",
+      "observed_at": "2026-09-28T15:08:33+00:00",
       "amc": "Sundaram Mutual Fund"
     },
     {
@@ -60,10 +60,10 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "source_sha256": "12ad66f602ef48531d2e018513b9d6df4952048de42678e3def209c3db7a08c5",
+      "source_sha256": "77d9e0d7f1c622df74d0dabb26eb1421a95d0abe994a5ab671fcf92060e12250",
       "source_content_type": "text/html; charset=UTF-8",
       "source_data_as_of": "2026-09-25",
-      "observed_at": "2026-09-28T14:25:33+00:00",
+      "observed_at": "2026-09-28T15:08:36+00:00",
       "amc": "Baroda BNP Paribas Mutual Fund"
     },
     {
@@ -89,9 +89,9 @@
       "benchmark_series_verified": false,
       "parser_version": "explicit-primary-benchmark-labels-v1",
       "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular",
-      "source_sha256": "a11a5756f30d5eeafdc79053aedf2a1fc15b42058ef449163a9492de9e90aa04",
+      "source_sha256": "167340f62e8b36b9fc75067c82779bee217b51611d1af021dbef4dc8794a3102",
       "source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-09-28T14:25:37.519483+00:00"
+      "observed_at": "2026-09-28T15:08:39.209577+00:00"
     },
     {
       "family": "Mirae Asset Midcap Fund",
@@ -116,7 +116,7 @@
       "source": "https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund",
       "source_sha256": "06163cec57d3111a57bdc4922a573987056acba795fb84b5ad46af62199c1d0d",
       "source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-09-28T14:25:39.169374+00:00"
+      "observed_at": "2026-09-28T15:08:41.149292+00:00"
     },
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -141,7 +141,7 @@
       "source": "https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html",
       "source_sha256": "c21d367231006606430cdb2bb34970a44fca211115b31a93b5d39a15c8b67c14",
       "source_content_type": "text/html",
-      "observed_at": "2026-09-28T14:25:40.916704+00:00"
+      "observed_at": "2026-09-28T15:08:42.873462+00:00"
     },
     {
       "family": "SBI MIDCAP FUND",
@@ -167,7 +167,33 @@
       "source": "https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0",
       "source_sha256": "1340f3e97b4c90c9efd0a0623468c81011d4c2532a7ecb223335b1e6b5db66e6",
       "source_content_type": "application/pdf",
-      "observed_at": "2026-09-28T14:25:42.992664+00:00"
+      "observed_at": "2026-09-28T15:08:45.084978+00:00"
+    },
+    {
+      "family": "Invesco India Mid Cap Fund",
+      "amc": "Invesco Mutual Fund",
+      "status": "recovered",
+      "primary_benchmark": "BSE 150 Midcap TRI",
+      "reported_benchmarks": [
+        "BSE 150 Midcap TRI"
+      ],
+      "additional_benchmarks": [],
+      "benchmark_role": "primary",
+      "return_variant": "total_return",
+      "source_heading": "Invesco India Mid Cap Fund",
+      "source_page": 11,
+      "source_document_period": "2026-08",
+      "source_data_as_of": null,
+      "benchmark_effective_as_of": null,
+      "benchmark_series_verified": false,
+      "source_kind": "monthly_factsheet_pdf",
+      "parser_version": "invesco-midcap-benchmark-factsheet-v1",
+      "source_locator": "scheme-detail page; Scheme Benchmark Tier I panel and Key Facts Benchmark Index",
+      "evidence_excerpt": "As per AMFI Tier I Benchmark i.e. BSE 150 Midcap TRI | Benchmark Index: BSE 150 Midcap TRI",
+      "source": "https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf",
+      "source_sha256": "85b405dab788875aff4b31748bd1efab4424c73c9339cef207415595804d4a5a",
+      "source_content_type": "application/pdf",
+      "observed_at": "2026-09-28T15:08:58.983559+00:00"
     }
   ],
   "errors": [
@@ -181,9 +207,10 @@
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [
-    "Batch 2 uses exact current first-party fund pages, factsheets or scheme documents only.",
+    "Batch 2 uses exact first-party fund pages, factsheets or scheme documents only; their original periods stay explicit.",
     "No benchmark is inferred from category membership.",
-    "Axis, Mirae, Aditya Birla Sun Life and SBI use reviewed fund-specific primary labels; additional comparators and effective dates remain separate.",
+    "Axis, Mirae, Aditya Birla Sun Life, SBI and Invesco use reviewed fund-specific primary labels; additional comparators and effective dates remain separate.",
+    "Invesco requires the latest closed month's dated factsheet and two agreeing primary fields; performance comparators are not collected by this reader.",
     "A published benchmark identity does not prove that its benchmark series is available to the tracker."
   ]
 }

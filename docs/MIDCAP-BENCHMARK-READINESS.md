@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **16 / 34** · remaining: **18**.
+Benchmark identity: **17 / 34** · remaining: **17**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -18,7 +18,7 @@ Benchmark identity: **16 / 34** · remaining: **18**.
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap |
 | ITI Mid Cap Fund | ITI Mutual Fund | Gap | Gap |
-| Invesco India Mid Cap Fund | Invesco Mutual Fund | Gap | Gap |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
 | JM Mid Cap Fund | JM Financial Mutual Fund | Gap | Gap |
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | NIFTY Midcap 150 TRI | https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | Gap |
