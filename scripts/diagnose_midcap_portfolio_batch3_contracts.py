@@ -5,9 +5,13 @@ import argparse
 import io
 import json
 import re
+import sys
 import zipfile
 from pathlib import Path, PurePosixPath
 from urllib.parse import urljoin
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 
 import openpyxl
 from bs4 import BeautifulSoup
