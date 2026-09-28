@@ -130,11 +130,11 @@ Month End AUM: Rs. 100 Cr''')
         self.assertIn('https://cmsnew.bandhanmutual.com/wp-content/uploads/portfolio.pdf',links)
 
     def test_parser_upgrade_pending_query_retains_family_identity(self):
-        source=(Path(__file__).resolve().parents[1]/'scripts'/'refresh_amc_reports.py').read_text()
+        root=Path(__file__).resolve().parents[1]
+        source=(root/'scripts'/'refresh_amc_reports.py').read_text()
         self.assertIn('SELECT DISTINCT d.family,d.url,v.hash FROM documents d',source)
-        workflow=(Path(__file__).resolve().parents[1]/'.github'/'workflows'/'daily.yml').read_text()
-        upgrade=workflow.split('- name: Apply official AMC report collector upgrade',1)[1].split('- name: Collect daily data',1)[0]
-        self.assertNotIn('continue-on-error: true',upgrade)
+        workflow=(root/'.github'/'workflows'/'daily.yml').read_text()
+        self.assertNotIn('Apply official AMC report collector upgrade',workflow)
 
     def test_parser_upgrade_does_not_duplicate_daily_amc_discovery(self):
         root=Path(__file__).resolve().parents[1]
