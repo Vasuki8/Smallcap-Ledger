@@ -452,16 +452,67 @@ def _fetch_midcap_ter(families,months=3,fetch_fn=providers.fetch,sleep_fn=time.s
     })
     return rows,checks,errors
 
-def collect(today=None):
+def _retained_aum_rows(payload):
+    if payload is None:
+        return []
+    if not isinstance(payload,dict) or payload.get("schema_version")!=1:
+        raise ValueError("Retained Mid Cap AUM evidence has an unsupported schema")
+    if payload.get("evidence_kind")!="last_verified_mid_cap_aum":
+        raise ValueError("Retained Mid Cap AUM evidence kind is invalid")
+    if payload.get("source")!=amfi_metrics.PERFORMANCE_PAGE:
+        raise ValueError("Retained Mid Cap AUM source is not the reviewed AMFI fund-performance source")
+    rows=payload.get("rows")
+    if not isinstance(rows,list) or not rows:
+        raise ValueError("Retained Mid Cap AUM evidence has no rows")
+    cleaned=[]
+    for row in rows:
+        if not isinstance(row,dict):
+            raise ValueError("Retained Mid Cap AUM row is invalid")
+        cleaned.append({
+            "schemeName":row.get("schemeName"),
+            "dailyAUM":row.get("dailyAUM"),
+            "navDate":row.get("navDate"),
+        })
+    return cleaned
+
+
+def collect(today=None,retained_aum=None):
     families=_family_map()
     errors=[];checks=[];aum_rows=[];ter_rows=[]
+    aum_mode="unavailable"
     try:
         aum_rows,aum_checks=_fetch_midcap_aum(families);checks.extend(aum_checks)
+        aum_mode="current_fetch"
     except Exception as exc:
         errors.append({"source":"AMFI daily AUM","error":(str(exc) or type(exc).__name__)[:300]})
+        try:
+            aum_rows=_retained_aum_rows(retained_aum)
+            if aum_rows:
+                aum_mode="retained_last_verified"
+                checks.append({
+                    "kind":"aum_retained_last_verified",
+                    "source":retained_aum.get("source"),
+                    "retained_from_audit_built_at":retained_aum.get("retained_from_audit_built_at"),
+                    "rows":len(aum_rows),
+                })
+        except Exception as retained_exc:
+            errors.append({
+                "source":"Retained Mid Cap AUM",
+                "error":(str(retained_exc) or type(retained_exc).__name__)[:300],
+            })
     try:
         ter_rows,ter_checks,ter_errors=_fetch_midcap_ter(families)
         checks.extend(ter_checks);errors.extend(ter_errors)
     except Exception as exc:
         errors.append({"source":"AMFI TER","error":(str(exc) or type(exc).__name__)[:300]})
-    return report(aum_rows,ter_rows,source_checks=checks,source_errors=errors,today=today)
+    result=report(aum_rows,ter_rows,source_checks=checks,source_errors=errors,today=today)
+    result["aum_evidence"]={
+        "mode":aum_mode,
+        "current_fetch_ok":aum_mode=="current_fetch",
+        "retained_from_audit_built_at":(
+            retained_aum.get("retained_from_audit_built_at")
+            if aum_mode=="retained_last_verified" and isinstance(retained_aum,dict)
+            else None
+        ),
+    }
+    return result

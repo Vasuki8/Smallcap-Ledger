@@ -29,6 +29,18 @@ class MidCapLaunchReadinessTests(unittest.TestCase):
         self.assertEqual(r["required"], {"aum":34,"direct_ter":31,"benchmark_identity":31,"current_portfolio_evidence":28})
         self.assertEqual(r["remaining_to_data_gate"]["benchmark_identity"], 19)
         self.assertEqual(r["remaining_to_data_gate"]["current_portfolio_evidence"], 19)
+    def test_retained_aum_presence_does_not_clear_live_source_failure(self):
+        values=list(self.fixtures(bench=34,portfolio=34))
+        values[0]["source_errors"]=[{"source":"AMFI daily AUM","error":"502 Bad Gateway"}]
+        values[0]["aum_evidence"]={"mode":"retained_last_verified","current_fetch_ok":False}
+        result=self.check(values,public_surface_ready=True)
+        self.assertEqual(result["actual"]["aum"],34)
+        self.assertTrue(result["gates"]["aum"])
+        self.assertFalse(result["gates"]["source_fetch_health"])
+        self.assertFalse(result["data_ready"])
+        self.assertFalse(result["launch_ready"])
+        self.assertIn("source_fetch_health",result["blockers"])
+
     def test_data_ready_still_requires_public_surface_dry_run(self):
         values=self.fixtures(bench=31,portfolio=28)
         r=self.check(values)
