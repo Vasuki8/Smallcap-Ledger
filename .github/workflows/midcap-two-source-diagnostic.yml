@@ -19,37 +19,28 @@ jobs:
           version: '0.11.33'
           python-version: '3.12'
       - run: uv sync --frozen
-      - name: Inspect official discovery documents without writes
+      - name: Inspect bounded public catalogue contract
         run: |
           uv run --frozen python - <<'PY'
           import hashlib,json,re
           from pathlib import Path
           from unittest.mock import patch
-          from bs4 import BeautifulSoup
           from tracker import db,providers
-          urls=[
-            'https://digitalfactsheet.icicipruamc.com/fact/icici-prudential-midcap-fund.php',
-            'https://www.invescomutualfund.com/literature-forms/factsheets',
-            'https://www.icicipruamc.com/downloads/factsheets',
-          ]
+          base='https://www.invescomutualfund.com'
+          paths=['/_next/static/chunks/app/page-5577bb455604c475.js','/_next/static/chunks/4733-542e47c28f90cfb0.js','/_next/static/chunks/6007-719f81552068cb77.js','/_next/static/chunks/9428-9c4d2efd5d12871e.js']
           with patch.object(db,'connect',side_effect=AssertionError('Database forbidden')):
-            for url in urls:
+            for path in paths:
               try:
-                body,_,typ=providers.fetch(url,archive=False,max_bytes=8*1024*1024)
-                print('SOURCE',json.dumps({'url':url,'sha256':hashlib.sha256(body).hexdigest(),'type':typ,'bytes':len(body)}))
-                s=BeautifulSoup(body.decode('utf-8'),'html.parser')
-                print('HEADINGS',json.dumps([x.get_text(' ',strip=True) for x in s.find_all(['h1','h2','h3'])][:25]))
-                for a in s.find_all(['a','iframe','img','script','object']):
-                  val=str(a)
-                  if re.search(r'factsheet|fact-sheet|mid.?cap|\.pdf|\.js|\.png|\.jpg',val,re.I):
-                    if a.name=='script' and not a.get('src'): continue
-                    print('RESOURCE',val[:1300])
-                for m in list(re.finditer(r'benchmark|/api/|factsheet',body.decode('utf-8'),re.I))[:15]:
-                  print('CONTEXT',body.decode('utf-8')[max(0,m.start()-100):m.end()+400].replace('\n',' '))
-              except Exception as exc: print('ERROR',url,str(exc)[:400])
-          print('EXISTING_SOURCES')
-          data=json.loads(Path('tracker/sources.json').read_text())
-          items=data if isinstance(data,list) else data.get('sources',[])
-          for row in items:
-            if re.search(r'invesco|icici',json.dumps(row),re.I): print(json.dumps(row))
+                body,_,typ=providers.fetch(base+path,archive=False,max_bytes=8*1024*1024)
+                text=body.decode('utf-8')
+                print('SOURCE',path,len(body),hashlib.sha256(body).hexdigest())
+                for m in list(re.finditer(r'factsheet|fact-sheet|FactSheet|literatureandforms|CompleteMonthlyHoldings',text,re.I))[:25]:
+                  print('CONTRACT',text[max(0,m.start()-200):m.end()+550])
+              except Exception as exc: print('ERROR',path,str(exc)[:250])
+          print('EXISTING_CONTRACTS')
+          for path in Path('tracker').glob('*.py'):
+            text=path.read_text()
+            if 'invesco' not in text.lower(): continue
+            for line in text.splitlines():
+              if re.search(r'api/|invesco.*factsheet|factsheet.*invesco',line,re.I): print(str(path),line[:600])
           PY
