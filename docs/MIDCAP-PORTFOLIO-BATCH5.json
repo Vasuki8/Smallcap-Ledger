@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-09-28T06:01:48+00:00",
+  "built_at": "2026-09-28T13:24:35+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 5,
-  "recovered": 4,
-  "failed": 1,
+  "recovered": 3,
+  "failed": 2,
   "results": [
     {
       "family": "JM Mid Cap Fund",
@@ -23,7 +23,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T06:01:39+00:00"
+      "observed_at": "2026-09-28T13:24:26+00:00"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
@@ -397,24 +397,7 @@
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
       "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-09-28T06:01:41+00:00"
-    },
-    {
-      "family": "Invesco India Mid Cap Fund",
-      "amc": "Invesco Mutual Fund",
-      "status": "recovered",
-      "sheet": "Mid cap  Fund",
-      "as_of": "2026-08-31",
-      "positions_observed": 43,
-      "complete": true,
-      "unknown_rows": [],
-      "aum": 15905.311,
-      "scope": "structured_monthly_portfolio",
-      "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0",
-      "source_title": "Complete monthly holdings 08/26",
-      "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
-      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-28T06:01:43+00:00"
+      "observed_at": "2026-09-28T13:24:29+00:00"
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -431,16 +414,20 @@
       "source_sha256": "7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "discovery_source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json",
-      "discovery_source_sha256": "c207757ae71d6f60ac9314a3f8bcf7c2f2fb0bd2ddc1aad4adaf65cf2a816c82",
+      "discovery_source_sha256": "a1f9e9a1a56c9ec7e255c9ac180e30da664ecf2b2faa1fc0fe28814c1269e5c9",
       "publisher_scheme_code": "MC",
       "card_aum_as_of_raw": "31-Jul-2026",
-      "observed_at": "2026-09-28T06:01:48+00:00"
+      "observed_at": "2026-09-28T13:24:35+00:00"
     }
   ],
   "errors": [
     {
       "family": "Kotak Mid Cap Fund",
       "error": "Factsheet lacks the exact staged scheme heading"
+    },
+    {
+      "family": "Invesco India Mid Cap Fund",
+      "error": "Server error '502 Bad Gateway' for url 'https://www.invescomutualfund.com/api/CompleteMonthlyHoldings?year=2026&classification=equity'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
     }
   ],
   "production_writes": 0,

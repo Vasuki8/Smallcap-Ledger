@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T05:59:48+00:00",
+  "built_at": "2026-09-28T13:22:21+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 7,
@@ -72,14 +72,14 @@
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-24",
+      "as_of": "2026-09-27",
       "plans": {
         "Regular": {
-          "base_expense_ratio": 1.53,
+          "base_expense_ratio": 1.52,
           "brokerage": 0.01,
           "transaction_cost": 0.0,
           "statutory_levies": 0.3,
-          "ter": 1.84
+          "ter": 1.83
         },
         "Direct": {
           "base_expense_ratio": 0.88,
@@ -90,13 +90,13 @@
         }
       },
       "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "61d5eb4cd5d4c327880394ad941ad1ad1f5d5f566e9cbdab45ec2599dd813076",
+      "sha256": "b3813562020f884407fd8e9a6c1fa2d4cd45210140b3e5d9e54b97b06e23ca76",
       "identity": {
         "scheme_name": "ICICI Prudential Mid Cap Fund"
       },
       "evidence_type": "official_amc_workbook",
       "direct_ter": 1.09,
-      "regular_ter": 1.84
+      "regular_ter": 1.83
     },
     {
       "family": "Invesco India Mid Cap Fund",

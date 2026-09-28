@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T05:59:20+00:00",
+  "built_at": "2026-09-28T13:21:39+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -22,7 +22,7 @@
     {
       "kind": "aum_filters",
       "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformancefilters",
-      "sha256": "e14fdd554b7232c6ec06a0bae0a5126b3cd949d24a06588971c87848a4e3b5c4"
+      "sha256": "b1e615680b1d2bba17061f65a4e85bddcaee5898b3c422c7bd94f877a2d7fb64"
     },
     {
       "kind": "aum_subcategories",
@@ -52,20 +52,7 @@
         "mfid": 0,
         "reportDate": "25-Sep-2026"
       },
-      "sha256": "a1c00d0752481657b86f520170fadd598b88464d9787fae38f528d5131f02b65",
-      "matched_families": 0
-    },
-    {
-      "kind": "aum_mid_cap",
-      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformance",
-      "request": {
-        "maturityType": 1,
-        "category": 1,
-        "subCategory": 5,
-        "mfid": 0,
-        "reportDate": "24-Sep-2026"
-      },
-      "sha256": "db77de6fc9f8684f21d9762a22736466d7edac127c646ca34e627c71bf5bac1b",
+      "sha256": "9f1e5cd6857ac83d7a2438761f415b9513944ab39f851af61b6219228f678b46",
       "matched_families": 34
     },
     {
@@ -651,9 +638,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 24,
-          "mid_cap_rows": 24,
-          "sha256": "7e94a0ffa5eeeec3d610a1f76e7f3a3d3cb3944f309b168a205c839b9fe39bf3"
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "555e62a3d0e924f1e738fd0cf6f6f20fc154e470a733601dcfe08252a5a40f2c"
         }
       ],
       "matched_families": [
@@ -689,9 +676,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 25,
-          "mid_cap_rows": 25,
-          "sha256": "283322b8efef6f9f1c03de6729370e74d5924a2cab4b71441f53cef50bbcdc8c"
+          "rows": 27,
+          "mid_cap_rows": 27,
+          "sha256": "7a9014ca84242b1cea4728e080f6b2607be622467fefb9120dab90fb06256b84"
         }
       ],
       "matched_families": [
@@ -1362,7 +1349,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "bdc42aad40797d2d070c038af788a97204cb763fd4a80589aefdde2ad7f04b40",
-      "observed_at": "2026-09-28T05:59:05.083119+00:00",
+      "observed_at": "2026-09-28T13:21:37.344263+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1385,7 +1372,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-      "observed_at": "2026-09-28T05:59:19.600100+00:00",
+      "observed_at": "2026-09-28T13:21:38.512679+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1408,7 +1395,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
       "sha256": "1458364ed9bc1dd67e96797e29f0d5001c05ce238bc074e075edd422361bfe51",
-      "observed_at": "2026-09-28T05:59:20.468497+00:00",
+      "observed_at": "2026-09-28T13:21:39.570240+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1488,8 +1475,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 6682.289,
+        "as_of": "2026-09-25",
+        "value": 6680.097,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Aditya Birla Sun Life Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -1619,8 +1606,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 35090.125,
+        "as_of": "2026-09-25",
+        "value": 34402.434,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Axis Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -1696,7 +1683,7 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
+        "as_of": "2026-09-25",
         "value": 2624.4946,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Bandhan Mid Cap Fund",
@@ -1815,8 +1802,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 740.83,
+        "as_of": "2026-09-25",
+        "value": 737.14,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Bank of India Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -1928,8 +1915,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 2565.23,
+        "as_of": "2026-09-25",
+        "value": 2560.14,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Baroda BNP Paribas Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2053,8 +2040,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 5111.4253,
+        "as_of": "2026-09-25",
+        "value": 5102.372,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Canara Robeco Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2172,8 +2159,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 20062.275,
+        "as_of": "2026-09-25",
+        "value": 20036.982,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "DSP Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2285,8 +2272,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 19588.254,
+        "as_of": "2026-09-25",
+        "value": 19585.037,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Edelweiss Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2398,8 +2385,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 12506.37,
+        "as_of": "2026-09-25",
+        "value": 12434.22,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Franklin India Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2487,8 +2474,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 104533.91,
+        "as_of": "2026-09-25",
+        "value": 104358.19,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "HDFC Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2606,8 +2593,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 2372.8389,
+        "as_of": "2026-09-25",
+        "value": 2380.8096,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Helios Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2707,8 +2694,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 17029.158,
+        "as_of": "2026-09-25",
+        "value": 16997.242,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "HSBC Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2826,8 +2813,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 8130.6025,
+        "as_of": "2026-09-25",
+        "value": 8139.309,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "ICICI Prudential Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2885,8 +2872,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 16120.95,
+        "as_of": "2026-09-25",
+        "value": 15996.02,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Invesco India Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -2992,8 +2979,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 1483.44,
+        "as_of": "2026-09-25",
+        "value": 1483.85,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "ITI Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3105,8 +3092,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 1356.5657,
+        "as_of": "2026-09-25",
+        "value": 1330.0876,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "JM Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3176,7 +3163,7 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
+        "as_of": "2026-09-25",
         "value": 69941.18,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Kotak Mid Cap Fund",
@@ -3337,8 +3324,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 378.21027,
+        "as_of": "2026-09-25",
+        "value": 376.87982,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "LIC MF Mid cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3456,8 +3443,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 5199.15,
+        "as_of": "2026-09-25",
+        "value": 5188.55,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Mahindra Manulife Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3557,8 +3544,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 20024.938,
+        "as_of": "2026-09-25",
+        "value": 19969.752,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Mirae Asset Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3682,8 +3669,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 41037.65,
+        "as_of": "2026-09-25",
+        "value": 40942.21,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Motilal Oswal Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3787,8 +3774,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 51412.367,
+        "as_of": "2026-09-25",
+        "value": 51272.355,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Nippon India Growth Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -3906,8 +3893,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 10943.412,
+        "as_of": "2026-09-25",
+        "value": 10788.845,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "PGIM India Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4025,8 +4012,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 7829.7725,
+        "as_of": "2026-09-25",
+        "value": 7752.054,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Quant Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4141,8 +4128,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 76.84,
+        "as_of": "2026-09-25",
+        "value": 76.81,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Samco Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4161,7 +4148,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "3c2afe6b1046bb5e0ebb3f79aab5fe0089a23fecf794e8985e10fe86b64ece66",
-        "source_observed_at": "2026-09-28T05:59:19.600100+00:00",
+        "source_observed_at": "2026-09-28T13:21:38.512679+00:00",
         "source_row": 44,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -4277,14 +4264,14 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 23888.502,
+        "as_of": "2026-09-25",
+        "value": 23817.617,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "SBI Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-24",
+        "as_of": "2026-09-27",
         "scheme_name": "SBI Midcap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4384,14 +4371,14 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 14207.98,
+        "as_of": "2026-09-25",
+        "value": 14201.73,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Sundaram Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-25",
+        "as_of": "2026-09-27",
         "scheme_name": "Sundaram Mid Cap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4521,8 +4508,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 6014.75,
+        "as_of": "2026-09-25",
+        "value": 5996.36,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Tata Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4646,8 +4633,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 139.50714,
+        "as_of": "2026-09-25",
+        "value": 139.33287,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Taurus Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4698,8 +4685,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 174.48251,
+        "as_of": "2026-09-25",
+        "value": 174.7308,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "The Wealth Company Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4802,8 +4789,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 684.63,
+        "as_of": "2026-09-25",
+        "value": 688.2,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "TRUSTMF Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4873,8 +4860,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 1942.1859,
+        "as_of": "2026-09-25",
+        "value": 1943.8978,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "Union Midcap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -4934,7 +4921,7 @@
           "label": "Research Notes / Market Outlook",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "status": "Partial",
-          "last_checked": "2026-09-28T05:16:49+00:00"
+          "last_checked": "2026-09-28T06:02:36+00:00"
         }
       ],
       "coverage_gaps": [
@@ -4962,8 +4949,8 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
-        "value": 12167.749,
+        "as_of": "2026-09-25",
+        "value": 12161.872,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "UTI Mid Cap Fund",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -5005,7 +4992,7 @@
           "label": "Leadership Desk / Market Insights",
           "url": "https://www.utimf.com/learn",
           "status": "Partial",
-          "last_checked": "2026-09-28T05:16:52+00:00"
+          "last_checked": "2026-09-28T06:02:38+00:00"
         }
       ],
       "coverage_gaps": [
@@ -5033,7 +5020,7 @@
       ],
       "nav_history_checked": "2026-09-27T11:31:56+00:00",
       "aum": {
-        "as_of": "2026-09-24",
+        "as_of": "2026-09-25",
         "value": 7609.7,
         "unit": "₹ crore · daily scheme AUM",
         "scheme_name": "WhiteOak Capital Mid Cap Fund",

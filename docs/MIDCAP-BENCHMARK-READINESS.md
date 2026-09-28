@@ -1,11 +1,11 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **12 / 34** · remaining: **22**.
+Benchmark identity: **14 / 34** · remaining: **20**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
 | Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | Gap |
-| Axis Midcap Fund | Axis Mutual Fund | Gap | Gap |
+| Axis Midcap Fund | Axis Mutual Fund | BSE Midcap 150 TRI | https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Nifty Midcap 150 TRI | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
@@ -23,7 +23,7 @@ Benchmark identity: **12 / 34** · remaining: **22**.
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | NIFTY Midcap 150 TRI | https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Gap | Gap |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Nifty Midcap 150 TRI | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
-| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | Gap | Gap |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | Gap |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | Gap |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
