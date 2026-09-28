@@ -1,0 +1,28 @@
+name: Mid Cap source contract probe
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/midcap-source-probe.yml'
+      - 'scripts/diagnose_mahindra_midcap_table.py'
+      - 'tracker/midcap_factsheet_validation.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'fix/midcap-mahindra-table-sections-20260927'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      SMALLCAP_NO_SCHEDULER: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          version: '0.11.33'
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Inspect one official HTML source without database writes
+        run: uv run --frozen python scripts/diagnose_mahindra_midcap_table.py
