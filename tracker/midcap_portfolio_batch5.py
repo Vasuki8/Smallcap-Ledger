@@ -13,10 +13,13 @@ from bs4 import BeautifulSoup
 
 from . import db, disclosures, jm_portfolios, providers
 from .coverage import expected_portfolio_as_of
-from .midcap_portfolio_first_party import (
-    CORPORATE_HINT, _add_position, _clean, _explicit_dates, _kotak, _percent, _table_rows
+from .midcap_portfolio_first_party import _explicit_dates, _kotak
+from .midcap_factsheet_validation import (
+    PARSER_VERSION as MAHINDRA_PARSER_VERSION,
+    mahindra_positions as _mahindra_positions,
 )
 from .midcap_portfolio_structured import _parse_workbook
+from .report_parser import dated
 
 
 KOTAK_FAMILY="Kotak Mid Cap Fund"
@@ -44,21 +47,6 @@ def _require_html_identity_date(body,family,expected):
     return soup,text
 
 
-def _mahindra_positions(soup):
-    out=[]
-    for table,rows in _table_rows(soup):
-        context=_clean(table.get_text(" ",strip=True))
-        if not re.search(r"Company\s*/\s*Issuer|%\s*of\s*Net\s*Assets",context,re.I):
-            continue
-        for cells in rows:
-            if len(cells)<2:continue
-            name=next((x for x in cells if x and _percent(x) is None),None)
-            weight=next((_percent(x) for x in reversed(cells) if _percent(x) is not None),None)
-            if not name or not CORPORATE_HINT.search(name):continue
-            _add_position(out,name,weight)
-    return out
-
-
 def _html_result(family,amc,url,parser,fetch_fn,expected):
     body,_,typ=fetch_fn(url,archive=False,max_bytes=12*1024*1024)
     soup,_=_require_html_identity_date(body,family,expected)
@@ -80,9 +68,11 @@ def _kotak_result(fetch_fn,expected):
 
 
 def _mahindra_result(fetch_fn,expected):
-    return _html_result(
+    result=_html_result(
         MAHINDRA_FAMILY,"Mahindra Manulife Mutual Fund",MAHINDRA_URL,
         _mahindra_positions,fetch_fn,expected)
+    result["parser_version"]=MAHINDRA_PARSER_VERSION
+    return result
 
 
 def _jm_source(fetch_fn,expected):
@@ -202,7 +192,9 @@ def _sundaram_result(fetch_fn,expected):
         raise ValueError(f"Sundaram fund-card data exposed {len(matches)} exact Mid Cap rows")
     row=matches[0]
     dated_value=str(row.get("AUMASONDATE") or "").strip()
-    day=disclosures.report_date(dated_value)
+    # AUMASONDATE is a date field, not a document with an "as on" label.
+    # The downloaded portfolio must independently prove its own reporting date.
+    day=dated(dated_value) or disclosures.report_date(dated_value)
     if day!=expected:
         raise ValueError(f"Sundaram fund-card row is not current: {day or 'unknown'}")
     source=urljoin("https://www.sundarammutual.com",str(row.get("PORTFOLIO_PATH") or "").strip())
@@ -217,6 +209,8 @@ def _sundaram_result(fetch_fn,expected):
             "source":source,"source_sha256":hashlib.sha256(body).hexdigest(),
             "source_content_type":typ,
         }
+    if body.lstrip().startswith(b"%PDF"):
+        raise ValueError("Sundaram current source needs a dedicated PDF portfolio parser: "+source)
     soup,_=_require_html_identity_date(body,SUNDARAM_FAMILY,expected)
     positions=_mahindra_positions(soup)
     if len(positions)<5:
@@ -259,6 +253,7 @@ def collect(fetch_fn=providers.fetch,today=None):
         "notes":[
             "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
             "Kotak and Mahindra current factsheet holdings count only as partial current evidence.",
+            "Mahindra sector headings and totals are excluded; unknown rows and conflicting copies fail closed.",
             "Every result requires exact staged family identity and the current regulatory month-end; no live records are written.",
         ],
     }
