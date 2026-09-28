@@ -173,6 +173,13 @@ jobs:
         run: >-
           uv run --frozen python scripts/diagnose_midcap_ter_final3_targeted.py
           --output deployment/midcap-ter-final3-targeted.json
+      - name: Diagnose staged Mid Cap portfolio batch 1
+        if: github.event_name == 'push'
+        timeout-minutes: 8
+        continue-on-error: true
+        run: >-
+          uv run --frozen python scripts/diagnose_midcap_portfolio_batch1.py
+          --output deployment/midcap-portfolio-batch1-diagnostic.json
       - name: Import owner-supplied additions
         if: github.event_name == 'workflow_dispatch' && inputs.import_archive_asset != ''
         env:
