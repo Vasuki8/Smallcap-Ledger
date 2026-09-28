@@ -69,21 +69,52 @@ def coverage():
     return report
 
 
+PACKAGE_MANIFEST='PACKAGE-MANIFEST.json'
+PACKAGE_PREFIX='Smallcap-Ledger/'
+PACKAGE_EXCLUDED_DIRS={'.venv','__pycache__','.git','.openai','node_modules','data','site'}
+
+
+def package_sources(root=ROOT):
+    """Return immutable package inputs; generated package metadata is never an input."""
+    root=Path(root)
+    return [
+        f for f in root.rglob('*')
+        if f.is_file()
+        and not any(x in PACKAGE_EXCLUDED_DIRS for x in f.relative_to(root).parts)
+        and f.suffix not in ('.pyc','.zip')
+        and f.relative_to(root).as_posix()!=PACKAGE_MANIFEST
+    ]
+
+
+def write_package(output,sources,prepared_at,root=ROOT):
+    """Write one verified manifest after all package inputs have been recorded."""
+    root=Path(root);output=Path(output);manifest=[]
+    output.parent.mkdir(parents=True,exist_ok=True)
+    manifest_path=PACKAGE_PREFIX+PACKAGE_MANIFEST
+    with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+        for f in sorted(map(Path,sources)):
+            name=PACKAGE_PREFIX+f.relative_to(root).as_posix()
+            if name==manifest_path:
+                raise RuntimeError('Generated package manifest cannot be a package input')
+            z.write(f,name)
+            manifest.append({'path':name,'bytes':f.stat().st_size,'sha256':digest(f)})
+        z.writestr(manifest_path,json.dumps({'prepared_at':prepared_at,'files':manifest},indent=2)+'\n')
+    with zipfile.ZipFile(output) as z:
+        if z.namelist().count(manifest_path)!=1:
+            raise RuntimeError('Package must contain exactly one generated manifest')
+        if z.testzip():
+            raise RuntimeError('Package ZIP verification failed')
+    return manifest
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('output',type=Path);a=p.parse_args()
     if db.one("SELECT id FROM jobs WHERE status='running' LIMIT 1"):raise RuntimeError('Finish updates before packaging')
     verify_data(db.DATA);report=coverage();seed(ROOT/'bootstrap')
-    excluded={'.venv','__pycache__','.git','.openai','node_modules','data','site'}
-    sources=[f for f in ROOT.rglob('*') if f.is_file() and not any(x in excluded for x in f.relative_to(ROOT).parts) and f.suffix not in ('.pyc','.zip')]
+    sources=package_sources()
     if any(f.stat().st_size>=25*1024*1024 for f in sources):raise RuntimeError('A source-package file exceeds the browser upload limit')
-    output=a.output.resolve();output.parent.mkdir(parents=True,exist_ok=True);manifest=[]
-    with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
-        for f in sorted(sources):
-            name='Smallcap-Ledger/'+f.relative_to(ROOT).as_posix();z.write(f,name)
-            manifest.append({'path':name,'bytes':f.stat().st_size,'sha256':digest(f)})
-        z.writestr('Smallcap-Ledger/PACKAGE-MANIFEST.json',json.dumps({'prepared_at':report['server_time'],'files':manifest},indent=2)+'\n')
-    with zipfile.ZipFile(output) as z:
-        if z.testzip():raise RuntimeError('Package ZIP verification failed')
+    output=a.output.resolve()
+    manifest=write_package(output,sources,report['server_time'])
     print(json.dumps({'output':str(output),'bytes':output.stat().st_size,'files':len(manifest)+1,'funds':report['counts']['funds'],'plans':report['counts']['plans'],'aum_funds':report['counts']['aum_funds'],'fee_funds':report['counts']['fee_funds']},indent=2))
 
 
