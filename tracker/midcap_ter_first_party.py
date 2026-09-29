@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import date,timedelta,datetime
+import calendar
 import hashlib
 import io
 import json
@@ -161,18 +162,54 @@ def _hsbc(family,today):
         book.close()
 
 
+def _icici_fallback_sources(today):
+    """Current then previous month, on ICICI's reviewed public TER workbook path."""
+    fy=amc_expenses._icici_financial_year(today)
+    month=date(today.year,today.month,1)
+    previous=(month-timedelta(days=1)).replace(day=1)
+    for period in (month,previous):
+        # A fiscal-year rollover can make the previous month belong to another folder.
+        folder=amc_expenses._icici_financial_year(period)
+        yield (
+            amc_expenses.ICICI_FILE_BASE
+            + "/financials-disclosures-files/Files/Total%20Expense%20Ratio/"
+            + folder
+            + "/TotalExpenseRatio"
+            + period.strftime("%b%Y")
+            + ".xlsx"
+        )
+
+
 def _icici(family,today):
-    categories=amc_expenses._icici_api(amc_expenses.ICICI_CATEGORIES_API+"?userType=Investor")
-    parent,child,fy=amc_expenses._icici_category_ids(categories,today)
-    payload={
-        "categoryId":child,"userType":"Investor","fileType":"All","page":"1","size":"20",
-        "filter":[{"SHOW":[amc_expenses.ICICI_TER_SHOW]},{"FINANCIAL_YEAR":[fy]}],"search":"",
-    }
-    data=amc_expenses._icici_api(amc_expenses.ICICI_FILES_API,body=payload)
-    if not isinstance(data,dict):raise ValueError("ICICI TER file list changed format")
-    source=amc_expenses._icici_select_file(data.get("files"),parent,child,fy,today)
-    content,_,_=providers.fetch(source,archive=False,max_bytes=5*1024*1024)
-    if not content.startswith(b"PK"):raise ValueError("ICICI TER source is not XLSX")
+    source=None;content=None;api_error=None
+    try:
+        categories=amc_expenses._icici_api(amc_expenses.ICICI_CATEGORIES_API+"?userType=Investor")
+        parent,child,fy=amc_expenses._icici_category_ids(categories,today)
+        payload={
+            "categoryId":child,"userType":"Investor","fileType":"All","page":"1","size":"20",
+            "filter":[{"SHOW":[amc_expenses.ICICI_TER_SHOW]},{"FINANCIAL_YEAR":[fy]}],"search":"",
+        }
+        data=amc_expenses._icici_api(amc_expenses.ICICI_FILES_API,body=payload)
+        if not isinstance(data,dict):raise ValueError("ICICI TER file list changed format")
+        source=amc_expenses._icici_select_file(data.get("files"),parent,child,fy,today)
+        content,_,_=providers.fetch(source,archive=False,max_bytes=5*1024*1024)
+        if not content.startswith(b"PK"):raise ValueError("ICICI TER source is not XLSX")
+    except Exception as exc:
+        api_error=(str(exc) or type(exc).__name__)[:200]
+        source=None;content=None
+        for candidate in _icici_fallback_sources(today):
+            try:
+                body,_,_=providers.fetch(candidate,archive=False,max_bytes=5*1024*1024)
+                if not body.startswith(b"PK"):
+                    continue
+                # Do not accept a merely reachable workbook. Parsing below must
+                # prove the exact Mid Cap scheme and complete Regular/Direct pair.
+                source=candidate;content=body
+                break
+            except Exception:
+                continue
+        if source is None or content is None:
+            raise ValueError("ICICI financial disclosure API and reviewed TER workbook paths are unavailable") from exc
     rows=amc_expenses._icici_inline_strings(content)
     if len(rows)<4:raise ValueError("ICICI TER workbook has no usable rows")
     for col,expected in amc_expenses._ICICI_HEADER.items():
@@ -210,6 +247,8 @@ def _icici(family,today):
         "plans":plans,"source":source,"sha256":_sha(content),
         "identity":{"scheme_name":next(iter(names))},
         "evidence_type":"official_amc_workbook",
+        "discovery_channel":"financial_disclosure_api" if api_error is None else "reviewed_monthly_workbook_fallback",
+        "discovery_api_error":api_error,
     }
 
 
