@@ -23,6 +23,9 @@ from .midcap_portfolio_structured import _parse_workbook
 
 KOTAK_FAMILY="Kotak Mid Cap Fund"
 KOTAK_URL="https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html"
+KOTAK_REVIEWED_HEADINGS=(
+    "KOTAK MID CAP FUND (ERSTWHILE KNOWN AS KOTAK MIDCAP FUND)",
+)
 JM_FAMILY="JM Mid Cap Fund"
 MAHINDRA_FAMILY="Mahindra Manulife Mid Cap Fund"
 MAHINDRA_URL="https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html"
@@ -41,9 +44,11 @@ def _norm(value):
     return re.sub(r"[^a-z0-9]+","",str(value or "").casefold())
 
 
-def _require_html_identity_date(body,family,expected):
+def _require_html_identity_date(body,family,expected,reviewed_heading_aliases=()):
     soup=BeautifulSoup(body,"html.parser")
-    validate_factsheet_context(soup,family,expected)
+    validate_factsheet_context(
+        soup,family,expected,reviewed_heading_aliases=tuple(reviewed_heading_aliases)
+    )
     return soup,soup.get_text("\n",strip=True)
 
 
@@ -58,9 +63,11 @@ def _reconciled_mahindra_positions(soup):
     return reconciled
 
 
-def _html_result(family,amc,url,parser,fetch_fn,expected):
+def _html_result(family,amc,url,parser,fetch_fn,expected,reviewed_heading_aliases=()):
     body,_,typ=fetch_fn(url,archive=False,max_bytes=12*1024*1024)
-    soup,_=_require_html_identity_date(body,family,expected)
+    soup,_=_require_html_identity_date(
+        body,family,expected,reviewed_heading_aliases=reviewed_heading_aliases
+    )
     positions=parser(soup)
     if len(positions)<5:
         raise ValueError(f"Only {len(positions)} named current holdings were visible; need at least 5")
@@ -78,7 +85,8 @@ def _html_result(family,amc,url,parser,fetch_fn,expected):
 
 def _kotak_result(fetch_fn,expected):
     return _html_result(
-        KOTAK_FAMILY,"Kotak Mahindra Mutual Fund",KOTAK_URL,equity_positions,fetch_fn,expected)
+        KOTAK_FAMILY,"Kotak Mahindra Mutual Fund",KOTAK_URL,equity_positions,fetch_fn,expected,
+        reviewed_heading_aliases=KOTAK_REVIEWED_HEADINGS)
 
 
 def _mahindra_result(fetch_fn,expected):
