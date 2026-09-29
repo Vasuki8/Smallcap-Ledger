@@ -1,4 +1,4 @@
-"""Tests for UTI, ICICI Prudential and Union Mid Cap benchmark documents."""
+"""Tests for UTI and ICICI Prudential Mid Cap benchmark documents."""
 import hashlib
 import unittest
 from datetime import datetime, timezone
@@ -46,23 +46,6 @@ class MidCapBenchmarkGate3Tests(unittest.TestCase):
                     "Nifty Midcap 150 TRI (Benchmark)",
                     "Nifty Midcap 150 TRI (Additional Benchmark)",
                 ),
-            )
-
-    def test_union_kim_requires_explicit_scheme_benchmark_statement(self):
-        text=(
-            "Union Midcap Fund - Direct Plan - Growth Option\n"
-            "The benchmark for the Scheme is BSE 150 Midcap Index (TRI).\n"
-            "Additional Benchmark BSE Sensex Index (TRI)\n"
-            "*The data is as on March 31, 2025.\n"
-        )
-        row=gate3.parse_source("Union Midcap Fund",b"%PDF fixture",pdf_text_fn=lambda _:text)
-        self.assertEqual(row["primary_benchmark"],"BSE 150 Midcap Index (TRI)")
-        self.assertEqual(row["additional_benchmarks"],["BSE Sensex Index (TRI)"])
-        self.assertEqual(row["source_data_as_of"],"2025-03-31")
-        with self.assertRaises(ValueError):
-            gate3.parse_source(
-                "Union Midcap Fund",b"%PDF fixture",
-                pdf_text_fn=lambda _:text.replace("benchmark for the Scheme is","additional benchmark is"),
             )
 
     def test_inspect_requires_exact_registered_url_pdf_and_records_provenance(self):
@@ -113,7 +96,7 @@ class MidCapBenchmarkGate3Tests(unittest.TestCase):
              patch.object(batch2.gate3,"inspect_family",side_effect=inspector):
             result=batch2.collect(fetch_fn=lambda *a,**k:(b"",None,"application/pdf"))
         self.assertEqual(set(seen),set(gate3.SOURCES))
-        self.assertEqual(result["recovered"],3)
+        self.assertEqual(result["recovered"],2)
         self.assertEqual(result["errors"],[])
 
         wrong=[{"family":"UTI - Mid Cap Fund","amc":"Wrong AMC"}]
