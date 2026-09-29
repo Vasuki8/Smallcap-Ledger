@@ -52,20 +52,18 @@ class BandhanMidCapBenchmarkTests(unittest.TestCase):
                 ),
             )
 
-    def test_wrong_or_ambiguous_benchmark_is_rejected(self):
+    def test_wrong_benchmark_is_rejected_and_identical_repeat_is_not_conflict(self):
         with self.assertRaisesRegex(ValueError,"benchmark value"):
             bandhan.parse_source(
                 b"%PDF fixture",
                 pdf_text_fn=lambda _:table_text("BSE 250 SmallCap TRI"),
             )
-        with self.assertRaisesRegex(ValueError,"benchmark value"):
-            bandhan.parse_source(
-                b"%PDF fixture",
-                pdf_text_fn=lambda _:table_text().replace(
-                    "Bandhan Midcap Fund - Direct Plan",
-                    "BSE 150 Midcap TRI Bandhan Midcap Fund - Direct Plan",
-                ),
-            )
+        repeated=table_text().replace(
+            "Bandhan Midcap Fund - Direct Plan",
+            "BSE 150 Midcap TRI Bandhan Midcap Fund - Direct Plan",
+        )
+        row=bandhan.parse_source(b"%PDF fixture",pdf_text_fn=lambda _:repeated)
+        self.assertEqual(row["primary_benchmark"],"BSE 150 Midcap TRI")
 
     def test_inspect_requires_exact_url_pdf_and_records_provenance(self):
         body=b"%PDF fixture"
