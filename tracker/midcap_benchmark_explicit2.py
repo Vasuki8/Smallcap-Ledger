@@ -1,4 +1,4 @@
-"""Reviewed first-party benchmark sources for four staged Mid Cap funds.
+"""Reviewed first-party benchmark sources for three staged Mid Cap funds.
 
 Source-specific parsing preserves each publisher's exact primary benchmark
 wording and keeps additional comparators separate. Scheme aliases are accepted
@@ -21,7 +21,6 @@ SOURCES = {
         "https://www.franklintempletonindia.com/static/factsheet/Innerpage/"
         "Franklin-India-Prima-Fund.html"
     ),
-    "UTI - Mid Cap Fund": "https://www.utimf.com/mutual-funds/uti-mid-cap-fund",
     "Motilal Oswal Midcap Fund": (
         "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
     ),
@@ -32,7 +31,6 @@ SOURCES = {
 }
 AMCS = {
     "Franklin India Mid Cap Fund": "Franklin Templeton Mutual Fund",
-    "UTI - Mid Cap Fund": "UTI Mutual Fund",
     "Motilal Oswal Midcap Fund": "Motilal Oswal Mutual Fund",
     "HSBC Midcap Fund": "HSBC Mutual Fund",
 }
@@ -41,13 +39,11 @@ ALIASES = {
         "Franklin India Mid Cap Fund",
         "Franklin India Mid Cap Fund (Erstwhile Franklin India Prima Fund)",
     ),
-    "UTI - Mid Cap Fund": ("UTI Mid Cap Fund",),
     "Motilal Oswal Midcap Fund": ("Motilal Oswal Midcap Fund",),
     "HSBC Midcap Fund": ("HSBC Midcap Fund",),
 }
 HTML_FAMILIES = {
     "Franklin India Mid Cap Fund",
-    "UTI - Mid Cap Fund",
     "Motilal Oswal Midcap Fund",
 }
 MAX_BYTES = 20 * 1024 * 1024
@@ -148,27 +144,6 @@ def _parse_franklin(text):
     )
 
 
-def _parse_uti(text):
-    family = "UTI - Mid Cap Fund"
-    _require_alias(text, family)
-    matches = re.findall(
-        r"\bBenchmark\s+Index\s+(Nifty\s+Midcap\s+150\s+TRI)\b",
-        text,
-        re.I,
-    )
-    values = {_norm(x): _clean(x) for x in matches}
-    if len(values) != 1:
-        raise ValueError("UTI fund page lacks one unambiguous Benchmark Index value")
-    value = next(iter(values.values()))
-    return _base(
-        value,
-        source_heading="UTI Mid Cap Fund",
-        source_locator="Current fund page; Fund Facts Benchmark Index field",
-        evidence_excerpt=f"Benchmark Index {value}",
-        source_kind="current_fund_page",
-    )
-
-
 def _parse_motilal(text):
     family = "Motilal Oswal Midcap Fund"
     _require_alias(text, family)
@@ -230,7 +205,6 @@ def _parse_hsbc(text):
 
 PARSERS = {
     "Franklin India Mid Cap Fund": _parse_franklin,
-    "UTI - Mid Cap Fund": _parse_uti,
     "Motilal Oswal Midcap Fund": _parse_motilal,
     "HSBC Midcap Fund": _parse_hsbc,
 }
