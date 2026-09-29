@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **26 / 34** · remaining: **8**.
+Benchmark identity: **28 / 34** · remaining: **6**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -17,9 +17,9 @@ Benchmark identity: **26 / 34** · remaining: **8**.
 | HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap |
-| ITI Mid Cap Fund | ITI Mutual Fund | Gap | Gap |
+| ITI Mid Cap Fund | ITI Mutual Fund | Nifty Midcap 150 TRI | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
-| JM Mid Cap Fund | JM Financial Mutual Fund | Gap | Gap |
+| JM Mid Cap Fund | JM Financial Mutual Fund | Nifty Midcap 150 TRI | https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx |
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | NIFTY Midcap 150 TRI | https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Nifty Midcap 150 TRI | https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Nifty Midcap 150 TRI | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |

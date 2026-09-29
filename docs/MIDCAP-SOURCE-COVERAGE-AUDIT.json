@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T02:44:32+00:00",
+  "built_at": "2026-09-29T03:02:05+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -1361,8 +1361,8 @@
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
-      "sha256": "c157f91b69463e6e9cb5d115398192b76db108d32ad0f3a4f10b500b275b9dd1",
-      "observed_at": "2026-09-29T02:44:30.071359+00:00",
+      "sha256": "4a05f2c59d13c9cf1dafa893aa4699a4084d850e77b109edef70caed5b60aaeb",
+      "observed_at": "2026-09-29T03:02:03.306336+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1377,15 +1377,15 @@
       "pagination": {
         "page": 1,
         "pageSize": 100,
-        "total": 255,
+        "total": 256,
         "pageCount": 3
       }
     },
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
-      "sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-      "observed_at": "2026-09-29T02:44:31.100058+00:00",
+      "sha256": "aa1bb2aaec7732c5c4c50c2e3a2fd1a854622508d6325fb6d0733becdd758cf4",
+      "observed_at": "2026-09-29T03:02:04.393617+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1400,15 +1400,15 @@
       "pagination": {
         "page": 2,
         "pageSize": 100,
-        "total": 255,
+        "total": 256,
         "pageCount": 3
       }
     },
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
-      "sha256": "4e76cad5931fb9f399aec4b3fe0c56d835de62f656bd132bd22cbc0672121410",
-      "observed_at": "2026-09-29T02:44:32.025279+00:00",
+      "sha256": "6c89866ce53c097d1a5cf187fb8ecb7189744337b51bcbf4a5fba1d231057649",
+      "observed_at": "2026-09-29T03:02:05.472437+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1419,11 +1419,11 @@
       },
       "amc": "Samco Mutual Fund",
       "page": 3,
-      "rows": 55,
+      "rows": 56,
       "pagination": {
         "page": 3,
         "pageSize": 100,
-        "total": 255,
+        "total": 256,
         "pageCount": 3
       }
     },
@@ -1432,7 +1432,7 @@
       "amc": "Samco Mutual Fund",
       "month": "09-2026",
       "complete": true,
-      "total_rows": 255,
+      "total_rows": 256,
       "pages_checked": 3,
       "matched_families": [
         "Samco Mid Cap Fund"
@@ -4160,8 +4160,8 @@
           "value": 3.0,
           "unit": "% p.a. · AMC-reported via AMFI"
         },
-        "source_sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-        "source_observed_at": "2026-09-29T02:44:31.100058+00:00",
+        "source_sha256": "aa1bb2aaec7732c5c4c50c2e3a2fd1a854622508d6325fb6d0733becdd758cf4",
+        "source_observed_at": "2026-09-29T03:02:04.393617+00:00",
         "source_row": 52,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -5076,6 +5076,6 @@
     "current_fetch_ok": true,
     "retained_from_audit_built_at": null,
     "retained_artifact_path": "docs/MIDCAP-AUM-LAST-VERIFIED.json",
-    "retained_artifact_sha256": "5851cb26133428ff317655b62eed1ff4d417c3e3b4cd6135c56194e2ebcbf97a"
+    "retained_artifact_sha256": "4c21befd4a44533eb75da82c5ada862e9d40e7ff5486ce8c5dd33fa409d264f9"
   }
 }

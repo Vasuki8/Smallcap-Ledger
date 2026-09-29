@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-09-29T02:46:25+00:00
+Prepared: 2026-09-29T03:04:02+00:00
 
-Targets: **17** · recovered: **16** · failed: **1**.
+Targets: **18** · recovered: **18** · failed: **0**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -21,8 +21,6 @@ Targets: **17** · recovered: **16** · failed: **1**.
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Nifty Midcap 150 TRI | https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund |
 | HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
+| ITI Mid Cap Fund | ITI Mutual Fund | Nifty Midcap 150 TRI | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
+| JM Mid Cap Fund | JM Financial Mutual Fund | Nifty Midcap 150 TRI | https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
-
-## Errors
-
-- JM Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity
