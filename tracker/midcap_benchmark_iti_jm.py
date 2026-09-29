@@ -18,8 +18,7 @@ SOURCES = {
         "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html"
     ),
     "JM Mid Cap Fund": (
-        "https://www.jmfinancialmf.com/products/Equity/JM-Midcap-Fund/J644/"
-        "Regular-Growth-Option"
+        "https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx"
     ),
 }
 AMCS = {
@@ -110,7 +109,7 @@ def _parse_jm(text):
     family = "JM Mid Cap Fund"
     _require_alias(text, family)
     values = re.findall(
-        r"\bBenchmark\s+Index\s*:?\s*(Nifty\s+Midcap\s+150\s+TRI)\b",
+        r"\bBenchmark(?:\s+Index)?\s*:?\s*(Nifty\s+Midcap\s+150\s+TRI)\b",
         text,
         re.I,
     )
@@ -129,8 +128,8 @@ def _parse_jm(text):
             additional.append(cleaned)
     return _base(
         family, value,
-        "Current fund page; Benchmark Index field",
-        f"Benchmark Index: {value}",
+        "JM Midcap Fund scheme microsite; Benchmark field",
+        f"Benchmark: {value}",
         additional=additional,
     )
 
