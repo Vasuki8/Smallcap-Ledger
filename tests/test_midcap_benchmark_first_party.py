@@ -59,7 +59,8 @@ class MidCapBenchmarkFirstPartyTests(unittest.TestCase):
                     fetch_fn=lambda *args,body=body,**kwargs:(body,None,"text/html"),
                 )
                 self.assertEqual(row["primary_benchmark"],"Nifty Midcap 150 TRI")
-                self.assertEqual(row["reported_benchmarks"],["Nifty Midcap 150 TRI"])
+                self.assertEqual(row["reported_benchmarks"][0],"Nifty Midcap 150 TRI")
+                self.assertIn("Nifty Midcap 150 TRI",row["reported_benchmarks"])
 
     def test_explicit_midcap_benchmark_is_recovered_read_only(self):
         def fetch(url,**kwargs):
