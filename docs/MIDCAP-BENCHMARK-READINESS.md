@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **17 / 34** · remaining: **17**.
+Benchmark identity: **19 / 34** · remaining: **15**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -25,7 +25,7 @@ Benchmark identity: **17 / 34** · remaining: **17**.
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Nifty Midcap 150 TRI | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | Gap |
-| Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Gap | Gap |
+| Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Nifty Midcap 150 TRI | https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
 | Quant Mid Cap Fund | quant Mutual Fund | Gap | Gap |
 | SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
@@ -33,7 +33,7 @@ Benchmark identity: **17 / 34** · remaining: **17**.
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | Nifty Midcap 150 TRI | https://www.sundarammutual.com/Sundaram-Mid-Cap-Fund |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | Gap | Gap |
 | Tata Mid Cap Fund | Tata Mutual Fund | Nifty Midcap 150 TRI | https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth |
-| Taurus Mid Cap Fund | Taurus Mutual Fund | Gap | Gap |
+| Taurus Mid Cap Fund | Taurus Mutual Fund | Nifty Midcap 150 TRI | https://www.taurusmutualfund.com/node/557 |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | NIFTY Midcap 150 TRI | https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/ |
 | UTI - Mid Cap Fund | UTI Mutual Fund | Gap | Gap |
 | Union Midcap Fund | Union Mutual Fund | Gap | Gap |

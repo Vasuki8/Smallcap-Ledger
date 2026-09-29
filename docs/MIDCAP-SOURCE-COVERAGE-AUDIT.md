@@ -1,12 +1,12 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-28T20:51:28+00:00
+Prepared: 2026-09-29T01:50:01+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
 Families: **34** · scheme codes: **135** · AUM: **34** · Direct TER: **21** · reported benchmark identity: **0** · current portfolio: **0** · all required evidence: **0**.
 
-AUM evidence mode: **retained_last_verified**. A retained last-verified AUM set preserves original reporting dates and never clears a live source-fetch error.
+AUM evidence mode: **current_fetch**. A retained last-verified AUM set preserves original reporting dates and never clears a live source-fetch error.
 
 Mid Cap registry stage: **staged** · public export enabled: **false** · launch ready: **false**.
 
@@ -53,12 +53,6 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 - mid_cap_direct_ter_coverage_incomplete
 - mid_cap_benchmark_identity_coverage_incomplete
 - mid_cap_portfolio_current_coverage_incomplete
-- mid_cap_source_audit_fetch_errors
-
-## Source fetch errors
-
-- AMFI daily AUM: Server error '502 Bad Gateway' for url 'https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformancefilters'
-For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
 
 ## Notes
 

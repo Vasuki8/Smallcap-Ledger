@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-28T20:56:09+00:00",
+  "built_at": "2026-09-29T01:54:35+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
@@ -34,6 +34,12 @@
   "recent_jobs": [
     {
       "kind": "amc-communication-archive-repair",
+      "started_at": "2026-09-29T01:53:41+00:00",
+      "finished_at": "2026-09-29T01:53:41+00:00",
+      "status": "partial"
+    },
+    {
+      "kind": "amc-communication-archive-repair",
       "started_at": "2026-09-28T20:55:05+00:00",
       "finished_at": "2026-09-28T20:55:05+00:00",
       "status": "partial"
@@ -48,12 +54,6 @@
       "kind": "amc-communication-archive-repair",
       "started_at": "2026-09-28T20:18:59+00:00",
       "finished_at": "2026-09-28T20:18:59+00:00",
-      "status": "partial"
-    },
-    {
-      "kind": "amc-communication-archive-repair",
-      "started_at": "2026-09-28T20:00:20+00:00",
-      "finished_at": "2026-09-28T20:00:20+00:00",
       "status": "partial"
     }
   ],

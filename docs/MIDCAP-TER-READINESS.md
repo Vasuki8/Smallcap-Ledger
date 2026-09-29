@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-28T20:51:28+00:00
+Prepared: 2026-09-29T01:50:01+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -11,7 +11,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap | Gap | Gap | Gap |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Gap | Gap | Gap | Gap | Gap |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | 0.7800% | 2.2100% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | 0.8600% | 2.1100% | 2026-09-28 | first_party_amc | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-14&to_date=2026-09-28 |
+| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | 0.8600% | 2.1100% | 2026-09-28 | first_party_amc | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-15&to_date=2026-09-29 |
 | DSP Midcap Fund | DSP Mutual Fund | 0.8300% | 1.7300% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | 0.6800% | 1.8700% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | 1.1600% | 1.9100% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
@@ -22,7 +22,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-27 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
 | JM Mid Cap Fund | JM Financial Mutual Fund | 0.9500% | 2.4700% | 2026-09-28 | first_party_amc | https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest |
-| Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5352% | 1.4952% | 2026-09-26 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
+| Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5352% | 1.4952% | 2026-09-27 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | 1.7700% | 2.8600% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 0.7500% | 2.0200% | 2026-09-28 | first_party_amc | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 0.9600% | 2.0200% | 2026-09-27 | first_party_amc | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_27092026.xls |

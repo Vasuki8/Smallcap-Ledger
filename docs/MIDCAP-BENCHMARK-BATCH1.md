@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 1
 
-Prepared: 2026-09-28T20:52:35+00:00
+Prepared: 2026-09-29T01:51:25+00:00
 
-Targets: **10** · recovered: **8** · failed: **2** · staged families: **34**.
+Targets: **12** · recovered: **10** · failed: **2** · staged families: **34**.
 
 | Family | AMC | Primary benchmark | Source data as of | Source |
 | --- | --- | --- | --- | --- |
@@ -14,6 +14,8 @@ Targets: **10** · recovered: **8** · failed: **2** · staged families: **34**.
 | HDFC Mid Cap Fund | HDFC Mutual Fund | NIFTY Midcap 150 Index (Total Returns Index) | Observed current page | https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular |
 | DSP Midcap Fund | DSP Mutual Fund | Nifty Midcap 150 TRI | Observed current page | https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | Observed current page | https://www.heliosmf.in/helios-mid-cap-fund/ |
+| Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Nifty Midcap 150 TRI | Observed current page | https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy |
+| Taurus Mid Cap Fund | Taurus Mutual Fund | Nifty Midcap 150 TRI | Observed current page | https://www.taurusmutualfund.com/node/557 |
 
 ## Errors
 
