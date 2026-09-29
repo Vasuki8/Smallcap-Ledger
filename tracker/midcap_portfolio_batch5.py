@@ -33,6 +33,8 @@ SAMCO_FAMILY="Samco Mid Cap Fund"
 SAMCO_URL="https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg"
 MOTILAL_FAMILY="Motilal Oswal Midcap Fund"
 MOTILAL_PAGE="https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
+FRANKLIN_FAMILY="Franklin India Mid Cap Fund"
+FRANKLIN_URL="https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html"
 
 
 def _norm(value):
@@ -189,6 +191,78 @@ def _invesco_result(fetch_fn,expected):
         **parsed,"scope":"structured_monthly_portfolio",
         "source":source,"source_title":title,
         "source_sha256":hashlib.sha256(body).hexdigest(),"source_content_type":typ,
+    }
+
+
+def _franklin_result(fetch_fn,expected):
+    body,_,typ=fetch_fn(FRANKLIN_URL,archive=False,max_bytes=12*1024*1024)
+    media=str(typ or "").split(";",1)[0].strip().casefold()
+    if media not in ("text/html","application/xhtml+xml"):
+        raise ValueError("Franklin portfolio source did not return HTML")
+    soup=BeautifulSoup(body,"html.parser")
+    text=re.sub(r"\s+"," ",soup.get_text(" ",strip=True))
+    if _norm(FRANKLIN_FAMILY) not in _norm(text):
+        raise ValueError("Franklin source lacks the exact staged Mid Cap family identity")
+    d=date.fromisoformat(expected)
+    date_variants={
+        expected,
+        d.strftime("%d %B %Y"),
+        d.strftime("%B %d, %Y").replace(" 0"," "),
+        d.strftime("%d-%m-%Y"),
+        d.strftime("%d/%m/%Y"),
+    }
+    if not any(token.casefold() in text.casefold() for token in date_variants):
+        raise ValueError(f"Franklin page does not prove current portfolio date {expected}")
+    positions=[]
+    matched_table=False
+    for table in soup.find_all("table"):
+        rows=[]
+        for tr in table.find_all("tr"):
+            cells=[re.sub(r"\s+"," ",x.get_text(" ",strip=True)).strip() for x in tr.find_all(["th","td"])]
+            if cells:rows.append(cells)
+        if not rows:continue
+        header=" ".join(" ".join(row) for row in rows[:3]).casefold()
+        if "company name" not in header or ("% of assets" not in header and "% of asset" not in header):
+            continue
+        matched_table=True
+        for cells in rows:
+            if len(cells)<2:continue
+            name=cells[0].strip()
+            if not name or re.search(
+                r"^(?:Company Name|Equity|Fixed Income|Cash|Cash & Cash Equivalents|"
+                r"Grand Total|Total|Net Current Assets|TREPS)",
+                name,re.I,
+            ):
+                continue
+            weight=None
+            for token in reversed(cells[1:]):
+                token=token.replace(",","").replace("%","").strip()
+                if re.fullmatch(r"\d+(?:\.\d+)?",token):
+                    value=float(token)
+                    if 0<value<=20:
+                        weight=value
+                        break
+            if weight is None:continue
+            # Sector/category rows have no quantity/market-value evidence.
+            evidence=" ".join(cells[1:-1])
+            if not re.search(r"\d",evidence):
+                continue
+            key=_norm(name.rstrip("*"))
+            clean_name=re.sub(r"\*+$","",name).strip()
+            if key and key not in {_norm(x["name"]) for x in positions}:
+                positions.append({"name":clean_name,"weight":round(weight,8)})
+    if not matched_table:
+        raise ValueError("Franklin factsheet lacks the reviewed portfolio table")
+    if len(positions)<5:
+        raise ValueError(f"Only {len(positions)} named Franklin holdings were visible; need at least 5")
+    return {
+        "family":FRANKLIN_FAMILY,"amc":"Franklin Templeton Mutual Fund","status":"recovered",
+        "as_of":expected,"positions_observed":len(positions),"positions":positions,
+        "complete":False,"scope":"factsheet_portfolio_table",
+        "completeness_note":"The current factsheet portfolio table is retained as partial evidence; no independent 100% structured reconciliation is claimed.",
+        "equity_weight_sum":round(sum(x["weight"] for x in positions),8),
+        "source":FRANKLIN_URL,"source_sha256":hashlib.sha256(body).hexdigest(),
+        "source_content_type":typ,
     }
 
 
@@ -356,6 +430,7 @@ COLLECTORS=(
     (SUNDARAM_FAMILY,_sundaram_result),
     (SAMCO_FAMILY,_samco_result),
     (MOTILAL_FAMILY,_motilal_result),
+    (FRANKLIN_FAMILY,_franklin_result),
 )
 
 
@@ -380,6 +455,7 @@ def collect(fetch_fn=providers.fetch,today=None):
             "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
             "Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.",
             "Motilal Oswal uses the current fund page only to discover the exact dated monthly workbook, which is parsed through the existing structured parser.",
+            "Franklin uses its dated current static factsheet portfolio table and remains explicitly partial.",
             "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
             "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
             "Every result requires exact staged family identity and the current regulatory month-end; no live records are written.",
