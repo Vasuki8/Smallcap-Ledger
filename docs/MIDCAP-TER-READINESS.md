@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-29T15:57:29+00:00
+Prepared: 2026-09-29T16:05:28+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -17,7 +17,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | 1.1600% | 1.9100% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | 0.7600% | 1.3100% | 2026-09-24 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-28 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
-| Helios Mid Cap Fund | Helios Mutual Fund | 0.9800% | 2.4300% | 2026-09-28 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
+| Helios Mid Cap Fund | Helios Mutual Fund | 0.9800% | 2.4300% | 2026-09-29 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.1100% | 1.8500% | 2026-09-28 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-28 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
@@ -35,7 +35,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | 1.0600% | 1.8700% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | 1.9000% | 3.5300% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Tata Mid Cap Fund | Tata Mutual Fund | 0.8600% | 2.0300% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| Taurus Mid Cap Fund | Taurus Mutual Fund | 2.3600% | 2.8000% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
+| Taurus Mid Cap Fund | Taurus Mutual Fund | 2.3600% | 2.8000% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | 3.0100% | 5.0100% | 2026-09-28 | first_party_amc | https://www.wealthcompanyamc.in/api/ter-values/year/2026/export |
 | UTI - Mid Cap Fund | UTI Mutual Fund | 1.2600% | 1.9600% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Union Midcap Fund | Union Mutual Fund | 1.1100% | 2.4100% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |

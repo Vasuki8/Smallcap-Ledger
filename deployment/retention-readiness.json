@@ -1,5 +1,5 @@
 {
-  "prepared_at": "2026-09-29T16:01:18+00:00",
+  "prepared_at": "2026-09-29T16:08:48+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
@@ -7,7 +7,7 @@
   "historical_candidates_strengthened_by_current_scan": 4,
   "post_audit_hashes_reviewed": 391,
   "post_audit_delta": {
-    "reviewed_at": "2026-09-29T16:01:18+00:00",
+    "reviewed_at": "2026-09-29T16:08:47+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
     "new_hashes_reviewed": 391,
@@ -77,12 +77,12 @@
       "sha256": "53b1927eab61b9f56c49a46b9b037d35efb214be7c3bf1c75338849f32a6933f"
     },
     "category_staged_nav": {
-      "rows": 353292,
-      "sha256": "201a729e2f2ecf76cc47110be60831acedf191bc598ff15d1bb58f88805aad4c"
+      "rows": 353296,
+      "sha256": "b0aeaf4edbccaff7b0e4418ae416ad315b18651c71a79e463e6a360fb1b43519"
     },
     "category_staged_schemes": {
       "rows": 135,
-      "sha256": "02da0be1e265b4163466d4c9fc66f83946efb60cdec64baaa5edb2c15ebdcda1"
+      "sha256": "856e472978c5c906d743149d8ea654c989fda6ca4736ca015e2565643c06ae90"
     },
     "distribution_coverage": {
       "rows": 0,
@@ -113,8 +113,8 @@
       "sha256": "56043d8ee4da5f7a33742e19990ae78f14ed9bcb5e71c0a034dce4145aa1f52d"
     },
     "jobs": {
-      "rows": 1106,
-      "sha256": "2bea0f7a086ebd49920ab51bc02f64eef776d20feee17392a055b71c4f90a2bc"
+      "rows": 1107,
+      "sha256": "3a6b5dec095b97f2038e36ac28b98e13dbef9f13044b184f9facb442f2ed84df"
     },
     "metrics": {
       "rows": 26580,
@@ -148,7 +148,7 @@
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-09-29T03:07:19+00:00",
+  "active_checkpoint_created_at": "2026-09-29T16:02:13+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
   "deletion_enabled": false,

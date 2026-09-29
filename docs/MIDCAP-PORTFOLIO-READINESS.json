@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
   "staged_category": "mid-cap",
-  "built_at": "2026-09-29T16:01:03.973649+00:00",
-  "evaluated_at": "2026-09-29T16:01:03.973649+00:00",
+  "built_at": "2026-09-29T16:08:33.658158+00:00",
+  "evaluated_at": "2026-09-29T16:08:33.658158+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "families": 34,
-  "current_portfolio_evidence": 17,
-  "current_complete_portfolios": 4,
-  "remaining": 17,
+  "current_portfolio_evidence": 18,
+  "current_complete_portfolios": 5,
+  "remaining": 16,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -28,7 +28,7 @@
       "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
       "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-09-29T16:00:42+00:00",
+      "observed_at": "2026-09-29T16:08:13+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -50,7 +50,7 @@
       "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
       "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:23+00:00",
+      "observed_at": "2026-09-29T16:07:57+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -108,9 +108,9 @@
       "scope": "top_5",
       "complete": false,
       "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "source_sha256": "0185a127b1ef8adc7c8cb2cd6ffed7d1136ee37eaa9d17b1bc6a71e75223235e",
+      "source_sha256": "f3f93945c89bfb226c446d1b3f53e2d3baf5f499c4aa4217607a7431f5b610cc",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-29T15:59:30+00:00",
+      "observed_at": "2026-09-29T16:07:05+00:00",
       "amc": "Baroda BNP Paribas Mutual Fund",
       "current": true,
       "freshness_status": "current"
@@ -363,7 +363,7 @@
       "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html",
       "source_sha256": "1ab0d04dbf8cf7070e7502966af758780ff9d38c5e9378d7dea9870c46c13160",
       "source_content_type": "text/html",
-      "observed_at": "2026-09-29T15:59:27+00:00",
+      "observed_at": "2026-09-29T16:07:01+00:00",
       "amc": "Canara Robeco Mutual Fund",
       "current": true,
       "freshness_status": "current"
@@ -386,7 +386,7 @@
       "source_sha256": "7be409861d36404640a8d3a5635b83758b464f982b766444090245cc62f07963",
       "workbook_sha256": "e6d2c0000cd0b055c285e502a429a934cf165063e893998a5c38d2222bb9a42c",
       "source_content_type": "application/zip",
-      "observed_at": "2026-09-29T15:59:35+00:00",
+      "observed_at": "2026-09-29T16:07:10+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -428,7 +428,7 @@
       "source": "https://files.hdfcfund.com/s3fs-public/2026-09/Monthly%20HDFC%20Mid%20Cap%20Fund%20-%2031%20August%202026.xlsx",
       "source_sha256": "767a0a0025e82d8f74df9f31159f51bbc233b4085a1b7ae30f6e965db3574ea0",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T15:59:33+00:00",
+      "observed_at": "2026-09-29T16:07:08+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -480,7 +480,7 @@
       "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
       "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-09-29T16:00:21+00:00",
+      "observed_at": "2026-09-29T16:07:53+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -511,7 +511,7 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:57+00:00",
+      "observed_at": "2026-09-29T16:08:25+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -532,7 +532,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:53+00:00",
+      "observed_at": "2026-09-29T16:08:24+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -932,7 +932,7 @@
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
       "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-09-29T16:00:55+00:00",
+      "observed_at": "2026-09-29T16:08:25+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -951,21 +951,30 @@
       "source_title": "Portfolio Details as on 31st August 2026 for Mirae Asset Midcap Fund",
       "source_sha256": "f35304f2c9cf880e753ea44811b51fd2a3f06d5251c9a8a7667c76244e21d0bc",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:47+00:00",
+      "observed_at": "2026-09-29T16:08:17+00:00",
       "current": true,
       "freshness_status": "current"
     },
     {
       "family": "Motilal Oswal Midcap Fund",
       "amc": "Motilal Oswal Mutual Fund",
-      "status": "unavailable",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
-      "complete": false,
-      "source": null,
-      "current": false,
-      "freshness_status": "unavailable"
+      "status": "recovered",
+      "sheet": "YO07",
+      "as_of": "2026-08-31",
+      "positions_observed": 32,
+      "complete": true,
+      "unknown_rows": [],
+      "aum": 42851.5937,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.motilaloswalmf.com/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO07.xlsx",
+      "source_sha256": "349eadc5955f05b53a483f55677f9f018640ab14724ca7727a7322995d45a36a",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "discovery_source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
+      "discovery_source_sha256": "198155a7df7ce04f237c8d187df0615cdf1420ebd06009445819cf29873ed573",
+      "discovery_source_content_type": "text/html; charset=utf-8",
+      "observed_at": "2026-09-29T16:08:33+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Nippon India Growth Mid Cap Fund",
@@ -996,7 +1005,7 @@
       "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
       "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:44+00:00",
+      "observed_at": "2026-09-29T16:08:15+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1031,7 +1040,7 @@
       "source_title": "Download",
       "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:26+00:00",
+      "observed_at": "2026-09-29T16:08:00+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1168,9 +1177,9 @@
       "completeness_note": "Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
       "equity_weight_sum": 98.54,
       "source": "https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg",
-      "source_sha256": "1021d186d8442302393402cc236259ec9b54e091e9b057dc14e344688fe2c12a",
+      "source_sha256": "7b2b8f9873f50931dba8afec26bbef540916d10e4480676e76571ee3c0a1d08b",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-29T16:01:03+00:00",
+      "observed_at": "2026-09-29T16:08:31+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1192,7 +1201,7 @@
       "discovery_source_sha256": "98508b5a0f7b52886a64fcff32ed915775db93f43b7343b5e1551aa252e0d957",
       "publisher_scheme_code": "MC",
       "card_aum_as_of_raw": "31-Aug-2026",
-      "observed_at": "2026-09-29T16:01:02+00:00",
+      "observed_at": "2026-09-29T16:08:30+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1227,7 +1236,7 @@
       "source_title": "Portfolio as on 31st August, 2026",
       "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:00:28+00:00",
+      "observed_at": "2026-09-29T16:08:02+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1835,7 +1844,7 @@
       "source_sha256": "8e938ad0ab0fd14f315dc8f8657e718e13170039cdb36aec9864c5c5d8ee90b4",
       "workbook_sha256": "bc3e8ed96a0fdf477387da8efbacc29820c265c699e864d7bfaef0a9c5838555",
       "source_content_type": "application/zip",
-      "observed_at": "2026-09-29T16:00:30+00:00",
+      "observed_at": "2026-09-29T16:08:03+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1874,7 +1883,6 @@
     "ITI Mid Cap Fund",
     "Kotak Mid Cap Fund",
     "LIC MF Mid Cap Fund",
-    "Motilal Oswal Midcap Fund",
     "Nippon India Growth Mid Cap Fund",
     "Quant Mid Cap Fund",
     "TRUSTMF MID CAP FUND",
@@ -1912,36 +1920,36 @@
   "input_reports": [
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH1.json",
-      "sha256": "b043abdfd99acac299cf80b68fbffa7395f806826a9f667e2a5ffbfe31302f56",
-      "built_at": "2026-09-29T15:59:31+00:00",
+      "sha256": "01c8e8ec1363c8033cfb31a3a037e3523aef21411faef0f625741eec1a590f74",
+      "built_at": "2026-09-29T16:07:05+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH2.json",
-      "sha256": "69207ce35af55aaa05c452e7ed2392f5b7103d3894bb66a6593e115a966dd89d",
-      "built_at": "2026-09-29T15:59:35+00:00",
+      "sha256": "a4fb2167ec9216d9886f9b6aa8fab9ecb8c77230c13a81dc74254a3322809652",
+      "built_at": "2026-09-29T16:07:10+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH3.json",
-      "sha256": "1bd58b6ed9473812b540c6e4095da29fc2236c48db8e5f071c622ca82ccb2dfe",
-      "built_at": "2026-09-29T16:00:30+00:00",
+      "sha256": "e824477c310b45e6e6c20bb0f4bb9c05b4845427bcced1a61128281e34a0de73",
+      "built_at": "2026-09-29T16:08:03+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH4.json",
-      "sha256": "b07ae8259a4d7cfb310276affddb6b7381696d4ce54f167bd9181ecfdafeb928",
-      "built_at": "2026-09-29T16:00:47+00:00",
+      "sha256": "4537d82d8f3e19edb33c2ee964ad6d109fa798244aac4c34dc579ede8ff95297",
+      "built_at": "2026-09-29T16:08:17+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH5.json",
-      "sha256": "52c6e4a06780b600d5ba0b587afdeb2cf9373305dd87e536ee97cfe790df4efc",
-      "built_at": "2026-09-29T16:01:03+00:00",
+      "sha256": "3677d0acbc221e70b15c4382640826e8ee713d76637673dc69abe8ce39c0f0f0",
+      "built_at": "2026-09-29T16:08:33+00:00",
       "ok": true,
       "error": null
     }
