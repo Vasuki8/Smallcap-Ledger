@@ -6,6 +6,7 @@ from . import midcap_benchmark_documents as documents
 from . import midcap_benchmark_labels as labeled
 from . import midcap_benchmark_invesco as invesco
 from . import midcap_benchmark_explicit as explicit
+from . import midcap_benchmark_explicit2 as explicit2
 from .midcap_benchmark_first_party import inspect_family
 
 
@@ -18,6 +19,7 @@ SOURCES={
     **labeled.SOURCES,
     **documents.SOURCES,
     **explicit.SOURCES,
+    **explicit2.SOURCES,
 }
 
 
@@ -43,6 +45,8 @@ def collect(fetch_fn=None):
                 else invesco.AMC if family == invesco.FAMILY
                 else explicit.AMCS.get(family)
                 if family in explicit.SOURCES
+                else explicit2.AMCS.get(family)
+                if family in explicit2.SOURCES
                 else None
             )
             if registered_amc is not None and staged[family] != registered_amc:
@@ -55,6 +59,8 @@ def collect(fetch_fn=None):
                 inspector = invesco.inspect_family
             elif family in explicit.SOURCES:
                 inspector = explicit.inspect_family
+            elif family in explicit2.SOURCES:
+                inspector = explicit2.inspect_family
             else:
                 inspector = inspect_family
             row=inspector(family,url,fetch_fn=fetch_fn)

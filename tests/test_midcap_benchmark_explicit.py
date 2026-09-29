@@ -83,6 +83,14 @@ class MidCapBenchmarkExplicitTests(unittest.TestCase):
             explicit.inspect_family(family,explicit.SOURCES[family],
                                     fetch_fn=lambda *a,**k:(body,None,"application/pdf"),now=NOW)
 
+    def test_live_preflight_excludes_known_flaky_edelweiss_transport(self):
+        self.assertEqual(
+            set(explicit.PREFLIGHT_SOURCES),
+            {"Quant Mid Cap Fund","Samco Mid Cap Fund","LIC MF Mid Cap Fund"},
+        )
+        self.assertIn("Edelweiss Mid Cap Fund",explicit.SOURCES)
+        self.assertNotIn("Edelweiss Mid Cap Fund",explicit.PREFLIGHT_SOURCES)
+
     def test_batch2_routes_explicit_sources_and_requires_registered_amc(self):
         staged=[{"family":family,"amc":explicit.AMCS[family]} for family in explicit.SOURCES]
         seen=[]

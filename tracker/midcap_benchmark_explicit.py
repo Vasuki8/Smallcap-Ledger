@@ -193,6 +193,11 @@ def _parse_lic(text):
     }
 
 
+PREFLIGHT_SOURCES={
+    family:SOURCES[family]
+    for family in ("Quant Mid Cap Fund","Samco Mid Cap Fund","LIC MF Mid Cap Fund")
+}
+
 PARSERS = {
     "Quant Mid Cap Fund": _parse_quant,
     "Samco Mid Cap Fund": _parse_samco,
