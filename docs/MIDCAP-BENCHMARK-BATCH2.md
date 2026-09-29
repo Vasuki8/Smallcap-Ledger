@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-09-29T01:51:57+00:00
+Prepared: 2026-09-29T02:07:51+00:00
 
-Targets: **10** · recovered: **9** · failed: **1**.
+Targets: **14** · recovered: **13** · failed: **1**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -14,6 +14,10 @@ Targets: **10** · recovered: **9** · failed: **1**.
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
 | Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Nifty Midcap 150 TRI | https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html |
 | SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
+| Quant Mid Cap Fund | quant Mutual Fund | Nifty Mid Cap 150 TRI | https://quantmutual.com/equity/opportunities-fund |
+| Samco Mid Cap Fund | Samco Mutual Fund | Nifty Midcap 150 Total Returns Index | https://www.samcomf.com/faqs |
+| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Nifty Midcap 150 TRI | https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf |
+| LIC MF Mid Cap Fund | LIC Mutual Fund | Nifty Midcap 150 TRI | https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
 
 ## Errors

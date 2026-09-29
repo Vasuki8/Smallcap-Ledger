@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T01:50:01+00:00",
+  "built_at": "2026-09-29T02:06:19+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -1362,7 +1362,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "c157f91b69463e6e9cb5d115398192b76db108d32ad0f3a4f10b500b275b9dd1",
-      "observed_at": "2026-09-29T01:49:59.197058+00:00",
+      "observed_at": "2026-09-29T02:06:17.197314+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1385,7 +1385,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-      "observed_at": "2026-09-29T01:50:00.234477+00:00",
+      "observed_at": "2026-09-29T02:06:18.234062+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1408,7 +1408,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
       "sha256": "4e76cad5931fb9f399aec4b3fe0c56d835de62f656bd132bd22cbc0672121410",
-      "observed_at": "2026-09-29T01:50:01.111088+00:00",
+      "observed_at": "2026-09-29T02:06:19.102634+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -4161,7 +4161,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-        "source_observed_at": "2026-09-29T01:50:00.234477+00:00",
+        "source_observed_at": "2026-09-29T02:06:18.234062+00:00",
         "source_row": 52,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -5076,6 +5076,6 @@
     "current_fetch_ok": true,
     "retained_from_audit_built_at": null,
     "retained_artifact_path": "docs/MIDCAP-AUM-LAST-VERIFIED.json",
-    "retained_artifact_sha256": "fd7afe91a55f0d9beff2665c225ba35328ad00ce47959beff291f4165277fe62"
+    "retained_artifact_sha256": "4a4e673f6c3e448723ac13b993c603bf57e535c71d26daa312928796426fb921"
   }
 }
