@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T02:06:19+00:00",
+  "built_at": "2026-09-29T02:44:32+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -591,9 +591,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 25,
-          "mid_cap_rows": 25,
-          "sha256": "a7b47f0e7bae93bf195b3dbbf72ad65652bbb9073c844e943b8d9f3c37f255b0"
+          "rows": 28,
+          "mid_cap_rows": 28,
+          "sha256": "75c078756b9a7912443c6e252ca1525e1bf0b966cd490fd6284b4538ae3b9ed9"
         }
       ],
       "matched_families": [
@@ -1362,7 +1362,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "c157f91b69463e6e9cb5d115398192b76db108d32ad0f3a4f10b500b275b9dd1",
-      "observed_at": "2026-09-29T02:06:17.197314+00:00",
+      "observed_at": "2026-09-29T02:44:30.071359+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1385,7 +1385,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-      "observed_at": "2026-09-29T02:06:18.234062+00:00",
+      "observed_at": "2026-09-29T02:44:31.100058+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1408,7 +1408,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
       "sha256": "4e76cad5931fb9f399aec4b3fe0c56d835de62f656bd132bd22cbc0672121410",
-      "observed_at": "2026-09-29T02:06:19.102634+00:00",
+      "observed_at": "2026-09-29T02:44:32.025279+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -3689,7 +3689,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-25",
+        "as_of": "2026-09-28",
         "scheme_name": "Motilal Oswal Midcap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4161,7 +4161,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "92cb0d853e002580b09851d4730e87c243de774fc74da17449fc404817b12763",
-        "source_observed_at": "2026-09-29T02:06:18.234062+00:00",
+        "source_observed_at": "2026-09-29T02:44:31.100058+00:00",
         "source_row": 52,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -5076,6 +5076,6 @@
     "current_fetch_ok": true,
     "retained_from_audit_built_at": null,
     "retained_artifact_path": "docs/MIDCAP-AUM-LAST-VERIFIED.json",
-    "retained_artifact_sha256": "4a4e673f6c3e448723ac13b993c603bf57e535c71d26daa312928796426fb921"
+    "retained_artifact_sha256": "5851cb26133428ff317655b62eed1ff4d417c3e3b4cd6135c56194e2ebcbf97a"
   }
 }

@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-09-29T02:07:51+00:00
+Prepared: 2026-09-29T02:46:25+00:00
 
-Targets: **14** · recovered: **13** · failed: **1**.
+Targets: **17** · recovered: **16** · failed: **1**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -18,6 +18,9 @@ Targets: **14** · recovered: **13** · failed: **1**.
 | Samco Mid Cap Fund | Samco Mutual Fund | Nifty Midcap 150 Total Returns Index | https://www.samcomf.com/faqs |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Nifty Midcap 150 TRI | https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Nifty Midcap 150 TRI | https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf |
+| Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
+| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Nifty Midcap 150 TRI | https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund |
+| HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
 
 ## Errors

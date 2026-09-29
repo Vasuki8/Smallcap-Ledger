@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **23 / 34** · remaining: **11**.
+Benchmark identity: **26 / 34** · remaining: **8**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -12,9 +12,9 @@ Benchmark identity: **23 / 34** · remaining: **11**.
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | BSE 150 Mid Cap TRI | https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html |
 | DSP Midcap Fund | DSP Mutual Fund | Nifty Midcap 150 TRI | https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Nifty Midcap 150 TRI | https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf |
-| Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Gap | Gap |
+| Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | NIFTY Midcap 150 Index (Total Returns Index) | https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular |
-| HSBC Midcap Fund | HSBC Mutual Fund | Gap | Gap |
+| HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap |
 | ITI Mid Cap Fund | ITI Mutual Fund | Gap | Gap |
@@ -24,7 +24,7 @@ Benchmark identity: **23 / 34** · remaining: **11**.
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Nifty Midcap 150 TRI | https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | Nifty Midcap 150 TRI | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
-| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Gap | Gap |
+| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Nifty Midcap 150 TRI | https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Nifty Midcap 150 TRI | https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
 | Quant Mid Cap Fund | quant Mutual Fund | Nifty Mid Cap 150 TRI | https://quantmutual.com/equity/opportunities-fund |
