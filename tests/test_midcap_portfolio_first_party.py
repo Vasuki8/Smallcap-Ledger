@@ -6,6 +6,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tracker import db
+from bs4 import BeautifulSoup
+
+from tracker.midcap_factsheet_equities import validate_factsheet_context
 from tracker.midcap_portfolio_first_party import inspect_family
 
 
@@ -56,6 +59,27 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
                 "url":"https://digitalassets.canararobeco.com/test.html",
                 "parser":"canara","scope":"full_page_portfolio",
             },fetch_fn=fetch,today=date(2026,9,27))
+
+    def test_reviewed_heading_alias_is_opt_in_and_exact(self):
+        html=(
+            "<html><body><h1>KOTAK MID CAP FUND "
+            "(ERSTWHILE KNOWN AS KOTAK MIDCAP FUND)</h1>"
+            "<p>Data as on 31st August, 2026</p></body></html>"
+        )
+        soup=BeautifulSoup(html,"html.parser")
+        with self.assertRaisesRegex(ValueError,"exact staged scheme"):
+            validate_factsheet_context(soup,"Kotak Mid Cap Fund","2026-08-31")
+        validate_factsheet_context(
+            soup,"Kotak Mid Cap Fund","2026-08-31",
+            reviewed_heading_aliases=(
+                "KOTAK MID CAP FUND (ERSTWHILE KNOWN AS KOTAK MIDCAP FUND)",
+            ),
+        )
+        with self.assertRaisesRegex(ValueError,"exact staged scheme"):
+            validate_factsheet_context(
+                soup,"Kotak Mid Cap Fund","2026-08-31",
+                reviewed_heading_aliases=("KOTAK MID CAP FUND",),
+            )
 
     def test_wrong_family_is_rejected(self):
         html="<html><body>Canara Robeco Small Cap Fund as on August 31, 2026</body></html>"
