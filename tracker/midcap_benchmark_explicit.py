@@ -1,4 +1,4 @@
-"""Reviewed explicit benchmark sources for five staged Mid Cap funds.
+"""Reviewed explicit benchmark sources for four staged Mid Cap funds.
 
 Each parser is source-specific and requires:
 - the exact registered first-party URL,
@@ -23,20 +23,18 @@ from pypdf import PdfReader
 SOURCES = {
     "Quant Mid Cap Fund": "https://quantmutual.com/equity/opportunities-fund",
     "Samco Mid Cap Fund": "https://www.samcomf.com/faqs",
-    "Union Midcap Fund": "https://www.unionmf.com/docs/default-source/funddetail-downloads/presentation/union-midcap-fund.pdf",
     "Edelweiss Mid Cap Fund": "https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf",
     "LIC MF Mid Cap Fund": "https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf",
 }
 AMCS = {
     "Quant Mid Cap Fund": "quant Mutual Fund",
     "Samco Mid Cap Fund": "Samco Mutual Fund",
-    "Union Midcap Fund": "Union Mutual Fund",
     "Edelweiss Mid Cap Fund": "Edelweiss Mutual Fund",
     "LIC MF Mid Cap Fund": "LIC Mutual Fund",
 }
 HTML_FAMILIES = {"Quant Mid Cap Fund", "Samco Mid Cap Fund"}
 MAX_BYTES = 20 * 1024 * 1024
-PARSER_VERSION = "explicit-midcap-benchmark-five-v1"
+PARSER_VERSION = "explicit-midcap-benchmark-four-v1"
 
 
 def _clean(value):
@@ -131,56 +129,17 @@ def _parse_samco(text):
     }
 
 
-def _parse_union(text):
-    _require_family(text, "Union Midcap Fund")
-    match = re.search(
-        r"UNION\s+MIDCAP\s+FUND.{0,2500}?Benchmark\s+Index\s+"
-        r"(BSE\s+150\s+MidCap\s+Index\s*\(TRI\))(?=\s|$)",
-        text,
-        re.I | re.S,
-    )
-    if not match:
-        raise ValueError("Union presentation lacks the reviewed Benchmark Index value")
-    value = _clean(match.group(1))
-    as_of = None
-    date_match = re.search(
-        r"Data\s+is\s+as\s+of\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})",
+def _parse_edelweiss(text):
+    _require_family(text, "Edelweiss Mid Cap Fund")
+    matches = re.findall(
+        r"\bBenchmark\s+(Nifty\s+Midcap\s+150\s+TRI)\b",
         text,
         re.I,
     )
-    if date_match:
-        try:
-            as_of = datetime.strptime(_clean(date_match.group(1)), "%B %d, %Y").date().isoformat()
-        except ValueError:
-            as_of = None
-    return {
-        "primary_benchmark": value,
-        "reported_benchmarks": [value],
-        "additional_benchmarks": [],
-        "benchmark_role": "primary",
-        "return_variant": "total_return",
-        "source_heading": "UNION MIDCAP FUND",
-        "source_locator": "Fund presentation; Benchmark Index field",
-        "evidence_excerpt": f"Benchmark Index {value}",
-        "source_data_as_of": as_of,
-        "benchmark_effective_as_of": None,
-        "source_kind": "fund_presentation_pdf",
-        "benchmark_series_verified": False,
-        "parser_version": PARSER_VERSION,
-    }
-
-
-def _parse_edelweiss(text):
-    _require_family(text, "Edelweiss Mid Cap Fund")
-    match = re.search(
-        r"Edelweiss\s+Mid\s+Cap\s+Fund.{0,1800}?\bBenchmark\s+"
-        r"(Nifty\s+Midcap\s+150\s+TRI)\b",
-        text,
-        re.I | re.S,
-    )
-    if not match:
-        raise ValueError("Edelweiss factsheet lacks the reviewed Benchmark value")
-    value = _clean(match.group(1))
+    values = {_norm(value): _clean(value) for value in matches}
+    if len(values) != 1:
+        raise ValueError("Edelweiss factsheet lacks one unambiguous reviewed Benchmark value")
+    value = next(iter(values.values()))
     as_of = None
     date_match = re.search(r"Data\s+as\s+on\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})", text, re.I)
     if date_match:
@@ -237,7 +196,6 @@ def _parse_lic(text):
 PARSERS = {
     "Quant Mid Cap Fund": _parse_quant,
     "Samco Mid Cap Fund": _parse_samco,
-    "Union Midcap Fund": _parse_union,
     "Edelweiss Mid Cap Fund": _parse_edelweiss,
     "LIC MF Mid Cap Fund": _parse_lic,
 }
