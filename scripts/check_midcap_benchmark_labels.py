@@ -23,7 +23,7 @@ def main():
         (documents.SOURCES, documents.inspect_family),
         (invesco.sources(), invesco.inspect_family),
         (first_party.PREFLIGHT_SOURCES, first_party.inspect_family),
-        (explicit.SOURCES, explicit.inspect_family),
+        (explicit.PREFLIGHT_SOURCES, explicit.inspect_family),
         (explicit2.SOURCES, explicit2.inspect_family),
     )
     expected = sum(len(sources) for sources, _ in source_groups)
