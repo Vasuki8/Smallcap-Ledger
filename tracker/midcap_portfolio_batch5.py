@@ -31,6 +31,8 @@ SUNDARAM_FAMILY="Sundaram Mid Cap Fund"
 SUNDARAM_CARD="https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json"
 SAMCO_FAMILY="Samco Mid Cap Fund"
 SAMCO_URL="https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg"
+MOTILAL_FAMILY="Motilal Oswal Midcap Fund"
+MOTILAL_PAGE="https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
 
 
 def _norm(value):
@@ -190,6 +192,62 @@ def _invesco_result(fetch_fn,expected):
     }
 
 
+def _motilal_source(fetch_fn,expected):
+    body,_,typ=fetch_fn(MOTILAL_PAGE,archive=False,max_bytes=15*1024*1024)
+    media=str(typ or "").split(";",1)[0].strip().casefold()
+    if media not in ("text/html","application/xhtml+xml"):
+        raise ValueError("Motilal portfolio discovery source did not return HTML")
+    html=body.decode("utf-8","replace")
+    soup=BeautifulSoup(html,"html.parser")
+    text=re.sub(r"\s+"," ",soup.get_text(" ",strip=True))
+    if _norm(MOTILAL_FAMILY) not in _norm(text):
+        raise ValueError("Motilal source lacks the exact staged Mid Cap family identity")
+    d=date.fromisoformat(expected)
+    expected_labels={
+        expected,
+        d.strftime("%d %b %Y"),
+        d.strftime("%d %B %Y"),
+        d.strftime("%d-%b-%Y"),
+        d.strftime("%B %d, %Y").replace(" 0"," "),
+    }
+    if not any(label.casefold() in text.casefold() or label.casefold() in html.casefold()
+               for label in expected_labels):
+        raise ValueError(f"Motilal page does not prove current portfolio date {expected}")
+    decoded=html.replace("\\/","/")
+    patterns=(
+        r"portfolioUrl\s*[:=]?\s*[\"']?([^\"'<>\s]+\.xlsx(?:\?[^\"'<>\s]*)?)",
+        r"(\/content\/dam\/motilal-mf\/sheets\/fund-csvs\/Month_End_Portfolio_[^\"'<>\s]+\.xlsx)",
+    )
+    candidates=[]
+    for pattern in patterns:
+        for match in re.finditer(pattern,decoded,re.I):
+            raw=match.group(1).strip()
+            source=urljoin(MOTILAL_PAGE,raw)
+            parsed=urlparse(source)
+            if (parsed.scheme=="https"
+                    and parsed.hostname=="www.motilaloswalmf.com"
+                    and re.search(r"/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_",parsed.path,re.I)
+                    and parsed.path.casefold().endswith(".xlsx")):
+                candidates.append(source)
+    candidates=list(dict.fromkeys(candidates))
+    if len(candidates)!=1:
+        raise ValueError(f"Motilal page exposed {len(candidates)} exact monthly portfolio workbooks")
+    return candidates[0],hashlib.sha256(body).hexdigest(),typ
+
+
+def _motilal_result(fetch_fn,expected):
+    source,discovery_sha,discovery_type=_motilal_source(fetch_fn,expected)
+    body,_,typ=fetch_fn(source,archive=False,max_bytes=30*1024*1024)
+    parsed=_parse_workbook(body,MOTILAL_FAMILY,expected)
+    return {
+        "family":MOTILAL_FAMILY,"amc":"Motilal Oswal Mutual Fund","status":"recovered",
+        **parsed,"scope":"structured_monthly_portfolio",
+        "source":source,"source_sha256":hashlib.sha256(body).hexdigest(),
+        "source_content_type":typ,"discovery_source":MOTILAL_PAGE,
+        "discovery_source_sha256":discovery_sha,"discovery_source_content_type":discovery_type,
+    }
+
+
 def _samco_result(fetch_fn,expected):
     body,_,typ=fetch_fn(SAMCO_URL,archive=False,max_bytes=12*1024*1024)
     media=str(typ or "").split(";",1)[0].strip().casefold()
@@ -297,6 +355,7 @@ COLLECTORS=(
     (INVESCO_FAMILY,_invesco_result),
     (SUNDARAM_FAMILY,_sundaram_result),
     (SAMCO_FAMILY,_samco_result),
+    (MOTILAL_FAMILY,_motilal_result),
 )
 
 
@@ -320,6 +379,7 @@ def collect(fetch_fn=providers.fetch,today=None):
         "notes":[
             "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
             "Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.",
+            "Motilal Oswal uses the current fund page only to discover the exact dated monthly workbook, which is parsed through the existing structured parser.",
             "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
             "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
             "Every result requires exact staged family identity and the current regulatory month-end; no live records are written.",
