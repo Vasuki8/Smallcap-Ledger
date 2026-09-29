@@ -75,7 +75,7 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
                 "KOTAK MID CAP FUND (ERSTWHILE KNOWN AS KOTAK MIDCAP FUND)",
             ),
         )
-        with self.assertRaisesRegex(ValueError,"staged or reviewed"):
+        with self.assertRaisesRegex(ValueError,"exact staged scheme"):
             validate_factsheet_context(
                 soup,"Kotak Mid Cap Fund","2026-08-31",
                 reviewed_heading_aliases=("KOTAK MID CAP FUND",),
