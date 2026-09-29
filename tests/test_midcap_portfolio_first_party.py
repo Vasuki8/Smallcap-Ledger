@@ -67,7 +67,7 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
             "<p>Data as on 31st August, 2026</p></body></html>"
         )
         soup=BeautifulSoup(html,"html.parser")
-        with self.assertRaisesRegex(ValueError,"staged or reviewed"):
+        with self.assertRaisesRegex(ValueError,"exact staged scheme"):
             validate_factsheet_context(soup,"Kotak Mid Cap Fund","2026-08-31")
         validate_factsheet_context(
             soup,"Kotak Mid Cap Fund","2026-08-31",
