@@ -2,7 +2,7 @@ name: Mid Cap evidence regression
 
 on:
   push:
-    branches: ['fix/midcap-evidence-*', 'fix/midcap-samco-*', 'fix/midcap-benchmark-*']
+    branches: ['fix/midcap-evidence-*', 'fix/midcap-samco-*', 'fix/midcap-benchmark-*', 'fix/midcap-kotak-*']
   pull_request:
     paths:
       - 'tracker/midcap*'
@@ -11,6 +11,7 @@ on:
       - 'scripts/check_midcap_samco_portfolio.py'
       - 'scripts/check_midcap_motilal_portfolio.py'
       - 'scripts/check_midcap_bandhan_portfolio.py'
+      - 'scripts/check_midcap_kotak_portfolio.py'
       - 'scripts/check_midcap_samco_ter.py'
       - 'scripts/check_midcap_benchmark_labels.py'
       - '.github/workflows/midcap-evidence.yml'
@@ -51,7 +52,7 @@ jobs:
             exit 1
           fi
       - name: Read-only public evidence preflight
-        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fix/midcap-samco-') && !startsWith(github.ref_name, 'fix/midcap-benchmark-') && !startsWith(github.ref_name, 'fix/midcap-evidence-samco-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-motilal-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-bandhan-portfolio-')
+        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fix/midcap-samco-') && !startsWith(github.ref_name, 'fix/midcap-benchmark-') && !startsWith(github.ref_name, 'fix/midcap-evidence-samco-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-motilal-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-bandhan-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-kotak-')
         run: uv run --frozen python scripts/check_midcap_batch5_evidence.py
       - name: Read-only exact Samco portfolio preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-evidence-samco-portfolio-')
@@ -62,6 +63,9 @@ jobs:
       - name: Read-only exact Bandhan portfolio preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-evidence-bandhan-portfolio-')
         run: uv run --frozen python scripts/check_midcap_bandhan_portfolio.py
+      - name: Read-only exact Kotak portfolio preflight
+        if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-kotak-')
+        run: uv run --frozen python scripts/check_midcap_kotak_portfolio.py
       - name: Read-only exact Samco TER preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-samco-')
         run: uv run --frozen python scripts/check_midcap_samco_ter.py
