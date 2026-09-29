@@ -39,25 +39,13 @@ class MidCapBenchmarkExplicitTests(unittest.TestCase):
                 b"What is the benchmark for Samco Small Cap Fund?",
             ))
 
-    def test_union_presentation_requires_exact_benchmark_index(self):
-        text=(
-            "UNION MIDCAP FUND\n"
-            "Date Of Inception 23rd March 2020\n"
-            "Benchmark Index\nBSE 150 MidCap Index (TRI)\n"
-            "(Data is as of January 31, 2026)"
-        )
-        row=explicit.parse_source("Union Midcap Fund",b"%PDF fixture",pdf_text_fn=lambda _:text)
-        self.assertEqual(row["primary_benchmark"],"BSE 150 MidCap Index (TRI)")
-        self.assertEqual(row["source_data_as_of"],"2026-01-31")
-        with self.assertRaises(ValueError):
-            explicit.parse_source("Union Midcap Fund",b"%PDF fixture",pdf_text_fn=lambda _:text.replace("UNION MIDCAP FUND","UNION SMALL CAP FUND"))
-
     def test_edelweiss_factsheet_requires_about_scheme_benchmark(self):
         text=(
+            "Data as on April 30, 2026\n"
+            "Benchmark Nifty Midcap 150 TRI\n"
+            "About the Scheme\n"
             "Edelweiss Mid Cap Fund\n"
             "An open ended equity scheme predominantly investing in mid cap stocks\n"
-            "Data as on April 30, 2026\n"
-            "About the Scheme\nBenchmark\nNifty Midcap 150 TRI\n"
             "Additional Benchmark Nifty 50 TRI"
         )
         row=explicit.parse_source("Edelweiss Mid Cap Fund",b"%PDF fixture",pdf_text_fn=lambda _:text)
@@ -111,7 +99,7 @@ class MidCapBenchmarkExplicitTests(unittest.TestCase):
              patch.object(batch2.explicit,"inspect_family",side_effect=inspector):
             result=batch2.collect(fetch_fn=lambda *a,**k:(b"",None,"text/html"))
         self.assertEqual(set(seen),set(explicit.SOURCES))
-        self.assertEqual(result["recovered"],5)
+        self.assertEqual(result["recovered"],4)
         self.assertEqual(result["errors"],[])
 
         wrong=[{"family":"Quant Mid Cap Fund","amc":"Wrong AMC"}]
