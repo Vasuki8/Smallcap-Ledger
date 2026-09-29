@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 
-from tracker.midcap_portfolio_batch5 import _invesco_source,_jm_source,_mahindra_positions,_motilal_source,_samco_result
+from tracker.midcap_portfolio_batch5 import _franklin_result,_invesco_source,_jm_source,_mahindra_positions,_motilal_source,_samco_result
 
 
 class MidCapPortfolioBatch5Tests(unittest.TestCase):
@@ -36,6 +36,40 @@ class MidCapPortfolioBatch5Tests(unittest.TestCase):
             source,title=_jm_source(fetch,"2026-08-31")
         self.assertTrue(source.endswith("/mid.xlsx"))
         self.assertIn("JM Mid Cap Fund",title)
+
+    def test_franklin_current_factsheet_portfolio_is_partial_evidence(self):
+        html="""<html><body>
+        <h1>Franklin India Mid Cap Fund</h1><div>As on August 31, 2026</div>
+        <table>
+          <tr><th>Company Name</th><th>No. of shares</th><th>Market Value Rs Lakhs</th><th>% of assets</th></tr>
+          <tr><td>Banks</td><td></td><td></td><td></td></tr>
+          <tr><td>Federal Bank Ltd*</td><td>9149683</td><td>32636.92</td><td>2.50</td></tr>
+          <tr><td>IDFC First Bank Ltd*</td><td>36893177</td><td>31717.06</td><td>2.43</td></tr>
+          <tr><td>Kalyan Jewellers India Ltd*</td><td>6304921</td><td>37892.58</td><td>2.90</td></tr>
+          <tr><td>Biocon Ltd*</td><td>8094684</td><td>33350.10</td><td>2.56</td></tr>
+          <tr><td>Coforge Ltd*</td><td>1425747</td><td>28305.36</td><td>2.17</td></tr>
+          <tr><td>Equity Total</td><td></td><td></td><td>97.67</td></tr>
+          <tr><td>Cash & Cash Equivalents</td><td></td><td></td><td>2.33</td></tr>
+        </table></body></html>"""
+        row=_franklin_result(lambda *a,**k:(html.encode(),None,"text/html"),"2026-08-31")
+        self.assertEqual(row["as_of"],"2026-08-31")
+        self.assertEqual(row["positions_observed"],5)
+        self.assertFalse(row["complete"])
+        self.assertEqual(row["scope"],"factsheet_portfolio_table")
+        names={x["name"] for x in row["positions"]}
+        self.assertIn("Federal Bank Ltd",names)
+        self.assertNotIn("Banks",names)
+        self.assertNotIn("Equity Total",names)
+
+    def test_franklin_rejects_stale_date_or_wrong_identity(self):
+        table="<table><tr><th>Company Name</th><th>No. of shares</th><th>Market Value</th><th>% of assets</th></tr></table>"
+        def run(family,date_text):
+            html=f"<html><body>{family} As on {date_text}{table}</body></html>"
+            return _franklin_result(lambda *a,**k:(html.encode(),None,"text/html"),"2026-08-31")
+        with self.assertRaisesRegex(ValueError,"exact staged"):
+            run("Franklin India Small Cap Fund","August 31, 2026")
+        with self.assertRaisesRegex(ValueError,"current portfolio date"):
+            run("Franklin India Mid Cap Fund","July 31, 2026")
 
     def test_motilal_source_discovers_exact_current_month_workbook(self):
         html="""<html><body>
