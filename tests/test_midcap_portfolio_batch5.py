@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 
-from tracker.midcap_portfolio_batch5 import _invesco_source,_jm_source,_mahindra_positions,_samco_result
+from tracker.midcap_portfolio_batch5 import _invesco_source,_jm_source,_mahindra_positions,_motilal_source,_samco_result
 
 
 class MidCapPortfolioBatch5Tests(unittest.TestCase):
@@ -36,6 +36,35 @@ class MidCapPortfolioBatch5Tests(unittest.TestCase):
             source,title=_jm_source(fetch,"2026-08-31")
         self.assertTrue(source.endswith("/mid.xlsx"))
         self.assertIn("JM Mid Cap Fund",title)
+
+    def test_motilal_source_discovers_exact_current_month_workbook(self):
+        html="""<html><body>
+        <h1>Motilal Oswal Midcap Fund</h1>
+        <div>Date As On: 31 Aug 2026</div>
+        <script>portfolioUrl: /content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO07.xlsx</script>
+        </body></html>"""
+        calls=[]
+        def fetch(url,**kwargs):
+            calls.append((url,kwargs))
+            return html.encode(),None,"text/html; charset=utf-8"
+        source,digest,media=_motilal_source(fetch,"2026-08-31")
+        self.assertEqual(
+            source,
+            "https://www.motilaloswalmf.com/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO07.xlsx",
+        )
+        self.assertEqual(calls[0][1].get("archive"),False)
+        self.assertEqual(media,"text/html; charset=utf-8")
+        self.assertEqual(len(digest),64)
+
+    def test_motilal_source_rejects_wrong_family_and_stale_date(self):
+        current="/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO07.xlsx"
+        def run(family,date_text):
+            html=f"<html><body>{family}<div>Date As On: {date_text}</div><script>portfolioUrl: {current}</script></body></html>"
+            return _motilal_source(lambda *a,**k:(html.encode(),None,"text/html"),"2026-08-31")
+        with self.assertRaisesRegex(ValueError,"exact staged"):
+            run("Motilal Oswal Small Cap Fund","31 Aug 2026")
+        with self.assertRaisesRegex(ValueError,"current portfolio date"):
+            run("Motilal Oswal Midcap Fund","31 Jul 2026")
 
     def test_samco_current_all_holdings_are_partial_evidence(self):
         html="""<html><body>
