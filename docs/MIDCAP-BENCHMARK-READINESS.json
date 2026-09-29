@@ -1,7 +1,7 @@
 {
   "families": 34,
-  "benchmark_identity": 28,
-  "remaining": 6,
+  "benchmark_identity": 30,
+  "remaining": 4,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -35,10 +35,10 @@
         "source": "https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html",
         "source_sha256": "c21d367231006606430cdb2bb34970a44fca211115b31a93b5d39a15c8b67c14",
         "source_content_type": "text/html",
-        "observed_at": "2026-09-29T16:06:35.013107+00:00"
+        "observed_at": "2026-09-29T16:28:23.373752+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:35.013107+00:00"
+      "observed_at": "2026-09-29T16:28:23.373752+00:00"
     },
     {
       "family": "Axis Midcap Fund",
@@ -48,7 +48,7 @@
         "BSE Midcap 150 TRI"
       ],
       "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular",
-      "source_sha256": "8ba25841349315716db87a263b3bc0b929335ce246072f31ad44e90f6a37529b",
+      "source_sha256": "14e93d0862d4dcff2466548240f3e31bd661d4cdd35eb2ea9a2ca3dd25bcba7d",
       "source_evidence": {
         "family": "Axis Midcap Fund",
         "amc": "Axis Mutual Fund",
@@ -72,12 +72,12 @@
         "benchmark_series_verified": false,
         "parser_version": "explicit-primary-benchmark-labels-v1",
         "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular",
-        "source_sha256": "8ba25841349315716db87a263b3bc0b929335ce246072f31ad44e90f6a37529b",
+        "source_sha256": "14e93d0862d4dcff2466548240f3e31bd661d4cdd35eb2ea9a2ca3dd25bcba7d",
         "source_content_type": "text/html; charset=utf-8",
-        "observed_at": "2026-09-29T16:06:31.355243+00:00"
+        "observed_at": "2026-09-29T16:28:21.329260+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:31.355243+00:00"
+      "observed_at": "2026-09-29T16:28:21.329260+00:00"
     },
     {
       "family": "BANDHAN MID CAP FUND",
@@ -112,11 +112,11 @@
         "source_sha256": "729e4df34f01fbcec730f7d035efc6e3c19badeb53c0f50f3e126ddd412e669e",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:01+00:00",
+        "observed_at": "2026-09-29T16:27:52+00:00",
         "amc": "Bank of India Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:01+00:00"
+      "observed_at": "2026-09-29T16:27:52+00:00"
     },
     {
       "family": "Baroda BNP Paribas Mid Cap Fund",
@@ -127,7 +127,7 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "source_sha256": "f42b504b33678844f7c9c128fcf9a025e8db2a66a3b0686aca0a4963b100084b",
+      "source_sha256": "e4c31f585cbe73b572e768c189a92c7b2bad977347e3cd01e862373f5b69ddc6",
       "source_evidence": {
         "family": "Baroda BNP Paribas Mid Cap Fund",
         "status": "recovered",
@@ -137,14 +137,14 @@
           "Nifty Midcap 150"
         ],
         "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-        "source_sha256": "f42b504b33678844f7c9c128fcf9a025e8db2a66a3b0686aca0a4963b100084b",
+        "source_sha256": "e4c31f585cbe73b572e768c189a92c7b2bad977347e3cd01e862373f5b69ddc6",
         "source_content_type": "text/html; charset=UTF-8",
         "source_data_as_of": "2026-09-28",
-        "observed_at": "2026-09-29T16:06:29+00:00",
+        "observed_at": "2026-09-29T16:28:19+00:00",
         "amc": "Baroda BNP Paribas Mutual Fund"
       },
       "source_data_as_of": "2026-09-28",
-      "observed_at": "2026-09-29T16:06:29+00:00"
+      "observed_at": "2026-09-29T16:28:19+00:00"
     },
     {
       "family": "Canara Robeco Mid Cap Fund",
@@ -166,11 +166,11 @@
         "source_sha256": "1ab0d04dbf8cf7070e7502966af758780ff9d38c5e9378d7dea9870c46c13160",
         "source_content_type": "text/html",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:05:58+00:00",
+        "observed_at": "2026-09-29T16:27:48+00:00",
         "amc": "Canara Robeco Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:05:58+00:00"
+      "observed_at": "2026-09-29T16:27:48+00:00"
     },
     {
       "family": "DSP Midcap Fund",
@@ -181,7 +181,7 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth",
-      "source_sha256": "2862404d51a62882793d7d844d10e680b7191386147dbd58c78b1f49ca8f8b08",
+      "source_sha256": "c8de5038f94eba938a09615e9918b8c020adfdda022689d4e6a2be5165b40320",
       "source_evidence": {
         "family": "DSP Midcap Fund",
         "status": "recovered",
@@ -191,14 +191,14 @@
           "Nifty Midcap 150"
         ],
         "source": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth",
-        "source_sha256": "2862404d51a62882793d7d844d10e680b7191386147dbd58c78b1f49ca8f8b08",
+        "source_sha256": "c8de5038f94eba938a09615e9918b8c020adfdda022689d4e6a2be5165b40320",
         "source_content_type": "text/html",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:16+00:00",
+        "observed_at": "2026-09-29T16:28:02+00:00",
         "amc": "DSP Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:16+00:00"
+      "observed_at": "2026-09-29T16:28:02+00:00"
     },
     {
       "family": "Edelweiss Mid Cap Fund",
@@ -231,10 +231,10 @@
         "source": "https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf",
         "source_sha256": "9d3d5dc58c8718f469c3a0cf766dcf216c2edbfbb33f34cb30ec376cf5ab7d35",
         "source_content_type": "application/pdf",
-        "observed_at": "2026-09-29T16:06:40.498135+00:00"
+        "observed_at": "2026-09-29T16:28:29.795964+00:00"
       },
       "source_data_as_of": "2026-04-30",
-      "observed_at": "2026-09-29T16:06:40.498135+00:00"
+      "observed_at": "2026-09-29T16:28:29.795964+00:00"
     },
     {
       "family": "Franklin India Mid Cap Fund",
@@ -268,10 +268,10 @@
         "source": "https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html",
         "source_sha256": "c67afb4d86c9acfea2c6e44b0871bdd1dbed28aaf5cff4b9d724475f06294f59",
         "source_content_type": "text/html",
-        "observed_at": "2026-09-29T16:06:43.599810+00:00"
+        "observed_at": "2026-09-29T16:28:33.441846+00:00"
       },
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-09-29T16:06:43.599810+00:00"
+      "observed_at": "2026-09-29T16:28:33.441846+00:00"
     },
     {
       "family": "HDFC Mid Cap Fund",
@@ -282,7 +282,7 @@
         "NIFTY Midcap 150"
       ],
       "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
-      "source_sha256": "4622840f133bf3a072b9abb1f86a31a6ab117e3eeae736259a5eb261c85a803a",
+      "source_sha256": "dca7620038c3cf4d52814df4df70ae73aa6ed7d0502362804edd6d5485142fce",
       "source_evidence": {
         "family": "HDFC Mid Cap Fund",
         "status": "recovered",
@@ -292,14 +292,14 @@
           "NIFTY Midcap 150"
         ],
         "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
-        "source_sha256": "4622840f133bf3a072b9abb1f86a31a6ab117e3eeae736259a5eb261c85a803a",
+        "source_sha256": "dca7620038c3cf4d52814df4df70ae73aa6ed7d0502362804edd6d5485142fce",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:07+00:00",
+        "observed_at": "2026-09-29T16:27:59+00:00",
         "amc": "HDFC Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:07+00:00"
+      "observed_at": "2026-09-29T16:27:59+00:00"
     },
     {
       "family": "HSBC Midcap Fund",
@@ -335,10 +335,10 @@
         "source": "https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf",
         "source_sha256": "25a05595ee479eb918900ac952b05caa96dca4375c4fab0e1a5c19d2928a24b9",
         "source_content_type": "application/pdf",
-        "observed_at": "2026-09-29T16:06:44.450118+00:00"
+        "observed_at": "2026-09-29T16:28:35.423567+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:44.450118+00:00"
+      "observed_at": "2026-09-29T16:28:35.423567+00:00"
     },
     {
       "family": "Helios Mid Cap Fund",
@@ -349,7 +349,7 @@
         "NIFTY Midcap 150"
       ],
       "source": "https://www.heliosmf.in/helios-mid-cap-fund/",
-      "source_sha256": "92489ca7edf6811372aea071d0d4fb3e32d3ceb1bb9fbb6b7e666fbaded4c0a2",
+      "source_sha256": "9492965dc04ecc8cd5ccbb12a423de9a1051cad956a560b709e62fee63905a57",
       "source_evidence": {
         "family": "Helios Mid Cap Fund",
         "status": "recovered",
@@ -359,25 +359,53 @@
           "NIFTY Midcap 150"
         ],
         "source": "https://www.heliosmf.in/helios-mid-cap-fund/",
-        "source_sha256": "92489ca7edf6811372aea071d0d4fb3e32d3ceb1bb9fbb6b7e666fbaded4c0a2",
+        "source_sha256": "9492965dc04ecc8cd5ccbb12a423de9a1051cad956a560b709e62fee63905a57",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:18+00:00",
+        "observed_at": "2026-09-29T16:28:06+00:00",
         "amc": "Helios Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:18+00:00"
+      "observed_at": "2026-09-29T16:28:06+00:00"
     },
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "benchmark_identity": null,
-      "reported_benchmarks": [],
-      "source": null,
-      "source_sha256": null,
-      "source_evidence": null,
-      "source_data_as_of": null,
-      "observed_at": null
+      "benchmark_identity": "Nifty Midcap 150 TRI",
+      "reported_benchmarks": [
+        "Nifty Midcap 150 TRI"
+      ],
+      "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf",
+      "source_sha256": "28b596ecab467ee7a41b59d1cf8e7d8a11de66409bea21aec93b268975e56c0a",
+      "source_evidence": {
+        "family": "ICICI Prudential Mid Cap Fund",
+        "amc": "ICICI Prudential Mutual Fund",
+        "status": "recovered",
+        "primary_benchmark": "Nifty Midcap 150 TRI",
+        "reported_benchmarks": [
+          "Nifty Midcap 150 TRI"
+        ],
+        "additional_benchmarks": [
+          "Nifty 50 TRI"
+        ],
+        "benchmark_role": "primary",
+        "return_variant": "total_return",
+        "source_heading": "ICICI Prudential Midcap Fund",
+        "source_locator": "Abridged factsheet performance table; explicit (Benchmark) row",
+        "evidence_excerpt": "Nifty Midcap 150 TRI (Benchmark)",
+        "source_data_as_of": "2024-08-31",
+        "source_document_as_of": null,
+        "benchmark_effective_as_of": null,
+        "source_kind": "abridged_factsheet_pdf",
+        "benchmark_series_verified": false,
+        "parser_version": "midcap-benchmark-gate3-v1",
+        "source": "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf",
+        "source_sha256": "28b596ecab467ee7a41b59d1cf8e7d8a11de66409bea21aec93b268975e56c0a",
+        "source_content_type": "application/pdf",
+        "observed_at": "2026-09-29T16:28:54.964205+00:00"
+      },
+      "source_data_as_of": "2024-08-31",
+      "observed_at": "2026-09-29T16:28:54.964205+00:00"
     },
     {
       "family": "ITI Mid Cap Fund",
@@ -412,10 +440,10 @@
         "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
         "source_sha256": "f11c2bd4b4bff70ac732275bff83d24aeb351893f94951cbfda852a097b809e5",
         "source_content_type": "text/html; charset=UTF-8",
-        "observed_at": "2026-09-29T16:06:45.407654+00:00"
+        "observed_at": "2026-09-29T16:28:36.630345+00:00"
       },
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-09-29T16:06:45.407654+00:00"
+      "observed_at": "2026-09-29T16:28:36.630345+00:00"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -450,10 +478,10 @@
         "source": "https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf",
         "source_sha256": "85b405dab788875aff4b31748bd1efab4424c73c9339cef207415595804d4a5a",
         "source_content_type": "application/pdf",
-        "observed_at": "2026-09-29T16:07:00.745297+00:00"
+        "observed_at": "2026-09-29T16:29:06.115223+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:07:00.745297+00:00"
+      "observed_at": "2026-09-29T16:29:06.115223+00:00"
     },
     {
       "family": "JM Mid Cap Fund",
@@ -463,7 +491,7 @@
         "Nifty Midcap 150 TRI"
       ],
       "source": "https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx",
-      "source_sha256": "faf72081fc941c04dce790038922eabe951e0a0517b03c80134273278c5b67b2",
+      "source_sha256": "90e0f32bd9d595904e1c809ce07f14f56fd5cb1179eb1461a97e7e75ea4a4937",
       "source_evidence": {
         "family": "JM Mid Cap Fund",
         "status": "recovered",
@@ -484,12 +512,12 @@
         "parser_version": "explicit-midcap-benchmark-iti-jm-v1",
         "amc": "JM Financial Mutual Fund",
         "source": "https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx",
-        "source_sha256": "faf72081fc941c04dce790038922eabe951e0a0517b03c80134273278c5b67b2",
+        "source_sha256": "90e0f32bd9d595904e1c809ce07f14f56fd5cb1179eb1461a97e7e75ea4a4937",
         "source_content_type": "text/html; charset=utf-8",
-        "observed_at": "2026-09-29T16:06:46.670570+00:00"
+        "observed_at": "2026-09-29T16:28:38.075425+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:46.670570+00:00"
+      "observed_at": "2026-09-29T16:28:38.075425+00:00"
     },
     {
       "family": "Kotak Mid Cap Fund",
@@ -501,7 +529,7 @@
         "Nifty Midcap 100 TRI"
       ],
       "source": "https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html",
-      "source_sha256": "a8b566a4de032682afb61bf5a5bb0a717c372aed61dee3cb8c5fc8633cdd09c5",
+      "source_sha256": "82f555afcfac903e99a63f8f224cea5c4a87831d2af1e3362031071b6e985cf8",
       "source_evidence": {
         "family": "Kotak Mid Cap Fund",
         "status": "recovered",
@@ -512,14 +540,14 @@
           "Nifty Midcap 100 TRI"
         ],
         "source": "https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html",
-        "source_sha256": "a8b566a4de032682afb61bf5a5bb0a717c372aed61dee3cb8c5fc8633cdd09c5",
+        "source_sha256": "82f555afcfac903e99a63f8f224cea5c4a87831d2af1e3362031071b6e985cf8",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:05:59+00:00",
+        "observed_at": "2026-09-29T16:27:50+00:00",
         "amc": "Kotak Mahindra Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:05:59+00:00"
+      "observed_at": "2026-09-29T16:27:50+00:00"
     },
     {
       "family": "LIC MF Mid Cap Fund",
@@ -552,10 +580,10 @@
         "source": "https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf",
         "source_sha256": "bc018d117e17c098431863991cba927f063796e2ee71a0c7b89009a37810c8de",
         "source_content_type": "application/pdf",
-        "observed_at": "2026-09-29T16:06:43.115322+00:00"
+        "observed_at": "2026-09-29T16:28:33.003724+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:43.115322+00:00"
+      "observed_at": "2026-09-29T16:28:33.003724+00:00"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
@@ -579,11 +607,11 @@
         "source_sha256": "53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640",
         "source_content_type": "text/html",
         "source_data_as_of": "2026-08-31",
-        "observed_at": "2026-09-29T16:06:25+00:00",
+        "observed_at": "2026-09-29T16:28:12+00:00",
         "amc": "Mahindra Manulife Mutual Fund"
       },
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-09-29T16:06:25+00:00"
+      "observed_at": "2026-09-29T16:28:12+00:00"
     },
     {
       "family": "Mirae Asset Midcap Fund",
@@ -617,10 +645,10 @@
         "source": "https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund",
         "source_sha256": "06163cec57d3111a57bdc4922a573987056acba795fb84b5ad46af62199c1d0d",
         "source_content_type": "text/html; charset=utf-8",
-        "observed_at": "2026-09-29T16:06:32.983595+00:00"
+        "observed_at": "2026-09-29T16:28:21.510871+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:32.983595+00:00"
+      "observed_at": "2026-09-29T16:28:21.510871+00:00"
     },
     {
       "family": "Motilal Oswal Midcap Fund",
@@ -630,7 +658,7 @@
         "Nifty Midcap 150 TRI"
       ],
       "source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
-      "source_sha256": "198155a7df7ce04f237c8d187df0615cdf1420ebd06009445819cf29873ed573",
+      "source_sha256": "160f67a3ce6af88fc722e59a08db8da608d794401daebe6510593c63812487d0",
       "source_evidence": {
         "family": "Motilal Oswal Midcap Fund",
         "amc": "Motilal Oswal Mutual Fund",
@@ -652,12 +680,12 @@
         "benchmark_series_verified": false,
         "parser_version": "explicit-midcap-benchmark-four-v2",
         "source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
-        "source_sha256": "198155a7df7ce04f237c8d187df0615cdf1420ebd06009445819cf29873ed573",
+        "source_sha256": "160f67a3ce6af88fc722e59a08db8da608d794401daebe6510593c63812487d0",
         "source_content_type": "text/html; charset=utf-8",
-        "observed_at": "2026-09-29T16:06:43.819178+00:00"
+        "observed_at": "2026-09-29T16:28:33.683577+00:00"
       },
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-09-29T16:06:43.819178+00:00"
+      "observed_at": "2026-09-29T16:28:33.683577+00:00"
     },
     {
       "family": "Nippon India Growth Mid Cap Fund",
@@ -668,7 +696,7 @@
         "Nifty Midcap 150"
       ],
       "source": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy",
-      "source_sha256": "84b5186c26da9143a58f6b3950a53daef7db567378231984e82e5d7e855162d4",
+      "source_sha256": "99f388ad5544843dfd4546a277d56f60111c9f4dc2ea447d4f62b087b70710c9",
       "source_evidence": {
         "family": "Nippon India Growth Mid Cap Fund",
         "status": "recovered",
@@ -678,14 +706,14 @@
           "Nifty Midcap 150"
         ],
         "source": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy",
-        "source_sha256": "84b5186c26da9143a58f6b3950a53daef7db567378231984e82e5d7e855162d4",
+        "source_sha256": "99f388ad5544843dfd4546a277d56f60111c9f4dc2ea447d4f62b087b70710c9",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:20+00:00",
+        "observed_at": "2026-09-29T16:28:09+00:00",
         "amc": "Nippon India Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:20+00:00"
+      "observed_at": "2026-09-29T16:28:09+00:00"
     },
     {
       "family": "PGIM India Midcap Fund",
@@ -709,11 +737,11 @@
         "source_sha256": "2e7febfcf6e7994f5aa0a81e0e80c291c8d8a72daa9a2de9c7d795bacaae2c84",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": "2026-08-31",
-        "observed_at": "2026-09-29T16:06:05+00:00",
+        "observed_at": "2026-09-29T16:27:56+00:00",
         "amc": "PGIM India Mutual Fund"
       },
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-09-29T16:06:05+00:00"
+      "observed_at": "2026-09-29T16:27:56+00:00"
     },
     {
       "family": "Quant Mid Cap Fund",
@@ -723,7 +751,7 @@
         "Nifty Mid Cap 150 TRI"
       ],
       "source": "https://quantmutual.com/equity/opportunities-fund",
-      "source_sha256": "d876ce33eb7e72877d247005231a00791ee48218f383f458d2b37fa66f1aa524",
+      "source_sha256": "5f7cce66e75d199cee3d60191041fda25dd5c5e4561ab337add1a8a28e35896f",
       "source_evidence": {
         "family": "Quant Mid Cap Fund",
         "amc": "quant Mutual Fund",
@@ -744,12 +772,12 @@
         "benchmark_series_verified": false,
         "parser_version": "explicit-midcap-benchmark-four-v1",
         "source": "https://quantmutual.com/equity/opportunities-fund",
-        "source_sha256": "d876ce33eb7e72877d247005231a00791ee48218f383f458d2b37fa66f1aa524",
+        "source_sha256": "5f7cce66e75d199cee3d60191041fda25dd5c5e4561ab337add1a8a28e35896f",
         "source_content_type": "text/html; charset=utf-8",
-        "observed_at": "2026-09-29T16:06:38.772915+00:00"
+        "observed_at": "2026-09-29T16:28:27.839075+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:38.772915+00:00"
+      "observed_at": "2026-09-29T16:28:27.839075+00:00"
     },
     {
       "family": "SBI MIDCAP FUND",
@@ -784,10 +812,10 @@
         "source": "https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0",
         "source_sha256": "1340f3e97b4c90c9efd0a0623468c81011d4c2532a7ecb223335b1e6b5db66e6",
         "source_content_type": "application/pdf",
-        "observed_at": "2026-09-29T16:06:36.922334+00:00"
+        "observed_at": "2026-09-29T16:28:25.792239+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:36.922334+00:00"
+      "observed_at": "2026-09-29T16:28:25.792239+00:00"
     },
     {
       "family": "Samco Mid Cap Fund",
@@ -797,7 +825,7 @@
         "Nifty Midcap 150 Total Returns Index"
       ],
       "source": "https://www.samcomf.com/faqs",
-      "source_sha256": "1f8089ffd65f52f29683676f219b4e21f71b484d3385380381275bff35621b5b",
+      "source_sha256": "9425fbd5fd79cf518840a5981472081168b47051cea64ddbe6ca8028bd4c506b",
       "source_evidence": {
         "family": "Samco Mid Cap Fund",
         "amc": "Samco Mutual Fund",
@@ -818,12 +846,12 @@
         "benchmark_series_verified": false,
         "parser_version": "explicit-midcap-benchmark-four-v1",
         "source": "https://www.samcomf.com/faqs",
-        "source_sha256": "1f8089ffd65f52f29683676f219b4e21f71b484d3385380381275bff35621b5b",
+        "source_sha256": "9425fbd5fd79cf518840a5981472081168b47051cea64ddbe6ca8028bd4c506b",
         "source_content_type": "text/html; charset=UTF-8",
-        "observed_at": "2026-09-29T16:06:40.101520+00:00"
+        "observed_at": "2026-09-29T16:28:29.404873+00:00"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:40.101520+00:00"
+      "observed_at": "2026-09-29T16:28:29.404873+00:00"
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -847,11 +875,11 @@
         "source_sha256": "b0055d3d8957f46fcb3ee936fdfcf087238b8f9c303c2d09a169534cbc0a6899",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:27+00:00",
+        "observed_at": "2026-09-29T16:28:17+00:00",
         "amc": "Sundaram Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:27+00:00"
+      "observed_at": "2026-09-29T16:28:17+00:00"
     },
     {
       "family": "TRUSTMF MID CAP FUND",
@@ -873,7 +901,7 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth",
-      "source_sha256": "10fa3fa278cfba9397cbcaaed42d791b04ef4c4dbfcf68f8be678f67dbefb6e3",
+      "source_sha256": "24475e9335ceb3bb78232ca3e5df9d26d2b2e501a9bda347767c1cdedd5d0c5b",
       "source_evidence": {
         "family": "Tata Mid Cap Fund",
         "status": "recovered",
@@ -883,14 +911,14 @@
           "Nifty Midcap 150"
         ],
         "source": "https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth",
-        "source_sha256": "10fa3fa278cfba9397cbcaaed42d791b04ef4c4dbfcf68f8be678f67dbefb6e3",
+        "source_sha256": "24475e9335ceb3bb78232ca3e5df9d26d2b2e501a9bda347767c1cdedd5d0c5b",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": "2026-06-30",
-        "observed_at": "2026-09-29T16:06:25+00:00",
+        "observed_at": "2026-09-29T16:28:14+00:00",
         "amc": "Tata Mutual Fund"
       },
       "source_data_as_of": "2026-06-30",
-      "observed_at": "2026-09-29T16:06:25+00:00"
+      "observed_at": "2026-09-29T16:28:14+00:00"
     },
     {
       "family": "Taurus Mid Cap Fund",
@@ -914,11 +942,11 @@
         "source_sha256": "95245bd9cd262f65d37cfaf15bf0bd0b8f2a855ba1c64c581d4c9050f30a240c",
         "source_content_type": "text/html; charset=UTF-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:23+00:00",
+        "observed_at": "2026-09-29T16:28:12+00:00",
         "amc": "Taurus Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:23+00:00"
+      "observed_at": "2026-09-29T16:28:12+00:00"
     },
     {
       "family": "The Wealth Company Mid Cap Fund",
@@ -942,22 +970,48 @@
         "source_sha256": "1ce42ce8dc7a86a791b74d486f04998d835ef85cfebc539a011a5ee0106cb79a",
         "source_content_type": "text/html; charset=utf-8",
         "source_data_as_of": null,
-        "observed_at": "2026-09-29T16:06:00+00:00",
+        "observed_at": "2026-09-29T16:27:51+00:00",
         "amc": "The Wealth Company Mutual Fund"
       },
       "source_data_as_of": null,
-      "observed_at": "2026-09-29T16:06:00+00:00"
+      "observed_at": "2026-09-29T16:27:51+00:00"
     },
     {
       "family": "UTI - Mid Cap Fund",
       "amc": "UTI Mutual Fund",
-      "benchmark_identity": null,
-      "reported_benchmarks": [],
-      "source": null,
-      "source_sha256": null,
-      "source_evidence": null,
+      "benchmark_identity": "Nifty Midcap 150 TRI",
+      "reported_benchmarks": [
+        "Nifty Midcap 150 TRI"
+      ],
+      "source": "https://doc.utimf.com/uticontainer/UTI%20Mid%20Cap%20Fund%20-%20SID%2029%20October%20202120211109-060535.pdf",
+      "source_sha256": "8f1989ed313a17cd0aac7a2570b98fcf1113c39ec76f956a0c2c27ed1f5f7a2a",
+      "source_evidence": {
+        "family": "UTI - Mid Cap Fund",
+        "amc": "UTI Mutual Fund",
+        "status": "recovered",
+        "primary_benchmark": "Nifty Midcap 150 TRI",
+        "reported_benchmarks": [
+          "Nifty Midcap 150 TRI"
+        ],
+        "additional_benchmarks": [],
+        "benchmark_role": "primary",
+        "return_variant": "total_return",
+        "source_heading": "UTI Mid Cap Fund",
+        "source_locator": "SID Highlights / performance note; benchmark plus explicit Total Return Variant",
+        "evidence_excerpt": "Benchmark Nifty Midcap 150 | Total Return Variant Nifty Midcap 150 TRI",
+        "source_data_as_of": null,
+        "source_document_as_of": "2021-10-29",
+        "benchmark_effective_as_of": null,
+        "source_kind": "scheme_information_document",
+        "benchmark_series_verified": false,
+        "parser_version": "midcap-benchmark-gate3-v1",
+        "source": "https://doc.utimf.com/uticontainer/UTI%20Mid%20Cap%20Fund%20-%20SID%2029%20October%20202120211109-060535.pdf",
+        "source_sha256": "8f1989ed313a17cd0aac7a2570b98fcf1113c39ec76f956a0c2c27ed1f5f7a2a",
+        "source_content_type": "application/pdf",
+        "observed_at": "2026-09-29T16:28:39.661900+00:00"
+      },
       "source_data_as_of": null,
-      "observed_at": null
+      "observed_at": "2026-09-29T16:28:39.661900+00:00"
     },
     {
       "family": "Union Midcap Fund",
@@ -984,9 +1038,7 @@
   ],
   "remaining_families": [
     "BANDHAN MID CAP FUND",
-    "ICICI Prudential Mid Cap Fund",
     "TRUSTMF MID CAP FUND",
-    "UTI - Mid Cap Fund",
     "Union Midcap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
@@ -1010,5 +1062,5 @@
     "This combines read-only evidence only; no Mid Cap benchmark metric is inserted into the live metrics table.",
     "A family is covered only when an exact first-party page explicitly reports its benchmark."
   ],
-  "built_at": "2026-09-29T16:07:00+00:00"
+  "built_at": "2026-09-29T16:29:06+00:00"
 }

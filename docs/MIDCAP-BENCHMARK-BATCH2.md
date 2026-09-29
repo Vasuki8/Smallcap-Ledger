@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-09-29T16:07:00+00:00
+Prepared: 2026-09-29T16:29:06+00:00
 
-Targets: **18** · recovered: **18** · failed: **0**.
+Targets: **20** · recovered: **20** · failed: **0**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -23,4 +23,6 @@ Targets: **18** · recovered: **18** · failed: **0**.
 | HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | ITI Mid Cap Fund | ITI Mutual Fund | Nifty Midcap 150 TRI | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
 | JM Mid Cap Fund | JM Financial Mutual Fund | Nifty Midcap 150 TRI | https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx |
+| UTI - Mid Cap Fund | UTI Mutual Fund | Nifty Midcap 150 TRI | https://doc.utimf.com/uticontainer/UTI%20Mid%20Cap%20Fund%20-%20SID%2029%20October%20202120211109-060535.pdf |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Nifty Midcap 150 TRI | https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |

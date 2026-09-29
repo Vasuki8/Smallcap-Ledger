@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **28 / 34** · remaining: **6**.
+Benchmark identity: **30 / 34** · remaining: **4**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Benchmark identity: **28 / 34** · remaining: **6**.
 | HDFC Mid Cap Fund | HDFC Mutual Fund | NIFTY Midcap 150 Index (Total Returns Index) | https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular |
 | HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
-| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Nifty Midcap 150 TRI | https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf |
 | ITI Mid Cap Fund | ITI Mutual Fund | Nifty Midcap 150 TRI | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
 | JM Mid Cap Fund | JM Financial Mutual Fund | Nifty Midcap 150 TRI | https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx |
@@ -35,6 +35,6 @@ Benchmark identity: **28 / 34** · remaining: **6**.
 | Tata Mid Cap Fund | Tata Mutual Fund | Nifty Midcap 150 TRI | https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth |
 | Taurus Mid Cap Fund | Taurus Mutual Fund | Nifty Midcap 150 TRI | https://www.taurusmutualfund.com/node/557 |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | NIFTY Midcap 150 TRI | https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/ |
-| UTI - Mid Cap Fund | UTI Mutual Fund | Gap | Gap |
+| UTI - Mid Cap Fund | UTI Mutual Fund | Nifty Midcap 150 TRI | https://doc.utimf.com/uticontainer/UTI%20Mid%20Cap%20Fund%20-%20SID%2029%20October%20202120211109-060535.pdf |
 | Union Midcap Fund | Union Mutual Fund | Gap | Gap |
 | WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | Gap | Gap |
