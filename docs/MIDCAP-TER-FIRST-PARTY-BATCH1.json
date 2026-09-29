@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T16:27:41+00:00",
+  "built_at": "2026-09-29T16:56:01+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 7,
@@ -9,32 +9,32 @@
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "plans": {
         "Regular": {
-          "base_expense_ratio": 1.6,
+          "base_expense_ratio": 1.61,
           "brokerage": 0.0,
           "transaction_cost": 0.0,
           "statutory_levies": 0.0,
-          "ter": 2.11
+          "ter": 2.12
         },
         "Direct": {
-          "base_expense_ratio": 0.52,
+          "base_expense_ratio": 0.53,
           "brokerage": 0.0,
           "transaction_cost": 0.0,
           "statutory_levies": 0.0,
-          "ter": 0.86
+          "ter": 0.87
         }
       },
       "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-15&to_date=2026-09-29",
-      "sha256": "39880cc8d2925c09f2302661cb37231c8f1de6f2b2727266837b570fa0c63898",
+      "sha256": "e733fe5a70f8def979bc82c7c0b5c6133b0037f1bb34f32d913f7bf8f28b6790",
       "identity": {
         "scheme_name": "Canara Robeco Mid Cap Fund",
         "scheme_code": "MD"
       },
       "evidence_type": "official_amc_json",
-      "direct_ter": 0.86,
-      "regular_ter": 2.11
+      "direct_ter": 0.87,
+      "regular_ter": 2.12
     },
     {
       "family": "HSBC Midcap Fund",
@@ -90,7 +90,7 @@
         }
       },
       "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "4a6e39d2761f71bdbfb5352a8fb86f1673a658fc5d68b0265e340eafa118603d",
+      "sha256": "ee851c1b54949fbc94045977b7db4c9358d87e730a6b0d1cdbe12e1627ae9185",
       "identity": {
         "scheme_name": "ICICI Prudential Mid Cap Fund"
       },

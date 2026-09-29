@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T16:26:56+00:00",
+  "built_at": "2026-09-29T16:55:12+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
@@ -68,9 +68,9 @@
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 0.86,
-      "regular_ter": 2.11,
-      "as_of": "2026-09-28",
+      "direct_ter": 0.87,
+      "regular_ter": 2.12,
+      "as_of": "2026-09-29",
       "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-15&to_date=2026-09-29",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -210,7 +210,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.5352,
       "regular_ter": 1.4952,
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -328,7 +328,7 @@
         "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
       },
       "source_sha256": "aa1bb2aaec7732c5c4c50c2e3a2fd1a854622508d6325fb6d0733becdd758cf4",
-      "source_observed_at": "2026-09-29T16:26:54.984918+00:00",
+      "source_observed_at": "2026-09-29T16:55:11.211581+00:00",
       "source_row": 52,
       "published_row": {
         "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -401,7 +401,7 @@
       "direct_ter_available": true,
       "direct_ter": 3.0100000000000002,
       "regular_ter": 5.01,
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
       "evidence_channel": "first_party_amc",
       "identity": {

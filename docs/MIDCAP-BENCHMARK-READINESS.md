@@ -1,12 +1,12 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **30 / 34** · remaining: **4**.
+Benchmark identity: **31 / 34** · remaining: **3**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
 | Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Nifty Midcap 150 TRI | https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html |
 | Axis Midcap Fund | Axis Mutual Fund | BSE Midcap 150 TRI | https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular |
-| BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap |
+| BANDHAN MID CAP FUND | Bandhan Mutual Fund | BSE 150 Midcap TRI | https://assets.bandhanmutual.com/2025/03/339eeb25-bandhan-performance-table-feb-2025.pdf |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Nifty Midcap 150 TRI | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | BSE 150 Mid Cap TRI | https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html |
