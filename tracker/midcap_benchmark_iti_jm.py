@@ -109,7 +109,7 @@ def _parse_jm(text):
     family = "JM Mid Cap Fund"
     _require_alias(text, family)
     values = re.findall(
-        r"\bBenchmark(?:\s+Index)?\s*:?\s*(Nifty\s+Midcap\s+150\s+TRI)\b",
+        r"(?<!Additional )\bBenchmark(?:\s+Index)?\s*:?\s*(Nifty\s+Midcap\s+150\s+TRI)\b",
         text,
         re.I,
     )
