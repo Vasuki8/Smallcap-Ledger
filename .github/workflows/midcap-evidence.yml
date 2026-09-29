@@ -10,6 +10,7 @@ on:
       - 'scripts/check_midcap_batch5_evidence.py'
       - 'scripts/check_midcap_samco_portfolio.py'
       - 'scripts/check_midcap_motilal_portfolio.py'
+      - 'scripts/check_midcap_franklin_portfolio.py'
       - 'scripts/check_midcap_samco_ter.py'
       - 'scripts/check_midcap_benchmark_labels.py'
       - '.github/workflows/midcap-evidence.yml'
@@ -50,7 +51,7 @@ jobs:
             exit 1
           fi
       - name: Read-only public evidence preflight
-        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fix/midcap-samco-') && !startsWith(github.ref_name, 'fix/midcap-benchmark-') && !startsWith(github.ref_name, 'fix/midcap-evidence-samco-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-motilal-portfolio-')
+        if: github.event_name == 'push' && !startsWith(github.ref_name, 'fix/midcap-samco-') && !startsWith(github.ref_name, 'fix/midcap-benchmark-') && !startsWith(github.ref_name, 'fix/midcap-evidence-samco-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-motilal-portfolio-') && !startsWith(github.ref_name, 'fix/midcap-evidence-franklin-portfolio-')
         run: uv run --frozen python scripts/check_midcap_batch5_evidence.py
       - name: Read-only exact Samco portfolio preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-evidence-samco-portfolio-')
@@ -58,6 +59,9 @@ jobs:
       - name: Read-only exact Motilal portfolio preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-evidence-motilal-portfolio-')
         run: uv run --frozen python scripts/check_midcap_motilal_portfolio.py
+      - name: Read-only exact Franklin portfolio preflight
+        if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-evidence-franklin-portfolio-')
+        run: uv run --frozen python scripts/check_midcap_franklin_portfolio.py
       - name: Read-only exact Samco TER preflight
         if: github.event_name == 'push' && startsWith(github.ref_name, 'fix/midcap-samco-')
         run: uv run --frozen python scripts/check_midcap_samco_ter.py
