@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T16:55:12+00:00",
+  "built_at": "2026-09-29T17:08:35+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -448,9 +448,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 28,
-          "mid_cap_rows": 28,
-          "sha256": "3d80e00139780dfa025b3d317ff74458225ce9c18f53eaa1a3a616fc6f4a2a06"
+          "rows": 29,
+          "mid_cap_rows": 29,
+          "sha256": "45c1f9afedd01ca585cdc1ac139e560449d3129daef31fa3039829aded89f623"
         }
       ],
       "matched_families": [
@@ -832,9 +832,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 28,
-          "mid_cap_rows": 28,
-          "sha256": "8599d8ffdc43b5cf3d4420ba59e724ef8f613db4a0f827c4d0f61f7f8c653cd2"
+          "rows": 29,
+          "mid_cap_rows": 29,
+          "sha256": "db9800a462fe65ca481281c5212cd8f8f1893b793a2230926d90c1433e942eed"
         }
       ],
       "matched_families": [
@@ -1348,8 +1348,8 @@
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
-      "sha256": "4a05f2c59d13c9cf1dafa893aa4699a4084d850e77b109edef70caed5b60aaeb",
-      "observed_at": "2026-09-29T16:55:10.232125+00:00",
+      "sha256": "751490a42cd09503710fb6b9a3c131d820b1086ea0fcec738005f48fbbe9085a",
+      "observed_at": "2026-09-29T17:08:33.337790+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1364,15 +1364,15 @@
       "pagination": {
         "page": 1,
         "pageSize": 100,
-        "total": 256,
+        "total": 268,
         "pageCount": 3
       }
     },
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
-      "sha256": "aa1bb2aaec7732c5c4c50c2e3a2fd1a854622508d6325fb6d0733becdd758cf4",
-      "observed_at": "2026-09-29T16:55:11.211581+00:00",
+      "sha256": "35600da9338dfa59de434c82022b6bfa262b233de3588758bcb273997d214886",
+      "observed_at": "2026-09-29T17:08:34.508465+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1387,15 +1387,15 @@
       "pagination": {
         "page": 2,
         "pageSize": 100,
-        "total": 256,
+        "total": 268,
         "pageCount": 3
       }
     },
     {
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
-      "sha256": "6c89866ce53c097d1a5cf187fb8ecb7189744337b51bcbf4a5fba1d231057649",
-      "observed_at": "2026-09-29T16:55:12.075405+00:00",
+      "sha256": "a318e8e7445fd6ecf7e963b626ab45547e171258dbbdf8e587998a27ebabbf4f",
+      "observed_at": "2026-09-29T17:08:35.417793+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1406,11 +1406,11 @@
       },
       "amc": "Samco Mutual Fund",
       "page": 3,
-      "rows": 56,
+      "rows": 68,
       "pagination": {
         "page": 3,
         "pageSize": 100,
-        "total": 256,
+        "total": 268,
         "pageCount": 3
       }
     },
@@ -1419,13 +1419,13 @@
       "amc": "Samco Mutual Fund",
       "month": "09-2026",
       "complete": true,
-      "total_rows": 256,
+      "total_rows": 268,
       "pages_checked": 3,
       "matched_families": [
         "Samco Mid Cap Fund"
       ],
-      "exact_daily_observations": 19,
-      "latest_reporting_date": "2026-09-28"
+      "exact_daily_observations": 20,
+      "latest_reporting_date": "2026-09-29"
     },
     {
       "kind": "ter_mid_cap_contract_summary",
@@ -2986,7 +2986,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-28",
+        "as_of": "2026-09-29",
         "scheme_name": "ITI Mid Cap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4019,7 +4019,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-28",
+        "as_of": "2026-09-29",
         "scheme_name": "Quant Mid Cap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -4135,7 +4135,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-28",
+        "as_of": "2026-09-29",
         "scheme_name": "Samco Mid Cap Fund",
         "category": "Equity Schemes - Mid Cap Fund",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
@@ -4147,16 +4147,16 @@
           "value": 3.0,
           "unit": "% p.a. · AMC-reported via AMFI"
         },
-        "source_sha256": "aa1bb2aaec7732c5c4c50c2e3a2fd1a854622508d6325fb6d0733becdd758cf4",
-        "source_observed_at": "2026-09-29T16:55:11.211581+00:00",
-        "source_row": 52,
+        "source_sha256": "35600da9338dfa59de434c82022b6bfa262b233de3588758bcb273997d214886",
+        "source_observed_at": "2026-09-29T17:08:34.508465+00:00",
+        "source_row": 60,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
           "Scheme_Name": "Samco Mid Cap Fund",
           "SchemeType_Desc": "Open Ended",
           "SchemeCat_Desc": "Equity Schemes - Mid Cap Fund",
           "TER_Year": "2026-2027",
-          "TER_Date": "2026-09-28T00:00:00.000Z",
+          "TER_Date": "2026-09-29T00:00:00.000Z",
           "R_BER": "2.1000",
           "R_BrokerageCost": "0.1000",
           "R_TransactionCost": "0.0100",
@@ -5063,6 +5063,6 @@
     "current_fetch_ok": true,
     "retained_from_audit_built_at": null,
     "retained_artifact_path": "docs/MIDCAP-AUM-LAST-VERIFIED.json",
-    "retained_artifact_sha256": "22652e71bdabbf3fdab4e9430f0ad4e0e75441951c0da51c5db8f9a0e0d7df8e"
+    "retained_artifact_sha256": "fde03640733c8a677badbba55b4b0b150b8f2e87169754e9b8c234d1edd31fb9"
   }
 }

@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-29T17:00:00+00:00",
+  "built_at": "2026-09-29T17:13:28+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
-  "targets": 7,
-  "recovered": 6,
+  "targets": 8,
+  "recovered": 7,
   "failed": 1,
   "results": [
     {
@@ -23,7 +23,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:59:49+00:00"
+      "observed_at": "2026-09-29T17:13:09+00:00"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
@@ -397,7 +397,7 @@
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
       "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-09-29T16:59:50+00:00"
+      "observed_at": "2026-09-29T17:13:11+00:00"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -414,7 +414,7 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T16:59:52+00:00"
+      "observed_at": "2026-09-29T17:13:14+00:00"
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -434,7 +434,7 @@
       "discovery_source_sha256": "1d7262f9beb24c22056a5d94f325c42f26ef5bb0cb8c31d9c079e02897eda8f1",
       "publisher_scheme_code": "MC",
       "card_aum_as_of_raw": "31-Aug-2026",
-      "observed_at": "2026-09-29T16:59:56+00:00"
+      "observed_at": "2026-09-29T17:13:19+00:00"
     },
     {
       "family": "Samco Mid Cap Fund",
@@ -569,9 +569,9 @@
       "completeness_note": "Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
       "equity_weight_sum": 98.54,
       "source": "https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg",
-      "source_sha256": "05b9a8b13ee0fdc3b3d84ea9290030b7368b7507b7f680bd5845084878a5595a",
+      "source_sha256": "2a4015f5b0f57a8ada70e0fa9c804f0ce22b50e66e912851360f86a60b23cbed",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-29T16:59:58+00:00"
+      "observed_at": "2026-09-29T17:13:20+00:00"
     },
     {
       "family": "Motilal Oswal Midcap Fund",
@@ -588,9 +588,33 @@
       "source_sha256": "349eadc5955f05b53a483f55677f9f018640ab14724ca7727a7322995d45a36a",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "discovery_source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
-      "discovery_source_sha256": "198155a7df7ce04f237c8d187df0615cdf1420ebd06009445819cf29873ed573",
+      "discovery_source_sha256": "160f67a3ce6af88fc722e59a08db8da608d794401daebe6510593c63812487d0",
       "discovery_source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-09-29T17:00:00+00:00"
+      "observed_at": "2026-09-29T17:13:23+00:00"
+    },
+    {
+      "family": "BANDHAN MID CAP FUND",
+      "amc": "Bandhan Mutual Fund",
+      "status": "recovered",
+      "sheet": "IDF281",
+      "as_of": "2026-08-31",
+      "positions_observed": 88,
+      "complete": false,
+      "unknown_rows": [
+        "Triparty Repo TRP_010926",
+        "Cash Margin - Derivatives",
+        "Cash / Bank Balance"
+      ],
+      "aum": 2581.285528,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/31f832d6-bandhan-mid-cap-fund_64601504-9a02-4098-a032-61e6fceefec9_31-august-2026.xlsx",
+      "source_title": "Bandhan Mid cap Fund 31 August 2026",
+      "source_sha256": "d0c6d885d00c77599cdb8e97d9f4cf94e8613b785911a6cf101e23bbf2212bd5",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "discovery_page": "https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-mid-cap-fund-31-august-2026/",
+      "disclosure_post_id": 158812,
+      "parser_version": "bandhan-midcap-monthly-portfolio-v1",
+      "observed_at": "2026-09-29T17:13:28+00:00"
     }
   ],
   "errors": [
@@ -605,6 +629,7 @@
     "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
     "Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.",
     "Motilal Oswal uses the current fund page only to discover the exact dated monthly workbook, which is parsed through the existing structured parser.",
+    "Bandhan uses the exact scheme/month CMS disclosure post and read-only finance API to resolve one official workbook, which is parsed through the existing structured parser.",
     "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
     "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
     "Every result requires exact staged family identity and the current regulatory month-end; no live records are written."

@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-29T16:56:01+00:00",
+  "built_at": "2026-09-29T17:09:21+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
-  "recovered": 7,
-  "failed": 0,
+  "recovered": 6,
+  "failed": 1,
   "results": [
     {
       "family": "Canara Robeco Mid Cap Fund",
@@ -69,36 +69,6 @@
       "regular_ter": 2.21
     },
     {
-      "family": "ICICI Prudential Mid Cap Fund",
-      "amc": "ICICI Prudential Mutual Fund",
-      "status": "recovered",
-      "as_of": "2026-09-28",
-      "plans": {
-        "Regular": {
-          "base_expense_ratio": 1.53,
-          "brokerage": 0.01,
-          "transaction_cost": 0.0,
-          "statutory_levies": 0.31,
-          "ter": 1.85
-        },
-        "Direct": {
-          "base_expense_ratio": 0.89,
-          "brokerage": 0.01,
-          "transaction_cost": 0.0,
-          "statutory_levies": 0.21,
-          "ter": 1.11
-        }
-      },
-      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "ee851c1b54949fbc94045977b7db4c9358d87e730a6b0d1cdbe12e1627ae9185",
-      "identity": {
-        "scheme_name": "ICICI Prudential Mid Cap Fund"
-      },
-      "evidence_type": "official_amc_workbook",
-      "direct_ter": 1.11,
-      "regular_ter": 1.85
-    },
-    {
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
       "status": "recovered",
@@ -133,7 +103,7 @@
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.85,
@@ -151,7 +121,7 @@
         }
       },
       "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
-      "sha256": "9cc8e3c36fe2730b5dbdf9de27ee25685307db6b8841e77664a2ff348a365f7f",
+      "sha256": "efc5f4ec9c37dcf3e10d3b2914aa086d19726f03d96e7386a6e1f4e589ff808a",
       "identity": {
         "scheme_name": "JM Mid Cap Fund",
         "scheme_code": "MD",
@@ -224,7 +194,13 @@
       "regular_ter": 2.02
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "error": "ICICI financial disclosure API is unavailable or invalid"
+    }
+  ],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [
