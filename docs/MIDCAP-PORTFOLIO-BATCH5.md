@@ -1,8 +1,8 @@
 # Mid Cap current portfolio evidence — batch 5
 
-Prepared: 2026-09-29T03:05:38+00:00
+Prepared: 2026-09-29T16:01:03+00:00
 
-Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · failed: **1**.
+Expected month-end: **2026-08-31** · targets: **6** · recovered: **5** · failed: **1**.
 
 | Family | AMC | As of | Positions | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
@@ -10,6 +10,7 @@ Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · fail
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 2026-08-31 | 59 | factsheet_equity_only | false | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | 2026-08-31 | 43 | structured_monthly_portfolio | true | https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0 |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | 2026-08-31 | 79 | structured_monthly_portfolio | true | https://www.sundarammutual.com/Downloads_Pdf/Portfolio_Archives/2026/Aug/Equity/MIDCAP.xlsx |
+| Samco Mid Cap Fund | Samco Mutual Fund | 2026-08-31 | 30 | publisher_all_holdings_html | false | https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg |
 
 ## Errors
 
@@ -18,6 +19,7 @@ Expected month-end: **2026-08-31** · targets: **5** · recovered: **4** · fail
 ## Notes
 
 - Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.
+- Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.
 - Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.
 - Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.
 - Every result requires exact staged family identity and the current regulatory month-end; no live records are written.

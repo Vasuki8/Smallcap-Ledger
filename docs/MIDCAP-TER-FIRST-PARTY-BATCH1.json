@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T03:02:53+00:00",
+  "built_at": "2026-09-29T15:58:15+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 7,
@@ -40,7 +40,7 @@
       "family": "HSBC Midcap Fund",
       "amc": "HSBC Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.43,
@@ -58,7 +58,7 @@
         }
       },
       "source": "https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx",
-      "sha256": "82e7d8798ff95e5cc384cbb7f1432ef407b7d6a784340583938807dbdaad6886",
+      "sha256": "fa4af303c0bc1cbb9207da4d3b09b3ddfaa56a479a82f96d533ae40bce58de65",
       "identity": {
         "scheme_name": "HSBC Midcap Fund",
         "scheme_code": "HEMCPF",
@@ -72,37 +72,37 @@
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "plans": {
         "Regular": {
-          "base_expense_ratio": 1.52,
+          "base_expense_ratio": 1.53,
           "brokerage": 0.01,
           "transaction_cost": 0.0,
-          "statutory_levies": 0.3,
-          "ter": 1.83
+          "statutory_levies": 0.31,
+          "ter": 1.85
         },
         "Direct": {
-          "base_expense_ratio": 0.88,
+          "base_expense_ratio": 0.89,
           "brokerage": 0.01,
           "transaction_cost": 0.0,
-          "statutory_levies": 0.2,
-          "ter": 1.09
+          "statutory_levies": 0.21,
+          "ter": 1.11
         }
       },
       "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "8e388dc9ab8328d4d3b39fbdca8dd3c33f0abd5d5ced21568eb09d75b4706877",
+      "sha256": "4a6e39d2761f71bdbfb5352a8fb86f1673a658fc5d68b0265e340eafa118603d",
       "identity": {
         "scheme_name": "ICICI Prudential Mid Cap Fund"
       },
       "evidence_type": "official_amc_workbook",
-      "direct_ter": 1.09,
-      "regular_ter": 1.83
+      "direct_ter": 1.11,
+      "regular_ter": 1.85
     },
     {
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-27",
+      "as_of": "2026-09-28",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.44,
@@ -120,7 +120,7 @@
         }
       },
       "source": "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9",
-      "sha256": "3abedbf1a599888f0b9792d1d829b3a088f54309df69f040428467d7d5f66245",
+      "sha256": "4496a7fa8c436d1d1e334751f731b953703316b4060dcbd9cacbe065ecb2dd3d",
       "identity": {
         "scheme_name": "Invesco India Mid Cap Fund",
         "nsdl_scheme_code": "INVM/O/E/MIF/07/01/0006"

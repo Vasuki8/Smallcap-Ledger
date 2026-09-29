@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-29T03:05:38+00:00",
+  "built_at": "2026-09-29T16:01:03+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
-  "targets": 5,
-  "recovered": 4,
+  "targets": 6,
+  "recovered": 5,
   "failed": 1,
   "results": [
     {
@@ -23,7 +23,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T03:05:27+00:00"
+      "observed_at": "2026-09-29T16:00:53+00:00"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
@@ -397,7 +397,7 @@
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
       "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-09-29T03:05:30+00:00"
+      "observed_at": "2026-09-29T16:00:55+00:00"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -414,7 +414,7 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-29T03:05:32+00:00"
+      "observed_at": "2026-09-29T16:00:57+00:00"
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -431,10 +431,147 @@
       "source_sha256": "7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "discovery_source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json",
-      "discovery_source_sha256": "cada61259941301d311338612ceebad224973494a6dd99c2772215a13a2784f1",
+      "discovery_source_sha256": "98508b5a0f7b52886a64fcff32ed915775db93f43b7343b5e1551aa252e0d957",
       "publisher_scheme_code": "MC",
       "card_aum_as_of_raw": "31-Aug-2026",
-      "observed_at": "2026-09-29T03:05:38+00:00"
+      "observed_at": "2026-09-29T16:01:02+00:00"
+    },
+    {
+      "family": "Samco Mid Cap Fund",
+      "amc": "Samco Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-08-31",
+      "positions_observed": 30,
+      "positions": [
+        {
+          "name": "National Aluminium Company Limited",
+          "weight": 5.78
+        },
+        {
+          "name": "Laurus Labs Limited",
+          "weight": 5.05
+        },
+        {
+          "name": "Apar Industries Limited",
+          "weight": 4.68
+        },
+        {
+          "name": "L&T Finance Limited",
+          "weight": 4.46
+        },
+        {
+          "name": "The Federal Bank Limited",
+          "weight": 4.3
+        },
+        {
+          "name": "Aditya Birla Capital Limited",
+          "weight": 4.21
+        },
+        {
+          "name": "Bank of Maharashtra",
+          "weight": 4.01
+        },
+        {
+          "name": "AU Small Finance Bank Limited",
+          "weight": 3.74
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 3.74
+        },
+        {
+          "name": "Multi Commodity Exchange of India Limited",
+          "weight": 3.63
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 3.62
+        },
+        {
+          "name": "FSN E-Commerce Ventures Limited",
+          "weight": 3.45
+        },
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 3.38
+        },
+        {
+          "name": "Aurobindo Pharma Limited",
+          "weight": 3.27
+        },
+        {
+          "name": "BSE Limited",
+          "weight": 3.19
+        },
+        {
+          "name": "Bank of India",
+          "weight": 3.07
+        },
+        {
+          "name": "Hitachi Energy India Limited",
+          "weight": 3.06
+        },
+        {
+          "name": "NMDC Limited",
+          "weight": 3.03
+        },
+        {
+          "name": "Vodafone Idea Limited",
+          "weight": 2.97
+        },
+        {
+          "name": "Polycab India Limited",
+          "weight": 2.95
+        },
+        {
+          "name": "Life Insurance Corporation Of India",
+          "weight": 2.89
+        },
+        {
+          "name": "Marico Limited",
+          "weight": 2.82
+        },
+        {
+          "name": "Bharat Forge Limited",
+          "weight": 2.6
+        },
+        {
+          "name": "Hindustan Petroleum Corporation Limited",
+          "weight": 2.59
+        },
+        {
+          "name": "General Insurance Corporation of India",
+          "weight": 2.45
+        },
+        {
+          "name": "Lupin Limited",
+          "weight": 2.37
+        },
+        {
+          "name": "Thermax Limited",
+          "weight": 2.09
+        },
+        {
+          "name": "NLC India Limited",
+          "weight": 2.05
+        },
+        {
+          "name": "Radico Khaitan Limited",
+          "weight": 1.55
+        },
+        {
+          "name": "LIC Housing Finance Limited",
+          "weight": 1.54
+        }
+      ],
+      "complete": false,
+      "scope": "publisher_all_holdings_html",
+      "completeness_note": "Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
+      "equity_weight_sum": 98.54,
+      "source": "https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg",
+      "source_sha256": "1021d186d8442302393402cc236259ec9b54e091e9b057dc14e344688fe2c12a",
+      "source_content_type": "text/html; charset=UTF-8",
+      "observed_at": "2026-09-29T16:01:03+00:00"
     }
   ],
   "errors": [
@@ -447,6 +584,7 @@
   "public_export_enabled": false,
   "notes": [
     "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
+    "Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.",
     "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
     "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
     "Every result requires exact staged family identity and the current regulatory month-end; no live records are written."
