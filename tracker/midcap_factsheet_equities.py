@@ -30,14 +30,22 @@ def normalized(value: object) -> str:
     return re.sub(r"[^a-z0-9]", "", clean(value).casefold())
 
 
-def validate_factsheet_context(soup: BeautifulSoup, family: str, expected: str) -> None:
-    """Use an exact scheme text node and the factsheet's explicit data-date label.
+def validate_factsheet_context(
+    soup: BeautifulSoup,
+    family: str,
+    expected: str,
+    *,
+    reviewed_heading_aliases: tuple[str, ...] = (),
+) -> None:
+    """Use an exact reviewed scheme text node and the factsheet's explicit date.
 
     A current NAV/performance/AUM date somewhere else on the page cannot make an
-    older factsheet current. These two templates print 'Data as on ...'.
+    older factsheet current. Aliases are opt-in and must be source-reviewed;
+    fuzzy/substring matching is never used here.
     """
-    if not any(normalized(text) == normalized(family) for text in soup.stripped_strings):
-        raise ValueError("Factsheet lacks the exact staged scheme heading")
+    accepted = {normalized(family), *(normalized(value) for value in reviewed_heading_aliases)}
+    if not any(normalized(text) in accepted for text in soup.stripped_strings):
+        raise ValueError("Factsheet lacks the exact staged or reviewed scheme heading")
     # Match a leading, standalone Data-as-on label. For example, Kotak also
     # prints "Folio Count data as on ..." for a different reporting period.
     # That qualified metric date must not override the overall factsheet date.
