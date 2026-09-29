@@ -16,6 +16,7 @@ from tracker import midcap_benchmark_explicit as explicit
 from tracker import midcap_benchmark_explicit2 as explicit2
 from tracker import midcap_benchmark_iti_jm as iti_jm
 from tracker import midcap_benchmark_gate3 as gate3
+from tracker import midcap_benchmark_bandhan as bandhan
 
 
 def main():
@@ -29,6 +30,7 @@ def main():
         (explicit2.SOURCES, explicit2.inspect_family),
         (iti_jm.SOURCES, iti_jm.inspect_family),
         (gate3.SOURCES, gate3.inspect_family),
+        ({bandhan.FAMILY: bandhan.SOURCE}, bandhan.inspect_family),
     )
     expected = sum(len(sources) for sources, _ in source_groups)
     with patch.object(db, "connect", side_effect=AssertionError("Database access forbidden in source preflight")):
