@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-29T17:09:21+00:00",
+  "built_at": "2026-09-29T17:27:26+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
-  "recovered": 6,
-  "failed": 1,
+  "recovered": 7,
+  "failed": 0,
   "results": [
     {
       "family": "Canara Robeco Mid Cap Fund",
@@ -67,6 +67,38 @@
       "evidence_type": "official_amc_linked_workbook",
       "direct_ter": 1.15,
       "regular_ter": 2.21
+    },
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-28",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.53,
+          "brokerage": 0.01,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.31,
+          "ter": 1.85
+        },
+        "Direct": {
+          "base_expense_ratio": 0.89,
+          "brokerage": 0.01,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.21,
+          "ter": 1.11
+        }
+      },
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "sha256": "ee851c1b54949fbc94045977b7db4c9358d87e730a6b0d1cdbe12e1627ae9185",
+      "identity": {
+        "scheme_name": "ICICI Prudential Mid Cap Fund"
+      },
+      "evidence_type": "official_amc_workbook",
+      "discovery_channel": "financial_disclosure_api",
+      "discovery_api_error": null,
+      "direct_ter": 1.11,
+      "regular_ter": 1.85
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -135,7 +167,7 @@
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.6,
@@ -153,7 +185,7 @@
         }
       },
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
-      "sha256": "e55b41a01beb1152227ebfb2a6de3d95586737ca00e673e277bad6882d5eb549",
+      "sha256": "e36c701c531292d53cf96ca75dc9baa36350da540a39cc184be53981a1c1f383",
       "identity": {
         "scheme_name": "Mahindra Manulife Mid Cap Fund",
         "nsdl_scheme_code": "MAHM/O/E /MIF/17/11/0006"
@@ -194,13 +226,7 @@
       "regular_ter": 2.02
     }
   ],
-  "errors": [
-    {
-      "family": "ICICI Prudential Mid Cap Fund",
-      "amc": "ICICI Prudential Mutual Fund",
-      "error": "ICICI financial disclosure API is unavailable or invalid"
-    }
-  ],
+  "errors": [],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [

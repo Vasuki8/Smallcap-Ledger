@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-09-29T17:08:35+00:00",
+  "built_at": "2026-09-29T17:26:54+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 30,
+    "direct_ter": 31,
     "amfi": 21,
-    "first_party_amc": 9,
-    "remaining": 4
+    "first_party_amc": 10,
+    "remaining": 3
   },
   "families": [
     {
@@ -82,9 +82,9 @@
       "family": "DSP Midcap Fund",
       "amc": "DSP Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 0.83,
-      "regular_ter": 1.73,
-      "as_of": "2026-09-28",
+      "direct_ter": 0.84,
+      "regular_ter": 1.74,
+      "as_of": "2026-09-29",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -154,13 +154,15 @@
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 1.11,
+      "regular_ter": 1.85,
+      "as_of": "2026-09-28",
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "ICICI Prudential Mid Cap Fund"
+      }
     },
     {
       "family": "ITI Mid Cap Fund",
@@ -208,7 +210,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.5352,
       "regular_ter": 1.4952,
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-27",
       "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -233,7 +235,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.75,
       "regular_ter": 2.02,
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -326,7 +328,7 @@
         "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
       },
       "source_sha256": "35600da9338dfa59de434c82022b6bfa262b233de3588758bcb273997d214886",
-      "source_observed_at": "2026-09-29T17:08:34.508465+00:00",
+      "source_observed_at": "2026-09-29T17:26:52.954027+00:00",
       "source_row": 60,
       "published_row": {
         "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -424,7 +426,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.11,
       "regular_ter": 2.41,
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -444,7 +446,6 @@
   "remaining_families": [
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
-    "ICICI Prudential Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
   "production_writes": 0,

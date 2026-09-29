@@ -1,12 +1,12 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-29T17:08:35+00:00
+Prepared: 2026-09-29T17:26:54+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
 Families: **34** · scheme codes: **135** · AUM: **34** · Direct TER: **21** · reported benchmark identity: **0** · current portfolio: **0** · all required evidence: **0**.
 
-AUM evidence mode: **current_fetch**. A retained last-verified AUM set preserves original reporting dates and never clears a live source-fetch error.
+AUM evidence mode: **retained_last_verified**. A retained last-verified AUM set preserves original reporting dates and never clears a live source-fetch error.
 
 Mid Cap registry stage: **staged** · public export enabled: **false** · launch ready: **false**.
 
@@ -18,7 +18,7 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | ₹ 727.34 Cr · 2026-09-28 | Gap | Gap | Gap | 12 | direct_ter, benchmark_identity, current_portfolio |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | ₹ 2517.97 Cr · 2026-09-28 | 0.7800% · 2026-09-28 | Gap | Gap | 12 | benchmark_identity, current_portfolio |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | ₹ 5016.00 Cr · 2026-09-28 | Gap | Gap | Gap | 13 | direct_ter, benchmark_identity, current_portfolio |
-| DSP Midcap Fund | DSP Mutual Fund | ₹ 19735.78 Cr · 2026-09-28 | 0.8300% · 2026-09-28 | Gap | Gap | 10 | benchmark_identity, current_portfolio |
+| DSP Midcap Fund | DSP Mutual Fund | ₹ 19735.78 Cr · 2026-09-28 | 0.8400% · 2026-09-29 | Gap | Gap | 10 | benchmark_identity, current_portfolio |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | ₹ 19288.78 Cr · 2026-09-28 | 0.6800% · 2026-09-28 | Gap | Gap | 10 | benchmark_identity, current_portfolio |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | ₹ 12244.92 Cr · 2026-09-28 | 1.1600% · 2026-09-28 | Gap | Gap | 6 | benchmark_identity, current_portfolio |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | ₹ 102927.34 Cr · 2026-09-28 | 0.7600% · 2026-09-24 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
@@ -43,7 +43,7 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | Taurus Mid Cap Fund | Taurus Mutual Fund | ₹ 136.69 Cr · 2026-09-28 | 2.3600% · 2026-09-29 | Gap | Gap | 0 | benchmark_identity, current_portfolio |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | ₹ 173.43 Cr · 2026-09-28 | Gap | Gap | Gap | 11 | direct_ter, benchmark_identity, current_portfolio |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | ₹ 681.06 Cr · 2026-09-28 | 1.9000% · 2026-09-28 | Gap | Gap | 3 | benchmark_identity, current_portfolio |
-| Union Midcap Fund | Union Mutual Fund | ₹ 1914.12 Cr · 2026-09-28 | 1.1100% · 2026-09-28 | Gap | Gap | 6 | benchmark_identity, current_portfolio |
+| Union Midcap Fund | Union Mutual Fund | ₹ 1914.12 Cr · 2026-09-28 | 1.1100% · 2026-09-29 | Gap | Gap | 6 | benchmark_identity, current_portfolio |
 | UTI - Mid Cap Fund | UTI Mutual Fund | ₹ 11986.67 Cr · 2026-09-28 | 1.2600% · 2026-09-28 | Gap | Gap | 3 | benchmark_identity, current_portfolio |
 | WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | ₹ 7540.60 Cr · 2026-09-28 | Gap | Gap | Gap | 0 | direct_ter, benchmark_identity, current_portfolio |
 
@@ -53,6 +53,12 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 - mid_cap_direct_ter_coverage_incomplete
 - mid_cap_benchmark_identity_coverage_incomplete
 - mid_cap_portfolio_current_coverage_incomplete
+- mid_cap_source_audit_fetch_errors
+
+## Source fetch errors
+
+- AMFI daily AUM: Server error '502 Bad Gateway' for url 'https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformancefilters'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
 
 ## Notes
 

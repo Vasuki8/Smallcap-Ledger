@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-09-29T17:14:28+00:00",
+  "checked_at": "2026-09-29T17:32:18+00:00",
   "scope": "current_production_operational_health",
   "database": {
-    "bytes": 132026368,
+    "bytes": 132354048,
     "integrity": "ok",
     "foreign_key_violations": []
   },
@@ -22,7 +22,7 @@
     "status": "ok",
     "tag": "tracker-history",
     "asset_count": 117,
-    "compressed_bytes": 2734009149,
+    "compressed_bytes": 2734014133,
     "review_threshold_assets": 750,
     "remaining_to_review_threshold": 633,
     "review_due": false,

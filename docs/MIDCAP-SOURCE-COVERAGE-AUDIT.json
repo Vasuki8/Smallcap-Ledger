@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-29T17:08:35+00:00",
+  "built_at": "2026-09-29T17:26:54+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -20,40 +20,10 @@
   },
   "source_checks": [
     {
-      "kind": "aum_filters",
-      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformancefilters",
-      "sha256": "0ac005ac4b473a6a58e892781922006417c40dbf798114354bf8444236119d63"
-    },
-    {
-      "kind": "aum_subcategories",
-      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/getsubcategory",
-      "sha256": "c9a187558b6e3c008b0774fc119483c612ae3e1455fe60204aa6b6156420efab"
-    },
-    {
-      "kind": "aum_mid_cap",
-      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformance",
-      "request": {
-        "maturityType": 1,
-        "category": 1,
-        "subCategory": 5,
-        "mfid": 0,
-        "reportDate": "29-Sep-2026"
-      },
-      "sha256": "a1c00d0752481657b86f520170fadd598b88464d9787fae38f528d5131f02b65",
-      "matched_families": 0
-    },
-    {
-      "kind": "aum_mid_cap",
-      "source": "https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformance",
-      "request": {
-        "maturityType": 1,
-        "category": 1,
-        "subCategory": 5,
-        "mfid": 0,
-        "reportDate": "28-Sep-2026"
-      },
-      "sha256": "dd6fbf76ef714f0c1d9e1c0e6284a343dec5eede9515aa49a0c8eb08f37f9e58",
-      "matched_families": 34
+      "kind": "aum_retained_last_verified",
+      "source": "https://www.amfiindia.com/otherdata/fund-performance",
+      "retained_from_audit_built_at": "2026-09-29T17:08:35+00:00",
+      "rows": 34
     },
     {
       "kind": "ter_mutual_fund_selector",
@@ -314,9 +284,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 19,
-          "mid_cap_rows": 19,
-          "sha256": "edff7c657a6d9cb1f2f67def69d300a94ecffb0b4e434a8e064c3c95811f621f"
+          "rows": 20,
+          "mid_cap_rows": 20,
+          "sha256": "41bad62c474bc02ac99c83b6aac32a69da8fd07b288b44cb4077b5af666966ef"
         }
       ],
       "matched_families": [
@@ -794,9 +764,9 @@
       "pages_checked": [
         {
           "page": 1,
-          "rows": 28,
-          "mid_cap_rows": 28,
-          "sha256": "b56127e8282c31f8a7d68687a366f6e0077e75b1f3511f52a6f14b4711f6e50d"
+          "rows": 29,
+          "mid_cap_rows": 29,
+          "sha256": "92707137a9bc72829bc9ceadd6552c0c70ad113da89e61652685c7c1967a12d7"
         }
       ],
       "matched_families": [
@@ -1349,7 +1319,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "751490a42cd09503710fb6b9a3c131d820b1086ea0fcec738005f48fbbe9085a",
-      "observed_at": "2026-09-29T17:08:33.337790+00:00",
+      "observed_at": "2026-09-29T17:26:51.745981+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1372,7 +1342,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=2&pageSize=1000",
       "sha256": "35600da9338dfa59de434c82022b6bfa262b233de3588758bcb273997d214886",
-      "observed_at": "2026-09-29T17:08:34.508465+00:00",
+      "observed_at": "2026-09-29T17:26:52.954027+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1395,7 +1365,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=09-2026&strCat=-1&strType=1&page=3&pageSize=1000",
       "sha256": "a318e8e7445fd6ecf7e963b626ab45547e171258dbbdf8e587998a27ebabbf4f",
-      "observed_at": "2026-09-29T17:08:35.417793+00:00",
+      "observed_at": "2026-09-29T17:26:53.981964+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "09-2026",
@@ -1452,7 +1422,12 @@
       "contract": "resolve official Mid Cap category and query AMC x month; unresolved Samco only uses a complete, exact-identity AMC-scoped fallback"
     }
   ],
-  "source_errors": [],
+  "source_errors": [
+    {
+      "source": "AMFI daily AUM",
+      "error": "Server error '502 Bad Gateway' for url 'https://www.amfiindia.com/gateway/pollingsebi/api/amfi/fundperformancefilters'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    }
+  ],
   "unmatched_mid_cap_aum_names": [],
   "unmatched_mid_cap_ter_names": [],
   "families": [
@@ -2166,16 +2141,16 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-28",
+        "as_of": "2026-09-29",
         "scheme_name": "DSP Midcap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
         "direct": {
-          "value": 0.83,
+          "value": 0.84,
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "regular": {
-          "value": 1.73,
+          "value": 1.74,
           "unit": "% p.a. · AMC-reported via AMFI"
         }
       },
@@ -4148,7 +4123,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "35600da9338dfa59de434c82022b6bfa262b233de3588758bcb273997d214886",
-        "source_observed_at": "2026-09-29T17:08:34.508465+00:00",
+        "source_observed_at": "2026-09-29T17:26:52.954027+00:00",
         "source_row": 60,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -4867,7 +4842,7 @@
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-28",
+        "as_of": "2026-09-29",
         "scheme_name": "Union Midcap Fund",
         "category": "Equity Scheme - Mid Cap Fund",
         "source": "https://www.amfiindia.com/ter-of-mf-schemes",
@@ -5046,7 +5021,8 @@
     "mid_cap_registry_stage_is_staged",
     "mid_cap_direct_ter_coverage_incomplete",
     "mid_cap_benchmark_identity_coverage_incomplete",
-    "mid_cap_portfolio_current_coverage_incomplete"
+    "mid_cap_portfolio_current_coverage_incomplete",
+    "mid_cap_source_audit_fetch_errors"
   ],
   "source_coverage_ready": false,
   "mid_cap_launch_ready": false,
@@ -5059,9 +5035,9 @@
     "A staged category remains ineligible for public export regardless of source coverage."
   ],
   "aum_evidence": {
-    "mode": "current_fetch",
-    "current_fetch_ok": true,
-    "retained_from_audit_built_at": null,
+    "mode": "retained_last_verified",
+    "current_fetch_ok": false,
+    "retained_from_audit_built_at": "2026-09-29T17:08:35+00:00",
     "retained_artifact_path": "docs/MIDCAP-AUM-LAST-VERIFIED.json",
     "retained_artifact_sha256": "fde03640733c8a677badbba55b4b0b150b8f2e87169754e9b8c234d1edd31fb9"
   }
