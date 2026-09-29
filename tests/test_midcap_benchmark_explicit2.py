@@ -1,4 +1,4 @@
-"""Tests for Franklin, UTI, Motilal Oswal and HSBC Mid Cap benchmark sources."""
+"""Tests for Franklin, Motilal Oswal and HSBC Mid Cap benchmark sources."""
 import hashlib
 import unittest
 from datetime import datetime, timezone
@@ -25,20 +25,6 @@ class MidCapBenchmarkExplicit2Tests(unittest.TestCase):
             explicit2.parse_source(
                 "Franklin India Mid Cap Fund",
                 body.replace(b"Franklin India Mid Cap Fund",b"Franklin India Small Cap Fund"),
-            )
-
-    def test_uti_reviewed_alias_requires_benchmark_index(self):
-        body=(
-            b"<html><body><h1>UTI Mid Cap Fund</h1><section>Fund Facts "
-            b"Benchmark Index Nifty Midcap 150 TRI Special Facilities</section></body></html>"
-        )
-        row=explicit2.parse_source("UTI - Mid Cap Fund",body)
-        self.assertEqual(row["primary_benchmark"],"Nifty Midcap 150 TRI")
-        self.assertEqual(row["benchmark_role"],"primary")
-        with self.assertRaises(ValueError):
-            explicit2.parse_source(
-                "UTI - Mid Cap Fund",
-                body.replace(b"Benchmark Index Nifty Midcap 150 TRI",b"Nifty Midcap 150 TRI"),
             )
 
     def test_motilal_current_page_requires_explicit_benchmark(self):
@@ -72,14 +58,17 @@ class MidCapBenchmarkExplicit2Tests(unittest.TestCase):
             )
 
     def test_inspect_requires_exact_url_media_type_and_provenance(self):
-        family="UTI - Mid Cap Fund"
-        body=b"<html><body>UTI Mid Cap Fund Benchmark Index Nifty Midcap 150 TRI</body></html>"
+        family="Franklin India Mid Cap Fund"
+        body=(
+            b"<html><body>Franklin India Mid Cap Fund (Erstwhile Franklin India Prima Fund) "
+            b"As on July 31, 2026 BENCHMARK: Nifty Midcap 150</body></html>"
+        )
         calls=[]
         def fetch(url,**kwargs):
             calls.append((url,kwargs))
             return body,None,"text/html; charset=utf-8"
         row=explicit2.inspect_family(family,explicit2.SOURCES[family],fetch_fn=fetch,now=NOW)
-        self.assertEqual(row["amc"],"UTI Mutual Fund")
+        self.assertEqual(row["amc"],"Franklin Templeton Mutual Fund")
         self.assertEqual(row["source_sha256"],hashlib.sha256(body).hexdigest())
         self.assertEqual(row["observed_at"],NOW.isoformat())
         self.assertFalse(calls[0][1]["archive"])
@@ -107,11 +96,11 @@ class MidCapBenchmarkExplicit2Tests(unittest.TestCase):
              patch.object(batch2.explicit2,"inspect_family",side_effect=inspector):
             result=batch2.collect(fetch_fn=lambda *a,**k:(b"",None,"text/html"))
         self.assertEqual(set(seen),set(explicit2.SOURCES))
-        self.assertEqual(result["recovered"],4)
+        self.assertEqual(result["recovered"],3)
         self.assertEqual(result["errors"],[])
 
-        wrong=[{"family":"UTI - Mid Cap Fund","amc":"Wrong AMC"}]
-        with patch.object(batch2,"SOURCES",{"UTI - Mid Cap Fund":explicit2.SOURCES["UTI - Mid Cap Fund"]}), \
+        wrong=[{"family":"Franklin India Mid Cap Fund","amc":"Wrong AMC"}]
+        with patch.object(batch2,"SOURCES",{"Franklin India Mid Cap Fund":explicit2.SOURCES["Franklin India Mid Cap Fund"]}), \
              patch.object(batch2.invesco,"sources",return_value={}), \
              patch.object(batch2.db,"rows",return_value=wrong):
             result=batch2.collect(fetch_fn=lambda *a,**k:(b"",None,"text/html"))
