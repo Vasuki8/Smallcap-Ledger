@@ -7,6 +7,7 @@ from . import midcap_benchmark_labels as labeled
 from . import midcap_benchmark_invesco as invesco
 from . import midcap_benchmark_explicit as explicit
 from . import midcap_benchmark_explicit2 as explicit2
+from . import midcap_benchmark_iti_jm as iti_jm
 from .midcap_benchmark_first_party import inspect_family
 
 
@@ -14,12 +15,12 @@ SOURCES={
     "Mahindra Manulife Mid Cap Fund":"https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html",
     "Tata Mid Cap Fund":"https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth",
     "Sundaram Mid Cap Fund":"https://www.sundarammutual.com/Sundaram-Mid-Cap-Fund",
-    "JM Mid Cap Fund":"https://www.jmfinancialmf.com/products/Equity/JM-Midcap-Fund/J644/Regular-Growth-Option",
     "Baroda BNP Paribas Mid Cap Fund":"https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
     **labeled.SOURCES,
     **documents.SOURCES,
     **explicit.SOURCES,
     **explicit2.SOURCES,
+    **iti_jm.SOURCES,
 }
 
 
@@ -47,6 +48,8 @@ def collect(fetch_fn=None):
                 if family in explicit.SOURCES
                 else explicit2.AMCS.get(family)
                 if family in explicit2.SOURCES
+                else iti_jm.AMCS.get(family)
+                if family in iti_jm.SOURCES
                 else None
             )
             if registered_amc is not None and staged[family] != registered_amc:
@@ -61,6 +64,8 @@ def collect(fetch_fn=None):
                 inspector = explicit.inspect_family
             elif family in explicit2.SOURCES:
                 inspector = explicit2.inspect_family
+            elif family in iti_jm.SOURCES:
+                inspector = iti_jm.inspect_family
             else:
                 inspector = inspect_family
             row=inspector(family,url,fetch_fn=fetch_fn)
