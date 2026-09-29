@@ -135,7 +135,7 @@ def _parse_union(text):
     _require_family(text, "Union Midcap Fund")
     match = re.search(
         r"UNION\s+MIDCAP\s+FUND.{0,2500}?Benchmark\s+Index\s+"
-        r"(BSE\s+150\s+MidCap\s+Index\s*\(TRI\))\b",
+        r"(BSE\s+150\s+MidCap\s+Index\s*\(TRI\))(?=\s|$)",
         text,
         re.I | re.S,
     )
