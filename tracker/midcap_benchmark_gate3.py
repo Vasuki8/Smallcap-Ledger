@@ -1,4 +1,4 @@
-"""Reviewed first-party benchmark documents for three staged Mid Cap funds.
+"""Reviewed first-party benchmark documents for two staged Mid Cap funds.
 
 These readers are deliberately source-specific. They require exact registered
 first-party URLs, reviewed scheme identities and explicit publisher benchmark
@@ -23,15 +23,10 @@ SOURCES = {
     "ICICI Prudential Mid Cap Fund": (
         "https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf"
     ),
-    "Union Midcap Fund": (
-        "https://unionmf.com/docs/default-source/funddetail-downloads/kim/"
-        "union-midcap-fund.pdf?sfvrsn=4c6e3f39_6"
-    ),
 }
 AMCS = {
     "UTI - Mid Cap Fund": "UTI Mutual Fund",
     "ICICI Prudential Mid Cap Fund": "ICICI Prudential Mutual Fund",
-    "Union Midcap Fund": "Union Mutual Fund",
 }
 MAX_BYTES = 24 * 1024 * 1024
 PARSER_VERSION = "midcap-benchmark-gate3-v1"
@@ -91,24 +86,23 @@ def _base(value, *, heading, locator, excerpt, source_kind,
 
 
 def _parse_uti(text):
-    if _norm("UTI Mid Cap Fund") not in _norm(text):
+    flat = _clean(text)
+    if _norm("UTI Mid Cap Fund") not in _norm(flat):
         raise ValueError("UTI SID lacks the reviewed exact scheme identity")
-    base = re.findall(
-        r"\bBenchmark\s+(Nifty\s+Midcap\s+150)\b(?!\s+TRI)",
-        text,
+    base_match = re.search(
+        r"\bBenchmark\s+(Nifty\s+Midcap\s+150)\b",
+        flat,
         re.I,
     )
-    tri = re.findall(
-        r"Total\s+Return\s+Variant\s+of\s+the\s+benchmark\s+index\s+that\s+is\s+"
-        r"(Nifty\s+Midcap\s+150\s+TRI)\b",
-        text,
-        re.I | re.S,
-    )
-    base_values = {_norm(v): _clean(v) for v in base}
+    if base_match is None:
+        raise ValueError("UTI SID lacks the reviewed base benchmark")
+    if not re.search(r"\bTotal\s+Return\s+Variant\b", flat, re.I):
+        raise ValueError("UTI SID lacks the explicit Total Return Variant statement")
+    tri = re.findall(r"\bNifty\s+Midcap\s+150\s+TRI\b", flat, re.I)
     tri_values = {_norm(v): _clean(v) for v in tri}
-    if len(base_values) != 1 or len(tri_values) != 1:
-        raise ValueError("UTI SID lacks one reviewed benchmark and total-return variant")
-    base_value = next(iter(base_values.values()))
+    if len(tri_values) != 1:
+        raise ValueError("UTI SID lacks one unambiguous Nifty Midcap 150 TRI value")
+    base_value = _clean(base_match.group(1))
     value = next(iter(tri_values.values()))
     if _norm(value).replace("tri", "") != _norm(base_value):
         raise ValueError("UTI benchmark and total-return variant do not agree")
@@ -168,56 +162,10 @@ def _parse_icici(text):
     )
 
 
-def _parse_union(text):
-    if _norm("Union Midcap Fund") not in _norm(text):
-        raise ValueError("Union KIM lacks the exact staged scheme identity")
-    matches = re.findall(
-        r"benchmark\s+for\s+the\s+Scheme\s+is\s+"
-        r"(BSE\s+150\s+Midcap\s+Index\s*\(TRI\))",
-        text,
-        re.I,
-    )
-    values = {_norm(v): _clean(v) for v in matches}
-    if len(values) != 1:
-        raise ValueError("Union KIM lacks one reviewed scheme benchmark value")
-    value = next(iter(values.values()))
-    additional = []
-    for match in re.findall(
-        r"(BSE\s+Sensex\s+Index\s*\(TRI\))",
-        text,
-        re.I,
-    ):
-        cleaned = _clean(match)
-        if _norm(cleaned) not in {_norm(x) for x in additional}:
-            additional.append(cleaned)
-    data_as_of = None
-    date_match = re.search(
-        r"\*The\s+data\s+is\s+as\s+on\s+([A-Za-z]+\s+\d{1,2},\s*20\d{2})",
-        text,
-        re.I,
-    )
-    if date_match:
-        try:
-            data_as_of = datetime.strptime(
-                _clean(date_match.group(1)), "%B %d, %Y"
-            ).date().isoformat()
-        except ValueError:
-            data_as_of = None
-    return _base(
-        value,
-        heading="Union Midcap Fund",
-        locator="KIM performance disclosure; 'benchmark for the Scheme is' statement",
-        excerpt=f"The benchmark for the Scheme is {value}",
-        source_kind="key_information_memorandum",
-        data_as_of=data_as_of,
-        additional=additional,
-    )
-
 
 PARSERS = {
     "UTI - Mid Cap Fund": _parse_uti,
     "ICICI Prudential Mid Cap Fund": _parse_icici,
-    "Union Midcap Fund": _parse_union,
 }
 
 
