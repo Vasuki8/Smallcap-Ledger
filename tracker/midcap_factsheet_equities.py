@@ -45,7 +45,7 @@ def validate_factsheet_context(
     """
     accepted = {normalized(family), *(normalized(value) for value in reviewed_heading_aliases)}
     if not any(normalized(text) in accepted for text in soup.stripped_strings):
-        raise ValueError("Factsheet lacks the exact staged or reviewed scheme heading")
+        raise ValueError("Factsheet lacks the exact staged scheme heading or reviewed alias")
     # Match a leading, standalone Data-as-on label. For example, Kotak also
     # prints "Folio Count data as on ..." for a different reporting period.
     # That qualified metric date must not override the overall factsheet date.
