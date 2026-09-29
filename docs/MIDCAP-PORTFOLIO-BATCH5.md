@@ -1,6 +1,6 @@
 # Mid Cap current portfolio evidence — batch 5
 
-Prepared: 2026-09-29T17:31:11+00:00
+Prepared: 2026-09-29T17:50:19+00:00
 
 Expected month-end: **2026-08-31** · targets: **8** · recovered: **7** · failed: **1**.
 
@@ -16,7 +16,7 @@ Expected month-end: **2026-08-31** · targets: **8** · recovered: **7** · fail
 
 ## Errors
 
-- Kotak Mid Cap Fund: Factsheet lacks the exact staged scheme heading
+- Kotak Mid Cap Fund: Factsheet lacks the exact staged scheme heading or reviewed alias
 
 ## Notes
 
