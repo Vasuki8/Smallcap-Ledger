@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tracker import db
-from tracker.midcap_benchmark_first_party import extract_benchmarks,inspect_family
+from tracker.midcap_benchmark_first_party import PREFLIGHT_SOURCES,SOURCES,extract_benchmarks,inspect_family
 
 
 class MidCapBenchmarkFirstPartyTests(unittest.TestCase):
@@ -30,6 +30,37 @@ class MidCapBenchmarkFirstPartyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"exact staged"):
             inspect_family("Canara Robeco Mid Cap Fund",
                            "https://digitalassets.canararobeco.com/test.html",fetch_fn=fetch)
+
+    def test_new_official_html_sources_are_registered_for_live_preflight(self):
+        self.assertEqual(
+            PREFLIGHT_SOURCES,
+            {
+                "Nippon India Growth Mid Cap Fund": SOURCES["Nippon India Growth Mid Cap Fund"],
+                "Taurus Mid Cap Fund": SOURCES["Taurus Mid Cap Fund"],
+            },
+        )
+
+    def test_nippon_and_taurus_shapes_recover_publisher_wording(self):
+        fixtures={
+            "Nippon India Growth Mid Cap Fund": (
+                b"<html><body><h1>Nippon India Growth Mid Cap Fund</h1>"
+                b"<div>Benchmark Riskometer</div><div>Nifty Midcap 150 TRI</div></body></html>"
+            ),
+            "Taurus Mid Cap Fund": (
+                b"<html><body><h1>Taurus Mid Cap Fund(G)</h1>"
+                b"<div>Benchmark</div><div>Nifty Midcap 150 TRI. Benchmark Index changed w.e.f. 01/12/2021</div>"
+                b"</body></html>"
+            ),
+        }
+        for family,body in fixtures.items():
+            with self.subTest(family=family):
+                row=inspect_family(
+                    family,SOURCES[family],
+                    fetch_fn=lambda *args,body=body,**kwargs:(body,None,"text/html"),
+                )
+                self.assertEqual(row["primary_benchmark"],"Nifty Midcap 150 TRI")
+                self.assertEqual(row["reported_benchmarks"][0],"Nifty Midcap 150 TRI")
+                self.assertIn("Nifty Midcap 150 TRI",row["reported_benchmarks"])
 
     def test_explicit_midcap_benchmark_is_recovered_read_only(self):
         def fetch(url,**kwargs):

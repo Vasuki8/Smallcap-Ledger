@@ -22,15 +22,24 @@ SOURCES={
     "HDFC Mid Cap Fund":"https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
     "DSP Midcap Fund":"https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth",
     "Helios Mid Cap Fund":"https://www.heliosmf.in/helios-mid-cap-fund/",
+    "Nippon India Growth Mid Cap Fund":"https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy",
+    "Taurus Mid Cap Fund":"https://www.taurusmutualfund.com/node/557",
 }
 
 HOSTS={
     "digitalassets.canararobeco.com","www.kotakmf.com","www.wealthcompanyamc.in",
     "www.boimf.in","www.pgimindia.com","www.franklintempletonindia.com",
     "www.utimf.com","www.hdfcfund.com","www.dspim.com","www.heliosmf.in",
+    "mf.nipponindiaim.com","www.taurusmutualfund.com",
     "www.mahindramanulife.com","www.tatamutualfund.com","www.sundarammutual.com",
     "www.jmfinancialmf.com","www.barodabnpparibasmf.in",
 }
+
+PREFLIGHT_SOURCES={
+    family:SOURCES[family]
+    for family in ("Nippon India Growth Mid Cap Fund","Taurus Mid Cap Fund")
+}
+
 
 INDEX_PATTERNS=(
     re.compile(r"\bBSE\s*150\s*Mid\s*Cap\s*(?:Total\s*Returns?\s*Index|TRI)\b",re.I),

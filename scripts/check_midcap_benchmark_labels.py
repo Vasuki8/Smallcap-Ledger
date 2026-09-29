@@ -11,6 +11,7 @@ from tracker import db
 from tracker import midcap_benchmark_documents as documents
 from tracker import midcap_benchmark_labels as labeled
 from tracker import midcap_benchmark_invesco as invesco
+from tracker import midcap_benchmark_first_party as first_party
 
 
 def main():
@@ -19,6 +20,7 @@ def main():
         (labeled.SOURCES, labeled.inspect_family),
         (documents.SOURCES, documents.inspect_family),
         (invesco.sources(), invesco.inspect_family),
+        (first_party.PREFLIGHT_SOURCES, first_party.inspect_family),
     )
     expected = sum(len(sources) for sources, _ in source_groups)
     with patch.object(db, "connect", side_effect=AssertionError("Database access forbidden in source preflight")):
