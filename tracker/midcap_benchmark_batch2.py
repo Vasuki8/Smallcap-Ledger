@@ -5,6 +5,7 @@ from . import db
 from . import midcap_benchmark_documents as documents
 from . import midcap_benchmark_labels as labeled
 from . import midcap_benchmark_invesco as invesco
+from . import midcap_benchmark_explicit as explicit
 from .midcap_benchmark_first_party import inspect_family
 
 
@@ -16,6 +17,7 @@ SOURCES={
     "Baroda BNP Paribas Mid Cap Fund":"https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
     **labeled.SOURCES,
     **documents.SOURCES,
+    **explicit.SOURCES,
 }
 
 
@@ -39,6 +41,8 @@ def collect(fetch_fn=None):
                 else documents.AMCS.get(family)
                 if family in documents.SOURCES
                 else invesco.AMC if family == invesco.FAMILY
+                else explicit.AMCS.get(family)
+                if family in explicit.SOURCES
                 else None
             )
             if registered_amc is not None and staged[family] != registered_amc:
@@ -49,6 +53,8 @@ def collect(fetch_fn=None):
                 inspector = documents.inspect_family
             elif family == invesco.FAMILY:
                 inspector = invesco.inspect_family
+            elif family in explicit.SOURCES:
+                inspector = explicit.inspect_family
             else:
                 inspector = inspect_family
             row=inspector(family,url,fetch_fn=fetch_fn)
