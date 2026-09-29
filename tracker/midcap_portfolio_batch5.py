@@ -29,6 +29,8 @@ INVESCO_FAMILY="Invesco India Mid Cap Fund"
 INVESCO_ROOT="https://www.invescomutualfund.com"
 SUNDARAM_FAMILY="Sundaram Mid Cap Fund"
 SUNDARAM_CARD="https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json"
+SAMCO_FAMILY="Samco Mid Cap Fund"
+SAMCO_URL="https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg"
 
 
 def _norm(value):
@@ -188,6 +190,64 @@ def _invesco_result(fetch_fn,expected):
     }
 
 
+def _samco_result(fetch_fn,expected):
+    body,_,typ=fetch_fn(SAMCO_URL,archive=False,max_bytes=12*1024*1024)
+    media=str(typ or "").split(";",1)[0].strip().casefold()
+    if media not in ("text/html","application/xhtml+xml"):
+        raise ValueError("Samco portfolio source did not return HTML")
+    soup=BeautifulSoup(body,"html.parser")
+    text=re.sub(r"\s+"," ",soup.get_text(" ",strip=True))
+    if _norm(SAMCO_FAMILY) not in _norm(text):
+        raise ValueError("Samco source lacks the exact staged Mid Cap family identity")
+    d=date.fromisoformat(expected)
+    date_variants={
+        expected,
+        d.strftime("%d-%m-%Y"),
+        d.strftime("%d/%m/%Y"),
+        d.strftime("%d %B %Y"),
+        d.strftime("%B %d, %Y").replace(" 0"," "),
+    }
+    if "allholdings" not in _norm(text) or not any(token.casefold() in text.casefold() for token in date_variants):
+        raise ValueError(f"Samco page does not prove current all-holdings date {expected}")
+    positions=[]
+    for table in soup.find_all("table"):
+        rows=[]
+        for tr in table.find_all("tr"):
+            cells=[re.sub(r"\s+"," ",x.get_text(" ",strip=True)).strip() for x in tr.find_all(["th","td"])]
+            if cells:rows.append(cells)
+        if not rows:continue
+        header=" ".join(rows[0]).casefold()
+        if "issuer" not in header or "net assets" not in header:
+            continue
+        for cells in rows[1:]:
+            if len(cells)<2:continue
+            name=cells[0].strip()
+            if not name or re.search(
+                r"^(?:Indian Equity and Equity Related Total|Grand Total|TREPS,?\s*Cash|Cash\s*&|"
+                r"Cash and Cash Equivalents|Net Current Assets)",
+                name,re.I,
+            ):
+                continue
+            raw=next((x for x in reversed(cells[1:]) if re.fullmatch(r"-?\d+(?:\.\d+)?%?",x.replace(",","").strip())),None)
+            if raw is None:continue
+            weight=float(raw.replace(",","").replace("%",""))
+            if not 0<weight<=20:continue
+            key=_norm(name)
+            if key and key not in {_norm(x["name"]) for x in positions}:
+                positions.append({"name":name,"weight":round(weight,8)})
+    if len(positions)<5:
+        raise ValueError(f"Only {len(positions)} named Samco holdings were visible; need at least 5")
+    return {
+        "family":SAMCO_FAMILY,"amc":"Samco Mutual Fund","status":"recovered",
+        "as_of":expected,"positions_observed":len(positions),"positions":positions,
+        "complete":False,"scope":"publisher_all_holdings_html",
+        "completeness_note":"Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
+        "equity_weight_sum":round(sum(x["weight"] for x in positions),8),
+        "source":SAMCO_URL,"source_sha256":hashlib.sha256(body).hexdigest(),
+        "source_content_type":typ,
+    }
+
+
 def _sundaram_result(fetch_fn,expected):
     raw,_,_=fetch_fn(SUNDARAM_CARD,archive=False,max_bytes=12*1024*1024)
     rows=json.loads(raw)
@@ -236,6 +296,7 @@ COLLECTORS=(
     (MAHINDRA_FAMILY,_mahindra_result),
     (INVESCO_FAMILY,_invesco_result),
     (SUNDARAM_FAMILY,_sundaram_result),
+    (SAMCO_FAMILY,_samco_result),
 )
 
 
@@ -258,6 +319,7 @@ def collect(fetch_fn=providers.fetch,today=None):
         "results":results,"errors":errors,"production_writes":0,"public_export_enabled":False,
         "notes":[
             "Structured monthly workbooks are preferred for JM, Invesco and Sundaram where available.",
+            "Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.",
             "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
             "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
             "Every result requires exact staged family identity and the current regulatory month-end; no live records are written.",
