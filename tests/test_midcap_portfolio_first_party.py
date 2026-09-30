@@ -89,7 +89,8 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
         <table>
         <tr><th></th><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
         <tr><td></td><td>Equity &amp; Equity Related Total</td><td>97.39</td><td>0.63</td></tr>
-        <tr><td></td><td>Capital Goods</td><td>14.81</td><td></td></tr>
+        <tr><td></td><td><strong>Capital Goods</strong></td><td>14.81</td><td></td></tr>
+        <tr><td></td><td><strong>Healthcare</strong></td><td>12.87</td><td></td></tr>
         <tr><td>•</td><td>Bharat Heavy Electricals Limited</td><td>1.53</td><td></td></tr>
         <tr><td></td><td>Cummins India Limited</td><td>1.45</td><td></td></tr>
         <tr><td></td><td>Apar Industries Limited</td><td>1.38</td><td></td></tr>
