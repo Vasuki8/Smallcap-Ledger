@@ -13,6 +13,7 @@ import json
 import os
 import tempfile
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 import sys
 
@@ -160,6 +161,41 @@ def table_fingerprints(exclude=('archive_retention',)):
         return out
 
 
+def parse_timestamp(value):
+    """Parse stored ISO timestamps for checkpoint-boundary comparisons."""
+    if not value:
+        return None
+    try:
+        parsed=datetime.fromisoformat(str(value).replace('Z','+00:00'))
+    except (TypeError,ValueError):
+        return None
+    if parsed.tzinfo is None:
+        parsed=parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def candidates_expected_in_active_manifest(audited,stored_after,archives,manifest):
+    """Return candidates old enough that the previous checkpoint must contain them.
+
+    The retention step runs after daily collection but before the new checkpoint is
+    published. Hashes first seen after the active checkpoint are therefore expected
+    to be absent from its immutable source packs until this run publishes them.
+    """
+    checkpoint_at=parse_timestamp((manifest or {}).get('created_at'))
+    required=set()
+    for h,row in stored_after.items():
+        if row['classification']!='link_only_candidate':
+            continue
+        if h in audited:
+            required.add(h)
+            continue
+        first_seen=parse_timestamp(archives[h].get('first_seen'))
+        # Unknown timestamps are treated conservatively as pre-existing.
+        if checkpoint_at is None or first_seen is None or first_seen<=checkpoint_at:
+            required.add(h)
+    return required
+
+
 def active_manifest_hashes():
     repo=os.environ.get('GITHUB_REPOSITORY','')
     if not repo:
@@ -252,11 +288,16 @@ def prepare(*,apply=False,report_path=None,delta_path=None,delta_markdown=None,c
     manifest,packed=active_manifest_hashes()
     protected_manifest_ok=None
     candidate_manifest_ok=None
+    candidate_hashes=set()
+    fresh_candidate_hashes=set()
     if packed is not None:
         protected_manifest_ok=set(protected_hashes)<=packed
         if not protected_manifest_ok:raise ValueError('Active source packs do not cover all protected evidence')
-        candidate_hashes={h for h,row in stored_after.items()
-                          if row['classification']=='link_only_candidate'}
+        candidate_hashes=candidates_expected_in_active_manifest(
+            audited,stored_after,archives,manifest)
+        all_candidate_hashes={h for h,row in stored_after.items()
+                              if row['classification']=='link_only_candidate'}
+        fresh_candidate_hashes=all_candidate_hashes-candidate_hashes
         candidate_manifest_ok=candidate_hashes<=packed
         if states['metadata_only']==0 and not candidate_manifest_ok:
             raise ValueError('Zero-deletion rollout lost a reviewed link-only candidate from active packs')
@@ -294,6 +335,8 @@ def prepare(*,apply=False,report_path=None,delta_path=None,delta_markdown=None,c
         'active_checkpoint_created_at':manifest.get('created_at') if manifest else None,
         'protected_hashes_covered_by_active_source_manifest':protected_manifest_ok,
         'link_only_candidates_still_covered_by_active_source_manifest':candidate_manifest_ok,
+        'link_only_candidates_expected_in_active_source_manifest':len(candidate_hashes),
+        'link_only_candidates_newer_than_active_checkpoint':len(fresh_candidate_hashes),
         'deletion_enabled':False,
         'source_pack_repack_performed':False,
         'legacy_or_rollback_assets_retired':False,
