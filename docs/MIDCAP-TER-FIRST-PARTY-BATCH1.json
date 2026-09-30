@@ -1,40 +1,40 @@
 {
-  "built_at": "2026-09-30T05:03:08+00:00",
+  "built_at": "2026-09-30T22:32:44+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
-  "recovered": 7,
-  "failed": 0,
+  "recovered": 6,
+  "failed": 1,
   "results": [
     {
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-29",
+      "as_of": "2026-09-30",
       "plans": {
         "Regular": {
-          "base_expense_ratio": 1.61,
+          "base_expense_ratio": 1.6,
           "brokerage": 0.0,
           "transaction_cost": 0.0,
           "statutory_levies": 0.0,
-          "ter": 2.12
+          "ter": 2.11
         },
         "Direct": {
-          "base_expense_ratio": 0.53,
+          "base_expense_ratio": 0.52,
           "brokerage": 0.0,
           "transaction_cost": 0.0,
           "statutory_levies": 0.0,
-          "ter": 0.87
+          "ter": 0.86
         }
       },
       "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-16&to_date=2026-09-30",
-      "sha256": "1c69928631db2ecf15c2182d86598659a9059cc71e1b7e3db48c5e880693e87f",
+      "sha256": "72d72800dc9df646bf2580f3fa0782cbb18900cdf732bafb9610a8cae3f147ae",
       "identity": {
         "scheme_name": "Canara Robeco Mid Cap Fund",
         "scheme_code": "MD"
       },
       "evidence_type": "official_amc_json",
-      "direct_ter": 0.87,
-      "regular_ter": 2.12
+      "direct_ter": 0.86,
+      "regular_ter": 2.11
     },
     {
       "family": "HSBC Midcap Fund",
@@ -67,38 +67,6 @@
       "evidence_type": "official_amc_linked_workbook",
       "direct_ter": 1.15,
       "regular_ter": 2.21
-    },
-    {
-      "family": "ICICI Prudential Mid Cap Fund",
-      "amc": "ICICI Prudential Mutual Fund",
-      "status": "recovered",
-      "as_of": "2026-09-28",
-      "plans": {
-        "Regular": {
-          "base_expense_ratio": 1.53,
-          "brokerage": 0.01,
-          "transaction_cost": 0.0,
-          "statutory_levies": 0.31,
-          "ter": 1.85
-        },
-        "Direct": {
-          "base_expense_ratio": 0.89,
-          "brokerage": 0.01,
-          "transaction_cost": 0.0,
-          "statutory_levies": 0.21,
-          "ter": 1.11
-        }
-      },
-      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "84208bcc5a36576428ea6e049794843226fab2c17f4e31b4900893ead0d56bff",
-      "identity": {
-        "scheme_name": "ICICI Prudential Mid Cap Fund"
-      },
-      "evidence_type": "official_amc_workbook",
-      "discovery_channel": "financial_disclosure_api",
-      "discovery_api_error": null,
-      "direct_ter": 1.11,
-      "regular_ter": 1.85
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -135,7 +103,7 @@
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-29",
+      "as_of": "2026-09-30",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.85,
@@ -153,7 +121,7 @@
         }
       },
       "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
-      "sha256": "efc5f4ec9c37dcf3e10d3b2914aa086d19726f03d96e7386a6e1f4e589ff808a",
+      "sha256": "852ab9f4aeb0b9a556c139b6937f3f7ea8c0d1a41f333361753ba1ad9bb22f8b",
       "identity": {
         "scheme_name": "JM Mid Cap Fund",
         "scheme_code": "MD",
@@ -167,7 +135,7 @@
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-29",
+      "as_of": "2026-09-30",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.6,
@@ -185,7 +153,7 @@
         }
       },
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
-      "sha256": "e36c701c531292d53cf96ca75dc9baa36350da540a39cc184be53981a1c1f383",
+      "sha256": "c51089d81591641932c2082514a08ad48fa2b72635d9d3d6695f33092b13fa22",
       "identity": {
         "scheme_name": "Mahindra Manulife Mid Cap Fund",
         "nsdl_scheme_code": "MAHM/O/E /MIF/17/11/0006"
@@ -226,7 +194,13 @@
       "regular_ter": 2.02
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "error": "ICICI TER workbook columns changed"
+    }
+  ],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [

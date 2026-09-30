@@ -1,14 +1,14 @@
 {
-  "built_at": "2026-09-30T05:03:13+00:00",
+  "built_at": "2026-09-30T22:33:18+00:00",
   "staged_category": "mid-cap",
   "targets": 3,
-  "recovered": 3,
-  "failed": 0,
+  "recovered": 2,
+  "failed": 1,
   "results": [
     {
       "family": "Helios Mid Cap Fund",
       "status": "recovered",
-      "as_of": "2026-09-29",
+      "as_of": "2026-09-30",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.72,
@@ -28,7 +28,7 @@
       "direct_ter": 0.98,
       "regular_ter": 2.43,
       "source": "https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls",
-      "sha256": "c43bffe9cfe38637eaf6157f6529ac048a644aac2f3a3da747f0698ae9a14a80",
+      "sha256": "a4b1eda2f95be582d9997a6918f140bfdea0cd6a964795161fa6b23d944ed17c",
       "identity": {
         "scheme_name": "Helios Mid Cap Fund",
         "nsdl_scheme_code": "HELI/O/E/MIF/24/08/0006"
@@ -57,43 +57,19 @@
       "direct_ter": 0.5352,
       "regular_ter": 1.5052,
       "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
-      "sha256": "64094732144b5db2d32e831e61d4e633351ce91ecb32b7cda2656e3947c7d55e",
+      "sha256": "aa7af7a7377c72d1ca4b23cc55f5f0e8014ef32b9d92e87ecb8cf1e70f8f461e",
       "identity": {
         "scheme_name": "Kotak Mid Cap Fund",
         "nsdl_scheme_code": "KOTM/O/E/MIF/06/09/0018"
       }
-    },
-    {
-      "family": "The Wealth Company Mid Cap Fund",
-      "status": "recovered",
-      "as_of": "2026-09-29",
-      "plans": {
-        "Regular": {
-          "base_expense_ratio": 2.1,
-          "brokerage": 0.78,
-          "transaction_cost": 0.04,
-          "statutory_levies": 2.09,
-          "ter": 5.01
-        },
-        "Direct": {
-          "base_expense_ratio": 0.4,
-          "brokerage": 0.78,
-          "transaction_cost": 0.04,
-          "statutory_levies": 1.79,
-          "ter": 3.0100000000000002
-        }
-      },
-      "direct_ter": 3.0100000000000002,
-      "regular_ter": 5.01,
-      "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
-      "sha256": "63fc008101da2f8032e319c02b9d58add4d19eb825dccb370e47ca4b3d291ab6",
-      "identity": {
-        "scheme_name": "THE WEALTH COMPANY MID  CAP FUND",
-        "nsdl_scheme_code": "TWCF/O/E/MIF/26/06/0012"
-      }
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "family": "The Wealth Company Mid Cap Fund",
+      "error": "timed out"
+    }
+  ],
   "production_writes": 0,
   "public_export_enabled": false
 }

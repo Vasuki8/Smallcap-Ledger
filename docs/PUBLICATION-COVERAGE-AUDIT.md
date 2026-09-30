@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-30T05:36:11+00:00
+Prepared: 2026-09-30T23:15:23+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -8,8 +8,8 @@ Prepared: 2026-09-30T05:36:11+00:00
 
 - Funds with at least one retained AMC communication: **34 / 36**.
 - Funds with no retained AMC communication: **2**.
-- Retained communication documents: **283**; archived originals: **265**.
-- Market/newsletter/CIO/product-view documents: **267**; letters to unitholders: **16**.
+- Retained communication documents: **284**; archived originals: **266**.
+- Market/newsletter/CIO/product-view documents: **268**; letters to unitholders: **16**.
 - Communication documents with an explicit published date: **62**.
 - Funds with a registered communication-oriented source page: **29**.
 
@@ -36,7 +36,7 @@ Prepared: 2026-09-30T05:36:11+00:00
 | Axis Small Cap Fund | 3 | 3 | 0 | 3 | 2 | 2026-03-15 | 2 | publication_date_missing |
 | Bajaj Finserv Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2026-05-21 | 1 | none |
 | Bandhan Small Cap Fund | 4 | 4 | 0 | 4 | 4 | 2026-09-11 | 3 | none |
-| Bank Of India Small Cap Fund | 3 | 3 | 0 | 3 | 0 | Gap | 1 | publication_date_missing |
+| Bank Of India Small Cap Fund | 4 | 4 | 0 | 4 | 0 | Gap | 1 | publication_date_missing |
 | Baroda Bnp Paribas Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
 | Canara Robeco Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2025-02-20 | 2 | none |
 | DSP Small Cap Fund | 13 | 0 | 13 | 13 | 0 | Gap | 0 | publication_date_missing |

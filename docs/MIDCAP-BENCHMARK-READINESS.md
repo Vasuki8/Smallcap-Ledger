@@ -1,10 +1,10 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **31 / 34** · remaining: **3**.
+Benchmark identity: **28 / 34** · remaining: **6**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
-| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Nifty Midcap 150 TRI | https://mutualfund.adityabirlacapital.com/empower/Equity-Funds/Midcap-Fund.html |
+| Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | Gap | Gap |
 | Axis Midcap Fund | Axis Mutual Fund | BSE Midcap 150 TRI | https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | BSE 150 Midcap TRI | https://assets.bandhanmutual.com/2025/03/339eeb25-bandhan-performance-table-feb-2025.pdf |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
@@ -16,7 +16,7 @@ Benchmark identity: **31 / 34** · remaining: **3**.
 | HDFC Mid Cap Fund | HDFC Mutual Fund | NIFTY Midcap 150 Index (Total Returns Index) | https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular |
 | HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
-| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Nifty Midcap 150 TRI | https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap |
 | ITI Mid Cap Fund | ITI Mutual Fund | Nifty Midcap 150 TRI | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | BSE 150 Midcap TRI | https://www.invescomutualfund.com/docs/default-source/factsheet/invesco-mf-factsheet-august-2026.pdf |
 | JM Mid Cap Fund | JM Financial Mutual Fund | Nifty Midcap 150 TRI | https://docviewer.jmfinancialmf.com/jmmidcapfund/jmmidcapfund/Index.aspx |
@@ -34,7 +34,7 @@ Benchmark identity: **31 / 34** · remaining: **3**.
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | Gap | Gap |
 | Tata Mid Cap Fund | Tata Mutual Fund | Nifty Midcap 150 TRI | https://www.tatamutualfund.com/mutual-funds/tata-mid-cap-fund-direct-growth |
 | Taurus Mid Cap Fund | Taurus Mutual Fund | Nifty Midcap 150 TRI | https://www.taurusmutualfund.com/node/557 |
-| The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | NIFTY Midcap 150 TRI | https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/ |
+| The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | Gap | Gap |
 | UTI - Mid Cap Fund | UTI Mutual Fund | Nifty Midcap 150 TRI | https://doc.utimf.com/uticontainer/UTI%20Mid%20Cap%20Fund%20-%20SID%2029%20October%20202120211109-060535.pdf |
 | Union Midcap Fund | Union Mutual Fund | Gap | Gap |
 | WhiteOak Capital Mid Cap Fund | WhiteOak Capital Mutual Fund | Gap | Gap |
