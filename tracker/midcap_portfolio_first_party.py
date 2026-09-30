@@ -37,11 +37,15 @@ SOURCES={
         "url":"https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
         "parser":"iti","scope":"digital_factsheet_named_holdings",
     },
+    "BANK OF INDIA MID CAP FUND":{
+        "url":"https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund",
+        "parser":"boi","scope":"top_10",
+    },
 }
 
 HOSTS={
     "digitalassets.canararobeco.com","www.kotakmf.com","www.dspim.com",
-    "www.barodabnpparibasmf.in","www.hdfcfund.com","www.itiamc.com",
+    "www.barodabnpparibasmf.in","www.hdfcfund.com","www.itiamc.com","www.boimf.in",
 }
 
 CORPORATE_HINT=re.compile(
@@ -230,6 +234,33 @@ def _iti(soup):
     return out
 
 
+def _boi(soup):
+    """Read Bank of India's explicitly labelled Top 10 portfolio table."""
+    out=[]
+    matches=0
+    for _,rows in _table_rows(soup):
+        header=None
+        for i,cells in enumerate(rows[:5]):
+            labels=[_norm(value) for value in cells]
+            if "portfoliodetails" in labels and "tonetassets" in labels:
+                header=i
+                break
+        if header is None:
+            continue
+        matches+=1
+        for cells in rows[header+1:]:
+            if len(cells)<2:
+                continue
+            weight=next((_percent(value) for value in reversed(cells[1:])
+                         if _percent(value) is not None),None)
+            _add_position(out,cells[0],weight)
+    if matches!=1:
+        raise ValueError(f"Bank of India page exposed {matches} exact Top 10 portfolio tables")
+    if len(out)!=10:
+        raise ValueError(f"Bank of India Top 10 table exposed {len(out)} named holdings")
+    return out
+
+
 def _hdfc(soup,text):
     # HDFC's public page labels the current portfolio section server-side, but
     # holdings may remain client-rendered. Count evidence only if named rows are
@@ -247,7 +278,7 @@ def _hdfc(soup,text):
     return out
 
 
-PARSERS={"canara":_canara,"kotak":_kotak,"dsp":_dsp,"iti":_iti}
+PARSERS={"canara":_canara,"kotak":_kotak,"dsp":_dsp,"iti":_iti,"boi":_boi}
 
 
 def inspect_family(family,config,fetch_fn=providers.fetch,today=None):
