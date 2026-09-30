@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-30T03:52:15+00:00
+Prepared: 2026-09-30T05:02:40+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -16,7 +16,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | 0.6800% | 1.8700% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | 1.1300% | 1.9100% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HDFC Mid Cap Fund | HDFC Mutual Fund | 0.7600% | 1.3100% | 2026-09-24 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-28 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
+| HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-29 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
 | Helios Mid Cap Fund | Helios Mutual Fund | 0.9800% | 2.4300% | 2026-09-29 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.1100% | 1.8500% | 2026-09-28 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
