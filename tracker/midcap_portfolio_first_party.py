@@ -33,11 +33,15 @@ SOURCES={
         "url":"https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
         "parser":"hdfc","scope":"top_holdings",
     },
+    "ITI Mid Cap Fund":{
+        "url":"https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
+        "parser":"iti","scope":"digital_factsheet_named_holdings",
+    },
 }
 
 HOSTS={
     "digitalassets.canararobeco.com","www.kotakmf.com","www.dspim.com",
-    "www.barodabnpparibasmf.in","www.hdfcfund.com",
+    "www.barodabnpparibasmf.in","www.hdfcfund.com","www.itiamc.com",
 }
 
 CORPORATE_HINT=re.compile(
@@ -182,6 +186,35 @@ def _baroda(text):
     return out
 
 
+def _iti(soup):
+    """Read named security rows from ITI's dated digital factsheet portfolio table.
+
+    Sector totals, aggregate asset-class rows and cash/debt summaries are not
+    positions. The page also publishes derivative exposure in a separate
+    percentage column; a named security with only that value remains a named
+    disclosed position. This reader is intentionally partial until a complete
+    structured disclosure is independently reconciled.
+    """
+    out=[]
+    for table,rows in _table_rows(soup):
+        context=_clean(table.get_text(" ",strip=True))
+        if ("Name of the Instrument" not in context
+                or not re.search(r"%\s*to\s*NAV",context,re.I)):
+            continue
+        for cells in rows:
+            if len(cells)<2:
+                continue
+            name=cells[0]
+            if not CORPORATE_HINT.search(name):
+                continue
+            weight=next(
+                (_percent(x) for x in reversed(cells[1:]) if _percent(x) is not None),
+                None,
+            )
+            _add_position(out,name,weight)
+    return out
+
+
 def _hdfc(soup,text):
     # HDFC's public page labels the current portfolio section server-side, but
     # holdings may remain client-rendered. Count evidence only if named rows are
@@ -199,7 +232,7 @@ def _hdfc(soup,text):
     return out
 
 
-PARSERS={"canara":_canara,"kotak":_kotak,"dsp":_dsp}
+PARSERS={"canara":_canara,"kotak":_kotak,"dsp":_dsp,"iti":_iti}
 
 
 def inspect_family(family,config,fetch_fn=providers.fetch,today=None):
