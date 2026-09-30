@@ -195,6 +195,36 @@ class RetentionDependencyTests(unittest.TestCase):
 
 
 class RetentionMetadataPreparationTests(unittest.TestCase):
+    def test_fresh_candidate_is_not_required_in_previous_checkpoint(self):
+        from scripts import prepare_retention_metadata as prep
+        audited={'a'*64:{'classification':'link_only_candidate'}}
+        stored={
+            'a'*64:{'classification':'link_only_candidate'},
+            'b'*64:{'classification':'link_only_candidate'},
+            'c'*64:{'classification':'retain_latest_or_review'},
+        }
+        archives={
+            'a'*64:{'first_seen':'2026-09-24T00:00:00+00:00'},
+            'b'*64:{'first_seen':'2026-09-29T00:00:00+00:00'},
+            'c'*64:{'first_seen':'2026-09-29T00:00:00+00:00'},
+        }
+        manifest={'created_at':'2026-09-25T22:17:00+00:00'}
+        self.assertEqual(
+            prep.candidates_expected_in_active_manifest(
+                audited,stored,archives,manifest),
+            {'a'*64})
+
+    def test_preexisting_post_audit_candidate_is_still_required_in_checkpoint(self):
+        from scripts import prepare_retention_metadata as prep
+        h='b'*64
+        stored={h:{'classification':'link_only_candidate'}}
+        archives={h:{'first_seen':'2026-09-25T21:00:00+00:00'}}
+        manifest={'created_at':'2026-09-25T22:17:00+00:00'}
+        self.assertEqual(
+            prep.candidates_expected_in_active_manifest(
+                {},stored,archives,manifest),
+            {h})
+
     def test_prepare_repairs_generated_artifact_false_promotion_and_classifies_new_hash(self):
         import json
         from tracker import db
