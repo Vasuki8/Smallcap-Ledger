@@ -35,11 +35,11 @@ def main():
             for name in book.sheet_names()[:20]:
                 sheet=book.sheet_by_name(name)
                 preview=[]
-                for r in range(min(sheet.nrows,25)):
+                for r in range(min(sheet.nrows,80)):
                     row=[_clean(sheet.cell_value(r,c)) for c in range(min(sheet.ncols,12))]
                     if any(row):
                         preview.append(row)
-                sheets.append({"name":name,"nrows":sheet.nrows,"ncols":sheet.ncols,"preview":preview[:18]})
+                sheets.append({"name":name,"nrows":sheet.nrows,"ncols":sheet.ncols,"preview":preview[:70]})
         finally:
             book.release_resources()
         print(json.dumps({
