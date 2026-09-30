@@ -2,7 +2,57 @@
 
 Read this alongside the latest generated artifacts and their exact production run. A green workflow, a fresh summary or an isolated source preflight does not establish coverage for every family. Mid Cap remains staged and non-public.
 
-## Latest verified checkpoint
+## Current checkpoint — 2026-09-30
+
+Production [#683 / 36666170603](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36666170603) completed successfully on code `a91b0f09c86d5e6b83124e1ebe63f2082e22dfdf` (PR #347), with generated evidence commit `e27afda92794a9f3fe71a2cc2a6b472a384a9ef6`. The latest launch report was evaluated **2026-09-30T03:56:19.215155+00:00**, separately from the **04:15:41** public status build and **04:16:39Z** terminal workflow time. A live cache-busted status read matched that public build and NAV **2026-09-29**.
+
+| Measure | Current production evidence | Required policy |
+| --- | ---: | ---: |
+| Staged scheme/NAV history | 135/135 codes, 353,423 observations through 2026-09-29 | All staged codes |
+| AUM | 34/34 | 34/34 |
+| Direct TER | 31/34 | At least 31/34 |
+| Reported benchmark identity | 31/34 | At least 31/34 |
+| Current portfolio evidence | 21/34 | At least 28/34 |
+| Complete current portfolios | 5/34 | Separate measure |
+
+`data_ready=false`, `launch_ready=false`, `public_export_enabled=false`. `audit_input_integrity=true`; `input_issues=[]`. Current portfolio evidence reports **2026-08-31**. The five complete accepted portfolios are HDFC (81 positions), Mirae Asset (68), Invesco (43), Motilal Oswal (32) and Sundaram (79). Current presence remains distinct from a fresh successful fetch of every source: the source-coverage report records an **AMFI daily-AUM HTTP 502**, and source-fetch health remains false. Do not count retained AUM as a successful AMFI request in that run.
+
+The benchmark gate is now numerically satisfied; the earlier Invesco/ICICI/Franklin/UTI/JM recovery tasks below have progressed and must not be repeated from the old priority list. Remaining benchmark gaps are Trust, Union and WhiteOak. Portfolio evidence still needs seven more families to reach the policy minimum; the category-aware exporter/API/static-data/UI dry run remains separate and blocked. Names do not establish available benchmark TRI history.
+
+## Prepared Helios recovery — PR #348, not deployed
+
+[PR #348](https://github.com/Vasuki8/Smallcap-Ledger/pull/348) adds **Helios Mid Cap Fund** to the existing portfolio batch 2. It adds no audit artifact, database schema, dependency, launch threshold or public-category switch.
+
+Discovery uses `https://www.heliosmf.in/portfolio-disclosure`: exactly one Monthly Portfolio section, exactly one Helios Mid Cap Fund scheme section, the expected month label, a unique approved HTTPS workbook link and its complete explicit reporting date. Large & Mid Cap and half-yearly disclosures cannot supply the evidence. Duplicate identical links are one source; distinct current links fail closed. Credential markers (including empty userinfo), unapproved hosts/ports and malformed/stale source paths are rejected.
+
+The workbook is parsed in memory with the existing exact-family/date structured parser. That parser's issuer, unknown-row, duplicate and net-asset reconciliation semantics remain unchanged; unrecognized numeric rows keep a snapshot partial. Both discovery and workbook bytes retain actual SHA-256 hashes, media types and source locator. The collector uses `archive=False`, and the standalone source preflight forbids database connections.
+
+Application head: **`df3c945c73d0ad60359d07bea967064f52b29ae2`**. Exact-head [push verification 36670447719](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670447719), job `109744099747`, passed **844 full repository tests** (`Ran 844 tests in 13.977s`, `OK`), compilation and the exact Helios preflight. [Repository regression 36670454506](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670454506), [Mid Cap PR regression 36670454540](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670454540) and [Research UI checks 36670455402](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670455402) all passed. PR runs do not perform the live preflight.
+
+The source preflight observed **2026-09-30T04:48:07+00:00**, sheet **HMCF**, reporting date **2026-08-31**, **74 positions**, `complete=true`, `unknown_rows=[]`.
+
+- Workbook: `https://www.heliosmf.in/wp-content/uploads/2026/09/helios-mid-cap-fund-monthly-portfolio-as-on-31st-august-2026.xlsx`.
+- Workbook SHA-256: `375e9f39754882d43677cfd45f95a57572a89b8eb4de04895cf88780a432f181`.
+- Exact-head discovery SHA-256: `62f5670ec554218be41805d59ee0557ed2010ba3f121d9fcfb9c1849f2e51114`.
+- Locator: `Monthly Portfolio / Helios Mid Cap Fund / August 2026`; parser version `helios-midcap-monthly-workbook-v1`.
+
+Ten new tests exercise real in-memory XLSX parsing and discovery boundaries. Their first run failed for the absent reader and missing batch integration; they then passed. Independent read-only code review found no blocking issues. Its empty-userinfo suggestion was reproduced with failing tests, corrected and verified. The local full suite passes **844 tests** after that correction. An initial sandboxed full-suite attempt hung in an existing in-process API test; the unchanged test and full suite passed outside the sandbox. No application change was made for that execution-environment issue.
+
+The shared `providers.fetch` API follows public redirects without returning the final URL; redirect-host pinning remains an existing transport-wide limitation, separately deferred. This bounded repair validates selected source URLs and actual returned hashes under the existing client contract.
+
+**Release blocker:** automatic approval review rejected merging PR #348 into `main`, because it triggers shared production/publication workflows and requires explicit approval for that action. The PR remains open. Do not report Helios as production coverage, change 21/34 to an anticipated count, or claim a new deployment. These handoff updates are documentation-only on the same PR branch.
+
+## Next action
+
+After explicit merge/publication approval, merge the latest checked PR #348 head with an expected-head guard. Verify the resulting production build/deploy, fresh batch-2 Helios observation, combined portfolio and launch reports, preserved input integrity and actual live Pages NAV/status payloads. A successful isolated preflight does not substitute for this step.
+
+Continue portfolio recovery from the latest unavailable-family list only after that checkpoint. Kotak passed a fresh read-only check in this session (**68 equity positions, partial, 2026-08-31**), but both production batch 1 and batch 5 still recorded identity failures. Keep the discrepancy explicit; reproduce the production response before changing identity validation or counting recovery. ABSL has recovered in the current run (78 positions, partial), so the historical 503 below is not the current task. Source-fetch health still needs a successful new AMFI observation, not retimestamped last-good evidence.
+
+## Historical checkpoint through PR #300
+
+The following chronology is preserved for parser contracts and historical source evidence. Its counts, production run, source outcomes and next-task notes are superseded by the current sections above.
+
+### Historical verified checkpoint (#653)
 
 - **Code: PR #300**, Invesco India Mid Cap Fund primary-benchmark recovery from a dated AMC factsheet. Squash merge: `f8ab83dd20970efa93d38c983cbb79c0fa694946`. This adds one source to existing benchmark batch 2; the PR #298 ABSL/SBI role correction and all earlier freshness safeguards are preserved.
 - **Final tested head:** `22a4d46cd1d9272f7dedd344dcc248da74d256f6`. [Branch verification 36440199684](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36440199684), **attempt 2**, job `108989263321`, passed syntax checks, **749 full repository tests** (`Ran 749 tests in 72.806s`, `OK`) and **5/5 actual read-only benchmark-source preflights, `errors=[]`**. Attempt 1's ABSL HTTP 503 and the normal same-head recovery are retained below.
@@ -14,7 +64,7 @@ Read this alongside the latest generated artifacts and their exact production ru
 
 Verification scope: local parser red-to-green checks, remote failing-then-passing batch integration, full repository CI, actual source preflight, exact-diff self-review and the production evidence above. No independent human/subagent review is claimed. No public UI, dependencies, launch thresholds, source permissions or Mid Cap publication switch changed.
 
-## Current staged readiness
+### Historical staged readiness (#653)
 
 | Measure | Verified production count | Existing launch data policy |
 | --- | ---: | ---: |
@@ -79,7 +129,7 @@ ABSL's observed document banner is **July 2026**, retained as `source_document_p
 
 The preceding full checkpoint and detailed correction history are preserved in [the pre-#300 handoff](https://github.com/Vasuki8/Smallcap-Ledger/blob/d6ba0ae3367c2deae95923727c010607492fd0b9/docs/MIDCAP-HANDOFF.md) and its linked runs/plans. New numerical coverage claims require the exact fresh evidence checkpoint above.
 
-## Next coherent task
+### Historical next-task notes (superseded)
 
 First recheck the **ABSL portfolio-discovery HTTP 503** against its normal official route. Restore a current count only after a successful new observation and production reconciliation. Require a repeatable transport/source contract before changing code; do not retimestamp the old workbook, weaken validation or add another permanent diagnostic on every production push.
 

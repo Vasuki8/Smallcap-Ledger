@@ -214,13 +214,16 @@ def _inspect_dsp(expected,fetch_fn):
 
 
 def collect(fetch_fn=providers.fetch,today=None):
+    from .midcap_helios_portfolio import FAMILY as HELIOS_FAMILY, inspect as inspect_helios
+
     today=today or date.today()
     expected=expected_portfolio_as_of(today)
     staged={x["family"] for x in db.rows(
         "SELECT DISTINCT family FROM category_staged_schemes WHERE category='mid-cap'"
     )}
     results=[];errors=[]
-    for family,collector in ((HDFC_FAMILY,_inspect_hdfc),(DSP_FAMILY,_inspect_dsp)):
+    collectors=((HDFC_FAMILY,_inspect_hdfc),(DSP_FAMILY,_inspect_dsp),(HELIOS_FAMILY,inspect_helios))
+    for family,collector in collectors:
         if family not in staged:
             errors.append({"family":family,"error":"staged family identity missing"})
             continue
@@ -233,12 +236,12 @@ def collect(fetch_fn=providers.fetch,today=None):
     return {
         "built_at":db.now(),"staged_category":"mid-cap",
         "portfolio_expected_as_of":expected,
-        "targets":2,"recovered":len(results),"failed":len(errors),
+        "targets":len(collectors),"recovered":len(results),"failed":len(errors),
         "results":results,"errors":errors,
         "production_writes":0,"public_export_enabled":False,
         "notes":[
             "This audit downloads official current month-end disclosure files but performs no portfolio, holding, metric, document or fetch writes.",
-            "Both sources are parsed through the existing exact-family structured portfolio parser in memory.",
+            "All sources are parsed through the existing exact-family structured portfolio parser in memory.",
             "Completeness is reported exactly as the parser proves it; no balancing cash or missing rows are invented.",
         ],
     }
