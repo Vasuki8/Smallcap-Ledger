@@ -76,6 +76,23 @@ def main():
         for tag in soup.find_all("script",src=True)
         if str(tag.get("src") or "").strip()
     ]
+    year_endpoint="https://quantmutual.com/statutorydisclosures.aspx/displaydisclouser1"
+    year_raw,_,year_type=providers.fetch(
+        year_endpoint,
+        body={"id":"2026","cat":"MONTHLY PORTFOLIO - FUND - WISE"},
+        archive=False,
+        max_bytes=4*1024*1024,
+        headers={"Referer":SOURCE},
+    )
+    year_payload=json.loads(year_raw)
+    year_html=str(year_payload.get("d") or "")
+    year_soup=BeautifulSoup(year_html,"html.parser")
+    year_controls=[]
+    for tag in year_soup.find_all(True):
+        attrs={k:(" ".join(v) if isinstance(v,list) else str(v)) for k,v in tag.attrs.items()}
+        rendered=clean(tag.get_text(" ",strip=True))
+        if rendered or any("submit_event" in value for value in attrs.values()):
+            year_controls.append({"tag":tag.name,"text":rendered[:240],"attrs":attrs})
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
@@ -88,6 +105,9 @@ def main():
         "monthly_fundwise_dom":disclosure_blocks[:4],
         "submit_function_snippets":list(dict.fromkeys(submit_defs))[:20],
         "script_sources":script_srcs,
+        "year_endpoint_content_type":year_type,
+        "year_response_controls":year_controls[:160],
+        "year_response_html":year_html[:12000],
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
