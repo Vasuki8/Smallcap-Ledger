@@ -59,6 +59,14 @@ def main():
             raw=" ".join(value) if isinstance(value,list) else str(value)
             if "displaydis" in raw.casefold():
                 event_attrs.append({"tag":tag.name,"attr":name,"value":clean(raw)[:1800]})
+    disclosure_blocks=[]
+    for node in soup.find_all(string=lambda value: value and "MONTHLY PORTFOLIO - FUND - WISE" in clean(value).upper()):
+        current=node.parent
+        ancestors=[]
+        for parent in list(current.parents)[:7]:
+            if getattr(parent,"name",None):
+                ancestors.append({"tag":parent.name,"html":str(parent)[:9000]})
+        disclosure_blocks.append({"node":str(current)[:3000],"ancestors":ancestors})
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
@@ -68,6 +76,7 @@ def main():
         "endpoint_script_snippets":list(dict.fromkeys(snippets))[:20],
         "literal_method_calls":literal_calls[:120],
         "event_attributes":event_attrs[:120],
+        "monthly_fundwise_dom":disclosure_blocks[:4],
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
