@@ -189,26 +189,34 @@ def _baroda(text):
 def _iti(soup):
     """Read named security rows from ITI's dated digital factsheet portfolio table.
 
+    The publisher currently includes a leading marker column, so columns are
+    located from the exact visible header rather than assumed by position.
     Sector totals, aggregate asset-class rows and cash/debt summaries are not
-    positions. The page also publishes derivative exposure in a separate
-    percentage column; a named security with only that value remains a named
-    disclosed position. This reader is intentionally partial until a complete
-    structured disclosure is independently reconciled.
+    positions. A named security with only derivative exposure remains a named
+    disclosed position. Evidence stays partial until independently reconciled.
     """
     out=[]
-    for table,rows in _table_rows(soup):
-        context=_clean(table.get_text(" ",strip=True))
-        if ("Name of the Instrument" not in context
-                or not re.search(r"%\s*to\s*NAV",context,re.I)):
+    for _,rows in _table_rows(soup):
+        header_index=None
+        name_col=None
+        for i,cells in enumerate(rows[:8]):
+            matches=[j for j,value in enumerate(cells) if _norm(value)=="nameoftheinstrument"]
+            if len(matches)==1 and any(
+                re.search(r"%\s*to\s*NAV",value,re.I) for value in cells[matches[0]+1:]
+            ):
+                header_index=i
+                name_col=matches[0]
+                break
+        if header_index is None or name_col is None:
             continue
-        for cells in rows:
-            if len(cells)<2:
+        for cells in rows[header_index+1:]:
+            if len(cells)<=name_col:
                 continue
-            name=cells[0]
+            name=cells[name_col]
             if not CORPORATE_HINT.search(name):
                 continue
             weight=next(
-                (_percent(x) for x in reversed(cells[1:]) if _percent(x) is not None),
+                (_percent(x) for x in reversed(cells[name_col+1:]) if _percent(x) is not None),
                 None,
             )
             _add_position(out,name,weight)
