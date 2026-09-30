@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-09-30T01:54:43+00:00",
+  "built_at": "2026-09-30T03:26:32+00:00",
   "staged_category": "mid-cap",
   "families": 34,
   "portfolio_expected_as_of": "2026-08-31",
-  "targets": 5,
-  "current_portfolio_evidence": 2,
+  "targets": 6,
+  "current_portfolio_evidence": 3,
   "failed": 3,
   "results": [
     {
@@ -255,7 +255,7 @@
       "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html",
       "source_sha256": "1ab0d04dbf8cf7070e7502966af758780ff9d38c5e9378d7dea9870c46c13160",
       "source_content_type": "text/html",
-      "observed_at": "2026-09-30T01:54:37+00:00",
+      "observed_at": "2026-09-30T03:26:27+00:00",
       "amc": "Canara Robeco Mutual Fund"
     },
     {
@@ -288,10 +288,393 @@
       "scope": "top_5",
       "complete": false,
       "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "source_sha256": "5b34cb0b4b4a0ebfcc1228b337d4943fc38c4df86279dd18073fe9dd7c1067a1",
+      "source_sha256": "f11133fc5b269c45b24a8a3179c89aa917ece53dd6feef120621c223a618404a",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-30T01:54:41+00:00",
+      "observed_at": "2026-09-30T03:26:30+00:00",
       "amc": "Baroda BNP Paribas Mutual Fund"
+    },
+    {
+      "family": "ITI Mid Cap Fund",
+      "status": "recovered",
+      "as_of": "2026-08-31",
+      "positions_observed": 92,
+      "positions": [
+        {
+          "name": "Ather Energy Limited",
+          "weight": 1.86
+        },
+        {
+          "name": "TVS Motor Company Limited",
+          "weight": 1.65
+        },
+        {
+          "name": "Tube Investments of India Limited",
+          "weight": 1.48
+        },
+        {
+          "name": "Sona BLW Precision Forgings Limited",
+          "weight": 1.44
+        },
+        {
+          "name": "Bharat Forge Limited",
+          "weight": 1.29
+        },
+        {
+          "name": "ZF Commercial Vehicle Control Systems India Limited",
+          "weight": 1.15
+        },
+        {
+          "name": "Schaeffler India Limited",
+          "weight": 0.79
+        },
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 1.53
+        },
+        {
+          "name": "Cummins India Limited",
+          "weight": 1.45
+        },
+        {
+          "name": "Apar Industries Limited",
+          "weight": 1.38
+        },
+        {
+          "name": "Ashok Leyland Limited",
+          "weight": 1.36
+        },
+        {
+          "name": "PTC Industries Limited",
+          "weight": 1.13
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 1.05
+        },
+        {
+          "name": "Polycab India Limited",
+          "weight": 0.96
+        },
+        {
+          "name": "Mazagon Dock Shipbuilders Limited",
+          "weight": 0.9
+        },
+        {
+          "name": "Jyoti CNC Automation Ltd",
+          "weight": 0.9
+        },
+        {
+          "name": "Supreme Industries Limited",
+          "weight": 0.81
+        },
+        {
+          "name": "Bharat Electronics Limited",
+          "weight": 0.8
+        },
+        {
+          "name": "Thermax Limited",
+          "weight": 0.75
+        },
+        {
+          "name": "Hitachi Energy India Limited",
+          "weight": 0.67
+        },
+        {
+          "name": "Shakti Pumps (India) Limited",
+          "weight": 0.6
+        },
+        {
+          "name": "KEI Industries Limited",
+          "weight": 0.51
+        },
+        {
+          "name": "Solar Industries India Limited",
+          "weight": 2.56
+        },
+        {
+          "name": "Anupam Rasayan India Limited",
+          "weight": 1.25
+        },
+        {
+          "name": "SRF Limited",
+          "weight": 0.48
+        },
+        {
+          "name": "Navin Fluorine International Limited",
+          "weight": 0.34
+        },
+        {
+          "name": "JK Cement Limited",
+          "weight": 1.08
+        },
+        {
+          "name": "Dixon Technologies (India) Limited",
+          "weight": 1.23
+        },
+        {
+          "name": "LG Electronics India Ltd",
+          "weight": 1.16
+        },
+        {
+          "name": "Blue Star Limited",
+          "weight": 1.06
+        },
+        {
+          "name": "Midwest Limited",
+          "weight": 1.04
+        },
+        {
+          "name": "Info Edge (India) Limited",
+          "weight": 1.17
+        },
+        {
+          "name": "Swiggy Limited",
+          "weight": 0.69
+        },
+        {
+          "name": "Radico Khaitan Limited",
+          "weight": 1.76
+        },
+        {
+          "name": "Marico Limited",
+          "weight": 1.53
+        },
+        {
+          "name": "Godfrey Phillips India Limited",
+          "weight": 0.63
+        },
+        {
+          "name": "The Federal Bank Limited",
+          "weight": 3.05
+        },
+        {
+          "name": "One 97 Communications Limited",
+          "weight": 2.33
+        },
+        {
+          "name": "IDFC First Bank Limited",
+          "weight": 1.61
+        },
+        {
+          "name": "AU Small Finance Bank Limited",
+          "weight": 1.59
+        },
+        {
+          "name": "IndusInd Bank Limited",
+          "weight": 1.59
+        },
+        {
+          "name": "PB Fintech Limited",
+          "weight": 1.57
+        },
+        {
+          "name": "BSE Limited",
+          "weight": 1.47
+        },
+        {
+          "name": "Motilal Oswal Financial Services Limited",
+          "weight": 1.38
+        },
+        {
+          "name": "Sundaram Finance Limited",
+          "weight": 1.36
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 1.26
+        },
+        {
+          "name": "Yes Bank Limited",
+          "weight": 1.16
+        },
+        {
+          "name": "Housing & Urban Development Corporation Limited",
+          "weight": 1.12
+        },
+        {
+          "name": "Multi Commodity Exchange of India Limited",
+          "weight": 1.1
+        },
+        {
+          "name": "State Bank of India",
+          "weight": 1.06
+        },
+        {
+          "name": "Shriram Finance Limited",
+          "weight": 1.01
+        },
+        {
+          "name": "Max Financial Services Limited",
+          "weight": 0.98
+        },
+        {
+          "name": "Karur Vysya Bank Limited",
+          "weight": 0.93
+        },
+        {
+          "name": "Bank of Maharashtra",
+          "weight": 0.84
+        },
+        {
+          "name": "Five Star Business Finance Limited",
+          "weight": 0.74
+        },
+        {
+          "name": "L&T Finance Limited",
+          "weight": 0.68
+        },
+        {
+          "name": "Mahindra & Mahindra Financial Services Limited",
+          "weight": 0.67
+        },
+        {
+          "name": "Poonawalla Fincorp Limited",
+          "weight": 0.65
+        },
+        {
+          "name": "Union Bank of India",
+          "weight": 0.64
+        },
+        {
+          "name": "Aptus Value Housing Finance India Limited",
+          "weight": 0.63
+        },
+        {
+          "name": "Fortis Healthcare Limited",
+          "weight": 1.98
+        },
+        {
+          "name": "Neuland Laboratories Limited",
+          "weight": 1.38
+        },
+        {
+          "name": "Abbott India Limited",
+          "weight": 1.18
+        },
+        {
+          "name": "Aurobindo Pharma Limited",
+          "weight": 1.09
+        },
+        {
+          "name": "Max Healthcare Institute Limited",
+          "weight": 1.08
+        },
+        {
+          "name": "Sun Pharmaceutical Industries Limited",
+          "weight": 0.97
+        },
+        {
+          "name": "Lupin Limited",
+          "weight": 0.94
+        },
+        {
+          "name": "Park Medi World Limited",
+          "weight": 0.9
+        },
+        {
+          "name": "Biocon Limited",
+          "weight": 0.89
+        },
+        {
+          "name": "GlaxoSmithKline Pharmaceuticals Limited",
+          "weight": 0.89
+        },
+        {
+          "name": "Acutaas Chemicals Limited",
+          "weight": 0.59
+        },
+        {
+          "name": "Zydus Lifesciences Limited",
+          "weight": 0.52
+        },
+        {
+          "name": "IPCA Laboratories Limited",
+          "weight": 0.47
+        },
+        {
+          "name": "Oracle Financial Services Software Limited",
+          "weight": 1.59
+        },
+        {
+          "name": "Coforge Limited",
+          "weight": 0.69
+        },
+        {
+          "name": "Persistent Systems Limited",
+          "weight": 0.61
+        },
+        {
+          "name": "Lloyds Metals And Energy Limited",
+          "weight": 1.36
+        },
+        {
+          "name": "National Aluminium Company Limited",
+          "weight": 1.08
+        },
+        {
+          "name": "Hindustan Copper Limited",
+          "weight": 0.75
+        },
+        {
+          "name": "Vedanta Aluminium Metal Limited",
+          "weight": 0.58
+        },
+        {
+          "name": "Steel Authority of India Limited",
+          "weight": 0.33
+        },
+        {
+          "name": "JSW Energy Limited",
+          "weight": 1.17
+        },
+        {
+          "name": "NTPC Green Energy Limited",
+          "weight": 0.85
+        },
+        {
+          "name": "Adani Power Limited",
+          "weight": 0.57
+        },
+        {
+          "name": "NTPC Limited",
+          "weight": 0.52
+        },
+        {
+          "name": "Oberoi Realty Limited",
+          "weight": 1.03
+        },
+        {
+          "name": "GMR Airports Limited",
+          "weight": 0.7
+        },
+        {
+          "name": "Smartworks Coworking Spaces Ltd",
+          "weight": 0.64
+        },
+        {
+          "name": "Shiprocket Limited",
+          "weight": 0.52
+        },
+        {
+          "name": "Shadowfax Technologies Limited",
+          "weight": 0.39
+        },
+        {
+          "name": "Bharti Hexacom Limited",
+          "weight": 1.06
+        },
+        {
+          "name": "Page Industries Limited",
+          "weight": 0.83
+        }
+      ],
+      "scope": "digital_factsheet_named_holdings",
+      "complete": false,
+      "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
+      "source_sha256": "f11c2bd4b4bff70ac732275bff83d24aeb351893f94951cbfda852a097b809e5",
+      "source_content_type": "text/html; charset=UTF-8",
+      "observed_at": "2026-09-30T03:26:32+00:00",
+      "amc": "ITI Mutual Fund"
     }
   ],
   "errors": [
@@ -324,7 +707,6 @@
     "HSBC Midcap Fund",
     "Helios Mid Cap Fund",
     "ICICI Prudential Mid Cap Fund",
-    "ITI Mid Cap Fund",
     "Invesco India Mid Cap Fund",
     "JM Mid Cap Fund",
     "LIC MF Mid Cap Fund",

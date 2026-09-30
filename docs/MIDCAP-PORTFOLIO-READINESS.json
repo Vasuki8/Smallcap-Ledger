@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
   "staged_category": "mid-cap",
-  "built_at": "2026-09-30T01:56:28.261206+00:00",
-  "evaluated_at": "2026-09-30T01:56:28.261206+00:00",
+  "built_at": "2026-09-30T03:28:18.342648+00:00",
+  "evaluated_at": "2026-09-30T03:28:18.342648+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "families": 34,
-  "current_portfolio_evidence": 19,
+  "current_portfolio_evidence": 20,
   "current_complete_portfolios": 5,
-  "remaining": 15,
+  "remaining": 14,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -28,7 +28,7 @@
       "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
       "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-09-30T01:56:01+00:00",
+      "observed_at": "2026-09-30T03:27:51+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -50,7 +50,7 @@
       "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
       "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:55:35+00:00",
+      "observed_at": "2026-09-30T03:27:24+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -76,7 +76,7 @@
       "discovery_page": "https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-mid-cap-fund-31-august-2026/",
       "disclosure_post_id": 158812,
       "parser_version": "bandhan-midcap-monthly-portfolio-v1",
-      "observed_at": "2026-09-30T01:56:28+00:00",
+      "observed_at": "2026-09-30T03:28:18+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -122,9 +122,9 @@
       "scope": "top_5",
       "complete": false,
       "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "source_sha256": "5b34cb0b4b4a0ebfcc1228b337d4943fc38c4df86279dd18073fe9dd7c1067a1",
+      "source_sha256": "f11133fc5b269c45b24a8a3179c89aa917ece53dd6feef120621c223a618404a",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-30T01:54:41+00:00",
+      "observed_at": "2026-09-30T03:26:30+00:00",
       "amc": "Baroda BNP Paribas Mutual Fund",
       "current": true,
       "freshness_status": "current"
@@ -377,7 +377,7 @@
       "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html",
       "source_sha256": "1ab0d04dbf8cf7070e7502966af758780ff9d38c5e9378d7dea9870c46c13160",
       "source_content_type": "text/html",
-      "observed_at": "2026-09-30T01:54:37+00:00",
+      "observed_at": "2026-09-30T03:26:27+00:00",
       "amc": "Canara Robeco Mutual Fund",
       "current": true,
       "freshness_status": "current"
@@ -400,7 +400,7 @@
       "source_sha256": "7be409861d36404640a8d3a5635b83758b464f982b766444090245cc62f07963",
       "workbook_sha256": "e6d2c0000cd0b055c285e502a429a934cf165063e893998a5c38d2222bb9a42c",
       "source_content_type": "application/zip",
-      "observed_at": "2026-09-30T01:54:48+00:00",
+      "observed_at": "2026-09-30T03:26:35+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -442,7 +442,7 @@
       "source": "https://files.hdfcfund.com/s3fs-public/2026-09/Monthly%20HDFC%20Mid%20Cap%20Fund%20-%2031%20August%202026.xlsx",
       "source_sha256": "767a0a0025e82d8f74df9f31159f51bbc233b4085a1b7ae30f6e965db3574ea0",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:54:46+00:00",
+      "observed_at": "2026-09-30T03:26:33+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -494,21 +494,394 @@
       "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
       "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-09-30T01:55:31+00:00",
+      "observed_at": "2026-09-30T03:27:21+00:00",
       "current": true,
       "freshness_status": "current"
     },
     {
       "family": "ITI Mid Cap Fund",
-      "amc": "ITI Mutual Fund",
-      "status": "unavailable",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "status": "recovered",
+      "as_of": "2026-08-31",
+      "positions_observed": 92,
+      "positions": [
+        {
+          "name": "Ather Energy Limited",
+          "weight": 1.86
+        },
+        {
+          "name": "TVS Motor Company Limited",
+          "weight": 1.65
+        },
+        {
+          "name": "Tube Investments of India Limited",
+          "weight": 1.48
+        },
+        {
+          "name": "Sona BLW Precision Forgings Limited",
+          "weight": 1.44
+        },
+        {
+          "name": "Bharat Forge Limited",
+          "weight": 1.29
+        },
+        {
+          "name": "ZF Commercial Vehicle Control Systems India Limited",
+          "weight": 1.15
+        },
+        {
+          "name": "Schaeffler India Limited",
+          "weight": 0.79
+        },
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 1.53
+        },
+        {
+          "name": "Cummins India Limited",
+          "weight": 1.45
+        },
+        {
+          "name": "Apar Industries Limited",
+          "weight": 1.38
+        },
+        {
+          "name": "Ashok Leyland Limited",
+          "weight": 1.36
+        },
+        {
+          "name": "PTC Industries Limited",
+          "weight": 1.13
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 1.05
+        },
+        {
+          "name": "Polycab India Limited",
+          "weight": 0.96
+        },
+        {
+          "name": "Mazagon Dock Shipbuilders Limited",
+          "weight": 0.9
+        },
+        {
+          "name": "Jyoti CNC Automation Ltd",
+          "weight": 0.9
+        },
+        {
+          "name": "Supreme Industries Limited",
+          "weight": 0.81
+        },
+        {
+          "name": "Bharat Electronics Limited",
+          "weight": 0.8
+        },
+        {
+          "name": "Thermax Limited",
+          "weight": 0.75
+        },
+        {
+          "name": "Hitachi Energy India Limited",
+          "weight": 0.67
+        },
+        {
+          "name": "Shakti Pumps (India) Limited",
+          "weight": 0.6
+        },
+        {
+          "name": "KEI Industries Limited",
+          "weight": 0.51
+        },
+        {
+          "name": "Solar Industries India Limited",
+          "weight": 2.56
+        },
+        {
+          "name": "Anupam Rasayan India Limited",
+          "weight": 1.25
+        },
+        {
+          "name": "SRF Limited",
+          "weight": 0.48
+        },
+        {
+          "name": "Navin Fluorine International Limited",
+          "weight": 0.34
+        },
+        {
+          "name": "JK Cement Limited",
+          "weight": 1.08
+        },
+        {
+          "name": "Dixon Technologies (India) Limited",
+          "weight": 1.23
+        },
+        {
+          "name": "LG Electronics India Ltd",
+          "weight": 1.16
+        },
+        {
+          "name": "Blue Star Limited",
+          "weight": 1.06
+        },
+        {
+          "name": "Midwest Limited",
+          "weight": 1.04
+        },
+        {
+          "name": "Info Edge (India) Limited",
+          "weight": 1.17
+        },
+        {
+          "name": "Swiggy Limited",
+          "weight": 0.69
+        },
+        {
+          "name": "Radico Khaitan Limited",
+          "weight": 1.76
+        },
+        {
+          "name": "Marico Limited",
+          "weight": 1.53
+        },
+        {
+          "name": "Godfrey Phillips India Limited",
+          "weight": 0.63
+        },
+        {
+          "name": "The Federal Bank Limited",
+          "weight": 3.05
+        },
+        {
+          "name": "One 97 Communications Limited",
+          "weight": 2.33
+        },
+        {
+          "name": "IDFC First Bank Limited",
+          "weight": 1.61
+        },
+        {
+          "name": "AU Small Finance Bank Limited",
+          "weight": 1.59
+        },
+        {
+          "name": "IndusInd Bank Limited",
+          "weight": 1.59
+        },
+        {
+          "name": "PB Fintech Limited",
+          "weight": 1.57
+        },
+        {
+          "name": "BSE Limited",
+          "weight": 1.47
+        },
+        {
+          "name": "Motilal Oswal Financial Services Limited",
+          "weight": 1.38
+        },
+        {
+          "name": "Sundaram Finance Limited",
+          "weight": 1.36
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 1.26
+        },
+        {
+          "name": "Yes Bank Limited",
+          "weight": 1.16
+        },
+        {
+          "name": "Housing & Urban Development Corporation Limited",
+          "weight": 1.12
+        },
+        {
+          "name": "Multi Commodity Exchange of India Limited",
+          "weight": 1.1
+        },
+        {
+          "name": "State Bank of India",
+          "weight": 1.06
+        },
+        {
+          "name": "Shriram Finance Limited",
+          "weight": 1.01
+        },
+        {
+          "name": "Max Financial Services Limited",
+          "weight": 0.98
+        },
+        {
+          "name": "Karur Vysya Bank Limited",
+          "weight": 0.93
+        },
+        {
+          "name": "Bank of Maharashtra",
+          "weight": 0.84
+        },
+        {
+          "name": "Five Star Business Finance Limited",
+          "weight": 0.74
+        },
+        {
+          "name": "L&T Finance Limited",
+          "weight": 0.68
+        },
+        {
+          "name": "Mahindra & Mahindra Financial Services Limited",
+          "weight": 0.67
+        },
+        {
+          "name": "Poonawalla Fincorp Limited",
+          "weight": 0.65
+        },
+        {
+          "name": "Union Bank of India",
+          "weight": 0.64
+        },
+        {
+          "name": "Aptus Value Housing Finance India Limited",
+          "weight": 0.63
+        },
+        {
+          "name": "Fortis Healthcare Limited",
+          "weight": 1.98
+        },
+        {
+          "name": "Neuland Laboratories Limited",
+          "weight": 1.38
+        },
+        {
+          "name": "Abbott India Limited",
+          "weight": 1.18
+        },
+        {
+          "name": "Aurobindo Pharma Limited",
+          "weight": 1.09
+        },
+        {
+          "name": "Max Healthcare Institute Limited",
+          "weight": 1.08
+        },
+        {
+          "name": "Sun Pharmaceutical Industries Limited",
+          "weight": 0.97
+        },
+        {
+          "name": "Lupin Limited",
+          "weight": 0.94
+        },
+        {
+          "name": "Park Medi World Limited",
+          "weight": 0.9
+        },
+        {
+          "name": "Biocon Limited",
+          "weight": 0.89
+        },
+        {
+          "name": "GlaxoSmithKline Pharmaceuticals Limited",
+          "weight": 0.89
+        },
+        {
+          "name": "Acutaas Chemicals Limited",
+          "weight": 0.59
+        },
+        {
+          "name": "Zydus Lifesciences Limited",
+          "weight": 0.52
+        },
+        {
+          "name": "IPCA Laboratories Limited",
+          "weight": 0.47
+        },
+        {
+          "name": "Oracle Financial Services Software Limited",
+          "weight": 1.59
+        },
+        {
+          "name": "Coforge Limited",
+          "weight": 0.69
+        },
+        {
+          "name": "Persistent Systems Limited",
+          "weight": 0.61
+        },
+        {
+          "name": "Lloyds Metals And Energy Limited",
+          "weight": 1.36
+        },
+        {
+          "name": "National Aluminium Company Limited",
+          "weight": 1.08
+        },
+        {
+          "name": "Hindustan Copper Limited",
+          "weight": 0.75
+        },
+        {
+          "name": "Vedanta Aluminium Metal Limited",
+          "weight": 0.58
+        },
+        {
+          "name": "Steel Authority of India Limited",
+          "weight": 0.33
+        },
+        {
+          "name": "JSW Energy Limited",
+          "weight": 1.17
+        },
+        {
+          "name": "NTPC Green Energy Limited",
+          "weight": 0.85
+        },
+        {
+          "name": "Adani Power Limited",
+          "weight": 0.57
+        },
+        {
+          "name": "NTPC Limited",
+          "weight": 0.52
+        },
+        {
+          "name": "Oberoi Realty Limited",
+          "weight": 1.03
+        },
+        {
+          "name": "GMR Airports Limited",
+          "weight": 0.7
+        },
+        {
+          "name": "Smartworks Coworking Spaces Ltd",
+          "weight": 0.64
+        },
+        {
+          "name": "Shiprocket Limited",
+          "weight": 0.52
+        },
+        {
+          "name": "Shadowfax Technologies Limited",
+          "weight": 0.39
+        },
+        {
+          "name": "Bharti Hexacom Limited",
+          "weight": 1.06
+        },
+        {
+          "name": "Page Industries Limited",
+          "weight": 0.83
+        }
+      ],
+      "scope": "digital_factsheet_named_holdings",
       "complete": false,
-      "source": null,
-      "current": false,
-      "freshness_status": "unavailable"
+      "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
+      "source_sha256": "f11c2bd4b4bff70ac732275bff83d24aeb351893f94951cbfda852a097b809e5",
+      "source_content_type": "text/html; charset=UTF-8",
+      "observed_at": "2026-09-30T03:26:32+00:00",
+      "amc": "ITI Mutual Fund",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -525,7 +898,7 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:56:16+00:00",
+      "observed_at": "2026-09-30T03:28:06+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -546,7 +919,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:56:12+00:00",
+      "observed_at": "2026-09-30T03:28:02+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -946,7 +1319,7 @@
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
       "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-09-30T01:56:13+00:00",
+      "observed_at": "2026-09-30T03:28:04+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -965,7 +1338,7 @@
       "source_title": "Portfolio Details as on 31st August 2026 for Mirae Asset Midcap Fund",
       "source_sha256": "f35304f2c9cf880e753ea44811b51fd2a3f06d5251c9a8a7667c76244e21d0bc",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:56:06+00:00",
+      "observed_at": "2026-09-30T03:27:56+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -986,7 +1359,7 @@
       "discovery_source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
       "discovery_source_sha256": "b17a6d30d2325c1d11c6e3ba85d9b57f1eb06de24ca8c99542a0fca232219e85",
       "discovery_source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-09-30T01:56:23+00:00",
+      "observed_at": "2026-09-30T03:28:13+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1019,7 +1392,7 @@
       "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
       "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:56:03+00:00",
+      "observed_at": "2026-09-30T03:27:53+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1054,7 +1427,7 @@
       "source_title": "Download",
       "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:55:37+00:00",
+      "observed_at": "2026-09-30T03:27:26+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1191,9 +1564,9 @@
       "completeness_note": "Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
       "equity_weight_sum": 98.54,
       "source": "https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg",
-      "source_sha256": "c512a6d0c41288448cc0c8cce08241859dd0c2ea4bc0a50a61dcb3b9ad324fdb",
+      "source_sha256": "869fd28eb2711de13f8715643b2d9e3a2bec9f67068fbb43f22e6b18fdb280f1",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-30T01:56:21+00:00",
+      "observed_at": "2026-09-30T03:28:12+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1215,7 +1588,7 @@
       "discovery_source_sha256": "b2b88ca7a0fde40fce9bd04d9df81433f34572b35351cf625c04816524462266",
       "publisher_scheme_code": "MC",
       "card_aum_as_of_raw": "31-Aug-2026",
-      "observed_at": "2026-09-30T01:56:20+00:00",
+      "observed_at": "2026-09-30T03:28:11+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1250,7 +1623,7 @@
       "source_title": "Portfolio as on 31st August, 2026",
       "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T01:55:39+00:00",
+      "observed_at": "2026-09-30T03:27:29+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1858,7 +2231,7 @@
       "source_sha256": "8e938ad0ab0fd14f315dc8f8657e718e13170039cdb36aec9864c5c5d8ee90b4",
       "workbook_sha256": "bc3e8ed96a0fdf477387da8efbacc29820c265c699e864d7bfaef0a9c5838555",
       "source_content_type": "application/zip",
-      "observed_at": "2026-09-30T01:55:41+00:00",
+      "observed_at": "2026-09-30T03:27:30+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1893,7 +2266,6 @@
     "Franklin India Mid Cap Fund",
     "HSBC Midcap Fund",
     "Helios Mid Cap Fund",
-    "ITI Mid Cap Fund",
     "Kotak Mid Cap Fund",
     "LIC MF Mid Cap Fund",
     "Nippon India Growth Mid Cap Fund",
@@ -1933,36 +2305,36 @@
   "input_reports": [
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH1.json",
-      "sha256": "db48d5e897aeb3ab651e61272a0c7350669b1d51118c36c8845ca02d248cf6b0",
-      "built_at": "2026-09-30T01:54:43+00:00",
+      "sha256": "a16398f505dec85b95e19f6b2dce2e63ce51af730e85fee08e8ae919f8dd8034",
+      "built_at": "2026-09-30T03:26:32+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH2.json",
-      "sha256": "63088a5db3b243762f057bb2fe9e8df75e292a1d2226189d543e602c53e0e597",
-      "built_at": "2026-09-30T01:54:48+00:00",
+      "sha256": "f82fcc9daa988d9adf6e0089cfae3d45e1e0a1b74cdd2d4dd9caf888d3fde7d6",
+      "built_at": "2026-09-30T03:26:35+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH3.json",
-      "sha256": "77961e6bf068d1a33e3bc346d69b2a2851c3013e5a76c7a883676d15aecf1746",
-      "built_at": "2026-09-30T01:55:41+00:00",
+      "sha256": "34282547a323557a53c46fa9895d3acabadbec9d13bdecf3365dced79883f65f",
+      "built_at": "2026-09-30T03:27:30+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH4.json",
-      "sha256": "1f3c8561bf674779bd99fa46ebd32ce5d14bf47e7295e208ca6c672bc54093ef",
-      "built_at": "2026-09-30T01:56:06+00:00",
+      "sha256": "5b0d3a3bbdac5c6052c7b3c90ac800b47e5aa9df58fa294da2a5921b57ac01fd",
+      "built_at": "2026-09-30T03:27:56+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH5.json",
-      "sha256": "2eb78f09fe4a483abe978273f9ef7fb21549817c91829d520751c30e4e0577f8",
-      "built_at": "2026-09-30T01:56:28+00:00",
+      "sha256": "85d0f4aedb490163c084bdfc3bfb351114d69efaf9d35e58b67dd3b8c39c6bde",
+      "built_at": "2026-09-30T03:28:18+00:00",
       "ok": true,
       "error": null
     }

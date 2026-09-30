@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-30T01:52:38+00:00
+Prepared: 2026-09-30T03:24:31+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -25,8 +25,8 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5352% | 1.4952% | 2026-09-28 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | 1.7700% | 2.8600% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 0.7500% | 2.0200% | 2026-09-29 | first_party_amc | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx |
-| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 0.9600% | 2.0200% | 2026-09-28 | first_party_amc | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_28092026.xls |
-| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | 0.9300% | 1.6400% | 2026-09-28 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 0.9700% | 2.0200% | 2026-09-29 | first_party_amc | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_29092026.xls |
+| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | 0.9300% | 1.6400% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | 0.8000% | 1.5500% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | 0.7400% | 1.9200% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Quant Mid Cap Fund | quant Mutual Fund | 1.1800% | 2.2100% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |

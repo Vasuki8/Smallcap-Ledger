@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-09-30T01:52:38+00:00
+Prepared: 2026-09-30T03:24:31+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 
@@ -32,7 +32,7 @@ Mid Cap registry stage: **staged** · public export enabled: **false** · launch
 | LIC MF Mid Cap Fund | LIC Mutual Fund | ₹ 371.34 Cr · 2026-09-28 | 1.7700% · 2026-09-29 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | ₹ 5108.61 Cr · 2026-09-28 | Gap | Gap | Gap | 10 | direct_ter, benchmark_identity, current_portfolio |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | ₹ 19739.22 Cr · 2026-09-28 | Gap | Gap | Gap | 14 | direct_ter, benchmark_identity, current_portfolio |
-| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | ₹ 40334.89 Cr · 2026-09-28 | 0.9300% · 2026-09-28 | Gap | Gap | 8 | benchmark_identity, current_portfolio |
+| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | ₹ 40334.89 Cr · 2026-09-28 | 0.9300% · 2026-09-29 | Gap | Gap | 8 | benchmark_identity, current_portfolio |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | ₹ 50564.51 Cr · 2026-09-28 | 0.8000% · 2026-09-29 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | ₹ 10609.29 Cr · 2026-09-28 | 0.7400% · 2026-09-29 | Gap | Gap | 11 | benchmark_identity, current_portfolio |
 | Quant Mid Cap Fund | quant Mutual Fund | ₹ 7769.56 Cr · 2026-09-28 | 1.1800% · 2026-09-29 | Gap | Gap | 11 | benchmark_identity, current_portfolio |

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-30T01:53:06+00:00",
+  "built_at": "2026-09-30T03:24:59+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 7,
@@ -90,7 +90,7 @@
         }
       },
       "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
-      "sha256": "275a835d3681a7bd359f8ac4f44d97ac7e0506a3bc2c89dab38b0af8bb05dd9e",
+      "sha256": "788bd7a521d1f678e5f2480cf7a8c2eee873b3546d8f224f9ae089d6547c51bc",
       "identity": {
         "scheme_name": "ICICI Prudential Mid Cap Fund"
       },
@@ -198,7 +198,7 @@
       "family": "Mirae Asset Midcap Fund",
       "amc": "Mirae Asset Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.41,
@@ -208,21 +208,21 @@
           "ter": 2.02
         },
         "Direct": {
-          "base_expense_ratio": 0.51,
+          "base_expense_ratio": 0.52,
           "brokerage": 0.11,
           "transaction_cost": 0.01,
           "statutory_levies": 0.33,
-          "ter": 0.96
+          "ter": 0.97
         }
       },
-      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_28092026.xls",
-      "sha256": "7188cb85ebcf812dc7da85cad08b3049847a80e73ee6e08b80b6896d4a50de5d",
+      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_29092026.xls",
+      "sha256": "db99f7f4bd6c6ed3d3605d5b6e521c48592d07f4a81ee848fdb204ed3c878c47",
       "identity": {
         "scheme_name": "Mirae Asset Midcap Fund",
         "nsdl_scheme_code": "MIRA/O/E/MIF/19/05/0015"
       },
       "evidence_type": "official_amc_workbook",
-      "direct_ter": 0.96,
+      "direct_ter": 0.97,
       "regular_ter": 2.02
     }
   ],

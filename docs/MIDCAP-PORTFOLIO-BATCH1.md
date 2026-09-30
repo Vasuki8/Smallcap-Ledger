@@ -1,13 +1,14 @@
 # Mid Cap current portfolio evidence — batch 1
 
-Prepared: 2026-09-30T01:54:43+00:00
+Prepared: 2026-09-30T03:26:32+00:00
 
-Expected month-end: **2026-08-31** · targets: **5** · current evidence: **2** · failed: **3**.
+Expected month-end: **2026-08-31** · targets: **6** · current evidence: **3** · failed: **3**.
 
 | Family | AMC | As of | Positions observed | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | 2026-08-31 | 59 | full_page_portfolio | false | https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | 2026-08-31 | 5 | top_5 | false | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
+| ITI Mid Cap Fund | ITI Mutual Fund | 2026-08-31 | 92 | digital_factsheet_named_holdings | false | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
 
 ## Errors
 
