@@ -117,6 +117,35 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
             },
         )
 
+
+    def test_bank_of_india_top_10_current_holdings(self):
+        html="""<html><body>
+        <h1>Bank of India Mid Cap Fund</h1>
+        <p>The above Riskometer is based on the portfolio as on 31st August 2026.</p>
+        <h3>Top 10 Portfolio Holdings</h3>
+        <table>
+        <tr><th>Portfolio Details</th><th>% to Net Assets</th></tr>
+        <tr><td>Aurobindo Pharma Limited</td><td>5.6%</td></tr>
+        <tr><td>Multi Commodity Exchange of India Limited</td><td>4.9%</td></tr>
+        <tr><td>Abbott India Limited</td><td>4.4%</td></tr>
+        <tr><td>Bharti Hexacom Limited</td><td>4.0%</td></tr>
+        <tr><td>One 97 Communications Limited</td><td>3.4%</td></tr>
+        <tr><td>Quality Power Electrical Eqp Ltd</td><td>3.1%</td></tr>
+        <tr><td>UNO Minda Limited</td><td>2.9%</td></tr>
+        <tr><td>Nippon Life India Asset Management Limited</td><td>2.9%</td></tr>
+        <tr><td>Bank of Maharashtra</td><td>2.7%</td></tr>
+        <tr><td>Mankind Pharma Limited</td><td>2.7%</td></tr>
+        </table></body></html>"""
+        def fetch(url,**kwargs):return html.encode(),None,"text/html"
+        row=inspect_family("BANK OF INDIA MID CAP FUND",{
+            "url":"https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund",
+            "parser":"boi","scope":"top_10",
+        },fetch_fn=fetch,today=date(2026,9,30))
+        self.assertEqual(row["as_of"],"2026-08-31")
+        self.assertEqual(row["positions_observed"],10)
+        self.assertFalse(row["complete"])
+        self.assertEqual(row["scope"],"top_10")
+
     def test_wrong_family_is_rejected(self):
         html="<html><body>Canara Robeco Small Cap Fund as on August 31, 2026</body></html>"
         def fetch(url,**kwargs):return html.encode(),None,"text/html"
