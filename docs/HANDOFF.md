@@ -1,23 +1,26 @@
 # Smallcap Ledger backend handoff
 
 
-Updated: 2026-09-30, after verifying the latest production checkpoint and preparing Helios Mid Cap portfolio recovery in PR #348.
+Updated: 2026-09-30, after the explicitly authorized merge of Helios Mid Cap portfolio recovery in PR #348 and independent production/live-data verification.
 
-## Current checkpoint and pending release — 2026-09-30
+## Verified production checkpoint — 2026-09-30
 
-The last successful production run is [#683 / 36666170603](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36666170603), on code `a91b0f09c86d5e6b83124e1ebe63f2082e22dfdf` (PR #347). Its generated evidence commit is `e27afda92794a9f3fe71a2cc2a6b472a384a9ef6`. The run completed at **2026-09-30T04:16:39Z**. A cache-busted live `data/status.json` read in this session matched the committed build clock **2026-09-30T04:15:41+00:00** and the following counts:
+The last successful production run is [#684 / 36671423719](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36671423719), on code `feefbb15025077b2e05e848edb9c9d31a6b53d9b` (PR #348). Its generated evidence commit is `087ba55634a9db3503117f22af61d4505b8f5799`. Build job `109747037093` and Pages deploy job `109755440959` both passed; deployment completed at **2026-09-30T05:36:47Z**. Cache-busted live status, fund-index and coverage reads matched the committed build clock **2026-09-30T05:35:53+00:00** and the following counts:
 
 - Small Cap funds **36**, NAV series **143**, NAV observations **281,868**; latest included NAV **2026-09-29**.
 - AUM and Direct fee presence **36/36**. Selected record-date ranges: AUM **2026-09-24 → 2026-09-28**, Direct fee **2026-04-30 → 2026-09-29**. Presence is not uniform freshness.
-- Retained portfolio snapshots **155**, documents **3,218**, original archive binaries **4,174**, archive bytes **3,369,179,415**. No retention deletion occurred in this development slice.
+- The live NAV index has **142 series dated 2026-09-29** and **one dated 2020-04-24**; all 143 series remain in the Small Cap public scope. Its summed NAV observations match the status count.
+- Retained portfolio snapshots **161**, documents **3,450**, original archive binaries **4,425**, archive bytes **3,578,406,511**. Database integrity, foreign keys, publication budget and retention safety all pass. No archive deletion occurred; split checkpoint `database-36671423719-1.zip` retains **124 reusable source packs**.
 
 Recent repairs already merged: PR #342 fixed the fresh-source retention checkpoint boundary; #343 corrected the date-sensitive Tata portfolio regression; #344 runs the guarded daily refresh on push publications; #345 invalidates stale hosted-data caches; #346 and #347 recover ITI and Bank of India staged portfolio evidence. Their original source and publication evidence remains in GitHub history and generated reports. Do not repeat the September 25 NAV or PR #300 Mid Cap counts below as current.
 
-[PR #348](https://github.com/Vasuki8/Smallcap-Ledger/pull/348) prepares Helios Mid Cap monthly portfolio discovery in existing staged portfolio batch 2. Application head `df3c945c73d0ad60359d07bea967064f52b29ae2` passes **844 repository tests**, independent code review and the exact read-only official-source preflight: **74 positions, complete=true, 2026-08-31**. See [MIDCAP-HANDOFF.md](MIDCAP-HANDOFF.md) for source hashes, CI links and limitations.
+[PR #348](https://github.com/Vasuki8/Smallcap-Ledger/pull/348) adds Helios Mid Cap monthly portfolio discovery in existing staged portfolio batch 2. Production freshly observed **74 positions, complete=true, 2026-08-31** at **2026-09-30T05:04:46+00:00**. All **844 repository tests** passed in production (`Ran 844 tests in 8.445s`, `OK`), followed by generated-site/download validation and publication. Independent code review and the earlier exact-source preflight also passed. See [MIDCAP-HANDOFF.md](MIDCAP-HANDOFF.md) for distinct production/preflight source hashes and CI evidence.
 
-**PR #348 is not merged or deployed.** Automatic approval review rejected the merge because default-branch publication needs explicit user authorization for this merge and its production workflow effects. Do not retry the merge through another route. The next release action is owner approval of PR #348 merge/publication, followed by the normal production run and independent checks of fresh staged artifacts and live Pages payloads. Passing preflight is not production coverage.
+The user explicitly authorized the merge. PR #348 was squash-merged at **2026-09-30T05:00:28Z**, with expected head `d41c762541ce86c8bc88cd2a26b560825e40b4a2`. Its normal production run and independent live-data checks are complete. The release handoff changes only documentation and uses `[skip ci]` to avoid replaying collection for prose.
 
-Current staged launch evidence reports AUM **34/34**, Direct TER **31/34**, benchmark identity **31/34**, current portfolio evidence **21/34** and **5 complete**. Seven more current portfolio families are needed for the 28-family policy gate; source-fetch health and the category-aware public-surface gate also remain blocked. Mid Cap remains non-public. Follow the updated Mid Cap handoff for the next source work.
+Fresh staged launch evidence reports AUM **34/34**, Direct TER **31/34**, benchmark identity **31/34**, current portfolio evidence **22/34** and **6 complete**. All **14 launch-input hashes** were independently checked; `audit_input_integrity=true`, `input_issues=[]`. Six more current portfolio families are needed for the 28-family policy gate. AMFI daily-AUM HTTP 502 still blocks source-fetch health; the category-aware public-surface gate also remains blocked. Mid Cap remains staged and non-public. Follow the updated Mid Cap handoff for the next source work.
+
+Best-effort retained communication repair still leaves six unavailable originals: five LIC market-outlook URLs failed document validation and one Samco scheme-presentation URL is disallowed by the publisher's robots policy. A successful workflow does not erase those source limitations.
 
 The September 28 repository audit below is preserved as historical evidence. Its branch-protection owner action remains documented; repository-administration settings were not rechecked in this source-recovery slice.
 
