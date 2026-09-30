@@ -12,12 +12,6 @@ class PublisherMaintenanceTests(unittest.TestCase):
         cls.text = WORKFLOW.read_text(encoding="utf-8")
 
     def test_completed_push_only_recovery_hooks_are_not_in_normal_publisher(self):
-        push_only_if_lines = [
-            line.strip()
-            for line in self.text.splitlines()
-            if line.strip().startswith("if: github.event_name == 'push'")
-        ]
-        self.assertEqual(push_only_if_lines, [])
         retired = (
             "scripts/diagnose_bajaj_media.py",
             "scripts/diagnose_wealth_uti_transport.py",
@@ -38,9 +32,9 @@ class PublisherMaintenanceTests(unittest.TestCase):
             with self.subTest(script=script):
                 self.assertNotIn(script, self.text)
 
-    def test_nightly_collection_and_retained_archive_repair_remain_active(self):
+    def test_daily_collection_runs_for_push_schedule_and_manual_refresh(self):
         self.assertIn(
-            "if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)",
+            "if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)",
             self.text,
         )
         self.assertIn("uv run --frozen python scripts/daily_update.py", self.text)
