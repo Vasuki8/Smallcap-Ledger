@@ -31,6 +31,8 @@ def main():
                     "tag":getattr(parent,"name",None),
                     "parent":str(parent)[:1200],
                     "grandparent":str(getattr(parent,"parent",None))[:1800],
+                    "ancestor_tags":[x.name for x in list(parent.parents)[:8] if getattr(x,"name",None)],
+                    "closest_table":str(parent.find_parent("table"))[:7000],
                 })
         print(json.dumps({
             "mode":"read_only_iti_midcap_portfolio_dom_diagnostic",
