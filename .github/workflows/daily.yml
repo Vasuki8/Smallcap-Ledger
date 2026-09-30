@@ -250,7 +250,7 @@ jobs:
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
       - name: Collect daily data
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
+        if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
         timeout-minutes: 40
         continue-on-error: true
         run: uv run --frozen python scripts/daily_update.py
