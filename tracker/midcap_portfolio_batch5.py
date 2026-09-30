@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 
 from . import db, disclosures, jm_portfolios, providers
 from . import midcap_bandhan_portfolio as bandhan_midcap
+from . import midcap_wealth_portfolio as wealth_midcap
 from .coverage import expected_portfolio_as_of
 from .midcap_factsheet_equities import equity_positions, validate_factsheet_context
 from .midcap_factsheet_validation import (
@@ -38,6 +39,7 @@ SAMCO_URL="https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth
 MOTILAL_FAMILY="Motilal Oswal Midcap Fund"
 MOTILAL_PAGE="https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund"
 BANDHAN_FAMILY=bandhan_midcap.FAMILY
+WEALTH_FAMILY=wealth_midcap.FAMILY
 
 
 def _norm(value):
@@ -373,6 +375,10 @@ def _sundaram_result(fetch_fn,expected):
     }
 
 
+def _wealth_result(fetch_fn,expected):
+    return wealth_midcap.inspect(fetch_fn,expected)
+
+
 COLLECTORS=(
     (KOTAK_FAMILY,_kotak_result),
     (JM_FAMILY,_jm_result),
@@ -382,6 +388,7 @@ COLLECTORS=(
     (SAMCO_FAMILY,_samco_result),
     (MOTILAL_FAMILY,_motilal_result),
     (BANDHAN_FAMILY,_bandhan_result),
+    (WEALTH_FAMILY,_wealth_result),
 )
 
 
@@ -407,6 +414,7 @@ def collect(fetch_fn=providers.fetch,today=None):
             "Samco uses the publisher's current All Holdings table, but remains explicitly partial until structured 100% reconciliation is proven.",
             "Motilal Oswal uses the current fund page only to discover the exact dated monthly workbook, which is parsed through the existing structured parser.",
             "Bandhan uses the exact scheme/month CMS disclosure post and read-only finance API to resolve one official workbook, which is parsed through the existing structured parser.",
+            "The Wealth Company uses its exact current monthly disclosure record to resolve one scheme workbook; named ISIN holdings remain explicitly partial until independent 100% reconciliation.",
             "Kotak and Mahindra retain sector-reconciled equity-only evidence, explicitly partial.",
             "Portfolio dates come from their own disclosure, never from unrelated AUM or NAV dates.",
             "Every result requires exact staged family identity and the current regulatory month-end; no live records are written.",
