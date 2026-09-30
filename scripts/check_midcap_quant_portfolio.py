@@ -93,6 +93,22 @@ def main():
         rendered=clean(tag.get_text(" ",strip=True))
         if rendered or any("submit_event" in value for value in attrs.values()):
             year_controls.append({"tag":tag.name,"text":rendered[:240],"attrs":attrs})
+    month_endpoint="https://quantmutual.com/statutorydisclosures.aspx/displaydisclouser2"
+    month_raw,_,month_type=providers.fetch(
+        month_endpoint,
+        body={"id":"8","cat":"MONTHLY PORTFOLIO - FUND - WISE","tab":"2026"},
+        archive=False,
+        max_bytes=8*1024*1024,
+        headers={"Referer":SOURCE},
+    )
+    month_payload=json.loads(month_raw)
+    month_html=str(month_payload.get("d") or "")
+    month_soup=BeautifulSoup(month_html,"html.parser")
+    month_links=[
+        {"text":clean(a.get_text(" ",strip=True))[:300],
+         "href":urljoin(SOURCE,str(a.get("href") or "").strip())[:900]}
+        for a in month_soup.find_all("a",href=True)
+    ]
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
@@ -108,6 +124,9 @@ def main():
         "year_endpoint_content_type":year_type,
         "year_response_controls":year_controls[:160],
         "year_response_html":year_html[:12000],
+        "month_endpoint_content_type":month_type,
+        "august_links":month_links[:200],
+        "month_response_html":month_html[:18000],
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
