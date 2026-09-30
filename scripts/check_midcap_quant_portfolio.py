@@ -42,6 +42,23 @@ def main():
             for endpoint in ("displaydisclouser","displaydisclouser1","displaydisclouser2","displaydisfundname"):
                 for hit in re.finditer(endpoint,text,re.I):
                     snippets.append(clean(text[max(0,hit.start()-1200):hit.end()+1800])[:3200])
+    literal_calls=[]
+    for match in re.finditer(
+        r"""(?:PageMethods\.)?(displaydisclouser2|displaydisclouser1|displaydisclouser|displaydisfundname)\s*\(\s*(['"][^'"]*['"]|\d+)\s*,\s*(['"][^'"]*['"]|\d+)(?:\s*,\s*(['"][^'"]*['"]|\d+))?""",
+        html,re.I,
+    ):
+        literal_calls.append({
+            "method":match.group(1),
+            "id":match.group(2),
+            "cat":match.group(3),
+            "tab":match.group(4),
+        })
+    event_attrs=[]
+    for tag in soup.find_all(True):
+        for name,value in tag.attrs.items():
+            raw=" ".join(value) if isinstance(value,list) else str(value)
+            if "displaydis" in raw.casefold():
+                event_attrs.append({"tag":tag.name,"attr":name,"value":clean(raw)[:1800]})
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
@@ -49,6 +66,8 @@ def main():
         "anchor_candidates":anchors[:120],
         "script_endpoint_candidates":list(dict.fromkeys(scripts))[:80],
         "endpoint_script_snippets":list(dict.fromkeys(snippets))[:20],
+        "literal_method_calls":literal_calls[:120],
+        "event_attributes":event_attrs[:120],
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
