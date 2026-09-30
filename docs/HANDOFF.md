@@ -1,11 +1,29 @@
 # Smallcap Ledger backend handoff
 
 
-Updated: 2026-09-28, after repository-wide operational hardening, portable-package repair, coverage-date clarification, and publisher cleanup.
+Updated: 2026-09-30, after verifying the latest production checkpoint and preparing Helios Mid Cap portfolio recovery in PR #348.
+
+## Current checkpoint and pending release — 2026-09-30
+
+The last successful production run is [#683 / 36666170603](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36666170603), on code `a91b0f09c86d5e6b83124e1ebe63f2082e22dfdf` (PR #347). Its generated evidence commit is `e27afda92794a9f3fe71a2cc2a6b472a384a9ef6`. The run completed at **2026-09-30T04:16:39Z**. A cache-busted live `data/status.json` read in this session matched the committed build clock **2026-09-30T04:15:41+00:00** and the following counts:
+
+- Small Cap funds **36**, NAV series **143**, NAV observations **281,868**; latest included NAV **2026-09-29**.
+- AUM and Direct fee presence **36/36**. Selected record-date ranges: AUM **2026-09-24 → 2026-09-28**, Direct fee **2026-04-30 → 2026-09-29**. Presence is not uniform freshness.
+- Retained portfolio snapshots **155**, documents **3,218**, original archive binaries **4,174**, archive bytes **3,369,179,415**. No retention deletion occurred in this development slice.
+
+Recent repairs already merged: PR #342 fixed the fresh-source retention checkpoint boundary; #343 corrected the date-sensitive Tata portfolio regression; #344 runs the guarded daily refresh on push publications; #345 invalidates stale hosted-data caches; #346 and #347 recover ITI and Bank of India staged portfolio evidence. Their original source and publication evidence remains in GitHub history and generated reports. Do not repeat the September 25 NAV or PR #300 Mid Cap counts below as current.
+
+[PR #348](https://github.com/Vasuki8/Smallcap-Ledger/pull/348) prepares Helios Mid Cap monthly portfolio discovery in existing staged portfolio batch 2. Application head `df3c945c73d0ad60359d07bea967064f52b29ae2` passes **844 repository tests**, independent code review and the exact read-only official-source preflight: **74 positions, complete=true, 2026-08-31**. See [MIDCAP-HANDOFF.md](MIDCAP-HANDOFF.md) for source hashes, CI links and limitations.
+
+**PR #348 is not merged or deployed.** Automatic approval review rejected the merge because default-branch publication needs explicit user authorization for this merge and its production workflow effects. Do not retry the merge through another route. The next release action is owner approval of PR #348 merge/publication, followed by the normal production run and independent checks of fresh staged artifacts and live Pages payloads. Passing preflight is not production coverage.
+
+Current staged launch evidence reports AUM **34/34**, Direct TER **31/34**, benchmark identity **31/34**, current portfolio evidence **21/34** and **5 complete**. Seven more current portfolio families are needed for the 28-family policy gate; source-fetch health and the category-aware public-surface gate also remain blocked. Mid Cap remains non-public. Follow the updated Mid Cap handoff for the next source work.
+
+The September 28 repository audit below is preserved as historical evidence. Its branch-protection owner action remains documented; repository-administration settings were not rechecked in this source-recovery slice.
 
 ## 2026-09-28 repository audit closure and current gate
 
-### Latest verified production checkpoint
+### Historical production checkpoint (#662)
 
 Production **run #662 / 36477739739** completed successfully after the approved branch cleanup on commit `785918d57610daeb0f50522a9efcf06e651cbf3a`, followed by status commit `efe12ae9ad314a8d4e3a839b080786db3afb607f`.
 
