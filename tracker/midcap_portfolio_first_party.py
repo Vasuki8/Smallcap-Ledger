@@ -191,32 +191,39 @@ def _iti(soup):
 
     The publisher currently includes a leading marker column, so columns are
     located from the exact visible header rather than assumed by position.
-    Sector totals, aggregate asset-class rows and cash/debt summaries are not
-    positions. A named security with only derivative exposure remains a named
-    disclosed position. Evidence stays partial until independently reconciled.
+    Sector/asset-class subtotal labels are bold in the issuer column and are
+    excluded structurally. Evidence stays partial until independently reconciled.
     """
     out=[]
-    for _,rows in _table_rows(soup):
+    for table in soup.find_all("table"):
+        rows=[r for r in table.find_all("tr") if r.find_parent("table") is table]
         header_index=None
         name_col=None
-        for i,cells in enumerate(rows[:8]):
-            matches=[j for j,value in enumerate(cells) if _norm(value)=="nameoftheinstrument"]
+        for i,row in enumerate(rows[:8]):
+            cells=row.find_all(["td","th"],recursive=False)
+            values=[_clean(cell.get_text(" ",strip=True)) for cell in cells]
+            matches=[j for j,value in enumerate(values) if _norm(value)=="nameoftheinstrument"]
             if len(matches)==1 and any(
-                re.search(r"%\s*to\s*NAV",value,re.I) for value in cells[matches[0]+1:]
+                re.search(r"%\s*to\s*NAV",value,re.I) for value in values[matches[0]+1:]
             ):
                 header_index=i
                 name_col=matches[0]
                 break
         if header_index is None or name_col is None:
             continue
-        for cells in rows[header_index+1:]:
+        for row in rows[header_index+1:]:
+            cells=row.find_all(["td","th"],recursive=False)
             if len(cells)<=name_col:
                 continue
-            name=cells[name_col]
+            name_cell=cells[name_col]
+            if name_cell.find(["b","strong"]):
+                continue
+            name=_clean(name_cell.get_text(" ",strip=True))
             if not CORPORATE_HINT.search(name):
                 continue
+            values=[_clean(cell.get_text(" ",strip=True)) for cell in cells[name_col+1:]]
             weight=next(
-                (_percent(x) for x in reversed(cells[name_col+1:]) if _percent(x) is not None),
+                (_percent(value) for value in reversed(values) if _percent(value) is not None),
                 None,
             )
             _add_position(out,name,weight)
