@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-30T01:33:41+00:00",
+  "built_at": "2026-09-30T02:29:36+00:00",
   "policy": {
     "origin": "AMC only",
     "communication_kinds": [
@@ -13,18 +13,18 @@
     "funds": 36,
     "funds_with_amc_communications": 34,
     "funds_without_amc_communications": 2,
-    "communication_documents": 241,
-    "archived_communication_documents": 224,
-    "market_views": 225,
+    "communication_documents": 283,
+    "archived_communication_documents": 259,
+    "market_views": 267,
     "unitholder_letters": 16,
-    "documents_with_published_date": 60,
+    "documents_with_published_date": 61,
     "funds_with_registered_communication_sources": 29,
     "issue_counts": {
       "communication_archive_limitation": 4,
-      "communication_document_not_archived": 4,
+      "communication_document_not_archived": 6,
       "communication_source_limitation": 2,
       "no_amc_communications_collected": 2,
-      "publication_date_missing": 26
+      "publication_date_missing": 28
     }
   },
   "repair_priorities": [
@@ -49,26 +49,36 @@
         "Samco Small Cap Fund"
       ],
       "reason": "The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure."
+    },
+    {
+      "priority": 3,
+      "code": "repair_unarchived_communication_documents",
+      "actionable": true,
+      "affected_funds": [
+        "Abakkus Small Cap Fund",
+        "HDFC Small Cap Fund"
+      ],
+      "reason": "AMC communication metadata is retained but one or more original document versions are not archived."
     }
   ],
   "funds": [
     {
       "family": "Abakkus Small Cap Fund",
       "amc": "Abakkus Mutual Fund",
-      "communication_count": 11,
-      "archived_communication_count": 11,
-      "market_view_count": 11,
+      "communication_count": 13,
+      "archived_communication_count": 12,
+      "market_view_count": 13,
       "unitholder_letter_count": 0,
       "published_date_count": 10,
       "latest_published_at": "2026-08-11",
-      "latest_observed_at": "2026-09-26T05:52:10+00:00",
+      "latest_observed_at": "2026-09-30T02:26:26+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Abakkus",
           "url": "https://insights.abakkusinvest.com/market-outlook-august-2026/",
           "label": "Market Outlook - August 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T05:52:12+00:00",
+          "last_checked": "2026-09-30T02:26:31+00:00",
           "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 1 documents without extracted tables; 0 download/parser gaps"
         },
         {
@@ -76,41 +86,42 @@
           "url": "https://insights.abakkusinvest.com/tag/market-outlook/",
           "label": "Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T05:52:10+00:00",
+          "last_checked": "2026-09-30T02:26:28+00:00",
           "detail": "10 relevant links; 10 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         },
         {
           "amc_match": "Abakkus",
           "url": "https://insights.abakkusinvest.com/market-outlook-july-2026/",
           "label": "Market Outlook - July 2026",
-          "status": "Pending",
-          "last_checked": null,
-          "detail": null
+          "status": "Checked",
+          "last_checked": "2026-09-30T01:57:15+00:00",
+          "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 1 documents without extracted tables; 0 download/parser gaps"
         }
       ],
       "source_limitation": null,
       "archive_limitation": null,
       "issues": [
+        "communication_document_not_archived",
         "publication_date_missing"
       ]
     },
     {
       "family": "Aditya Birla Sun Life Small Cap Fund",
       "amc": "Aditya Birla Sun Life Mutual Fund",
-      "communication_count": 1,
-      "archived_communication_count": 1,
-      "market_view_count": 1,
+      "communication_count": 2,
+      "archived_communication_count": 2,
+      "market_view_count": 2,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-06T07:23:48+00:00",
+      "latest_observed_at": "2026-09-30T02:23:24+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Aditya Birla",
           "url": "https://mutualfund.adityabirlacapital.com/market-update",
           "label": "Market Updates",
           "status": "Checked",
-          "last_checked": "2026-09-25T22:00:21+00:00",
+          "last_checked": "2026-09-30T02:11:14+00:00",
           "detail": "1 relevant links; 1 documents archived; 94 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         }
       ],
@@ -129,14 +140,14 @@
       "unitholder_letter_count": 0,
       "published_date_count": 2,
       "latest_published_at": "2026-03-15",
-      "latest_observed_at": "2026-09-26T05:52:20+00:00",
+      "latest_observed_at": "2026-09-30T02:26:40+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Axis",
           "url": "https://www.axismf.com/cms/sites/default/files/pdf-factsheets/Axis%20MF_%20Annual%20Equity%20Outlook%202026.pdf",
           "label": "Annual Equity Outlook 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T05:52:22+00:00",
+          "last_checked": "2026-09-30T02:26:44+00:00",
           "detail": "0 extracted facts/holdings; 1 document archived; 0 download/parser gaps"
         },
         {
@@ -144,7 +155,7 @@
           "url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook",
           "label": "Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T05:52:17+00:00",
+          "last_checked": "2026-09-30T02:26:41+00:00",
           "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         }
       ],
@@ -170,7 +181,7 @@
           "url": "https://cobranding.bajajamc.com/marketing/Cobrandingmarketingmaterial?LId=51",
           "label": "Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T06:20:01+00:00",
+          "last_checked": "2026-09-30T02:26:57+00:00",
           "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         }
       ],
@@ -181,20 +192,20 @@
     {
       "family": "Bandhan Small Cap Fund",
       "amc": "Bandhan Mutual Fund",
-      "communication_count": 3,
-      "archived_communication_count": 3,
-      "market_view_count": 3,
+      "communication_count": 4,
+      "archived_communication_count": 4,
+      "market_view_count": 4,
       "unitholder_letter_count": 0,
-      "published_date_count": 3,
+      "published_date_count": 4,
       "latest_published_at": "2026-09-11",
-      "latest_observed_at": "2026-09-26T06:20:09+00:00",
+      "latest_observed_at": "2026-09-30T01:57:51+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Bandhan",
           "url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-debt-september-2026/",
           "label": "Market Outlook - Debt - September 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T06:20:11+00:00",
+          "last_checked": "2026-09-30T02:26:58+00:00",
           "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         },
         {
@@ -202,7 +213,7 @@
           "url": "https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/",
           "label": "Market Outlook - Equity - September 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T06:20:06+00:00",
+          "last_checked": "2026-09-30T02:26:53+00:00",
           "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         },
         {
@@ -210,7 +221,7 @@
           "url": "https://bandhanmutual.com/downloads/market-outlook",
           "label": "Market Outlook",
           "status": "Limited",
-          "last_checked": "2026-09-26T06:20:02+00:00",
+          "last_checked": "2026-09-30T02:26:50+00:00",
           "detail": "Page archived; no automatically readable fund documents found"
         }
       ],
@@ -233,9 +244,9 @@
           "amc_match": "Bank of India",
           "url": "https://www.boimf.in/docs/default-source/productnote/boi-axa-small-cap-fund/product-presentation_bank-of-india-small-cap-fund_july-2026.pdf?sfvrsn=c36848b_5",
           "label": "Official report archive",
-          "status": "Partial",
-          "last_checked": "2026-09-25T21:54:24+00:00",
-          "detail": "0 extracted facts/holdings; 1 document archived; 1 download/parser gaps"
+          "status": "Checked",
+          "last_checked": "2026-09-30T02:04:37+00:00",
+          "detail": "0 extracted facts/holdings; 1 document archived; 0 download/parser gaps"
         }
       ],
       "source_limitation": null,
@@ -277,15 +288,15 @@
           "url": "https://www.canararobeco.com/documents/news-insights/market-outlook/",
           "label": "Market Outlook",
           "status": "Gap",
-          "last_checked": "2026-09-25T22:00:25+00:00",
-          "detail": "Client error '403 Forbidden' for url 'https://www.canararobeco.com/documents/news-insights/market-outlook/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+          "last_checked": "2026-09-30T02:10:45+00:00",
+          "detail": "Client error '403 Forbidden' for url 'https://www.canararobeco.com/documents/news-insights/market-outlook/equity-scheme/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
         },
         {
           "amc_match": "Canara",
           "url": "https://www.canararobeco.com/daily-market-updates/",
           "label": "Daily Market Update",
           "status": "Gap",
-          "last_checked": "2026-09-25T22:00:24+00:00",
+          "last_checked": "2026-09-30T02:10:44+00:00",
           "detail": "Client error '403 Forbidden' for url 'https://www.canararobeco.com/daily-market-updates/'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
         }
       ],
@@ -304,7 +315,7 @@
       "unitholder_letter_count": 13,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-25T22:01:21+00:00",
+      "latest_observed_at": "2026-09-30T02:12:53+00:00",
       "registered_communication_sources": [],
       "source_limitation": null,
       "archive_limitation": null,
@@ -315,29 +326,29 @@
     {
       "family": "Edelweiss Small Cap Fund",
       "amc": "Edelweiss Mutual Fund",
-      "communication_count": 1,
-      "archived_communication_count": 1,
-      "market_view_count": 1,
+      "communication_count": 3,
+      "archived_communication_count": 3,
+      "market_view_count": 3,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-26T12:14:46+00:00",
+      "latest_observed_at": "2026-09-30T01:57:15+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Edelweiss",
           "url": "https://www.edelweissmf.com/investor-insights/fund-market/curve",
           "label": "Debt Market Update - Curve",
-          "status": "Pending",
-          "last_checked": null,
-          "detail": null
+          "status": "Limited",
+          "last_checked": "2026-09-30T01:57:15+00:00",
+          "detail": "Page archived; no automatically readable fund documents found"
         },
         {
           "amc_match": "Edelweiss",
           "url": "https://www.edelweissmf.com/investor-insights/fund-market",
           "label": "Fund & Market Insights",
-          "status": "Pending",
-          "last_checked": null,
-          "detail": null
+          "status": "Limited",
+          "last_checked": "2026-09-30T01:57:13+00:00",
+          "detail": "Page archived; no automatically readable fund documents found"
         }
       ],
       "source_limitation": null,
@@ -354,7 +365,7 @@
       "market_view_count": 10,
       "unitholder_letter_count": 0,
       "published_date_count": 10,
-      "latest_published_at": "2026-09-18",
+      "latest_published_at": "2026-09-25",
       "latest_observed_at": null,
       "registered_communication_sources": [
         {
@@ -362,7 +373,7 @@
           "url": "https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries",
           "label": "Latest Commentaries / Market Insights",
           "status": "Checked",
-          "last_checked": "2026-09-26T12:14:47+00:00",
+          "last_checked": "2026-09-30T02:26:57+00:00",
           "detail": "10 Franklin market-commentary metadata records retained from first-party article API; original Widen binaries remain link-only because automatic access is disallowed by robots policy; 0 download/parser gaps"
         }
       ],
@@ -392,7 +403,7 @@
           "url": "https://www.growwmf.in/distributor/knowledge-hub/publications",
           "label": "Reports and Newsletter",
           "status": "Checked",
-          "last_checked": "2026-09-26T13:10:14+00:00",
+          "last_checked": "2026-09-30T02:27:05+00:00",
           "detail": "3 Groww Reports & Newsletter market-intelligence PDFs retained; 0 download/parser gaps"
         }
       ],
@@ -403,29 +414,56 @@
     {
       "family": "HDFC Small Cap Fund",
       "amc": "HDFC Mutual Fund",
-      "communication_count": 1,
-      "archived_communication_count": 1,
-      "market_view_count": 0,
+      "communication_count": 19,
+      "archived_communication_count": 13,
+      "market_view_count": 18,
       "unitholder_letter_count": 1,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-25T21:57:22+00:00",
+      "latest_observed_at": "2026-09-30T02:06:50+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "HDFC",
           "url": "https://www.hdfcfund.com/market-update",
           "label": "Market updates",
           "status": "Gap",
-          "last_checked": "2026-09-25T22:09:36+00:00",
+          "last_checked": "2026-09-30T02:19:33+00:00",
           "detail": "Client error '404 Not Found' for url 'https://www.hdfcfund.com/market-update'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
         },
         {
           "amc_match": "HDFC",
           "url": "https://www.hdfcfund.com/learn/macros-markets-more/market-review",
           "label": "Market Update",
-          "status": "Limited",
-          "last_checked": "2026-09-25T21:56:44+00:00",
-          "detail": "Page archived; no automatically readable fund documents found"
+          "status": "Checked",
+          "last_checked": "2026-09-30T02:06:47+00:00",
+          "detail": "18 relevant links; 12 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
+        }
+      ],
+      "source_limitation": null,
+      "archive_limitation": null,
+      "issues": [
+        "communication_document_not_archived",
+        "publication_date_missing"
+      ]
+    },
+    {
+      "family": "HSBC Small Cap Fund",
+      "amc": "HSBC Mutual Fund",
+      "communication_count": 21,
+      "archived_communication_count": 21,
+      "market_view_count": 21,
+      "unitholder_letter_count": 0,
+      "published_date_count": 20,
+      "latest_published_at": "2026-08-11",
+      "latest_observed_at": "2026-09-30T02:27:21+00:00",
+      "registered_communication_sources": [
+        {
+          "amc_match": "HSBC",
+          "url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
+          "label": "Local Market Commentary",
+          "status": "Checked",
+          "last_checked": "2026-09-30T02:27:21+00:00",
+          "detail": "20 HSBC Local Market Commentary articles retained; 0 download/parser gaps"
         }
       ],
       "source_limitation": null,
@@ -435,39 +473,15 @@
       ]
     },
     {
-      "family": "HSBC Small Cap Fund",
-      "amc": "HSBC Mutual Fund",
-      "communication_count": 20,
-      "archived_communication_count": 20,
-      "market_view_count": 20,
-      "unitholder_letter_count": 0,
-      "published_date_count": 20,
-      "latest_published_at": "2026-08-11",
-      "latest_observed_at": "2026-09-26T13:10:41+00:00",
-      "registered_communication_sources": [
-        {
-          "amc_match": "HSBC",
-          "url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
-          "label": "Local Market Commentary",
-          "status": "Checked",
-          "last_checked": "2026-09-26T13:10:41+00:00",
-          "detail": "20 HSBC Local Market Commentary articles retained; 0 download/parser gaps"
-        }
-      ],
-      "source_limitation": null,
-      "archive_limitation": null,
-      "issues": []
-    },
-    {
       "family": "Helios Small Cap Fund",
       "amc": "Helios Mutual Fund",
-      "communication_count": 2,
-      "archived_communication_count": 2,
-      "market_view_count": 2,
+      "communication_count": 10,
+      "archived_communication_count": 10,
+      "market_view_count": 10,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-22T03:00:13+00:00",
+      "latest_observed_at": "2026-09-30T02:22:31+00:00",
       "registered_communication_sources": [],
       "source_limitation": null,
       "archive_limitation": null,
@@ -484,14 +498,14 @@
       "unitholder_letter_count": 0,
       "published_date_count": 1,
       "latest_published_at": "2026-08-11",
-      "latest_observed_at": "2026-09-26T14:05:10+00:00",
+      "latest_observed_at": "2026-09-30T02:27:05+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "ICICI",
           "url": "https://www.icicipruamc.com/blob/sebi-repo/Advertisements/2026/August/Filing%20date%2012-08-2026/Release%20date%2011-08-2026/Advertisements/Annexure%206%20-%20Mailer%20on%20Monthly%20Market%20Outlook.html",
           "label": "Monthly Market Outlook - August 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T14:05:10+00:00",
+          "last_checked": "2026-09-30T02:27:09+00:00",
           "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 2 documents without extracted tables; 0 download/parser gaps"
         }
       ],
@@ -517,7 +531,7 @@
           "url": "https://www.invescomutualfund.com/docs/default-source/presentations-pdf/market-outlook---apr2026.pdf?sfvrsn=31679dc2_0",
           "label": "Market Outlook - April 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T14:05:15+00:00",
+          "last_checked": "2026-09-30T02:27:12+00:00",
           "detail": "0 extracted facts/holdings; 1 document archived; 0 download/parser gaps"
         }
       ],
@@ -543,7 +557,7 @@
           "url": "https://www.itiamc.com/digitalfactsheet/July2026/debt-update.html",
           "label": "Debt Market Update",
           "status": "Checked",
-          "last_checked": "2026-09-25T21:52:43+00:00",
+          "last_checked": "2026-09-30T02:03:07+00:00",
           "detail": "2 relevant links; 2 documents archived; 1 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         },
         {
@@ -551,7 +565,7 @@
           "url": "https://www.itiamc.com/digitalfactsheet/July2026/equity-update.html",
           "label": "Equity Market Update",
           "status": "Checked",
-          "last_checked": "2026-09-25T21:52:29+00:00",
+          "last_checked": "2026-09-30T02:02:50+00:00",
           "detail": "2 relevant links; 2 documents archived; 1 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         },
         {
@@ -559,7 +573,7 @@
           "url": "https://www.itiamc.com/digitalfactsheet/July2026/CEO.html",
           "label": "Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-25T21:52:22+00:00",
+          "last_checked": "2026-09-30T02:02:39+00:00",
           "detail": "3 relevant links; 3 documents archived; 1 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         }
       ],
@@ -601,9 +615,9 @@
           "amc_match": "Kotak",
           "url": "https://www.kotakmf.com/monthly-market-update",
           "label": "Monthly Market Update",
-          "status": "Checked",
-          "last_checked": "2026-09-26T14:24:17+00:00",
-          "detail": "1 Kotak current Monthly Market Update retained; title=Monthly Outlook PPT sept 2026; published_at=2026-09-09; original PDF link-only because robots policy disallows automatic retrieval; 0 download/parser gaps"
+          "status": "Gap",
+          "last_checked": "2026-09-30T02:27:13+00:00",
+          "detail": "Kotak Monthly Market Update state was not found"
         }
       ],
       "source_limitation": null,
@@ -619,21 +633,21 @@
     {
       "family": "LIC Mf Small Cap Fund",
       "amc": "LIC Mutual Fund",
-      "communication_count": 19,
-      "archived_communication_count": 14,
-      "market_view_count": 19,
+      "communication_count": 20,
+      "archived_communication_count": 15,
+      "market_view_count": 20,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-22T21:39:23+00:00",
+      "latest_observed_at": "2026-09-30T01:58:18+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "LIC",
           "url": "https://www.licmf.com/insights/market-update",
           "label": "Market Update",
           "status": "Partial",
-          "last_checked": "2026-09-25T21:53:45+00:00",
-          "detail": "19 relevant links; 6 documents archived; 0 facts/holdings; 6 documents without extracted tables; 6 download/parser gaps"
+          "last_checked": "2026-09-30T02:04:53+00:00",
+          "detail": "20 relevant links; 8 documents archived; 0 facts/holdings; 8 documents without extracted tables; 4 download/parser gaps"
         }
       ],
       "source_limitation": null,
@@ -663,8 +677,8 @@
           "url": "https://www.mahindramanulife.com/digital-factsheet/july-2026/Outlook.html",
           "label": "Market Outlook",
           "status": "Partial",
-          "last_checked": "2026-09-25T21:47:36+00:00",
-          "detail": "2 relevant links; 2 documents archived; 0 facts/holdings; 2 documents without extracted tables; 2 download/parser gaps"
+          "last_checked": "2026-09-30T01:58:29+00:00",
+          "detail": "1 relevant links; 1 documents archived; 0 facts/holdings; 1 documents without extracted tables; 1 download/parser gaps"
         }
       ],
       "source_limitation": null,
@@ -676,20 +690,20 @@
     {
       "family": "Mirae Asset Small Cap Fund",
       "amc": "Mirae Asset Mutual Fund",
-      "communication_count": 1,
-      "archived_communication_count": 1,
-      "market_view_count": 1,
+      "communication_count": 2,
+      "archived_communication_count": 2,
+      "market_view_count": 2,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-26T14:24:17+00:00",
+      "latest_observed_at": "2026-09-30T02:12:38+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Mirae",
           "url": "https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf",
           "label": "Annual Market Outlook 2026",
           "status": "Checked",
-          "last_checked": "2026-09-26T14:24:20+00:00",
+          "last_checked": "2026-09-30T02:27:16+00:00",
           "detail": "0 extracted facts/holdings; 1 document archived; 0 download/parser gaps"
         }
       ],
@@ -715,7 +729,7 @@
           "url": "https://www.motilaloswalmf.com/motilal-oswal-edge/articles/monthly-market-outlook-august-2026-by-prateek-agrawal",
           "label": "Read Now",
           "status": "Limited",
-          "last_checked": "2026-09-25T22:02:43+00:00",
+          "last_checked": "2026-09-30T02:13:18+00:00",
           "detail": "Page archived; no automatically readable fund documents found"
         },
         {
@@ -723,7 +737,7 @@
           "url": "https://www.motilaloswalmf.com/motilal-oswal-edge/articles/monthly-market-outlook-september-2026-by-prateek-agrawal",
           "label": "Read Now",
           "status": "Limited",
-          "last_checked": "2026-09-25T22:01:37+00:00",
+          "last_checked": "2026-09-30T02:12:57+00:00",
           "detail": "Page archived; no automatically readable fund documents found"
         }
       ],
@@ -749,7 +763,7 @@
           "url": "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook",
           "label": "Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-25T21:57:52+00:00",
+          "last_checked": "2026-09-30T02:07:38+00:00",
           "detail": "100 relevant links; 12 documents archived; 0 facts/holdings; 0 documents without extracted tables; 0 download/parser gaps"
         }
       ],
@@ -768,14 +782,14 @@
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-26T15:55:47+00:00",
+      "latest_observed_at": "2026-09-30T02:27:32+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "PGIM",
           "url": "https://www.pgimindia.com/mutual-funds",
           "label": "CEO Letters / Outlooks & Economy",
           "status": "Checked",
-          "last_checked": "2026-09-26T15:55:47+00:00",
+          "last_checked": "2026-09-30T02:27:32+00:00",
           "detail": "5 PGIM India CEO/outlook insight articles retained; 0 download/parser gaps"
         }
       ],
@@ -788,20 +802,20 @@
     {
       "family": "Quant Small Cap Fund",
       "amc": "quant Mutual Fund",
-      "communication_count": 7,
-      "archived_communication_count": 7,
-      "market_view_count": 7,
+      "communication_count": 12,
+      "archived_communication_count": 12,
+      "market_view_count": 12,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-26T15:56:30+00:00",
+      "latest_observed_at": "2026-09-30T02:20:37+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "quant Mutual",
           "url": "https://www.quantmutual.com/downloads/investment_outlook",
           "label": "Investment Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T15:56:30+00:00",
+          "last_checked": "2026-09-30T02:27:56+00:00",
           "detail": "7 quant Investment Outlook PDFs retained; 0 download/parser gaps"
         }
       ],
@@ -831,26 +845,28 @@
     {
       "family": "SBI Small Cap Fund",
       "amc": "SBI Mutual Fund",
-      "communication_count": 1,
-      "archived_communication_count": 1,
-      "market_view_count": 1,
+      "communication_count": 2,
+      "archived_communication_count": 2,
+      "market_view_count": 2,
       "unitholder_letter_count": 0,
       "published_date_count": 1,
       "latest_published_at": "2026-01-08",
-      "latest_observed_at": "2026-09-26T21:50:08+00:00",
+      "latest_observed_at": "2026-09-30T02:06:54+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "SBI",
           "url": "https://www.sbimf.com/monthly-outlook-videos",
           "label": "Monthly Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:31:12+00:00",
+          "last_checked": "2026-09-30T02:27:36+00:00",
           "detail": "1 SBI annual Outlook article(s) retained; 1 expected year URL(s) absent; 0 download/parser gaps"
         }
       ],
       "source_limitation": null,
       "archive_limitation": null,
-      "issues": []
+      "issues": [
+        "publication_date_missing"
+      ]
     },
     {
       "family": "Samco Small Cap Fund",
@@ -877,20 +893,20 @@
     {
       "family": "Sundaram Small Cap Fund",
       "amc": "Sundaram Mutual Fund",
-      "communication_count": 6,
-      "archived_communication_count": 6,
-      "market_view_count": 6,
+      "communication_count": 7,
+      "archived_communication_count": 7,
+      "market_view_count": 7,
       "unitholder_letter_count": 0,
       "published_date_count": 0,
       "latest_published_at": null,
-      "latest_observed_at": "2026-09-26T22:31:53+00:00",
+      "latest_observed_at": "2026-09-30T02:14:05+00:00",
       "registered_communication_sources": [
         {
           "amc_match": "Sundaram",
           "url": "https://www.sundarammutual.com/knowledge-hub",
           "label": "Market Outlook / Knowledge Hub",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:31:53+00:00",
+          "last_checked": "2026-09-30T02:28:10+00:00",
           "detail": "6 Sundaram recent Outlook PDFs retained; 0 card-linked month URL(s) absent; 0 download/parser gaps"
         }
       ],
@@ -916,7 +932,7 @@
           "url": "https://info.tatamutualfund.com/combined/TATA/Equity-Marketoutlook.html",
           "label": "Equity Market Outlook",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:49:28+00:00",
+          "last_checked": "2026-09-30T02:27:57+00:00",
           "detail": "1 Tata Equity Market Outlook page retained; source reports as on 2026-08-31; publication day not inferred; 0 download/parser gaps"
         }
       ],
@@ -942,7 +958,7 @@
           "url": "https://www.wealthcompanyamc.in/knowledge-center/current-insights/",
           "label": "Market Insights / Current Insights",
           "status": "Checked",
-          "last_checked": "2026-09-26T22:49:42+00:00",
+          "last_checked": "2026-09-30T02:28:10+00:00",
           "detail": "5 The Wealth Company recap/news-maker assets retained; 0 download/parser gaps"
         }
       ],
@@ -986,8 +1002,8 @@
           "amc_match": "UTI",
           "url": "https://www.utimf.com/learn",
           "label": "Leadership Desk / Market Insights",
-          "status": "Partial",
-          "last_checked": "2026-09-28T17:14:20+00:00",
+          "status": "Checked",
+          "last_checked": "2026-09-30T02:28:21+00:00",
           "detail": "6 UTI Market Insight/CIO Desk PDF(s) retained from first-party CMS; 0 download/parser gaps"
         }
       ],
@@ -1012,8 +1028,8 @@
           "amc_match": "Union",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
-          "status": "Partial",
-          "last_checked": "2026-09-28T17:14:18+00:00",
+          "status": "Gap",
+          "last_checked": "2026-09-30T02:28:28+00:00",
           "detail": "[Errno 111] Connection refused"
         }
       ],

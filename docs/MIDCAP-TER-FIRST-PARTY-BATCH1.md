@@ -1,6 +1,6 @@
 # Mid Cap first-party TER recovery batch 1
 
-Prepared: 2026-09-30T01:28:54+00:00
+Prepared: 2026-09-30T01:53:06+00:00
 
 Targets: **7** · recovered: **7** · failed: **0**.
 
