@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-09-30T03:26:32+00:00",
+  "built_at": "2026-09-30T03:54:28+00:00",
   "staged_category": "mid-cap",
   "families": 34,
   "portfolio_expected_as_of": "2026-08-31",
-  "targets": 6,
-  "current_portfolio_evidence": 3,
+  "targets": 7,
+  "current_portfolio_evidence": 4,
   "failed": 3,
   "results": [
     {
@@ -255,7 +255,7 @@
       "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html",
       "source_sha256": "1ab0d04dbf8cf7070e7502966af758780ff9d38c5e9378d7dea9870c46c13160",
       "source_content_type": "text/html",
-      "observed_at": "2026-09-30T03:26:27+00:00",
+      "observed_at": "2026-09-30T03:54:21+00:00",
       "amc": "Canara Robeco Mutual Fund"
     },
     {
@@ -288,9 +288,9 @@
       "scope": "top_5",
       "complete": false,
       "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "source_sha256": "f11133fc5b269c45b24a8a3179c89aa917ece53dd6feef120621c223a618404a",
+      "source_sha256": "cd051cea872e01d9002226dca7271a7c364e673f387fb77f1233f78bafbb9de1",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-30T03:26:30+00:00",
+      "observed_at": "2026-09-30T03:54:25+00:00",
       "amc": "Baroda BNP Paribas Mutual Fund"
     },
     {
@@ -673,8 +673,63 @@
       "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
       "source_sha256": "f11c2bd4b4bff70ac732275bff83d24aeb351893f94951cbfda852a097b809e5",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-30T03:26:32+00:00",
+      "observed_at": "2026-09-30T03:54:27+00:00",
       "amc": "ITI Mutual Fund"
+    },
+    {
+      "family": "BANK OF INDIA MID CAP FUND",
+      "status": "recovered",
+      "as_of": "2026-08-31",
+      "positions_observed": 10,
+      "positions": [
+        {
+          "name": "Aurobindo Pharma Limited",
+          "weight": 5.6
+        },
+        {
+          "name": "Multi Commodity Exchange of India Limited",
+          "weight": 4.9
+        },
+        {
+          "name": "Abbott India Limited",
+          "weight": 4.4
+        },
+        {
+          "name": "Bharti Hexacom Limited",
+          "weight": 4.0
+        },
+        {
+          "name": "One 97 Communications Limited",
+          "weight": 3.4
+        },
+        {
+          "name": "Quality Power Electrical Eqp Ltd",
+          "weight": 3.1
+        },
+        {
+          "name": "UNO Minda Limited",
+          "weight": 2.9
+        },
+        {
+          "name": "Nippon Life India Asset Management Limited",
+          "weight": 2.9
+        },
+        {
+          "name": "Bank of Maharashtra",
+          "weight": 2.7
+        },
+        {
+          "name": "Mankind Pharma Limited",
+          "weight": 2.7
+        }
+      ],
+      "scope": "top_10",
+      "complete": false,
+      "source": "https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund",
+      "source_sha256": "729e4df34f01fbcec730f7d035efc6e3c19badeb53c0f50f3e126ddd412e669e",
+      "source_content_type": "text/html; charset=utf-8",
+      "observed_at": "2026-09-30T03:54:28+00:00",
+      "amc": "Bank of India Mutual Fund"
     }
   ],
   "errors": [
@@ -701,7 +756,6 @@
     "Aditya Birla Sun Life Midcap Fund",
     "Axis Midcap Fund",
     "BANDHAN MID CAP FUND",
-    "BANK OF INDIA MID CAP FUND",
     "Edelweiss Mid Cap Fund",
     "Franklin India Mid Cap Fund",
     "HSBC Midcap Fund",

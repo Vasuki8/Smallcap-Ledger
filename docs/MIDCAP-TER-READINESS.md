@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-09-30T03:24:31+00:00
+Prepared: 2026-09-30T03:52:15+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -20,9 +20,9 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Helios Mid Cap Fund | Helios Mutual Fund | 0.9800% | 2.4300% | 2026-09-29 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.1100% | 1.8500% | 2026-09-28 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4200% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-28 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-29 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
 | JM Mid Cap Fund | JM Financial Mutual Fund | 0.9500% | 2.4700% | 2026-09-29 | first_party_amc | https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest |
-| Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5352% | 1.4952% | 2026-09-28 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
+| Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5352% | 1.5052% | 2026-09-29 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | 1.7700% | 2.8600% | 2026-09-29 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 0.7500% | 2.0200% | 2026-09-29 | first_party_amc | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 0.9700% | 2.0200% | 2026-09-29 | first_party_amc | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_29092026.xls |

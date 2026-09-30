@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-30T03:25:04+00:00",
+  "built_at": "2026-09-30T03:52:52+00:00",
   "staged_category": "mid-cap",
   "targets": 3,
   "recovered": 3,
@@ -37,14 +37,14 @@
     {
       "family": "Kotak Mid Cap Fund",
       "status": "recovered",
-      "as_of": "2026-09-28",
+      "as_of": "2026-09-29",
       "plans": {
         "Regular": {
-          "base_expense_ratio": 1.16,
+          "base_expense_ratio": 1.17,
           "brokerage": 0.0323,
           "transaction_cost": 0.0029,
           "statutory_levies": 0.3,
-          "ter": 1.4952
+          "ter": 1.5052
         },
         "Direct": {
           "base_expense_ratio": 0.35,
@@ -55,9 +55,9 @@
         }
       },
       "direct_ter": 0.5352,
-      "regular_ter": 1.4952,
+      "regular_ter": 1.5052,
       "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
-      "sha256": "0ebe9b9ca123245d3b0a63ff9295fa262b9271d85f6913b091e5cc358738ed0d",
+      "sha256": "64094732144b5db2d32e831e61d4e633351ce91ecb32b7cda2656e3947c7d55e",
       "identity": {
         "scheme_name": "Kotak Mid Cap Fund",
         "nsdl_scheme_code": "KOTM/O/E/MIF/06/09/0018"
@@ -86,7 +86,7 @@
       "direct_ter": 3.0100000000000002,
       "regular_ter": 5.01,
       "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
-      "sha256": "6c77467ae7587f90fe7537712cc78d4c6c80b28b63e735835b2b0582dc7b864e",
+      "sha256": "6a5fdc4bde7aa5f36d28c5c748e41c4a55eda40ad7afda662b527eb13075ed61",
       "identity": {
         "scheme_name": "THE WEALTH COMPANY MID  CAP FUND",
         "nsdl_scheme_code": "TWCF/O/E/MIF/26/06/0012"

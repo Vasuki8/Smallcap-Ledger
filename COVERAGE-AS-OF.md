@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-09-30T03:48:13+00:00
+Prepared: 2026-09-30T04:15:27+00:00
 
 **36 funds, 143 NAV series, 281,868 NAV observations. Latest included NAV: 2026-09-29.**
 
@@ -26,9 +26,9 @@ Coverage counts mean a selected dated record exists. The ranges above are report
 | Groww Small Cap Fund | ₹ 942.00 · 2026-09-24 | 1.12% TER · 2026-04-30 | 62 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 13 |
 | HDFC Small Cap Fund | ₹ 41,711.07 · 2026-09-24 | 0.78% TER · 2026-09-24 | 87 positions · 2026-08-31 · complete · current | BSE 250 SmallCap Index (Total Returns Index) · 2026-09-30 | 37 |
 | HSBC Small Cap Fund | ₹ 18,925.64 · 2026-09-24 | 0.77% TER · 2026-09-28 | 115 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 24 |
-| Helios Small Cap Fund | ₹ 1,886.36 · 2026-09-24 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | Nifty Small Cap 250 Total Return Index (TRI) · 2026-09-23 | 173 |
+| Helios Small Cap Fund | ₹ 1,886.36 · 2026-09-24 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | Nifty Small Cap 250 Total Return Index (TRI) · 2026-09-30 | 173 |
 | ICICI Prudential Small Cap Fund | ₹ 9,891.94 · 2026-09-24 | 1.18% TER · 2026-09-28 | 125 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 6 |
-| Invesco India Small Cap Fund | ₹ 16,363.87 · 2026-09-24 | 0.63% TER · 2026-09-28 | 72 positions · 2026-08-31 · complete · current | BSE 250 Smallcap TRI · 2026-08-31 | 6 |
+| Invesco India Small Cap Fund | ₹ 16,363.87 · 2026-09-24 | 0.63% TER · 2026-09-29 | 72 positions · 2026-08-31 · complete · current | BSE 250 Smallcap TRI · 2026-08-31 | 6 |
 | Iti Small Cap Fund | ₹ 3,699.82 · 2026-09-24 | 0.86% TER · 2026-09-29 | 87 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 10 |
 | Jm Small Cap Fund | ₹ 965.30 · 2026-09-24 | 0.97% TER · 2026-09-29 | 85 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-06-30 | 6 |
 | Kotak Small Cap Fund | ₹ 19,740.18 · 2026-09-24 | 0.6459% TER · 2026-09-27 | 81 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-08-31 | 9 |
