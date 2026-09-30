@@ -13,6 +13,8 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 
 from tracker import providers
+from tracker.coverage import expected_portfolio_as_of
+from tracker.midcap_portfolio_structured import _parse_workbook
 
 SOURCE="https://quantmutual.com/statutorydisclosures.aspx/displaydisclouser"
 
@@ -109,6 +111,14 @@ def main():
          "href":urljoin(SOURCE,str(a.get("href") or "").strip())[:900]}
         for a in month_soup.find_all("a",href=True)
     ]
+    exact=[x for x in month_links if clean(x["text"]).casefold()=="quant mid cap fund"]
+    if len(exact)!=1:
+        raise ValueError(f"Quant August disclosure exposed {len(exact)} exact Mid Cap links")
+    workbook_url=exact[0]["href"]
+    workbook,_,workbook_type=providers.fetch(
+        workbook_url,archive=False,max_bytes=30*1024*1024,headers={"Referer":SOURCE}
+    )
+    parsed=_parse_workbook(workbook,"Quant Mid Cap Fund",expected_portfolio_as_of())
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
@@ -127,6 +137,16 @@ def main():
         "month_endpoint_content_type":month_type,
         "august_links":month_links[:200],
         "month_response_html":month_html[:18000],
+        "workbook_source":workbook_url,
+        "workbook_content_type":workbook_type,
+        "parsed_portfolio":{
+            "as_of":parsed.get("as_of"),
+            "positions_observed":parsed.get("positions_observed"),
+            "complete":parsed.get("complete"),
+            "unknown_rows":parsed.get("unknown_rows"),
+            "aum":parsed.get("aum"),
+            "sheet":parsed.get("sheet"),
+        },
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
