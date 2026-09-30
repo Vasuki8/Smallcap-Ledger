@@ -33,17 +33,22 @@ def main():
         if any(token in combined for token in ("portfolio","mid cap","midcap","2026","aug")):
             anchors.append({"text":text[:220],"href":href[:700]})
     scripts=[]
+    snippets=[]
     for script in soup.find_all("script"):
         text=str(script.string or script.get_text(" ",strip=True) or "")
         if re.search(r"portfolio|disclos|ajax|mid.?cap",text,re.I):
             for match in re.findall(r"""(?:url|href|action)\s*[:=]\s*["']([^"']+)["']""",text,re.I):
                 scripts.append(urljoin(SOURCE,match)[:700])
+            for endpoint in ("displaydisclouser","displaydisclouser1","displaydisclouser2","displaydisfundname"):
+                for hit in re.finditer(endpoint,text,re.I):
+                    snippets.append(clean(text[max(0,hit.start()-1200):hit.end()+1800])[:3200])
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
         "content_type":typ,
         "anchor_candidates":anchors[:120],
         "script_endpoint_candidates":list(dict.fromkeys(scripts))[:80],
+        "endpoint_script_snippets":list(dict.fromkeys(snippets))[:20],
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
