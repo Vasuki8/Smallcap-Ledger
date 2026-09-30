@@ -2,9 +2,9 @@
 
 Read this alongside the latest generated artifacts and their exact production run. A green workflow, a fresh summary or an isolated source preflight does not establish coverage for every family. Mid Cap remains staged and non-public.
 
-## Current checkpoint — 2026-09-30
+## Verified production checkpoint — 2026-09-30
 
-Production [#683 / 36666170603](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36666170603) completed successfully on code `a91b0f09c86d5e6b83124e1ebe63f2082e22dfdf` (PR #347), with generated evidence commit `e27afda92794a9f3fe71a2cc2a6b472a384a9ef6`. The latest launch report was evaluated **2026-09-30T03:56:19.215155+00:00**, separately from the **04:15:41** public status build and **04:16:39Z** terminal workflow time. A live cache-busted status read matched that public build and NAV **2026-09-29**.
+Production [#684 / 36671423719](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36671423719) completed successfully on code `feefbb15025077b2e05e848edb9c9d31a6b53d9b` (PR #348), with generated evidence commit `087ba55634a9db3503117f22af61d4505b8f5799`. Build job `109747037093` and deploy job `109755440959` passed. The latest launch report was evaluated **2026-09-30T05:06:24.056660+00:00**, separately from the **05:35:53** public status build and **05:36:47Z** terminal deployment time. Cache-busted live status, fund-index and coverage reads matched the exact public build and NAV **2026-09-29**. Small Cap retains **36 families, 143 series and 281,868 NAV observations**; the live index reports 142 latest dates on September 29 and one on April 24, 2020. Its category identities and summed observations were independently checked.
 
 | Measure | Current production evidence | Required policy |
 | --- | ---: | ---: |
@@ -12,16 +12,18 @@ Production [#683 / 36666170603](https://github.com/Vasuki8/Smallcap-Ledger/actio
 | AUM | 34/34 | 34/34 |
 | Direct TER | 31/34 | At least 31/34 |
 | Reported benchmark identity | 31/34 | At least 31/34 |
-| Current portfolio evidence | 21/34 | At least 28/34 |
-| Complete current portfolios | 5/34 | Separate measure |
+| Current portfolio evidence | 22/34 | At least 28/34 |
+| Complete current portfolios | 6/34 | Separate measure |
 
-`data_ready=false`, `launch_ready=false`, `public_export_enabled=false`. `audit_input_integrity=true`; `input_issues=[]`. Current portfolio evidence reports **2026-08-31**. The five complete accepted portfolios are HDFC (81 positions), Mirae Asset (68), Invesco (43), Motilal Oswal (32) and Sundaram (79). Current presence remains distinct from a fresh successful fetch of every source: the source-coverage report records an **AMFI daily-AUM HTTP 502**, and source-fetch health remains false. Do not count retained AUM as a successful AMFI request in that run.
+`data_ready=false`, `launch_ready=false`, `public_export_enabled=false`. `audit_input_integrity=true`; `input_issues=[]`. All **14 input-file hashes** were independently recomputed against this checkpoint, and current/complete portfolio counts were recalculated from the accepted rows. Current portfolio evidence reports **2026-08-31**. The six complete accepted portfolios are HDFC (81 positions), Helios (74), Mirae Asset (68), Invesco (43), Motilal Oswal (32) and Sundaram (79). Current presence remains distinct from a fresh successful fetch of every source: the source-coverage report records an **AMFI daily-AUM HTTP 502**, and source-fetch health remains false. Do not count retained AUM as a successful AMFI request in that run.
 
-The benchmark gate is now numerically satisfied; the earlier Invesco/ICICI/Franklin/UTI/JM recovery tasks below have progressed and must not be repeated from the old priority list. Remaining benchmark gaps are Trust, Union and WhiteOak. Portfolio evidence still needs seven more families to reach the policy minimum; the category-aware exporter/API/static-data/UI dry run remains separate and blocked. Names do not establish available benchmark TRI history.
+The benchmark gate is numerically satisfied; the earlier Invesco/ICICI/Franklin/UTI/JM recovery tasks below have progressed and must not be repeated from the old priority list. Remaining benchmark gaps are Trust, Union and WhiteOak. Portfolio evidence still needs six more families to reach the policy minimum; the category-aware exporter/API/static-data/UI dry run remains separate and blocked. Names do not establish available benchmark TRI history.
 
-## Prepared Helios recovery — PR #348, not deployed
+## Deployed Helios recovery — PR #348
 
 [PR #348](https://github.com/Vasuki8/Smallcap-Ledger/pull/348) adds **Helios Mid Cap Fund** to the existing portfolio batch 2. It adds no audit artifact, database schema, dependency, launch threshold or public-category switch.
+
+Production batch 2 freshly observed **74 positions, complete=true, unknown_rows=[]**, sheet **HMCF**, reporting date **2026-08-31**, at **2026-09-30T05:04:46+00:00**. The workbook SHA-256 is `375e9f39754882d43677cfd45f95a57572a89b8eb4de04895cf88780a432f181`; production discovery-page SHA-256 is `3680c51e4fd443e74a4897885060557f78eac5c0ac11ad880dcf7a9edc793003`. The workbook matches the earlier preflight; the actual discovery-page bytes differ. The fresh combined report accepts Helios as current and complete. Production passed **844 tests in 8.445s**, generated-site validation, archive publication and Pages deployment. No new visual/mobile browser pass is claimed for this backend-only change.
 
 Discovery uses `https://www.heliosmf.in/portfolio-disclosure`: exactly one Monthly Portfolio section, exactly one Helios Mid Cap Fund scheme section, the expected month label, a unique approved HTTPS workbook link and its complete explicit reporting date. Large & Mid Cap and half-yearly disclosures cannot supply the evidence. Duplicate identical links are one source; distinct current links fail closed. Credential markers (including empty userinfo), unapproved hosts/ports and malformed/stale source paths are rejected.
 
@@ -40,13 +42,13 @@ Ten new tests exercise real in-memory XLSX parsing and discovery boundaries. The
 
 The shared `providers.fetch` API follows public redirects without returning the final URL; redirect-host pinning remains an existing transport-wide limitation, separately deferred. This bounded repair validates selected source URLs and actual returned hashes under the existing client contract.
 
-**Release blocker:** automatic approval review rejected merging PR #348 into `main`, because it triggers shared production/publication workflows and requires explicit approval for that action. The PR remains open. Do not report Helios as production coverage, change 21/34 to an anticipated count, or claim a new deployment. These handoff updates are documentation-only on the same PR branch.
+The user explicitly authorized the merge. PR #348 was squash-merged at **2026-09-30T05:00:28Z**, with expected head `d41c762541ce86c8bc88cd2a26b560825e40b4a2`, into code commit `feefbb15025077b2e05e848edb9c9d31a6b53d9b`. Final-head Repository regression [36670974257](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670974257), Mid Cap PR evidence [36670974174](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670974174), Research UI [36670974188](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670974188) and exact-source push verification [36670971628](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36670971628) all passed before merge. Production and independent live-data verification are complete. The pre-release checkpoint (#683) reported 21/34 current and five complete portfolios; use the fresh 22/34 and six complete above.
 
 ## Next action
 
-After explicit merge/publication approval, merge the latest checked PR #348 head with an expected-head guard. Verify the resulting production build/deploy, fresh batch-2 Helios observation, combined portfolio and launch reports, preserved input integrity and actual live Pages NAV/status payloads. A successful isolated preflight does not substitute for this step.
+Continue exact first-party portfolio recovery from the current twelve unavailable families: Edelweiss, Franklin, HSBC, Kotak, LIC, Nippon India, Quant, Trust, Taurus, The Wealth Company, Union and WhiteOak. Six additional current families are needed for the policy minimum. Helios is verified in production; do not reimplement its reader or reuse an old count.
 
-Continue portfolio recovery from the latest unavailable-family list only after that checkpoint. Kotak passed a fresh read-only check in this session (**68 equity positions, partial, 2026-08-31**), but both production batch 1 and batch 5 still recorded identity failures. Keep the discrepancy explicit; reproduce the production response before changing identity validation or counting recovery. ABSL has recovered in the current run (78 positions, partial), so the historical 503 below is not the current task. Source-fetch health still needs a successful new AMFI observation, not retimestamped last-good evidence.
+Kotak passed a fresh read-only check earlier in this session (**68 equity positions, partial, 2026-08-31**), but both production batch 1 and batch 5 again recorded identity failures in #684. Keep the discrepancy explicit; reproduce the production response before changing identity validation or counting recovery. ABSL remains recovered in the current run (78 positions, partial), so the historical 503 below is not the current task. Source-fetch health still needs a successful new AMFI observation, not retimestamped last-good evidence. Only after data/input-integrity gates pass should the separate category-aware public-surface dry run proceed; the launch report never enables Mid Cap itself.
 
 ## Historical checkpoint through PR #300
 
