@@ -67,6 +67,10 @@ def main():
             if getattr(parent,"name",None):
                 ancestors.append({"tag":parent.name,"html":str(parent)[:9000]})
         disclosure_blocks.append({"node":str(current)[:3000],"ancestors":ancestors})
+    submit_defs=[]
+    for name in ("submit_event1","submit_event2","submit_event","displaydisfundname"):
+        for hit in re.finditer(r"(?:function\s+)?"+re.escape(name)+r"\s*\(",html,re.I):
+            submit_defs.append(clean(html[max(0,hit.start()-600):hit.start()+5000])[:5600])
     print(json.dumps({
         "mode":"read_only_quant_midcap_portfolio_discovery_probe",
         "source":SOURCE,
@@ -77,6 +81,7 @@ def main():
         "literal_method_calls":literal_calls[:120],
         "event_attributes":event_attrs[:120],
         "monthly_fundwise_dom":disclosure_blocks[:4],
+        "submit_function_snippets":list(dict.fromkeys(submit_defs))[:20],
         "production_writes":0,
         "public_export_enabled":False,
     },indent=2,ensure_ascii=False))
