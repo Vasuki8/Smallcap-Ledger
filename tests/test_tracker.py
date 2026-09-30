@@ -534,6 +534,9 @@ process.stdout.write(JSON.stringify({
         self.assertIn("Reported benchmark history unavailable",source)
         self.assertIn("alternate comparison",source)
         self.assertNotIn("?'BSE 250 SmallCap TRI':'Nifty Smallcap 250 TRI'",source)
+        static_source=(db.ROOT/'dist'/'static-data.js').read_text()
+        self.assertIn("cache:'no-store'",static_source)
+        self.assertIn("target.searchParams.set('_v',stamp)",static_source)
 
     def test_db_init_reclassifies_retained_risk_factor_factsheet_as_disclosure(self):
         with db.connect() as c:
