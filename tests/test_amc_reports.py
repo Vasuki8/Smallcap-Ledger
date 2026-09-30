@@ -534,8 +534,8 @@ Month End AUM: Rs. 100 Cr''')
             rows=list(discover('Tata'))
         self.assertEqual(rows,[(
             'Tata Small Cap Fund',
-            'https://betacms.tatamutualfund.com/system/files/2026-09/Monthly-Portfolio-August-2026.xlsx',
-            'Portfolio as on 31st August, 2026')])
+            'https://betacms.tatamutualfund.com/system/files/2026-10/Monthly-Portfolio-September-2026.xlsx',
+            'Portfolio as on 30th September, 2026')])
 
     def test_v124_targets_only_tata_current_structured_portfolio(self):
         from tracker import amc_reports
