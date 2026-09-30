@@ -87,15 +87,15 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
         <h1>ITI Mid Cap Fund</h1>
         <p>Data is as of August 31, 2026 unless otherwise specified.</p>
         <table>
-        <tr><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
-        <tr><td>Equity &amp; Equity Related Total</td><td>97.39</td><td>0.63</td></tr>
-        <tr><td>Capital Goods</td><td>14.81</td><td></td></tr>
-        <tr><td>Bharat Heavy Electricals Limited</td><td>1.53</td><td></td></tr>
-        <tr><td>Cummins India Limited</td><td>1.45</td><td></td></tr>
-        <tr><td>Apar Industries Limited</td><td>1.38</td><td></td></tr>
-        <tr><td>Indian Bank</td><td>1.26</td><td></td></tr>
-        <tr><td>Godfrey Phillips India Limited</td><td></td><td>0.63</td></tr>
-        <tr><td>Short Term Debt &amp; Net Current Assets</td><td>1.63</td><td></td></tr>
+        <tr><th></th><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
+        <tr><td></td><td>Equity &amp; Equity Related Total</td><td>97.39</td><td>0.63</td></tr>
+        <tr><td></td><td>Capital Goods</td><td>14.81</td><td></td></tr>
+        <tr><td>•</td><td>Bharat Heavy Electricals Limited</td><td>1.53</td><td></td></tr>
+        <tr><td></td><td>Cummins India Limited</td><td>1.45</td><td></td></tr>
+        <tr><td></td><td>Apar Industries Limited</td><td>1.38</td><td></td></tr>
+        <tr><td></td><td>Indian Bank</td><td>1.26</td><td></td></tr>
+        <tr><td></td><td>Godfrey Phillips India Limited</td><td></td><td>0.63</td></tr>
+        <tr><td></td><td>Short Term Debt &amp; Net Current Assets</td><td>1.63</td><td></td></tr>
         </table></body></html>"""
         def fetch(url,**kwargs):return html.encode(),None,"text/html"
         row=inspect_family("ITI Mid Cap Fund",{
