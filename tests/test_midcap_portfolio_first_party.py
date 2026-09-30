@@ -81,6 +81,41 @@ class MidCapPortfolioFirstPartyTests(unittest.TestCase):
                 reviewed_heading_aliases=("KOTAK MID CAP FUND",),
             )
 
+
+    def test_iti_digital_factsheet_recovers_named_current_holdings(self):
+        html="""<html><body>
+        <h1>ITI Mid Cap Fund</h1>
+        <p>Data is as of August 31, 2026 unless otherwise specified.</p>
+        <table>
+        <tr><th>Name of the Instrument</th><th>% to NAV</th><th>% to NAV Derivatives</th></tr>
+        <tr><td>Equity &amp; Equity Related Total</td><td>97.39</td><td>0.63</td></tr>
+        <tr><td>Capital Goods</td><td>14.81</td><td></td></tr>
+        <tr><td>Bharat Heavy Electricals Limited</td><td>1.53</td><td></td></tr>
+        <tr><td>Cummins India Limited</td><td>1.45</td><td></td></tr>
+        <tr><td>Apar Industries Limited</td><td>1.38</td><td></td></tr>
+        <tr><td>Indian Bank</td><td>1.26</td><td></td></tr>
+        <tr><td>Godfrey Phillips India Limited</td><td></td><td>0.63</td></tr>
+        <tr><td>Short Term Debt &amp; Net Current Assets</td><td>1.63</td><td></td></tr>
+        </table></body></html>"""
+        def fetch(url,**kwargs):return html.encode(),None,"text/html"
+        row=inspect_family("ITI Mid Cap Fund",{
+            "url":"https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
+            "parser":"iti","scope":"digital_factsheet_named_holdings",
+        },fetch_fn=fetch,today=date(2026,9,30))
+        self.assertEqual(row["as_of"],"2026-08-31")
+        self.assertEqual(row["positions_observed"],5)
+        self.assertFalse(row["complete"])
+        self.assertEqual(
+            {x["name"] for x in row["positions"]},
+            {
+                "Bharat Heavy Electricals Limited",
+                "Cummins India Limited",
+                "Apar Industries Limited",
+                "Indian Bank",
+                "Godfrey Phillips India Limited",
+            },
+        )
+
     def test_wrong_family_is_rejected(self):
         html="<html><body>Canara Robeco Small Cap Fund as on August 31, 2026</body></html>"
         def fetch(url,**kwargs):return html.encode(),None,"text/html"
