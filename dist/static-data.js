@@ -3,7 +3,16 @@
   'use strict';
   const config=window.SMALLCAP_CONFIG||{};if(config.mode!=='github')return;
   const cache=new Map();let revision='';
-  async function json(path,refresh=false){if(refresh)cache.delete(path);if(!cache.has(path))cache.set(path,fetch(new URL(path,document.baseURI),{cache:'no-cache'}).then(async r=>{if(!r.ok)throw Error('The saved data file is unavailable. Try refreshing the page.');return r.json();}).catch(e=>{cache.delete(path);throw e;}));return cache.get(path);}
+  async function json(path,refresh=false){
+    if(refresh)cache.delete(path);
+    if(!cache.has(path)){
+      const target=new URL(path,document.baseURI);
+      const stamp=refresh?String(Date.now()):revision;
+      if(stamp)target.searchParams.set('_v',stamp);
+      cache.set(path,fetch(target,{cache:'no-store'}).then(async r=>{if(!r.ok)throw Error('The saved data file is unavailable. Try refreshing the page.');return r.json();}).catch(e=>{cache.delete(path);throw e;}));
+    }
+    return cache.get(path);
+  }
   window.SmallcapStatic={
     async request(url,options={}){
       const u=new URL(url,location.origin),parts=u.pathname.split('/').filter(Boolean);
