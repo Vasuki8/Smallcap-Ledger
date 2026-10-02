@@ -4,6 +4,74 @@ Read this alongside the latest generated artifacts and their exact production ru
 
 ## Latest committed evidence reviewed — 2026-10-02
 
+### Bounded ICICI TER investigation — source access blocked
+
+Investigation branch `diag/icici-ter-evidence-20261002` starts at repair/handoff
+commit `068f181018cbaad7945e53db5b30614271d9d0fd`, which includes the **unmerged**
+test repair `9e8ee21d3540b7069c8fae3f95f7fc2a61cf465e`. This slice changes only
+documentation. No parser fix is justified yet, and no production data changed.
+Remote main and repair refs were checked immediately before branching and were
+unchanged. The GitHub API denial was not retried.
+
+Evidence establishes the failure boundary, not the upstream root cause:
+
+- At evidence commit `087ba55634a9db3503117f22af61d4505b8f5799`, batch 1 built
+  **2026-09-30T05:03:08+00:00** recovered ICICI Prudential Mid Cap Fund through
+  `financial_disclosure_api`, with source record date **2026-09-28**, Regular TER
+  **1.85** and Direct TER **1.11**. Workbook SHA-256:
+  `84208bcc5a36576428ea6e049794843226fab2c17f4e31b4900893ead0d56bff`.
+  The source was the official September workbook:
+  `https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx`.
+- At `fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`, batch 1 built
+  **2026-09-30T22:32:44+00:00** reports `ICICI TER workbook columns changed`.
+  The error is raised before exact-family selection: at least one A–L header
+  differs from `_ICICI_HEADER` in the third decoded worksheet row. Neither
+  `tracker/amc_expenses.py` nor `tracker/midcap_ter_first_party.py` changed between
+  the successful and failing evidence commits. This rules out a change to those
+  parsers between these checkpoints, but does not prove which source bytes or
+  discovery route the failing run used.
+- The failed result records no source URL, content hash, mismatched column,
+  discovery channel or source reporting date. Those values remain **unknown**;
+  the batch build time is not the source date. Current readiness correctly leaves
+  ICICI Mid Cap TER values, date and source null. Historical 1.11/1.85 values must
+  not be republished or retimestamped as current.
+- Confirmed affected target: **ICICI Prudential Mid Cap Fund**, both plan values
+  withheld. The Small Cap TER parser uses the same XML reader/header contract,
+  so it is potentially affected by the same workbook change; this investigation
+  does not establish a fresh Small Cap failure or effects on other AMC funds.
+- `_icici_inline_strings` supports inline text and raw cell values but does not
+  resolve shared-string indices. A shared-string encoding change, inserted rows,
+  or changed header wording could each produce this error. None is proven without
+  the actual failing workbook. Mid Cap tests currently mock decoded rows, while
+  Small Cap tests construct inline-string XML; their success cannot demonstrate
+  compatibility with the unavailable response.
+
+No retained real ICICI workbook/database was found in this checkout or the local
+workspace search. One normal request to the September workbook above returned
+**HTTP 403**, `server: envoy`, `content-type: text/plain`, `content-length: 16`
+(response Date **2026-10-02T22:38:17Z**). No workbook was downloaded; this is not
+evidence that the AMC removed the workbook. Source access stopped at that denial;
+no alternate host, proxy, security-setting change or TLS bypass was attempted.
+
+Required evidence to continue: permit normal HTTPS access to
+**`app.beta.icicipruamc.com`** for that workbook, or provide the original failed-run
+workbook plus its source URL/hash. Reproducing the exact discovery path additionally
+requires the normal **`apimf.icicipruamc.com`** categories/files endpoints (not
+attempted in this bounded slice). Parent owns permission and sequencing decisions.
+Once bytes are available, inspect raw OOXML cell types/header positions and exact
+scheme/date rows, compare against the recorded successful hash, and reproduce the
+failure before proposing a reusable reader correction. A newly fetched mutable
+September URL need not contain the September 30 failed-run bytes.
+
+Fresh focused checks on the unchanged application: **5 Mid Cap first-party TER
+tests passed in 0.002s** and **44 AMC expense tests passed in 10.168s**. These
+exercise existing fixtures, not the blocked source. The full 844-test repair
+verification remains recorded in HANDOFF.md; it was not needlessly rerun for this
+documentation-only investigation. No merge, deployment, network change or source
+recovery is claimed.
+
+### Dated readiness snapshot
+
 At remote main `fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`, the launch report
 evaluated **2026-09-30T22:37:28.080093+00:00** supersedes the earlier checkpoint's
 coverage counts below: AUM **34/34**, Direct TER **29/34**, benchmark identity
