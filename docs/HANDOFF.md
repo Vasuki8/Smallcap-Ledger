@@ -1,5 +1,122 @@
 # Smallcap Ledger backend handoff
 
+## Development checkpoint — 2026-10-02 (API restored; draft repair PR)
+
+The freshly provisioned environment's `/etc/codex/network-policy.json` explicitly
+allows `api.github.com`. The first and only access probe, a normal GET of the
+repository API, returned **HTTP 200 at 2026-10-02T22:49:24Z**. No alternate route,
+network/security setting, credential, or TLS policy was changed. The previous
+API-blocked checkpoint below is historical and superseded by this section.
+
+Remote main remains `fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`. The existing
+repair was fast-forwarded intact to `068f181018cbaad7945e53db5b30614271d9d0fd`
+(code repair `9e8ee21d3540b7069c8fae3f95f7fc2a61cf465e`), reviewed, and submitted
+as draft [PR #350](https://github.com/Vasuki8/Smallcap-Ledger/pull/350). No duplicate
+fix was implemented. The only executable diff pins the regression fixture clock;
+production freshness calculations, snapshot acceptance, and Mid Cap gates remain
+unchanged. Fresh local checks at that head: **844 tests passed in 13.459s**, locked
+`uv sync --frozen`, Python compilation, and all five production JavaScript syntax
+checks passed. `UV_CACHE_DIR=/workspace/.cache/uv` was needed because the default
+home cache is read-only. The working tree was clean after testing.
+
+PR creation started Repository regression run
+[37074695018](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/37074695018)
+and Research UI checks run
+[37074694999](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/37074694999)
+on `068f181…`. Both were in progress when this handoff update was prepared.
+This documentation commit creates a newer PR head: final exact-head CI must be
+read from the PR/API before integration; an earlier head's success is insufficient.
+
+All nine pre-existing dependency PRs remain open and GitHub reports each mergeable.
+PRs #317–319 still have failed recorded checks (`mergeable_state=unstable`):
+#317 head `6a6726b6bd300e73cde41e6cc9f74da362244a90`, #318 head
+`f07ff127d522bd3c60e164120eb6c3d96d6d3e7d`, #319 head
+`d75ca9d5a5527cb93c3d4ef4f563b71765e1d90e`. PRs #320, #321, #322, #323,
+#325, and #326 have successful recorded checks. These historical runs were not
+rerun, and mergeability does not establish compatibility with current main.
+[Issue #312](https://github.com/Vasuki8/Smallcap-Ledger/issues/312) is freshly
+confirmed **open**; main is **unprotected**, and the ruleset list is empty.
+No repository settings were changed.
+
+The separate documentation-only diagnostic branch remains
+`diag/icici-ter-evidence-20261002` at
+`c8f05aefcd5e5620197b2dd6764e1f2fae3d7a4f`, based on the repair. It establishes
+the ICICI Mid Cap TER header-validation failure boundary, not its upstream cause.
+Exact failed-run workbook bytes are unavailable; no parser fix is justified.
+Its prior HTTP 403 with `server: envoy` is ambiguous between environment/upstream,
+not an established domain denial. No ICICI host was retried in this continuation.
+The diagnostic records 49 focused tests passing; those are historical fixture
+checks, not proof of compatibility with the unavailable workbook.
+
+Next gate: inspect final-head PR #350 CI and request explicit merge authorization
+before any integration or deployment. Then continue evidence acquisition for the
+TER diagnostic under parent sequencing. No merge, deployment, source refresh,
+launch-gate weakening, credential change, or spending change was performed.
+No project AGENTS.md or `.agents/skills` exists; `/workspace/.agents` is empty.
+
+## Historical development checkpoint — 2026-10-02 (GitHub API access blocked)
+
+Remote Git refs were rechecked in this continuation: `main` is
+`fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`; the existing repair branch
+`fix/icici-regression-clock-20261002` was fetched at
+`9e8ee21d3540b7069c8fae3f95f7fc2a61cf465e`. That repair was reviewed intact,
+not recreated. It changes only the ICICI regression fixture's clock to
+2026-09-24, leaving the real closed-month calculation and production freshness
+checks unchanged. On the actual October clock the unchanged main test fails
+because it requires September/August but supplies August/July snapshots.
+
+Fresh local verification of the exact repair commit: **844 tests passed in
+13.742s**, using `SMALLCAP_NO_SCHEDULER=1 .venv/bin/python -m unittest discover
+-s tests -v`; Python compilation and all five JavaScript syntax checks from
+`repository-regression.yml` also passed. The main version of the single test
+was separately executed in memory and reproduced the expected assertion failure.
+This is local evidence, not a CI result or production verification.
+
+Git-fetched PR heads [#317](https://github.com/Vasuki8/Smallcap-Ledger/pull/317)
+(`6a6726b6bd300e73cde41e6cc9f74da362244a90`),
+[#318](https://github.com/Vasuki8/Smallcap-Ledger/pull/318)
+(`f07ff127d522bd3c60e164120eb6c3d96d6d3e7d`) and
+[#319](https://github.com/Vasuki8/Smallcap-Ledger/pull/319)
+(`d75ca9d5a5527cb93c3d4ef4f563b71765e1d90e`) each pass local
+`git merge-tree --write-tree` against that main commit. This establishes no
+content conflict for these three refs; it does not establish open status, green
+CI, or merge authorization. The earlier nine-open-PR claim and historical CI
+failures could not be refreshed.
+
+**Blocker:** `gh pr list` fails with `Post https://api.github.com/graphql:
+Forbidden`; a normal HTTPS request also fails at the proxy CONNECT step with
+HTTP 403. Git HTTPS works. No security setting, proxy route, credential, or TLS
+policy was changed. No advertised pull-request head matched the repair commit,
+but API confirmation of PR absence remains unavailable. No draft PR was created,
+CI rerun requested, merge performed, or deployment triggered in this continuation.
+The checkout has no project `.agents/skills` or `AGENTS.md`, and the mounted
+`/workspace/.agents` is empty; repository handoffs were inspected instead.
+
+Required user/environment action: **apply the already saved `api.github.com`
+network allowlist change to this execution environment, then restart/resume the
+task in that updated environment**. Once normal API access succeeds, re-list PRs
+for the existing repair branch and create a draft only if absent; check its exact
+head CI, refresh all open-PR conflicts/checks, and read
+[issue #312](https://github.com/Vasuki8/Smallcap-Ledger/issues/312) and branch
+protection again. Current issue/protection state is unverified, not reconfirmed
+from the historical section below. Do not merge or change repository settings
+without explicit authorization.
+
+The latest committed launch report is newer than the production checkpoint below:
+it was evaluated **2026-09-30T22:37:28.080093+00:00** at main `fe21c5d…`.
+All **14/14** input hashes independently match. It reports AUM **34/34**, Direct
+TER **29/34**, benchmark identity **28/34**, current portfolios **22/34**, and
+complete current portfolios **6/34**; portfolio counts were independently
+recounted, all accepted rows dated **2026-08-31**. Source-fetch health is true
+in that report. These are dated committed observations, not new October source
+fetches or independently verified live deployment results. Data/launch readiness
+and public export remain false. See the updated Mid Cap handoff for next work.
+
+Next milestone after API recovery: finish the repair PR/CI gate, then investigate
+the fresh missing-data errors before changing parsers. No second implementation
+stream was started while that first gate remains blocked; production rollout of
+any recovery will require explicit merge authorization.
+
 
 Updated: 2026-09-30, after the explicitly authorized merge of Helios Mid Cap portfolio recovery in PR #348 and independent production/live-data verification.
 

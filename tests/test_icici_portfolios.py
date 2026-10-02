@@ -224,8 +224,11 @@ class IciciPortfolioTests(unittest.TestCase):
             (icici.FAMILY, august, "August"),
             (icici.FAMILY, july, "July"),
         ]
-        with patch.object(amc_discovery, "discover", return_value=rows), \
+        # Keep the real closed-month calculation aligned with these dated fixtures.
+        with patch.object(icici, "date", wraps=date) as clock, \
+             patch.object(amc_discovery, "discover", return_value=rows), \
              patch.object(amc_discovery, "store_report", side_effect=store) as save:
+            clock.today.return_value = date(2026, 9, 24)
             self.assertTrue(upgrade.run())
             self.assertTrue(upgrade.run())
             self.assertEqual(save.call_count, 2)
