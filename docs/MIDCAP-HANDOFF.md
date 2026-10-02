@@ -2,6 +2,38 @@
 
 Read this alongside the latest generated artifacts and their exact production run. A green workflow, a fresh summary or an isolated source preflight does not establish coverage for every family. Mid Cap remains staged and non-public.
 
+## Latest committed evidence reviewed — 2026-10-02
+
+At remote main `fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`, the launch report
+evaluated **2026-09-30T22:37:28.080093+00:00** supersedes the earlier checkpoint's
+coverage counts below: AUM **34/34**, Direct TER **29/34**, benchmark identity
+**28/34**, current portfolio evidence **22/34**, and complete portfolios **6/34**.
+All 14 input hashes match; the 22 current/six complete portfolio counts were
+independently recounted, with accepted reporting dates **2026-08-31**. Remaining
+numerical deficits are **two TER, three benchmark identities and six portfolios**.
+Source-fetch health is true in this committed report. No October source fetch or
+new live-production verification is implied. Mid Cap is still non-public and
+`data_ready=false`, `launch_ready=false`, `public_export_enabled=false`.
+
+The next bounded missing-data investigation should reproduce **ICICI's TER
+workbook column mismatch** from first-party batch 1, inspect the exact returned
+workbook headers, scheme/plan identity and source date, then add a fixture-backed
+parser correction only if supported by that evidence. Its benchmark PDF also
+timed out with HTTP 504; that transport result is separate and does not prove a
+parser defect. The Wealth Company TER timed out; ABSL's benchmark failed the
+one-Fund-Snapshot-table contract. Do not repeat the older claim that the TER and
+benchmark gates currently pass. Keep all remaining families and nulls visible.
+
+For the continuing portfolio roadmap, Kotak still fails identity in both batches
+1 and 5. Reproduce the actual production response before changing accepted
+headings or counting its earlier isolated preflight. The twelve-family portfolio
+list below remains applicable. None of these source investigations requires
+merging the test-only ICICI repair to inspect evidence, but the requested first
+GitHub-repair milestone is currently blocked by API network access (see
+[HANDOFF.md](HANDOFF.md)); no concurrent parser implementation was started.
+Any future production integration requires explicit merge authorization, and
+the public-surface gate remains separate.
+
 ## Verified production checkpoint — 2026-09-30
 
 Production [#684 / 36671423719](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/36671423719) completed successfully on code `feefbb15025077b2e05e848edb9c9d31a6b53d9b` (PR #348), with generated evidence commit `087ba55634a9db3503117f22af61d4505b8f5799`. Build job `109747037093` and deploy job `109755440959` passed. The latest launch report was evaluated **2026-09-30T05:06:24.056660+00:00**, separately from the **05:35:53** public status build and **05:36:47Z** terminal deployment time. Cache-busted live status, fund-index and coverage reads matched the exact public build and NAV **2026-09-29**. Small Cap retains **36 families, 143 series and 281,868 NAV observations**; the live index reports 142 latest dates on September 29 and one on April 24, 2020. Its category identities and summed observations were independently checked.

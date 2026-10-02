@@ -1,5 +1,68 @@
 # Smallcap Ledger backend handoff
 
+## Development checkpoint — 2026-10-02 (GitHub API access blocked)
+
+Remote Git refs were rechecked in this continuation: `main` is
+`fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`; the existing repair branch
+`fix/icici-regression-clock-20261002` was fetched at
+`9e8ee21d3540b7069c8fae3f95f7fc2a61cf465e`. That repair was reviewed intact,
+not recreated. It changes only the ICICI regression fixture's clock to
+2026-09-24, leaving the real closed-month calculation and production freshness
+checks unchanged. On the actual October clock the unchanged main test fails
+because it requires September/August but supplies August/July snapshots.
+
+Fresh local verification of the exact repair commit: **844 tests passed in
+13.742s**, using `SMALLCAP_NO_SCHEDULER=1 .venv/bin/python -m unittest discover
+-s tests -v`; Python compilation and all five JavaScript syntax checks from
+`repository-regression.yml` also passed. The main version of the single test
+was separately executed in memory and reproduced the expected assertion failure.
+This is local evidence, not a CI result or production verification.
+
+Git-fetched PR heads [#317](https://github.com/Vasuki8/Smallcap-Ledger/pull/317)
+(`6a6726b6bd300e73cde41e6cc9f74da362244a90`),
+[#318](https://github.com/Vasuki8/Smallcap-Ledger/pull/318)
+(`f07ff127d522bd3c60e164120eb6c3d96d6d3e7d`) and
+[#319](https://github.com/Vasuki8/Smallcap-Ledger/pull/319)
+(`d75ca9d5a5527cb93c3d4ef4f563b71765e1d90e`) each pass local
+`git merge-tree --write-tree` against that main commit. This establishes no
+content conflict for these three refs; it does not establish open status, green
+CI, or merge authorization. The earlier nine-open-PR claim and historical CI
+failures could not be refreshed.
+
+**Blocker:** `gh pr list` fails with `Post https://api.github.com/graphql:
+Forbidden`; a normal HTTPS request also fails at the proxy CONNECT step with
+HTTP 403. Git HTTPS works. No security setting, proxy route, credential, or TLS
+policy was changed. No advertised pull-request head matched the repair commit,
+but API confirmation of PR absence remains unavailable. No draft PR was created,
+CI rerun requested, merge performed, or deployment triggered in this continuation.
+The checkout has no project `.agents/skills` or `AGENTS.md`, and the mounted
+`/workspace/.agents` is empty; repository handoffs were inspected instead.
+
+Required user/environment action: **apply the already saved `api.github.com`
+network allowlist change to this execution environment, then restart/resume the
+task in that updated environment**. Once normal API access succeeds, re-list PRs
+for the existing repair branch and create a draft only if absent; check its exact
+head CI, refresh all open-PR conflicts/checks, and read
+[issue #312](https://github.com/Vasuki8/Smallcap-Ledger/issues/312) and branch
+protection again. Current issue/protection state is unverified, not reconfirmed
+from the historical section below. Do not merge or change repository settings
+without explicit authorization.
+
+The latest committed launch report is newer than the production checkpoint below:
+it was evaluated **2026-09-30T22:37:28.080093+00:00** at main `fe21c5d…`.
+All **14/14** input hashes independently match. It reports AUM **34/34**, Direct
+TER **29/34**, benchmark identity **28/34**, current portfolios **22/34**, and
+complete current portfolios **6/34**; portfolio counts were independently
+recounted, all accepted rows dated **2026-08-31**. Source-fetch health is true
+in that report. These are dated committed observations, not new October source
+fetches or independently verified live deployment results. Data/launch readiness
+and public export remain false. See the updated Mid Cap handoff for next work.
+
+Next milestone after API recovery: finish the repair PR/CI gate, then investigate
+the fresh missing-data errors before changing parsers. No second implementation
+stream was started while that first gate remains blocked; production rollout of
+any recovery will require explicit merge authorization.
+
 
 Updated: 2026-09-30, after the explicitly authorized merge of Helios Mid Cap portfolio recovery in PR #348 and independent production/live-data verification.
 
