@@ -28,9 +28,15 @@ For the continuing portfolio roadmap, Kotak still fails identity in both batches
 1 and 5. Reproduce the actual production response before changing accepted
 headings or counting its earlier isolated preflight. The twelve-family portfolio
 list below remains applicable. None of these source investigations requires
-merging the test-only ICICI repair to inspect evidence, but the requested first
-GitHub-repair milestone is currently blocked by API network access (see
-[HANDOFF.md](HANDOFF.md)); no concurrent parser implementation was started.
+merging the test-only ICICI repair to inspect evidence, and GitHub API access is now verified. The first repair milestone is draft
+[PR #350](https://github.com/Vasuki8/Smallcap-Ledger/pull/350), awaiting final-head
+CI and explicit merge authorization (see [HANDOFF.md](HANDOFF.md)). The separate
+documentation-only diagnostic is preserved at
+`c8f05aefcd5e5620197b2dd6764e1f2fae3d7a4f` on
+`diag/icici-ter-evidence-20261002`: exact failing workbook bytes are unavailable,
+so no parser correction is justified. Its previous Envoy HTTP 403 does not
+establish a domain-policy denial, and no ICICI host was retried here. No concurrent
+parser implementation was started.
 Any future production integration requires explicit merge authorization, and
 the public-surface gate remains separate.
 

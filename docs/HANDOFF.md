@@ -1,6 +1,60 @@
 # Smallcap Ledger backend handoff
 
-## Development checkpoint — 2026-10-02 (GitHub API access blocked)
+## Development checkpoint — 2026-10-02 (API restored; draft repair PR)
+
+The freshly provisioned environment's `/etc/codex/network-policy.json` explicitly
+allows `api.github.com`. The first and only access probe, a normal GET of the
+repository API, returned **HTTP 200 at 2026-10-02T22:49:24Z**. No alternate route,
+network/security setting, credential, or TLS policy was changed. The previous
+API-blocked checkpoint below is historical and superseded by this section.
+
+Remote main remains `fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`. The existing
+repair was fast-forwarded intact to `068f181018cbaad7945e53db5b30614271d9d0fd`
+(code repair `9e8ee21d3540b7069c8fae3f95f7fc2a61cf465e`), reviewed, and submitted
+as draft [PR #350](https://github.com/Vasuki8/Smallcap-Ledger/pull/350). No duplicate
+fix was implemented. The only executable diff pins the regression fixture clock;
+production freshness calculations, snapshot acceptance, and Mid Cap gates remain
+unchanged. Fresh local checks at that head: **844 tests passed in 13.459s**, locked
+`uv sync --frozen`, Python compilation, and all five production JavaScript syntax
+checks passed. `UV_CACHE_DIR=/workspace/.cache/uv` was needed because the default
+home cache is read-only. The working tree was clean after testing.
+
+PR creation started Repository regression run
+[37074695018](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/37074695018)
+and Research UI checks run
+[37074694999](https://github.com/Vasuki8/Smallcap-Ledger/actions/runs/37074694999)
+on `068f181…`. Both were in progress when this handoff update was prepared.
+This documentation commit creates a newer PR head: final exact-head CI must be
+read from the PR/API before integration; an earlier head's success is insufficient.
+
+All nine pre-existing dependency PRs remain open and GitHub reports each mergeable.
+PRs #317–319 still have failed recorded checks (`mergeable_state=unstable`):
+#317 head `6a6726b6bd300e73cde41e6cc9f74da362244a90`, #318 head
+`f07ff127d522bd3c60e164120eb6c3d96d6d3e7d`, #319 head
+`d75ca9d5a5527cb93c3d4ef4f563b71765e1d90e`. PRs #320, #321, #322, #323,
+#325, and #326 have successful recorded checks. These historical runs were not
+rerun, and mergeability does not establish compatibility with current main.
+[Issue #312](https://github.com/Vasuki8/Smallcap-Ledger/issues/312) is freshly
+confirmed **open**; main is **unprotected**, and the ruleset list is empty.
+No repository settings were changed.
+
+The separate documentation-only diagnostic branch remains
+`diag/icici-ter-evidence-20261002` at
+`c8f05aefcd5e5620197b2dd6764e1f2fae3d7a4f`, based on the repair. It establishes
+the ICICI Mid Cap TER header-validation failure boundary, not its upstream cause.
+Exact failed-run workbook bytes are unavailable; no parser fix is justified.
+Its prior HTTP 403 with `server: envoy` is ambiguous between environment/upstream,
+not an established domain denial. No ICICI host was retried in this continuation.
+The diagnostic records 49 focused tests passing; those are historical fixture
+checks, not proof of compatibility with the unavailable workbook.
+
+Next gate: inspect final-head PR #350 CI and request explicit merge authorization
+before any integration or deployment. Then continue evidence acquisition for the
+TER diagnostic under parent sequencing. No merge, deployment, source refresh,
+launch-gate weakening, credential change, or spending change was performed.
+No project AGENTS.md or `.agents/skills` exists; `/workspace/.agents` is empty.
+
+## Historical development checkpoint — 2026-10-02 (GitHub API access blocked)
 
 Remote Git refs were rechecked in this continuation: `main` is
 `fe21c5dc3cded97ec1fd0b6bb4a849a19d837ada`; the existing repair branch
