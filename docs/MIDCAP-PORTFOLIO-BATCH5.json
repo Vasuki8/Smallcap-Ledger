@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-30T22:37:27+00:00",
+  "built_at": "2026-10-02T23:03:58+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 8,
@@ -23,7 +23,7 @@
       "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
       "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T22:37:10+00:00"
+      "observed_at": "2026-10-02T23:03:42+00:00"
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
@@ -397,7 +397,7 @@
       "source_content_type": "text/html",
       "parser_version": "mahindra-midcap-issuer-rows-v2",
       "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-09-30T22:37:12+00:00"
+      "observed_at": "2026-10-02T23:03:44+00:00"
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -414,7 +414,7 @@
       "source_title": "Complete monthly holdings 08/26",
       "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-09-30T22:37:14+00:00"
+      "observed_at": "2026-10-02T23:03:45+00:00"
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -431,10 +431,10 @@
       "source_sha256": "7cc4431867469382f3559c54bd12e0fbecb9586d6ddcd4bc02ba2bd7941894f0",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "discovery_source": "https://www.sundarammutual.com/Upload/JSON/Fund_Card_data.json",
-      "discovery_source_sha256": "7b5848068af04d1d45dbb556255e0a05d09b6afc444a63581eb4f3e9db3f76b9",
+      "discovery_source_sha256": "b358411b6d2ff89756ce148d0d6e17996ff7a0ee3429bd3200cd766f51081b52",
       "publisher_scheme_code": "MC",
       "card_aum_as_of_raw": "31-Aug-2026",
-      "observed_at": "2026-09-30T22:37:19+00:00"
+      "observed_at": "2026-10-02T23:03:49+00:00"
     },
     {
       "family": "Samco Mid Cap Fund",
@@ -445,133 +445,133 @@
       "positions": [
         {
           "name": "National Aluminium Company Limited",
-          "weight": 5.78
+          "weight": 4.52
         },
         {
           "name": "Laurus Labs Limited",
-          "weight": 5.05
+          "weight": 4.48
         },
         {
           "name": "Apar Industries Limited",
-          "weight": 4.68
-        },
-        {
-          "name": "L&T Finance Limited",
-          "weight": 4.46
-        },
-        {
-          "name": "The Federal Bank Limited",
-          "weight": 4.3
-        },
-        {
-          "name": "Aditya Birla Capital Limited",
-          "weight": 4.21
+          "weight": 3.94
         },
         {
           "name": "Bank of Maharashtra",
-          "weight": 4.01
+          "weight": 3.55
         },
         {
-          "name": "AU Small Finance Bank Limited",
-          "weight": 3.74
+          "name": "Aditya Birla Capital Limited",
+          "weight": 3.53
         },
         {
-          "name": "Indian Bank",
-          "weight": 3.74
+          "name": "The Federal Bank Limited",
+          "weight": 3.52
+        },
+        {
+          "name": "L&T Finance Limited",
+          "weight": 3.29
         },
         {
           "name": "Multi Commodity Exchange of India Limited",
-          "weight": 3.63
+          "weight": 3.16
         },
         {
           "name": "GE Vernova T&D India Limited",
-          "weight": 3.62
+          "weight": 3.13
+        },
+        {
+          "name": "AU Small Finance Bank Limited",
+          "weight": 3.11
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 3.08
         },
         {
           "name": "FSN E-Commerce Ventures Limited",
-          "weight": 3.45
-        },
-        {
-          "name": "Bharat Heavy Electricals Limited",
-          "weight": 3.38
+          "weight": 2.88
         },
         {
           "name": "Aurobindo Pharma Limited",
-          "weight": 3.27
-        },
-        {
-          "name": "BSE Limited",
-          "weight": 3.19
+          "weight": 2.71
         },
         {
           "name": "Bank of India",
-          "weight": 3.07
+          "weight": 2.66
+        },
+        {
+          "name": "BSE Limited",
+          "weight": 2.63
+        },
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 2.56
+        },
+        {
+          "name": "Lloyds Metals And Energy Limited",
+          "weight": 2.52
         },
         {
           "name": "Hitachi Energy India Limited",
-          "weight": 3.06
+          "weight": 2.49
+        },
+        {
+          "name": "One 97 Communications Limited",
+          "weight": 2.39
         },
         {
           "name": "NMDC Limited",
-          "weight": 3.03
+          "weight": 2.34
         },
         {
           "name": "Vodafone Idea Limited",
-          "weight": 2.97
-        },
-        {
-          "name": "Polycab India Limited",
-          "weight": 2.95
-        },
-        {
-          "name": "Life Insurance Corporation Of India",
-          "weight": 2.89
-        },
-        {
-          "name": "Marico Limited",
-          "weight": 2.82
-        },
-        {
-          "name": "Bharat Forge Limited",
-          "weight": 2.6
+          "weight": 2.29
         },
         {
           "name": "Hindustan Petroleum Corporation Limited",
-          "weight": 2.59
+          "weight": 2.23
         },
         {
-          "name": "General Insurance Corporation of India",
-          "weight": 2.45
-        },
-        {
-          "name": "Lupin Limited",
-          "weight": 2.37
-        },
-        {
-          "name": "Thermax Limited",
+          "name": "Bharat Forge Limited",
           "weight": 2.09
         },
         {
+          "name": "Oracle Financial Services Software Limited",
+          "weight": 2.07
+        },
+        {
+          "name": "General Insurance Corporation of India",
+          "weight": 2.06
+        },
+        {
           "name": "NLC India Limited",
-          "weight": 2.05
+          "weight": 1.78
+        },
+        {
+          "name": "Thermax Limited",
+          "weight": 1.62
         },
         {
           "name": "Radico Khaitan Limited",
-          "weight": 1.55
+          "weight": 1.48
         },
         {
           "name": "LIC Housing Finance Limited",
-          "weight": 1.54
+          "weight": 1.4
+        },
+        {
+          "name": "National Stock Exchange Of India Ltd",
+          "weight": 0.51
         }
       ],
       "complete": false,
       "scope": "publisher_all_holdings_html",
       "completeness_note": "Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
-      "equity_weight_sum": 98.54,
+      "equity_weight_sum": 80.02,
       "source": "https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg",
-      "source_sha256": "f12705f1e3a2ffd0f2bcdd73c7e4baeb864e5677c058c8625aaf6de2932e36b3",
+      "source_sha256": "2e6ec4f7cd4199b48523b61ea290bbf70722e45f126ef80b9ba0447b7f211e17",
       "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-09-30T22:37:20+00:00"
+      "observed_at": "2026-10-02T23:03:51+00:00"
     },
     {
       "family": "Motilal Oswal Midcap Fund",
@@ -588,9 +588,9 @@
       "source_sha256": "349eadc5955f05b53a483f55677f9f018640ab14724ca7727a7322995d45a36a",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "discovery_source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
-      "discovery_source_sha256": "2fb88b40cb7b285d5567be08deafd5267071daa59394265c60ac017228f27523",
+      "discovery_source_sha256": "dbacc60daecb9d51350cf34207c03600da77738660a27cb09975d9fb420dad80",
       "discovery_source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-09-30T22:37:22+00:00"
+      "observed_at": "2026-10-02T23:03:53+00:00"
     },
     {
       "family": "BANDHAN MID CAP FUND",
@@ -614,7 +614,7 @@
       "discovery_page": "https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-mid-cap-fund-31-august-2026/",
       "disclosure_post_id": 158812,
       "parser_version": "bandhan-midcap-monthly-portfolio-v1",
-      "observed_at": "2026-09-30T22:37:27+00:00"
+      "observed_at": "2026-10-02T23:03:58+00:00"
     }
   ],
   "errors": [

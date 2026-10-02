@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-09-30T22:33:18+00:00",
+  "built_at": "2026-10-02T23:01:00+00:00",
   "staged_category": "mid-cap",
   "targets": 3,
-  "recovered": 2,
-  "failed": 1,
+  "recovered": 3,
+  "failed": 0,
   "results": [
     {
       "family": "Helios Mid Cap Fund",
@@ -37,39 +37,63 @@
     {
       "family": "Kotak Mid Cap Fund",
       "status": "recovered",
-      "as_of": "2026-09-29",
+      "as_of": "2026-10-01",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.17,
-          "brokerage": 0.0323,
+          "brokerage": 0.033,
           "transaction_cost": 0.0029,
-          "statutory_levies": 0.3,
-          "ter": 1.5052
+          "statutory_levies": 0.3034,
+          "ter": 1.5093
         },
         "Direct": {
           "base_expense_ratio": 0.35,
-          "brokerage": 0.0323,
+          "brokerage": 0.033,
           "transaction_cost": 0.0029,
           "statutory_levies": 0.15,
-          "ter": 0.5352
+          "ter": 0.5359
         }
       },
-      "direct_ter": 0.5352,
-      "regular_ter": 1.5052,
+      "direct_ter": 0.5359,
+      "regular_ter": 1.5093,
       "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
-      "sha256": "aa7af7a7377c72d1ca4b23cc55f5f0e8014ef32b9d92e87ecb8cf1e70f8f461e",
+      "sha256": "2a8fb4d38ffaab160bd5542f57df671f2851c134b18eb832af09b9b5f802dcc5",
       "identity": {
         "scheme_name": "Kotak Mid Cap Fund",
         "nsdl_scheme_code": "KOTM/O/E/MIF/06/09/0018"
       }
-    }
-  ],
-  "errors": [
+    },
     {
       "family": "The Wealth Company Mid Cap Fund",
-      "error": "timed out"
+      "status": "recovered",
+      "as_of": "2026-10-02",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 2.1,
+          "brokerage": 0.55,
+          "transaction_cost": 0.03,
+          "statutory_levies": 1.59,
+          "ter": 4.2700000000000005
+        },
+        "Direct": {
+          "base_expense_ratio": 0.4,
+          "brokerage": 0.55,
+          "transaction_cost": 0.03,
+          "statutory_levies": 1.28,
+          "ter": 2.2600000000000002
+        }
+      },
+      "direct_ter": 2.2600000000000002,
+      "regular_ter": 4.2700000000000005,
+      "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
+      "sha256": "70c41c1e8f21e7e1738e5a5f4ee940c985ab1def48753974113fce3020d1906b",
+      "identity": {
+        "scheme_name": "THE WEALTH COMPANY MID  CAP FUND",
+        "nsdl_scheme_code": "TWCF/O/E/MIF/26/06/0012"
+      }
     }
   ],
+  "errors": [],
   "production_writes": 0,
   "public_export_enabled": false
 }

@@ -1,18 +1,18 @@
 # Mid Cap first-party TER recovery batch 1
 
-Prepared: 2026-09-30T22:32:44+00:00
+Prepared: 2026-10-02T23:00:56+00:00
 
-Targets: **7** · recovered: **6** · failed: **1**.
+Targets: **7** · recovered: **5** · failed: **2**.
 
 | Family | AMC | Status | As of | Direct TER | Regular TER | Source | Identity |
 | --- | --- | --- | --- | ---: | ---: | --- | --- |
-| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | recovered | 2026-09-30 | 0.8600% | 2.1100% | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-16&to_date=2026-09-30 | scheme_name=Canara Robeco Mid Cap Fund, scheme_code=MD |
-| HSBC Midcap Fund | HSBC Mutual Fund | recovered | 2026-09-29 | 1.1500% | 2.2100% | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx | scheme_name=HSBC Midcap Fund, scheme_code=HEMCPF, nsdl_scheme_code=LTMF/O/E/MIF/04/06/0006 |
-| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | failed |  |  |  |  | ICICI TER workbook columns changed |
-| Invesco India Mid Cap Fund | Invesco Mutual Fund | recovered | 2026-09-29 | 0.7800% | 1.8800% | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 | scheme_name=Invesco India Mid Cap Fund, nsdl_scheme_code=INVM/O/E/MIF/07/01/0006 |
-| JM Mid Cap Fund | JM Financial Mutual Fund | recovered | 2026-09-30 | 0.9500% | 2.4700% | https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest | scheme_name=JM Mid Cap Fund, scheme_code=MD, nsdl_scheme_code=JMFI/O/E/MIF/21/09/0014 |
-| Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | recovered | 2026-09-30 | 0.7500% | 2.0200% | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx | scheme_name=Mahindra Manulife Mid Cap Fund, nsdl_scheme_code=MAHM/O/E /MIF/17/11/0006 |
-| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | recovered | 2026-09-29 | 0.9700% | 2.0200% | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_29092026.xls | scheme_name=Mirae Asset Midcap Fund, nsdl_scheme_code=MIRA/O/E/MIF/19/05/0015 |
+| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | recovered | 2026-10-01 | 0.8800% | 2.1300% | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-18&to_date=2026-10-02 | scheme_name=Canara Robeco Mid Cap Fund, scheme_code=MD |
+| HSBC Midcap Fund | HSBC Mutual Fund | recovered | 2026-09-30 | 1.1500% | 2.2100% | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx | scheme_name=HSBC Midcap Fund, scheme_code=HEMCPF, nsdl_scheme_code=LTMF/O/E/MIF/04/06/0006 |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | failed |  |  |  |  | ICICI exact Mid Cap scheme name is not unique |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | recovered | 2026-09-30 | 0.7800% | 1.8800% | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 | scheme_name=Invesco India Mid Cap Fund, nsdl_scheme_code=INVM/O/E/MIF/07/01/0006 |
+| JM Mid Cap Fund | JM Financial Mutual Fund | failed |  |  |  |  | JM exact Mid Cap identity is not unique |
+| Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | recovered | 2026-10-01 | 0.7500% | 2.0200% | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx | scheme_name=Mahindra Manulife Mid Cap Fund, nsdl_scheme_code=MAHM/O/E /MIF/17/11/0006 |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | recovered | 2026-10-01 | 0.9500% | 2.0100% | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_01102026.xls | scheme_name=Mirae Asset Midcap Fund, nsdl_scheme_code=MIRA/O/E/MIF/19/05/0015 |
 
 ## Notes
 

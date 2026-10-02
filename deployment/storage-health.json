@@ -1,30 +1,30 @@
 {
-  "checked_at": "2026-09-30T23:15:04+00:00",
+  "checked_at": "2026-10-02T23:22:13+00:00",
   "scope": "current_production_operational_health",
   "database": {
-    "bytes": 138932224,
+    "bytes": 144592896,
     "integrity": "ok",
     "foreign_key_violations": []
   },
   "archive": {
-    "files": 4687,
-    "bytes": 3768438107,
+    "files": 5106,
+    "bytes": 3971416130,
     "metadata_only_files": 0,
     "metadata_only_bytes": 0,
     "retention_by_binary_state": {
       "retained": {
-        "files": 4687,
-        "bytes": 3768438107
+        "files": 5106,
+        "bytes": 3971416130
       }
     }
   },
   "release_archive": {
     "status": "ok",
     "tag": "tracker-history",
-    "asset_count": 130,
-    "compressed_bytes": 3423947986,
+    "asset_count": 132,
+    "compressed_bytes": 3500444708,
     "review_threshold_assets": 750,
-    "remaining_to_review_threshold": 620,
+    "remaining_to_review_threshold": 618,
     "review_due": false,
     "policy": "review_only_no_automatic_deletion"
   },
@@ -32,10 +32,10 @@
     "hard_budget_bytes": 262144000,
     "reserve_bytes": 5242880,
     "selection_limit_bytes": 256901120,
-    "selected_files": 134,
-    "selected_bytes": 256900962,
-    "headroom_to_selection_limit_bytes": 158,
-    "headroom_to_hard_budget_bytes": 5243038
+    "selected_files": 153,
+    "selected_bytes": 256900788,
+    "headroom_to_selection_limit_bytes": 332,
+    "headroom_to_hard_budget_bytes": 5243212
   },
   "coverage": {
     "funds": 36,

@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-09-30T23:15:23+00:00
+Prepared: 2026-10-02T23:22:32+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -54,7 +54,7 @@ Prepared: 2026-09-30T23:15:23+00:00
 | LIC Mf Small Cap Fund | 20 | 20 | 0 | 15 | 0 | Gap | 1 | communication_document_not_archived, communication_archive_limitation, publication_date_missing |
 | Mahindra Manulife Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Mirae Asset Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 1 | publication_date_missing |
-| Motilal Oswal Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 2 | publication_date_missing |
+| Motilal Oswal Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 3 | publication_date_missing |
 | Nippon India Small Cap Fund | 103 | 103 | 0 | 103 | 0 | Gap | 1 | publication_date_missing |
 | Pgim India Small Cap Fund | 5 | 5 | 0 | 5 | 0 | Gap | 1 | publication_date_missing |
 | Quant Small Cap Fund | 12 | 12 | 0 | 12 | 0 | Gap | 1 | publication_date_missing |
