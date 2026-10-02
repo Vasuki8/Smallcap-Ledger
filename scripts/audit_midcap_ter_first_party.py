@@ -33,7 +33,7 @@ def markdown(result):
         else:
             row=errors[family]
             lines.append("| "+" | ".join([
-                family,row.get("amc",""),"failed","","","","",row["error"],
+                family,row.get("amc",""),"failed","","","",row.get("source",""),row["error"],
             ])+" |")
     lines.extend(["","## Notes",""])
     lines.extend("- "+x for x in result.get("notes",[]))

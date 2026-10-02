@@ -35,6 +35,14 @@ def _sha(content):
     return hashlib.sha256(content).hexdigest()
 
 
+class _IciciWorkbookError(ValueError):
+    """Keep rejected source identity separate from accepted TER evidence."""
+
+    def __init__(self,message,source,content):
+        super().__init__(message)
+        self.source_evidence={"source":source,"sha256":_sha(content),"bytes":len(content)}
+
+
 def _reconcile(plans,label):
     for plan in ("Regular","Direct"):
         values=plans.get(plan)
@@ -210,6 +218,13 @@ def _icici(family,today):
                 continue
         if source is None or content is None:
             raise ValueError("ICICI financial disclosure API and reviewed TER workbook paths are unavailable") from exc
+    try:
+        return _icici_workbook_result(family,today,source,content,api_error)
+    except Exception as exc:
+        raise _IciciWorkbookError(str(exc) or type(exc).__name__,source,content) from exc
+
+
+def _icici_workbook_result(family,today,source,content,api_error):
     rows=amc_expenses._icici_inline_strings(content)
     if len(rows)<4:raise ValueError("ICICI TER workbook has no usable rows")
     for col,expected in amc_expenses._ICICI_HEADER.items():
@@ -450,8 +465,11 @@ def collect(today=None):
             result["regular_ter"]=result["plans"]["Regular"]["ter"]
             results.append(result)
         except Exception as exc:
-            errors.append({"family":family,"amc":TARGETS[family],
-                           "error":(str(exc) or type(exc).__name__)[:300]})
+            error={"family":family,"amc":TARGETS[family],
+                   "error":(str(exc) or type(exc).__name__)[:300]}
+            if isinstance(exc,_IciciWorkbookError):
+                error.update(exc.source_evidence)
+            errors.append(error)
     return {
         "built_at":db.now(),
         "staged_category":"mid-cap",

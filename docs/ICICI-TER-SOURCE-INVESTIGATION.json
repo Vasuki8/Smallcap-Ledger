@@ -1,0 +1,103 @@
+{
+  "reviewed_on": "2026-10-02",
+  "scope": "rejected_source_provenance_and_read_only_reproduction",
+  "historical_source": {
+    "url": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+    "sha256": "e3619e5cae99d4e663e67bf6eaedf21749bc8ec86f3eca351f666cd4d10c9dcc",
+    "bytes": 303076,
+    "archived_fetch_at": "2026-09-30T22:38:18+00:00",
+    "member_size_and_sha256_verified": true,
+    "database_checkpoint": {
+      "asset": "database-36785965245-1.zip",
+      "bytes": 12524413,
+      "sha256": "324245341e2395deb39028b347ba10d318f61eeac7e0d3c77982bed24e58c4c0",
+      "size_and_sha256_match_manifest": true
+    },
+    "earlier_failed_response": {
+      "batch_built_at": "2026-09-30T22:32:44+00:00",
+      "error": "ICICI TER workbook columns changed",
+      "url_recorded": false,
+      "sha256_recorded": false,
+      "same_bytes_established": false
+    }
+  },
+  "local_reproduction": {
+    "clock": "2026-09-30",
+    "worksheet": "xl/worksheets/sheet1.xml",
+    "physical_header_row": 3,
+    "header_cell_type": "inlineStr",
+    "midcap_error": "ValueError: ICICI TER workbook columns changed",
+    "smallcap_error": "ValueError: ICICI TER column C changed",
+    "header_mismatches": {
+      "C": {"expected": "Base Expense Ratio (BER) (%)", "actual": "Base TER (%)¹"},
+      "D": {"expected": "Brokerage cost (%)", "actual": "Additional expense as per Regulation 52(6A)(b) (%)²"},
+      "E": {"expected": "Transaction Cost incurred for the purpose of execution of trade (%)", "actual": "Additional expense as per Regulation 52(6A)(c) (%)³"},
+      "F": {"expected": "Statutory Levies (including GST) (%)", "actual": "GST (%)⁴"},
+      "H": {"expected": "Base Expense Ratio (BER) (%)", "actual": "Base TER(%)¹"},
+      "I": {"expected": "Brokerage cost (%)", "actual": "Additional expense as per Regulation 52(6A)(b)(%)²"},
+      "J": {"expected": "Transaction Cost incurred for the purpose of execution of trade (%)", "actual": "Additional expense as per Regulation 52(6A)(c)(%)³"},
+      "K": {"expected": "Statutory Levies (including GST) (%)", "actual": "GST(%)⁴"},
+      "L": {"expected": "Total TER (%)", "actual": "Total TER(%)"}
+    },
+    "latest_exact_rows": [
+      {
+        "family": "ICICI Prudential Mid Cap Fund",
+        "physical_row": 1973,
+        "as_of": "2026-09-29",
+        "regular": {"source_components": [1.53, 0.01, 0.00, 0.31], "component_sum": 1.85, "reported_total_ter": 1.85, "difference": 0.00},
+        "direct": {"source_components": [0.89, 0.01, 0.00, 0.31], "component_sum": 1.21, "reported_total_ter": 1.11, "difference": 0.10}
+      },
+      {
+        "family": "ICICI Prudential Small Cap Fund",
+        "physical_row": 4177,
+        "as_of": "2026-09-29",
+        "regular": {"source_components": [1.50, 0.08, 0.01, 0.51], "component_sum": 2.10, "reported_total_ter": 2.10, "difference": 0.00},
+        "direct": {"source_components": [0.70, 0.08, 0.01, 0.51], "component_sum": 1.30, "reported_total_ter": 1.18, "difference": 0.12}
+      }
+    ],
+    "values_unit": "annual_percentage_points",
+    "reconciliation_tolerance_percentage_points": 0.02,
+    "footnotes": [
+      "1. Base TER excludes additional expenses provided in Regulation 52(6A)(b) and 52(6A)(c) of SEBI (Mutual Funds) Regulations, 1996 and Goods and Services Tax (GST) on investment and advisory fees as per applicable rate.",
+      "7. TER disclosure has been revised to net basis (net of reversals on account of regulatory provisions) with effect from August 30, 2018.It is only a change in the manner of disclosure and not a change in the TER charged to the scheme.",
+      "8. TER is generated as on 30-Sep-2026 05:00 AM."
+    ],
+    "row_adjustment_quantified_by_source": false,
+    "accepted_ter_recovery": false
+  },
+  "current_production": {
+    "run_id": 37075265591,
+    "conclusion": "success",
+    "code_commit": "b11f49c4d264ea860b9fc9c45f4149fceea902dd",
+    "build_completed_at": "2026-10-02T23:22:44Z",
+    "deploy_completed_at": "2026-10-02T23:23:02Z",
+    "generated_commit": "031571cf94b7b2dd79ec69558ce16c370577ff04",
+    "generated_commit_parent": "b11f49c4d264ea860b9fc9c45f4149fceea902dd",
+    "committed_export_clock": "2026-10-02T23:22:13+00:00",
+    "latest_included_nav_date": "2026-10-01",
+    "funds": 36,
+    "nav_series": 143,
+    "nav_observations": 282152,
+    "live_website_independently_verified": false,
+    "live_host_check_blocker": "environment_network_policy",
+    "midcap_batch1_built_at": "2026-10-02T23:00:56+00:00",
+    "icici_error": "ICICI exact Mid Cap scheme name is not unique",
+    "rejected_response_bytes_captured": false,
+    "rejected_response_sha256_recorded": false,
+    "no_successful_october_icici_ter_archived_fetch_in_checkpoint": true,
+    "database_checkpoint": {
+      "asset": "database-37075265591-1.zip",
+      "bytes": 12775334,
+      "sha256": "36eac5351b02d799ab82c00736606196a7e260d64751fec762bcc340f706243d",
+      "size_and_sha256_match_manifest": true
+    },
+    "midcap_direct_ter_families": 29,
+    "midcap_total_families": 34,
+    "remaining_ter_families": ["BANDHAN MID CAP FUND", "BANK OF INDIA MID CAP FUND", "ICICI Prudential Mid Cap Fund", "JM Mid Cap Fund", "WhiteOak Capital Mid Cap Fund"],
+    "midcap_launch_ready": false,
+    "midcap_public_export_enabled": false
+  },
+  "next_action": "After the four approved source-domain draft additions are applied, capture an actual rejected ICICI workbook with URL, SHA-256 and byte count through the normal read-only preflight; inspect exact identity, headers, dates and reconciliation evidence before any parser acceptance change.",
+  "parser_acceptance_changed": false,
+  "tracked_source_binary_added": false
+}
