@@ -38,7 +38,7 @@ openpyxl==3.1.5
     # via smallcap-ledger
 pydantic==2.13.5
     # via fastapi
-pydantic-core==2.46.5
+pydantic-core==2.49.0
     # via pydantic
 pypdf==6.17.0
     # via smallcap-ledger
