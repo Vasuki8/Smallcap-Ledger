@@ -1,10 +1,43 @@
 {
-  "built_at": "2026-10-03T01:06:16+00:00",
+  "built_at": "2026-10-03T02:17:41+00:00",
   "staged_category": "mid-cap",
-  "targets": 7,
-  "recovered": 6,
+  "targets": 8,
+  "recovered": 7,
   "failed": 1,
   "results": [
+    {
+      "family": "BANK OF INDIA MID CAP FUND",
+      "amc": "Bank of India Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-29",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 2.02,
+          "brokerage": 0.06,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.47,
+          "ter": 2.55
+        },
+        "Direct": {
+          "base_expense_ratio": 0.98,
+          "brokerage": 0.06,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.28,
+          "ter": 1.32
+        }
+      },
+      "source": "https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8",
+      "sha256": "4a4d8482f052c438a5dd664def2c8277c7ecaa5a311c0f3902307e7fdb62fc75",
+      "bytes": 56375,
+      "identity": {
+        "scheme_name": "Bank of India Mid Cap Fund",
+        "nsdl_scheme_code": "BOIA/O/E/MIF/25/06/0023"
+      },
+      "evidence_type": "official_amc_reviewed_workbook",
+      "discovery_channel": "reviewed_monthly_workbook",
+      "direct_ter": 1.32,
+      "regular_ter": 2.55
+    },
     {
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",

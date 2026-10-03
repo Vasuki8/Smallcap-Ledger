@@ -1,8 +1,8 @@
 {
-  "reviewed_at": "2026-10-03T01:27:15+00:00",
+  "reviewed_at": "2026-10-03T02:39:16+00:00",
   "scope": "new_hash_delta_only",
-  "count": 1161,
-  "raw_bytes": 482934478,
+  "count": 1289,
+  "raw_bytes": 534104787,
   "production_binary_state_changes": 0,
   "merged_into_existing_695_hash_proposal": false,
   "candidates": [
@@ -307,6 +307,26 @@
       ]
     },
     {
+      "hash": "0271396119a2b47dff844aa6713712e26f75deed9471185cba26b6c861647300",
+      "bytes": 297889,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:16:56+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/mandatory-disclosures/online-dispute-resolution",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/mandatory-disclosures/online-dispute-resolution"
+      ]
+    },
+    {
       "hash": "029c30dd1186de499287b1f88f21aa04bb1068f01b62a33952bb6de2b17651f6",
       "bytes": 293854,
       "media_type": "text/html; charset=utf-8",
@@ -467,6 +487,26 @@
       ]
     },
     {
+      "hash": "034a21ffec67ca52c958e0a4ad0270f16270a5b55cf7e6d0e6db4dcef96a4f91",
+      "bytes": 187735,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:03+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/statutory-disclosure",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/statutory-disclosure"
+      ]
+    },
+    {
       "hash": "035e47e1d5ecc4d0887620262824a6fcb99e23818a10bc01b883748fa7076321",
       "bytes": 256173,
       "media_type": "text/html; charset=utf-8",
@@ -491,7 +531,7 @@
       "bytes": 404979,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:46+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/mandatory-disclosures/portfolio-disclosures",
@@ -511,7 +551,7 @@
       "bytes": 297889,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:12:08+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/mandatory-disclosures/online-dispute-resolution",
@@ -584,6 +624,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/responsible-investing"
+      ]
+    },
+    {
+      "hash": "04cca2204a9309cc34ca50bd01c1a923db10ca71e70b4cdedfaa57541a8bc68e",
+      "bytes": 296110,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:51+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/statutory-disclosures/other-statutory-disclosures",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/statutory-disclosures/other-statutory-disclosures"
       ]
     },
     {
@@ -831,7 +891,7 @@
       "bytes": 109661,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:22+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy",
@@ -851,7 +911,7 @@
       "bytes": 86961,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T01:11:06+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Oct2026/Innerpages/Small-cap.html",
@@ -1064,6 +1124,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.quantumamc.com/portfolio/combined/-1/1/0/0"
+      ]
+    },
+    {
+      "hash": "08e74715a1dcfcdaabd83b75bbbe197a81070d92c17b7e3715abf67de8cc5711",
+      "bytes": 114040,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:32+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme"
       ]
     },
     {
@@ -1288,6 +1368,27 @@
       ]
     },
     {
+      "hash": "0b23fd3d66932d5227947f540c72dee47c54909bf160071da71c34a2b4be70af",
+      "bytes": 420226,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-30T03:01:10+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://invescomutualfund.com/statutory-disclosures",
+      "host": "invescomutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://invescomutualfund.com/statutory-disclosures",
+        "https://www.invescomutualfund.com/statutory-disclosures"
+      ]
+    },
+    {
       "hash": "0b32ec25b1503b26a5b19df6d77155aad9af1d834674689fc0c350c550680521",
       "bytes": 114008,
       "media_type": "text/html; charset=UTF-8",
@@ -1352,7 +1453,7 @@
       "bytes": 120291,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:08:58+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/mutual-funds/factsheets",
@@ -1392,7 +1493,7 @@
       "bytes": 342376,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:13:24+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/mandatory-disclosures",
@@ -1708,6 +1809,26 @@
       ]
     },
     {
+      "hash": "0f782519cebd395ce43c780818cd648e8bcdf12e69a76c3226c896c59115ae08",
+      "bytes": 86961,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T02:23:17+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Oct2026/Innerpages/Small-cap.html",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/efactsheet/Oct2026/Innerpages/Small-cap.html"
+      ]
+    },
+    {
       "hash": "0f7fd36bb683699f73f0550e9f110a456b0d58c87d81a12434537b47818064c3",
       "bytes": 101692,
       "media_type": "text/html; charset=utf-8",
@@ -1808,6 +1929,26 @@
       ]
     },
     {
+      "hash": "104954c5edab4608f66e736ff1b96d974c4cce6d930d10b8b459ddcee1d40e8b",
+      "bytes": 143716,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:27+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/"
+      ]
+    },
+    {
       "hash": "107dc6464160bebfa55bf6b6685ac86f95590ad531747e6a56665c54a5731e3d",
       "bytes": 730448,
       "media_type": "text/html; charset=utf-8",
@@ -1852,7 +1993,7 @@
       "bytes": 272511,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-02T23:10:41+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-difference-disclosures",
@@ -1988,6 +2129,26 @@
       ]
     },
     {
+      "hash": "11b9093cc52af9b58e1c3a4df06e95770087cb0ea8e3040e44f7fb342c474195",
+      "bytes": 235242,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:14+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/disclosures/valuation-policies",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/disclosures/valuation-policies"
+      ]
+    },
+    {
       "hash": "11d2c4015bd1634fe7d37b05c6e44701aecee8e4a37a2a5bc5114beaae2137d7",
       "bytes": 577697,
       "media_type": "text/html; charset=utf-8",
@@ -2112,7 +2273,7 @@
       "bytes": 293321,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:12:51+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/blog/how-many-mutual-funds-for-diversified-portfolio",
@@ -2192,7 +2353,7 @@
       "bytes": 114040,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:44+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme",
@@ -2331,6 +2492,26 @@
       ]
     },
     {
+      "hash": "14dce86ae0ec856f3ba6af83eaced3bc7dfe3f8695e0e55824bd574868c96f24",
+      "bytes": 297477,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:16:30+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/mandatory-disclosures/sebi-registration-details",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/mandatory-disclosures/sebi-registration-details"
+      ]
+    },
+    {
       "hash": "14f5a4f7d06662e32fb4515ecee82dc477559ec801938791c09e6e1892568666",
       "bytes": 226198,
       "media_type": "text/html; charset=utf-8",
@@ -2355,7 +2536,7 @@
       "bytes": 143716,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:17:01+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/",
@@ -2491,11 +2672,51 @@
       ]
     },
     {
+      "hash": "16e752f28929bafc732f46a7d62049a4f48f2dbfeb2bbdde9653aa05df9a65e4",
+      "bytes": 119886,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:40+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/statutory-disclosures",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/statutory-disclosures"
+      ]
+    },
+    {
+      "hash": "16f282be1b8cc22ba730567f7e534e5042fb55d1aacfed1781e209064a77f587",
+      "bytes": 114040,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:11+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme"
+      ]
+    },
+    {
       "hash": "16fe16f4e5ad42c0d737b67982073db56d4c692a8e4e398ef96e2f36b99c4781",
       "bytes": 936620,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:15:53+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.samcomf.com/downloads/#Factsheet",
@@ -2548,6 +2769,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.dspim.com/factsheets/comparative-performance"
+      ]
+    },
+    {
+      "hash": "17558177991491e4763af2f88e55fe9fc3767a617ce604bf29b58bd86d606ac5",
+      "bytes": 294828,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:18:45+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/abslamc-knowledge-centre/articles/is-your-portfolio-missing-the-shine-of-gold-and-silver",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/abslamc-knowledge-centre/articles/is-your-portfolio-missing-the-shine-of-gold-and-silver"
       ]
     },
     {
@@ -2635,7 +2876,7 @@
       "bytes": 269781,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:12:27+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/market-update",
@@ -2695,7 +2936,7 @@
       "bytes": 304106,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:18+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/factsheets/how-to-read-factsheet",
@@ -2895,7 +3136,7 @@
       "bytes": 15082,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:34+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html",
@@ -2988,6 +3229,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.barodabnpparibasmf.in/mandatory-disclosures"
+      ]
+    },
+    {
+      "hash": "1af9b28bd1032c629e98ed3bd3b37f6d9552d7f98bb12529f3c5daf68158324b",
+      "bytes": 256173,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:12+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/disclosures/dividend-summary",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/disclosures/dividend-summary"
       ]
     },
     {
@@ -3135,7 +3396,7 @@
       "bytes": 123680,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:36+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/learn/macros-markets-more/market-review",
@@ -3215,7 +3476,7 @@
       "bytes": 584377,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:17:37+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/",
@@ -3235,7 +3496,7 @@
       "bytes": 420434,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:12:13+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://invescomutualfund.com/statutory-disclosures/voting-policy",
@@ -3255,7 +3516,7 @@
       "bytes": 15069,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:12:16+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/Information/corporate-disclosure",
@@ -3275,7 +3536,7 @@
       "bytes": 41660,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:12:06+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.heliosmf.in/portfolio-construction",
@@ -3348,6 +3609,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.dspim.com/"
+      ]
+    },
+    {
+      "hash": "1e4fd1a4a154d207a043b72ed27161e32beba0eb6a5c793cf23d5012436b92d5",
+      "bytes": 151224,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:13:26+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/portfolio/quantum-small-cap-fund/13/1/0/0",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/portfolio/quantum-small-cap-fund/13/1/0/0"
       ]
     },
     {
@@ -3515,7 +3796,7 @@
       "bytes": 151224,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:08:16+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/portfolio/quantum-small-cap-fund/13/1/0/0",
@@ -3571,6 +3852,26 @@
       ]
     },
     {
+      "hash": "1fdb40563a343a83d5954f300e9604c610a0064805b1ba83dfdc445a48ebd27e",
+      "bytes": 575692,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:10:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/downloads/scheme-summary-documents",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/downloads/scheme-summary-documents"
+      ]
+    },
+    {
       "hash": "1fe19d64b820c1d4aec48cbebf41b6c23bb4bb237c2d08e0120d86a68268848c",
       "bytes": 75403,
       "media_type": "text/html; charset=utf-8",
@@ -3591,11 +3892,31 @@
       ]
     },
     {
+      "hash": "2025c9cf29f972aea9e34e1cf8bb6a05de427c73870a5ad42f3c0d1289f21374",
+      "bytes": 79360,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:25:56+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/downloads/factsheet",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/downloads/factsheet"
+      ]
+    },
+    {
       "hash": "2027411e0a43b1e31d3c38d8d80d98806e2e650967deba308b42a626757f5a56",
       "bytes": 249851,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:14:49+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund",
@@ -3648,6 +3969,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html"
+      ]
+    },
+    {
+      "hash": "2061bfc3ba62c57442b9ab582f7bf5a4ea7924e3249f6c4a41033a9ec7449512",
+      "bytes": 10494,
+      "media_type": "text/html",
+      "first_seen": "2026-10-03T01:20:07+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular",
+      "host": "bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular"
       ]
     },
     {
@@ -3715,7 +4056,7 @@
       "bytes": 75403,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:22:04+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantmutual.com/downloads/investment_outlook",
@@ -3768,6 +4109,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://quantmutual.com/"
+      ]
+    },
+    {
+      "hash": "22130a9ea4b3cc84c29ca8efde0bcf48e79651c804ccc752cc9498391ebeda0c",
+      "bytes": 111920,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:24+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy/active-equities",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy/active-equities"
       ]
     },
     {
@@ -3871,6 +4232,27 @@
       ]
     },
     {
+      "hash": "2310cea44b1bc8d5cbc87f77af58a31e5d7c106b7ef91dc91ac7147b63238f7d",
+      "bytes": 421536,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-02T23:04:51+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://invescomutualfund.com/statutory-disclosures",
+      "host": "invescomutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://invescomutualfund.com/statutory-disclosures",
+        "https://www.invescomutualfund.com/statutory-disclosures"
+      ]
+    },
+    {
       "hash": "2360c5cb32ccaee9aaf48e58d4a2f77ebab8faf8630e77c00798eca07edfe0e3",
       "bytes": 92589,
       "media_type": "text/html; charset=UTF-8",
@@ -3895,7 +4277,7 @@
       "bytes": 15077,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:47+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/July_2026/kotak/SMALL-CAP.html",
@@ -3995,7 +4377,7 @@
       "bytes": 111920,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:23+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy/active-equities",
@@ -4155,7 +4537,7 @@
       "bytes": 732840,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:19:46+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/",
@@ -4276,7 +4658,7 @@
       "bytes": 144196,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:07+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/statutory-disclosure/letter-unitholder",
@@ -4289,6 +4671,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.hdfcfund.com/statutory-disclosure/letter-unitholder"
+      ]
+    },
+    {
+      "hash": "285e302f6331a89bcac9e614f4f2400ad5211593a0a3035708e0ba41e9db5ad2",
+      "bytes": 86961,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T02:23:25+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html"
       ]
     },
     {
@@ -4316,7 +4718,7 @@
       "bytes": 318837,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:01+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/factsheets/comparative-performance",
@@ -4472,11 +4874,31 @@
       ]
     },
     {
+      "hash": "2b0b29da1526a5fc10c0750f96195c75a950e60fcd33de3e20418d690f54d587",
+      "bytes": 123679,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:27+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/learn/macros-markets-more/market-review",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/learn/macros-markets-more/market-review"
+      ]
+    },
+    {
       "hash": "2b740b8303ba6e041b8131af2abc964cdfac39588ef1ffb5406fa010fd50e6e5",
       "bytes": 15037,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:17:25+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/",
@@ -4496,7 +4918,7 @@
       "bytes": 235242,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:22+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/disclosures/valuation-policies",
@@ -4536,7 +4958,7 @@
       "bytes": 105332,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:05:06+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/transaction-and-money-market-securities",
@@ -4633,11 +5055,31 @@
       ]
     },
     {
+      "hash": "2cf36c292bddc75202cc4fd710393d065dfcd831d3adf8224f940d5d23b96080",
+      "bytes": 244927,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:11+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/customer-service/investor-charter-and-disclosure-of-complaints",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/customer-service/investor-charter-and-disclosure-of-complaints"
+      ]
+    },
+    {
       "hash": "2d12c44571d48ac62017b80913a41b79c5da9db753ed774e8f73fd07e0f720f8",
       "bytes": 18554,
       "media_type": "text/html",
       "first_seen": "2026-10-03T00:17:15+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.icicipruamc.com/",
@@ -4657,7 +5099,7 @@
       "bytes": 201434,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:20:41+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
@@ -4857,7 +5299,7 @@
       "bytes": 297770,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:49+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/compensation-disclosure",
@@ -5057,7 +5499,7 @@
       "bytes": 575692,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:05:09+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/downloads/scheme-summary-documents",
@@ -5197,7 +5639,7 @@
       "bytes": 10495,
       "media_type": "text/html",
       "first_seen": "2026-10-03T00:19:24+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://bandhanmutual.com/downloads/market-outlook",
@@ -5237,7 +5679,7 @@
       "bytes": 8089180,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-02T23:16:17+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/equity-funds/small-cap-mutual-funds",
@@ -5330,6 +5772,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.growwmf.in/downloads/scheme-summary-documents"
+      ]
+    },
+    {
+      "hash": "3499026f714fcbcfd4534d7fa03507786377923025428cef6b885e3a7c6979f7",
+      "bytes": 577697,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:10:07+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/downloads/disclosure-requirement-for-amc-pursuant-to-para-22.8-of-sebi-master-circular",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/downloads/disclosure-requirement-for-amc-pursuant-to-para-22.8-of-sebi-master-circular"
       ]
     },
     {
@@ -5497,7 +5959,7 @@
       "bytes": 227840,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:10+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/disclosure-requirement-for-amc-pursuant-to-sebi-circular-dated-aug-25-2022",
@@ -5833,6 +6295,26 @@
       ]
     },
     {
+      "hash": "3a049211c72f017a8b853c56aa3b5be206e9393b3b331015c47d08a3220829bc",
+      "bytes": 232052,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:19:14+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.heliosmf.in/portfolio-disclosure",
+      "host": "heliosmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.heliosmf.in/portfolio-disclosure"
+      ]
+    },
+    {
       "hash": "3a639f6eaf6306e3842d4b378b9fccd749adfff1f71bd75b00bc17c7b23ba1a0",
       "bytes": 190232,
       "media_type": "text/html; charset=utf-8",
@@ -5897,7 +6379,7 @@
       "bytes": 10492,
       "media_type": "text/html",
       "first_seen": "2026-10-03T00:16:41+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://bandhanmutual.com/downloads/disclosures",
@@ -5957,7 +6439,7 @@
       "bytes": 91642,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:28+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/unclaimed-redemption-and-dividend-details",
@@ -5977,7 +6459,7 @@
       "bytes": 425864,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:17:28+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/",
@@ -6053,6 +6535,26 @@
       ]
     },
     {
+      "hash": "3cf068452a8199b68e7b02449feed2c6233e045823782ac58e73a0e97a05abad",
+      "bytes": 318837,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:10+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/factsheets/comparative-performance",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/factsheets/comparative-performance"
+      ]
+    },
+    {
       "hash": "3d26f75091937a8a39836b28a14ccad7e962be9ec69bef37a55d6d7816473f7d",
       "bytes": 190232,
       "media_type": "text/html; charset=utf-8",
@@ -6110,6 +6612,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme"
+      ]
+    },
+    {
+      "hash": "3db71a9476c907c6b552a30a69bc0ec29d5291842f4ede576a4456768ceec730",
+      "bytes": 12253727,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:12:44+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets"
       ]
     },
     {
@@ -6357,7 +6879,7 @@
       "bytes": 394938,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:48+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/statutory-disclosure/portfolio",
@@ -6517,7 +7039,7 @@
       "bytes": 421678,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:04:47+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://invescomutualfund.com/literature-forms/factsheets",
@@ -6614,6 +7136,26 @@
       ]
     },
     {
+      "hash": "415e0610c2f371e6c3bd484ea98e61050d1bdc9d38d2348d6227e131d7b6e571",
+      "bytes": 35935,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:23:05+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/distributor/knowledge-hub/publications",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/distributor/knowledge-hub/publications"
+      ]
+    },
+    {
       "hash": "416e6266a1b077a2be3e9aa46ab7a19c641e7858101aa2a3ca178cc7b5cadd98",
       "bytes": 397138,
       "media_type": "text/html; charset=utf-8",
@@ -6658,7 +7200,7 @@
       "bytes": 297520,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:48+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/statutory-disclosures/other-statutory-disclosures",
@@ -6874,6 +7416,26 @@
       ]
     },
     {
+      "hash": "44574577456ef19ab81c7608dc4f175d026cb7e9ae9d24e149b4c5c01b9d9110",
+      "bytes": 296304,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:43+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/statutory-disclosures/voting-policy",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/statutory-disclosures/voting-policy"
+      ]
+    },
+    {
       "hash": "44ad7ce098a3287e6bcdf6afec6398fa9bf2678a116476b3202aa3ba3e37365b",
       "bytes": 119897,
       "media_type": "text/html; charset=utf-8",
@@ -6938,6 +7500,26 @@
       "bytes": 190180,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:17:32+00:00",
+      "classification_before": "link_only_candidate",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.heliosmf.in/",
+      "host": "heliosmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.heliosmf.in/"
+      ]
+    },
+    {
+      "hash": "46952daa2b4ebb5d517a0779ee46fd2bbef7c6cc48e63d783c059f89cfdb76f3",
+      "bytes": 190180,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:21:17+00:00",
       "classification_before": "retain_latest_or_review",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
@@ -7094,11 +7676,31 @@
       ]
     },
     {
+      "hash": "47ac48a07b80a4e08c5a3bbceb99b8efe3383c57265dda890083da1750fa8e48",
+      "bytes": 228874,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:05+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document"
+      ]
+    },
+    {
       "hash": "47bf0e084a469376da4568a51d2ba4a4ee488523bc398ec16659eb0acdfe7f72",
       "bytes": 127450,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:00+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/our-governance",
@@ -7238,7 +7840,7 @@
       "bytes": 414370,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:04:52+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/statutory-disclosures/expense-ratio/expense-ratio/ter-notice",
@@ -7335,6 +7937,26 @@
       ]
     },
     {
+      "hash": "4a16efb82e4c21e92a0b312f530008ddd29ed10218574e937993793ca0ac2a43",
+      "bytes": 201434,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:24:18+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights?categories=%5B%27local-market-commentary%27%5D"
+      ]
+    },
+    {
       "hash": "4a4d9edba651656199de062c80f0e412bdf3edc57907ef5a4c2ae164c605e250",
       "bytes": 226198,
       "media_type": "text/html; charset=utf-8",
@@ -7352,6 +7974,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mf.nipponindiaim.com/investor-service/downloads/distributor-disclosures"
+      ]
+    },
+    {
+      "hash": "4a7ae6c3c1baa3863ab51809101d427449bdd7596e4c102734a6d6f3a0460cbf",
+      "bytes": 121660,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:22+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/responsible-investing",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/responsible-investing"
       ]
     },
     {
@@ -7439,7 +8081,7 @@
       "bytes": 92750,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:32+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures",
@@ -7479,7 +8121,7 @@
       "bytes": 190183,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:13:24+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/Download-document#funds-sec",
@@ -7499,7 +8141,7 @@
       "bytes": 90642,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:10:39+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio",
@@ -7555,6 +8197,26 @@
       ]
     },
     {
+      "hash": "4d971c51c0561376a5b85e5a733c0fd381ae2cde482818e93d01de2f129324eb",
+      "bytes": 189535,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:20:39+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/"
+      ]
+    },
+    {
       "hash": "4dee89e944a44fd8abbe4245498090900b4fa9413896857e05b6eb4e5f7b0bfb",
       "bytes": 10494,
       "media_type": "text/html",
@@ -7572,6 +8234,27 @@
       "latest_for_urls": [],
       "urls": [
         "https://bandhanmutual.com/downloads/factsheet/all-schemes"
+      ]
+    },
+    {
+      "hash": "4e11de6db5286f89b8783a75904fc9d10f8989a9ebe5ee73ff231787a532e03d",
+      "bytes": 418476,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-25T21:46:14+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://invescomutualfund.com/statutory-disclosures",
+      "host": "invescomutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://invescomutualfund.com/statutory-disclosures",
+        "https://www.invescomutualfund.com/statutory-disclosures"
       ]
     },
     {
@@ -7635,6 +8318,26 @@
       ]
     },
     {
+      "hash": "4edb0e82e825b0761a1ff6445302c3b0953b10755dd41f85e427adc2ef75f35d",
+      "bytes": 41660,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:16:34+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.heliosmf.in/portfolio-construction",
+      "host": "heliosmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.heliosmf.in/portfolio-construction"
+      ]
+    },
+    {
       "hash": "4fb9f08c71001a0b978d5f0cf4f0db977dab2817013d6588703bbe5eafe1d22e",
       "bytes": 402472,
       "media_type": "text/html; charset=UTF-8",
@@ -7672,6 +8375,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.quantumamc.com/portfolio/quantum-small-cap-fund/13/1/0/0"
+      ]
+    },
+    {
+      "hash": "4fda533c0394fb9861950905232de8db00e4a59f8a769d0731e471287ea69ef8",
+      "bytes": 407961,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:25:47+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures"
       ]
     },
     {
@@ -7739,7 +8462,7 @@
       "bytes": 113320,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:00+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us",
@@ -7755,11 +8478,51 @@
       ]
     },
     {
+      "hash": "50741f5ec312cbc3532d65681c7403649a8f97480f852e575cce21fc077206a5",
+      "bytes": 18554,
+      "media_type": "text/html",
+      "first_seen": "2026-10-03T01:20:40+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.icicipruamc.com/",
+      "host": "icicipruamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.icicipruamc.com/"
+      ]
+    },
+    {
+      "hash": "507b5d2064c09e1dde5f896165e7e769e98ed738df86d80e9ffd0559bff13e61",
+      "bytes": 133579,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:21:34+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.samcomf.com/",
+      "host": "samcomf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.samcomf.com/"
+      ]
+    },
+    {
       "hash": "50eff6a6d17caa930b761cb63f8fda4f0004f29e4e28e80f44d0a6af1943b11e",
       "bytes": 226198,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:12+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/distributor-disclosures",
@@ -7899,7 +8662,7 @@
       "bytes": 244927,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:14+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/customer-service/investor-charter-and-disclosure-of-complaints",
@@ -7972,6 +8735,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us"
+      ]
+    },
+    {
+      "hash": "528828e82ecf3a00d308df707122374f30442fc7edd63178f323ce9cfe8ec28c",
+      "bytes": 15077,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:45+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/factsheet/July_2026/kotak/SMALL-CAP.html",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/factsheet/July_2026/kotak/SMALL-CAP.html"
       ]
     },
     {
@@ -8119,7 +8902,7 @@
       "bytes": 3488430,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:15:23+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.samcomf.com/StatutoryDisclosure#scheme-financials",
@@ -8152,6 +8935,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.kotakmf.com/Information/corporate-disclosure"
+      ]
+    },
+    {
+      "hash": "54940efcac59ece79d57ebcf99cf60a9fad393f869fc14d5c21e45aac2da037c",
+      "bytes": 226198,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:10+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/distributor-disclosures",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/downloads/distributor-disclosures"
       ]
     },
     {
@@ -8192,6 +8995,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund"
+      ]
+    },
+    {
+      "hash": "55a2523aebc73d2824101210de752c08cb42028b11c66dbfdc3e6851585ee783",
+      "bytes": 297772,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:52+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/compensation-disclosure",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/compensation-disclosure"
       ]
     },
     {
@@ -8259,7 +9082,7 @@
       "bytes": 187736,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:06+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/statutory-disclosure",
@@ -8315,11 +9138,31 @@
       ]
     },
     {
+      "hash": "571e3c8fd183f3df8937fe648392880104ba4d98cc10c132912fbdf7446ef727",
+      "bytes": 249851,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:19:12+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund"
+      ]
+    },
+    {
       "hash": "5726282f2b8d06d4534018fda07c63a47c9580fd675cbd782fa3970138ef3de1",
       "bytes": 578861,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:05:12+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/downloads/disclosure-of-risk-parameters",
@@ -8719,7 +9562,7 @@
       "bytes": 15058,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:19:38+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/monthly-market-update",
@@ -8752,6 +9595,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.hdfcfund.com/statutory-disclosure/total-expense-ratio-of-mutual-fund-schemes/reports"
+      ]
+    },
+    {
+      "hash": "5c6e514a9a05f2396b699889a670e1cc888c923e9af69b0ca449abb81011a28d",
+      "bytes": 577485,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:12:05+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/downloads/fact-sheet",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/downloads/fact-sheet"
       ]
     },
     {
@@ -8879,7 +9742,7 @@
       "bytes": 120297,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:00+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/statutory-disclosure/total-expense-ratio-of-mutual-fund-schemes/reports",
@@ -9059,7 +9922,7 @@
       "bytes": 411269,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:05:16+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/schemes-related/scheme-factsheet",
@@ -9355,6 +10218,46 @@
       ]
     },
     {
+      "hash": "637fc6d904e6063c929877b474f8d7c85906fff713e84211f9571bc3010d7e1c",
+      "bytes": 101734,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:21:45+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/"
+      ]
+    },
+    {
+      "hash": "63a696e9d98976bd5792cdd70607efa892d99878ec01583d29bbfe12f2ffe712",
+      "bytes": 75519,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:16+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/ETF/Tracking.aspx",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/ETF/Tracking.aspx"
+      ]
+    },
+    {
       "hash": "63fa6ea5ab8c7e0202866822f73da4a93db0a5972d89e671c0228fef255f7c97",
       "bytes": 342376,
       "media_type": "text/html; charset=UTF-8",
@@ -9475,11 +10378,31 @@
       ]
     },
     {
+      "hash": "64f7a710e0c3fad93320a7073684bccdb46ac90519780c58da699e8ea38bc4b7",
+      "bytes": 66707,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:17:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.heliosmf.in/helios-small-cap-fund",
+      "host": "heliosmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.heliosmf.in/helios-small-cap-fund"
+      ]
+    },
+    {
       "hash": "650143a99ff0ca2ecf73dd4b9214dc92a3fda98b78b0cba385688046c2d0c84a",
       "bytes": 10493,
       "media_type": "text/html",
       "first_seen": "2026-10-03T00:16:40+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://bandhanmutual.com/mutual-funds/equity-funds/bandhan-small-cap-fund/regular",
@@ -9519,7 +10442,7 @@
       "bytes": 577485,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:55+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/downloads/fact-sheet",
@@ -9579,7 +10502,7 @@
       "bytes": 297477,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:11:50+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/mandatory-disclosures/sebi-registration-details",
@@ -9632,6 +10555,47 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.tatamutualfund.com/"
+      ]
+    },
+    {
+      "hash": "65b6c7de0427b4d639acc9b4a52d8f5eb36f22588cbd8d247e2ea4baa9318531",
+      "bytes": 91642,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:31+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/unclaimed-redemption-and-dividend-details",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/mandatory-disclosures/unclaimed-redemption-and-dividend-details"
+      ]
+    },
+    {
+      "hash": "65ef58f7d9236eb5b1c901177655622ffb784de07f1f81f89f4e449c2151cc60",
+      "bytes": 414368,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:09:47+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/statutory-disclosures/expense-ratio/expense-ratio/ter-notice",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/statutory-disclosures/expense-ratio/expense-ratio/ter-notice",
+        "https://www.tatamutualfund.com/statutory-disclosures/expense-ratio/ter-notice"
       ]
     },
     {
@@ -9772,6 +10736,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.barodabnpparibasmf.in/mandatory-disclosures"
+      ]
+    },
+    {
+      "hash": "66d194b73352c7af62dbc570246b972818003d033428ed39eed0ea7beb83edab",
+      "bytes": 394938,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:42+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/statutory-disclosure/portfolio",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/statutory-disclosure/portfolio"
       ]
     },
     {
@@ -9939,7 +10923,7 @@
       "bytes": 66707,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:12:22+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.heliosmf.in/helios-small-cap-fund",
@@ -10036,6 +11020,26 @@
       ]
     },
     {
+      "hash": "6a3bfb640c0ec65bbae9a4bfa641e384684dd2fe84f020f4e96e5617c3c85795",
+      "bytes": 105274,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:10:01+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/average-assets-under-management-disclosure",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/mandatory-disclosures/average-assets-under-management-disclosure"
+      ]
+    },
+    {
       "hash": "6abf2e94a6412cdce1b3ebca51a49355065a61d9286a6faeb27ebf6e957fe172",
       "bytes": 634482,
       "media_type": "text/html; charset=utf-8",
@@ -10093,6 +11097,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mf.nipponindiaim.com/investor-service/downloads/disclosure-requirement-for-amc-pursuant-to-sebi-circular-dated-aug-25-2022"
+      ]
+    },
+    {
+      "hash": "6b54448fba76bd4611dfa571f90e3caab21b783016f75a0f0b22e7fce8493069",
+      "bytes": 109661,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:23+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/investment-philosophy"
       ]
     },
     {
@@ -10160,7 +11184,7 @@
       "bytes": 135166,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:26+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/downloads/monthly-factsheet",
@@ -10260,7 +11284,7 @@
       "bytes": 190183,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:13:22+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/Download-document#headingFive",
@@ -10300,7 +11324,7 @@
       "bytes": 3488430,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T01:13:22+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
@@ -10500,7 +11524,7 @@
       "bytes": 160096,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:18:44+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook",
@@ -10600,7 +11624,7 @@
       "bytes": 91925,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:05:08+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/distributor-commission-disclosure",
@@ -10760,7 +11784,7 @@
       "bytes": 121660,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:22+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/responsible-investing",
@@ -10820,7 +11844,7 @@
       "bytes": 110845,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:00+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/portfolio-management-services",
@@ -10840,7 +11864,7 @@
       "bytes": 15057,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:12:15+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/July_2026/",
@@ -10856,11 +11880,31 @@
       ]
     },
     {
+      "hash": "71e8db61816c6b949f96005cdc580c98ebe174ffc5dc2b7c2fe2798bb0de3df9",
+      "bytes": 3488430,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:21:25+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ]
+    },
+    {
       "hash": "72855152037f3feebc08f82be9fba5cd760901319a10807ff17e318b3ce4971f",
       "bytes": 152447,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:16:29+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.axismf.com/downloads",
@@ -10880,7 +11924,7 @@
       "bytes": 10495,
       "media_type": "text/html",
       "first_seen": "2026-10-03T00:16:42+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
@@ -10893,6 +11937,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://bandhanmutual.com/downloads/factsheet/all-schemes"
+      ]
+    },
+    {
+      "hash": "730eed42beaa1c2f7f16b75f60dd8b34928a5a381d3937ee99c404b84fc7da2f",
+      "bytes": 297279,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:18:04+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/mandatory-disclosures/unitholder-letter-for-change-in-fundamental-attribute",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/mandatory-disclosures/unitholder-letter-for-change-in-fundamental-attribute"
       ]
     },
     {
@@ -11096,6 +12160,26 @@
       ]
     },
     {
+      "hash": "76dd6b5c9c3912c9eef2c4720dc15f1b85b716303650185e45b10d25019bb787",
+      "bytes": 75403,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:25:19+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantmutual.com/downloads/investment_outlook",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantmutual.com/downloads/investment_outlook"
+      ]
+    },
+    {
       "hash": "774aa2a0dddd3980830a2e3fbc2f6a7def4fc64bcb9d5ffd6eef8cd0c632f2e0",
       "bytes": 415978,
       "media_type": "text/html; charset=utf-8",
@@ -11136,11 +12220,31 @@
       ]
     },
     {
+      "hash": "77a01ee185d04afcac404fe125eccdd6bb6a52608297baa1f23b4e96de65558c",
+      "bytes": 1050900,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:22:31+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.heliosmf.in/downloads",
+      "host": "heliosmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.heliosmf.in/downloads"
+      ]
+    },
+    {
       "hash": "77f74c9a9b4c09b27671e46617084af521de48fb41392b3db1421b1521d3e551",
       "bytes": 79360,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:22:40+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/downloads/factsheet",
@@ -11616,6 +12720,26 @@
       ]
     },
     {
+      "hash": "7ba177c4b0bb28fd3a3f95dcdb374879881c696b9b0e1abf134b7604355fe4cf",
+      "bytes": 92750,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:34+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/mandatory-disclosures"
+      ]
+    },
+    {
       "hash": "7bd3d516bba5859114c098fb85b5e056879e5f2606e75e7164c0b761a223ec74",
       "bytes": 222019,
       "media_type": "text/html; charset=utf-8",
@@ -11653,6 +12777,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.growwmf.in/downloads/scheme-summary-documents"
+      ]
+    },
+    {
+      "hash": "7c1366522a00bbfa440fa0f4239e6f80be398d0be68565a5d99158209df3c657",
+      "bytes": 484951,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:10:11+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/schemes-related/scheme-summary",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/schemes-related/scheme-summary"
       ]
     },
     {
@@ -11857,6 +13001,26 @@
       ]
     },
     {
+      "hash": "7de41d28e3ae11151a121af741e7fecd8d95435e1733ca14f80a39561e2834e7",
+      "bytes": 299779,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:17:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/disclosures",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/forms-and-downloads/disclosures"
+      ]
+    },
+    {
       "hash": "7df055aad2d422636a51a5317ac501fc7699e65ca026bcd2f2baa7bc2c4de107",
       "bytes": 12253727,
       "media_type": "text/html; charset=utf-8",
@@ -11921,7 +13085,7 @@
       "bytes": 407961,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:22:10+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/factsheet-portfolio-and-other-disclosures",
@@ -12014,6 +13178,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.heliosmf.in/portfolio-disclosure"
+      ]
+    },
+    {
+      "hash": "8025a541d9f13d6c34e9774b8a97844a7e1891637cc953209e900493de60ddb9",
+      "bytes": 127450,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/our-governance",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/our-governance"
+      ]
+    },
+    {
+      "hash": "8037460cb5c2c854f1b63a703420b3a33e858feac4a614bf4d61e24cae018c27",
+      "bytes": 10494,
+      "media_type": "text/html",
+      "first_seen": "2026-10-03T01:22:40+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://bandhanmutual.com/downloads/market-outlook",
+      "host": "bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://bandhanmutual.com/downloads/market-outlook"
       ]
     },
     {
@@ -12177,6 +13381,26 @@
       ]
     },
     {
+      "hash": "821fa5f2fee9fd25b14f03b4172ac904598bd8c62245e56f0c782542336a0354",
+      "bytes": 411265,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:10:18+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/schemes-related/scheme-factsheet",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/schemes-related/scheme-factsheet"
+      ]
+    },
+    {
       "hash": "827b0ecd2dfabc321522bff190fcfe451d4924f2be55f08f4736bbe6382a499c",
       "bytes": 141914,
       "media_type": "text/html; charset=utf-8",
@@ -12237,11 +13461,31 @@
       ]
     },
     {
+      "hash": "82dd39677809b8120a53fbbb9b1198d6a6376f78d73d46d5db6157e33d170abe",
+      "bytes": 97930,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:37+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/"
+      ]
+    },
+    {
       "hash": "833f83676102a8afd8a8128c9e3834b7cb503b81987d949be83ed2ab3efdc598",
       "bytes": 86961,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T01:11:13+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html",
@@ -12274,26 +13518,6 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.canararobeco.com/"
-      ]
-    },
-    {
-      "hash": "836ec057acc4bde97694cdf6f4e0e43a2726d235a26244dbd02d9197570b4317",
-      "bytes": 270223,
-      "media_type": "text/html; charset=utf-8",
-      "first_seen": "2026-10-02T23:11:43+00:00",
-      "classification_before": "link_only_candidate",
-      "classification_after": "link_only_candidate",
-      "binary_state_after": "retained",
-      "primary_url": "https://mutualfund.adityabirlacapital.com/market-update",
-      "host": "mutualfund.adityabirlacapital.com",
-      "kind": "html",
-      "reasons": [
-        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
-      ],
-      "evidence_reasons": [],
-      "latest_for_urls": [],
-      "urls": [
-        "https://mutualfund.adityabirlacapital.com/market-update"
       ]
     },
     {
@@ -12397,11 +13621,31 @@
       ]
     },
     {
+      "hash": "840fbb97f41443efc997e665b4355ce96b8d4bbcf0f8cff720a5592e47223ba0",
+      "bytes": 578861,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:10:13+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/downloads/disclosure-of-risk-parameters",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/downloads/disclosure-of-risk-parameters"
+      ]
+    },
+    {
       "hash": "8464905322a12b737a8f7e3dba556e2b3c8fc73e4a61b26a0cb6f5003f3483aa",
       "bytes": 97930,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:17:12+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/",
@@ -12582,7 +13826,7 @@
       "bytes": 1050900,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:18:24+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.heliosmf.in/downloads",
@@ -12842,7 +14086,7 @@
       "bytes": 294828,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:14:06+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/abslamc-knowledge-centre/articles/is-your-portfolio-missing-the-shine-of-gold-and-silver",
@@ -12882,7 +14126,7 @@
       "bytes": 144732,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:08:15+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/factsheets/quantum-small-cap-fund/13/0/0",
@@ -12935,6 +14179,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.axismf.com/downloads"
+      ]
+    },
+    {
+      "hash": "89e9503aab4055c0d3d3b5049277ff0573fd026e6d780a56f880541cf2f5d381",
+      "bytes": 270471,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:16:32+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-difference-disclosures",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-difference-disclosures"
       ]
     },
     {
@@ -13022,7 +14286,7 @@
       "bytes": 572954,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:38+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/factsheets/idcw-history",
@@ -13162,7 +14426,7 @@
       "bytes": 15082,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T01:11:16+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html",
@@ -13256,6 +14520,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.hdfcfund.com/distributor-corner/forms-disclosure/forms"
+      ]
+    },
+    {
+      "hash": "8db13ffbd3c6eab00b0a80135eedb4534c56fae0bb9996223aad68d91c539dac",
+      "bytes": 572954,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:40+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/factsheets/idcw-history",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/factsheets/idcw-history"
       ]
     },
     {
@@ -13363,7 +14647,7 @@
       "bytes": 189535,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:17:14+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/",
@@ -13559,6 +14843,26 @@
       ]
     },
     {
+      "hash": "904a14a1ff063f8ea2dc688517f62271dd876e9f881907c260036176f3f53f39",
+      "bytes": 145158,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:25:03+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/factsheets/combined/-1/0/0",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/factsheets/combined/-1/0/0"
+      ]
+    },
+    {
       "hash": "904d5ec252c30fc1077424b401932fef4dcd97873e1c23a2984c8dd83193c7dc",
       "bytes": 12240143,
       "media_type": "text/html; charset=utf-8",
@@ -13683,7 +14987,7 @@
       "bytes": 186290,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:17:34+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/",
@@ -13703,7 +15007,7 @@
       "bytes": 326097,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:16:55+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.canararobeco.com/",
@@ -13723,7 +15027,7 @@
       "bytes": 249851,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T01:10:45+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund",
@@ -13796,6 +15100,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html"
+      ]
+    },
+    {
+      "hash": "92b144d85c65ace6521752286389f3ce06db769ba674efb8a8aaf9d0f278127a",
+      "bytes": 342376,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:17:58+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/mandatory-disclosures",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/mandatory-disclosures"
       ]
     },
     {
@@ -13876,6 +15200,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.pgimindia.com/mutual-funds"
+      ]
+    },
+    {
+      "hash": "9452bdd7c2ccbe73ea3e48eea4b445ea74dab22abf64608dc6c5c981f799f7e4",
+      "bytes": 3488430,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T02:25:04+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
+      "host": "samcomf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure"
+      ]
+    },
+    {
+      "hash": "945daf5aa174c808b63bf46ba80cecf069fb78d52ee42c3d553934a20b2e1199",
+      "bytes": 407961,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:23:40+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-services/downloads/factsheets",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-services/downloads/factsheets"
       ]
     },
     {
@@ -14124,7 +15488,7 @@
       "bytes": 15080,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T01:11:11+00:00",
-      "classification_before": "unclassified",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html",
@@ -14157,6 +15521,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio"
+      ]
+    },
+    {
+      "hash": "970238d19df770dbdb422af11f149e6fb5e18312533dc64e2d22038c86e16dcd",
+      "bytes": 190183,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:17:59+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/Download-document#funds-sec",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/Download-document#funds-sec"
       ]
     },
     {
@@ -14300,6 +15684,26 @@
       ]
     },
     {
+      "hash": "998ac5276babb722690bd024550891a599ddf59dd81ca12672b5ec9ab2ef074e",
+      "bytes": 156202,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:19:49+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/statutory-disclosure/portfolio",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/statutory-disclosure/portfolio"
+      ]
+    },
+    {
       "hash": "9991d8922e8ba3ad002e46b2374d17ddf2671c54a62a4d2a5a3428ec09db4ed0",
       "bytes": 572954,
       "media_type": "text/html; charset=UTF-8",
@@ -14320,11 +15724,31 @@
       ]
     },
     {
+      "hash": "99ae709df0f26e7f04767bd1732da079cc346a20e34ec2bc688dde5604a13788",
+      "bytes": 232052,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:18:26+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.heliosmf.in/portfolio-disclosure/",
+      "host": "heliosmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.heliosmf.in/portfolio-disclosure/"
+      ]
+    },
+    {
       "hash": "99c0d16cb54f912a2627d0049ffb12cc8a39253ba8899ae0d46016fa1dd8e4c5",
       "bytes": 145158,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:21:09+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/factsheets/combined/-1/0/0",
@@ -14384,7 +15808,7 @@
       "bytes": 65317,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:35+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/Statement-of-Scheme-Portfolios.aspx",
@@ -14404,7 +15828,7 @@
       "bytes": 156202,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:16:17+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/statutory-disclosure/portfolio",
@@ -14484,7 +15908,7 @@
       "bytes": 86961,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:15+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Oct2026/Innerpages/Small-cap.html",
@@ -14697,6 +16121,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://bandhanmutual.com/downloads/market-outlook"
+      ]
+    },
+    {
+      "hash": "9d31c22f060e8f2bbd60484a677b633eb586c1338a61a232efbeadba5a8d957b",
+      "bytes": 135409,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:13:57+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/distributor-corner/forms-disclosure/forms",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/distributor-corner/forms-disclosure/forms"
       ]
     },
     {
@@ -15060,6 +16504,26 @@
       ]
     },
     {
+      "hash": "a0d1ec821b38ff8a2484d667ccfd567b5524e6204cee3eafdb215aff4ea1304a",
+      "bytes": 91925,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:10:04+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/distributor-commission-disclosure",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/mandatory-disclosures/distributor-commission-disclosure"
+      ]
+    },
+    {
       "hash": "a1406409de16e51cdef542a17d21a0d1b7145ff7ef10c7d6a35cd114ca197eaa",
       "bytes": 10494,
       "media_type": "text/html",
@@ -15077,6 +16541,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://bandhanmutual.com/downloads/disclosures"
+      ]
+    },
+    {
+      "hash": "a1539c1d70e5594af60dce95c08db88ffe71d27d3334fa97e29a91854b53da58",
+      "bytes": 10496,
+      "media_type": "text/html",
+      "first_seen": "2026-10-03T01:20:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://bandhanmutual.com/downloads/factsheet/all-schemes",
+      "host": "bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://bandhanmutual.com/downloads/factsheet/all-schemes"
+      ]
+    },
+    {
+      "hash": "a169962e0c8f4c843ac4155d06551a664230ca5b3106abf1b6f8942cb4d32e24",
+      "bytes": 90647,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:15:04+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio.aspx",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio.aspx"
       ]
     },
     {
@@ -15184,7 +16688,7 @@
       "bytes": 15080,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:17+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html",
@@ -15240,6 +16744,26 @@
       ]
     },
     {
+      "hash": "a35dcc6f09434f2ae94790d2fc0a9ff7e0a08b96c44c19218e7208160cc16e27",
+      "bytes": 291226,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:18:02+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/blog/how-to-build-a-goal-based-mutual-fund-portfolio",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/blog/how-to-build-a-goal-based-mutual-fund-portfolio"
+      ]
+    },
+    {
       "hash": "a36412fb9fa3d58cfda0aa8b938bf909d464b92777ebffd50bebd4b57cac706d",
       "bytes": 44636,
       "media_type": "text/html; charset=utf-8",
@@ -15260,15 +16784,15 @@
       ]
     },
     {
-      "hash": "a36be8aca774c301b0646226dc37ff3bfb8ec049e02865579cc7ba89e88abb81",
-      "bytes": 272376,
+      "hash": "a3a5955ab0e91db27ebefb7c6a3ad4790ce42a161e2fe0c003cbad8d77bef10c",
+      "bytes": 421908,
       "media_type": "text/html; charset=utf-8",
-      "first_seen": "2026-10-02T23:06:19+00:00",
-      "classification_before": "link_only_candidate",
+      "first_seen": "2026-10-03T00:04:49+00:00",
+      "classification_before": "retain_latest_or_review",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
-      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio",
-      "host": "mutualfund.adityabirlacapital.com",
+      "primary_url": "https://invescomutualfund.com/statutory-disclosures",
+      "host": "invescomutualfund.com",
       "kind": "html",
       "reasons": [
         "superseded_discovery_response_without_identified_financial_or_replay_dependency"
@@ -15276,7 +16800,8 @@
       "evidence_reasons": [],
       "latest_for_urls": [],
       "urls": [
-        "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio"
+        "https://invescomutualfund.com/statutory-disclosures",
+        "https://www.invescomutualfund.com/statutory-disclosures"
       ]
     },
     {
@@ -15317,6 +16842,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.barodabnpparibasmf.in/mandatory-disclosures/distributor-commission-disclosure"
+      ]
+    },
+    {
+      "hash": "a414a8de9c3dde758d6eb16aa0f033d3a379e4d041f5245b0f197b365d0b97e4",
+      "bytes": 397148,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:53+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/schemes-related/portfolio",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/schemes-related/portfolio"
       ]
     },
     {
@@ -15364,7 +16909,7 @@
       "bytes": 326208,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:11:47+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/factsheets",
@@ -15440,6 +16985,26 @@
       ]
     },
     {
+      "hash": "a5a91777cea3065331751a77750bf4be8c4999fe88c5873d85b3ce80a23765d5",
+      "bytes": 151399,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:46+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/portfolio/combined/-1/1/0/0",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/portfolio/combined/-1/1/0/0"
+      ]
+    },
+    {
       "hash": "a5bb19946f9aaf37ed5602831ba19e9a5b15bdcaa1ac1f8fa06ae461db89d71b",
       "bytes": 186693,
       "media_type": "text/html; charset=utf-8",
@@ -15457,6 +17022,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.hdfcfund.com/statutory-disclosure"
+      ]
+    },
+    {
+      "hash": "a5cb6a11dc514f2e93eef253df6ad35be153c9c54bbda0b874c8b43aa52c399b",
+      "bytes": 151841,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:01+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.axismf.com/downloads",
+      "host": "axismf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.axismf.com/downloads"
       ]
     },
     {
@@ -15581,6 +17166,26 @@
       ]
     },
     {
+      "hash": "a70ccaec6fbba45dceff06c385f601d79c5c77e23d863b8190d153d23315bf18",
+      "bytes": 425864,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:21:14+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/"
+      ]
+    },
+    {
       "hash": "a728e40d619978a577b387e019c0ab3c843f88a94764ddab53f782356475b5c5",
       "bytes": 190183,
       "media_type": "text/html; charset=utf-8",
@@ -15625,7 +17230,7 @@
       "bytes": 232052,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:14:33+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.heliosmf.in/portfolio-disclosure",
@@ -15825,7 +17430,7 @@
       "bytes": 634501,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:19:45+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.pgimindia.com/mutual-funds",
@@ -15878,6 +17483,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.dspim.com/"
+      ]
+    },
+    {
+      "hash": "a91bbffaf93b6a2af950c96e2d0462d43d509ca4763028774d95b4ca83a8346c",
+      "bytes": 10494,
+      "media_type": "text/html",
+      "first_seen": "2026-10-03T01:20:08+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://bandhanmutual.com/downloads/disclosures",
+      "host": "bandhanmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://bandhanmutual.com/downloads/disclosures"
       ]
     },
     {
@@ -16005,7 +17630,7 @@
       "bytes": 101734,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:17:45+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/",
@@ -16018,6 +17643,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://quantmutual.com/"
+      ]
+    },
+    {
+      "hash": "aa2c3377125d81ca7f498e1add6ee8322a8b5d23ec64bbc33c5c90e54e856cb3",
+      "bytes": 110845,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/portfolio-management-services",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us/portfolio-management-services"
+      ]
+    },
+    {
+      "hash": "aa4753d8321dc8386c606242a0f22d09af9fde83afedfad2ce0b2774f6f8bb86",
+      "bytes": 15078,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T02:23:21+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html"
       ]
     },
     {
@@ -16158,6 +17823,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mutualfund.adityabirlacapital.com/abslamc-knowledge-centre/articles/is-your-portfolio-missing-the-shine-of-gold-and-silver"
+      ]
+    },
+    {
+      "hash": "aceba0225b12626c7e9833db941a8c700318f0d5d8a616d5345eff5fcb3c75dc",
+      "bytes": 159493,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:22:24+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook",
+      "host": "axismf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.axismf.com/mutual-fund-knowledge-centre/articles?tag=Market-Outlook"
       ]
     },
     {
@@ -16385,7 +18070,7 @@
       "bytes": 301377,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-02T23:11:19+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/disclosures",
@@ -16521,6 +18206,26 @@
       ]
     },
     {
+      "hash": "af2c46c600c342fed82007576847eec18671708df194abf457da20fab4e8d1e4",
+      "bytes": 120296,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:13:59+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/statutory-disclosure/total-expense-ratio-of-mutual-fund-schemes/reports",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/statutory-disclosure/total-expense-ratio-of-mutual-fund-schemes/reports"
+      ]
+    },
+    {
       "hash": "af76b72a908a95ba3148cdc25bb669a84d4e116476f171604f495c962537459d",
       "bytes": 17915,
       "media_type": "text/html",
@@ -16625,7 +18330,7 @@
       "bytes": 12253727,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:07:14+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Cap=&Date=&Doc=fund-factsheets",
@@ -16785,7 +18490,7 @@
       "bytes": 90647,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:10:24+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio.aspx",
@@ -16805,7 +18510,7 @@
       "bytes": 133579,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:17:40+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.samcomf.com/",
@@ -16865,7 +18570,7 @@
       "bytes": 290784,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:13:34+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/blog/how-to-build-a-goal-based-mutual-fund-portfolio",
@@ -16899,6 +18604,27 @@
       "urls": [
         "https://invescomutualfund.com/literature-forms/factsheets",
         "https://www.invescomutualfund.com/literature-forms/factsheets"
+      ]
+    },
+    {
+      "hash": "b3aa32f922b53a919f8a58f66ba412f4d52deefeb6f7ef6c52b86258bc236432",
+      "bytes": 420340,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-09-30T22:37:37+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://invescomutualfund.com/statutory-disclosures",
+      "host": "invescomutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://invescomutualfund.com/statutory-disclosures",
+        "https://www.invescomutualfund.com/statutory-disclosures"
       ]
     },
     {
@@ -16939,6 +18665,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund"
+      ]
+    },
+    {
+      "hash": "b4070be896ceb215c3dbdde3e2fe0a0ba66ca441c9c9979cd208831f9b453791",
+      "bytes": 86961,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:13+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Oct2026/Innerpages/Small-cap.html",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/efactsheet/Oct2026/Innerpages/Small-cap.html"
       ]
     },
     {
@@ -17019,6 +18765,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund"
+      ]
+    },
+    {
+      "hash": "b4a2084ddf820cac5d9945e636178955622317d722f52ce9122ee3ac9dba6d69",
+      "bytes": 402472,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:20+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/downloads?category=Information%20Documents&sub_category=Factsheets",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/downloads?category=Information%20Documents&sub_category=Factsheets"
       ]
     },
     {
@@ -17142,6 +18908,26 @@
       ]
     },
     {
+      "hash": "b5d39547d6a6eaba0ef7ceab1530ef0a11238612ebb09f1bae9c98e7ceca9062",
+      "bytes": 291723,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:17:39+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/blog/how-many-mutual-funds-for-diversified-portfolio",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/blog/how-many-mutual-funds-for-diversified-portfolio"
+      ]
+    },
+    {
       "hash": "b5ef8a56502d48284f1b8519b0abd2d64e6cbf22ded30e5780a93edb29e9c26e",
       "bytes": 89440,
       "media_type": "text/html; charset=utf-8",
@@ -17179,6 +18965,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mf.nipponindiaim.com/investor-service/disclosures/valuation-policies"
+      ]
+    },
+    {
+      "hash": "b65b0e678cd58fbd8c6aee26b6e7f4584201c95ce78af97dc46bf1e08322853c",
+      "bytes": 634501,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:23:20+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.pgimindia.com/mutual-funds",
+      "host": "pgimindia.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.pgimindia.com/mutual-funds"
       ]
     },
     {
@@ -17246,7 +19052,7 @@
       "bytes": 135410,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:08:58+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.hdfcfund.com/distributor-corner/forms-disclosure/forms",
@@ -17279,6 +19085,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.kotakmf.com/monthly-market-update"
+      ]
+    },
+    {
+      "hash": "b813bb9373de184607e9b163109ea125c27d8bb2dce75d613de591d16d49bd7f",
+      "bytes": 27157,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:09:35+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.niftyindices.com/BackPage/getTotalReturnIndexString",
+      "host": "niftyindices.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.niftyindices.com/BackPage/getTotalReturnIndexString"
       ]
     },
     {
@@ -17466,7 +19292,7 @@
       "bytes": 577765,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:05:08+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/downloads/portfolio-overlap",
@@ -17646,7 +19472,7 @@
       "bytes": 35935,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:19:32+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/distributor/knowledge-hub/publications",
@@ -17782,6 +19608,26 @@
       ]
     },
     {
+      "hash": "bd95ceeb579c7fe3a49a41c29df8431448a4f93f1ca6d4cb56f0530c3ccd262f",
+      "bytes": 259621,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:17+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook"
+      ]
+    },
+    {
       "hash": "bdc749a23e2f8698142f598f68a53a7c1fbfdcee1c4c798af0af42ddc0125de8",
       "bytes": 397128,
       "media_type": "text/html; charset=utf-8",
@@ -17819,6 +19665,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.growwmf.in/downloads/portfolio-overlap"
+      ]
+    },
+    {
+      "hash": "bdf65eacf6691218680fb171fc74dd5fde4c57bc734aec180cdefcb4e5373fa3",
+      "bytes": 186290,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:21:27+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/"
       ]
     },
     {
@@ -18019,6 +19885,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.motilaloswalmf.com/"
+      ]
+    },
+    {
+      "hash": "c08d31f0b79fb818c0bea2993e8aa956879578e8a80bc0d597618118b1329da6",
+      "bytes": 65317,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:24+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/Statement-of-Scheme-Portfolios.aspx",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/Statement-of-Scheme-Portfolios.aspx"
       ]
     },
     {
@@ -18266,7 +20152,7 @@
       "bytes": 86961,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:30+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html",
@@ -18406,7 +20292,7 @@
       "bytes": 297279,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:13:30+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/mandatory-disclosures/unitholder-letter-for-change-in-fundamental-attribute",
@@ -18482,6 +20368,46 @@
       ]
     },
     {
+      "hash": "c5ded5b79463a5ae48151416655cd15929bfad0f23c179ee5a1f42db65d38157",
+      "bytes": 730800,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:23:31+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/"
+      ]
+    },
+    {
+      "hash": "c5e6bb8fb20b9c8a032945f37ba565b8006cd5791b0f882cbd7e7a44b4d6518e",
+      "bytes": 15080,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T02:23:28+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html"
+      ]
+    },
+    {
       "hash": "c5ed4e7c89d7d1ca88df64724f8d2226e11371669527b54355cd0e5e290afc36",
       "bytes": 12240143,
       "media_type": "text/html; charset=utf-8",
@@ -18546,7 +20472,7 @@
       "bytes": 407961,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:19:59+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-services/downloads/factsheets",
@@ -18559,6 +20485,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mf.nipponindiaim.com/investor-services/downloads/factsheets"
+      ]
+    },
+    {
+      "hash": "c6fa0ba0ca1a834b2aab7d24da22579cb2b5c6bbe9b7b324010ba9d46a55f292",
+      "bytes": 249851,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T02:23:03+00:00",
+      "classification_before": "unclassified",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/equity-funds/quantum-small-cap-fund"
       ]
     },
     {
@@ -18626,7 +20572,7 @@
       "bytes": 119886,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:52+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/statutory-disclosures",
@@ -18719,6 +20665,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.tatamutualfund.com/statutory-disclosures/voting-policy"
+      ]
+    },
+    {
+      "hash": "c7fb8e5267af31841cbe18489ec1c75aba07465701154723256b6f5c9f0adce8",
+      "bytes": 90642,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:15:23+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio",
+      "host": "quantmutual.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://quantmutual.com/downloads/Notice-of-Monthly-Fortnightly-Portfolio"
       ]
     },
     {
@@ -18886,7 +20852,7 @@
       "bytes": 228874,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:16:34+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document",
@@ -18899,6 +20865,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mf.nipponindiaim.com/investor-service/downloads/scheme-summary-document"
+      ]
+    },
+    {
+      "hash": "c9ee6167cc1c6a6700418f9185621dce1ce78092d155edc3b5b9493463263054",
+      "bytes": 135166,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:28+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/downloads/monthly-factsheet",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/downloads/monthly-factsheet"
       ]
     },
     {
@@ -19226,7 +21212,7 @@
       "bytes": 402472,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:20+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.dspim.com/downloads?category=Information%20Documents&sub_category=Factsheets",
@@ -19683,6 +21669,26 @@
       ]
     },
     {
+      "hash": "d0044f1511fd8481c1719a856a6ef269a362d5492edc47533b8902c71b341304",
+      "bytes": 162028,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:05+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund"
+      ]
+    },
+    {
       "hash": "d0690913313aa22cd4da69d8b7f66d3262541708f7b7c44bf8a0ccfdf6818c82",
       "bytes": 392577,
       "media_type": "text/html; charset=utf-8",
@@ -19707,7 +21713,7 @@
       "bytes": 256173,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:21+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/investor-service/disclosures/dividend-summary",
@@ -19807,7 +21813,7 @@
       "bytes": 75519,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:25+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://quantmutual.com/ETF/Tracking.aspx",
@@ -19923,6 +21929,46 @@
       ]
     },
     {
+      "hash": "d2263dc109b8e27e3e77bbce8633b36684f669234462a051607623364c1058bc",
+      "bytes": 15069,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:17:04+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/Information/statutory-disclosure",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/Information/statutory-disclosure"
+      ]
+    },
+    {
+      "hash": "d274e4f150b5230af4b56b1ca3d70cafde580cbc40645b06d6a6e6023ac7036b",
+      "bytes": 404979,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:40+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/mandatory-disclosures/portfolio-disclosures",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/mandatory-disclosures/portfolio-disclosures"
+      ]
+    },
+    {
       "hash": "d300e4b988bd51ed1ea00219862e8a780e5d08b13588a4e4c95d49be31770aeb",
       "bytes": 304106,
       "media_type": "text/html; charset=UTF-8",
@@ -20000,6 +22046,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://bandhanmutual.com/downloads/market-outlook"
+      ]
+    },
+    {
+      "hash": "d468c8cc51aeddf9fc4da24621ef236da574791dcb5609571bded206eb9c187f",
+      "bytes": 15082,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:35+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/factsheet/September_2026/kotak/SMALL-CAP.html"
+      ]
+    },
+    {
+      "hash": "d4c1286f7156f99713d2b18e5d81d2d00773d0d79d8a55410857b21b38156570",
+      "bytes": 113320,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:11:09+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management/about-us"
       ]
     },
     {
@@ -20083,6 +22169,26 @@
       ]
     },
     {
+      "hash": "d56e54565b263405ea890a08bea7c1ede779885a1e046f115ba20fd24bbf601a",
+      "bytes": 577765,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:10:08+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.growwmf.in/downloads/portfolio-overlap",
+      "host": "growwmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.growwmf.in/downloads/portfolio-overlap"
+      ]
+    },
+    {
       "hash": "d57cec032be8577c39c6b8f207a81ad2aa7e740c66e7b9eb4ea1525e415b5b5f",
       "bytes": 15081,
       "media_type": "text/html; charset=UTF-8",
@@ -20160,6 +22266,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.kotakmf.com/"
+      ]
+    },
+    {
+      "hash": "d6f929840df74acc29bb4f2d0ea81fd6608f04c66719f208ff297791a6a61893",
+      "bytes": 120287,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:13:56+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/mutual-funds/factsheets",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/mutual-funds/factsheets"
       ]
     },
     {
@@ -20347,7 +22473,7 @@
       "bytes": 271934,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:12:46+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/portfolio",
@@ -20483,6 +22609,26 @@
       ]
     },
     {
+      "hash": "db4b07586e7503da6c9cad61229aad27944c14488ad108f63480ddba270ee92d",
+      "bytes": 227840,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:10+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/investor-service/downloads/disclosure-requirement-for-amc-pursuant-to-sebi-circular-dated-aug-25-2022",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/investor-service/downloads/disclosure-requirement-for-amc-pursuant-to-sebi-circular-dated-aug-25-2022"
+      ]
+    },
+    {
       "hash": "db7aea3f7f8b68df2db3f0838e87ca1cd48e135ea5d3bd86bca41d4a44ca7830",
       "bytes": 135134,
       "media_type": "text/html; charset=UTF-8",
@@ -20547,7 +22693,7 @@
       "bytes": 114040,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:09+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/downloads/monthly-portfolio-scheme",
@@ -20747,7 +22893,7 @@
       "bytes": 105274,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:05:02+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/average-assets-under-management-disclosure",
@@ -20807,7 +22953,7 @@
       "bytes": 151399,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:16:42+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.quantumamc.com/portfolio/combined/-1/1/0/0",
@@ -20860,6 +23006,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.heliosmf.in/portfolio-disclosure/"
+      ]
+    },
+    {
+      "hash": "dfb5a25bd1e93be5bb8f885cd9e6dd60722b7e35fca63e95cfd19ab6ffba5229",
+      "bytes": 584389,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:21:30+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.tatamutualfund.com/",
+      "host": "tatamutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.tatamutualfund.com/"
       ]
     },
     {
@@ -21024,6 +23190,46 @@
       ]
     },
     {
+      "hash": "e2239147c3837f0875c77a556bf36ab066cd89e711ce3365bd78e2807a657b4c",
+      "bytes": 144196,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:14:04+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.hdfcfund.com/statutory-disclosure/letter-unitholder",
+      "host": "hdfcfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.hdfcfund.com/statutory-disclosure/letter-unitholder"
+      ]
+    },
+    {
+      "hash": "e24ee32e893c1d733369fa615301fee1489716dd6904e728ec974cac06b87219",
+      "bytes": 190183,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:17:56+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/Download-document#headingFive",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/Download-document#headingFive"
+      ]
+    },
+    {
       "hash": "e2e337a5a77540e28d693d704135af254705376cc1012aefd0d8d7f211a19e26",
       "bytes": 201434,
       "media_type": "text/html; charset=utf-8",
@@ -21048,7 +23254,7 @@
       "bytes": 232052,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:13:37+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.heliosmf.in/portfolio-disclosure/",
@@ -21101,6 +23307,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook"
+      ]
+    },
+    {
+      "hash": "e31c8ee8795f875267c40cd314cf7153106271d4d78b46b134bdb573caf94a7f",
+      "bytes": 326097,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:20:22+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.canararobeco.com/",
+      "host": "canararobeco.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.canararobeco.com/"
       ]
     },
     {
@@ -21244,6 +23470,46 @@
       ]
     },
     {
+      "hash": "e51a0b948601318a10a034fe220ce26d56766ec683a2a3fef70e62f4e0295fff",
+      "bytes": 15080,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:15+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html"
+      ]
+    },
+    {
+      "hash": "e596fbe7d361df79b173afed6769514d6081c007d4b4a61a9070c8fd54ae242a",
+      "bytes": 144732,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:13:20+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.quantumamc.com/factsheets/quantum-small-cap-fund/13/0/0",
+      "host": "quantumamc.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.quantumamc.com/factsheets/quantum-small-cap-fund/13/0/0"
+      ]
+    },
+    {
       "hash": "e629f073deeb68a4437b1ead66ddd63113ea3c24d8bbe252f46c0b9ae6f9f436",
       "bytes": 186247,
       "media_type": "text/html; charset=utf-8",
@@ -21261,6 +23527,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.quantumamc.com/"
+      ]
+    },
+    {
+      "hash": "e63d7437889c721ba6158e6b0956a3ee6a25afaf31a07295526ad38ec0f1d917",
+      "bytes": 326208,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:16:27+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/factsheets",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/factsheets"
       ]
     },
     {
@@ -21328,7 +23614,7 @@
       "bytes": 27157,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:04:39+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.niftyindices.com/BackPage/getTotalReturnIndexString",
@@ -21341,6 +23627,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.niftyindices.com/BackPage/getTotalReturnIndexString"
+      ]
+    },
+    {
+      "hash": "e7453a1503ef8b8e218e6bab22754259d16bcd76df6a1a2bb7b5c3a087387a9d",
+      "bytes": 15081,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:17:03+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/investor/user/statement/postlogin-statements#account-statement",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/investor/user/statement/postlogin-statements#account-statement"
+      ]
+    },
+    {
+      "hash": "e76c41f038f2fd368e8ff24a1d15bd999c6b2ae6cac7db69dd7717a444c53392",
+      "bytes": 272112,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-02T23:11:14+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-error-disclosures",
+      "host": "mutualfund.adityabirlacapital.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mutualfund.adityabirlacapital.com/forms-and-downloads/tracking-error-disclosures"
       ]
     },
     {
@@ -21361,6 +23687,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.heliosmf.in/portfolio-disclosure"
+      ]
+    },
+    {
+      "hash": "e7afd45588a823ecc9ff1b0522220e5e3852decc84ea7800ae5210232e23f7b4",
+      "bytes": 936620,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:19:45+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.samcomf.com/downloads/#Factsheet",
+      "host": "samcomf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.samcomf.com/downloads/#Factsheet"
       ]
     },
     {
@@ -21428,7 +23774,7 @@
       "bytes": 15069,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:12:17+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/Information/statutory-disclosure",
@@ -21584,11 +23930,31 @@
       ]
     },
     {
+      "hash": "eae0da3a1a30695bd446b9472ce590005d7428169750bb6bdc7a5aa9424c8282",
+      "bytes": 110164,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:16:30+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management",
+      "host": "assetmanagement.hsbc.co.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.assetmanagement.hsbc.co.in/en/portfolio-management"
+      ]
+    },
+    {
       "hash": "eae75549d404cb461011db3f43a06f8d02812e7272dd7f2e97382b0c94d716ec",
       "bytes": 296294,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:45+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/statutory-disclosures/voting-policy",
@@ -21628,7 +23994,7 @@
       "bytes": 15081,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:12:15+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/investor/user/statement/postlogin-statements#account-statement",
@@ -21768,7 +24134,7 @@
       "bytes": 484959,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:05:11+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/schemes-related/scheme-summary",
@@ -21788,7 +24154,7 @@
       "bytes": 289923,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:16:49+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx",
@@ -21808,7 +24174,7 @@
       "bytes": 15080,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:06:17+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.kotakmf.com/factsheet/October_2026/kotak/SMALL-CAP.html",
@@ -22164,6 +24530,26 @@
       ]
     },
     {
+      "hash": "f08b31c861a7a65732feeb8f22e24f23d4fe364231de707f8b13b679d481e421",
+      "bytes": 15057,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:17:02+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/factsheet/July_2026/",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/factsheet/July_2026/"
+      ]
+    },
+    {
       "hash": "f0e7bcadacfa63b5bfce69e0fe376a223f0508d6e007c68076969ba5b2b809e9",
       "bytes": 573821,
       "media_type": "text/html; charset=utf-8",
@@ -22204,6 +24590,26 @@
       ]
     },
     {
+      "hash": "f1a762809dbe9b5e5f1e65c519afc0017ba9fb807be622c73880e27c033d98c2",
+      "bytes": 105332,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:10:02+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/mandatory-disclosures/transaction-and-money-market-securities",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/mandatory-disclosures/transaction-and-money-market-securities"
+      ]
+    },
+    {
       "hash": "f1d89e1fba3e9738b76537aa75d189846ebb095a8d0e98d9dc02dd1978ab1c65",
       "bytes": 98164,
       "media_type": "text/html; charset=utf-8",
@@ -22228,7 +24634,7 @@
       "bytes": 397130,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:06:50+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.tatamutualfund.com/schemes-related/portfolio",
@@ -22281,6 +24687,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.hdfcfund.com/statutory-disclosure/letter-unitholder"
+      ]
+    },
+    {
+      "hash": "f3b49784177b40455a5d9c002205c8ecbb479fb555f04c1de78072e6cabe9bc8",
+      "bytes": 612627,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T00:17:16+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://invescomutualfund.com/",
+      "host": "invescomutualfund.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://invescomutualfund.com/"
       ]
     },
     {
@@ -22408,7 +24834,7 @@
       "bytes": 259621,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:09:28+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://mf.nipponindiaim.com/knowledge-center/updates-insights/market-outlook",
@@ -22448,7 +24874,7 @@
       "bytes": 577697,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:05:08+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.growwmf.in/downloads/disclosure-requirement-for-amc-pursuant-to-para-22.8-of-sebi-master-circular",
@@ -22544,6 +24970,26 @@
       ]
     },
     {
+      "hash": "f6475d5a1457a9e379d176886b60dcb1b6f64b76c4ee6e0c7b5cb66e43f8e0b5",
+      "bytes": 15069,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:17:03+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/Information/corporate-disclosure",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/Information/corporate-disclosure"
+      ]
+    },
+    {
       "hash": "f6d1212309590c7e2a17f338c5fe59d583f4637be768c4e4e421e1cb61798d33",
       "bytes": 15076,
       "media_type": "text/html; charset=UTF-8",
@@ -22561,6 +25007,46 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.kotakmf.com/Information/corporate-disclosure"
+      ]
+    },
+    {
+      "hash": "f773841d4b183ba5dba5e445a522e39bd737dc997541ecb8425c96158f9e3b86",
+      "bytes": 86961,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:33+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html",
+      "host": "barodabnpparibasmf.in",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.barodabnpparibasmf.in/efactsheet/Sep2026/Innerpages/Small-cap.html"
+      ]
+    },
+    {
+      "hash": "f7cadb3bb0d9e7bfabc876e0350d7a70c860ac3ec257aaf6990df86e8b7e063f",
+      "bytes": 304106,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:11:18+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.dspim.com/factsheets/how-to-read-factsheet",
+      "host": "dspim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.dspim.com/factsheets/how-to-read-factsheet"
       ]
     },
     {
@@ -22724,6 +25210,46 @@
       ]
     },
     {
+      "hash": "f9e83ebc3231b01a3059822ea50e60a432e2e67aba334fdd7ec3f2a97a7ae03d",
+      "bytes": 15037,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:21:13+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/"
+      ]
+    },
+    {
+      "hash": "fa43a91b3ed8b412e73f1d19987ca4979379b949d062d0781d58a8433faab394",
+      "bytes": 289923,
+      "media_type": "text/html; charset=utf-8",
+      "first_seen": "2026-10-03T01:20:18+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx",
+      "host": "mf.nipponindiaim.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Small-Cap-Fund.aspx"
+      ]
+    },
+    {
       "hash": "fa465733136e110dd1f4832cd148091e38fc8464420eed728abab4ba7d5165fd",
       "bytes": 151399,
       "media_type": "text/html; charset=utf-8",
@@ -22748,7 +25274,7 @@
       "bytes": 162028,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:15:03+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investment-expertise/active-equities/hsbc-small-cap-fund",
@@ -22804,6 +25330,26 @@
       ]
     },
     {
+      "hash": "fafff4c3a138d1a91513032eb9a9f2c401fc270d15c2ccd177a34b079abe082a",
+      "bytes": 3488430,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:19:36+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.samcomf.com/StatutoryDisclosure#scheme-financials",
+      "host": "samcomf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.samcomf.com/StatutoryDisclosure#scheme-financials"
+      ]
+    },
+    {
       "hash": "fb04fdad072c867d6e3a8932813337a3907b8f3572636e89b48ded4bb8d3505d",
       "bytes": 415978,
       "media_type": "text/html; charset=utf-8",
@@ -22848,7 +25394,7 @@
       "bytes": 3488430,
       "media_type": "text/html; charset=UTF-8",
       "first_seen": "2026-10-03T00:17:26+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.samcomf.com/StatutoryDisclosure",
@@ -22961,6 +25507,26 @@
       "latest_for_urls": [],
       "urls": [
         "https://www.kotakmf.com/investor/user/statement/postlogin-statements#account-statement"
+      ]
+    },
+    {
+      "hash": "fbf6a0561f1299b995cf4431c6a2d4a5fb7f3901f75250fbf194b7405f68b104",
+      "bytes": 15058,
+      "media_type": "text/html; charset=UTF-8",
+      "first_seen": "2026-10-03T01:23:11+00:00",
+      "classification_before": "retain_latest_or_review",
+      "classification_after": "link_only_candidate",
+      "binary_state_after": "retained",
+      "primary_url": "https://www.kotakmf.com/monthly-market-update",
+      "host": "kotakmf.com",
+      "kind": "html",
+      "reasons": [
+        "superseded_discovery_response_without_identified_financial_or_replay_dependency"
+      ],
+      "evidence_reasons": [],
+      "latest_for_urls": [],
+      "urls": [
+        "https://www.kotakmf.com/monthly-market-update"
       ]
     },
     {
@@ -23088,7 +25654,7 @@
       "bytes": 110164,
       "media_type": "text/html; charset=utf-8",
       "first_seen": "2026-10-03T00:11:49+00:00",
-      "classification_before": "retain_latest_or_review",
+      "classification_before": "link_only_candidate",
       "classification_after": "link_only_candidate",
       "binary_state_after": "retained",
       "primary_url": "https://www.assetmanagement.hsbc.co.in/en/portfolio-management",

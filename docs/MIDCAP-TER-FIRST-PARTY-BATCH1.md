@@ -1,11 +1,12 @@
 # Mid Cap first-party TER recovery batch 1
 
-Prepared: 2026-10-03T01:06:16+00:00
+Prepared: 2026-10-03T02:17:41+00:00
 
-Targets: **7** · recovered: **6** · failed: **1**.
+Targets: **8** · recovered: **7** · failed: **1**.
 
 | Family | AMC | Status | As of | Direct TER | Regular TER | Source | Identity |
 | --- | --- | --- | --- | ---: | ---: | --- | --- |
+| BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | recovered | 2026-09-29 | 1.3200% | 2.5500% | https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8 | scheme_name=Bank of India Mid Cap Fund, nsdl_scheme_code=BOIA/O/E/MIF/25/06/0023 |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | recovered | 2026-10-01 | 0.8800% | 2.1300% | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-19&to_date=2026-10-03 | scheme_name=Canara Robeco Mid Cap Fund, scheme_code=MD |
 | HSBC Midcap Fund | HSBC Mutual Fund | recovered | 2026-09-30 | 1.1500% | 2.2100% | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx | scheme_name=HSBC Midcap Fund, scheme_code=HEMCPF, nsdl_scheme_code=LTMF/O/E/MIF/04/06/0006 |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | recovered | 2026-09-30 | 1.1100% | 1.8500% | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx | scheme_name=ICICI Prudential Mid Cap Fund |

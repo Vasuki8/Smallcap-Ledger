@@ -1,15 +1,15 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-10-03T01:05:42+00:00
+Prepared: 2026-10-03T02:17:09+00:00
 
-Direct TER evidence: **30 / 34** · AMFI: **21** · first-party AMC: **9** · remaining: **4**.
+Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
 | Family | AMC | Direct TER | Regular TER | As of | Evidence | Source |
 | --- | --- | ---: | ---: | --- | --- | --- |
 | Aditya Birla Sun Life Midcap Fund | Aditya Birla Sun Life Mutual Fund | 1.2300% | 2.0300% | 2026-09-30 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Axis Midcap Fund | Axis Mutual Fund | 0.8300% | 1.7800% | 2026-10-01 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | Gap | Gap | Gap | Gap | Gap |
-| BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Gap | Gap | Gap | Gap | Gap |
+| BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | 1.3200% | 2.5500% | 2026-09-29 | first_party_amc | https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8 |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | 0.7800% | 2.2100% | 2026-10-01 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | 0.8800% | 2.1300% | 2026-10-01 | first_party_amc | https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-19&to_date=2026-10-03 |
 | DSP Midcap Fund | DSP Mutual Fund | 0.8400% | 1.7400% | 2026-09-30 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
@@ -44,7 +44,6 @@ Direct TER evidence: **30 / 34** · AMFI: **21** · first-party AMC: **9** · re
 ## Remaining families
 
 - BANDHAN MID CAP FUND
-- BANK OF INDIA MID CAP FUND
 - JM Mid Cap Fund
 - WhiteOak Capital Mid Cap Fund
 

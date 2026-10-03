@@ -1,19 +1,18 @@
 # Mid Cap launch readiness
 
-Evaluated: 2026-10-03T01:09:30.909985+00:00
+Evaluated: 2026-10-03T02:21:44.239410+00:00
 
 Data ready: **false** · launch ready: **false**.
 
 | Gate | Actual | Required | Pass? | Remaining |
 | --- | ---: | ---: | --- | ---: |
 | AUM | 34 | 34 | true | 0 |
-| Direct TER | 30 | 31 | false | 1 |
+| Direct TER | 31 | 31 | true | 0 |
 | Reported benchmark identity | 29 | 31 | false | 2 |
-| Current portfolio evidence | 22 | 28 | false | 6 |
+| Current portfolio evidence | 21 | 28 | false | 7 |
 
 ## Current blockers
 
-- direct_ter
 - benchmark_identity
 - current_portfolio_evidence
 - category_aware_public_surface
