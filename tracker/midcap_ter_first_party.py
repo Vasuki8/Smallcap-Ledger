@@ -38,9 +38,16 @@ def _sha(content):
 class _IciciWorkbookError(ValueError):
     """Keep rejected source identity separate from accepted TER evidence."""
 
-    def __init__(self,message,source,content):
+    def __init__(self,message,source=None,content=None,*,api_error=None,rejected_candidates=None):
         super().__init__(message)
-        self.source_evidence={"source":source,"sha256":_sha(content),"bytes":len(content)}
+        self.source_evidence={
+            "discovery_channel":"financial_disclosure_api" if api_error is None else "reviewed_monthly_workbook_fallback",
+            "discovery_api_error":api_error,
+        }
+        if content is not None:
+            self.source_evidence.update({"source":source,"sha256":_sha(content),"bytes":len(content)})
+        if rejected_candidates:
+            self.source_evidence["rejected_candidates"]=rejected_candidates
 
 
 def _reconcile(plans,label):
@@ -204,20 +211,37 @@ def _icici(family,today):
         if not content.startswith(b"PK"):raise ValueError("ICICI TER source is not XLSX")
     except Exception as exc:
         api_error=(str(exc) or type(exc).__name__)[:200]
-        source=None;content=None
+        rejected_candidates=[];first_rejected=None
         for candidate in _icici_fallback_sources(today):
+            body=None
             try:
                 body,_,_=providers.fetch(candidate,archive=False,max_bytes=5*1024*1024)
                 if not body.startswith(b"PK"):
-                    continue
-                # Do not accept a merely reachable workbook. Parsing below must
-                # prove the exact Mid Cap scheme and complete Regular/Direct pair.
-                source=candidate;content=body
-                break
-            except Exception:
+                    raise ValueError("ICICI TER source is not XLSX")
+                # Validate each candidate before selecting it so a rejected
+                # current-month placeholder cannot hide the previous workbook.
+                result=_icici_workbook_result(family,today,candidate,body,api_error)
+            except Exception as candidate_exc:
+                rejection={"source":candidate,"error":(str(candidate_exc) or type(candidate_exc).__name__)[:300]}
+                if body is not None:
+                    rejection.update({"sha256":_sha(body),"bytes":len(body)})
+                    if first_rejected is None:
+                        first_rejected=(candidate_exc,candidate,body)
+                rejected_candidates.append(rejection)
                 continue
-        if source is None or content is None:
-            raise ValueError("ICICI financial disclosure API and reviewed TER workbook paths are unavailable") from exc
+            if rejected_candidates:
+                result["rejected_candidates"]=rejected_candidates
+            return result
+        if first_rejected is not None:
+            first_exc,source,content=first_rejected
+            raise _IciciWorkbookError(
+                str(first_exc) or type(first_exc).__name__,source,content,
+                api_error=api_error,rejected_candidates=rejected_candidates,
+            ) from first_exc
+        raise _IciciWorkbookError(
+            "ICICI financial disclosure API and reviewed TER workbook paths are unavailable",
+            api_error=api_error,rejected_candidates=rejected_candidates,
+        ) from exc
     try:
         return _icici_workbook_result(family,today,source,content,api_error)
     except Exception as exc:

@@ -1,6 +1,6 @@
 {
-  "reviewed_on": "2026-10-02",
-  "scope": "rejected_source_provenance_and_read_only_reproduction",
+  "reviewed_on": "2026-10-03",
+  "scope": "dated_source_history_exact_byte_selection_replay_and_verified_publication",
   "historical_source": {
     "url": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
     "sha256": "e3619e5cae99d4e663e67bf6eaedf21749bc8ec86f3eca351f666cd4d10c9dcc",
@@ -29,30 +29,97 @@
     "midcap_error": "ValueError: ICICI TER workbook columns changed",
     "smallcap_error": "ValueError: ICICI TER column C changed",
     "header_mismatches": {
-      "C": {"expected": "Base Expense Ratio (BER) (%)", "actual": "Base TER (%)¹"},
-      "D": {"expected": "Brokerage cost (%)", "actual": "Additional expense as per Regulation 52(6A)(b) (%)²"},
-      "E": {"expected": "Transaction Cost incurred for the purpose of execution of trade (%)", "actual": "Additional expense as per Regulation 52(6A)(c) (%)³"},
-      "F": {"expected": "Statutory Levies (including GST) (%)", "actual": "GST (%)⁴"},
-      "H": {"expected": "Base Expense Ratio (BER) (%)", "actual": "Base TER(%)¹"},
-      "I": {"expected": "Brokerage cost (%)", "actual": "Additional expense as per Regulation 52(6A)(b)(%)²"},
-      "J": {"expected": "Transaction Cost incurred for the purpose of execution of trade (%)", "actual": "Additional expense as per Regulation 52(6A)(c)(%)³"},
-      "K": {"expected": "Statutory Levies (including GST) (%)", "actual": "GST(%)⁴"},
-      "L": {"expected": "Total TER (%)", "actual": "Total TER(%)"}
+      "C": {
+        "expected": "Base Expense Ratio (BER) (%)",
+        "actual": "Base TER (%)¹"
+      },
+      "D": {
+        "expected": "Brokerage cost (%)",
+        "actual": "Additional expense as per Regulation 52(6A)(b) (%)²"
+      },
+      "E": {
+        "expected": "Transaction Cost incurred for the purpose of execution of trade (%)",
+        "actual": "Additional expense as per Regulation 52(6A)(c) (%)³"
+      },
+      "F": {
+        "expected": "Statutory Levies (including GST) (%)",
+        "actual": "GST (%)⁴"
+      },
+      "H": {
+        "expected": "Base Expense Ratio (BER) (%)",
+        "actual": "Base TER(%)¹"
+      },
+      "I": {
+        "expected": "Brokerage cost (%)",
+        "actual": "Additional expense as per Regulation 52(6A)(b)(%)²"
+      },
+      "J": {
+        "expected": "Transaction Cost incurred for the purpose of execution of trade (%)",
+        "actual": "Additional expense as per Regulation 52(6A)(c)(%)³"
+      },
+      "K": {
+        "expected": "Statutory Levies (including GST) (%)",
+        "actual": "GST(%)⁴"
+      },
+      "L": {
+        "expected": "Total TER (%)",
+        "actual": "Total TER(%)"
+      }
     },
     "latest_exact_rows": [
       {
         "family": "ICICI Prudential Mid Cap Fund",
         "physical_row": 1973,
         "as_of": "2026-09-29",
-        "regular": {"source_components": [1.53, 0.01, 0.00, 0.31], "component_sum": 1.85, "reported_total_ter": 1.85, "difference": 0.00},
-        "direct": {"source_components": [0.89, 0.01, 0.00, 0.31], "component_sum": 1.21, "reported_total_ter": 1.11, "difference": 0.10}
+        "regular": {
+          "source_components": [
+            1.53,
+            0.01,
+            0.0,
+            0.31
+          ],
+          "component_sum": 1.85,
+          "reported_total_ter": 1.85,
+          "difference": 0.0
+        },
+        "direct": {
+          "source_components": [
+            0.89,
+            0.01,
+            0.0,
+            0.31
+          ],
+          "component_sum": 1.21,
+          "reported_total_ter": 1.11,
+          "difference": 0.1
+        }
       },
       {
         "family": "ICICI Prudential Small Cap Fund",
         "physical_row": 4177,
         "as_of": "2026-09-29",
-        "regular": {"source_components": [1.50, 0.08, 0.01, 0.51], "component_sum": 2.10, "reported_total_ter": 2.10, "difference": 0.00},
-        "direct": {"source_components": [0.70, 0.08, 0.01, 0.51], "component_sum": 1.30, "reported_total_ter": 1.18, "difference": 0.12}
+        "regular": {
+          "source_components": [
+            1.5,
+            0.08,
+            0.01,
+            0.51
+          ],
+          "component_sum": 2.1,
+          "reported_total_ter": 2.1,
+          "difference": 0.0
+        },
+        "direct": {
+          "source_components": [
+            0.7,
+            0.08,
+            0.01,
+            0.51
+          ],
+          "component_sum": 1.3,
+          "reported_total_ter": 1.18,
+          "difference": 0.12
+        }
       }
     ],
     "values_unit": "annual_percentage_points",
@@ -65,7 +132,10 @@
     "row_adjustment_quantified_by_source": false,
     "accepted_ter_recovery": false
   },
-  "current_production": {
+  "next_action": "Collect and verify fresh production evidence using the implemented bounded fallback-selection correction. Preserve all rejected candidates and original reporting dates; leave staged Mid Cap counts and launch gates unchanged until that run is verified.",
+  "parser_acceptance_changed": false,
+  "tracked_source_binary_added": false,
+  "historical_production": {
     "run_id": 37075265591,
     "conclusion": "success",
     "code_commit": "b11f49c4d264ea860b9fc9c45f4149fceea902dd",
@@ -78,8 +148,6 @@
     "funds": 36,
     "nav_series": 143,
     "nav_observations": 282152,
-    "live_website_independently_verified": false,
-    "live_host_check_blocker": "environment_network_policy",
     "midcap_batch1_built_at": "2026-10-02T23:00:56+00:00",
     "icici_error": "ICICI exact Mid Cap scheme name is not unique",
     "rejected_response_bytes_captured": false,
@@ -93,11 +161,402 @@
     },
     "midcap_direct_ter_families": 29,
     "midcap_total_families": 34,
-    "remaining_ter_families": ["BANDHAN MID CAP FUND", "BANK OF INDIA MID CAP FUND", "ICICI Prudential Mid Cap Fund", "JM Mid Cap Fund", "WhiteOak Capital Mid Cap Fund"],
+    "remaining_ter_families": [
+      "BANDHAN MID CAP FUND",
+      "BANK OF INDIA MID CAP FUND",
+      "ICICI Prudential Mid Cap Fund",
+      "JM Mid Cap Fund",
+      "WhiteOak Capital Mid Cap Fund"
+    ],
     "midcap_launch_ready": false,
-    "midcap_public_export_enabled": false
+    "midcap_public_export_enabled": false,
+    "initial_live_host_check_blocked": true,
+    "later_baseline_live_reads_verified_export": true,
+    "superseded_by_run_id": 37080044847,
+    "rejected_response_same_as_current_october_established": false,
+    "initial_live_website_independently_verified": false,
+    "initial_live_host_check_blocker": "environment_network_policy"
   },
-  "next_action": "After the four approved source-domain draft additions are applied, capture an actual rejected ICICI workbook with URL, SHA-256 and byte count through the normal read-only preflight; inspect exact identity, headers, dates and reconciliation evidence before any parser acceptance change.",
-  "parser_acceptance_changed": false,
-  "tracked_source_binary_added": false
+  "current_september_source": {
+    "url": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+    "sha256": "ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+    "bytes": 306500,
+    "fetched_at": "2026-10-03T00:01:34.781429+00:00",
+    "discovery_channel": "financial_disclosure_api",
+    "discovery_api_error": null,
+    "api_category_and_file_list_responses_captured": false,
+    "api_metadata_reason_for_september_selection_established": false,
+    "same_url_different_bytes_from_historical_source": true,
+    "member_size_and_sha256_verified": true,
+    "worksheet": "xl/worksheets/sheet1.xml",
+    "worksheet_name": "TotalExpenseRatioSep2026",
+    "physical_header_row": 3,
+    "header_cell_type": "inlineStr",
+    "physical_row_count": 4489,
+    "expected_a_to_l_headers_match": true,
+    "published_headers": {
+      "A": "Scheme Name",
+      "B": "Date (DD/MM/YYYY)",
+      "C": "Base Expense Ratio (BER) (%)",
+      "D": "Brokerage cost (%)",
+      "E": "Transaction Cost incurred for the purpose of execution of trade (%)",
+      "F": "Statutory Levies (including GST) (%)",
+      "G": "Total TER (%)",
+      "H": "Base Expense Ratio (BER) (%)",
+      "I": "Brokerage cost (%)",
+      "J": "Transaction Cost incurred for the purpose of execution of trade (%)",
+      "K": "Statutory Levies (including GST) (%)",
+      "L": "Total TER (%)"
+    },
+    "changed_header_columns_a_to_l": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L"
+    ],
+    "changed_september_29_target_cells": [
+      {
+        "family": "ICICI Prudential Mid Cap Fund",
+        "column": "K",
+        "historical_value": 0.31,
+        "current_value": 0.21,
+        "unit": "percentage_points",
+        "historical_physical_row": 1973,
+        "current_physical_row": 2042
+      },
+      {
+        "family": "ICICI Prudential Small Cap Fund",
+        "column": "K",
+        "historical_value": 0.51,
+        "current_value": 0.39,
+        "unit": "percentage_points",
+        "historical_physical_row": 4177,
+        "current_physical_row": 4262
+      }
+    ],
+    "latest_exact_rows": [
+      {
+        "family": "ICICI Prudential Mid Cap Fund",
+        "physical_row": 2043,
+        "as_of": "2026-09-30",
+        "regular": {
+          "source_components": [
+            1.53,
+            0.01,
+            0.0,
+            0.31
+          ],
+          "component_sum": 1.85,
+          "reported_total_ter": 1.85,
+          "difference": 0.0
+        },
+        "direct": {
+          "source_components": [
+            0.89,
+            0.01,
+            0.0,
+            0.21
+          ],
+          "component_sum": 1.11,
+          "reported_total_ter": 1.11,
+          "difference": 0.0
+        }
+      },
+      {
+        "family": "ICICI Prudential Small Cap Fund",
+        "physical_row": 4263,
+        "as_of": "2026-09-30",
+        "regular": {
+          "source_components": [
+            1.5,
+            0.08,
+            0.01,
+            0.51
+          ],
+          "component_sum": 2.1,
+          "reported_total_ter": 2.1,
+          "difference": 0.0
+        },
+        "direct": {
+          "source_components": [
+            0.7,
+            0.08,
+            0.01,
+            0.39
+          ],
+          "component_sum": 1.18,
+          "reported_total_ter": 1.18,
+          "difference": 0.0
+        }
+      }
+    ],
+    "each_exact_target_family_has_30_unique_dates": true,
+    "unchanged_midcap_parser_accepted": true,
+    "unchanged_smallcap_parser_accepted": true,
+    "parser_replay_database_connections_forbidden": true,
+    "generation_footnote": "7. TER is generated as on 09-Sep-2026 05:00 AM.",
+    "generation_footnote_is_verified_generation_clock": false,
+    "source_revision_cause_and_exact_time_established": false,
+    "durable_retention": {
+      "run_id": 37080044847,
+      "release_tag": "tracker-history",
+      "manifest_created_at": "2026-10-03T00:24:48+00:00",
+      "manifest_sha256": "c9ff278bf56702369ec8db73512c8dd2c816d8ace116dd44346f92b1f3687627",
+      "database_asset_manifest_binding": {
+        "asset": "database-37080044847-1.zip",
+        "sha256": "b057a97ebe087b459a1cd028532ea9297158ac893081ea65a427b78969aa6466",
+        "bytes": 12924267
+      },
+      "source_pack": {
+        "asset": "sources-2026-10-p001-60472edbf22561b3.zip",
+        "bytes": 35078701,
+        "sha256": "05d86d33b253809cd540cbccb360f6009788e55754bbd11891462080b721ea37",
+        "compressed_size_and_hash_verified": true
+      },
+      "member": {
+        "path": "data/archive/cc/ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+        "bytes": 306500,
+        "sha256": "ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+        "member_size_hash_and_zip_crc_verified": true,
+        "byte_identical_to_independent_source_capture": true
+      },
+      "source_packs_downloaded_for_check": 1,
+      "database_archives_downloaded_for_check": 0,
+      "production_database_access": false
+    }
+  },
+  "current_october_source": {
+    "url": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+    "sha256": "2b136282721167025a5362b339ff2199feea635a3f48d59c6375142a5394de3c",
+    "bytes": 5010,
+    "fetched_at": "2026-10-03T00:02:45.874978+00:00",
+    "member_size_and_sha256_verified": true,
+    "worksheet": "xl/worksheets/sheet1.xml",
+    "worksheet_name": "TotalExpenseRatioOct2026",
+    "physical_header_row": 3,
+    "physical_row_count": 14,
+    "dated_target_family_rows": 0,
+    "midcap_error": "ICICI TER workbook columns changed",
+    "production_batch1_built_at": "2026-10-03T00:01:54+00:00",
+    "production_batch1_url_sha256_and_size_match": true,
+    "production_discovery_route_established": false,
+    "same_bytes_as_previous_run_688_response_established": false,
+    "retained_in_run_689_published_manifest": false,
+    "binary_retained_in_ignored_scratch": true,
+    "published_headers_match_historical_base_ter_headers": true
+  },
+  "current_production": {
+    "run_id": 37080044847,
+    "run_number": 689,
+    "conclusion": "success",
+    "code_commit": "2fbd734cbb8539d2beae76043b2326cffc932386",
+    "build_completed_at": "2026-10-03T00:25:05Z",
+    "deploy_completed_at": "2026-10-03T00:25:23Z",
+    "generated_commit": "db5a0df35df887640411d374447bbc03c09f356b",
+    "generated_commit_parent": "2fbd734cbb8539d2beae76043b2326cffc932386",
+    "committed_status_export_clock": "2026-10-03T00:24:33+00:00",
+    "committed_funds_and_coverage_clock": "2026-10-03T00:24:14+00:00",
+    "live_status_funds_coverage_checked_at": "2026-10-03T00:27:07Z",
+    "live_website_independently_verified": true,
+    "live_exports_match_generated_commit": true,
+    "latest_included_nav_date": "2026-10-01",
+    "funds": 36,
+    "nav_series": 143,
+    "nav_observations": 282152,
+    "smallcap_icici_direct": {
+      "as_of": "2026-09-30",
+      "observed_at": "2026-10-03T00:05:19+00:00",
+      "base_expense_ratio": 0.7,
+      "ter": 1.18,
+      "sha256": "ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+      "hosted_values_and_reporting_date_verified": true
+    },
+    "staged_midcap": {
+      "aum_families": 34,
+      "direct_ter_families": 29,
+      "required_direct_ter_families": 31,
+      "benchmark_identity_families": 29,
+      "required_benchmark_identity_families": 31,
+      "current_portfolio_families": 21,
+      "required_current_portfolio_families": 28,
+      "current_complete_families": 6,
+      "total_families": 34,
+      "remaining_ter_families": [
+        "BANDHAN MID CAP FUND",
+        "BANK OF INDIA MID CAP FUND",
+        "ICICI Prudential Mid Cap Fund",
+        "JM Mid Cap Fund",
+        "WhiteOak Capital Mid Cap Fund"
+      ],
+      "launch_input_hashes_independently_verified": 14,
+      "launch_input_hash_mismatches": 0,
+      "input_issues": [],
+      "source_fetch_health_gate": true,
+      "audit_input_integrity_gate": true,
+      "data_ready": false,
+      "launch_ready": false,
+      "public_export_enabled": false
+    }
+  },
+  "exact_byte_fallback_replay": {
+    "evaluation_date": "2026-10-03",
+    "api_unavailability_simulated": true,
+    "production_route_established_by_simulation": false,
+    "transport_mocked_to_captured_bytes_only": true,
+    "database_connections_forbidden": true,
+    "production_writes": 0,
+    "reviewed_fallback_order": [
+      "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+      "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx"
+    ],
+    "unchanged_collector": {
+      "downloaded_october_then_rejected": true,
+      "error": "ICICI TER workbook columns changed",
+      "source_evidence": {
+        "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+        "sha256": "2b136282721167025a5362b339ff2199feea635a3f48d59c6375142a5394de3c",
+        "bytes": 5010
+      },
+      "transport_calls": 1,
+      "september_was_fetched": false
+    },
+    "scratch_candidate_validation_proof": {
+      "tracked_implementation_changed": false,
+      "attempts": [
+        {
+          "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+          "sha256": "2b136282721167025a5362b339ff2199feea635a3f48d59c6375142a5394de3c",
+          "bytes": 5010,
+          "outcome": "rejected",
+          "error_type": "ValueError",
+          "error": "ICICI TER workbook columns changed"
+        },
+        {
+          "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+          "sha256": "ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+          "bytes": 306500,
+          "outcome": "accepted",
+          "as_of": "2026-09-30"
+        }
+      ],
+      "accepted_as_of": "2026-09-30",
+      "accepted_midcap_direct_ter": 1.11,
+      "accepted_midcap_regular_ter": 1.85
+    },
+    "existing_readiness_single_family_replay": {
+      "synthetic_single_family_universe": true,
+      "recovered_evidence_counted": true,
+      "row_reporting_date_preserved": true,
+      "reporting_date": "2026-09-30",
+      "record_age_on_evaluation_date_days": 3,
+      "separate_ter_row_age_gate_exists": false,
+      "public_export_enabled": false
+    },
+    "baseline_code_commit": "db5a0df35df887640411d374447bbc03c09f356b"
+  },
+  "approved_correction": {
+    "status": "implemented_isolated_replay_verified",
+    "user_approved": true,
+    "scope": "Validate each existing reviewed monthly fallback candidate before selection; preserve rejected-candidate and discovery provenance.",
+    "fallback_candidate_months": [
+      "current_month",
+      "previous_month"
+    ],
+    "successful_api_selected_invalid_workbook_remains_fail_closed": true,
+    "rejected_candidate_fields": [
+      "source",
+      "sha256",
+      "bytes",
+      "error"
+    ],
+    "discovery_fields": [
+      "discovery_channel",
+      "discovery_api_error"
+    ],
+    "transport_failure_fields": [
+      "source",
+      "error"
+    ],
+    "transport_failure_hash_or_size_invented": false,
+    "validation_contracts_unchanged": [
+      "headers",
+      "exact_identity",
+      "unique_latest_date",
+      "regular_direct_pair_completeness",
+      "numeric_limits",
+      "reconciliation_tolerance"
+    ],
+    "reporting_date_preserved": true,
+    "new_source_hosts": false,
+    "new_source_binaries_tracked": false,
+    "new_implementation_test_results_claimed": true,
+    "verification_boundaries": [
+      "exact_rejected_october_then_accepted_september",
+      "all_monthly_candidates_rejected",
+      "transport_failure",
+      "invalid_successful_api_selected_workbook",
+      "existing_fiscal_year_and_month_rollover"
+    ],
+    "fresh_production_collection_pending": true,
+    "api_acquisition_failure_or_non_pk_fallback_preserved": true,
+    "verification": {
+      "monthly_selection_tests_passed": 13,
+      "focused_icici_tests_passed": 35,
+      "full_repository_tests_passed": 865,
+      "full_repository_test_exit_code": 0,
+      "python_compilation_passed": true,
+      "production_javascript_syntax_checks_passed": 5,
+      "actual_source_derived_ooxml_fixtures_used": true,
+      "captured_source_binaries_separately_replayed": true,
+      "validation_and_candidate_url_functions_ast_unchanged": [
+        "_icici_workbook_result",
+        "_reconcile",
+        "_latest_exact",
+        "_icici_fallback_sources"
+      ]
+    }
+  },
+  "freshness_and_launch_constraints": {
+    "separate_ter_row_age_cutoff_exists": false,
+    "source_reporting_date_cannot_be_replaced_by_fetch_date": true,
+    "report_generation_freshness_required": true,
+    "portfolio_source_date_freshness_independently_re_evaluated": true,
+    "all_existing_launch_gates_preserved": true,
+    "september_30_evidence_is_october_observation": false,
+    "fresh_production_collection_required_before_new_staged_coverage_claim": true
+  },
+  "implemented_exact_byte_replay": {
+    "evaluation_date": "2026-10-03",
+    "api_unavailability_simulated": true,
+    "historical_production_route_established": false,
+    "database_connections_forbidden": true,
+    "production_writes": 0,
+    "transport_calls": [
+      "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+      "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx"
+    ],
+    "status": "recovered",
+    "selected_source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+    "selected_sha256": "ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+    "as_of": "2026-09-30",
+    "direct_ter": 1.11,
+    "regular_ter": 1.85,
+    "discovery_channel": "reviewed_monthly_workbook_fallback",
+    "discovery_api_error": "SIMULATED API unavailable for isolated fallback reproduction",
+    "rejected_candidates": [
+      {
+        "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+        "error": "ICICI TER workbook columns changed",
+        "sha256": "2b136282721167025a5362b339ff2199feea635a3f48d59c6375142a5394de3c",
+        "bytes": 5010
+      }
+    ],
+    "validation_and_candidate_url_functions_ast_unchanged": true,
+    "fresh_production_coverage_established": false
+  }
 }
