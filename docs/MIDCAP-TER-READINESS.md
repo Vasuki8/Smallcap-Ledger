@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-10-03T04:31:05+00:00
+Prepared: 2026-10-03T21:43:03+00:00
 
 Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · remaining: **3**.
 
@@ -25,7 +25,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | 0.5359% | 1.5093% | 2026-10-01 | first_party_amc | https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | 1.9900% | 3.0800% | 2026-10-03 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 0.7500% | 2.0200% | 2026-10-01 | first_party_amc | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx |
-| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 0.9500% | 2.0100% | 2026-10-01 | first_party_amc | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_01102026.xls |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | 0.9500% | 2.0100% | 2026-10-03 | first_party_amc | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_03102026.xls |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | 0.9100% | 1.6200% | 2026-10-01 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | 0.8000% | 1.5500% | 2026-09-30 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | 0.7200% | 1.9100% | 2026-10-03 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
@@ -34,7 +34,7 @@ Direct TER evidence: **31 / 34** · AMFI: **21** · first-party AMC: **10** · r
 | Samco Mid Cap Fund | Samco Mutual Fund | 1.6600% | 3.0800% | 2026-10-01 | amfi | https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=10-2026&strCat=-1&strType=1&page=1&pageSize=1000 |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | 1.0500% | 1.8600% | 2026-09-30 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | TRUSTMF MID CAP FUND | Trust Mutual Fund | 1.9300% | 3.5600% | 2026-10-03 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
-| Tata Mid Cap Fund | Tata Mutual Fund | 0.8600% | 2.0300% | 2026-09-30 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
+| Tata Mid Cap Fund | Tata Mutual Fund | 0.8400% | 2.0200% | 2026-10-03 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Taurus Mid Cap Fund | Taurus Mutual Fund | 2.3600% | 2.8000% | 2026-10-01 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | 2.2600% | 4.2700% | 2026-10-03 | first_party_amc | https://www.wealthcompanyamc.in/api/ter-values/year/2026/export |
 | UTI - Mid Cap Fund | UTI Mutual Fund | 1.2700% | 1.9700% | 2026-10-01 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |

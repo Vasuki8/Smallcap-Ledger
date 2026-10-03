@@ -1,6 +1,6 @@
 # Mid Cap first-party TER recovery batch 1
 
-Prepared: 2026-10-03T04:31:32+00:00
+Prepared: 2026-10-03T21:43:32+00:00
 
 Targets: **8** · recovered: **7** · failed: **1**.
 
@@ -13,7 +13,7 @@ Targets: **8** · recovered: **7** · failed: **1**.
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | recovered | 2026-09-30 | 0.7800% | 1.8800% | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 | scheme_name=Invesco India Mid Cap Fund, nsdl_scheme_code=INVM/O/E/MIF/07/01/0006 |
 | JM Mid Cap Fund | JM Financial Mutual Fund | failed |  |  |  |  | JM exact Mid Cap identity is not unique |
 | Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | recovered | 2026-10-01 | 0.7500% | 2.0200% | https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx | scheme_name=Mahindra Manulife Mid Cap Fund, nsdl_scheme_code=MAHM/O/E /MIF/17/11/0006 |
-| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | recovered | 2026-10-01 | 0.9500% | 2.0100% | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_01102026.xls | scheme_name=Mirae Asset Midcap Fund, nsdl_scheme_code=MIRA/O/E/MIF/19/05/0015 |
+| Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | recovered | 2026-10-03 | 0.9500% | 2.0100% | https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_03102026.xls | scheme_name=Mirae Asset Midcap Fund, nsdl_scheme_code=MIRA/O/E/MIF/19/05/0015 |
 
 ## Notes
 
