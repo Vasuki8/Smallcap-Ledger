@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-02T23:00:56+00:00",
+  "built_at": "2026-10-03T00:01:54+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
   "recovered": 5,
@@ -26,8 +26,8 @@
           "ter": 0.88
         }
       },
-      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-18&to_date=2026-10-02",
-      "sha256": "c28bd185dfc7b57e94820dfa521665b343a785dbf2d03a9f10fb3a8cdadb32d9",
+      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-19&to_date=2026-10-03",
+      "sha256": "d026e7e49360a6bf8d3932e49a218d6ea81134ec7c06a9341108d568895b01bf",
       "identity": {
         "scheme_name": "Canara Robeco Mid Cap Fund",
         "scheme_code": "MD"
@@ -166,7 +166,10 @@
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "error": "ICICI exact Mid Cap scheme name is not unique"
+      "error": "ICICI TER workbook columns changed",
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
+      "sha256": "2b136282721167025a5362b339ff2199feea635a3f48d59c6375142a5394de3c",
+      "bytes": 5010
     },
     {
       "family": "JM Mid Cap Fund",

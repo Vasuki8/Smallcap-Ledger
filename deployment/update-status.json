@@ -1,18 +1,18 @@
 {
-  "built_at": "2026-10-02T23:22:13+00:00",
+  "built_at": "2026-10-03T00:24:33+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
     "nav_points": 282152,
     "benchmark_points": 5334,
-    "portfolios": 173,
-    "documents": 3957,
-    "archive_bytes": 3971416130,
-    "archive_binary_files": 5106,
+    "portfolios": 178,
+    "documents": 4183,
+    "archive_bytes": 4145148809,
+    "archive_binary_files": 5339,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 144592896,
-    "total_storage_bytes": 4116009026,
+    "database_bytes": 142168064,
+    "total_storage_bytes": 4287316873,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-10-01"
@@ -24,36 +24,36 @@
     },
     "direct_fee": {
       "earliest": "2026-04-30",
-      "latest": "2026-10-02"
+      "latest": "2026-10-03"
     },
     "benchmark_identity": {
       "earliest": "2023-08-31",
-      "latest": "2026-10-02"
+      "latest": "2026-10-03"
     }
   },
   "recent_jobs": [
     {
       "kind": "amc-communication-archive-repair",
-      "started_at": "2026-10-02T23:21:27+00:00",
-      "finished_at": "2026-10-02T23:21:27+00:00",
+      "started_at": "2026-10-03T00:23:53+00:00",
+      "finished_at": "2026-10-03T00:23:53+00:00",
       "status": "partial"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-02T23:08:00+00:00",
-      "finished_at": "2026-10-02T23:08:00+00:00",
+      "started_at": "2026-10-03T00:08:29+00:00",
+      "finished_at": "2026-10-03T00:08:29+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-02T23:07:54+00:00",
-      "finished_at": "2026-10-02T23:07:54+00:00",
+      "started_at": "2026-10-03T00:08:24+00:00",
+      "finished_at": "2026-10-03T00:08:24+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-02T23:07:51+00:00",
-      "finished_at": "2026-10-02T23:07:51+00:00",
+      "started_at": "2026-10-03T00:08:20+00:00",
+      "finished_at": "2026-10-03T00:08:20+00:00",
       "status": "ok"
     }
   ],
@@ -67,7 +67,7 @@
     "publication_file_budget_bytes": 262144000,
     "publication_file_reserve_bytes": 5242880,
     "publication_selection_limit_bytes": 256901120,
-    "publication_files_included": 153,
-    "publication_bytes_included": 256900788
+    "publication_files_included": 143,
+    "publication_bytes_included": 256900763
   }
 }

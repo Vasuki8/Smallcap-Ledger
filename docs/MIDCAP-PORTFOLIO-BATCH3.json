@@ -1,37 +1,11 @@
 {
-  "built_at": "2026-10-02T23:03:23+00:00",
+  "built_at": "2026-10-03T00:03:53+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 5,
-  "recovered": 5,
-  "failed": 0,
+  "recovered": 4,
+  "failed": 1,
   "results": [
-    {
-      "family": "ICICI Prudential Mid Cap Fund",
-      "amc": "ICICI Prudential Mutual Fund",
-      "status": "recovered",
-      "sheet": "MIDCAP",
-      "as_of": "2026-08-31",
-      "positions_observed": 81,
-      "complete": false,
-      "unknown_rows": [
-        "Equity & Equity Related Instruments",
-        "Listed / Awaiting Listing On Stock Exchanges",
-        "CRISIL Ltd.",
-        "GSPL India Transco Ltd",
-        "Others",
-        "Cash Margin - Derivatives"
-      ],
-      "aum": 8403.29876,
-      "scope": "structured_monthly_portfolio",
-      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip",
-      "source_title": "Monthly Portfolio Disclosure August 2026",
-      "zip_entry": "ICICI Prudential Mid Cap Fund.xlsx",
-      "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
-      "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
-      "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-10-02T23:03:14+00:00"
-    },
     {
       "family": "Axis Midcap Fund",
       "amc": "Axis Mutual Fund",
@@ -50,7 +24,7 @@
       "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
       "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-02T23:03:17+00:00"
+      "observed_at": "2026-10-03T00:03:47+00:00"
     },
     {
       "family": "SBI MIDCAP FUND",
@@ -71,7 +45,7 @@
       "source_title": "Download",
       "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-02T23:03:19+00:00"
+      "observed_at": "2026-10-03T00:03:49+00:00"
     },
     {
       "family": "Tata Mid Cap Fund",
@@ -92,7 +66,7 @@
       "source_title": "Portfolio as on 31st August, 2026",
       "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-02T23:03:21+00:00"
+      "observed_at": "2026-10-03T00:03:52+00:00"
     },
     {
       "family": "UTI - Mid Cap Fund",
@@ -674,10 +648,15 @@
       "source_sha256": "8e938ad0ab0fd14f315dc8f8657e718e13170039cdb36aec9864c5c5d8ee90b4",
       "workbook_sha256": "bc3e8ed96a0fdf477387da8efbacc29820c265c699e864d7bfaef0a9c5838555",
       "source_content_type": "application/zip",
-      "observed_at": "2026-10-02T23:03:23+00:00"
+      "observed_at": "2026-10-03T00:03:53+00:00"
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "error": "Server disconnected without sending a response."
+    }
+  ],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [
