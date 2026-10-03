@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-03T03:53:44+00:00",
+  "built_at": "2026-10-03T04:31:05+00:00",
   "staged_category": "mid-cap",
   "stage": "staged",
   "public_export_enabled": false,
@@ -1786,7 +1786,7 @@
       "kind": "ter_samco_amc_page",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=10-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "sha256": "2e14e3d12424a8299dc908e5ebf79778ce1b3ea3403d2d945b73997fe7ff46de",
-      "observed_at": "2026-10-03T03:53:44.263023+00:00",
+      "observed_at": "2026-10-03T04:31:05.883551+00:00",
       "request": {
         "MF_ID": "74",
         "Month": "10-2026",
@@ -4605,7 +4605,7 @@
           "unit": "% p.a. · AMC-reported via AMFI"
         },
         "source_sha256": "2e14e3d12424a8299dc908e5ebf79778ce1b3ea3403d2d945b73997fe7ff46de",
-        "source_observed_at": "2026-10-03T03:53:44.263023+00:00",
+        "source_observed_at": "2026-10-03T04:31:05.883551+00:00",
         "source_row": 8,
         "published_row": {
           "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -5526,6 +5526,6 @@
     "current_fetch_ok": true,
     "retained_from_audit_built_at": null,
     "retained_artifact_path": "docs/MIDCAP-AUM-LAST-VERIFIED.json",
-    "retained_artifact_sha256": "64ba647940463756acfdae29ff482c733f7976034635347787137dfdd5922394"
+    "retained_artifact_sha256": "8970e5b20a41c7a1a6b5fedf798638758e4f85defe610c96095e08f918c2ddc7"
   }
 }

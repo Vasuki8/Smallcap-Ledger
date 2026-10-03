@@ -1,18 +1,18 @@
 {
-  "built_at": "2026-10-03T04:00:34+00:00",
+  "built_at": "2026-10-03T04:52:40+00:00",
   "counts": {
     "plans": 143,
     "funds": 36,
     "nav_points": 282152,
     "benchmark_points": 5334,
-    "portfolios": 193,
-    "documents": 4852,
-    "archive_bytes": 4645706009,
-    "archive_binary_files": 6023,
+    "portfolios": 198,
+    "documents": 5072,
+    "archive_bytes": 4797161030,
+    "archive_binary_files": 6247,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 142557184,
-    "total_storage_bytes": 4788263193,
+    "database_bytes": 143847424,
+    "total_storage_bytes": 4941008454,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-10-01"
@@ -34,26 +34,26 @@
   "recent_jobs": [
     {
       "kind": "amc-communication-archive-repair",
-      "started_at": "2026-10-03T03:59:55+00:00",
-      "finished_at": "2026-10-03T03:59:55+00:00",
-      "status": "partial"
-    },
-    {
-      "kind": "amc-communication-archive-repair",
-      "started_at": "2026-10-03T03:20:27+00:00",
-      "finished_at": "2026-10-03T03:20:27+00:00",
+      "started_at": "2026-10-03T04:52:02+00:00",
+      "finished_at": "2026-10-03T04:52:02+00:00",
       "status": "partial"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-03T03:06:32+00:00",
-      "finished_at": "2026-10-03T03:06:32+00:00",
+      "started_at": "2026-10-03T04:38:03+00:00",
+      "finished_at": "2026-10-03T04:38:03+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-03T03:06:27+00:00",
-      "finished_at": "2026-10-03T03:06:27+00:00",
+      "started_at": "2026-10-03T04:38:01+00:00",
+      "finished_at": "2026-10-03T04:38:01+00:00",
+      "status": "ok"
+    },
+    {
+      "kind": "amc-reports",
+      "started_at": "2026-10-03T04:37:57+00:00",
+      "finished_at": "2026-10-03T04:37:57+00:00",
       "status": "ok"
     }
   ],
@@ -67,7 +67,7 @@
     "publication_file_budget_bytes": 262144000,
     "publication_file_reserve_bytes": 5242880,
     "publication_selection_limit_bytes": 256901120,
-    "publication_files_included": 130,
-    "publication_bytes_included": 256899800
+    "publication_files_included": 134,
+    "publication_bytes_included": 256900944
   }
 }
