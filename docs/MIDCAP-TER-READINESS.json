@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-10-03T00:01:21+00:00",
+  "built_at": "2026-10-03T01:05:42+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 29,
+    "direct_ter": 30,
     "amfi": 21,
-    "first_party_amc": 8,
-    "remaining": 5
+    "first_party_amc": 9,
+    "remaining": 4
   },
   "families": [
     {
@@ -154,13 +154,15 @@
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 1.11,
+      "regular_ter": 1.85,
+      "as_of": "2026-09-30",
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "ICICI Prudential Mid Cap Fund"
+      }
     },
     {
       "family": "ITI Mid Cap Fund",
@@ -322,7 +324,7 @@
         "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
       },
       "source_sha256": "2e14e3d12424a8299dc908e5ebf79778ce1b3ea3403d2d945b73997fe7ff46de",
-      "source_observed_at": "2026-10-03T00:01:21.801086+00:00",
+      "source_observed_at": "2026-10-03T01:05:42.459018+00:00",
       "source_row": 8,
       "published_row": {
         "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
@@ -440,7 +442,6 @@
   "remaining_families": [
     "BANDHAN MID CAP FUND",
     "BANK OF INDIA MID CAP FUND",
-    "ICICI Prudential Mid Cap Fund",
     "JM Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],

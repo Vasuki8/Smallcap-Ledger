@@ -1,9 +1,9 @@
 {
-  "built_at": "2026-10-03T00:01:54+00:00",
+  "built_at": "2026-10-03T01:06:16+00:00",
   "staged_category": "mid-cap",
   "targets": 7,
-  "recovered": 5,
-  "failed": 2,
+  "recovered": 6,
+  "failed": 1,
   "results": [
     {
       "family": "Canara Robeco Mid Cap Fund",
@@ -67,6 +67,38 @@
       "evidence_type": "official_amc_linked_workbook",
       "direct_ter": 1.15,
       "regular_ter": 2.21
+    },
+    {
+      "family": "ICICI Prudential Mid Cap Fund",
+      "amc": "ICICI Prudential Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-30",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 1.53,
+          "brokerage": 0.01,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.31,
+          "ter": 1.85
+        },
+        "Direct": {
+          "base_expense_ratio": 0.89,
+          "brokerage": 0.01,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.21,
+          "ter": 1.11
+        }
+      },
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "sha256": "ccf702746465273bb812eda2e91fbbb6166b47dccc5e98daeae4b6307590beb9",
+      "identity": {
+        "scheme_name": "ICICI Prudential Mid Cap Fund"
+      },
+      "evidence_type": "official_amc_workbook",
+      "discovery_channel": "financial_disclosure_api",
+      "discovery_api_error": null,
+      "direct_ter": 1.11,
+      "regular_ter": 1.85
     },
     {
       "family": "Invesco India Mid Cap Fund",
@@ -163,14 +195,6 @@
     }
   ],
   "errors": [
-    {
-      "family": "ICICI Prudential Mid Cap Fund",
-      "amc": "ICICI Prudential Mutual Fund",
-      "error": "ICICI TER workbook columns changed",
-      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
-      "sha256": "2b136282721167025a5362b339ff2199feea635a3f48d59c6375142a5394de3c",
-      "bytes": 5010
-    },
     {
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",

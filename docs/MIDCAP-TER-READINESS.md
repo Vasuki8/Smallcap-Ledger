@@ -1,8 +1,8 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-10-03T00:01:21+00:00
+Prepared: 2026-10-03T01:05:42+00:00
 
-Direct TER evidence: **29 / 34** · AMFI: **21** · first-party AMC: **8** · remaining: **5**.
+Direct TER evidence: **30 / 34** · AMFI: **21** · first-party AMC: **9** · remaining: **4**.
 
 | Family | AMC | Direct TER | Regular TER | As of | Evidence | Source |
 | --- | --- | ---: | ---: | --- | --- | --- |
@@ -18,7 +18,7 @@ Direct TER evidence: **29 / 34** · AMFI: **21** · first-party AMC: **8** · re
 | HDFC Mid Cap Fund | HDFC Mutual Fund | 0.7600% | 1.3100% | 2026-09-30 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | HSBC Midcap Fund | HSBC Mutual Fund | 1.1500% | 2.2100% | 2026-09-30 | first_party_amc | https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx |
 | Helios Mid Cap Fund | Helios Mutual Fund | 0.9800% | 2.4300% | 2026-09-30 | first_party_amc | https://www.heliosmf.in/wp-content/uploads/2026/09/TER_sep_2026_vsvefi.xls |
-| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Gap | Gap | Gap | Gap | Gap |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 1.1100% | 1.8500% | 2026-09-30 | first_party_amc | https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx |
 | ITI Mid Cap Fund | ITI Mutual Fund | 0.9100% | 2.4300% | 2026-10-03 | amfi | https://www.amfiindia.com/ter-of-mf-schemes |
 | Invesco India Mid Cap Fund | Invesco Mutual Fund | 0.7800% | 1.8800% | 2026-09-30 | first_party_amc | https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9 |
 | JM Mid Cap Fund | JM Financial Mutual Fund | Gap | Gap | Gap | Gap | Gap |
@@ -45,7 +45,6 @@ Direct TER evidence: **29 / 34** · AMFI: **21** · first-party AMC: **8** · re
 
 - BANDHAN MID CAP FUND
 - BANK OF INDIA MID CAP FUND
-- ICICI Prudential Mid Cap Fund
 - JM Mid Cap Fund
 - WhiteOak Capital Mid Cap Fund
 
