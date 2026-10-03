@@ -1,6 +1,6 @@
 # Mid Cap launch readiness
 
-Evaluated: 2026-10-03T03:01:48.697810+00:00
+Evaluated: 2026-10-03T03:57:18.311016+00:00
 
 Data ready: **false** · launch ready: **false**.
 

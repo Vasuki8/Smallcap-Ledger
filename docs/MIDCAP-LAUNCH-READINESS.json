@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "built_at": "2026-10-03T03:01:48.697810+00:00",
-  "evaluated_at": "2026-10-03T03:01:48.697810+00:00",
+  "built_at": "2026-10-03T03:57:18.311016+00:00",
+  "evaluated_at": "2026-10-03T03:57:18.311016+00:00",
   "staged_category": "mid-cap",
   "families": 34,
   "portfolio_expected_as_of": "2026-08-31",
@@ -40,112 +40,112 @@
   "input_health": [
     {
       "path": "docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json",
-      "sha256": "be8b8486a05d78ee8453f2cf419472b03080898e6aa077d609d44780831327e7",
-      "built_at": "2026-10-03T02:58:03+00:00",
+      "sha256": "0995c6bc1a646393fa605ba4d5c540e0d2d09758dd75a58c004a0b8c063ce648",
+      "built_at": "2026-10-03T03:53:44+00:00",
       "ok": true,
       "error": null,
       "name": "source_audit"
     },
     {
       "path": "docs/MIDCAP-TER-READINESS.json",
-      "sha256": "793a9cdbff8474ecf0e94a41c1f503c8910bcb31da414fe755a2530b74b0ecc4",
-      "built_at": "2026-10-03T02:58:03+00:00",
+      "sha256": "282ef084cc2e60bfde44f658e4643bde9caea248564d71106b39466b7f34ded3",
+      "built_at": "2026-10-03T03:53:44+00:00",
       "ok": true,
       "error": null,
       "name": "ter"
     },
     {
       "path": "docs/MIDCAP-BENCHMARK-READINESS.json",
-      "sha256": "8eb7b918fa6f66101fd44288db3c614e7352f75ba4879c41eb70800215a939bc",
-      "built_at": "2026-10-03T02:59:45+00:00",
+      "sha256": "6486c8024bd13be6d2ce8859a44dcc1f46f1501ce22097388526c0b42743a514",
+      "built_at": "2026-10-03T03:55:22+00:00",
       "ok": true,
       "error": null,
       "name": "benchmark"
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-READINESS.json",
-      "sha256": "ab4c2f7ce44b9ac09721ddf6488ccfd5fe86206ac35a9152b1743c52667f7a7e",
-      "built_at": "2026-10-03T03:01:48.617858+00:00",
+      "sha256": "3e52ae3fedd70317ff21da850885d36c83d73caa5d120b4af78726480e55cd71",
+      "built_at": "2026-10-03T03:57:18.255265+00:00",
       "ok": true,
       "error": null,
       "name": "portfolio"
     },
     {
       "path": "deployment/midcap-history-status.json",
-      "sha256": "2572aae767ff727318314e312163dbdd0a4af93d441e486b2c5530e07727a596",
-      "built_at": "2026-10-03T02:55:40+00:00",
+      "sha256": "ac9075198799500a5b5455d627fa595dcdb5db684557a6a0212f616ed56ee4bc",
+      "built_at": "2026-10-03T03:51:42+00:00",
       "ok": true,
       "error": null,
       "name": "history"
     },
     {
       "path": "docs/MIDCAP-TER-FIRST-PARTY-BATCH1.json",
-      "sha256": "febe9287abbd20f2affabc7fae0dc09162e94abc6677540c0cc0703f92b99f80",
-      "built_at": "2026-10-03T02:58:33+00:00",
+      "sha256": "206c3ce2562b6848ed8d0b150ccf4eae58f08c09433d11d5e7b30915670d5f0d",
+      "built_at": "2026-10-03T03:54:12+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-TER-FIRST-PARTY-BATCH1.json"
     },
     {
       "path": "docs/MIDCAP-TER-FIRST-PARTY-BATCH2.json",
-      "sha256": "68e0d026ad69c388824447e91c2c0ea2ca6379dead8313acd983830c35e7d7fa",
-      "built_at": "2026-10-03T02:58:37+00:00",
+      "sha256": "fadc9731e64df829d5fbe0ad65408a0ec497e67adbe0c055ab22f2acb6aae268",
+      "built_at": "2026-10-03T03:54:17+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-TER-FIRST-PARTY-BATCH2.json"
     },
     {
       "path": "docs/MIDCAP-BENCHMARK-BATCH1.json",
-      "sha256": "d518d21442c7e2cdf3acf4280150e8b7306ddde69e75b3dd538b1a1982a8b28d",
-      "built_at": "2026-10-03T02:58:57+00:00",
+      "sha256": "615a8831abc96142f493a37c953f8ca24a3fd0ad90343edd06078a8558085eb0",
+      "built_at": "2026-10-03T03:54:36+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-BENCHMARK-BATCH1.json"
     },
     {
       "path": "docs/MIDCAP-BENCHMARK-BATCH2.json",
-      "sha256": "54f98e57107e02fa0ce15afa77f4ddf05c0dd1f9571014de6ff081c1e6c26bf5",
-      "built_at": "2026-10-03T02:59:45+00:00",
+      "sha256": "15463fadf471b7a17aa43b6d4487ba049d8eb702cd97126cb1d1d33934138950",
+      "built_at": "2026-10-03T03:55:22+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-BENCHMARK-BATCH2.json"
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH1.json",
-      "sha256": "4884ff5213c136aa46b8ac1176e921fcf303fdd88440dd1cfd668d9c3188217a",
-      "built_at": "2026-10-03T02:59:53+00:00",
+      "sha256": "2dedae17939ee271f4d7676f4005d900816ffdfb8daebaeffad257c15bc7fdf9",
+      "built_at": "2026-10-03T03:55:29+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-PORTFOLIO-BATCH1.json"
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH2.json",
-      "sha256": "c0546fdca9a72a84a5a9233c05018d2f44d9219fd6e17a975d118df530d76b0c",
-      "built_at": "2026-10-03T03:00:00+00:00",
+      "sha256": "fecfbddbf0eb65c67d95e6a90cb7755158ce735873c9ea4eb6128dae743aaf3c",
+      "built_at": "2026-10-03T03:55:35+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-PORTFOLIO-BATCH2.json"
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH3.json",
-      "sha256": "4836154ec5ef79e8d9f6e48b3f78d40fa9696a4e986efb2c04f690a8a3ff889f",
-      "built_at": "2026-10-03T03:00:55+00:00",
+      "sha256": "ee6e80ffb6eec867981e69e35295b339bdda810cf1542ea3fe816921c79c00cf",
+      "built_at": "2026-10-03T03:56:29+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-PORTFOLIO-BATCH3.json"
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH4.json",
-      "sha256": "34e23284bf0e85947c536f4e6596cd451cb80308b1ff9e60491230680f032659",
-      "built_at": "2026-10-03T03:01:13+00:00",
+      "sha256": "99fbcde0646d472214e9b5611be6d44049d9b3b928732af4e859ae8d8706618a",
+      "built_at": "2026-10-03T03:56:51+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-PORTFOLIO-BATCH4.json"
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH5.json",
-      "sha256": "2c8de2ee40e1646e88be80b6b1c525e52c77dee642a5677ad958c8d3ba8e680d",
-      "built_at": "2026-10-03T03:01:48+00:00",
+      "sha256": "07fd0b29f953309b454a30dff778945f02b0085730cf1c9cfa05f112e31bf2f0",
+      "built_at": "2026-10-03T03:57:18+00:00",
       "ok": true,
       "error": null,
       "name": "MIDCAP-PORTFOLIO-BATCH5.json"
