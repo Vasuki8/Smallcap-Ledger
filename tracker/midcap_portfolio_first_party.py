@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 
 from . import amfi_metrics,db,providers
 from .coverage import expected_portfolio_as_of
+from .midcap_kotak_evidence import FAMILY as KOTAK_FAMILY, KotakSourceRejected
 
 
 SOURCES={
@@ -289,24 +290,35 @@ def inspect_family(family,config,fetch_fn=providers.fetch,today=None):
     if parsed.scheme!="https" or parsed.hostname not in HOSTS:
         raise ValueError("Portfolio audit source is not an approved first-party host")
     body,_,typ=fetch_fn(url,archive=False,max_bytes=12*1024*1024)
-    soup=BeautifulSoup(body,"html.parser")
-    text=soup.get_text("\n",strip=True)
-    if _norm(family) not in _norm(text):
-        raise ValueError("First-party source does not contain the exact staged Mid Cap family identity")
-    dates=_explicit_dates(text)
-    if expected not in dates:
-        raise ValueError(f"First-party source does not explicitly report current portfolio date {expected}")
-    parser=config["parser"]
-    if parser in PARSERS:
-        positions=PARSERS[parser](soup)
-    elif parser=="baroda":
-        positions=_baroda(text)
-    elif parser=="hdfc":
-        positions=_hdfc(soup,text)
-    else:
-        raise ValueError("Unknown portfolio evidence parser")
-    if len(positions)<5:
-        raise ValueError(f"Only {len(positions)} named current holdings were visible; need at least 5")
+    stage="family_identity"
+    try:
+        soup=BeautifulSoup(body,"html.parser")
+        text=soup.get_text("\n",strip=True)
+        if _norm(family) not in _norm(text):
+            raise ValueError("First-party source does not contain the exact staged Mid Cap family identity")
+        stage="reporting_date"
+        dates=_explicit_dates(text)
+        if expected not in dates:
+            raise ValueError(f"First-party source does not explicitly report current portfolio date {expected}")
+        stage="positions"
+        parser=config["parser"]
+        if parser in PARSERS:
+            positions=PARSERS[parser](soup)
+        elif parser=="baroda":
+            positions=_baroda(text)
+        elif parser=="hdfc":
+            positions=_hdfc(soup,text)
+        else:
+            raise ValueError("Unknown portfolio evidence parser")
+        stage="minimum_positions"
+        if len(positions)<5:
+            raise ValueError(f"Only {len(positions)} named current holdings were visible; need at least 5")
+    except ValueError as exc:
+        if family==KOTAK_FAMILY:
+            raise KotakSourceRejected(
+                str(exc),source=url,content=body,content_type=typ,stage=stage
+            ) from exc
+        raise
     return {
         "family":family,
         "status":"recovered",
@@ -336,8 +348,11 @@ def collect(fetch_fn=providers.fetch,today=None):
             row["amc"]=staged[family]
             results.append(row)
         except Exception as exc:
-            errors.append({"family":family,"amc":staged.get(family),"source":config["url"],
-                           "error":(str(exc) or type(exc).__name__)[:300]})
+            error={"family":family,"amc":staged.get(family),"source":config["url"],
+                   "error":(str(exc) or type(exc).__name__)[:300]}
+            if isinstance(exc,KotakSourceRejected):
+                error.update(exc.source_evidence)
+            errors.append(error)
     return {
         "built_at":db.now(),
         "staged_category":"mid-cap",

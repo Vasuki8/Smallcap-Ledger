@@ -14,6 +14,7 @@ from . import db, disclosures, jm_portfolios, providers
 from . import midcap_bandhan_portfolio as bandhan_midcap
 from .coverage import expected_portfolio_as_of
 from .midcap_factsheet_equities import equity_positions, validate_factsheet_context
+from .midcap_kotak_evidence import KotakSourceRejected
 from .midcap_factsheet_validation import (
     PARSER_VERSION as MAHINDRA_PARSER_VERSION,
     mahindra_positions as _mahindra_positions,
@@ -65,12 +66,22 @@ def _reconciled_mahindra_positions(soup):
 
 def _html_result(family,amc,url,parser,fetch_fn,expected,reviewed_heading_aliases=()):
     body,_,typ=fetch_fn(url,archive=False,max_bytes=12*1024*1024)
-    soup,_=_require_html_identity_date(
-        body,family,expected,reviewed_heading_aliases=reviewed_heading_aliases
-    )
-    positions=parser(soup)
-    if len(positions)<5:
-        raise ValueError(f"Only {len(positions)} named current holdings were visible; need at least 5")
+    stage="factsheet_context"
+    try:
+        soup,_=_require_html_identity_date(
+            body,family,expected,reviewed_heading_aliases=reviewed_heading_aliases
+        )
+        stage="equity_positions"
+        positions=parser(soup)
+        stage="minimum_positions"
+        if len(positions)<5:
+            raise ValueError(f"Only {len(positions)} named current holdings were visible; need at least 5")
+    except ValueError as exc:
+        if family==KOTAK_FAMILY:
+            raise KotakSourceRejected(
+                str(exc),source=url,content=body,content_type=typ,stage=stage
+            ) from exc
+        raise
     return {
         "family":family,"amc":amc,"status":"recovered","as_of":expected,
         "positions_observed":len(positions),"positions":positions,
@@ -397,7 +408,10 @@ def collect(fetch_fn=providers.fetch,today=None):
         try:
             row=collector(fetch_fn,expected);row["observed_at"]=db.now();results.append(row)
         except Exception as exc:
-            errors.append({"family":family,"error":(str(exc) or type(exc).__name__)[:500]})
+            error={"family":family,"error":(str(exc) or type(exc).__name__)[:500]}
+            if isinstance(exc,KotakSourceRejected):
+                error.update(exc.source_evidence)
+            errors.append(error)
     return {
         "built_at":db.now(),"staged_category":"mid-cap","portfolio_expected_as_of":expected,
         "targets":len(COLLECTORS),"recovered":len(results),"failed":len(errors),
