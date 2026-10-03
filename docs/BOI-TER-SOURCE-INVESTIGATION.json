@@ -1,0 +1,271 @@
+{
+  "reviewed_on": "2026-10-02",
+  "review_timezone": "America/Toronto",
+  "scope": "exact_source_history_verified_isolated_collector_and_production_baseline",
+  "source_capture": {
+    "observed_at": "2026-10-03T00:44:51+00:00",
+    "source": "https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8",
+    "sha256": "4a4d8482f052c438a5dd664def2c8277c7ecaa5a311c0f3902307e7fdb62fc75",
+    "bytes": 56375,
+    "content_type": "application/vnd.ms-excel",
+    "actual_format": "xlsx_zip",
+    "url_extension": "xls",
+    "source_hash_and_size_independently_verified": true,
+    "production_writes": 0,
+    "repeat_capture_before_implementation": {
+      "observed_at": "2026-10-03T01:54:00.759316+00:00",
+      "sha256": "4a4d8482f052c438a5dd664def2c8277c7ecaa5a311c0f3902307e7fdb62fc75",
+      "bytes": 56375,
+      "matches_reviewed_snapshot": true
+    },
+    "sole_worksheet": "TER_UPLOAD_FORMAT",
+    "worksheet_part": "xl/worksheets/sheet1.xml",
+    "reported_dimension": "A1",
+    "physical_row_count": 713,
+    "header_physical_row": 1,
+    "header_and_identity_cell_types": "shared_string",
+    "date_cell_type": "styled_excel_serial_decoded_as_datetime",
+    "ter_value_units": "plain_annual_percentage_points",
+    "exact_family_rows": 29,
+    "date_range": [
+      "2026-09-01",
+      "2026-09-29"
+    ],
+    "published_nsdl_identities": [
+      "BOIA/O/E/MIF/25/06/0023"
+    ],
+    "latest_date_rows": 1,
+    "latest_exact_row": {
+      "physical_row": 436,
+      "scheme_name": "Bank of India Mid Cap Fund",
+      "nsdl_scheme_code": "BOIA/O/E/MIF/25/06/0023",
+      "as_of": "2026-09-29",
+      "raw_excel_date_serial": 46294.0,
+      "regular": {
+        "base_expense_ratio": 2.02,
+        "brokerage": 0.06,
+        "transaction_cost": 0.0,
+        "statutory_levies": 0.47,
+        "ter": 2.55,
+        "component_sum": 2.55,
+        "difference": 0.0
+      },
+      "direct": {
+        "base_expense_ratio": 0.98,
+        "brokerage": 0.06,
+        "transaction_cost": 0.0,
+        "statutory_levies": 0.28,
+        "ter": 1.32,
+        "component_sum": 1.32,
+        "difference": 0.0
+      }
+    },
+    "existing_reconcile_accepts_components": true,
+    "reconciliation_tolerance_percentage_points": 0.02,
+    "amfi_or_isin_mapping_established": false,
+    "durable_publication_retention_verified": false,
+    "staged_production_boi_recovery_verified": false
+  },
+  "historical_diagnostic": {
+    "artifact": "deployment/midcap-ter-final4-file-diagnostic.json",
+    "observed_at": null,
+    "capture_timestamp_recorded": false,
+    "source": "https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8",
+    "sha256": "27c3ac086b2c293c89922b3499ad5a1b28298080cbb585bd5788b51f983aa3e7",
+    "bytes": 48497,
+    "format": "xlsx",
+    "worksheet": "TER_UPLOAD_FORMAT",
+    "reported_rows": 1,
+    "reported_columns": 1,
+    "reported_sample": "NSDL Scheme Code",
+    "raw_rows_beyond_dimensions_inspected": false,
+    "binary_retained_by_diagnostic": false,
+    "hash_match_in_bounded_manifest_and_isolated_archive_search": false,
+    "same_bytes_as_current_capture_established": false,
+    "absence_of_source_data_proved": false
+  },
+  "official_disclosure_page": {
+    "source": "https://www.boimf.in/siddisclosures/scheme-expense-ratio",
+    "observed_at": "2026-10-03T01:37:09.561842+00:00",
+    "http_status": 200,
+    "sha256": "0a639d79b1d83aa3cb0c5c382590d9f046d4dede83229b96ed01e3ce6eef1f3d",
+    "bytes": 72147,
+    "content_type": "text/html; charset=utf-8",
+    "matching_ter_workbook_hrefs": [],
+    "dynamic_october_discovery_verified": false,
+    "october_workbook_availability_or_rows_verified": false
+  },
+  "verified_production_baseline": {
+    "run_id": 37084586835,
+    "run_number": 690,
+    "generated_commit": "372804172faa40f66774a3137aa7a5aa7106be4e",
+    "generated_commit_first_parent": "19fa310d9b34476883febe4f771955fe909f1422",
+    "all_input_hashes_and_original_report_clocks_verified": 14,
+    "ter_benchmark_portfolio_launch_replay_mismatches": 0,
+    "total_families": 34,
+    "direct_ter_families": 30,
+    "benchmark_identity_families": 29,
+    "current_portfolio_families": 22,
+    "current_complete_families": 6,
+    "source_fetch_health_gate": true,
+    "audit_input_integrity_gate": true,
+    "data_ready": false,
+    "launch_ready": false,
+    "public_export_enabled": false
+  },
+  "approved_collector_contract": {
+    "status": "implemented_isolated_replay_verified",
+    "user_approved": true,
+    "only_reviewed_source_url": "https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8",
+    "source_period": {
+      "first_date": "2026-09-01",
+      "last_date": "2026-09-30"
+    },
+    "eligible_source_months_relative_to_evaluation": [
+      "current_month",
+      "previous_month"
+    ],
+    "eligible_on": "2026-10-03",
+    "ineligible_in": "2026-11",
+    "reject_ineligible_period_before_fetch": true,
+    "dynamic_october_discovery_added": false,
+    "derived_october_url_added": false,
+    "expected_sole_worksheet": "TER_UPLOAD_FORMAT",
+    "expected_a_to_m_header_schema": {
+      "A": "NSDL Scheme Code",
+      "B": "Scheme Name",
+      "C": "TER Date\n(DD/MM/\nYYYY)",
+      "D": "Regular Plan - Base Expense Ratio (BER) (%)",
+      "E": "Regular Plan - Brokerage cost (%)",
+      "F": "Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+      "G": "Regular Plan - Statutory Levies (including GST) (%)",
+      "H": "Regular Plan - Total TER (%)",
+      "I": "Direct Plan - Base Expense Ratio (BER) (%)",
+      "J": "Direct Plan - Brokerage cost (%)",
+      "K": "Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+      "L": "Direct Plan - Statutory Levies (including GST) (%)",
+      "M": "Direct Plan - Total TER (%)"
+    },
+    "reset_incorrect_dimensions_before_iteration": true,
+    "decode_shared_strings_and_typed_excel_dates": true,
+    "numeric_units": "plain_annual_percentage_points",
+    "expected_normalized_exact_family": "BANK OF INDIA MID CAP FUND",
+    "expected_nsdl_scheme_code": "BOIA/O/E/MIF/25/06/0023",
+    "family_to_nsdl_and_nsdl_to_family_identity_validation": true,
+    "all_relevant_source_dates_valid_within_reviewed_period": true,
+    "source_date_not_after_evaluation_date": true,
+    "invalid_relevant_date_cannot_rescue_earlier_valid_row": true,
+    "unique_latest_row_required": true,
+    "regular_and_direct_values_complete": true,
+    "missing_values_cannot_default_to_zero": true,
+    "finite_values_required": true,
+    "numeric_range_percentage_points": [
+      0,
+      5
+    ],
+    "actual_zero_allowed": true,
+    "existing_reconciliation_rules_unchanged": true,
+    "reconciliation_tolerance_percentage_points": 0.02,
+    "source_reporting_date_preserved": true,
+    "actual_provenance_fields": [
+      "source",
+      "sha256",
+      "bytes"
+    ],
+    "downloaded_rejection_keeps_actual_provenance_and_original_error": true,
+    "transport_failure_hash_or_size_invented": false,
+    "fixed_source_hash_acceptance_allowlist": false,
+    "database_writes": false,
+    "readiness_and_launch_gates_changed": false,
+    "separate_ter_row_age_cutoff_added": false,
+    "tracked_source_binary_added": false,
+    "new_test_results_claimed": true,
+    "independent_review_pending": false,
+    "fresh_production_collection_pending": true,
+    "verification": {
+      "boi_tests_passed": 17,
+      "initial_test_run_failures": 38,
+      "initial_test_run_errors": 0,
+      "full_repository_tests_passed": 882,
+      "full_repository_test_duration_seconds": 13.806,
+      "full_repository_test_exit_code": 0,
+      "python_compilation_passed": true,
+      "production_javascript_syntax_checks_passed": 5,
+      "git_diff_check_passed": true,
+      "source_derived_ooxml_fixtures_used": true,
+      "existing_collector_classes_and_validation_functions_ast_unchanged": true,
+      "existing_dispatcher_change": "collect adds the BOI downloaded-rejection provenance branch",
+      "independent_review_approved_without_findings": true,
+      "independent_boi_tests_passed": 17,
+      "independent_real_source_and_year_month_probes_passed": true
+    }
+  },
+  "verification_pending": [
+    "fresh_production_source_records_and_all_fourteen_input_hashes_clocks_and_gates"
+  ],
+  "next_action": "Verify a fresh publisher before claiming production BOI recovery or changing the verified #690 coverage count of 30/34.",
+  "production_coverage_change_claimed": false,
+  "tracked_source_binary_added": false,
+  "implemented_exact_byte_replay": {
+    "report_built_at": "2026-10-03T02:04:55+00:00",
+    "mode": "isolated_exact_byte_collector_replay",
+    "database_access_forbidden": true,
+    "production_writes": 0,
+    "recovered": 1,
+    "failed": 0,
+    "result": {
+      "family": "BANK OF INDIA MID CAP FUND",
+      "amc": "Bank of India Mutual Fund",
+      "status": "recovered",
+      "as_of": "2026-09-29",
+      "plans": {
+        "Regular": {
+          "base_expense_ratio": 2.02,
+          "brokerage": 0.06,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.47,
+          "ter": 2.55
+        },
+        "Direct": {
+          "base_expense_ratio": 0.98,
+          "brokerage": 0.06,
+          "transaction_cost": 0.0,
+          "statutory_levies": 0.28,
+          "ter": 1.32
+        }
+      },
+      "source": "https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8",
+      "sha256": "4a4d8482f052c438a5dd664def2c8277c7ecaa5a311c0f3902307e7fdb62fc75",
+      "bytes": 56375,
+      "identity": {
+        "scheme_name": "Bank of India Mid Cap Fund",
+        "nsdl_scheme_code": "BOIA/O/E/MIF/25/06/0023"
+      },
+      "evidence_type": "official_amc_reviewed_workbook",
+      "discovery_channel": "reviewed_monthly_workbook",
+      "direct_ter": 1.32,
+      "regular_ter": 2.55
+    },
+    "public_export_enabled": false,
+    "production_coverage_verified": false
+  },
+  "historical_readiness_simulation": {
+    "baseline_commit": "372804172faa40f66774a3137aa7a5aa7106be4e",
+    "baseline_production_direct_ter_families": 30,
+    "counts": {
+      "families": 34,
+      "direct_ter": 31,
+      "amfi": 21,
+      "first_party_amc": 10,
+      "remaining": 3
+    },
+    "remaining_families": [
+      "BANDHAN MID CAP FUND",
+      "JM Mid Cap Fund",
+      "WhiteOak Capital Mid Cap Fund"
+    ],
+    "public_export_enabled": false,
+    "production_coverage_verified": false,
+    "scope": "Append the isolated BOI result to exact run #690 historical TER inputs; do not replace verified production counts."
+  }
+}

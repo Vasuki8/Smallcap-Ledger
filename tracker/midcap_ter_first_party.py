@@ -7,6 +7,7 @@ import calendar
 import hashlib
 import io
 import json
+import math
 from urllib.parse import urlencode
 
 import openpyxl
@@ -17,6 +18,7 @@ from . import jm_portfolios
 
 
 TARGETS={
+    "BANK OF INDIA MID CAP FUND":"Bank of India Mutual Fund",
     "Canara Robeco Mid Cap Fund":"Canara Robeco Mutual Fund",
     "HSBC Midcap Fund":"HSBC Mutual Fund",
     "ICICI Prudential Mid Cap Fund":"ICICI Prudential Mutual Fund",
@@ -25,6 +27,21 @@ TARGETS={
     "Mahindra Manulife Mid Cap Fund":"Mahindra Manulife Mutual Fund",
     "Mirae Asset Midcap Fund":"Mirae Asset Mutual Fund",
 }
+
+
+_BOI_SOURCE="https://www.boimf.in/docs/default-source/investorcorner/total-expense-ratio/expense_ratio_01092026_to_30092026.xls?sfvrsn=1b375908_8"
+_BOI_PERIOD_START=date(2026,9,1)
+_BOI_PERIOD_END=date(2026,9,30)
+_BOI_NSDL="BOIA/O/E/MIF/25/06/0023"
+_BOI_HEADER=(
+    "NSDL Scheme Code","Scheme Name","TER Date\n(DD/MM/\nYYYY)",
+    "Regular Plan - Base Expense Ratio (BER) (%)","Regular Plan - Brokerage cost (%)",
+    "Regular Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+    "Regular Plan - Statutory Levies (including GST) (%)","Regular Plan - Total TER (%)",
+    "Direct Plan - Base Expense Ratio (BER) (%)","Direct Plan - Brokerage cost (%)",
+    "Direct Plan - Transaction Cost incurred for the purpose of execution of trade (%)",
+    "Direct Plan - Statutory Levies (including GST) (%)","Direct Plan - Total TER (%)",
+)
 
 
 def _same_family(published,staged):
@@ -50,6 +67,16 @@ class _IciciWorkbookError(ValueError):
             self.source_evidence["rejected_candidates"]=rejected_candidates
 
 
+class _BoiWorkbookError(ValueError):
+    """Retain actual acquired BOI bytes without inventing transport evidence."""
+
+    def __init__(self,message,content=None):
+        super().__init__(message)
+        self.source_evidence={"source":_BOI_SOURCE,"discovery_channel":"reviewed_monthly_workbook"}
+        if content is not None:
+            self.source_evidence.update({"sha256":_sha(content),"bytes":len(content)})
+
+
 def _reconcile(plans,label):
     for plan in ("Regular","Direct"):
         values=plans.get(plan)
@@ -72,6 +99,80 @@ def _latest_exact(matches,label):
     if len(matches[day])!=1:
         raise ValueError(f"{label} has duplicate exact rows for {day}")
     return day,matches[day][0]
+
+
+def _boi_number(cell,label):
+    value=cell.value
+    if value is None or isinstance(value,bool) or str(value).strip().upper() in ("","-","NA","N/A"):
+        raise ValueError(f"BOI TER workbook is missing or has invalid {label}")
+    if "%" in cell.number_format:
+        raise ValueError(f"BOI TER workbook {label} percentage format changed units")
+    try:
+        parsed=float(value)
+    except (ValueError,TypeError) as exc:
+        raise ValueError(f"BOI TER workbook has invalid numeric {label}") from exc
+    if not math.isfinite(parsed) or not 0<=parsed<=5:
+        raise ValueError(f"BOI TER workbook {label} is outside accepted numeric range")
+    return parsed
+
+
+def _boi(family,today):
+    content=None
+    try:
+        month=today.replace(day=1)
+        previous=(month-timedelta(days=1)).replace(day=1)
+        if _BOI_PERIOD_START not in (month,previous):
+            raise ValueError("BOI reviewed TER source period is outside current/previous month")
+        content,_,_=providers.fetch(_BOI_SOURCE,archive=False,max_bytes=5*1024*1024)
+        if not content.startswith(b"PK"):
+            raise ValueError("BOI TER source is not XLSX")
+        book=openpyxl.load_workbook(io.BytesIO(content),data_only=True,read_only=True)
+        try:
+            if book.sheetnames!=["TER_UPLOAD_FORMAT"]:
+                raise ValueError("BOI TER workbook sheet layout changed")
+            sheet=book["TER_UPLOAD_FORMAT"]
+            # The reviewed workbook declares A1 while containing 713 rows.
+            sheet.reset_dimensions()
+            rows=sheet.iter_rows(max_col=13)
+            header=next(rows,None)
+            if tuple(str(c.value or "").strip() for c in (header or ()))!=_BOI_HEADER:
+                raise ValueError("BOI TER workbook columns changed")
+            matches=defaultdict(list)
+            for row in rows:
+                published=str(row[1].value or "").strip()
+                nsdl=str(row[0].value or "").strip()
+                same_family=_same_family(published,family)
+                if not same_family and nsdl!=_BOI_NSDL:
+                    continue
+                if not same_family or nsdl!=_BOI_NSDL:
+                    raise ValueError("BOI Mid Cap family/NSDL identity mismatch")
+                raw=row[2].value
+                if isinstance(raw,datetime):
+                    day=raw.date()
+                elif isinstance(raw,date):
+                    day=raw
+                else:
+                    raise ValueError("BOI exact Mid Cap row is missing a valid styled date")
+                if not _BOI_PERIOD_START<=day<=_BOI_PERIOD_END or day>today:
+                    raise ValueError("BOI exact Mid Cap date is outside source period or in the future")
+                matches[day.isoformat()].append(row)
+            day,row=_latest_exact(matches,"BOI TER workbook")
+            fields=("base_expense_ratio","brokerage","transaction_cost","statutory_levies","ter")
+            plans={
+                plan:{key:_boi_number(row[start+i],f"{plan} {key}") for i,key in enumerate(fields)}
+                for plan,start in (("Regular",3),("Direct",8))
+            }
+            _reconcile(plans,"BOI Mid Cap")
+            return {
+                "family":family,"amc":TARGETS[family],"status":"recovered","as_of":day,
+                "plans":plans,"source":_BOI_SOURCE,"sha256":_sha(content),"bytes":len(content),
+                "identity":{"scheme_name":str(row[1].value).strip(),"nsdl_scheme_code":str(row[0].value).strip()},
+                "evidence_type":"official_amc_reviewed_workbook","discovery_channel":"reviewed_monthly_workbook",
+            }
+        finally:
+            book.close()
+    except Exception as exc:
+        raise _BoiWorkbookError(str(exc) or type(exc).__name__,content) from exc
 
 
 def _canara(family,today):
@@ -463,6 +564,7 @@ def _mirae(family,today):
 
 
 COLLECTORS={
+    "BANK OF INDIA MID CAP FUND":_boi,
     "Canara Robeco Mid Cap Fund":_canara,
     "HSBC Midcap Fund":_hsbc,
     "ICICI Prudential Mid Cap Fund":_icici,
@@ -491,7 +593,7 @@ def collect(today=None):
         except Exception as exc:
             error={"family":family,"amc":TARGETS[family],
                    "error":(str(exc) or type(exc).__name__)[:300]}
-            if isinstance(exc,_IciciWorkbookError):
+            if isinstance(exc,(_IciciWorkbookError,_BoiWorkbookError)):
                 error.update(exc.source_evidence)
             errors.append(error)
     return {
