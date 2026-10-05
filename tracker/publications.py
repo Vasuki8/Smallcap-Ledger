@@ -13,8 +13,7 @@ def exclusion_reason(amc, url, title=''):
     path = unquote(parsed.path).lower()
     if re.search(r'\babakkus\b', amc, re.I):
         combined=(str(title or '')+' '+path).lower()
-        if (re.search(r'\babakkus[\s_-]*liquid[\s_-]*fund\b',combined)
-            and re.search(r'\bpresentation\b',combined)):
+        if re.search(r'\babakkus[\s_-]*liquid[\s_-]*fund[\s_-]*presentation\b',combined):
             return 'Abakkus Liquid Fund presentation; unrelated to Abakkus Small Cap Fund'
     if not re.search(r'\bsbi\b', amc, re.I):
         return None
