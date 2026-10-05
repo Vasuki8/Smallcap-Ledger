@@ -1,6 +1,6 @@
 # Mid Cap benchmark identity audit — batch 1
 
-Prepared: 2026-10-05T19:49:46+00:00
+Prepared: 2026-10-05T21:33:31+00:00
 
 Targets: **12** · recovered: **9** · failed: **3** · staged families: **34**.
 
@@ -18,7 +18,7 @@ Targets: **12** · recovered: **9** · failed: **3** · staged families: **34**.
 
 ## Errors
 
-- Canara Robeco Mid Cap Fund: Client error '403 This request is not authorized to perform this operation.' for url 'https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html'
+- Canara Robeco Mid Cap Fund: Client error '403 This request is not authorized to perform this operation.' for url 'https://150.171.109.152/digital-factsheet/2026/august/Scheme/MID-CAP.html'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
 - Franklin India Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity
 - UTI - Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity

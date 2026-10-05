@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-05T20:11:04+00:00",
+  "built_at": "2026-10-05T21:55:51+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -128,7 +128,7 @@
         "value": "0.72",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-05_18_29_36.xlsx"
+        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-05_21_18_16.xlsx"
       },
       "ter_observed": null,
       "base_expense_ratio": {
@@ -136,7 +136,7 @@
         "value": "0.53",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-05_18_29_36.xlsx"
+        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-05_21_18_16.xlsx"
       },
       "expense_ratio": {
         "as_of": "2026-10-01",
@@ -146,7 +146,7 @@
         "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct"
       },
       "benchmark": {
-        "as_of": "2026-10-05",
+        "as_of": "2026-10-06",
         "value": "Nifty Smallcap 250 TRI",
         "unit": "Observed on official fund page",
         "plan": "All",
@@ -158,7 +158,7 @@
         "value": "0.72",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-05_18_29_36.xlsx"
+        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-05_21_18_16.xlsx"
       },
       "portfolio": {
         "as_of": "2026-10-05",
@@ -451,7 +451,7 @@
         "value": "0.71",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-29&to_date=2026-10-05"
+        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-30&to_date=2026-10-06"
       },
       "ter_observed": null,
       "base_expense_ratio": {
@@ -459,7 +459,7 @@
         "value": "0.46",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-29&to_date=2026-10-05"
+        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-30&to_date=2026-10-06"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -475,7 +475,7 @@
         "value": "0.71",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-29&to_date=2026-10-05"
+        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-30&to_date=2026-10-06"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -518,7 +518,7 @@
       },
       "expense_ratio": null,
       "benchmark": {
-        "as_of": "2026-10-05",
+        "as_of": "2026-10-06",
         "value": "BSE 250 Small Cap TRI",
         "unit": "Observed on official fund page",
         "plan": "All",
@@ -743,7 +743,7 @@
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=3&pageSize=1000"
       },
       "ter_observed": {
-        "as_of": "2026-10-05",
+        "as_of": "2026-10-06",
         "value": "0.79",
         "unit": "% p.a. · observed date",
         "plan": "Direct",
@@ -758,7 +758,7 @@
       },
       "expense_ratio": null,
       "benchmark": {
-        "as_of": "2026-10-05",
+        "as_of": "2026-10-06",
         "value": "BSE 250 SmallCap Index (Total Returns Index)",
         "unit": "Observed",
         "plan": "All",
@@ -1872,7 +1872,7 @@
       },
       "expense_ratio": null,
       "benchmark": {
-        "as_of": "2026-10-05",
+        "as_of": "2026-10-06",
         "value": "NIFTY SmallCap 250 TRI",
         "unit": "Observed on official fund page",
         "plan": "All",
@@ -2084,7 +2084,7 @@
           "amc_match": "Union",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
-          "last_checked": "2026-10-05T20:07:51+00:00",
+          "last_checked": "2026-10-05T21:50:38+00:00",
           "status": "Gap",
           "detail": "[Errno 111] Connection refused"
         }
@@ -2121,7 +2121,7 @@
     },
     "benchmark_identity": {
       "earliest": "2023-08-31",
-      "latest": "2026-10-05"
+      "latest": "2026-10-06"
     }
   },
   "portfolio_gap_reasons": {

@@ -1,6 +1,6 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-10-05T19:50:37+00:00
+Prepared: 2026-10-05T21:34:24+00:00
 
 Targets: **21** · recovered: **19** · failed: **2**.
 
@@ -29,5 +29,5 @@ Targets: **21** · recovered: **19** · failed: **2**.
 ## Errors
 
 - Aditya Birla Sun Life Midcap Fund: ABSL requires one Fund Snapshot table
-- Invesco India Mid Cap Fund: Client error '404 Not Found' for url 'https://www.invescomutualfund.com/error.html?aspxerrorpath=/docs/default-source/factsheet/invesco-mf-factsheet-september-2026.pdf'
+- Invesco India Mid Cap Fund: Client error '404 Not Found' for url 'https://159.60.65.210/error.html?aspxerrorpath=/docs/default-source/factsheet/invesco-mf-factsheet-september-2026.pdf'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
