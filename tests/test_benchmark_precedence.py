@@ -62,7 +62,7 @@ class BenchmarkPrecedenceTests(unittest.TestCase):
                 '/api/import',
                 headers={'X-Smallcap-Client':'local'},
                 data={'kind':'benchmark','source':official,'benchmark':name},
-                files={'file':('fake.csv',f'date,value\\n{day},99999\\n'.encode(),'text/csv')},
+                files={'file':('fake.csv',f'date,value\n{day},99999\n'.encode(),'text/csv')},
             )
             self.assertEqual(response.status_code,200,response.text)
             canonical=db.one("SELECT value,source FROM benchmark WHERE name=? AND date=?",(name,day))
