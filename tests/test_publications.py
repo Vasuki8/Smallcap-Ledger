@@ -127,7 +127,7 @@ class PublicationTests(unittest.TestCase):
             c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
                       (code,'Helios Small Cap Direct Growth',family,
                        'Helios Mutual Fund','Direct','Growth','test'))
-            for title,url in foreign+(own,):
+            for title,url in foreign+[own]:
                 c.execute('''INSERT INTO documents(
                   family,title,kind,scope,url,first_seen,last_seen,origin)
                   VALUES(?,?,?,?,?,?,?,?)''',
