@@ -10,6 +10,7 @@ def exclusion_reason(amc, url, title=''):
     associations before they can appear on an unrelated Small Cap fund page.
     """
     parsed = urlparse(url)
+    host = (parsed.hostname or '').lower()
     path = unquote(parsed.path).lower()
     if re.search(r'\babakkus\b', amc, re.I):
         combined=(str(title or '')+' '+path).lower()
@@ -25,9 +26,18 @@ def exclusion_reason(amc, url, title=''):
         product_material=re.search(r'product[\s_-]*note|presentation',combined)
         if foreign_scheme and product_material:
             return 'Helios non-Small-Cap fund product material; unrelated to Helios Small Cap Fund'
+    if re.search(r'\bbandhan\b', amc, re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if (re.search(r'\bbandhan[\s_-]*nifty[\s_-]*midcap150[\s_-]*index[\s_-]*fund\b',combined)
+            and re.search(r'presentation',combined)):
+            return 'Bandhan Nifty Midcap150 Index Fund presentation; unrelated to Bandhan Small Cap Fund'
+    if re.search(r'\bhsbc\b', amc, re.I):
+        if (host in ('www.assetmanagement.hsbc.co.in','assetmanagement.hsbc.co.in')
+            and path.rstrip('/')=='/en/mutual-funds/investor-resources'
+            and 'doc=product-note-and-deck' in parsed.query.lower()):
+            return 'HSBC generic product-note/deck directory; not an AMC communication document'
     if not re.search(r'\bsbi\b', amc, re.I):
         return None
-    host = (parsed.hostname or '').lower()
     if host != 'sbimf.com' and not host.endswith('.sbimf.com'):
         return None
     foreign_section = re.search(r'(?:^|[/_-])frankline?[-_ ]+templeton(?:[/_-]|$)', path)
