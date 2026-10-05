@@ -182,6 +182,53 @@ class PublicationTests(unittest.TestCase):
             'https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2026',
             'RBI Monetary Policy Review - August 2026'))
 
+    def test_quant_foreign_nfos_and_mirae_directory_are_excluded(self):
+        cases=[
+            (
+                'Quant Small Cap Fund',9906,'quant Mutual Fund','a',
+                'https://www.quantmutual.com/Admin/Pdf/quan_%20Silver_ETF-NFO_Presentation.pdf',
+                'non-Small-Cap NFO presentation',
+            ),
+            (
+                'Quant Small Cap Fund',9907,'quant Mutual Fund','a',
+                'https://www.quantmutual.com/Admin/Pdf/quant_Income_Plus_Arbitrage_Active_FOF_presentation.pdf',
+                'non-Small-Cap NFO presentation',
+            ),
+            (
+                'Quant Small Cap Fund',9908,'quant Mutual Fund','NFO Presentation',
+                'https://quantmutual.com/distributorhub/NFOPresentation.aspx',
+                'generic NFO-presentation directory',
+            ),
+            (
+                'Mirae Asset Small Cap Fund',9909,'Mirae Asset Mutual Fund','Product Presentations',
+                'https://www.miraeassetmf.co.in/downloads/product-presentations',
+                'generic product-presentations directory',
+            ),
+        ]
+        with db.connect() as c:
+            for family,code,amc,title,url,_ in cases:
+                c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                          (code,family+' Direct Growth',family,amc,'Direct','Growth','test'))
+                c.execute('''INSERT INTO documents(
+                  family,title,kind,scope,url,first_seen,last_seen,origin)
+                  VALUES(?,?,?,?,?,?,?,?)''',
+                  (family,title,'market view','AMC',url,db.now(),db.now(),'AMC'))
+        for family,code,amc,title,url,reason in cases:
+            with self.subTest(url=url):
+                self.assertEqual(documents(code),[])
+                self.assertIn(reason,exclusion_reason(amc,url,title))
+                with self.assertRaises(ValueError):
+                    providers.save_document(family,title,url,'market view','AMC',origin='AMC')
+
+        self.assertIsNone(exclusion_reason(
+            'quant Mutual Fund',
+            'https://www.quantmutual.com/Admin/Pdf/VLRT-OUTLOOK-JULY-AUGUST2021.pdf',
+            'VLRT Outlook (July-Aug 2021)'))
+        self.assertIsNone(exclusion_reason(
+            'Mirae Asset Mutual Fund',
+            'https://www.miraeassetmf.co.in/docs/default-source/marketing-insights/annual-outlook-2025.pdf',
+            'Annual Market Outlook 2026'))
+
     def test_rules_preserve_legitimate_communications_and_titles(self):
         self.assertTrue(exclusion_reason('SBI Mutual Fund',WRONG.replace('frankline-templeton','Franklin%2DTempleton')))
         self.assertIsNone(exclusion_reason('Franklin Templeton Mutual Fund',WRONG))
