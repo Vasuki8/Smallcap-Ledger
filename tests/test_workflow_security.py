@@ -20,7 +20,7 @@ class WorkflowSecurityTests(unittest.TestCase):
         self.assertNotIn("id-token: write", self.header)
 
     def test_build_does_not_receive_pages_or_oidc_permissions(self):
-        self.assertIn("  build:\n    permissions:\n      contents: write\n", "\njobs:\n" + self.jobs)
+        self.assertIn("    permissions:\n      contents: write\n", self.build)
         self.assertNotIn("pages: write", self.build)
         self.assertNotIn("id-token: write", self.build)
 
