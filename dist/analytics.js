@@ -2,6 +2,7 @@
 (function(root){
   'use strict';
   const day=s=>Date.parse(s+'T00:00:00Z')/86400000;
+  const VOLATILITY_MAX_GAP_DAYS=3;
   const iso=d=>d.toISOString().slice(0,10);
   function shift(s,months){const d=new Date(s+'T00:00:00Z'),wanted=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()-months);const last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();d.setUTCDate(Math.min(wanted,last));return iso(d);}
   function prior(points,target){let lo=0,hi=points.length;while(lo<hi){const m=(lo+hi)>>1;if(points[m][0]<=target)lo=m+1;else hi=m;}return lo-1;}
@@ -15,7 +16,7 @@
     }
     const days=day(end)-day(points[0][0]);returns['Since start']=days>0?{value:100*(days>=365?Math.pow(last/points[0][1],365.25/days)-1:last/points[0][1]-1),start:points[0][0],end,annualized:days>=365}:null;
     let peak=points[0][1];
-    points.forEach(([d,v],i)=>{peak=Math.max(peak,v);drawdown.push([d,(v/peak-1)*100]);if(i){const gap=day(d)-day(points[i-1][0]);if(gap<=7)changes.push(Math.log(v/points[i-1][1]));else gaps.push({from:points[i-1][0],to:d,days:gap});}
+    points.forEach(([d,v],i)=>{peak=Math.max(peak,v);drawdown.push([d,(v/peak-1)*100]);if(i){const gap=day(d)-day(points[i-1][0]);if(gap<=VOLATILITY_MAX_GAP_DAYS)changes.push(Math.log(v/points[i-1][1]));if(gap>7)gaps.push({from:points[i-1][0],to:d,days:gap});}
       if(i%5===0||i===points.length-1){const target=shift(d,36),j=prior(points,target);if(j>=0&&day(target)-day(points[j][0])<=7)rolling.push([d,(Math.pow(v/points[j][1],365.25/(day(d)-day(points[j][0])))-1)*100]);}});
     let volatility=null;if(changes.length>=30){const mean=changes.reduce((a,b)=>a+b,0)/changes.length;volatility=Math.sqrt(changes.reduce((a,b)=>a+(b-mean)**2,0)/(changes.length-1)*252)*100;}
     return {returns,drawdown,rolling,max_drawdown:Math.min(...drawdown.map(p=>p[1])),volatility,gaps};
