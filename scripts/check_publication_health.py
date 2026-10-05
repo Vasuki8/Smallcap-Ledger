@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 import sys
 
@@ -29,13 +29,18 @@ def evaluate(started_at, *, today=None, max_age_days=7):
     if not started_at:
         raise ValueError("Collection start boundary is required")
     today=today or india_today()
+    boundary=datetime.fromisoformat(started_at.replace("Z","+00:00"))
+    if boundary.tzinfo is None:boundary=boundary.replace(tzinfo=timezone.utc)
     jobs={}
     blockers=[]
     degraded=[]
     for kind in REQUIRED_JOBS:
         row=db.one("""SELECT kind,started_at,finished_at,status,detail
-          FROM jobs WHERE kind=? AND started_at>=?
-          ORDER BY id DESC LIMIT 1""",(kind,started_at))
+          FROM jobs WHERE kind=? ORDER BY id DESC LIMIT 1""",(kind,))
+        if row:
+            stamp=datetime.fromisoformat(row["started_at"])
+            if stamp.tzinfo is None:stamp=stamp.replace(tzinfo=timezone.utc)
+            if stamp<boundary:row=None
         jobs[kind]=row
         if not row:
             blockers.append(f"{kind}_job_missing")
