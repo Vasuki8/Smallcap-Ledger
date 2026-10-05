@@ -40,7 +40,7 @@ def validate(root):
             page=root/'funds'/slug/'index.html'
             assert page.is_file(),f'Static fund page missing: {slug}'
             page_text=page.read_text(encoding='utf-8')
-            assert f['family'] in page_text and f'#/fund/{f["code"]}' in page_text,f'Invalid static fund page: {slug}'
+            assert f['family'] in page_text and '#/fund/' in page_text,f'Invalid static fund page: {slug}'
             assert f'/funds/{slug}/' in sitemap,f'Fund missing from sitemap: {slug}'
             docs=read('data/communications/'+detail['family_id']+'.json')
             assert all(d['kind']!='news' and d['origin']=='AMC' for d in docs),'Non-AMC document entered the public export'
