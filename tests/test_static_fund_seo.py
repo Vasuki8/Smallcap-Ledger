@@ -76,3 +76,9 @@ def test_discoverability_writes_directory_sitemap_robots_and_one_page_per_family
         assert sitemap.count("<url>")==4  # root + directory + 2 fund families
         robots=(root/"robots.txt").read_text(encoding="utf-8")
         assert "Sitemap: https://vasuki8.github.io/Smallcap-Ledger/sitemap.xml" in robots
+
+
+def test_generated_site_freshness_uses_india_calendar():
+    source=(Path(__file__).resolve().parents[1]/"scripts"/"validate_site.py").read_text(encoding="utf-8")
+    assert "nav_age=(india_today()-date.fromisoformat(latest_nav)).days" in source
+    assert "date.today()" not in source
