@@ -122,17 +122,23 @@ def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, he
             try:
                 with httpx.Client(timeout=httpx.Timeout(timeout,connect=15),headers={"User-Agent":USER_AGENT,"Accept":"*/*"}, follow_redirects=False) as client:
                     for _ in range(6):
+                        # Clear any previous same-thread resolution before validating
+                        # this redirect target. A patched validator in tests therefore
+                        # cannot accidentally reuse an older pinned address.
+                        _public_resolution.value=None
                         public_url(current)
+                        connect_url,pinned_headers,extensions=_pinned_request_target(current,attempt)
                         request_headers={"Referer":NIFTY_PAGE} if "niftyindices.com" in current else {}
                         # Internal public-CMS callers may need a browser-issued token.
                         # Never forward caller-supplied headers across a redirect to a
                         # different host.
                         if headers and (urlparse(current).hostname or '').lower()==(urlparse(original).hostname or '').lower():
                             request_headers.update(headers)
-                        with client.stream("POST" if is_post else "GET",current,
+                        request_headers.update(pinned_headers)
+                        with client.stream("POST" if is_post else "GET",connect_url,
                                            json=body if form is None else None,
                                            data=form if form is not None else None,
-                                           headers=request_headers) as r:
+                                           headers=request_headers,extensions=extensions) as r:
                             if r.is_redirect:
                                 current=urljoin(current,r.headers.get("location",""))
                                 continue
