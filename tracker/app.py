@@ -215,8 +215,7 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str|Non
                          else 'alternate_comparison')
     bp=[[x['date'],x['value']] for x in db.rows(
         "SELECT date,value FROM benchmark WHERE name=? ORDER BY date",(comparison_name,))] if comparison_name else []
-    benchmark_source=(db.one("""SELECT source,MAX(date) last,MIN(date) first,COUNT(*) points
-      FROM benchmark WHERE name=?""",(comparison_name,)) if comparison_name else None)
+    benchmark_source=db.benchmark_info(comparison_name) if comparison_name else None
     comparison_available=bool(bp)
     if not comparison_available:benchmark_source=None
     if not comparison_name:comparison_status=reported['status']
@@ -336,7 +335,7 @@ def status():
     return {"running":updater.status(),"settings":{x['key']:json.loads(x['value']) for x in db.rows("SELECT * FROM settings WHERE key NOT LIKE 'nifty_year_%' AND key NOT LIKE 'amfi_fee_month_%'")},
             "counts":counts,
             "jobs":db.rows("SELECT * FROM jobs ORDER BY id DESC LIMIT 30"),"sources":db.rows("SELECT * FROM source_pages ORDER BY amc_match,id"),
-            "benchmarks":db.rows("SELECT name,MIN(date) first,MAX(date) last,COUNT(*) points FROM benchmark GROUP BY name"),
+            "benchmarks":[db.benchmark_info(x['name']) for x in db.rows("SELECT DISTINCT name FROM benchmark ORDER BY name")],
             "data_location":str(db.DATA),"server_time":db.now()}
 
 
