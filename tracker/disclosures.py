@@ -7,6 +7,7 @@ from datetime import date,datetime
 from urllib.parse import urlparse,unquote,parse_qs
 from bs4 import BeautifulSoup
 from . import db
+from .clock import india_today
 from .publications import exclusion_reason
 from .providers import fetch,can_crawl,iso,number,candidate_links,classify,save_document,doc_version
 
@@ -181,7 +182,7 @@ def explicit_publication_date(content,media_type='',url=''):
         if re.match(r'^20\d{2}-\d{2}-\d{2}T',value):value=value[:10]
         try:day=iso(value)
         except ValueError:continue
-        if day<=date.today().isoformat():return day
+        if day<=india_today().isoformat():return day
     return None
 
 
@@ -208,7 +209,7 @@ def bajaj_outlook_candidates(soup,source):
         if not official_publication_url(target,'Bajaj'):continue
         try:day=iso(raw_date)
         except ValueError:continue
-        if day>date.today().isoformat():continue
+        if day>india_today().isoformat():continue
         key=(title,target,day)
         if key not in seen:out.append(key);seen.add(key)
     return out
@@ -229,7 +230,7 @@ def report_date(text):
     for m in re.finditer(r'(?:period ended|month ended|statement as on)\s*:?\s*('+DATE+r'|\d{4}-\d{2}-\d{2})',normalized,re.I):
         value=m.group(1)
         if re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):
-            if value<=date.today().isoformat():return value
+            if value<=india_today().isoformat():return value
         elif dated(value):return dated(value)
     patterns=[r"(?:as\s*(?:on|of)|portfolio\s*(?:for)?)\s*[:\-]?\s*(\d{1,2}[ /-](?:[A-Za-z]+|\d{1,2})[ /-]\d{2,4})",
               r"(?:as\s*(?:on|of))\s*[:\-]?\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s*,?\s*(\d{4})"]
@@ -287,7 +288,7 @@ def hdfc(soup,family,url,h):
         if not same_fund_title(root["banner"]["title"],family): return
     except (KeyError,TypeError,ValueError): return
     # Source gives a reported AUM date; undated facts are retained as observations, not backdated.
-    observed=date.today().isoformat()
+    observed=india_today().isoformat()
     for block in root["details"]:
         if "Overview" in block:
             overview=block["Overview"];data=overview["data"]
@@ -325,7 +326,7 @@ def summary_xml(content,family,url,h):
               "minimumapplicationamount":"minimum_lumpsum","statedassetallocation":"allocation_mandate",
               "annualexpensestatedmaximum":"stated_expense_maximum"}
     for k,label in mappings.items():
-        if nodes.get(k): db.metric(family,"All",label,date.today().isoformat(),nodes[k],"Observed · scheme summary",url,h)
+        if nodes.get(k): db.metric(family,"All",label,india_today().isoformat(),nodes[k],"Observed · scheme summary",url,h)
 
 
 def spreadsheet(content,family,url,h):
@@ -386,7 +387,7 @@ def spreadsheet(content,family,url,h):
         prefix=" ".join(str(v) for row in rows[:30] for v in row if v is not None)
         if not re.search(r"small\s*cap",sheet+" "+prefix,re.I): continue
         day=report_date(prefix)
-        if not day or day>date.today().isoformat(): continue
+        if not day or day>india_today().isoformat(): continue
         header=None;header_index=0
         for i,row in enumerate(rows[:35]):
             cells=[str(v or '').lower() for v in row]
