@@ -4,8 +4,10 @@ import io
 import json
 import os
 import re
+import shutil
 import sqlite3
 import tempfile
+import threading
 import zipfile
 from contextlib import asynccontextmanager
 from datetime import date,datetime,timedelta,timezone
@@ -31,6 +33,13 @@ async def lifespan(app):
     updater.stop.set()
 
 app=FastAPI(title="Smallcap Ledger",lifespan=lifespan,docs_url=None,redoc_url=None)
+
+_backup_lock=threading.Lock()
+
+
+def _finish_backup(temp):
+    try:shutil.rmtree(temp,ignore_errors=True)
+    finally:_backup_lock.release()
 
 
 @app.get('/api/health')
@@ -432,17 +441,24 @@ def export_portfolio(snapshot_id:int):
 
 @app.post('/api/export/backup')
 def backup():
-    temp=Path(tempfile.mkdtemp(prefix='smallcap-backup-'))
-    with db.connect() as source:
-        dest=sqlite3.connect(temp/'ledger.sqlite3');source.backup(dest);dest.close()
-    zpath=temp/'smallcap-data-backup.zip'
-    with zipfile.ZipFile(zpath,'w',zipfile.ZIP_DEFLATED) as z:
-        z.write(temp/'ledger.sqlite3','data/ledger.sqlite3')
-        for p in (db.DATA/'archive').rglob('*'):
-            if p.is_file() and p.suffix!='.tmp':z.write(p,'data/'+str(p.relative_to(db.DATA)))
-        z.writestr('RESTORE.txt','Close Smallcap Ledger first. Copy the data folder from this ZIP over the data folder in your app. Keep a backup of your current data before restoring. Reopen START-WINDOWS.cmd.\n')
-    import shutil
-    return FileResponse(zpath,filename='smallcap-data-backup.zip',background=BackgroundTask(shutil.rmtree,temp))
+    if not _backup_lock.acquire(blocking=False):
+        raise HTTPException(409,'A backup is already being created or downloaded')
+    temp=None
+    try:
+        temp=Path(tempfile.mkdtemp(prefix='smallcap-backup-'))
+        with db.connect() as source:
+            dest=sqlite3.connect(temp/'ledger.sqlite3');source.backup(dest);dest.close()
+        zpath=temp/'smallcap-data-backup.zip'
+        with zipfile.ZipFile(zpath,'w',zipfile.ZIP_DEFLATED) as z:
+            z.write(temp/'ledger.sqlite3','data/ledger.sqlite3')
+            for p in (db.DATA/'archive').rglob('*'):
+                if p.is_file() and p.suffix!='.tmp':z.write(p,'data/'+str(p.relative_to(db.DATA)))
+            z.writestr('RESTORE.txt','Close Smallcap Ledger first. Copy the data folder from this ZIP over the data folder in your app. Keep a backup of your current data before restoring. Reopen START-WINDOWS.cmd.\n')
+        return FileResponse(zpath,filename='smallcap-data-backup.zip',background=BackgroundTask(_finish_backup,temp))
+    except Exception:
+        if temp is not None:shutil.rmtree(temp,ignore_errors=True)
+        _backup_lock.release()
+        raise
 
 
 @app.post('/api/import')
