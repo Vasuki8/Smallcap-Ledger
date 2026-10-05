@@ -32,6 +32,10 @@ class PublisherMaintenanceTests(unittest.TestCase):
             with self.subTest(script=script):
                 self.assertNotIn(script, self.text)
 
+    def test_superseded_publishers_cancel_instead_of_consuming_collection_slot(self):
+        self.assertIn("group: smallcap-daily-and-deploy", self.text)
+        self.assertIn("cancel-in-progress: true", self.text)
+
     def test_daily_collection_runs_for_push_schedule_and_manual_refresh(self):
         self.assertIn(
             "if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)",
