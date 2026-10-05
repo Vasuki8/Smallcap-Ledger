@@ -8,6 +8,7 @@ from urllib.parse import urlparse,unquote,parse_qs
 from bs4 import BeautifulSoup
 from . import db
 from .archive_limits import validate_ooxml_package
+from .pdf_safe import safe_pdf_text
 from .clock import india_today
 from .publications import exclusion_reason
 from .providers import fetch,can_crawl,iso,number,candidate_links,classify,save_document,doc_version
@@ -449,7 +450,7 @@ def factsheet_pdf(content,family,url,h):
     from .report_parser import page_facts,owns_page,equity_positions
     count=0
     for page_index,page in enumerate(reader.pages):
-        text=page.extract_text() or ''
+        text=safe_pdf_text(page)
         owned=owns_page(text,family)
         full=None;partial=None
         if family=='Aditya Birla Sun Life Small Cap Fund':
@@ -458,20 +459,20 @@ def factsheet_pdf(content,family,url,h):
         if family=='ICICI Prudential Small Cap Fund' and re.search(r'(?:Date\s+of\s+inception|Inception/Allotment\s+date)\s*:\s*18-Oct-(?:07|2007)',text,re.I):
             from .report_parser import icici_named_portfolio
             if page_index+1<len(reader.pages):
-                next_text=reader.pages[page_index+1].extract_text() or ''
+                next_text=safe_pdf_text(reader.pages[page_index+1])
                 partial=icici_named_portfolio(text,next_text)
         if family=='Jm Small Cap Fund':
             from .report_parser import jm_top25_portfolio
             partial=jm_top25_portfolio(text)
             if not partial:
-                layout_text=page.extract_text(extraction_mode='layout') or ''
+                layout_text=safe_pdf_text(page,extraction_mode='layout')
                 if layout_text!=text:partial=jm_top25_portfolio(layout_text)
         if family=='Edelweiss Small Cap Fund':
             from .report_parser import edelweiss_top30_portfolio,edelweiss_top10_portfolio
             partial=edelweiss_top30_portfolio(text)
             if not partial and page_index+2<len(reader.pages):
-                next_two='\n'.join((reader.pages[page_index+1].extract_text() or '',
-                                     reader.pages[page_index+2].extract_text() or ''))
+                next_two='\n'.join((safe_pdf_text(reader.pages[page_index+1]),
+                                     safe_pdf_text(reader.pages[page_index+2])))
                 partial=edelweiss_top10_portfolio(text,next_two)
         if family=='Pgim India Small Cap Fund':
             from .report_parser import pgim_complete_portfolio
@@ -489,37 +490,37 @@ def factsheet_pdf(content,family,url,h):
             from .report_parser import quant_top10_portfolio
             partial=quant_top10_portfolio(text)
             if not partial:
-                layout_text=page.extract_text(extraction_mode='layout') or ''
+                layout_text=safe_pdf_text(page,extraction_mode='layout')
                 if layout_text!=text:partial=quant_top10_portfolio(layout_text)
         if family=='Trustmf Small Cap Fund':
             from .report_parser import trustmf_named_portfolio
             partial=trustmf_named_portfolio(text)
             if not partial:
-                layout_text=page.extract_text(extraction_mode='layout') or ''
+                layout_text=safe_pdf_text(page,extraction_mode='layout')
                 if layout_text!=text:partial=trustmf_named_portfolio(layout_text)
         if family=='Union Small Cap Fund':
             from .report_parser import union_complete_portfolio
             full=union_complete_portfolio(text)
             if not full:
-                layout_text=page.extract_text(extraction_mode='layout') or ''
+                layout_text=safe_pdf_text(page,extraction_mode='layout')
                 if layout_text!=text:full=union_complete_portfolio(layout_text)
         if family=='Bajaj Finserv Small Cap Fund':
             from .report_parser import bajaj_complete_portfolio,bajaj_top10_portfolio
             full=bajaj_complete_portfolio(text)
             if not full and page_index+1<len(reader.pages):
-                next_text=reader.pages[page_index+1].extract_text() or ''
+                next_text=safe_pdf_text(reader.pages[page_index+1])
                 partial=bajaj_top10_portfolio(text,next_text)
         if family=='Bank Of India Small Cap Fund':
             from .report_parser import boi_multicolumn_complete_portfolio,boi_complete_portfolio
             full=boi_multicolumn_complete_portfolio(text) or boi_complete_portfolio(text)
             if not full:
-                layout_text=page.extract_text(extraction_mode='layout') or ''
+                layout_text=safe_pdf_text(page,extraction_mode='layout')
                 if layout_text!=text:full=boi_complete_portfolio(layout_text)
         if not owned and not full and not partial:continue
         facts=page_facts(text,family) if owned else []
         if family in ('Bank Of India Small Cap Fund','UTI Small Cap Fund') and not any(f['metric']=='aum' for f in facts):
             from .report_parser import layout_aum
-            facts.extend(layout_aum(page.extract_text(extraction_mode='layout'),family,report_date(text)))
+            facts.extend(layout_aum(safe_pdf_text(page,extraction_mode='layout'),family,report_date(text)))
         for fact in facts:
             db.metric(family,fact['plan'],fact['metric'],fact['as_of'],fact['value'],fact['unit'],url,h)
         count+=len(facts)
