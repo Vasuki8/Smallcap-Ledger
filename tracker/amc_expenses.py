@@ -23,6 +23,7 @@ from pypdf import PdfReader
 
 from . import db, axis_portfolios, jm_portfolios
 from .archive_limits import validate_ooxml_package
+from .pdf_safe import safe_pdf_text
 from .clock import india_today
 from .providers import fetch, number, public_url
 
@@ -444,7 +445,7 @@ def _groww_pdf_text(content):
         reader = PdfReader(io.BytesIO(content))
         if len(reader.pages) != 1:
             raise ValueError("Groww BER notice page count changed")
-        text = reader.pages[0].extract_text() or ""
+        text = safe_pdf_text(reader.pages[0])
     except Exception as exc:
         if isinstance(exc, ValueError):
             raise
