@@ -5,6 +5,8 @@ import calendar
 import math
 from datetime import date, timedelta
 
+VOLATILITY_MAX_GAP_DAYS=3
+
 
 def shift_years(d, years):
     return d.replace(year=d.year-years, day=min(d.day, calendar.monthrange(d.year-years, d.month)[1]))
@@ -43,7 +45,10 @@ def performance(points):
     for i,(day,val) in enumerate(points):
         peak=max(peak,val)
         draw.append([day,(val/peak-1)*100])
-        if i and (dates[i]-dates[i-1]).days<=7:
+        if i and (dates[i]-dates[i-1]).days<=VOLATILITY_MAX_GAP_DAYS:
+            # Volatility is annualized from daily log returns. A multi-day
+            # missing-NAV jump must not be treated as one daily observation.
+            # Three calendar days still permits an ordinary Fri→Mon interval.
             changes.append(math.log(val/values[i-1]))
         if i%5==0 or i==len(points)-1:
             j=bisect.bisect_right(dates,shift_years(dates[i],3))-1
