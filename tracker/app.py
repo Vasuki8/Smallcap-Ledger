@@ -75,8 +75,17 @@ def metrics_for(s):
     from .reviewed_reports import annotate
     records=db.rows("SELECT * FROM metrics WHERE family=? AND plan IN ('All',?) ORDER BY as_of DESC,id DESC",(s['family'],s['plan']))
     latest={}
+    plan_specific={'ter','ter_observed','base_expense_ratio','expense_ratio',
+                   'brokerage','transaction_cost','statutory_levies'}
     for x in records:
-        if x['metric'] not in latest:latest[x['metric']]=annotate(x)
+        current=latest.get(x['metric'])
+        if current is None:
+            latest[x['metric']]=annotate(x)
+        elif (x['metric'] in plan_specific and s['plan'] in ('Direct','Regular')
+              and x['plan']==s['plan'] and current.get('plan')!=s['plan']):
+            # A generic fund-wide observation is only a fallback for a named
+            # Direct/Regular fee. Do not let recency erase plan identity.
+            latest[x['metric']]=annotate(x)
     return latest
 
 
