@@ -28,7 +28,8 @@ function bindBackupButton(selector){
 
 function metric(label,value,sub,featured=false){return `<div class="metric-card ${featured?'featured':''}"><div class="metric-label">${E(label)}</div><div class="metric-value mono">${value}</div><div class="metric-sub">${sub}</div></div>`;}
 function empty(title,message,action=''){return `<div class="empty"><h3>${E(title)}</h3><p>${E(message)}</p>${action}</div>`;}
-function sourceLink(url,label='Source'){return url?`<a href="${E(url)}" target="_blank" rel="noopener noreferrer">${E(label)} ↗</a>`:'';}
+function safeSourceURL(url){try{const u=new URL(String(url),location.href);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch{return '';}}
+function sourceLink(url,label='Source'){const safe=safeSourceURL(url);return safe?`<a href="${E(safe)}" target="_blank" rel="noopener noreferrer">${E(label)} ↗</a>`:'';}
 function mark(name){return name.split(' ').filter(x=>!['Small','Cap','Fund','India'].includes(x)).slice(0,2).map(x=>x[0]).join('').toUpperCase();}
 function metricValue(m){return m?E(m.value):'<span class="muted">Not available</span>';}
 function feeFor(s){const ms=s.metrics||{};return ms.ter||ms.ter_observed||ms.base_expense_ratio||ms.expense_ratio;}
