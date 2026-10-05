@@ -25,7 +25,7 @@ class WorkflowSecurityTests(unittest.TestCase):
         self.assertNotIn("id-token: write", self.build)
 
     def test_deploy_is_the_only_pages_oidc_writer(self):
-        self.assertIn("    permissions:\n      pages: write\n      id-token: write\n", "\n  deploy:\n" + self.deploy)
+        self.assertIn("    permissions:\n      contents: write\n      pages: write\n      id-token: write\n", "\n  deploy:\n" + self.deploy)
 
     def test_checkout_token_is_not_persisted(self):
         self.assertIn(
@@ -38,7 +38,7 @@ class WorkflowSecurityTests(unittest.TestCase):
     def test_github_token_is_step_scoped(self):
         pre_steps = self.build.split("\n    steps:\n", 1)[0]
         self.assertNotIn("GH_TOKEN:", pre_steps)
-        self.assertEqual(self.text.count("GH_TOKEN: ${{ github.token }}"), 6)
+        self.assertEqual(self.text.count("GH_TOKEN: ${{ github.token }}"), 7)
         for step in (
             "Restore cumulative history",
             "Import owner-supplied additions",
@@ -46,6 +46,7 @@ class WorkflowSecurityTests(unittest.TestCase):
             "Verify publication base is still current",
             "Save cumulative historical archive",
             "Record collection status",
+            "Record successful Pages deployment",
         ):
             block = self.text.split(f"- name: {step}", 1)[1].split("\n      - name:", 1)[0]
             self.assertIn("GH_TOKEN: ${{ github.token }}", block)
