@@ -43,6 +43,15 @@ class ResearchUIAssets(unittest.TestCase):
         self.assertIn('recordDateSpan(dates.aum)',app)
         self.assertIn('recordDateSpan(dates.direct_fee)',research)
 
+    def test_hosted_update_page_exposes_collection_jobs_and_stale_build_state(self):
+        research=(DIST/'research.js').read_text(encoding='utf-8')
+        self.assertIn('Latest pipeline results',research)
+        self.assertIn('Published snapshot is stale',research)
+        self.assertIn("['nav','NAV']",research)
+        self.assertIn("['benchmark','Benchmark TRI']",research)
+        self.assertIn("['metrics','AUM & expenses']",research)
+        self.assertIn("['documents','AMC documents']",research)
+
     @unittest.skipUnless(shutil.which('node'), 'Node is needed for client syntax checks')
     def test_client_syntax(self):
         for name in ('research.js', 'app.js', 'analytics.js', 'static-data.js'):
@@ -89,6 +98,19 @@ process.stdout.write(JSON.stringify((EXPRESSION)));
 
     def test_inactive_and_unknown_sources_are_not_healthy(self):
         self.assertEqual(self.evaluate("[{enabled:0,status:'Checked'},{enabled:1,status:'Checked'},{enabled:1,status:'Partial'},{enabled:1,status:'New status'},{enabled:true,status:'Excluded'}].map(api.sourceState)"), ['inactive','checked','attention','pending','inactive'])
+
+    def test_collection_job_state_is_explicit(self):
+        expression="[null,{status:'ok'},{status:'partial'},{status:'error'},{status:'interrupted'},{status:'running'},{status:'new'}].map(api.jobState)"
+        self.assertEqual(self.evaluate(expression),['missing','ok','partial','attention','attention','attention','unknown'])
+
+    def test_snapshot_age_uses_exact_hours(self):
+        self.assertEqual(self.evaluate("api.hoursSince('2026-10-04T00:00:00Z',Date.parse('2026-10-05T13:00:00Z'))"),37)
+        self.assertIsNone(self.evaluate("api.hoursSince('not-a-date',Date.parse('2026-10-05T13:00:00Z'))"))
+
+    def test_latest_core_job_uses_status_order_from_api(self):
+        jobs="[{kind:'metrics',id:4},{kind:'nav',id:3},{kind:'nav',id:2}]"
+        self.assertEqual(self.evaluate(f"api.latestJob({jobs},'nav').id"),3)
+        self.assertIsNone(self.evaluate(f"api.latestJob({jobs},'documents')"))
 
     def test_fund_name_sort_has_deterministic_code_tie_break(self):
         rows = "[{code:3,family:'Zulu'},{code:2,family:'Alpha'},{code:1,family:'Alpha'}]"

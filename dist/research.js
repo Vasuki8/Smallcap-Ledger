@@ -50,6 +50,19 @@
     if (['Gap', 'Partial', 'Limited', 'Error', 'Failed'].includes(source.status)) return 'attention';
     return 'pending';
   }
+  function hoursSince(value, now = Date.now()) {
+    const stamp = Date.parse(value), current = Number(now);
+    return Number.isFinite(stamp) && Number.isFinite(current) ? (current - stamp) / 3600000 : null;
+  }
+  function jobState(job) {
+    if (!job) return 'missing';
+    if (job.status === 'ok') return 'ok';
+    if (job.status === 'partial') return 'partial';
+    return ['error','interrupted','running'].includes(job.status) ? 'attention' : 'unknown';
+  }
+  function latestJob(jobs, kind) {
+    return (Array.isArray(jobs) ? jobs : []).find(job => job?.kind === kind) || null;
+  }
   let installed = false;
   function install() {
     if (installed) return;
@@ -269,8 +282,15 @@
     renderHostedSettings = function () {
       const sources = state.status?.sources || [];
       const counts = sources.reduce((sum, s) => { sum[sourceState(s)]++; return sum; }, {checked: 0, attention: 0, pending: 0, inactive: 0});
+      const buildAge = hoursSince(state.status?.server_time), staleBuild = buildAge != null && buildAge > 36;
+      const jobDefs = [['nav','NAV'],['benchmark','Benchmark TRI'],['metrics','AUM & expenses'],['documents','AMC documents']];
+      const coreJobs = jobDefs.map(([kind,label]) => ({kind,label,job:latestJob(state.status?.jobs,kind)}));
+      const jobPanel = '<section class="panel collection-health-panel"><div class="panel-head"><div><div class="eyebrow">COLLECTION JOBS</div><h2>Latest pipeline results</h2><p class="small muted">Job-level collection results. Individual source checks appear below.</p></div></div><div class="table-wrap"><table><thead><tr><th>Dataset</th><th>Finished</th><th>Status</th><th>Result</th></tr></thead><tbody>' + coreJobs.map(({label,job}) => {
+        const health=jobState(job), badge=health==='ok'?'green':health==='partial'||health==='attention'?'amber':'';
+        return '<tr><td><b>'+E(label)+'</b></td><td class="small nowrap">'+stamp(job?.finished_at||job?.started_at)+'</td><td><span class="badge '+badge+'">'+E(job?.status||'Missing')+'</span></td><td class="small">'+E((job?.detail||'No job result is present in this snapshot.').split('\n')[0])+'</td></tr>';
+      }).join('') + '</tbody></table></div></section>';
       $('#breadcrumb').textContent = 'Data & sources / Update status'; document.title = 'Update status · Smallcap Ledger';
-      $('#main').innerHTML = `${heading('COLLECTION STATUS', 'Freshness you can inspect.', 'A source check is not a guarantee that every field was extracted.', projectLink('/actions/workflows/daily.yml', 'View workflow runs'))}<div class="status-banner">${icon('clock')}<div><strong>Scheduled collection · ${E(state.status?.hosting?.schedule || 'See workflow schedule')}</strong><span>Snapshot built ${stamp(state.status?.server_time)}. Scheduled starts may be delayed.</span></div></div><section class="panel no-pad source-panel"><div class="source-summary"><span><b>${counts.checked}</b> checked</span><span class="warning-text"><b>${counts.attention}</b> need attention</span><span><b>${counts.pending}</b> pending / unknown</span><span><b>${counts.inactive}</b> inactive</span></div><div class="directory-toolbar"><label class="search-control">${icon('search')}<input type="search" id="source-search" aria-label="Search sources" placeholder="Search fund house, source or check result"></label><select id="source-filter" aria-label="Filter source status"><option value="all">All sources</option><option value="attention">Needs attention</option><option value="checked">Checked</option><option value="pending">Pending / unknown</option><option value="inactive">Inactive</option></select></div><div id="source-results" role="status" class="source-result-count"></div><div id="source-rows"></div></section>`;
+      $('#main').innerHTML = `${heading('COLLECTION STATUS', 'Freshness you can inspect.', 'A source check is not a guarantee that every field was extracted.', projectLink('/actions/workflows/daily.yml', 'View workflow runs'))}<div class="status-banner ${staleBuild?'warning':''}">${icon('clock')}<div><strong>${staleBuild?'Published snapshot is stale':'Scheduled collection · '+E(state.status?.hosting?.schedule || 'See workflow schedule')}</strong><span>Snapshot built ${stamp(state.status?.server_time)}.${staleBuild?' More than 36 hours old; check workflow runs.':' Scheduled starts may be delayed.'}</span></div></div>${jobPanel}<section class="panel no-pad source-panel"><div class="source-summary"><span><b>${counts.checked}</b> checked</span><span class="warning-text"><b>${counts.attention}</b> need attention</span><span><b>${counts.pending}</b> pending / unknown</span><span><b>${counts.inactive}</b> inactive</span></div><div class="directory-toolbar"><label class="search-control">${icon('search')}<input type="search" id="source-search" aria-label="Search sources" placeholder="Search fund house, source or check result"></label><select id="source-filter" aria-label="Filter source status"><option value="all">All sources</option><option value="attention">Needs attention</option><option value="checked">Checked</option><option value="pending">Pending / unknown</option><option value="inactive">Inactive</option></select></div><div id="source-results" role="status" class="source-result-count"></div><div id="source-rows"></div></section>`;
       function list() {
         const q = $('#source-search').value.trim().toLowerCase(), filter = $('#source-filter').value;
         const rows = sources.filter(s => (filter === 'all' || sourceState(s) === filter) && (!q || `${s.amc_match} ${s.label} ${s.status} ${s.detail}`.toLowerCase().includes(q)));
@@ -308,7 +328,7 @@
     document.addEventListener('keydown', e => { if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.target.closest('input,select,textarea,[contenteditable="true"]') && $('#search-funds')) { e.preventDefault(); $('#search-funds').focus(); } });
     window.addEventListener('storage', e => { if (e.key === SAVED_KEY) { try { ui.saved = codes(JSON.parse(e.newValue || '[]')); } catch { ui.saved = []; } if (ui.view === 'saved') fundTable(); syncButtons(); } });
   }
-  window.LedgerResearch = {install, codes, number, safeURL, sortFunds, sourceState, version: '2026-09-25-desk-2'};
+  window.LedgerResearch = {install, codes, number, safeURL, sortFunds, sourceState, hoursSince, jobState, latestJob, version: '2026-10-05-health'};
   if (typeof document !== 'undefined' && typeof window.route === 'function') {
     install();
     shell();
