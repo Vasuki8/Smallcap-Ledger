@@ -600,7 +600,9 @@ process.stdout.write(JSON.stringify({
         self.assertEqual(self.client.get('/api/archive/'+h).content,original)
         self.assertEqual(db.archive(original,'text/plain'),h)
         import zipfile,io
-        r=self.client.get('/api/export/backup');self.assertEqual(r.status_code,200)
+        self.assertEqual(self.client.get('/api/export/backup').status_code,405)
+        self.assertEqual(self.client.post('/api/export/backup').status_code,403)
+        r=self.client.post('/api/export/backup',headers={'X-Smallcap-Client':'local'});self.assertEqual(r.status_code,200)
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             self.assertIn('data/ledger.sqlite3',z.namelist());self.assertIn('RESTORE.txt',z.namelist())
 
