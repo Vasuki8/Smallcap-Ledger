@@ -24,6 +24,30 @@ BENCHMARK = "Nifty Smallcap 250 TRI"
 USER_AGENT = "SmallcapLedger/1.0 (local personal research)"
 _robots = {}
 _proxy_public_hosts = set()
+_PROXY_ENV_KEYS=('HTTPS_PROXY','https_proxy','ALL_PROXY','all_proxy','HTTP_PROXY','http_proxy')
+
+
+def _proxy_environment_configured():
+    return any(os.environ.get(key) for key in _PROXY_ENV_KEYS)
+
+
+def validate_connected_peer(response,url):
+    """Reject a direct connection that actually landed on a non-public IP."""
+    host=(urlparse(url).hostname or '').lower()
+    # In an HTTP proxy tunnel the socket peer is the proxy, not the target.
+    # The existing reviewed proxy path is handled separately by public_url().
+    if host in _proxy_public_hosts or _proxy_environment_configured():
+        return
+    stream=(getattr(response,'extensions',{}) or {}).get('network_stream')
+    if stream is None:return
+    try:address=stream.get_extra_info('server_addr')
+    except Exception:return
+    if not address:return
+    try:peer=ipaddress.ip_address(address[0])
+    except (ValueError,TypeError):raise ValueError("Connected peer did not expose a valid IP address")
+    if not peer.is_global:
+        raise ValueError("Data source connection resolved to a private or non-global network address")
+
 
 
 def iso(value):
@@ -54,7 +78,7 @@ def public_url(url):
         trusted={'mfapi.in','amfiindia.com','niftyindices.com'}
         trusted.update(urlparse(x[1]).hostname.removeprefix('www.') for x in json.loads((db.ROOT/'tracker'/'sources.json').read_text()))
         trusted.update(h for hosts in json.loads((db.ROOT/'tracker'/'document_hosts.json').read_text()).values() for h in hosts)
-        proxy=any(os.environ.get(k) for k in ('HTTPS_PROXY','https_proxy','ALL_PROXY','all_proxy','HTTP_PROXY','http_proxy'))
+        proxy=_proxy_environment_configured()
         if proxy and any(p.hostname==d or p.hostname.endswith('.'+d) for d in trusted):
             _proxy_public_hosts.add(p.hostname)
             return url
@@ -94,6 +118,7 @@ def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, he
                                            json=body if form is None else None,
                                            data=form if form is not None else None,
                                            headers=request_headers) as r:
+                            validate_connected_peer(r,current)
                             if r.is_redirect:
                                 current=urljoin(current,r.headers.get("location",""))
                                 continue
