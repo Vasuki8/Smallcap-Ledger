@@ -39,6 +39,7 @@ class AxisPortfolioIngestionTests(unittest.TestCase):
 
         with patch("tracker.axis_portfolios.discover",
                    return_value=iter([(FAMILY,target,title)])) as discover, \
+             patch("tracker.disclosures.india_today",return_value=date(2026,9,25)), \
              patch("tracker.disclosures.can_crawl",return_value=True) as crawl, \
              patch("tracker.disclosures.fetch",
                    return_value=(body,h,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) as fetch, \
@@ -49,7 +50,7 @@ class AxisPortfolioIngestionTests(unittest.TestCase):
         self.assertIn("1 documents archived",result)
         self.assertIn("77 facts/holdings",result)
         discover.assert_called_once()
-        self.assertEqual(discover.call_args.kwargs["today"],date.today() if False else discover.call_args.kwargs["today"])
+        self.assertEqual(discover.call_args.kwargs["today"],date(2026,9,25))
         self.assertEqual(fetch.call_args.args[0],target)
         extract.assert_called_once_with(body,FAMILY,target,h)
         self.assertGreaterEqual(crawl.call_count,2)
