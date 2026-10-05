@@ -1,8 +1,7 @@
 """Safe CSV export helpers for spreadsheet-facing downloads."""
 from __future__ import annotations
 
-DANGEROUS_PREFIXES=("=","+","-","@","	","","
-")
+DANGEROUS_PREFIXES=("=","+","-","@","\t","\r","\n")
 
 
 def safe_cell(value):
