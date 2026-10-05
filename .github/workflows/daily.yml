@@ -249,6 +249,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           IMPORT_ARCHIVE_ASSET: ${{ inputs.import_archive_asset }}
         run: uv run --frozen python scripts/import_archive.py
+      - name: Establish collection health boundary
+        if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
+        run: echo "SMALLCAP_COLLECTION_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: Collect daily data
         if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
         timeout-minutes: 40
@@ -260,6 +263,12 @@ jobs:
         run: uv run --frozen python scripts/repair_unarchived_communications.py
       - name: Recover any interrupted collection status
         run: uv run --frozen python -c "from tracker import db; db.init(recover=True)"
+      - name: Gate publication on collection health
+        if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)
+        run: >-
+          uv run --frozen python scripts/check_publication_health.py
+          --started-at "$SMALLCAP_COLLECTION_STARTED_AT"
+          --output deployment/publication-health.json
       - name: Prepare retention metadata without deleting binaries
         run: >-
           uv run --frozen python scripts/prepare_retention_metadata.py --apply
