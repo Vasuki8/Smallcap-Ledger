@@ -24,6 +24,7 @@ BENCHMARK = "Nifty Smallcap 250 TRI"
 USER_AGENT = "SmallcapLedger/1.0 (local personal research)"
 _robots = {}
 _proxy_public_hosts = set()
+_public_resolution = threading.local()
 
 
 def iso(value):
@@ -41,28 +42,66 @@ def number(value):
     return v
 
 
+def _proxy_enabled():
+    return any(os.environ.get(k) for k in
+               ('HTTPS_PROXY','https_proxy','ALL_PROXY','all_proxy','HTTP_PROXY','http_proxy'))
+
+
+def _trusted_source_host(host):
+    trusted={'mfapi.in','amfiindia.com','niftyindices.com'}
+    trusted.update((urlparse(x[1]).hostname or '').removeprefix('www.')
+                   for x in json.loads((db.ROOT/'tracker'/'sources.json').read_text()))
+    trusted.update(h for hosts in json.loads((db.ROOT/'tracker'/'document_hosts.json').read_text()).values() for h in hosts)
+    return any(host==d or host.endswith('.'+d) for d in trusted if d)
+
+
+def _remember_public_resolution(host,addresses):
+    _public_resolution.value=(host,tuple(addresses) if addresses else None)
+
+
 def public_url(url):
-    p=urlparse(url)
-    if p.scheme not in ("http","https") or not p.hostname or p.username or p.password or p.port not in (None,80,443):
+    p=urlparse(url);host=(p.hostname or '').lower()
+    if p.scheme not in ("http","https") or not host or p.username or p.password or p.port not in (None,80,443):
         raise ValueError("Use a public HTTP(S) source URL without credentials")
-    if p.hostname in _proxy_public_hosts:return url
+    if host in _proxy_public_hosts:
+        _remember_public_resolution(host,None)
+        return url
     # Some managed networks resolve approved public hosts at the HTTP/SOCKS proxy.
     # Only the bundled public-source domains may use that path if local DNS is unavailable.
     try:
-        addresses=socket.getaddrinfo(p.hostname,p.port or (443 if p.scheme=='https' else 80),type=socket.SOCK_STREAM)
+        addresses=socket.getaddrinfo(host,p.port or (443 if p.scheme=='https' else 80),type=socket.SOCK_STREAM)
     except socket.gaierror:
-        trusted={'mfapi.in','amfiindia.com','niftyindices.com'}
-        trusted.update(urlparse(x[1]).hostname.removeprefix('www.') for x in json.loads((db.ROOT/'tracker'/'sources.json').read_text()))
-        trusted.update(h for hosts in json.loads((db.ROOT/'tracker'/'document_hosts.json').read_text()).values() for h in hosts)
-        proxy=any(os.environ.get(k) for k in ('HTTPS_PROXY','https_proxy','ALL_PROXY','all_proxy','HTTP_PROXY','http_proxy'))
-        if proxy and any(p.hostname==d or p.hostname.endswith('.'+d) for d in trusted):
-            _proxy_public_hosts.add(p.hostname)
+        if _proxy_enabled() and _trusted_source_host(host):
+            _proxy_public_hosts.add(host);_remember_public_resolution(host,None)
             return url
         raise
+    public=[]
     for entry in addresses:
-        if not ipaddress.ip_address(entry[4][0]).is_global:
+        ip=entry[4][0].split('%',1)[0]
+        if not ipaddress.ip_address(ip).is_global:
             raise ValueError("Private network addresses cannot be used as data sources")
+        if ip not in public:public.append(ip)
+    if not public:raise ValueError("Public source URL did not resolve to an address")
+    # For reviewed built-in domains on managed proxy networks, keep the proxy's
+    # hostname routing. Arbitrary/custom hosts are always pinned to the exact
+    # validated address so DNS cannot change between validation and connection.
+    _remember_public_resolution(host,None if (_proxy_enabled() and _trusted_source_host(host)) else public)
     return url
+
+
+def _pinned_request_target(url,attempt=0):
+    """Connect to the exact validated IP while preserving HTTP Host and TLS SNI."""
+    p=urlparse(url);host=(p.hostname or '').lower()
+    remembered=getattr(_public_resolution,'value',None)
+    if not remembered or remembered[0]!=host or not remembered[1]:
+        return url,{},{}
+    addresses=remembered[1];ip=addresses[attempt%len(addresses)]
+    connect_host='['+ip+']' if ':' in ip else ip
+    netloc=connect_host+((':'+str(p.port)) if p.port is not None else '')
+    connect_url=p._replace(netloc=netloc).geturl()
+    headers={'Host':p.netloc}
+    extensions={'sni_hostname':host} if p.scheme=='https' else {}
+    return connect_url,headers,extensions
 
 
 def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, headers=None):
