@@ -111,6 +111,37 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(db.one('SELECT COUNT(*) n FROM document_versions WHERE document_id=?',(did,))['n'],1)
         self.assertTrue(db.archive_binary_path(h).is_file())
 
+    def test_helios_other_fund_product_material_is_not_small_cap_communication(self):
+        family='Helios Small Cap Fund';code=9903
+        foreign=[
+            ('Helios Flexi Cap Fund','https://www.heliosmf.in/wp-content/uploads/2025/04/FLexicap-Fund-Product-Note_.pdf'),
+            ('Helios Overnight Fund','https://www.heliosmf.in/wp-content/uploads/2025/04/Overnight-Fund-Product-Note.pdf'),
+            ('Helios Mid Cap Fund','https://www.heliosmf.in/wp-content/uploads/2025/04/Mid-Cap-Fund-Product-Note_.pdf'),
+            ('Helios Large & Mid Cap Fund','https://www.heliosmf.in/wp-content/uploads/2025/04/Large-Mid-Cap-Fund-Product-Note_.pdf'),
+            ('Helios Financial Services Fund','https://www.heliosmf.in/wp-content/uploads/2025/04/Financial-Services-Fund-Product-Note.pdf'),
+            ('Helios Arbitrage Fund','https://www.heliosmf.in/wp-content/uploads/2026/03/Helios-Arbitrage-Fund-NFO-Presentation.pdf'),
+        ]
+        own=('Helios Small Cap Fund',
+             'https://www.heliosmf.in/wp-content/uploads/2025/10/Helios-Small-Cap-Fund-Product-Note.pdf')
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (code,'Helios Small Cap Direct Growth',family,
+                       'Helios Mutual Fund','Direct','Growth','test'))
+            for title,url in foreign+(own,):
+                c.execute('''INSERT INTO documents(
+                  family,title,kind,scope,url,first_seen,last_seen,origin)
+                  VALUES(?,?,?,?,?,?,?,?)''',
+                  (family,title,'market view','AMC',url,db.now(),db.now(),'AMC'))
+
+        shown=documents(code)
+        self.assertEqual([(d['title'],d['url']) for d in shown],[own])
+        for title,url in foreign:
+            self.assertIn('non-Small-Cap',exclusion_reason('Helios Mutual Fund',url,title))
+            with self.assertRaisesRegex(ValueError,'non-Small-Cap'):
+                providers.save_document(family,title,url,'market view','AMC',origin='AMC')
+        self.assertIsNone(exclusion_reason('Helios Mutual Fund',own[1],own[0]))
+        providers.save_document(family,own[0],own[1],'market view','AMC',origin='AMC')
+
     def test_rules_preserve_legitimate_communications_and_titles(self):
         self.assertTrue(exclusion_reason('SBI Mutual Fund',WRONG.replace('frankline-templeton','Franklin%2DTempleton')))
         self.assertIsNone(exclusion_reason('Franklin Templeton Mutual Fund',WRONG))
