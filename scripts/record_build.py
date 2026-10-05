@@ -1,4 +1,4 @@
-"""Commit the deployed collection and coverage audits after each successful build."""
+"""Commit built collection and coverage audits before the Pages deployment step."""
 import json
 import os
 from pathlib import Path
@@ -33,7 +33,8 @@ publication_md=ROOT/'docs'/'PUBLICATION-COVERAGE-AUDIT.md'
 publication_md.write_text(publication_coverage_markdown(publication_coverage),encoding='utf-8')
 
 target=ROOT/'deployment/update-status.json';target.parent.mkdir(exist_ok=True)
-target.write_text(json.dumps({'built_at':status['server_time'],'counts':status['counts'],'record_dates':status.get('record_dates',{}),'recent_jobs':[{k:j[k] for k in ('kind','started_at','finished_at','status')} for j in status['jobs'][:4]],'schedule':status['hosting']},indent=2)+'\n')
+source_build_sha=os.environ.get('SMALLCAP_BUILD_SHA','').strip()
+target.write_text(json.dumps({'built_at':status['server_time'],'publication_state':'built_pending_pages_deploy','source_build_sha':source_build_sha or None,'counts':status['counts'],'record_dates':status.get('record_dates',{}),'recent_jobs':[{k:j[k] for k in ('kind','started_at','finished_at','status')} for j in status['jobs'][:4]],'schedule':status['hosting']},indent=2)+'\n')
 
 coverage_json=ROOT/'COVERAGE-AS-OF.json'
 coverage_json.write_text(json.dumps(coverage,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
@@ -227,7 +228,7 @@ git('add','deployment','COVERAGE-AS-OF.json','COVERAGE-AS-OF.md',
     'deployment/communication-transport-wealth-uti.json')
 if git('diff','--cached','--quiet',check=False).returncode:
     git('commit','-m','Record daily collection status and coverage [skip ci]')
-    expected_build_sha=os.environ.get('SMALLCAP_BUILD_SHA','').strip()
+    expected_build_sha=source_build_sha
     if not expected_build_sha:
         raise RuntimeError('SMALLCAP_BUILD_SHA is required for automated status publication')
     push_generated_status_commit(ROOT,expected_build_sha)
