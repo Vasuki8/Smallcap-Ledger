@@ -600,6 +600,16 @@ process.stdout.write(JSON.stringify({
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             self.assertIn('data/ledger.sqlite3',z.namelist());self.assertIn('RESTORE.txt',z.namelist())
 
+    def test_backup_generation_is_single_flight(self):
+        from tracker.app import _backup_lock
+        self.assertTrue(_backup_lock.acquire(blocking=False))
+        try:
+            r=self.client.post('/api/export/backup',headers={'X-Smallcap-Client':'local'})
+            self.assertEqual(r.status_code,409)
+            self.assertIn('already being prepared',r.json()['detail'])
+        finally:
+            _backup_lock.release()
+
     def test_health_and_static_assets(self):
         self.assertEqual(self.client.get('/api/health').json()['app'],'smallcap-ledger')
         for path in ['/','/app.js','/style.css','/favicon.svg']:
