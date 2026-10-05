@@ -107,8 +107,8 @@ def export(output:Path,repository=''):
         csv_file(Path('downloads')/f'portfolio-{sid}.csv',p['holdings'],['isin','name','sector','quantity','previous_quantity','share_change','weight','previous_weight','weight_change','asset_type'])
         downloads[f'/api/export/portfolio/{sid}']=f'data/downloads/portfolio-{sid}.csv'
     benchmark={}
-    for b in db.rows('SELECT name,MIN(date) first,MAX(date) last,COUNT(*) points FROM benchmark GROUP BY name'):
-        b['source']=db.one('SELECT source FROM benchmark WHERE name=? ORDER BY date DESC LIMIT 1',(b['name'],))['source']
+    for row in db.rows('SELECT DISTINCT name FROM benchmark ORDER BY name'):
+        b=db.benchmark_info(row['name'])
         b['data']=[[p['date'],p['value']] for p in db.rows('SELECT date,value FROM benchmark WHERE name=? ORDER BY date',(b['name'],))]
         benchmark[b['name']]=b
     write('benchmarks.json',benchmark)
