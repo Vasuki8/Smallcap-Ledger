@@ -7,6 +7,7 @@ from datetime import date,datetime
 from urllib.parse import urlparse,unquote,parse_qs
 from bs4 import BeautifulSoup
 from . import db
+from .archive_limits import validate_ooxml_package
 from .publications import exclusion_reason
 from .providers import fetch,can_crawl,iso,number,candidate_links,classify,save_document,doc_version
 
@@ -331,6 +332,7 @@ def summary_xml(content,family,url,h):
 def spreadsheet(content,family,url,h):
     import openpyxl,xlrd
     if content[:2]==b'PK':
+        validate_ooxml_package(content)
         book=openpyxl.load_workbook(io.BytesIO(content),read_only=True,data_only=True)
         sheets=[]
         for s in book.worksheets:
