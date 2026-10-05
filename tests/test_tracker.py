@@ -133,6 +133,8 @@ class TrackerTests(unittest.TestCase):
         months_after_restart=[x['month'] for x in db.rows(
             "SELECT DISTINCT substr(as_of,1,7) month FROM portfolios WHERE family=? ORDER BY month",(family,))]
         self.assertEqual(months_after_restart,months)
+        self.assertEqual(db.prune_portfolio_history(family),0)
+        self.assertEqual(db.one("SELECT COUNT(DISTINCT substr(as_of,1,7)) n FROM portfolios WHERE family=?",(family,))['n'],3)
         current=db.one("SELECT id FROM portfolios WHERE family=? AND as_of='2026-08-31'",(family,))
         payload=portfolio_holdings(current['id'])
         self.assertEqual(payload['previous']['as_of'],'2026-07-31')
