@@ -18,6 +18,7 @@ from starlette.background import BackgroundTask
 from . import db,analytics,providers,disclosures
 from .portfolio_limitations import portfolio_limitation
 from .coverage import expected_portfolio_as_of
+from .clock import india_today
 from .sync import updater
 
 
@@ -128,7 +129,7 @@ def funds():
                    as_of DESC,complete DESC,id DESC LIMIT 1""",(s['family'],expected))
         s['portfolio_limitation']=portfolio_limitation(s['family'],s['portfolio'])
         if s['portfolio'] is not None:s['portfolio']['limitation']=s['portfolio_limitation']
-        s['stale_days']=(date.today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
+        s['stale_days']=(india_today()-date.fromisoformat(coverage['last'])).days if coverage['last'] else None
     return {"funds":records,"as_of":db.now()}
 
 
@@ -447,6 +448,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
     content=await file.read(10*1024*1024+1)
     if len(content)>10*1024*1024:raise HTTPException(400,'Maximum import size is 10 MB')
     if not source.startswith(('http://','https://')):raise HTTPException(400,'Provide the original public source URL')
+    today=india_today().isoformat()
     try:
         if kind=='document':
             s=scheme(code);ext=Path(file.filename or '').suffix.lower()
@@ -467,11 +469,11 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
         if kind=='benchmark':
             if not benchmark.strip() or not re.search(r'TRI|total.return',benchmark,re.I):raise ValueError('Benchmark name must identify a total-return index (TRI)')
             points=[(providers.iso(r['date']),providers.number(r['value'])) for r in records]
-            if any(v<=0 or d>date.today().isoformat() for d,v in points):raise ValueError('Benchmark values must be positive and dates cannot be in the future')
+            if any(v<=0 or d>today for d,v in points):raise ValueError('Benchmark values must be positive and dates cannot be in the future')
             db.save_benchmark(benchmark.strip(),points,source)
         elif kind=='portfolio':
             s=scheme(code);day=providers.iso(as_of)
-            if day>date.today().isoformat():raise ValueError('Portfolio date cannot be in the future')
+            if day>today:raise ValueError('Portfolio date cannot be in the future')
             positions=[]
             for r in records:
                 quantity=providers.number(r['quantity']) if (r.get('quantity') or '').strip() else None
@@ -487,7 +489,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             numeric={'aum','ter','base_expense_ratio','brokerage','transaction_cost','statutory_levies','minimum_sip','minimum_lumpsum'}
             for r in records:
                 name=r['metric'];plan=r.get('plan') or 'All';day=providers.iso(r['as_of'])
-                if name not in allowed or plan not in ('All','Direct','Regular') or day>date.today().isoformat():raise ValueError('Unknown metric, plan or future date')
+                if name not in allowed or plan not in ('All','Direct','Regular') or day>today:raise ValueError('Unknown metric, plan or future date')
                 value=providers.number(r['value']) if name in numeric else r['value']
                 if name in numeric and value<0:raise ValueError('Metric cannot be negative')
                 unit='INR crore' if name=='aum' else '% p.a.' if name in ('ter','base_expense_ratio','brokerage','transaction_cost','statutory_levies') else 'INR' if name.startswith('minimum_') else 'Reported'
@@ -498,7 +500,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             s=scheme(code)
             if s['option']!='IDCW':raise ValueError('Select an IDCW scheme')
             first=providers.iso(coverage_from);last=providers.iso(coverage_to)
-            if not complete or first>last or last>date.today().isoformat():raise ValueError('Confirm complete payout history and specify a valid coverage window')
+            if not complete or first>last or last>today:raise ValueError('Confirm complete payout history and specify a valid coverage window')
             events=[(code,providers.iso(r['ex_date']),providers.number(r['amount']),providers.number(r['reinvestment_nav']),source,db.now()) for r in records]
             if any(x[2]<0 or x[3]<=0 or not first<=x[1]<=last for x in events):raise ValueError('Invalid distribution value or date outside coverage')
             with db.connect() as c:

@@ -14,6 +14,7 @@ from urllib.robotparser import RobotFileParser
 import httpx
 from bs4 import BeautifulSoup
 from . import db
+from .clock import india_today
 
 AMFI_NAV = "https://www.amfiindia.com/spages/NAVAll.txt"
 MFAPI = "https://api.mfapi.in/mf"
@@ -183,7 +184,7 @@ def parse_amfi(text):
         option=option_type(raw_option,name)
         try:
             nav=number(row.get("Net Asset Value",row.get("NAV","")));day=iso(row["Date"])
-            if nav<=0 or day>date.today().isoformat(): continue
+            if nav<=0 or day>india_today().isoformat(): continue
         except (ValueError,KeyError): continue
         isin=row.get("ISIN Div Payout/ ISIN Growth")
         reinvest=row.get("ISIN Div Reinvestment")
@@ -228,7 +229,7 @@ def backfill(code):
         points=[]
         for x in data.get("data",[]):
             d=iso(x["date"]);v=number(x["nav"])
-            if v>0 and d<=date.today().isoformat(): points.append((d,v))
+            if v>0 and d<=india_today().isoformat(): points.append((d,v))
         if not points: raise ValueError("No historical NAV returned")
         db.save_nav(code,points,url)
         with db.connect() as c:
@@ -248,12 +249,13 @@ def backfill(code):
 def fetch_benchmark(progress=lambda _:None):
     latest=db.one("SELECT MIN(date) first,MAX(date) last FROM benchmark WHERE name=?",(BENCHMARK,))
     # Recover an interrupted backfill using per-year checkpoints, then refresh the current year.
+    today=india_today()
     start_year=2005
     total=0
-    for year in range(start_year,date.today().year+1):
+    for year in range(start_year,today.year+1):
         key=f"nifty_year_{year}"
-        if year<date.today().year and db.setting(key,False): continue
-        start=date(year,1,1);end=min(date(year,12,31),date.today())
+        if year<today.year and db.setting(key,False): continue
+        start=date(year,1,1);end=min(date(year,12,31),today)
         progress(f"Archiving benchmark history: {year}")
         payload={"cinfo":json.dumps({"name":"NIFTY SMALLCAP 250","indexName":"NIFTY SMALLCAP 250",
                                      "startDate":start.strftime("%d-%b-%Y"),"endDate":end.strftime("%d-%b-%Y")})}
