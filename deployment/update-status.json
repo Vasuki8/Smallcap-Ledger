@@ -1,20 +1,20 @@
 {
-  "built_at": "2026-10-05T22:45:15+00:00",
+  "built_at": "2026-10-05T23:18:22+00:00",
   "publication_state": "built_pending_pages_deploy",
-  "source_build_sha": "bbbd7a9a0ccc2dc54d21842fb3e147c25d38cc3d",
+  "source_build_sha": "fa6b18177e9faf942976b29049249f8848a81145",
   "counts": {
     "plans": 143,
     "funds": 36,
     "nav_points": 282294,
     "benchmark_points": 5335,
-    "portfolios": 220,
-    "documents": 6006,
-    "archive_bytes": 5353395433,
-    "archive_binary_files": 7194,
+    "portfolios": 229,
+    "documents": 6197,
+    "archive_bytes": 5446983727,
+    "archive_binary_files": 7393,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 146751488,
-    "total_storage_bytes": 5500146921,
+    "database_bytes": 147456000,
+    "total_storage_bytes": 5594439727,
     "aum_funds": 36,
     "fee_funds": 36,
     "latest_nav_date": "2026-10-05"
@@ -36,26 +36,26 @@
   "recent_jobs": [
     {
       "kind": "amc-communication-archive-repair",
-      "started_at": "2026-10-05T22:44:28+00:00",
-      "finished_at": "2026-10-05T22:44:28+00:00",
+      "started_at": "2026-10-05T23:17:28+00:00",
+      "finished_at": "2026-10-05T23:17:28+00:00",
       "status": "partial"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-05T22:32:18+00:00",
-      "finished_at": "2026-10-05T22:32:18+00:00",
+      "started_at": "2026-10-05T23:00:52+00:00",
+      "finished_at": "2026-10-05T23:00:52+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-05T22:32:17+00:00",
-      "finished_at": "2026-10-05T22:32:17+00:00",
+      "started_at": "2026-10-05T23:00:48+00:00",
+      "finished_at": "2026-10-05T23:00:48+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-05T22:32:14+00:00",
-      "finished_at": "2026-10-05T22:32:14+00:00",
+      "started_at": "2026-10-05T23:00:45+00:00",
+      "finished_at": "2026-10-05T23:00:45+00:00",
       "status": "ok"
     }
   ],
@@ -70,6 +70,6 @@
     "publication_file_reserve_bytes": 5242880,
     "publication_selection_limit_bytes": 256901120,
     "publication_files_included": 175,
-    "publication_bytes_included": 256900155
+    "publication_bytes_included": 256899556
   }
 }

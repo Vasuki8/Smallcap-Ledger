@@ -1,6 +1,6 @@
 # Mid Cap source coverage audit
 
-Prepared: 2026-10-05T22:25:17+00:00
+Prepared: 2026-10-05T22:49:04+00:00
 
 **Read-only staged-category audit. No Mid Cap metric, portfolio, document, scheme, NAV, API or public-page writes are performed.**
 

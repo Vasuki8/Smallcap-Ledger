@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-10-05T22:45:28+00:00
+Prepared: 2026-10-05T23:18:39+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -8,8 +8,8 @@ Prepared: 2026-10-05T22:45:28+00:00
 
 - Funds with at least one retained AMC communication: **34 / 36**.
 - Funds with no retained AMC communication: **2**.
-- Retained communication documents: **284**; archived originals: **266**.
-- Market/newsletter/CIO/product-view documents: **268**; letters to unitholders: **16**.
+- Retained communication documents: **283**; archived originals: **266**.
+- Market/newsletter/CIO/product-view documents: **267**; letters to unitholders: **16**.
 - Communication documents with an explicit published date: **62**.
 - Funds with a registered communication-oriented source page: **29**.
 
@@ -19,19 +19,17 @@ Prepared: 2026-10-05T22:45:28+00:00
 | ---: | --- | --- | ---: | --- |
 | 2 | documented_communication_source_limitation | no | 2 | A qualifying first-party communication source is known, but current collection is limited by an explicit source/transport constraint; retain the visible gap and retry only when that constraint changes. |
 | 3 | documented_communication_archive_limitation | no | 4 | The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure. |
-| 3 | repair_unarchived_communication_documents | yes | 1 | AMC communication metadata is retained but one or more original document versions are not archived. |
 
 ### Affected funds
 
 - **documented_communication_source_limitation:** Trustmf Small Cap Fund, Union Small Cap Fund
 - **documented_communication_archive_limitation:** Franklin India Small Cap Fund, Kotak Small Cap Fund, LIC Mf Small Cap Fund, Samco Small Cap Fund
-- **repair_unarchived_communication_documents:** Abakkus Small Cap Fund
 
 ## Per-fund audit
 
 | Fund | Communications | Market views | Unitholder letters | Archived | Published-date docs | Latest published | Registered communication sources | Issues |
 | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |
-| Abakkus Small Cap Fund | 13 | 13 | 0 | 12 | 10 | 2026-08-11 | 3 | communication_document_not_archived, publication_date_missing |
+| Abakkus Small Cap Fund | 12 | 12 | 0 | 12 | 10 | 2026-08-11 | 3 | publication_date_missing |
 | Aditya Birla Sun Life Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 1 | publication_date_missing |
 | Axis Small Cap Fund | 3 | 3 | 0 | 3 | 2 | 2026-03-15 | 2 | publication_date_missing |
 | Bajaj Finserv Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2026-05-21 | 1 | none |

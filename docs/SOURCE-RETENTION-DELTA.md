@@ -1,16 +1,16 @@
 # Source-retention post-audit delta review
 
-Reviewed **4675** hashes added after the original audited inventory.
+Reviewed **4874** hashes added after the original audited inventory.
 **Every binary remains retained. Deleted files/bytes: 0 / 0.**
 
 | Classification | Files | Raw bytes |
 | --- | ---: | ---: |
-| retain_evidence | 1,826 | 1,466,673,459 |
-| retain_latest_or_review | 795 | 853,808,143 |
-| link_only_candidate | 2,054 | 870,394,163 |
+| retain_evidence | 1,894 | 1,497,481,337 |
+| retain_latest_or_review | 814 | 862,725,505 |
+| link_only_candidate | 2,166 | 924,257,217 |
 | unclassified | 0 | 0 |
 
-New link-only candidates: **2054 files / 870,394,163 raw bytes**.
+New link-only candidates: **2166 files / 924,257,217 raw bytes**.
 These are a separate review delta and are not merged into the existing approval-gated 695-hash migration proposal.
 
 Full per-hash review: SOURCE-RETENTION-DELTA.json.
