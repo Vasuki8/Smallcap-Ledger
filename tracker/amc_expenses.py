@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 from . import db, axis_portfolios, jm_portfolios
+from .archive_limits import validate_ooxml_package
 from .clock import india_today
 from .providers import fetch, number, public_url
 
@@ -746,6 +747,7 @@ def _hsbc_number(value, label):
 def parse_hsbc_workbook(content, today=None):
     """Return HSBC Small Cap's newest explicit BER and Total TER plan pair."""
     today = today or india_today()
+    validate_ooxml_package(content)
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -1009,6 +1011,7 @@ def _icici_inline_strings(content):
     dimension metadata, so ordinary openpyxl iteration exposes only row 1.
     Parsing the standard OOXML sheet cells retains the source exactly.
     """
+    validate_ooxml_package(content)
     try:
         archive = zipfile.ZipFile(io.BytesIO(content))
     except zipfile.BadZipFile as exc:
@@ -1691,6 +1694,7 @@ def _uti_percent(value, label):
 def parse_uti_workbook(content, today=None):
     """Return the newest exact UTI Small Cap BER and published Total TER pair."""
     today = today or india_today()
+    validate_ooxml_package(content)
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -1984,6 +1988,7 @@ def _mahindra_percent(value, label):
 def parse_mahindra_workbook(content, today=None):
     """Return the newest exact Small Cap BER and AMC-published Total TER pair."""
     today = today or india_today()
+    validate_ooxml_package(content)
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -2185,6 +2190,7 @@ def _axis_header(value):
 def parse_axis_workbook(content, today=None):
     """Parse Axis's generated first-party Total Expense Ratio XLSX."""
     today = today or india_today()
+    validate_ooxml_package(content)
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
