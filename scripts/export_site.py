@@ -3,9 +3,11 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import html
 import io
 import json
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -29,6 +31,97 @@ SITE_SIZE_LIMIT=400*1024*1024
 def public_documents(records):
     """Only verified AMC-origin documents are eligible for public Pages export."""
     return [d for d in records if d.get('origin')=='AMC']
+
+
+def fund_slug(value):
+    slug=re.sub(r'[^a-z0-9]+','-',str(value).lower()).strip('-')
+    return slug or hashlib.sha256(str(value).encode()).hexdigest()[:12]
+
+
+def github_pages_root(repository):
+    if not repository or '/' not in repository:return None
+    owner,name=repository.split('/',1)
+    host=f"https://{owner.lower()}.github.io/"
+    return host if name.lower()==owner.lower()+'.github.io' else host+name.strip('/')+'/'
+
+
+def seo_fee(record):
+    metrics=record.get('metrics') or {}
+    return metrics.get('ter') or metrics.get('ter_observed') or metrics.get('base_expense_ratio') or metrics.get('expense_ratio')
+
+
+def _display(value,suffix=''):
+    if value is None or value=='':return 'Not available'
+    return html.escape(str(value))+suffix
+
+
+def write_crawlable_fund_pages(output,index,repository):
+    """Write one semantic HTML landing page per fund family plus crawl metadata."""
+    root=github_pages_root(repository)
+    ranked={}
+    for row in index.get('funds',[]):
+        rank=(0 if row.get('plan')=='Direct' and row.get('option')=='Growth' else
+              1 if row.get('option')=='Growth' else 2,
+              int(row.get('code') or 0))
+        current=ranked.get(row['family'])
+        if current is None or rank<current[0]:ranked[row['family']]=(rank,row)
+    urls=[]
+    slugs={}
+    for family,(_,row) in sorted(ranked.items()):
+        slug=fund_slug(family)
+        if slug in slugs and slugs[slug]!=family:
+            slug+='-'+hashlib.sha256(family.encode()).hexdigest()[:8]
+        slugs[slug]=family
+        target=output/'funds'/slug/'index.html';target.parent.mkdir(parents=True,exist_ok=True)
+        canonical=(root+'funds/'+slug+'/') if root else None
+        title=f"{family} – NAV, AUM, Expense Ratio & Returns | Smallcap Ledger"
+        metrics=row.get('metrics') or {};aum=metrics.get('aum');fee=seo_fee(row);benchmark=metrics.get('benchmark')
+        description=(f"{family} mutual fund research: latest retained NAV, AUM, expense ratio, "
+                     "1Y/3Y/5Y returns, reported benchmark and source dates.")
+        facts=[
+            ('Plan',f"{row.get('plan','')} · {row.get('option_label') or row.get('option','')}"),
+            ('Latest NAV',('₹'+str(row['nav']['value'])) if row.get('nav') else 'Not available'),
+            ('AUM',('₹'+str(aum['value'])+' crore') if aum else 'Not available'),
+            ('Expense', (str(fee['value'])+'%') if fee else 'Not available'),
+            ('1Y return', (str(row.get('returns',{}).get('1'))+'%') if row.get('returns',{}).get('1') is not None else 'Not available'),
+            ('3Y CAGR', (str(row.get('returns',{}).get('3'))+'%') if row.get('returns',{}).get('3') is not None else 'Not available'),
+            ('5Y CAGR', (str(row.get('returns',{}).get('5'))+'%') if row.get('returns',{}).get('5') is not None else 'Not available'),
+            ('Reported benchmark', str(benchmark['value']) if benchmark else 'Not available'),
+        ]
+        canonical_tag=f'<link rel="canonical" href="{html.escape(canonical,quote=True)}">' if canonical else ''
+        og_url=f'<meta property="og:url" content="{html.escape(canonical,quote=True)}">' if canonical else ''
+        fact_html=''.join(f'<div class="fact"><dt>{html.escape(label)}</dt><dd>{html.escape(value)}</dd></div>' for label,value in facts)
+        source_notes=[]
+        for label,item in [('AUM',aum),('Expense',fee),('Benchmark',benchmark)]:
+            if item and item.get('source'):
+                source_notes.append(f'<li>{html.escape(label)} · {html.escape(str(item.get("as_of") or "date unavailable"))} · '
+                                    f'<a href="{html.escape(item["source"],quote=True)}" rel="nofollow noopener">{html.escape(item["source"])}</a></li>')
+        source_html='<ul>'+''.join(source_notes)+'</ul>' if source_notes else '<p>Source details are available in the research desk.</p>'
+        target.write_text(f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{html.escape(title)}</title><meta name="description" content="{html.escape(description,quote=True)}">
+{canonical_tag}<meta property="og:title" content="{html.escape(title,quote=True)}"><meta property="og:description" content="{html.escape(description,quote=True)}">{og_url}
+<link rel="stylesheet" href="../../style.css"></head><body>
+<main id="main" style="max-width:1000px;margin:0 auto;padding:32px 20px">
+<div class="page-heading"><div><div class="eyebrow">{html.escape(str(row.get('amc') or 'Mutual fund'))}</div><h1>{html.escape(family)}</h1>
+<p>{html.escape(description)}</p></div></div>
+<section class="panel"><h2>Fund snapshot</h2><dl class="facts">{fact_html}</dl>
+<p class="footer-note">Values are retained observations with their own reporting dates. Missing is not zero. Past performance is not a forecast.</p></section>
+<section class="panel"><h2>Source evidence</h2>{source_html}</section>
+<p><a class="primary-link" href="../../#/fund/{int(row['code'])}">Open interactive research page →</a></p>
+</main></body></html>
+''',encoding='utf-8')
+        if canonical:urls.append(canonical)
+    robots="User-agent: *\nAllow: /\n"
+    if root:
+        sitemap=root+'sitemap.xml';robots+=f"Sitemap: {sitemap}\n"
+        all_urls=[root]+urls
+        xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        xml+=''.join(f'  <url><loc>{html.escape(url)}</loc></url>\n' for url in all_urls)
+        xml+='</urlset>\n'
+        (output/'sitemap.xml').write_text(xml,encoding='utf-8')
+    (output/'robots.txt').write_text(robots,encoding='utf-8')
+    return {'fund_pages':len(ranked),'sitemap_urls':len(urls)+(1 if root else 0),'site_root':root}
 
 
 def select_publication_candidates(candidates,limit=PUBLIC_PUBLICATION_SELECTION_LIMIT):
@@ -66,6 +159,7 @@ def export(output:Path,repository=''):
         with p.open('w',encoding='utf-8-sig',newline='') as f:
             w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(rows)
     index=funds();write('funds.json',index)
+    seo=write_crawlable_fund_pages(output,index,repository)
     from tracker.coverage import report as coverage_report
     coverage=coverage_report()
     write('coverage.json',coverage)
@@ -150,7 +244,7 @@ def export(output:Path,repository=''):
     (output/'.nojekyll').write_text('')
     total=sum(p.stat().st_size for p in output.rglob('*') if p.is_file())
     if total>SITE_SIZE_LIMIT:raise RuntimeError('Site exceeded the configured static publication budget; existing online version should be retained.')
-    print(json.dumps({'site':str(output),'bytes':total,'funds':len(done),'series':len(index['funds']),'aum_funds':report['counts']['aum_funds'],'fee_funds':report['counts']['fee_funds'],'latest_nav_date':report['counts']['latest_nav_date'],'official_publication_files':len(hashes),'official_publication_bytes':published_publication_bytes},indent=2))
+    print(json.dumps({'site':str(output),'bytes':total,'funds':len(done),'series':len(index['funds']),'aum_funds':report['counts']['aum_funds'],'fee_funds':report['counts']['fee_funds'],'latest_nav_date':report['counts']['latest_nav_date'],'official_publication_files':len(hashes),'official_publication_bytes':published_publication_bytes,'crawlable_fund_pages':seo['fund_pages']},indent=2))
     return report
 
 
