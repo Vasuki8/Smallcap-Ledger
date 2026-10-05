@@ -550,6 +550,31 @@ def ingest_source(source):
     if reason:return 'Excluded: '+reason
     families=source_families(source["amc_match"])
     if not families: return "No matching small-cap fund yet"
+    if (str(source.get("amc_match") or "").lower()=="axis"
+        and url=="https://www.axismf.com/downloads"):
+        # Axis's generic downloads page is client-rendered. Follow its public,
+        # read-only CMS flow to the exact Small Cap monthly workbook instead of
+        # falling back to the partial Top-10 table on the fund page.
+        can_crawl(url)
+        from .axis_portfolios import discover as axis_discover
+        from .amc_reports import extract
+        active={row["family"] for row in families}
+        links=archived=parsed=errors=0
+        for family,target,title in axis_discover(fetch,today=india_today()):
+            if family not in active:continue
+            links+=1
+            try:
+                can_crawl(target)
+                body,ch,typ=fetch(target,max_bytes=25*1024*1024)
+                did=save_document(family,title,target,"portfolio","Fund",origin="AMC")
+                doc_version(did,ch);archived+=1
+                parsed+=extract(body,family,target,ch)
+            except Exception:
+                errors+=1
+        if not links:
+            return "Axis CMS exposed no exact current Small Cap monthly portfolio"
+        return (f"{links} exact monthly portfolio links; {archived} documents archived; "
+                f"{parsed} facts/holdings; {errors} download/parser gaps")
     if (str(source.get("amc_match") or "").lower()=="franklin"
         and url=="https://www.franklintempletonindia.com/knowledge-centre/quick-learn/latest-commentaries"):
         from .franklin_communications import ingest as franklin_ingest
