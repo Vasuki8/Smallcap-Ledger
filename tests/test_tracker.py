@@ -108,7 +108,7 @@ class TrackerTests(unittest.TestCase):
         self.assertEqual([positions[0]['quantity'],positions[1]['quantity']],[1200,2400])
         self.assertEqual(positions[0]['asset_type'],'Equity')
 
-    def test_portfolios_keep_two_months_and_compute_share_change(self):
+    def test_portfolios_retain_history_and_compute_share_change(self):
         from tracker.app import holdings as portfolio_holdings
         family='Rolling Quantity Small Cap Fund'
         with db.connect() as c:
@@ -128,7 +128,11 @@ class TrackerTests(unittest.TestCase):
             True,'https://example.com/aug.xlsx','aug')
         months=[x['month'] for x in db.rows(
             "SELECT DISTINCT substr(as_of,1,7) month FROM portfolios WHERE family=? ORDER BY month",(family,))]
-        self.assertEqual(months,['2026-07','2026-08'])
+        self.assertEqual(months,['2026-06','2026-07','2026-08'])
+        db.init()
+        months_after_restart=[x['month'] for x in db.rows(
+            "SELECT DISTINCT substr(as_of,1,7) month FROM portfolios WHERE family=? ORDER BY month",(family,))]
+        self.assertEqual(months_after_restart,months)
         current=db.one("SELECT id FROM portfolios WHERE family=? AND as_of='2026-08-31'",(family,))
         payload=portfolio_holdings(current['id'])
         self.assertEqual(payload['previous']['as_of'],'2026-07-31')
