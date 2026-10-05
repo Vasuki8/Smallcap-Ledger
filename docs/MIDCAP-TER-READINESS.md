@@ -1,6 +1,6 @@
 # Mid Cap TER readiness reconciliation
 
-Prepared: 2026-10-05T21:32:40+00:00
+Prepared: 2026-10-05T22:25:17+00:00
 
 Direct TER evidence: **32 / 34** · AMFI: **21** · first-party AMC: **11** · remaining: **2**.
 

@@ -1,10 +1,10 @@
 # Included data coverage
 
-Prepared: 2026-10-05T21:55:51+00:00
+Prepared: 2026-10-05T22:44:54+00:00
 
 **36 funds, 143 NAV series, 282,294 NAV observations. Latest included NAV: 2026-10-05.**
 
-AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **35 / 36 any**, **29 complete**, **34 current**, **29 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **36 / 36 funds**.
+AUM: **36 / 36 funds**. Direct fee figure: **36 / 36 funds**. Portfolio: **35 / 36 any**, **30 complete**, **34 current**, **30 current + complete** (expected month-end 2026-08-31). Reported benchmark identity: **36 / 36 funds**.
 
 Selected record dates — AUM: **2026-10-01 → 2026-10-04**; Direct fee: **2026-04-30 → 2026-10-05**; reported benchmark identity: **2023-08-31 → 2026-10-06**.
 
@@ -14,7 +14,7 @@ Coverage counts mean a selected dated record exists. The ranges above are report
 | --- | --- | --- | --- | --- | ---: |
 | Abakkus Small Cap Fund | ₹ 3,228.36 · 2026-10-01 | 1.2% TER · 2026-10-05 | 68 positions · 2026-08-31 · complete · current | NIFTY SmallCap 250 TRI · 2026-09-30 | 44 |
 | Aditya Birla Sun Life Small Cap Fund | ₹ 6,054.46 · 2026-10-01 | 1.07% TER · 2026-09-30 | 89 positions · 2026-08-31 · complete · current | BSE 250 Small Cap Index TRI · 2026-07-31 | 6 |
-| Axis Small Cap Fund | ₹ 30,679.82 · 2026-10-01 | 0.72% TER · 2026-10-04 | 10 positions · 2026-10-05 · partial · current | Nifty Smallcap 250 TRI · 2026-10-06 | 11 |
+| Axis Small Cap Fund | ₹ 30,679.82 · 2026-10-01 | 0.72% TER · 2026-10-04 | 134 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-10-06 | 11 |
 | Bajaj Finserv Small Cap Fund | ₹ 2,733.88 · 2026-10-01 | 0.98% TER · 2026-10-05 | 13 positions · 2026-07-31 · partial · older | BSE 250 SmallCap TRI · 2026-07-31 | 2 |
 | Bandhan Small Cap Fund | ₹ 35,759.13 · 2026-10-01 | 0.61% TER · 2026-10-04 | 260 positions · 2026-08-31 · partial · current | BSE 250 SmallCap TRI · 2025-03-31 | 7 |
 | Bank Of India Small Cap Fund | ₹ 3,672.06 · 2026-10-01 | 0.78% TER · 2026-10-05 | 103 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-08-31 | 8 |
