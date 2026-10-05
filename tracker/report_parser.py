@@ -6,6 +6,7 @@ All extracted values are saved with the original document's content hash by call
 from __future__ import annotations
 import re
 from datetime import date, datetime
+from .clock import india_today
 
 NUMBER = r'([0-9][0-9,]*(?:\.[0-9]+)?)'
 DATE = r'(?:\d{1,2}(?:st|nd|rd|th)?[\s./-]+(?:[A-Za-z]+|\d{1,2})[\s,./-]+(?:\d{4}|\d{2})\b|[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?\s*,?\s*\d{4})'
@@ -29,7 +30,7 @@ def dated(value):
                 '%B %d, %Y','%b %d, %Y','%B %d %Y','%b %d %Y'):
         try:
             d=datetime.strptime(value,fmt).date()
-            return d.isoformat() if date(1990,1,1)<=d<=date.today() else None
+            return d.isoformat() if date(1990,1,1)<=d<=india_today() else None
         except ValueError:pass
     return None
 
@@ -1383,7 +1384,7 @@ def layout_aum(text,family,day):
     Caller must first identify the exact scheme page and its reporting date.
     PDF text order otherwise places both values before both labels.
     """
-    if not day or day>date.today().isoformat():return []
+    if not day or day>india_today().isoformat():return []
     if family=='UTI Small Cap Fund':
         out=[]
         for label,key in [('Fund Size Monthly Average','average_aum'),('Closing AUM','aum')]:
