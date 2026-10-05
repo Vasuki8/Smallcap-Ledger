@@ -13,6 +13,9 @@ class BackupPostUiTests(unittest.TestCase):
         self.assertIn("'X-Smallcap-Client':'local'",source)
         self.assertIn('id="backup-download"',source)
         self.assertIn('id="settings-backup-download"',source)
+        self.assertIn("function bindBackupButton(selector)",source)
+        self.assertIn("btn.disabled=true",source)
+        self.assertIn("finally{btn.disabled=false;}",source)
 
 
 if __name__=="__main__":
