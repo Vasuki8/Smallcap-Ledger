@@ -138,7 +138,6 @@ def render_fund_landing(row,base_url):
 {og_url}
 {canonical_tag}
 <link rel="stylesheet" href="../../style.css">
-<script type="application/ld+json">{html.escape(json.dumps(structured,ensure_ascii=False,separators=(',',':')))}</script>
 </head>
 <body>
 <main style="max-width:900px;margin:3rem auto;padding:0 1.25rem">
