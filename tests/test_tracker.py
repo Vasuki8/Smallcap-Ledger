@@ -387,6 +387,7 @@ class TrackerTests(unittest.TestCase):
         self.assertTrue(disclosures.official_publication_url('https://files.hdfcfund.com/factsheet.pdf','HDFC'))
         self.assertFalse(disclosures.official_publication_url('https://news.example.com/hdfc-market-outlook','HDFC'))
         self.assertFalse(disclosures.official_publication_url('https://hdfcfund.com.evil.example/news','HDFC'))
+        self.assertFalse(disclosures.official_publication_url('javascript://files.hdfcfund.com/factsheet.pdf','HDFC'))
 
     def test_archive_retention_state_cannot_downgrade_protected_evidence(self):
         h=db.archive(b'protected retention invariant','application/pdf')
