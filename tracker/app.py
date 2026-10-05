@@ -216,8 +216,7 @@ def performance(code:int,start:str|None=None,end:str|None=None,benchmark:str|Non
     aligned=analytics.aligned(selected,bp)
     full=analytics.performance(total_points)
     selected_stats=analytics.performance(selected)
-    full_aligned=analytics.aligned([p for p in total_points if not end or p[0]<=end],bp)
-    aligned_f=[[p[0],p[1]] for p in full_aligned];aligned_b=[[p[0],p[2]] for p in full_aligned]
+    aligned_f=[[p[0],p[1]] for p in aligned];aligned_b=[[p[0],p[2]] for p in aligned]
     return {"nav":nav_selected,"total_return_series":selected,"method":method,"can_total_return":bool(selected),
             "reported_benchmark":reported,
             "comparison_series":{"name":comparison_name,"role":comparison_role,
