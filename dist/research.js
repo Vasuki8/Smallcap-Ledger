@@ -328,7 +328,7 @@
     document.addEventListener('keydown', e => { if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.target.closest('input,select,textarea,[contenteditable="true"]') && $('#search-funds')) { e.preventDefault(); $('#search-funds').focus(); } });
     window.addEventListener('storage', e => { if (e.key === SAVED_KEY) { try { ui.saved = codes(JSON.parse(e.newValue || '[]')); } catch { ui.saved = []; } if (ui.view === 'saved') fundTable(); syncButtons(); } });
   }
-  window.LedgerResearch = {install, codes, number, safeURL, sortFunds, sourceState, version: '2026-09-25-desk-2'};
+  window.LedgerResearch = {install, codes, number, safeURL, sortFunds, sourceState, hoursSince, jobState, latestJob, version: '2026-10-05-health'};
   if (typeof document !== 'undefined' && typeof window.route === 'function') {
     install();
     shell();
