@@ -16,6 +16,7 @@ os.environ['SMALLCAP_NO_SCHEDULER']='1'
 from tracker import db
 from tracker.app import funds,fund,holdings,documents,status
 from tracker.categories import assert_publication_scope
+from tracker.csv_safe import safe_record
 
 PUBLIC_PUBLICATION_BUDGET=250*1024*1024
 # Keep deterministic headroom for publication metadata, routing files and archive
@@ -64,7 +65,7 @@ def export(output:Path,repository=''):
     def csv_file(path,rows,fields):
         p=data/path;p.parent.mkdir(parents=True,exist_ok=True)
         with p.open('w',encoding='utf-8-sig',newline='') as f:
-            w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(rows)
+            w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(safe_record(r) for r in rows)
     index=funds();write('funds.json',index)
     from tracker.coverage import report as coverage_report
     coverage=coverage_report()
