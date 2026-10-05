@@ -326,14 +326,16 @@ def benchmark_source_priority(source):
     return 2 if any(host==root or host.endswith('.'+root) for root in official) else 1
 
 
-def save_benchmark(name, points, source):
+def save_benchmark(name, points, source, *, authoritative=True):
+    """Retain every observation but protect canonical dates from manual replacement."""
     records = [(name, day, float(value), source, now()) for day, value in points if float(value) > 0]
     with connect() as c:
         c.executemany("INSERT OR IGNORE INTO benchmark_observations VALUES(?,?,?,?,?)", records)
         for record in records:
             existing=c.execute("SELECT source FROM benchmark WHERE name=? AND date=?",record[:2]).fetchone()
             if existing:
-                incoming=benchmark_source_priority(source);current=benchmark_source_priority(existing['source'])
+                incoming=benchmark_source_priority(source) if authoritative else 0
+                current=benchmark_source_priority(existing['source'])
                 if incoming<current or (incoming==current==1 and existing['source']!=source):
                     continue
             c.execute('''INSERT INTO benchmark VALUES(?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
