@@ -26,7 +26,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  supersession:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      proceed: ${{ steps.guard.outputs.proceed }}
+    steps:
+      - name: Skip superseded push
+        id: guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "push" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CURRENT_MAIN="$(gh api "repos/$GITHUB_REPOSITORY/branches/main" --jq '.commit.sha')"
+          if [ "$CURRENT_MAIN" = "$GITHUB_SHA" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Superseded push: event $GITHUB_SHA; current main $CURRENT_MAIN"
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: supersession
+    if: needs.supersession.outputs.proceed == 'true'
     outputs:
       build_sha: ${{ steps.revision.outputs.sha }}
     permissions:
