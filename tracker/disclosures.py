@@ -275,7 +275,6 @@ def portfolio(family,day,positions,complete,source,h,*,replace_existing_partial=
                     c.execute("""UPDATE holdings SET quantity=? WHERE snapshot_id=?
                       AND lower(trim(name))=lower(trim(?)) AND asset_type=? AND quantity IS NULL""",
                               (q,sid,x["name"],x.get("asset_type","Equity")))
-    db.prune_portfolio_history(family)
     return sid
 
 
