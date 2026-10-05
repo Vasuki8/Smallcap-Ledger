@@ -343,12 +343,29 @@ def save_nav(code, points, source):
           WHERE excluded.source LIKE '%amfiindia.com%' OR nav.source NOT LIKE '%amfiindia.com%' ''', observations)
 
 
+def benchmark_source_priority(source):
+    """Rank benchmark provenance so lower-trust imports cannot replace official index data."""
+    from urllib.parse import urlparse
+    try:
+        host=(urlparse(str(source)).hostname or '').lower().removeprefix('www.')
+    except ValueError:
+        host=''
+    official=('niftyindices.com','nseindia.com','bseindices.com','bseindia.com')
+    return 2 if any(host==root or host.endswith('.'+root) for root in official) else 1
+
+
 def save_benchmark(name, points, source):
     records = [(name, day, float(value), source, now()) for day, value in points if float(value) > 0]
     with connect() as c:
         c.executemany("INSERT OR IGNORE INTO benchmark_observations VALUES(?,?,?,?,?)", records)
-        c.executemany('''INSERT INTO benchmark VALUES(?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
-          value=excluded.value,source=excluded.source,observed_at=excluded.observed_at''', records)
+        for record in records:
+            existing=c.execute("SELECT source FROM benchmark WHERE name=? AND date=?",record[:2]).fetchone()
+            if existing:
+                incoming=benchmark_source_priority(source);current=benchmark_source_priority(existing['source'])
+                if incoming<current or (incoming==current==1 and existing['source']!=source):
+                    continue
+            c.execute('''INSERT INTO benchmark VALUES(?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
+              value=excluded.value,source=excluded.source,observed_at=excluded.observed_at''',record)
 
 
 def metric(family, plan, name, as_of, value, unit, source, content_hash=""):
