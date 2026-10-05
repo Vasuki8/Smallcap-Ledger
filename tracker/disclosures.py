@@ -21,6 +21,7 @@ def official_publication_url(url,amc_match):
     """Registered AMC domains, excluding known sections for another AMC's schemes."""
     if exclusion_reason(amc_match,url):return False
     parsed=urlparse(url);host=(parsed.hostname or '').lower()
+    if parsed.scheme not in ('http','https') or not host:return False
     # Bandhan's public finance API returns disclosure binaries from one fixed
     # Google Cloud Storage bucket. Accept only that exact bucket path.
     if (str(amc_match).lower()=='bandhan' and host=='storage.googleapis.com'
