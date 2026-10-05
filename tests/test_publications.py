@@ -142,6 +142,46 @@ class PublicationTests(unittest.TestCase):
         self.assertIsNone(exclusion_reason('Helios Mutual Fund',own[1],own[0]))
         providers.save_document(family,own[0],own[1],'market view','AMC',origin='AMC')
 
+    def test_bandhan_foreign_presentation_and_hsbc_directory_are_excluded(self):
+        cases=[
+            (
+                'Bandhan Small Cap Fund',9904,'Bandhan Mutual Fund',
+                'Next Presentation on Bandhan Nifty Midcap150 Index Fund – May’26>Partners>Fund House>Presentation',
+                'https://cmsnew.bandhanmutual.com/presentation-on-bandhan-nifty-midcap150-index-fund-may26partnersfund-housepresentation/',
+                'Midcap150 Index Fund',
+            ),
+            (
+                'HSBC Small Cap Fund',9905,'HSBC Mutual Fund',
+                'Performance - Equity Hybrid Debt Global Funds',
+                'https://www.assetmanagement.hsbc.co.in/en/mutual-funds/investor-resources?Date=&Cap=&Doc=product-note-and-deck#&module-17=1',
+                'product-note/deck directory',
+            ),
+        ]
+        with db.connect() as c:
+            for family,code,amc,title,url,_ in cases:
+                c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                          (code,family+' Direct Growth',family,amc,'Direct','Growth','test'))
+                c.execute('''INSERT INTO documents(
+                  family,title,kind,scope,url,first_seen,last_seen,origin)
+                  VALUES(?,?,?,?,?,?,?,?)''',
+                  (family,title,'market view','AMC',url,db.now(),db.now(),'AMC'))
+        for family,code,amc,title,url,reason in cases:
+            with self.subTest(family=family):
+                self.assertEqual(documents(code),[])
+                self.assertIn(reason,exclusion_reason(amc,url,title))
+                with self.assertRaises(ValueError):
+                    providers.save_document(family,title,url,'market view','AMC',origin='AMC')
+
+        # Verified AMC-wide communications remain eligible.
+        self.assertIsNone(exclusion_reason(
+            'Bandhan Mutual Fund',
+            'https://cmsnew.bandhanmutual.com/market_outlook/market-outlook-equity-september-2026/',
+            'Market Outlook - Equity - September 2026'))
+        self.assertIsNone(exclusion_reason(
+            'HSBC Mutual Fund',
+            'https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2026',
+            'RBI Monetary Policy Review - August 2026'))
+
     def test_rules_preserve_legitimate_communications_and_titles(self):
         self.assertTrue(exclusion_reason('SBI Mutual Fund',WRONG.replace('frankline-templeton','Franklin%2DTempleton')))
         self.assertIsNone(exclusion_reason('Franklin Templeton Mutual Fund',WRONG))
