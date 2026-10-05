@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-10-03T21:43:03+00:00",
+  "built_at": "2026-10-05T19:48:53+00:00",
   "staged_category": "mid-cap",
   "counts": {
     "families": 34,
-    "direct_ter": 31,
+    "direct_ter": 32,
     "amfi": 21,
-    "first_party_amc": 10,
-    "remaining": 3
+    "first_party_amc": 11,
+    "remaining": 2
   },
   "families": [
     {
@@ -62,7 +62,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.78,
       "regular_ter": 2.21,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -71,10 +71,10 @@
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 0.88,
-      "regular_ter": 2.13,
-      "as_of": "2026-10-01",
-      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-19&to_date=2026-10-03",
+      "direct_ter": 0.87,
+      "regular_ter": 2.12,
+      "as_of": "2026-10-05",
+      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-21&to_date=2026-10-05",
       "evidence_channel": "first_party_amc",
       "identity": {
         "scheme_name": "Canara Robeco Mid Cap Fund",
@@ -87,7 +87,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.84,
       "regular_ter": 1.74,
-      "as_of": "2026-09-30",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -98,7 +98,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.68,
       "regular_ter": 1.87,
-      "as_of": "2026-09-30",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -107,9 +107,9 @@
       "family": "Franklin India Mid Cap Fund",
       "amc": "Franklin Templeton Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 1.14,
+      "direct_ter": 1.13,
       "regular_ter": 1.92,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -129,9 +129,9 @@
       "family": "HSBC Midcap Fund",
       "amc": "HSBC Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 1.15,
-      "regular_ter": 2.21,
-      "as_of": "2026-09-30",
+      "direct_ter": 1.1,
+      "regular_ter": 2.16,
+      "as_of": "2026-10-04",
       "source": "https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -158,10 +158,10 @@
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 1.11,
-      "regular_ter": 1.85,
-      "as_of": "2026-09-30",
-      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioSep2026.xlsx",
+      "direct_ter": 1.1,
+      "regular_ter": 1.84,
+      "as_of": "2026-10-01",
+      "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
         "scheme_name": "ICICI Prudential Mid Cap Fund"
@@ -172,8 +172,8 @@
       "amc": "ITI Mutual Fund",
       "direct_ter_available": true,
       "direct_ter": 0.91,
-      "regular_ter": 2.43,
-      "as_of": "2026-10-03",
+      "regular_ter": 2.42,
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -182,10 +182,10 @@
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
       "direct_ter_available": true,
-      "direct_ter": 0.78,
-      "regular_ter": 1.88,
-      "as_of": "2026-09-30",
-      "source": "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=9",
+      "direct_ter": 0.76,
+      "regular_ter": 1.86,
+      "as_of": "2026-10-04",
+      "source": "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=10",
       "evidence_channel": "first_party_amc",
       "identity": {
         "scheme_name": "Invesco India Mid Cap Fund",
@@ -195,13 +195,17 @@
     {
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
-      "direct_ter_available": false,
-      "direct_ter": null,
-      "regular_ter": null,
-      "as_of": null,
-      "source": null,
-      "evidence_channel": null,
-      "identity": null
+      "direct_ter_available": true,
+      "direct_ter": 0.94,
+      "regular_ter": 2.44,
+      "as_of": "2026-10-05",
+      "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
+      "evidence_channel": "first_party_amc",
+      "identity": {
+        "scheme_name": "JM Mid Cap Fund",
+        "scheme_code": "MD",
+        "nsdl_scheme_code": "JMFI/O/E/MIF/21/09/0014"
+      }
     },
     {
       "family": "Kotak Mid Cap Fund",
@@ -209,7 +213,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.5359,
       "regular_ter": 1.5093,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-04",
       "source": "https://vatseelabs-s3.kotakmf.com/TER/TER-2026-2027.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -223,7 +227,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.99,
       "regular_ter": 3.08,
-      "as_of": "2026-10-03",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -234,7 +238,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.75,
       "regular_ter": 2.02,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -248,8 +252,8 @@
       "direct_ter_available": true,
       "direct_ter": 0.95,
       "regular_ter": 2.01,
-      "as_of": "2026-10-03",
-      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_03102026.xls",
+      "as_of": "2026-10-04",
+      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_04102026.xls",
       "evidence_channel": "first_party_amc",
       "identity": {
         "scheme_name": "Mirae Asset Midcap Fund",
@@ -284,7 +288,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.72,
       "regular_ter": 1.91,
-      "as_of": "2026-10-03",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -294,8 +298,8 @@
       "amc": "quant Mutual Fund",
       "direct_ter_available": true,
       "direct_ter": 1.16,
-      "regular_ter": 2.18,
-      "as_of": "2026-10-03",
+      "regular_ter": 2.17,
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -306,7 +310,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.02,
       "regular_ter": 1.8,
-      "as_of": "2026-09-30",
+      "as_of": "2026-10-04",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -317,7 +321,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.66,
       "regular_ter": 3.08,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=74&Month=10-2026&strCat=-1&strType=1&page=1&pageSize=1000",
       "evidence_channel": "amfi",
       "identity": {
@@ -326,16 +330,16 @@
         "amfi_mf_id": "74",
         "nsdl_scheme_code": "SAMC/O/E/MIF/25/10/0013"
       },
-      "source_sha256": "aa2237cc943fac4ad6e17271cb614a5bccdbd844017c32be0f43937e78c72499",
-      "source_observed_at": "2026-10-03T21:43:03.895590+00:00",
-      "source_row": 8,
+      "source_sha256": "75b2dae51f4dc66394eee96f1b66e6eee590defef0d0516bec8e29645c5dfeac",
+      "source_observed_at": "2026-10-05T19:48:53.475925+00:00",
+      "source_row": 16,
       "published_row": {
         "NSDLSchemeCode": "SAMC/O/E/MIF/25/10/0013",
         "Scheme_Name": "Samco Mid Cap Fund",
         "SchemeType_Desc": "Open Ended",
         "SchemeCat_Desc": "Equity Schemes - Mid Cap Fund",
         "TER_Year": "2026-2027",
-        "TER_Date": "2026-10-01T00:00:00.000Z",
+        "TER_Date": "2026-10-05T00:00:00.000Z",
         "R_BER": "2.1000",
         "R_BrokerageCost": "0.1300",
         "R_TransactionCost": "0.0200",
@@ -366,8 +370,8 @@
       "amc": "Trust Mutual Fund",
       "direct_ter_available": true,
       "direct_ter": 1.93,
-      "regular_ter": 3.56,
-      "as_of": "2026-10-03",
+      "regular_ter": 3.55,
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -378,7 +382,7 @@
       "direct_ter_available": true,
       "direct_ter": 0.84,
       "regular_ter": 2.02,
-      "as_of": "2026-10-03",
+      "as_of": "2026-10-04",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -389,7 +393,7 @@
       "direct_ter_available": true,
       "direct_ter": 2.36,
       "regular_ter": 2.8,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -400,7 +404,7 @@
       "direct_ter_available": true,
       "direct_ter": 2.2600000000000002,
       "regular_ter": 4.2700000000000005,
-      "as_of": "2026-10-03",
+      "as_of": "2026-10-05",
       "source": "https://www.wealthcompanyamc.in/api/ter-values/year/2026/export",
       "evidence_channel": "first_party_amc",
       "identity": {
@@ -414,7 +418,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.27,
       "regular_ter": 1.97,
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -425,7 +429,7 @@
       "direct_ter_available": true,
       "direct_ter": 1.09,
       "regular_ter": 2.39,
-      "as_of": "2026-10-03",
+      "as_of": "2026-10-05",
       "source": "https://www.amfiindia.com/ter-of-mf-schemes",
       "evidence_channel": "amfi",
       "identity": null
@@ -444,7 +448,6 @@
   ],
   "remaining_families": [
     "BANDHAN MID CAP FUND",
-    "JM Mid Cap Fund",
     "WhiteOak Capital Mid Cap Fund"
   ],
   "production_writes": 0,

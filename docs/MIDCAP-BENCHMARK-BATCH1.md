@@ -1,12 +1,11 @@
 # Mid Cap benchmark identity audit — batch 1
 
-Prepared: 2026-10-03T21:43:58+00:00
+Prepared: 2026-10-05T19:49:46+00:00
 
-Targets: **12** · recovered: **10** · failed: **2** · staged families: **34**.
+Targets: **12** · recovered: **9** · failed: **3** · staged families: **34**.
 
 | Family | AMC | Primary benchmark | Source data as of | Source |
 | --- | --- | --- | --- | --- |
-| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | BSE 150 Mid Cap TRI | Observed current page | https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html |
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | NIFTY Midcap 150 TRI | Observed current page | https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | NIFTY Midcap 150 TRI | Observed current page | https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/ |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | Observed current page | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
@@ -19,6 +18,8 @@ Targets: **12** · recovered: **10** · failed: **2** · staged families: **34**
 
 ## Errors
 
+- Canara Robeco Mid Cap Fund: Client error '403 This request is not authorized to perform this operation.' for url 'https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
 - Franklin India Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity
 - UTI - Mid Cap Fund: First-party page does not contain the exact staged Mid Cap family identity
 

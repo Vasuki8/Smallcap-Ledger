@@ -1,30 +1,30 @@
 {
-  "checked_at": "2026-10-03T22:04:05+00:00",
+  "checked_at": "2026-10-05T20:11:24+00:00",
   "scope": "current_production_operational_health",
   "database": {
-    "bytes": 144601088,
+    "bytes": 149192704,
     "integrity": "ok",
     "foreign_key_violations": []
   },
   "archive": {
-    "files": 6479,
-    "bytes": 4947810958,
+    "files": 6774,
+    "bytes": 5132489437,
     "metadata_only_files": 0,
     "metadata_only_bytes": 0,
     "retention_by_binary_state": {
       "retained": {
-        "files": 6479,
-        "bytes": 4947810958
+        "files": 6774,
+        "bytes": 5132489437
       }
     }
   },
   "release_archive": {
     "status": "ok",
     "tag": "tracker-history",
-    "asset_count": 144,
-    "compressed_bytes": 3787786040,
+    "asset_count": 146,
+    "compressed_bytes": 3835517754,
     "review_threshold_assets": 750,
-    "remaining_to_review_threshold": 606,
+    "remaining_to_review_threshold": 604,
     "review_due": false,
     "policy": "review_only_no_automatic_deletion"
   },
@@ -32,10 +32,10 @@
     "hard_budget_bytes": 262144000,
     "reserve_bytes": 5242880,
     "selection_limit_bytes": 256901120,
-    "selected_files": 148,
-    "selected_bytes": 256900365,
-    "headroom_to_selection_limit_bytes": 755,
-    "headroom_to_hard_budget_bytes": 5243635
+    "selected_files": 174,
+    "selected_bytes": 256900780,
+    "headroom_to_selection_limit_bytes": 340,
+    "headroom_to_hard_budget_bytes": 5243220
   },
   "coverage": {
     "funds": 36,
@@ -44,10 +44,10 @@
     "ter": 36,
     "base_expense_ratio": 36,
     "portfolio": 35,
-    "portfolio_complete": 30,
+    "portfolio_complete": 29,
     "portfolio_fresh": 34,
-    "portfolio_fresh_complete": 30,
-    "portfolio_partial": 5,
+    "portfolio_fresh_complete": 29,
+    "portfolio_partial": 6,
     "benchmark_identity": 36
   },
   "safety": {

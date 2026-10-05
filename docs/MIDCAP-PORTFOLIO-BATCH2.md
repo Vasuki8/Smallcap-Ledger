@@ -1,6 +1,6 @@
 # Mid Cap structured current portfolio evidence — batch 2
 
-Prepared: 2026-10-03T21:44:59+00:00
+Prepared: 2026-10-05T19:50:56+00:00
 
 Expected month-end: **2026-08-31** · targets: **3** · recovered: **3** · failed: **0**.
 

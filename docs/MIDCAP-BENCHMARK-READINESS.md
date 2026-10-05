@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **29 / 34** · remaining: **5**.
+Benchmark identity: **28 / 34** · remaining: **6**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -9,7 +9,7 @@ Benchmark identity: **29 / 34** · remaining: **5**.
 | BANDHAN MID CAP FUND | Bandhan Mutual Fund | BSE 150 Midcap TRI | https://assets.bandhanmutual.com/2025/03/339eeb25-bandhan-performance-table-feb-2025.pdf |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Nifty Midcap 150 TRI | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
-| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | BSE 150 Mid Cap TRI | https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html |
+| Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | Gap | Gap |
 | DSP Midcap Fund | DSP Mutual Fund | Nifty Midcap 150 TRI | https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth |
 | Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Nifty Midcap 150 TRI | https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
