@@ -19,6 +19,7 @@ from . import db,analytics,providers,disclosures
 from .portfolio_limitations import portfolio_limitation
 from .coverage import expected_portfolio_as_of
 from .clock import india_today
+from .csv_safe import safe_record
 from .sync import updater
 
 
@@ -406,7 +407,7 @@ def download_archive(content_hash:str):
 def csv_response(records,filename):
     s=io.StringIO(newline='')
     if records:
-        w=csv.DictWriter(s,fieldnames=list(records[0]));w.writeheader();w.writerows(records)
+        w=csv.DictWriter(s,fieldnames=list(records[0]));w.writeheader();w.writerows(safe_record(r) for r in records)
     return Response(s.getvalue(),media_type='text/csv',headers={'Content-Disposition':f'attachment; filename="{filename}"'})
 
 
