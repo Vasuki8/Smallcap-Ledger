@@ -50,6 +50,19 @@
     if (['Gap', 'Partial', 'Limited', 'Error', 'Failed'].includes(source.status)) return 'attention';
     return 'pending';
   }
+  function hoursSince(value, now = Date.now()) {
+    const stamp = Date.parse(value), current = Number(now);
+    return Number.isFinite(stamp) && Number.isFinite(current) ? (current - stamp) / 3600000 : null;
+  }
+  function jobState(job) {
+    if (!job) return 'missing';
+    if (job.status === 'ok') return 'ok';
+    if (job.status === 'partial') return 'partial';
+    return ['error','interrupted','running'].includes(job.status) ? 'attention' : 'unknown';
+  }
+  function latestJob(jobs, kind) {
+    return (Array.isArray(jobs) ? jobs : []).find(job => job?.kind === kind) || null;
+  }
   let installed = false;
   function install() {
     if (installed) return;
