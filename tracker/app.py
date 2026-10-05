@@ -258,7 +258,10 @@ def holdings(snapshot_id:int):
     p['previous']=prior;p['changes']=[]
     if prior:
         old=db.rows("SELECT * FROM holdings WHERE snapshot_id=?",(prior['id'],))
-        key=lambda h:h['isin'] or h['name'].lower().strip()
+        def key(h):
+            isin=str(h.get('isin') or '').strip().upper()
+            if isin:return ('isin',isin)
+            return ('name',h['name'].lower().strip(),str(h.get('asset_type') or 'Equity').lower().strip())
         before={key(h):h for h in old};after={key(h):h for h in p['holdings']}
         for h in p['holdings']:
             a=before.get(key(h))
