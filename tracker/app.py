@@ -474,7 +474,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             points=[(providers.iso(r['date']),providers.number(r['value'])) for r in records]
             if any(v<=0 or d>today for d,v in points):raise ValueError('Benchmark values must be positive and dates cannot be in the future')
             h=db.archive(content,'text/csv')
-            db.save_benchmark(benchmark.strip(),points,source)
+            db.save_benchmark(benchmark.strip(),points,source,origin='user_import')
         elif kind=='portfolio':
             s=scheme(code);day=providers.iso(as_of)
             if day>today:raise ValueError('Portfolio date cannot be in the future')
