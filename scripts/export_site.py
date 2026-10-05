@@ -26,6 +26,11 @@ PUBLIC_PUBLICATION_SELECTION_LIMIT=PUBLIC_PUBLICATION_BUDGET-PUBLIC_PUBLICATION_
 SITE_SIZE_LIMIT=400*1024*1024
 
 
+def public_documents(records):
+    """Only verified AMC-origin documents are eligible for public Pages export."""
+    return [d for d in records if d.get('origin')=='AMC']
+
+
 def select_publication_candidates(candidates,limit=PUBLIC_PUBLICATION_SELECTION_LIMIT):
     selected=set();total=0
     for item in sorted(candidates,key=lambda x:(x['priority'],x['date']),reverse=True):
@@ -76,8 +81,8 @@ def export(output:Path,repository=''):
         downloads[f'/api/export/metrics/{code}']=f'data/downloads/metrics-{family_id}.csv'
         snapshot_ids.update(p['id'] for p in detail['portfolios'])
         if family_id not in done:
-            done.add(family_id);docs=documents(code)
-            assert not any(d['kind']=='news' for d in docs)
+            done.add(family_id);docs=public_documents(documents(code))
+            assert all(d.get('origin')=='AMC' and d['kind']!='news' for d in docs)
             # The cumulative tracker-history release retains every archived version.
             # GitHub Pages publishes only a bounded subset of the newest saved copies
             # so growing document history can never block fresh NAV/metric deployment.
