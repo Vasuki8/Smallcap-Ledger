@@ -6,6 +6,13 @@ from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import datetime,timezone,timedelta
 from . import db,providers,disclosures,amfi_metrics,amc_metrics,amc_expenses
 
+def retry_interval(status, normal_seconds):
+    """Retry failed/partial local updates earlier without hammering persistent source gaps."""
+    if status=='error':return min(normal_seconds,1800)
+    if status=='partial':return min(normal_seconds,2*3600)
+    return normal_seconds
+
+
 def nav_history_recovery_since(previous_good,now=None):
     """Return the last good NAV-run time only when a real scheduler gap exists."""
     if not previous_good:return ''
@@ -111,7 +118,7 @@ class Updater:
                     if kind in ('documents','metrics') and not has_funds: continue
                     previous=db.one("SELECT finished_at,status FROM jobs WHERE kind=? AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1",(kind,))
                     # Failed sources retry with bounded backoff, retaining all previous observations.
-                    due=not previous or previous['status']=='interrupted' or (datetime.now(timezone.utc)-datetime.fromisoformat(previous['finished_at'])).total_seconds()> (min(seconds,1800) if previous['status']=='error' else seconds)
+                    due=not previous or previous['status']=='interrupted' or (datetime.now(timezone.utc)-datetime.fromisoformat(previous['finished_at'])).total_seconds()> retry_interval(previous['status'],seconds)
                     if due:self.launch(kind)
             self.stop.wait(15)
 
