@@ -38,6 +38,34 @@ class BenchmarkAuthorityImportTests(unittest.TestCase):
                 (name,day,99999.0))
             self.assertEqual(imported['authority'],0)
 
+    def test_series_provenance_distinguishes_verified_user_and_mixed_history(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
+            db.init()
+            verified='Verified TRI'
+            db.save_benchmark(verified,[('2026-09-01',100),('2026-09-02',101)],
+                              'https://index.example/tri',authoritative=True)
+            self.assertEqual(db.benchmark_info(verified)['provenance_status'],'verified_collector')
+
+            manual='Manual TRI'
+            db.save_benchmark(manual,[('2026-09-01',200)],'https://example.com/manual.csv')
+            self.assertEqual(db.benchmark_info(manual)['provenance_status'],'user_supplied')
+
+            mixed='Mixed TRI'
+            db.save_benchmark(mixed,[('2026-09-01',300)],'https://example.com/manual.csv')
+            db.save_benchmark(mixed,[('2026-09-02',301)],'https://index.example/tri',authoritative=True)
+            info=db.benchmark_info(mixed)
+            self.assertEqual(info['provenance_status'],'mixed')
+            self.assertEqual((info['authoritative_points'],info['points']),(1,2))
+
+    def test_static_export_and_ui_surface_benchmark_provenance(self):
+        root=Path(__file__).resolve().parents[1]
+        export=(root/'scripts'/'export_site.py').read_text(encoding='utf-8')
+        ui=(root/'dist'/'app.js').read_text(encoding='utf-8')
+        self.assertIn("db.benchmark_info(row['name'])",export)
+        self.assertIn('Verified collector',ui)
+        self.assertIn('User-supplied',ui)
+        self.assertIn('provenance_status',ui)
+
     def test_legacy_nifty_rows_are_promoted_only_for_completed_collector_years(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
             Path(tmp).mkdir(parents=True,exist_ok=True)
