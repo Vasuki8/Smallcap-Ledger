@@ -27,6 +27,8 @@ concurrency:
 
 jobs:
   build:
+    outputs:
+      build_sha: ${{ steps.revision.outputs.sha }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -50,7 +52,10 @@ jobs:
       - name: Install locked dependencies
         run: uv sync --frozen
       - name: Capture tested revision
-        run: echo "SMALLCAP_BUILD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+        id: revision
+        run: |
+          echo "SMALLCAP_BUILD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Preflight Python syntax
         run: uv run --frozen python -m compileall -q tracker scripts tests
       - name: Restore cumulative history
@@ -317,6 +322,7 @@ jobs:
   deploy:
     needs: build
     permissions:
+      contents: write
       pages: write
       id-token: write
     runs-on: ubuntu-latest
@@ -328,3 +334,19 @@ jobs:
       - name: Publish website
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Record successful Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SMALLCAP_BUILD_SHA: ${{ needs.build.outputs.build_sha }}
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          echo "::add-mask::$AUTH_HEADER"
+          git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH_HEADER"
+          trap 'git config --local --unset-all http.https://github.com/.extraheader || true' EXIT
+          python scripts/record_deployment.py --page-url "$PAGES_URL" --run-id "$GITHUB_RUN_ID"
