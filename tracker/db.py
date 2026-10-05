@@ -84,10 +84,12 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS benchmark(
           name TEXT NOT NULL, date TEXT NOT NULL, value REAL NOT NULL CHECK(value>0),
           source TEXT NOT NULL, observed_at TEXT NOT NULL,
+          origin TEXT NOT NULL DEFAULT 'automatic',
           PRIMARY KEY(name,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS benchmark_observations(
           name TEXT NOT NULL,date TEXT NOT NULL,value REAL NOT NULL,source TEXT NOT NULL,
-          observed_at TEXT NOT NULL,PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;
+          observed_at TEXT NOT NULL,origin TEXT NOT NULL DEFAULT 'automatic',
+          PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS metrics(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, plan TEXT NOT NULL DEFAULT 'All',
           metric TEXT NOT NULL, as_of TEXT NOT NULL, value TEXT NOT NULL, unit TEXT,
@@ -151,6 +153,7 @@ def init(recover=False):
     migrate_portfolio_completeness()
     migrate_holding_quantity()
     migrate_category_staged_history_metadata()
+    migrate_benchmark_origin()
     prune_portfolio_history()
 
 
@@ -193,6 +196,15 @@ def migrate_category_staged_history_metadata():
             'PRAGMA table_info(category_staged_nav)').fetchall()}
         if 'source_url' not in nav_columns:
             c.execute("ALTER TABLE category_staged_nav ADD COLUMN source_url TEXT NOT NULL DEFAULT ''")
+
+
+def migrate_benchmark_origin():
+    """Add explicit provenance for canonical and retained benchmark observations."""
+    with connect() as c:
+        for table in ('benchmark','benchmark_observations'):
+            columns={row['name'] for row in c.execute(f'PRAGMA table_info({table})').fetchall()}
+            if 'origin' not in columns:
+                c.execute(f"ALTER TABLE {table} ADD COLUMN origin TEXT NOT NULL DEFAULT 'automatic'")
 
 
 def prune_portfolio_history(family=None):
@@ -343,8 +355,9 @@ def save_nav(code, points, source):
           WHERE excluded.source LIKE '%amfiindia.com%' OR nav.source NOT LIKE '%amfiindia.com%' ''', observations)
 
 
-def benchmark_source_priority(source):
-    """Rank benchmark provenance so lower-trust imports cannot replace official index data."""
+def benchmark_source_priority(source,origin='automatic'):
+    """Rank provenance; only automatically fetched official-provider data is authoritative."""
+    if origin!='automatic':return 1
     from urllib.parse import urlparse
     try:
         host=(urlparse(str(source)).hostname or '').lower().removeprefix('www.')
@@ -354,18 +367,29 @@ def benchmark_source_priority(source):
     return 2 if any(host==root or host.endswith('.'+root) for root in official) else 1
 
 
-def save_benchmark(name, points, source):
-    records = [(name, day, float(value), source, now()) for day, value in points if float(value) > 0]
+def save_benchmark(name, points, source, *, origin='automatic'):
+    if origin not in ('automatic','user_import'):raise ValueError('Unknown benchmark origin')
+    timestamp=now()
+    records=[(name,day,float(value),source,timestamp,origin) for day,value in points if float(value)>0]
     with connect() as c:
-        c.executemany("INSERT OR IGNORE INTO benchmark_observations VALUES(?,?,?,?,?)", records)
+        c.executemany('''INSERT INTO benchmark_observations(
+          name,date,value,source,observed_at,origin) VALUES(?,?,?,?,?,?)
+          ON CONFLICT(name,date,value,source) DO UPDATE SET
+            observed_at=excluded.observed_at,
+            origin=CASE WHEN excluded.origin='automatic' THEN 'automatic'
+                        ELSE benchmark_observations.origin END''',records)
         for record in records:
-            existing=c.execute("SELECT source FROM benchmark WHERE name=? AND date=?",record[:2]).fetchone()
+            name_,day,value,source_,observed_at,origin_=record
+            existing=c.execute("SELECT source,origin FROM benchmark WHERE name=? AND date=?",(name_,day)).fetchone()
             if existing:
-                incoming=benchmark_source_priority(source);current=benchmark_source_priority(existing['source'])
-                if incoming<current or (incoming==current==1 and existing['source']!=source):
+                incoming=benchmark_source_priority(source_,origin_)
+                current=benchmark_source_priority(existing['source'],existing['origin'])
+                if incoming<current or (incoming==current==1 and existing['source']!=source_):
                     continue
-            c.execute('''INSERT INTO benchmark VALUES(?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
-              value=excluded.value,source=excluded.source,observed_at=excluded.observed_at''',record)
+            c.execute('''INSERT INTO benchmark(name,date,value,source,observed_at,origin)
+              VALUES(?,?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
+              value=excluded.value,source=excluded.source,
+              observed_at=excluded.observed_at,origin=excluded.origin''',record)
 
 
 def metric(family, plan, name, as_of, value, unit, source, content_hash=""):
