@@ -151,7 +151,6 @@ def init(recover=False):
     migrate_portfolio_completeness()
     migrate_holding_quantity()
     migrate_category_staged_history_metadata()
-    prune_portfolio_history()
 
 
 def migrate_portfolio_completeness():
@@ -196,40 +195,13 @@ def migrate_category_staged_history_metadata():
 
 
 def prune_portfolio_history(family=None):
-    """Retain parsed holdings only for the newest two calendar months per fund.
+    """Deprecated compatibility shim: structured portfolio history is retained.
 
-    Original AMC documents and hashes remain in the source archive. Within each
-    retained month, only the latest reporting date is kept; multiple verified
-    views of that same date may coexist until the API selects the preferred one.
+    Older code called this after every parsed portfolio and at database startup.
+    It intentionally performs no deletion so monthly holdings remain available
+    for historical analytics and can be reconstructed from retained AMC files.
     """
-    with connect() as c:
-        families=[family] if family else [row['family'] for row in c.execute(
-            'SELECT DISTINCT family FROM portfolios').fetchall()]
-        removed=0
-        for current in families:
-            months=[row['month'] for row in c.execute(
-                "SELECT DISTINCT substr(as_of,1,7) month FROM portfolios WHERE family=? ORDER BY month DESC",
-                (current,)).fetchall()]
-            keep=set(months[:2])
-            doomed=set()
-            if keep:
-                marks=','.join('?' for _ in keep)
-                params=(current,*sorted(keep))
-                doomed.update(row['id'] for row in c.execute(
-                    f"SELECT id FROM portfolios WHERE family=? AND substr(as_of,1,7) NOT IN ({marks})",params).fetchall())
-                for month in keep:
-                    latest=c.execute(
-                        "SELECT MAX(as_of) FROM portfolios WHERE family=? AND substr(as_of,1,7)=?",
-                        (current,month)).fetchone()[0]
-                    doomed.update(row['id'] for row in c.execute(
-                        "SELECT id FROM portfolios WHERE family=? AND substr(as_of,1,7)=? AND as_of<?",
-                        (current,month,latest)).fetchall())
-            if doomed:
-                ids=tuple(sorted(doomed));marks=','.join('?' for _ in ids)
-                c.execute(f'DELETE FROM holdings WHERE snapshot_id IN ({marks})',ids)
-                c.execute(f'DELETE FROM portfolios WHERE id IN ({marks})',ids)
-                removed+=len(ids)
-        return removed
+    return 0
 
 def rows(sql, params=()):
     with connect() as c:
