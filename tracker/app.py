@@ -450,7 +450,8 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
                      title:str=Form(''),document_kind:str=Form('disclosure'),scope:str=Form('Fund')):
     content=await file.read(10*1024*1024+1)
     if len(content)>10*1024*1024:raise HTTPException(400,'Maximum import size is 10 MB')
-    if not source.startswith(('http://','https://')):raise HTTPException(400,'Provide the original public source URL')
+    try:providers.public_url(source)
+    except (ValueError,OSError) as e:raise HTTPException(400,'Provide a public source URL: '+str(e))
     today=india_today().isoformat()
     try:
         if kind=='document':
