@@ -212,6 +212,44 @@ class PublicationCoverageTests(unittest.TestCase):
             priorities.get("repair_unarchived_communication_documents",{}).get("affected_funds",[]),
         )
 
+    def test_cross_scheme_abakkus_liquid_presentation_does_not_create_archive_gap(self):
+        family='Abakkus Small Cap Fund'
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO schemes(code,name,family,amc,plan,option,category_source)
+                   VALUES(?,?,?,?,?,?,?)""",
+                (9810,'Abakkus Direct Growth',family,'Abakkus Mutual Fund',
+                 'Direct','Growth','test'),
+            )
+        good=providers.save_document(
+            family,'Market Outlook - August 2026',
+            'https://insights.abakkusinvest.com/market-outlook-august-2026/',
+            'market view','AMC',published='2026-08-11',origin='AMC')
+        digest=db.archive(b'<html>Abakkus August outlook</html>','text/html')
+        providers.doc_version(good,digest)
+
+        wrong=('https://www.abakkusmf.com/img/docs/LiquidFund/'
+               'Abakkus_Liquid_Fund_Presentation.pdf')
+        # Simulate the historical false association without invoking the new guard.
+        with db.connect() as c:
+            c.execute(
+                """INSERT INTO documents(
+                   family,title,kind,scope,url,first_seen,last_seen,origin)
+                   VALUES(?,?,?,?,?,?,?,?)""",
+                (family,'Scheme Presentation','market view','AMC',wrong,
+                 db.now(),db.now(),'AMC'),
+            )
+
+        row=next(r for r in report()['funds'] if r['family']==family)
+        self.assertEqual(row['communication_count'],1)
+        self.assertEqual(row['archived_communication_count'],1)
+        self.assertEqual(row['issues'],[])
+        priorities={p['code']:p for p in report()['repair_priorities']}
+        self.assertNotIn(
+            family,
+            priorities.get('repair_unarchived_communication_documents',{}).get('affected_funds',[]),
+        )
+
     def test_missing_published_date_is_visible_without_using_first_seen(self):
         digest=db.archive(b"letter","application/pdf")
         doc=providers.save_document(
