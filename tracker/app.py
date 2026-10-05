@@ -460,13 +460,9 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             if ext not in types or document_kind not in ('factsheet','portfolio','disclosure','scheme document','market view') or scope not in ('Fund','AMC'):
                 raise ValueError('Choose a supported document type and scope')
             h=db.archive(content,types[ext]);did=providers.save_document(s['family'],title.strip() or file.filename,source,document_kind,scope,origin='User import · unverified source')
-            providers.doc_version(did,h);parse_note='Original document archived.'
-            try:
-                if ext=='.xml':disclosures.summary_xml(content,s['family'],source,h)
-                elif ext in ('.xls','.xlsx'):disclosures.spreadsheet(content,s['family'],source,h)
-                elif ext=='.pdf' and document_kind in ('factsheet','portfolio'):disclosures.factsheet_pdf(content,s['family'],source,h)
-            except Exception:parse_note+=' Layout could not be parsed automatically; the original remains available.'
-            return {'ok':True,'rows':1,'kind':kind,'note':parse_note}
+            providers.doc_version(did,h)
+            return {'ok':True,'rows':1,'kind':kind,
+                    'note':'Original document archived as user-supplied, unverified evidence. Its contents are not promoted automatically into structured fund data.'}
         records=list(csv.DictReader(io.StringIO(content.decode('utf-8-sig'))))
         if not records or len(records)>100000:raise ValueError('CSV must contain 1–100,000 records')
         if kind=='benchmark':
