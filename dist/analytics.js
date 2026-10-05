@@ -64,7 +64,7 @@
     else if(available)comparisonStatus='available';
     else if(comparisonRole==='reported_benchmark')comparisonStatus='reported_series_missing';
     else comparisonStatus='alternate_series_missing';
-    const selected=total.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),navSelected=nav.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),common=aligned(total.filter(p=>!end||p[0]<=end),bp);
+    const selected=total.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),navSelected=nav.filter(p=>(!start||p[0]>=start)&&(!end||p[0]<=end)),common=aligned(selected,bp);
     const source=available?{...benchmark,data:undefined,points:bp.length}:null;
     return {nav:navSelected,total_return_series:selected,method,can_total_return:!!selected.length,
       reported_benchmark:reported,
