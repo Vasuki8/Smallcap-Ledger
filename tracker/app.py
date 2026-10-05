@@ -429,7 +429,7 @@ def export_portfolio(snapshot_id:int):
     return csv_response([{k:h.get(k) for k in fields} for h in p['holdings']],f'portfolio-{p["as_of"]}.csv')
 
 
-@app.get('/api/export/backup')
+@app.post('/api/export/backup')
 def backup():
     temp=Path(tempfile.mkdtemp(prefix='smallcap-backup-'))
     with db.connect() as source:
