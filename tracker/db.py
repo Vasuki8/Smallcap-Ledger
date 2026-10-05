@@ -83,10 +83,11 @@ def init(recover=False):
         CREATE INDEX IF NOT EXISTS idx_fetches_url_time ON fetches(url,fetched_at);
         CREATE TABLE IF NOT EXISTS benchmark(
           name TEXT NOT NULL, date TEXT NOT NULL, value REAL NOT NULL CHECK(value>0),
-          source TEXT NOT NULL, observed_at TEXT NOT NULL,
-          PRIMARY KEY(name,date)) WITHOUT ROWID;
+          source TEXT NOT NULL, authority INTEGER NOT NULL DEFAULT 0 CHECK(authority IN (0,1)),
+          observed_at TEXT NOT NULL, PRIMARY KEY(name,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS benchmark_observations(
           name TEXT NOT NULL,date TEXT NOT NULL,value REAL NOT NULL,source TEXT NOT NULL,
+          authority INTEGER NOT NULL DEFAULT 0 CHECK(authority IN (0,1)),
           observed_at TEXT NOT NULL,PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS metrics(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, plan TEXT NOT NULL DEFAULT 'All',
@@ -151,6 +152,7 @@ def init(recover=False):
     migrate_portfolio_completeness()
     migrate_holding_quantity()
     migrate_category_staged_history_metadata()
+    migrate_benchmark_authority()
 
 
 def migrate_portfolio_completeness():
@@ -192,6 +194,31 @@ def migrate_category_staged_history_metadata():
             'PRAGMA table_info(category_staged_nav)').fetchall()}
         if 'source_url' not in nav_columns:
             c.execute("ALTER TABLE category_staged_nav ADD COLUMN source_url TEXT NOT NULL DEFAULT ''")
+
+
+def migrate_benchmark_authority():
+    """Persist collection provenance separately from the user-supplied source URL."""
+    with connect() as c:
+        columns={row['name'] for row in c.execute('PRAGMA table_info(benchmark)').fetchall()}
+        if 'authority' not in columns:
+            c.execute("ALTER TABLE benchmark ADD COLUMN authority INTEGER NOT NULL DEFAULT 0 CHECK(authority IN (0,1))")
+        observation_columns={row['name'] for row in c.execute(
+            'PRAGMA table_info(benchmark_observations)').fetchall()}
+        if 'authority' not in observation_columns:
+            c.execute("ALTER TABLE benchmark_observations ADD COLUMN authority INTEGER NOT NULL DEFAULT 0 CHECK(authority IN (0,1))")
+        # Before this field existed, the automatic Nifty collector stored this
+        # fixed display source and recorded a completed per-year checkpoint.
+        # Promote only rows for years the tracker itself says it collected.
+        source='https://www.niftyindices.com/reports/historical-data'
+        name='Nifty Smallcap 250 TRI'
+        for table in ('benchmark','benchmark_observations'):
+            c.execute(f"""UPDATE {table} SET authority=1
+              WHERE authority=0 AND name=? AND source=?
+              AND EXISTS (
+                SELECT 1 FROM settings s
+                WHERE s.key='nifty_year_'||substr({table}.date,1,4)
+                  AND s.value='true'
+              )""",(name,source))
 
 
 def prune_portfolio_history(family=None):
@@ -315,29 +342,33 @@ def save_nav(code, points, source):
           WHERE excluded.source LIKE '%amfiindia.com%' OR nav.source NOT LIKE '%amfiindia.com%' ''', observations)
 
 
-def benchmark_source_priority(source):
-    """Rank benchmark provenance so lower-trust imports cannot replace official index data."""
-    from urllib.parse import urlparse
-    try:
-        host=(urlparse(str(source)).hostname or '').lower().removeprefix('www.')
-    except ValueError:
-        host=''
-    official=('niftyindices.com','nseindia.com','bseindices.com','bseindia.com')
-    return 2 if any(host==root or host.endswith('.'+root) for root in official) else 1
-
-
-def save_benchmark(name, points, source):
-    records = [(name, day, float(value), source, now()) for day, value in points if float(value) > 0]
+def save_benchmark(name, points, source, *, authoritative=False):
+    """Retain all observations while protecting canonical values by ingestion provenance."""
+    authority=1 if authoritative else 0
+    observed=now()
+    records=[(name,day,float(value),source,authority,observed)
+             for day,value in points if float(value)>0]
     with connect() as c:
-        c.executemany("INSERT OR IGNORE INTO benchmark_observations VALUES(?,?,?,?,?)", records)
+        c.executemany('''INSERT INTO benchmark_observations(
+          name,date,value,source,authority,observed_at) VALUES(?,?,?,?,?,?)
+          ON CONFLICT(name,date,value,source) DO UPDATE SET
+          authority=MAX(benchmark_observations.authority,excluded.authority),
+          observed_at=excluded.observed_at''',records)
         for record in records:
-            existing=c.execute("SELECT source FROM benchmark WHERE name=? AND date=?",record[:2]).fetchone()
+            existing=c.execute(
+                "SELECT source,authority FROM benchmark WHERE name=? AND date=?",
+                record[:2]).fetchone()
             if existing:
-                incoming=benchmark_source_priority(source);current=benchmark_source_priority(existing['source'])
-                if incoming<current or (incoming==current==1 and existing['source']!=source):
+                incoming=authority;current=int(existing['authority'] or 0)
+                if current and not incoming:
                     continue
-            c.execute('''INSERT INTO benchmark VALUES(?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
-              value=excluded.value,source=excluded.source,observed_at=excluded.observed_at''',record)
+                if not current and not incoming and existing['source']!=source:
+                    continue
+            c.execute('''INSERT INTO benchmark(
+              name,date,value,source,authority,observed_at) VALUES(?,?,?,?,?,?)
+              ON CONFLICT(name,date) DO UPDATE SET
+              value=excluded.value,source=excluded.source,
+              authority=excluded.authority,observed_at=excluded.observed_at''',record)
 
 
 def metric(family, plan, name, as_of, value, unit, source, content_hash=""):
