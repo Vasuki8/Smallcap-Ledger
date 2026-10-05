@@ -1,4 +1,7 @@
-"""AMC parser date guards must use the Asia/Kolkata reporting calendar."""
+"""AMC parser date guards must use the Asia/Kolkata reporting calendar.
+
+These regressions intentionally exercise the UTC-to-IST calendar boundary.
+"""
 import tempfile
 import unittest
 from datetime import date
