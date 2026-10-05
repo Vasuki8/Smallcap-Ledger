@@ -15,6 +15,7 @@ from datetime import date, datetime
 from urllib.parse import unquote, urlparse
 
 from . import disclosures
+from .clock import india_today
 
 FAMILY = "Axis Small Cap Fund"
 ROOT = "https://www.axismf.com"
@@ -36,7 +37,7 @@ _TITLE = re.compile(
 
 def closed_month_ends(today=None):
     """Newest two closed month-ends, matching rolling portfolio retention."""
-    today = today or date.today()
+    today = today or india_today()
     cursor = date(today.year, today.month, 1)
     for _ in range(2):
         year, month = (
@@ -96,7 +97,7 @@ def validate_monthly_branch(raw):
 
 def document_candidates(raw, today=None):
     """Return exact Small Cap monthly workbooks for the newest two closed months."""
-    today = today or date.today()
+    today = today or india_today()
     data = _json(raw, "monthly scheme documents endpoint")
 
     schemes = data.get("schemeCategories")
