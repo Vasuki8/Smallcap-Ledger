@@ -5,6 +5,7 @@ import re
 from datetime import date
 from urllib.parse import urlparse
 from . import db
+from .clock import india_today
 
 PARSER_VERSION='amc-reports-2026-09-v130'
 # Parser upgrades are full-catalog by default. Versions listed here changed
@@ -460,7 +461,7 @@ def should_reprocess_existing(family,url,h=None):
 
 
 def monthly_sources(today=None):
-    today=today or date.today()
+    today=today or india_today()
     for offset in range(3):
         year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
         name=calendar.month_name[month].lower()
