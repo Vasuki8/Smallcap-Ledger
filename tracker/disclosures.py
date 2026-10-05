@@ -25,8 +25,9 @@ def official_publication_url(url,amc_match):
         and parsed.path.startswith('/nonprod-static-assets-121to59kaawfgfi7bol/')):
         return True
     roots={urlparse(u).hostname.lower().removeprefix('www.') for amc,u,_ in json.loads((db.ROOT/'tracker'/'sources.json').read_text()) if amc.lower()==amc_match.lower()}
-    # Custom source pages are explicit owner-provided AMC sources.
-    roots.update((urlparse(r['url']).hostname or '').lower().removeprefix('www.') for r in db.rows('SELECT url FROM source_pages WHERE lower(amc_match)=lower(?)',(amc_match,)))
+    # Only reviewed, version-controlled source domains establish publication
+    # ownership. Owner-added source pages remain discovery inputs and must not
+    # silently expand the AMC trust boundary.
     hosts=json.loads((db.ROOT/'tracker'/'document_hosts.json').read_text())
     roots.update(hosts.get(amc_match,[]))
     return any(root and (host==root or host.endswith('.'+root)) for root in roots)
