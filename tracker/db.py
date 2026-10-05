@@ -371,6 +371,22 @@ def save_benchmark(name, points, source, *, authoritative=False):
               authority=excluded.authority,observed_at=excluded.observed_at''',record)
 
 
+def benchmark_info(name):
+    coverage=one("""SELECT MIN(date) first,MAX(date) last,COUNT(*) points,
+      COALESCE(SUM(authority),0) authoritative_points
+      FROM benchmark WHERE name=?""",(name,))
+    if not coverage or not coverage['points']:return None
+    latest=one("SELECT source,authority FROM benchmark WHERE name=? ORDER BY date DESC LIMIT 1",(name,))
+    coverage['name']=name
+    coverage['source']=latest['source']
+    coverage['latest_authoritative']=bool(latest['authority'])
+    coverage['verified']=coverage['authoritative_points']==coverage['points']
+    coverage['provenance_status']=('verified_collector' if coverage['verified']
+                                   else 'user_supplied' if coverage['authoritative_points']==0
+                                   else 'mixed')
+    return coverage
+
+
 def metric(family, plan, name, as_of, value, unit, source, content_hash=""):
     with connect() as c:
         c.execute("INSERT OR IGNORE INTO metrics(family,plan,metric,as_of,value,unit,source,hash,observed_at) VALUES(?,?,?,?,?,?,?,?,?)",
