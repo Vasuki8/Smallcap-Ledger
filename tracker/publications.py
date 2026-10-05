@@ -15,6 +15,16 @@ def exclusion_reason(amc, url, title=''):
         combined=(str(title or '')+' '+path).lower()
         if re.search(r'\babakkus[\s_-]*liquid[\s_-]*fund[\s_-]*presentation\b',combined):
             return 'Abakkus Liquid Fund presentation; unrelated to Abakkus Small Cap Fund'
+    if re.search(r'\bhelios\b', amc, re.I):
+        combined=(str(title or '')+' '+path).lower()
+        foreign_scheme=re.search(
+            r'\bhelios[\s_-]*(?:flexi[\s_-]*cap|overnight|(?:large[\s&_-]*)?mid[\s_-]*cap|'
+            r'financial[\s_-]*services|arbitrage)[\s_-]*fund\b',
+            combined,
+        )
+        product_material=re.search(r'product[\s_-]*note|presentation',combined)
+        if foreign_scheme and product_material:
+            return 'Helios non-Small-Cap fund product material; unrelated to Helios Small Cap Fund'
     if not re.search(r'\bsbi\b', amc, re.I):
         return None
     host = (parsed.hostname or '').lower()
