@@ -6,6 +6,7 @@ from datetime import date,timedelta
 import httpx
 from urllib.parse import urlencode
 from . import db
+from .clock import india_today
 from .providers import fetch,number,iso
 
 BASE='https://www.amfiindia.com'
@@ -27,7 +28,7 @@ def save_fees(records,source,content_hash):
         family=families.get(normalized(r.get('Scheme_Name','')))
         if not family:unmatched.add(r.get('Scheme_Name',''));continue
         day=iso(str(r.get('TER_Date',''))[:10])
-        if day>date.today().isoformat():continue
+        if day>india_today().isoformat():continue
         if 'small cap' not in r.get('SchemeCat_Desc','').lower():continue
         for prefix,plan in [('R','Regular'),('D','Direct')]:
             for field,metric in [('TER','ter'),('BER','base_expense_ratio'),('BaseTER','base_ter'),('BrokerageCost','brokerage'),('TransactionCost','transaction_cost'),('StatutoryLevies','statutory_levies')]:
@@ -58,7 +59,7 @@ def save_daily_aum(records,source,content_hash):
             value=number(raw);day=iso(r.get('navDate',''))
         except ValueError:
             continue
-        if value<=0 or day>date.today().isoformat():continue
+        if value<=0 or day>india_today().isoformat():continue
         values.append((family,'All','aum',day,str(value),'₹ crore · daily scheme AUM · AMC-reported via AMFI',source,content_hash,observed))
         matched.add(family)
     with db.connect() as c:
@@ -94,8 +95,9 @@ def daily_aum(progress=lambda _:None,lookback_days=12):
         if not isinstance(subs,list):raise ValueError('AMFI small-cap subcategory response changed format')
         small=next((x for x in subs if 'small' in str(x.get('name','')).lower() and 'cap' in str(x.get('name','')).lower()),None)
         if not small:raise ValueError('AMFI fund-performance filters no longer identify Small Cap')
+        today=india_today()
         for offset in range(lookback_days):
-            day=date.today()-timedelta(days=offset)
+            day=today-timedelta(days=offset)
             if day.weekday()>=5:continue
             label=day.strftime('%d-%b-%Y')
             progress('AMFI daily AUM · '+label)
@@ -126,7 +128,7 @@ def daily_aum(progress=lambda _:None,lookback_days=12):
 
 
 def fees(progress=lambda _:None,months=3):
-    today=date.today();total=0;matched=set();unmatched=set()
+    today=india_today();total=0;matched=set();unmatched=set()
     for offset in range(months):
         year,month=divmod(today.year*12+today.month-1-offset,12);month+=1
         label=f'{month:02d}-{year}'
