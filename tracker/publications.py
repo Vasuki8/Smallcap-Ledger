@@ -36,6 +36,17 @@ def exclusion_reason(amc, url, title=''):
             and path.rstrip('/')=='/en/mutual-funds/investor-resources'
             and 'doc=product-note-and-deck' in parsed.query.lower()):
             return 'HSBC generic product-note/deck directory; not an AMC communication document'
+    if re.search(r'\bquant\b', amc, re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if (path.rstrip('/') in ('/distributorhub/nfopresentation','/distributorhub/nfopresentation.aspx')):
+            return 'Quant generic NFO-presentation directory; not an AMC communication document'
+        if (re.search(r'(?:silver[\s_%+-]*etf|income[\s_%+-]*plus[\s_%+-]*arbitrage[\s_%+-]*active[\s_%+-]*fof)',combined)
+            and re.search(r'presentation',combined)):
+            return 'Quant non-Small-Cap NFO presentation; unrelated to Quant Small Cap Fund'
+    if re.search(r'\bmirae\b', amc, re.I):
+        if (host in ('www.miraeassetmf.co.in','miraeassetmf.co.in')
+            and path.rstrip('/')=='/downloads/product-presentations'):
+            return 'Mirae generic product-presentations directory; not an AMC communication document'
     if not re.search(r'\bsbi\b', amc, re.I):
         return None
     if host != 'sbimf.com' and not host.endswith('.sbimf.com'):
