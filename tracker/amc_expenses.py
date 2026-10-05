@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 from . import db, axis_portfolios, jm_portfolios
+from .clock import india_today
 from .providers import fetch, number, public_url
 
 AXIS_FAMILY = "Axis Small Cap Fund"
@@ -297,7 +298,7 @@ def parse_canara_records(records, today=None):
     We retain only the AMC-published base_ter and total_ter fields; components
     are not recomputed into a TER.
     """
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(records, list):
         raise ValueError("Canara TER API response changed format")
 
@@ -346,7 +347,7 @@ def parse_canara_records(records, today=None):
 
 def canara(progress=lambda _: None, today=None, lookback_days=7):
     """Collect current Canara Robeco Small Cap BER/TER from its browser API."""
-    today = today or date.today()
+    today = today or india_today()
     if lookback_days < 1:
         raise ValueError("Canara expense lookback must be at least one day")
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (CANARA_FAMILY,)):
@@ -399,7 +400,7 @@ def _groww_financial_year(today):
 
 def _groww_ber_links(content, today=None):
     """Return current-financial-year first-party Groww BER notices, newest number first."""
-    today = today or date.today()
+    today = today or india_today()
     soup = BeautifulSoup(content, "html.parser")
     expected_dir = (
         "/compliance_docs/Downloads/Expense Ratio/Notice - Change in TER/"
@@ -467,7 +468,7 @@ def _groww_ber_number(raw, label):
 
 def parse_groww_ber_text(text, today=None):
     """Parse exact Current BER values; deliberately ignore conditional revised BER."""
-    today = today or date.today()
+    today = today or india_today()
     normalized = re.sub(r"\s+", " ", str(text or "")).strip()
 
     notice = re.search(
@@ -551,7 +552,7 @@ def parse_groww_ber_pdf(content, today=None):
 
 
 def _groww_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     page, _, _ = fetch(GROWW_BER_PAGE, archive=False, max_bytes=2 * 1024 * 1024)
     candidates = _groww_ber_links(page, today)
     relevant = []
@@ -584,7 +585,7 @@ def _groww_disclosure(today=None):
 
 def groww(progress=lambda _: None, today=None):
     """Collect Groww Small Cap's explicitly published Current BER observations."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (GROWW_FAMILY,)):
         return "Groww Small Cap is not in the active universe"
 
@@ -744,7 +745,7 @@ def _hsbc_number(value, label):
 
 def parse_hsbc_workbook(content, today=None):
     """Return HSBC Small Cap's newest explicit BER and Total TER plan pair."""
-    today = today or date.today()
+    today = today or india_today()
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -816,7 +817,7 @@ def parse_hsbc_workbook(content, today=None):
 
 def hsbc(progress=lambda _: None, today=None):
     """Collect HSBC Small Cap's detailed TER workbook linked by its AMC factsheet."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (HSBC_FAMILY,)):
         return "HSBC Small Cap is not in the active universe"
 
@@ -904,7 +905,7 @@ def _icici_financial_year(today):
 
 
 def _icici_category_ids(categories, today=None):
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(categories, list):
         raise ValueError("ICICI financial categories response is not a list")
     top = [
@@ -955,7 +956,7 @@ def _icici_month(value):
 
 
 def _icici_select_file(files, parent_id, child_id, financial_year, today=None):
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(files, list):
         raise ValueError("ICICI TER file response is not a list")
     found = defaultdict(list)
@@ -1059,7 +1060,7 @@ def _icici_percent(value, label):
 
 def parse_icici_workbook(content, today=None):
     """Return the newest exact Small Cap BER and published Total TER pair."""
-    today = today or date.today()
+    today = today or india_today()
     rows = _icici_inline_strings(content)
     if len(rows) < 4:
         raise ValueError("ICICI TER workbook contains no usable rows")
@@ -1117,7 +1118,7 @@ def parse_icici_workbook(content, today=None):
 
 
 def _icici_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     categories = _icici_api(ICICI_CATEGORIES_API + "?userType=Investor")
     parent_id, child_id, financial_year = _icici_category_ids(categories, today)
     payload = {
@@ -1150,7 +1151,7 @@ def _icici_disclosure(today=None):
 
 def icici(progress=lambda _: None, today=None):
     """Collect ICICI Prudential Small Cap's explicit BER/Total TER workbook."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (ICICI_FAMILY,)):
         return "ICICI Prudential Small Cap is not in the active universe"
     progress("ICICI Prudential Small Cap expense ratios · official TER Details workbook")
@@ -1193,7 +1194,7 @@ def _invesco_percent(value, label):
 
 def parse_invesco_records(records, today=None):
     """Return the newest exact Small Cap BER and published Total TER pair."""
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(records, list):
         raise ValueError("Invesco TER API response changed format")
     matches = defaultdict(list)
@@ -1256,7 +1257,7 @@ def _invesco_json(raw, label):
 
 
 def _invesco_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     plans_raw, _, _ = fetch(INVESCO_PLANS_API, archive=False, max_bytes=1024 * 1024)
     plans = _invesco_json(plans_raw, "plans")
     if not isinstance(plans, list) or plans.count(INVESCO_FAMILY) != 1:
@@ -1291,7 +1292,7 @@ def _invesco_disclosure(today=None):
 
 def invesco(progress=lambda _: None, today=None):
     """Collect Invesco India Small Cap's explicit BER and Total TER JSON rows."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (INVESCO_FAMILY,)):
         return "Invesco India Small Cap is not in the active universe"
     progress("Invesco India Small Cap expense ratios · official TER disclosure API")
@@ -1332,7 +1333,7 @@ def _jm_percent(value, label):
 
 def parse_jm_ter_records(records, today=None):
     """Return the newest exact JM Small Cap BER and published Total TER pair."""
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(records, list):
         raise ValueError("JM TER API response changed format")
 
@@ -1382,7 +1383,7 @@ def parse_jm_ter_records(records, today=None):
 
 
 def _jm_ter_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     raw, _, _ = fetch(
         JM_TER_API,
         body=JM_TER_REQUEST,
@@ -1412,7 +1413,7 @@ def _jm_ter_disclosure(today=None):
 
 def jm(progress=lambda _: None, today=None):
     """Collect JM Small Cap's explicit BER and Total TER from its public table API."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (JM_FAMILY,)):
         return "JM Small Cap is not in the active universe"
 
@@ -1472,7 +1473,7 @@ def _mirae_percent(value, label):
 
 def parse_mirae_rows(rows, datemode=0, today=None):
     """Return the newest exact Mirae Small Cap BER and published Total TER pair."""
-    today = today or date.today()
+    today = today or india_today()
     matches = defaultdict(list)
     for row in rows:
         if len(row) < 13:
@@ -1528,7 +1529,7 @@ def parse_mirae_rows(rows, datemode=0, today=None):
 
 def parse_mirae_workbook(content, today=None):
     """Parse Mirae's explicit daily Total Expense Ratio legacy XLS workbook."""
-    today = today or date.today()
+    today = today or india_today()
     try:
         book = xlrd.open_workbook(file_contents=content)
     except Exception as exc:
@@ -1559,7 +1560,7 @@ def _mirae_dotnet_date(raw):
 
 
 def _mirae_select_download(payload, today=None):
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(payload, dict) or payload.get("ReturnCode") != "0":
         raise ValueError("Mirae TER download API returned an unsuccessful response")
     records = payload.get("Data")
@@ -1595,7 +1596,7 @@ def _mirae_select_download(payload, today=None):
 
 
 def _mirae_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     start = today - timedelta(days=35)
     request = {
         "request": {
@@ -1629,7 +1630,7 @@ def _mirae_disclosure(today=None):
 
 def mirae(progress=lambda _: None, today=None):
     """Collect Mirae Asset Small Cap's explicit BER and Total TER workbook."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (MIRAE_FAMILY,)):
         return "Mirae Asset Small Cap is not in the active universe"
 
@@ -1689,7 +1690,7 @@ def _uti_percent(value, label):
 
 def parse_uti_workbook(content, today=None):
     """Return the newest exact UTI Small Cap BER and published Total TER pair."""
-    today = today or date.today()
+    today = today or india_today()
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -1766,7 +1767,7 @@ def parse_uti_workbook(content, today=None):
 
 def _uti_ytd_file(payload, today=None):
     """Select UTI's newest exact current-financial-year YTD TER workbook."""
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(payload, dict):
         raise ValueError("UTI YTD TER metadata changed format")
     components = payload.get("field_component")
@@ -1820,7 +1821,7 @@ def _uti_ytd_file(payload, today=None):
 
 
 def _uti_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     raw, _, _ = fetch(UTI_YTD_META_API, archive=False, max_bytes=2 * 1024 * 1024)
     try:
         payload = json.loads(raw)
@@ -1838,7 +1839,7 @@ def _uti_disclosure(today=None):
 
 def uti(progress=lambda _: None, today=None):
     """Collect UTI Small Cap's explicit BER and Total TER from its public YTD workbook."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (UTI_FAMILY,)):
         return "UTI Small Cap is not in the active universe"
 
@@ -1933,7 +1934,7 @@ def _mahindra_exact_children(nodes, name):
 
 def _mahindra_select_ter_file(tree, today=None):
     """Select the exact current-financial-year TER workbook from AMC metadata."""
-    today = today or date.today()
+    today = today or india_today()
     top = _mahindra_exact_children(tree, _MAHINDRA_TOP_CATEGORY)
     if len(top) != 1:
         raise ValueError("Mahindra Mandatory Disclosures category is not uniquely identified")
@@ -1982,7 +1983,7 @@ def _mahindra_percent(value, label):
 
 def parse_mahindra_workbook(content, today=None):
     """Return the newest exact Small Cap BER and AMC-published Total TER pair."""
-    today = today or date.today()
+    today = today or india_today()
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -2055,7 +2056,7 @@ def parse_mahindra_workbook(content, today=None):
 
 
 def _mahindra_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     raw, _, _ = fetch(
         MAHINDRA_DOWNLOADS_API,
         archive=False,
@@ -2072,7 +2073,7 @@ def _mahindra_disclosure(today=None):
 
 def mahindra(progress=lambda _: None, today=None):
     """Collect Mahindra Manulife Small Cap's explicit BER and Total TER workbook."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (MAHINDRA_FAMILY,)):
         return "Mahindra Manulife Small Cap is not in the active universe"
 
@@ -2136,7 +2137,7 @@ def _axis_values(row, offset, plan, day):
 
 def parse_axis_records(records, today=None):
     """Parse the browser API's exact Axis Small Cap TER rows."""
-    today = today or date.today()
+    today = today or india_today()
     if not isinstance(records, list):
         raise ValueError("Axis TER API response changed row format")
     matches = defaultdict(list)
@@ -2183,7 +2184,7 @@ def _axis_header(value):
 
 def parse_axis_workbook(content, today=None):
     """Parse Axis's generated first-party Total Expense Ratio XLSX."""
-    today = today or date.today()
+    today = today or india_today()
     try:
         book = openpyxl.load_workbook(io.BytesIO(content), data_only=True, read_only=True)
     except Exception as exc:
@@ -2261,7 +2262,7 @@ def _axis_cms_token():
 
 
 def _axis_select_workbook(payload, today=None):
-    today = today or date.today()
+    today = today or india_today()
     if (
         not isinstance(payload, dict)
         or payload.get("status") != "success"
@@ -2289,7 +2290,7 @@ def _axis_select_workbook(payload, today=None):
 
 
 def _axis_disclosure(today=None):
-    today = today or date.today()
+    today = today or india_today()
     start = today - timedelta(days=14)
     payload = {
         "fundType": AXIS_TER_FUND_TYPE,
@@ -2328,7 +2329,7 @@ def _axis_disclosure(today=None):
 
 def axis(progress=lambda _: None, today=None):
     """Collect Axis Small Cap's explicit BER and Total TER workbook."""
-    today = today or date.today()
+    today = today or india_today()
     if not db.one("SELECT code FROM schemes WHERE family=? LIMIT 1", (AXIS_FAMILY,)):
         return "Axis Small Cap is not in the active universe"
 
