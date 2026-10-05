@@ -1,6 +1,7 @@
 """Auditable per-fund coverage, regenerated from the cumulative archive."""
 from datetime import date,timedelta
 from . import db
+from .clock import india_today
 from .portfolio_limitations import portfolio_limitation
 
 FEE_METRICS=('ter','ter_observed','base_expense_ratio','expense_ratio')
@@ -8,7 +9,7 @@ FEE_METRICS=('ter','ter_observed','base_expense_ratio','expense_ratio')
 
 def expected_portfolio_as_of(today=None):
     """Operational freshness target with a 10-day new-month publication grace."""
-    today=today or date.today()
+    today=today or india_today()
     prior=today.replace(day=1)-timedelta(days=1)
     if today.day<=10:prior=prior.replace(day=1)-timedelta(days=1)
     return prior.isoformat()
