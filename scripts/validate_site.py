@@ -30,7 +30,7 @@ def validate(root):
             if len(set(dates).intersection(p[0] for p in bench.get('Nifty Smallcap 250 TRI',{}).get('data',[])))>=2:compared+=1
         if detail['family_id'] not in seen:
             seen.add(detail['family_id']);docs=read('data/communications/'+detail['family_id']+'.json')
-            assert all(d['kind']!='news' and (d['origin']=='AMC' or d['origin'].startswith('User import')) for d in docs),'Third-party news entered the export'
+            assert all(d['kind']!='news' and d['origin']=='AMC' for d in docs),'Non-AMC document entered the public export'
             for d in docs:
                 assert urlparse(d['url']).scheme in ('http','https'),'Invalid source URL'
                 assert d['family']==f['family'],'Publication attached to another fund'
