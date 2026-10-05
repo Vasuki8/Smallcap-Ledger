@@ -315,7 +315,7 @@ def fetch_benchmark(progress=lambda _:None):
             d=iso(row["Date"]);v=number(row["TotalReturnsIndex"])
             if start.isoformat()<=d<=end.isoformat() and v>0: points.append((d,v))
         if not points and year>=2006: raise ValueError(f"No TRI observations for {year}")
-        db.save_benchmark(BENCHMARK,points,NIFTY_PAGE)
+        db.save_benchmark(BENCHMARK,points,NIFTY_PAGE,authoritative=True)
         total+=len(points)
         with db.connect() as c: c.execute("INSERT OR REPLACE INTO settings VALUES(?,?)",(key,"true"))
     return f"{total} benchmark observations updated"
