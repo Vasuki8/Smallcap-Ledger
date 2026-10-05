@@ -6,6 +6,7 @@ import json
 import re
 from urllib.parse import urlparse
 from . import db
+from .clock import india_today
 from .providers import fetch,can_crawl,iso,number,save_document,doc_version
 from .disclosures import same_fund_title,report_date
 from bs4 import BeautifulSoup
@@ -188,7 +189,7 @@ def axis_top_holdings(soup,page_text,url,h):
     m=re.search(r'Top\s*10\s*Stocks\s*\(%\)\s*([\d.]+).*?Updated\s+as\s+on:\s*(?:As\s+of\s+)?([A-Za-z]+\s+\d{1,2},\s*\d{4})',page_text,re.I)
     if not m:return 0
     stated=number(m.group(1));day=report_date('as on '+m.group(2))
-    if not day or day>date.today().isoformat() or not 0<stated<100:return 0
+    if not day or day>india_today().isoformat() or not 0<stated<100:return 0
     for table in soup.select('table'):
         table_text=re.sub(r'\s+',' ',table.get_text(' ',strip=True))
         if not (re.search(r'\bStocks\b',table_text,re.I) and re.search(r'%\s*of\s*holdings',table_text,re.I)):continue
@@ -217,7 +218,7 @@ def tata_top10_holdings(soup,page_text,url,h):
     d=re.search(r'\bAs\s+on\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4})\b',page_text,re.I)
     if not d:return 0
     day=report_date('as on '+d.group(1))
-    if not day or day>date.today().isoformat():return 0
+    if not day or day>india_today().isoformat():return 0
 
     positions=[]
     for table in soup.select('table'):
@@ -261,7 +262,7 @@ def boi_top_holdings(soup,page_text,url,h):
     d=re.search(r'portfolio\s+as\s+on\s+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s*,?\s*\d{4})',page_text,re.I)
     if not d:return 0
     day=report_date('as on '+d.group(1))
-    if not day or day>date.today().isoformat():return 0
+    if not day or day>india_today().isoformat():return 0
 
     positions=[]
     for candidate in soup.select('table'):
@@ -313,7 +314,7 @@ def jm_top_holdings(soup,page_text,url,h):
         d=re.search(r'Holdings\b.*?As\s+on\s*[-–:]?\s*(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s*,?\s*\d{4})',page_text,re.I)
     if not d:return 0
     day=report_date('as on '+d.group(1))
-    if not day or day>date.today().isoformat():return 0
+    if not day or day>india_today().isoformat():return 0
 
     positions=[]
     # Prefer a literal holdings table if the server-rendered response exposes it.
@@ -478,7 +479,7 @@ def parse_page(content,family,url,h):
         m=re.search(r'Scheme\s+Performance.*?as\s+on\s+(\d{1,2}\s+[A-Za-z]+\s+\d{4}).*?Scheme\s+Benchmark\s*-\s*Nifty\s+Small\s*cap\s+250\s+TRI\b',
                     text,re.I)
         day=report_date('as on '+m.group(1)) if m else None
-        if day and day<=date.today().isoformat():
+        if day and day<=india_today().isoformat():
             db.metric(family,'All','benchmark',day,'Nifty Smallcap 250 TRI','Reported',url,h)
             return 1
         return 0
@@ -509,14 +510,14 @@ def parse_page(content,family,url,h):
         return 0
     if family=='The Wealth Company Small Cap Fund':
         if re.search(r'\bBenchmark\s*:\s*NIFTY\s+Small\s*Cap\s+250\s+index\s*\(TRI\)',text,re.I):
-            db.metric(family,'All','benchmark',date.today().isoformat(),'NIFTY SmallCap 250 TRI',
+            db.metric(family,'All','benchmark',india_today().isoformat(),'NIFTY SmallCap 250 TRI',
                       'Observed on official fund page',url,h)
             return 1
         return 0
     if family=='Jm Small Cap Fund':return jm_top_holdings(soup,text,url,h)
     if kotak_monthly:
         day=report_date(text)
-        if not day or day>date.today().isoformat():return 0
+        if not day or day>india_today().isoformat():return 0
         saved=kotak_portfolio(soup,day,url,h)
         if not saved:return 0
         a=re.search(r'\bAUM\s+Rs\s*([\d,.]+)\s*crs\b',text,re.I)
@@ -559,7 +560,7 @@ def parse_page(content,family,url,h):
             navday=report_date(nav.group(1))
             if navday and navday[:7]==report.strftime('%Y-%m'):
                 day=report.replace(day=calendar.monthrange(report.year,report.month)[1]).isoformat();value=number(m.group(1))
-    if value is None or day is None or day>date.today().isoformat() or not 0<value<10_000_000:return 0
+    if value is None or day is None or day>india_today().isoformat() or not 0<value<10_000_000:return 0
     db.metric(family,'All','aum',day,value,'INR crore',url,h)
     saved=1
     if family=='Axis Small Cap Fund':
@@ -588,8 +589,8 @@ def parse_page(content,family,url,h):
         m=re.search(r'Base Expense Ratio\s*([\d.]+)%\s*(as of [A-Za-z]+ \d{1,2}, \d{4})',text,re.I)
         if m:db.metric(family,'Direct','base_expense_ratio',report_date(m.group(2)),number(m.group(1)),'% p.a.',url,h)
     # Only unambiguous fund-level benchmark text in the summary region.
-    if family=='DSP Small Cap Fund' and re.search(r'Benchmark:\s*BSE 250 Small Cap TRI',text,re.I):db.metric(family,'All','benchmark',date.today().isoformat(),'BSE 250 Small Cap TRI','Observed on official fund page',url,h)
-    if family=='Axis Small Cap Fund' and re.search(r'Benchmark Returns.{0,35}NIFTY Smallcap 250 TRI',text,re.I):db.metric(family,'All','benchmark',date.today().isoformat(),'Nifty Smallcap 250 TRI','Observed on official fund page',url,h)
+    if family=='DSP Small Cap Fund' and re.search(r'Benchmark:\s*BSE 250 Small Cap TRI',text,re.I):db.metric(family,'All','benchmark',india_today().isoformat(),'BSE 250 Small Cap TRI','Observed on official fund page',url,h)
+    if family=='Axis Small Cap Fund' and re.search(r'Benchmark Returns.{0,35}NIFTY Smallcap 250 TRI',text,re.I):db.metric(family,'All','benchmark',india_today().isoformat(),'Nifty Smallcap 250 TRI','Observed on official fund page',url,h)
     return saved
 
 
@@ -597,7 +598,7 @@ def update(progress=lambda _:None):
     saved=0;gaps=[]
     pages=list(PAGES)
     for offset in range(3):
-        today=date.today();year,month=divmod(today.year*12+today.month-1-offset,12);month+=1;name=calendar.month_name[month]
+        today=india_today();year,month=divmod(today.year*12+today.month-1-offset,12);month+=1;name=calendar.month_name[month]
         pages.extend([
             ('Baroda','Baroda Bnp Paribas Small Cap Fund',f'https://www.barodabnpparibasmf.in/efactsheet/{name[:3]}{year}/Innerpages/Small-cap.html'),
             ('Mahindra','Mahindra Manulife Small Cap Fund',f'https://www.mahindramanulife.com/digital-factsheet/{name.lower()}-{year}/Equity-funds/Small-Cap-Fund.html'),
