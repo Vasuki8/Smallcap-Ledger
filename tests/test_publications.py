@@ -86,6 +86,31 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(old['enabled'],0);self.assertEqual(old['status'],'Excluded')
         self.assertEqual(db.one('SELECT enabled FROM source_pages WHERE url=?',(GOOD,))['enabled'],1)
 
+    def test_abakkus_liquid_fund_presentation_is_not_small_cap_communication(self):
+        family='Abakkus Small Cap Fund';code=9902
+        wrong=('https://www.abakkusmf.com/img/docs/LiquidFund/'
+               'Abakkus_Liquid_Fund_Presentation.pdf')
+        with db.connect() as c:
+            c.execute('INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                      (code,'Abakkus Small Cap Direct Growth',family,
+                       'Abakkus Mutual Fund','Direct','Growth','test'))
+            did=c.execute('''INSERT INTO documents(
+              family,title,kind,scope,url,first_seen,last_seen,origin)
+              VALUES(?,?,?,?,?,?,?,?)''',
+              (family,'Scheme Presentation','market view','AMC',wrong,db.now(),db.now(),'AMC')).lastrowid
+        h=db.archive(b'%PDF-1.7 historical liquid-fund presentation','application/pdf')
+        providers.doc_version(did,h)
+
+        self.assertEqual(documents(code),[])
+        self.assertIn('Liquid Fund',exclusion_reason('Abakkus Mutual Fund',wrong,'Scheme Presentation'))
+        with self.assertRaisesRegex(ValueError,'Liquid Fund presentation'):
+            providers.save_document(family,'Scheme Presentation',wrong,'market view','AMC',origin='AMC')
+
+        # Evidence stays retained even though the cross-scheme association is hidden.
+        self.assertEqual(db.one('SELECT COUNT(*) n FROM documents WHERE id=?',(did,))['n'],1)
+        self.assertEqual(db.one('SELECT COUNT(*) n FROM document_versions WHERE document_id=?',(did,))['n'],1)
+        self.assertTrue(db.archive_binary_path(h).is_file())
+
     def test_rules_preserve_legitimate_communications_and_titles(self):
         self.assertTrue(exclusion_reason('SBI Mutual Fund',WRONG.replace('frankline-templeton','Franklin%2DTempleton')))
         self.assertIsNone(exclusion_reason('Franklin Templeton Mutual Fund',WRONG))
