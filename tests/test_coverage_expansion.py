@@ -1376,9 +1376,10 @@ Investment Objective'''
         <p>Benchmark: NIFTY SmallCap 250 index (TRI)</p>
         <p>Benchmark Risk-o-meter NIFTY SmallCap 250 index (TRI)</p>
         </body></html>'''
-        self.assertEqual(parse_page(html,f,u,'wealth-benchmark'),1)
+        with patch('tracker.amc_metrics.india_today',return_value=date(2026,10,5)):
+            self.assertEqual(parse_page(html,f,u,'wealth-benchmark'),1)
         self.assertEqual(db.one("SELECT value,as_of,unit FROM metrics WHERE family=? AND metric='benchmark'",(f,)),
-                         {'value':'NIFTY SmallCap 250 TRI','as_of':date.today().isoformat(),
+                         {'value':'NIFTY SmallCap 250 TRI','as_of':'2026-10-05',
                           'unit':'Observed on official fund page'})
         self.assertEqual(parse_page(html.replace('Small Cap Fund','Mid Cap Fund'),f,u,'wrong'),0)
 
