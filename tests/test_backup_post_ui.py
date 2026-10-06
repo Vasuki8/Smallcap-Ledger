@@ -1,4 +1,4 @@
-"""Local backup UI must use the protected POST boundary."""
+"""Local backup UI must stream through a protected native POST."""
 from pathlib import Path
 import unittest
 
@@ -6,16 +6,16 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class BackupPostUiTests(unittest.TestCase):
-    def test_backup_is_not_exposed_as_passive_get_link(self):
+    def test_backup_uses_native_post_without_buffering_whole_zip_in_javascript(self):
         source=(ROOT/"dist"/"app.js").read_text(encoding="utf-8")
         self.assertNotIn('href="/api/export/backup"',source)
-        self.assertIn("fetch('/api/export/backup',{method:'POST'",source)
-        self.assertIn("'X-Smallcap-Client':'local'",source)
+        self.assertNotIn("fetch('/api/export/backup'",source)
+        self.assertNotIn(".blob()",source)
+        self.assertNotIn("URL.createObjectURL",source)
+        self.assertGreaterEqual(
+            source.count('method="post" action="/api/export/backup"'),2)
         self.assertIn('id="backup-download"',source)
         self.assertIn('id="settings-backup-download"',source)
-        self.assertIn("function bindBackupButton(selector)",source)
-        self.assertIn("btn.disabled=true",source)
-        self.assertIn("finally{btn.disabled=false;}",source)
 
 
 if __name__=="__main__":
