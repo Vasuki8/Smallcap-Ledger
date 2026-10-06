@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-10-05T23:17:52+00:00
+Prepared: 2026-10-06T00:47:28+00:00
 
 **36 funds, 143 NAV series, 282,294 NAV observations. Latest included NAV: 2026-10-05.**
 
@@ -53,7 +53,7 @@ Coverage counts mean a selected dated record exists. The ranges above are report
 
 | Fund | Diagnosis | Latest official portfolio/factsheet | Parser evidence | Latest source check |
 | --- | --- | --- | --- | --- |
-| Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Gap · 2026-10-05 · [Errno 111] Connection refused |
+| Union Small Cap Fund | Document known but not archived | factsheet: Union Small Cap Fund Scheme Information Document | Gap | Gap · 2026-10-06 · [Errno 111] Connection refused |
 
 ## Notes
 
