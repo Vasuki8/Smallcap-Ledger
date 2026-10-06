@@ -94,6 +94,25 @@ class DnsPinningTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,r"9\.53674e-07 MiB fetch limit"):
                 providers.fetch("https://example.com/large",archive=False,max_bytes=1)
 
+    def test_reviewed_host_keeps_hostname_routing_without_proxy(self):
+        url="https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct"
+        with patch("tracker.providers.socket.getaddrinfo",return_value=addr(PUBLIC_IP)), \
+             patch("tracker.providers._proxy_enabled",return_value=False), \
+             patch("tracker.providers._trusted_source_host",return_value=True):
+            providers.public_url(url)
+            target,headers,extensions=providers._pinned_request_target(url)
+        self.assertEqual(target,url)
+        self.assertEqual(headers,{})
+        self.assertEqual(extensions,{})
+
+    def test_reviewed_host_still_rejects_private_dns_resolution(self):
+        url="https://www.hdfcfund.com/explore/mutual-funds/hdfc-small-cap-fund/direct"
+        with patch("tracker.providers.socket.getaddrinfo",return_value=addr("127.0.0.1")), \
+             patch("tracker.providers._proxy_enabled",return_value=False), \
+             patch("tracker.providers._trusted_source_host",return_value=True):
+            with self.assertRaisesRegex(ValueError,"Private network"):
+                providers.public_url(url)
+
     def test_reviewed_host_may_keep_proxy_hostname_routing(self):
         with patch("tracker.providers.socket.getaddrinfo",return_value=addr(PUBLIC_IP)), \
              patch("tracker.providers._proxy_enabled",return_value=True), \
