@@ -680,6 +680,10 @@ def ingest_source(source):
             attempted+=1
             try:
                 can_crawl(target)
+            except Exception as exc:
+                _record_preflight_failure(target,exc);errors+=1
+                continue
+            try:
                 body,ch,typ=fetch(target)
                 doc_version(did,ch);narchive+=1
             except Exception:
@@ -723,6 +727,10 @@ def ingest_source(source):
             attempted+=1
             try:
                 can_crawl(target)
+            except Exception as exc:
+                _record_preflight_failure(target,exc);errors+=1
+                continue
+            try:
                 body,ch,typ=fetch(target)
                 doc_version(did,ch);narchive+=1
                 if link_kind in ('market view','unitholder letter'):
