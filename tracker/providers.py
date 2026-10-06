@@ -145,7 +145,14 @@ def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, he
                                            data=form if form is not None else None,
                                            headers=request_headers,extensions=extensions) as r:
                             if r.is_redirect:
-                                current=urljoin(current,r.headers.get("location",""))
+                                location=r.headers.get("location","")
+                                if not location:
+                                    raise ValueError("Redirect response did not provide a Location")
+                                next_url=urljoin(current,location)
+                                if (urlparse(current).scheme.lower()=="https"
+                                    and urlparse(next_url).scheme.lower()!="https"):
+                                    raise ValueError("HTTPS source redirected to insecure HTTP")
+                                current=next_url
                                 continue
                             r.raise_for_status()
                             content=bytearray()
