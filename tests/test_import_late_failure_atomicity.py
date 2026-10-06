@@ -162,6 +162,40 @@ class LateImportFailureAtomicityTests(unittest.TestCase):
         self.assertEqual(row["reason"],"synthetic reviewed link-only evidence")
         self.assertFalse(path.exists())
 
+    def test_post_commit_audit_log_failure_does_not_report_import_failure(self):
+        with db.connect() as c:
+            c.execute("""CREATE TRIGGER fail_import_audit BEFORE INSERT ON fetches
+                         WHEN NEW.status='imported'
+                         BEGIN SELECT RAISE(ABORT,'synthetic fetch audit failure'); END""")
+        payload=b"metric,plan,as_of,value\nter,Direct,2026-09-30,0.65\n"
+        r=self.post(
+            {"kind":"metrics","code":"8123","source":"https://example.com/metrics.csv"},
+            payload,
+        )
+        self.assertEqual(r.status_code,200,r.text)
+        body=r.json()
+        self.assertTrue(body["ok"])
+        self.assertIn("audit-log row could not be recorded",body.get("warning",""))
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM metrics")["n"],1)
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM archives")["n"],1)
+        self.assertEqual(db.one("SELECT COUNT(*) n FROM fetches WHERE status='imported'")["n"],0)
+
+    def test_document_import_records_import_audit_row(self):
+        r=self.client.post(
+            "/api/import",
+            headers={"X-Smallcap-Client":"local"},
+            data={
+                "kind":"document","code":"8123","source":"https://example.com/disclosure.pdf",
+                "title":"Imported disclosure","document_kind":"disclosure","scope":"Fund",
+            },
+            files={"file":("disclosure.pdf",b"%PDF-1.7 synthetic","application/pdf")},
+        )
+        self.assertEqual(r.status_code,200,r.text)
+        row=db.one("SELECT url,status,detail,hash FROM fetches WHERE status='imported'")
+        self.assertEqual(row["url"],"https://example.com/disclosure.pdf")
+        self.assertEqual(row["detail"],"document")
+        self.assertTrue(row["hash"])
+
     def test_archive_metadata_failure_does_not_leave_untracked_binary(self):
         payload=b"archive metadata failure"
         h=hashlib.sha256(payload).hexdigest()
