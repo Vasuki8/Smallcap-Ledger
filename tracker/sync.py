@@ -44,10 +44,17 @@ class Updater:
 
     def run(self,kind):
         errors=[];detail=""
-        previous_nav=(db.one("SELECT finished_at,status FROM jobs WHERE kind='nav' AND finished_at IS NOT NULL AND status IN ('ok','partial') ORDER BY id DESC LIMIT 1")
-                      if kind=='nav' else None)
-        with db.connect() as c:
-            jid=c.execute("INSERT INTO jobs(kind,started_at,status) VALUES(?,?,'running')",(kind,db.now())).lastrowid
+        try:
+            previous_nav=(db.one("SELECT finished_at,status FROM jobs WHERE kind='nav' AND finished_at IS NOT NULL AND status IN ('ok','partial') ORDER BY id DESC LIMIT 1")
+                          if kind=='nav' else None)
+            with db.connect() as c:
+                jid=c.execute("INSERT INTO jobs(kind,started_at,status) VALUES(?,?,'running')",(kind,db.now())).lastrowid
+        except Exception:
+            # A setup/database failure must never leave this update kind stuck
+            # in the in-memory running map forever.
+            traceback.print_exc()
+            with self.lock:self.running.pop(kind,None)
+            return
         try:
             if kind=="nav":
                 self.progress(kind,"Checking the official AMFI small-cap category")
@@ -104,9 +111,15 @@ class Updater:
         except Exception as e:
             status="error";detail=str(e)[:500]
         finally:
-            with db.connect() as c:
-                c.execute("UPDATE jobs SET finished_at=?,status=?,detail=? WHERE id=?",(db.now(),status,detail+("\n"+"\n".join(errors) if errors else ""),jid))
-            with self.lock: self.running.pop(kind,None)
+            try:
+                with db.connect() as c:
+                    c.execute("UPDATE jobs SET finished_at=?,status=?,detail=? WHERE id=?",(db.now(),status,detail+("\n"+"\n".join(errors) if errors else ""),jid))
+            except Exception:
+                # The next startup's recover=True pass will mark the retained
+                # unfinished job interrupted; do not wedge the live scheduler.
+                traceback.print_exc()
+            finally:
+                with self.lock:self.running.pop(kind,None)
 
     def schedule(self):
         while not self.stop.is_set():
