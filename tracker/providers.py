@@ -21,7 +21,7 @@ MFAPI = "https://api.mfapi.in/mf"
 NIFTY_PAGE = "https://www.niftyindices.com/reports/historical-data"
 NIFTY_API = "https://www.niftyindices.com/BackPage/getTotalReturnIndexString"
 BENCHMARK = "Nifty Smallcap 250 TRI"
-USER_AGENT = "SmallcapLedger/1.0 (local personal research)"
+USER_AGENT = "SmallcapLedger/1.0 (+https://github.com/Vasuki8/Smallcap-Ledger)"
 _robots = {}
 _proxy_public_hosts = set()
 _public_resolution = threading.local()
@@ -64,8 +64,12 @@ def public_url(url):
     if p.scheme not in ("http","https") or not host or p.username or p.password or p.port not in (None,80,443):
         raise ValueError("Use a public HTTP(S) source URL without credentials")
     if host in _proxy_public_hosts:
-        _remember_public_resolution(host,None)
-        return url
+        if _proxy_enabled():
+            _remember_public_resolution(host,None)
+            return url
+        # Proxy configuration can change in long-lived local processes/tests.
+        # Never let a stale proxy-fallback cache bypass direct DNS validation.
+        _proxy_public_hosts.discard(host)
     # Some managed networks resolve approved public hosts at the HTTP/SOCKS proxy.
     # Only the bundled public-source domains may use that path if local DNS is unavailable.
     try:
@@ -146,7 +150,7 @@ def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, he
                             content=bytearray()
                             for chunk in r.iter_bytes():
                                 content.extend(chunk)
-                                if len(content)>max_bytes: raise ValueError("Source is larger than the 25 MB archive limit; use its original link")
+                                if len(content)>max_bytes: raise ValueError(f"Source exceeds the {max_bytes/1024/1024:g} MiB fetch limit; use its original link")
                             content=bytes(content)
                             if archive and not content:
                                 raise ValueError("Source returned an empty response; existing archive was retained")

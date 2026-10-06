@@ -58,6 +58,42 @@ class DnsPinningTests(unittest.TestCase):
         self.assertEqual(seen["headers"]["Host"],"example.com")
         self.assertEqual(seen["extensions"]["sni_hostname"],"example.com")
 
+    def test_stale_proxy_cache_does_not_bypass_direct_dns_validation(self):
+        host="www.amfiindia.com"
+        providers._proxy_public_hosts.add(host)
+        with patch("tracker.providers._proxy_enabled",return_value=False), \
+             patch("tracker.providers.socket.getaddrinfo",return_value=addr("127.0.0.1")):
+            with self.assertRaisesRegex(ValueError,"Private network"):
+                providers.public_url("https://www.amfiindia.com/spages/NAVAll.txt")
+        self.assertNotIn(host,providers._proxy_public_hosts)
+
+    def test_crawler_identity_describes_public_project_not_personal_research(self):
+        self.assertEqual(
+            providers.USER_AGENT,
+            "SmallcapLedger/1.0 (+https://github.com/Vasuki8/Smallcap-Ledger)",
+        )
+        self.assertNotIn("personal",providers.USER_AGENT.lower())
+        self.assertNotIn("local",providers.USER_AGENT.lower())
+
+    def test_fetch_size_error_reports_the_actual_limit(self):
+        class Response:
+            is_redirect=False
+            headers={"content-type":"application/octet-stream"}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def raise_for_status(self):return None
+            def iter_bytes(self):return iter((b"x"*(1024*1024+1),))
+        class Client:
+            def __init__(self,*args,**kwargs):pass
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def stream(self,*args,**kwargs):return Response()
+        with patch("tracker.providers.socket.getaddrinfo",return_value=addr(PUBLIC_IP)), \
+             patch("tracker.providers._proxy_enabled",return_value=False), \
+             patch("tracker.providers.httpx.Client",Client):
+            with self.assertRaisesRegex(ValueError,r"9\.53674e-07 MiB fetch limit"):
+                providers.fetch("https://example.com/large",archive=False,max_bytes=1)
+
     def test_reviewed_host_may_keep_proxy_hostname_routing(self):
         with patch("tracker.providers.socket.getaddrinfo",return_value=addr(PUBLIC_IP)), \
              patch("tracker.providers._proxy_enabled",return_value=True), \
