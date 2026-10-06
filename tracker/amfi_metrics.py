@@ -136,17 +136,21 @@ def fees(progress=lambda _:None,months=3):
         # Current and previous months are rechecked for AMC corrections.
         if offset>1 and db.setting('amfi_fee_month_'+label,False):continue
         page=1
+        month_matched=set()
         while True:
             progress('AMFI expense ratios · '+label+' · page '+str(page))
             url=BASE+'/api/populate-te-rdata-revised?'+urlencode({'MF_ID':'All','Month':label,'strCat':'18','strType':'1','page':page,'pageSize':1000})
             body,h,_=fetch(url);payload=json.loads(body)
             records=payload.get('data',[]) if isinstance(payload,dict) else payload
             if not isinstance(records,list):raise ValueError('AMFI expense response has changed')
-            n,yes,no=save_fees(records,url,h);total+=n;matched.update(yes);unmatched.update(no)
+            n,yes,no=save_fees(records,url,h);total+=n;matched.update(yes);month_matched.update(yes);unmatched.update(no)
             meta=payload.get('meta',{}) if isinstance(payload,dict) else {}
             pages=meta.get('totalPages') or meta.get('pageCount')
             if not records or (pages and page>=int(pages)) or (not pages and len(records)<int(meta.get('pageSize',1000))):break
             page+=1
             if page>20:raise ValueError('Unexpected size of the small-cap expense feed')
-        with db.connect() as c:c.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('amfi_fee_month_'+label,'true'))
+        # Only freeze an immutable prior month after at least one retained
+        # small-cap fund matched. Empty/wrong responses must remain retryable.
+        if month_matched:
+            with db.connect() as c:c.execute('INSERT OR REPLACE INTO settings VALUES(?,?)',('amfi_fee_month_'+label,'true'))
     return f'{len(matched)} funds with AMC-reported expense figures; {total} dated plan/fee values checked'+(' · unmatched fund names: '+', '.join(sorted(unmatched)) if unmatched else '')
