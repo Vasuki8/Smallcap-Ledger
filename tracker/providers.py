@@ -86,10 +86,11 @@ def public_url(url):
             raise ValueError("Private network addresses cannot be used as data sources")
         if ip not in public:public.append(ip)
     if not public:raise ValueError("Public source URL did not resolve to an address")
-    # For reviewed built-in domains on managed proxy networks, keep the proxy's
-    # hostname routing. Arbitrary/custom hosts are always pinned to the exact
-    # validated address so DNS cannot change between validation and connection.
-    _remember_public_resolution(host,None if (_proxy_enabled() and _trusted_source_host(host)) else public)
+    # Reviewed/version-controlled source domains still undergo the public-IP
+    # validation above, but connect by hostname so CDN/WAF routing sees the
+    # expected authority. Arbitrary/custom hosts remain pinned to the exact
+    # validated IP so DNS cannot change between validation and connection.
+    _remember_public_resolution(host,None if _trusted_source_host(host) else public)
     return url
 
 
