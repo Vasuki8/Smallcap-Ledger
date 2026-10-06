@@ -3,7 +3,7 @@ import re
 from urllib.parse import unquote, urlparse
 
 
-def exclusion_reason(amc, url, title=''):
+def exclusion_reason(amc, url, title='', kind=None):
     """Exclude reviewed cross-scheme/foreign associations without deleting evidence.
 
     A hosting domain establishes AMC ownership, not that every linked document
@@ -34,6 +34,20 @@ def exclusion_reason(amc, url, title=''):
         combined=(str(title or '')+' '+path).lower()
         if re.search(r'axis[\s_-]*greater[\s_-]*china[\s_-]*(?:equity[\s_-]*)?fund[\s_-]*of[\s_-]*fund',combined):
             return 'Axis Greater China Fund of Fund article; unrelated to Axis Small Cap Fund'
+
+    if re.search(r'\bhdfc\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if (host in ('www.hdfcfund.com','hdfcfund.com')
+            and path.rstrip('/')=='/statutory-disclosure/letter-unitholder'
+            and kind!='source page'):
+            return 'HDFC unitholder-letter directory; not a Small Cap communication document'
+        scheme_letter=bool(re.search(r'letter|unitholder|fundamental|merger',combined))
+        foreign_scheme=bool(
+            re.search(r'\bhdfc\b[^\n]{0,160}\b(?:fund|etf)\b',combined)
+            or re.search(r'\bhdfc[\s_-]*fmp\b',combined)
+        )
+        if scheme_letter and foreign_scheme and not re.search(r'\bsmall[\s_-]*cap\b',combined):
+            return 'HDFC non-Small-Cap scheme unitholder material; unrelated to HDFC Small Cap Fund'
 
     if re.search(r'\bhelios\b', str(amc), re.I):
         combined=(str(title or '')+' '+path).lower()
@@ -91,8 +105,9 @@ def exclusion_reason(amc, url, title=''):
         )
         if foreign_scheme and re.search(r'unitholder|fundamental|corrigendum|letter',combined):
             return 'DSP non-Small-Cap scheme unitholder material; unrelated to DSP Small Cap Fund'
-        if path.rstrip('/')=='/mandatory-disclosures/unitholder-letter-for-change-in-fundamental-attribute':
-            return 'DSP Global Allocation Fund of Fund unitholder-letter page; unrelated to DSP Small Cap Fund'
+        if (path.rstrip('/')=='/mandatory-disclosures/unitholder-letter-for-change-in-fundamental-attribute'
+            and kind!='source page'):
+            return 'DSP Global Allocation Fund of Fund unitholder-letter directory; unrelated to DSP Small Cap Fund'
 
     if re.search(r'\bquantum\b', str(amc), re.I):
         combined=(str(title or '')+' '+path).lower()
