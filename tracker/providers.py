@@ -382,11 +382,12 @@ def classify(title,url):
     if re.search(r'(?:^|[^a-z0-9])(?:press[\s_-]*release|notice|circular)(?:[^a-z0-9]|$)',title_text):return "disclosure"
     if re.search(r'\brisk[\s_-]*factors?\b',title_text):return "disclosure"
     compact_title=re.sub(r"[^a-z0-9]","",title_text)
-    if (("lien" in title_text or "pledge" in title_text)
-        and any(token in title_text for token in ("request","covering","removal","invocation"))):
+    compact_source=re.sub(r"[^a-z0-9]","",s)
+    if (("lien" in s or "pledge" in s)
+        and any(token in s for token in ("request","covering","removal","invocation"))):
         return "disclosure"
-    if ("lienrequestletterfromunitholder" in compact_title
-        or "requestletterforlien" in compact_title):
+    if ("lienrequestletterfromunitholder" in compact_source
+        or "requestletterforlien" in compact_source):
         return "disclosure"
     # Explicit first-party communication titles outrank generic directory/path
     # words such as "digitalfactsheet". Otherwise "Equity Market Update" pages
