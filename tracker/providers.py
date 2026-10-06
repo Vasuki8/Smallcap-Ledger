@@ -383,8 +383,12 @@ def classify(title,url):
     title_text=(title or '').lower()
     s=(title_text+" "+url).lower()
     # Notices/press releases can mention a portfolio without containing the
-    # portfolio itself. Keep them out of portfolio coverage and parser queues.
-    if re.search(r'(?:^|[^a-z0-9])(?:press[\s_-]*release|notice|circular)(?:[^a-z0-9]|$)',title_text):return "disclosure"
+    # portfolio itself. Keep them out of portfolio/communication coverage even
+    # when a generic anchor title (for example "a") hides the file's real name.
+    filename=unquote(urlparse(url).path.rsplit('/',1)[-1]).lower()
+    notice_pattern=r'(?:^|[^a-z0-9])(?:press[\s_-]*release|(?:public[\s_-]*)?notice|circular)(?:[^a-z0-9]|$)'
+    if re.search(notice_pattern,title_text) or re.search(notice_pattern,filename):
+        return "disclosure"
     if re.search(r'\brisk[\s_-]*factors?\b',title_text):return "disclosure"
     compact_title=re.sub(r"[^a-z0-9]","",title_text)
     compact_source=re.sub(r"[^a-z0-9]","",s)
