@@ -98,6 +98,32 @@ class PublicationHealthGateTests(unittest.TestCase):
             result=evaluate(self.boundary,today=self.today)
             self.assertIn('documents_job_missing',result['blockers'])
 
+    def test_one_fresh_aum_cannot_hide_another_funds_stale_aum(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
+            db.init();self.seed(latest='2026-10-05')
+            with db.connect() as c:
+                c.execute(
+                    'INSERT INTO schemes(code,name,family,amc,plan,option,category_source) VALUES(?,?,?,?,?,?,?)',
+                    (9010,'Stale Small Cap Direct Growth','Stale Small Cap Fund',
+                     'Stale AMC','Direct','Growth','test'),
+                )
+            db.save_nav(9010,[('2026-10-05',50)],providers.AMFI_NAV)
+            db.metric(
+                'Stale Small Cap Fund','All','aum','2026-08-01',500,
+                'INR crore','https://example.com/stale-aum',
+            )
+            db.metric(
+                'Stale Small Cap Fund','Direct','ter','2026-10-05',0.8,
+                '% p.a.','https://example.com/stale-ter',
+            )
+            result=evaluate(self.boundary,today=self.today)
+            self.assertEqual(result['status'],'blocked')
+            self.assertNotIn('aum_stale_or_invalid',result['blockers'])
+            self.assertIn('aum_fund_dates_stale_or_invalid',result['blockers'])
+            self.assertEqual(result['data']['aum_latest_date'],'2026-10-05')
+            self.assertEqual(result['data']['aum_earliest_date'],'2026-08-01')
+            self.assertEqual(result['data']['aum_oldest_age_days'],66)
+
     def test_stale_nav_and_aum_block_even_when_jobs_are_green(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
             db.init();self.seed(latest='2026-09-20')
