@@ -111,12 +111,63 @@ class FalseUnitholderArtifactTests(unittest.TestCase):
         self.assertEqual([d["url"] for d in shown],[good_url])
         for title,url in foreign:
             with self.subTest(title=title):
-                self.assertIsNotNone(exclusion_reason(amc,url,title))
+                self.assertIsNotNone(exclusion_reason(amc,url,title,'unitholder letter'))
                 with self.assertRaises(ValueError):
                     providers.save_document(
                         family,title,url,"unitholder letter","AMC",origin="AMC")
         self.assertIsNone(exclusion_reason(amc,good_url,good_title))
         self.assertEqual(db.one("SELECT COUNT(*) n FROM documents")["n"],len(foreign)+1)
+
+    def test_hdfc_unitholder_directory_is_source_only_and_foreign_letters_are_hidden(self):
+        family="HDFC Small Cap Fund";amc="HDFC Mutual Fund";code=9202
+        directory="https://www.hdfcfund.com/statutory-disclosure/letter-unitholder"
+        self.scheme(code,family,amc)
+        # Historical pre-fix row misclassified the directory itself as a letter.
+        self.old_doc(family,"Letter to Unitholders",directory)
+        foreign=[
+            (
+                "Letter to Unitholders - Change in Fundamental attributes - HDFC Balanced Advantage Fund",
+                "https://files.hdfcfund.com/s3fs-public/2026-10/HDFC-Balanced-Advantage-Fund-letter.pdf",
+            ),
+            (
+                "Letter to Unitholders - Change in Fundamental attributes- HDFC Gold ETF",
+                "https://files.hdfcfund.com/s3fs-public/2026-03/HDFC-Gold-ETF-letter.pdf",
+            ),
+        ]
+        for title,url in foreign:self.old_doc(family,title,url)
+
+        good_title="Letter to Unitholders - HDFC Small Cap Fund"
+        good_url="https://files.hdfcfund.com/s3fs-public/2026-10/HDFC-Small-Cap-Fund-letter.pdf"
+        good=providers.save_document(
+            family,good_title,good_url,"unitholder letter","Fund",origin="AMC")
+        h=db.archive(b"%PDF-1.7 HDFC Small Cap letter","application/pdf")
+        providers.doc_version(good,h)
+
+        shown=documents(code)
+        self.assertEqual([d["url"] for d in shown],[good_url])
+        self.assertIn(
+            "directory",
+            exclusion_reason(amc,directory,"Letter to Unitholders","unitholder letter"),
+        )
+        self.assertIsNone(
+            exclusion_reason(amc,directory,"Letter to Unitholders","source page")
+        )
+        for title,url in foreign:
+            with self.subTest(title=title):
+                self.assertIn("non-Small-Cap",exclusion_reason(amc,url,title,"unitholder letter"))
+                with self.assertRaisesRegex(ValueError,"non-Small-Cap"):
+                    providers.save_document(
+                        family,title,url,"unitholder letter","AMC",origin="AMC")
+        self.assertIsNone(exclusion_reason(amc,good_url,good_title,"unitholder letter"))
+
+        # A later source refresh can safely repair the historical directory row
+        # back to source-page semantics without being blocked by ownership rules.
+        providers.save_document(
+            family,"Letter to Unitholders",directory,"source page","AMC",origin="AMC")
+        row=db.one("SELECT kind FROM documents WHERE family=? AND url=?",(family,directory))
+        self.assertEqual(row["kind"],"source page")
+        audit=next(x for x in report()["funds"] if x["family"]==family)
+        self.assertEqual(audit["unitholder_letter_count"],1)
 
     def test_quantum_other_scheme_letter_is_hidden_but_small_cap_letter_allowed(self):
         family="Quantum Small Cap Fund";amc="Quantum Mutual Fund";code=9202
