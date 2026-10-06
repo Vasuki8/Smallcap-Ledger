@@ -19,6 +19,27 @@ def nav_maintenance_cutoff(today=None):
     return ((today or india_today())-timedelta(days=30)).isoformat()
 
 
+def update_due(previous,seconds,now=None):
+    """Return whether a scheduler job should launch; malformed legacy times retry safely."""
+    if not previous:
+        return True
+    try:
+        status=previous['status']
+        finished_at=previous['finished_at']
+    except (KeyError,IndexError,TypeError):
+        return True
+    if status=='interrupted':
+        return True
+    try:
+        finished=datetime.fromisoformat(finished_at)
+    except (TypeError,ValueError):
+        return True
+    if finished.tzinfo is None:
+        finished=finished.replace(tzinfo=timezone.utc)
+    now=now or datetime.now(timezone.utc)
+    return (now-finished).total_seconds()>retry_interval(status,seconds)
+
+
 def nav_history_recovery_since(previous_good,now=None):
     """Return the last good NAV-run time only when a real scheduler gap exists."""
     if not previous_good:return ''
@@ -127,18 +148,28 @@ class Updater:
             finally:
                 with self.lock:self.running.pop(kind,None)
 
+    def schedule_once(self):
+        if not db.setting("auto_update",True):
+            return
+        intervals={"nav":db.setting("nav_interval_minutes",60)*60,"benchmark":6*3600,"metrics":12*3600,
+                   "documents":db.setting("disclosure_interval_hours",12)*3600}
+        has_funds=bool(db.one("SELECT code FROM schemes LIMIT 1"))
+        for kind,seconds in intervals.items():
+            if kind in ('documents','metrics') and not has_funds:
+                continue
+            previous=db.one("SELECT finished_at,status FROM jobs WHERE kind=? AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1",(kind,))
+            # Failed sources retry with bounded backoff, retaining all previous observations.
+            if update_due(previous,seconds):
+                self.launch(kind)
+
     def schedule(self):
         while not self.stop.is_set():
-            if db.setting("auto_update",True):
-                intervals={"nav":db.setting("nav_interval_minutes",60)*60,"benchmark":6*3600,"metrics":12*3600,
-                           "documents":db.setting("disclosure_interval_hours",12)*3600}
-                has_funds=bool(db.one("SELECT code FROM schemes LIMIT 1"))
-                for kind,seconds in intervals.items():
-                    if kind in ('documents','metrics') and not has_funds: continue
-                    previous=db.one("SELECT finished_at,status FROM jobs WHERE kind=? AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1",(kind,))
-                    # Failed sources retry with bounded backoff, retaining all previous observations.
-                    due=not previous or previous['status']=='interrupted' or (datetime.now(timezone.utc)-datetime.fromisoformat(previous['finished_at'])).total_seconds()> retry_interval(previous['status'],seconds)
-                    if due:self.launch(kind)
+            try:
+                self.schedule_once()
+            except Exception:
+                # A transient settings/database read failure must not kill the
+                # daemon scheduler permanently. The next tick retries retained state.
+                traceback.print_exc()
             self.stop.wait(15)
 
     def start(self):

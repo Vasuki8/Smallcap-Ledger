@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tracker import db
-from tracker.sync import Updater
+from tracker.sync import Updater,update_due
 
 
 class UpdaterRunningCleanupTests(unittest.TestCase):
@@ -17,6 +17,54 @@ class UpdaterRunningCleanupTests(unittest.TestCase):
              patch("tracker.sync.traceback.print_exc"):
             updater.run("benchmark")
         self.assertEqual(updater.status(),{})
+
+    def test_due_helper_accepts_real_sqlite_row(self):
+        conn=sqlite3.connect(":memory:")
+        conn.row_factory=sqlite3.Row
+        row=conn.execute(
+            "SELECT ? AS finished_at, ? AS status",
+            ("2026-10-06T03:00:00+00:00","ok"),
+        ).fetchone()
+        from datetime import datetime,timezone
+        try:
+            self.assertFalse(update_due(
+                row,3600,now=datetime(2026,10,6,3,30,tzinfo=timezone.utc)))
+        finally:
+            conn.close()
+
+    def test_malformed_previous_timestamp_is_due_instead_of_blocking_scheduler(self):
+        self.assertTrue(update_due(
+            {"finished_at":"not-a-date","status":"ok"},
+            3600,
+        ))
+
+    def test_naive_legacy_timestamp_is_interpreted_as_utc(self):
+        from datetime import datetime,timezone
+        self.assertFalse(update_due(
+            {"finished_at":"2026-10-06T03:00:00","status":"ok"},
+            3600,
+            now=datetime(2026,10,6,3,30,tzinfo=timezone.utc),
+        ))
+        self.assertTrue(update_due(
+            {"finished_at":"2026-10-06T03:00:00","status":"ok"},
+            3600,
+            now=datetime(2026,10,6,4,1,tzinfo=timezone.utc),
+        ))
+
+    def test_scheduler_survives_one_iteration_failure(self):
+        updater=Updater()
+        class StopAfterTwoTicks:
+            def __init__(self):self.ticks=0
+            def is_set(self):return self.ticks>=2
+            def wait(self,_seconds):self.ticks+=1
+        updater.stop=StopAfterTwoTicks()
+        with patch.object(
+            updater,"schedule_once",
+            side_effect=[sqlite3.OperationalError("database is locked"),None],
+        ) as once, patch("tracker.sync.traceback.print_exc"):
+            updater.schedule()
+        self.assertEqual(once.call_count,2)
+        self.assertEqual(updater.stop.ticks,2)
 
     def test_final_status_write_failure_still_clears_running_state(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,"DATA",Path(tmp)):
