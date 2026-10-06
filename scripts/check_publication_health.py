@@ -25,7 +25,7 @@ def _age(day,today):
     return (today-date.fromisoformat(day)).days
 
 
-def evaluate(started_at, *, today=None, max_age_days=7):
+def evaluate(started_at, *, today=None, max_age_days=7, max_aum_age_days=35):
     if not started_at:
         raise ValueError("Collection start boundary is required")
     today=today or india_today()
@@ -90,10 +90,15 @@ def evaluate(started_at, *, today=None, max_age_days=7):
     if funds<=0:blockers.append("fund_universe_empty")
     if coverage["counts"]["aum"]!=funds:blockers.append("aum_coverage_incomplete")
     if coverage["counts"]["fee"]!=funds:blockers.append("fee_coverage_incomplete")
-    aum_latest=(coverage.get("record_dates",{}).get("aum") or {}).get("latest")
+    aum_dates=coverage.get("record_dates",{}).get("aum") or {}
+    aum_latest=aum_dates.get("latest")
+    aum_earliest=aum_dates.get("earliest")
     aum_age=_age(aum_latest,today)
+    aum_oldest_age=_age(aum_earliest,today)
     if aum_age is None or aum_age<0 or aum_age>max_age_days:
         blockers.append("aum_stale_or_invalid")
+    if aum_oldest_age is None or aum_oldest_age<0 or aum_oldest_age>max_aum_age_days:
+        blockers.append("aum_fund_dates_stale_or_invalid")
 
     status="blocked" if blockers else ("degraded" if degraded else "ok")
     return {
@@ -101,6 +106,7 @@ def evaluate(started_at, *, today=None, max_age_days=7):
         "collection_started_at":started_at,
         "checked_for_date":today.isoformat(),
         "max_age_days":max_age_days,
+        "max_aum_age_days":max_aum_age_days,
         "jobs":jobs,
         "degraded":degraded,
         "blockers":blockers,
@@ -117,6 +123,8 @@ def evaluate(started_at, *, today=None, max_age_days=7):
             "fee_funds":coverage["counts"]["fee"],
             "aum_latest_date":aum_latest,
             "aum_age_days":aum_age,
+            "aum_earliest_date":aum_earliest,
+            "aum_oldest_age_days":aum_oldest_age,
         },
     }
 
@@ -126,8 +134,13 @@ def main(argv=None):
     parser.add_argument("--started-at",default=os.environ.get("SMALLCAP_COLLECTION_STARTED_AT",""))
     parser.add_argument("--output",type=Path,default=ROOT/"deployment"/"publication-health.json")
     parser.add_argument("--max-age-days",type=int,default=7)
+    parser.add_argument("--max-aum-age-days",type=int,default=35)
     args=parser.parse_args(argv)
-    report=evaluate(args.started_at,max_age_days=args.max_age_days)
+    report=evaluate(
+        args.started_at,
+        max_age_days=args.max_age_days,
+        max_aum_age_days=args.max_aum_age_days,
+    )
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print(json.dumps(report,indent=2,ensure_ascii=False))
