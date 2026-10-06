@@ -346,28 +346,33 @@ def document_title(title,url):
     return title
 
 
-def save_document(family,title,url,kind="disclosure",scope="Fund",published=None,origin="AMC"):
+def save_document_in_connection(c,family,title,url,kind="disclosure",scope="Fund",published=None,origin="AMC"):
+    """Save one document using the caller's transaction."""
     from .publications import exclusion_reason
     reason=exclusion_reason(family,url,title)
     if reason:raise ValueError(reason)
     title=document_title(title,url)
+    c.execute('''INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
+      VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(family,url) DO UPDATE SET
+      title=CASE
+        WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.title
+        ELSE excluded.title END,
+      kind=CASE
+        WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.kind
+        ELSE excluded.kind END,
+      scope=CASE
+        WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.scope
+        ELSE excluded.scope END,
+      origin=CASE WHEN documents.origin='AMC' THEN documents.origin ELSE excluded.origin END,
+      last_seen=excluded.last_seen,
+      published_at=COALESCE(excluded.published_at,documents.published_at)''',
+      (family,title[:500],kind,scope,url,published,db.now(),db.now(),origin))
+    return c.execute("SELECT id FROM documents WHERE family=? AND url=?",(family,url)).fetchone()[0]
+
+
+def save_document(family,title,url,kind="disclosure",scope="Fund",published=None,origin="AMC"):
     with db.connect() as c:
-        c.execute('''INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
-          VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(family,url) DO UPDATE SET
-          title=CASE
-            WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.title
-            ELSE excluded.title END,
-          kind=CASE
-            WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.kind
-            ELSE excluded.kind END,
-          scope=CASE
-            WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.scope
-            ELSE excluded.scope END,
-          origin=CASE WHEN documents.origin='AMC' THEN documents.origin ELSE excluded.origin END,
-          last_seen=excluded.last_seen,
-          published_at=COALESCE(excluded.published_at,documents.published_at)''',
-          (family,title[:500],kind,scope,url,published,db.now(),db.now(),origin))
-        return c.execute("SELECT id FROM documents WHERE family=? AND url=?",(family,url)).fetchone()[0]
+        return save_document_in_connection(c,family,title,url,kind,scope,published,origin)
 
 
 def doc_version(doc_id, content_hash):
