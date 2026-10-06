@@ -483,10 +483,14 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             h=db.archive(content,types[ext]);did=providers.save_document(s['family'],doc_title,source,document_kind,scope,origin='User import · unverified source')
             providers.doc_version(did,h);parse_note='Original document archived.'
             try:
-                if ext=='.xml':disclosures.summary_xml(content,s['family'],source,h)
-                elif ext in ('.xls','.xlsx'):disclosures.spreadsheet(content,s['family'],source,h)
-                elif ext=='.pdf' and document_kind in ('factsheet','portfolio'):disclosures.factsheet_pdf(content,s['family'],source,h)
+                with db.row_origin('User import'):
+                    if ext=='.xml':disclosures.summary_xml(content,s['family'],source,h)
+                    elif ext in ('.xls','.xlsx'):disclosures.spreadsheet(content,s['family'],source,h)
+                    elif ext=='.pdf' and document_kind in ('factsheet','portfolio'):disclosures.factsheet_pdf(content,s['family'],source,h)
             except Exception:parse_note+=' Layout could not be parsed automatically; the original remains available.'
+            with db.connect() as c:
+                c.execute('INSERT INTO fetches(url,fetched_at,status,hash,detail) VALUES(?,?,?,?,?)',
+                          (source,db.now(),'imported',h,kind))
             return {'ok':True,'rows':1,'kind':kind,'note':parse_note}
         records=list(csv.DictReader(io.StringIO(content.decode('utf-8-sig'))))
         if not records or len(records)>100000:raise ValueError('CSV must contain 1–100,000 records')
@@ -495,7 +499,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             points=[(providers.iso(r['date']),providers.number(r['value'])) for r in records]
             if any(v<=0 or d>today for d,v in points):raise ValueError('Benchmark values must be positive and dates cannot be in the future')
             h=db.archive(content,'text/csv')
-            db.save_benchmark(benchmark.strip(),points,source,authoritative=False)
+            db.save_benchmark(benchmark.strip(),points,source,authoritative=False,origin='User import')
         elif kind=='portfolio':
             s=scheme(code);day=providers.iso(as_of)
             if day>today:raise ValueError('Portfolio date cannot be in the future')
@@ -508,7 +512,7 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             if any(p['quantity'] is not None and p['quantity']<0 for p in positions):raise ValueError('Quantity cannot be negative')
             if complete and not 95<=sum(p['weight'] for p in positions)<=105:raise ValueError('A complete portfolio must total approximately 100%; include cash and other assets, or leave completeness unchecked')
             h=db.archive(content,'text/csv')
-            disclosures.portfolio(s['family'],day,positions,complete,source,h)
+            with db.row_origin('User import'):disclosures.portfolio(s['family'],day,positions,complete,source,h)
         elif kind=='metrics':
             s=scheme(code);valid=[]
             allowed={'aum','ter','base_expense_ratio','brokerage','transaction_cost','statutory_levies','exit_load','benchmark','managers','fund_launch','objective','risk','minimum_sip','minimum_lumpsum'}
@@ -522,21 +526,26 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
                 if name in ('ter','base_expense_ratio') and value>10:raise ValueError('Fee must be percentage points, e.g. 0.65 for 0.65%')
                 valid.append((plan,name,day,value,unit))
             h=db.archive(content,'text/csv')
-            for plan,name,day,value,unit in valid:db.metric(s['family'],plan,name,day,value,unit,source,h)
+            with db.row_origin('User import'):
+                for plan,name,day,value,unit in valid:db.metric(s['family'],plan,name,day,value,unit,source,h)
         elif kind=='distributions':
             s=scheme(code)
             if s['option']!='IDCW':raise ValueError('Select an IDCW scheme')
             first=providers.iso(coverage_from);last=providers.iso(coverage_to)
             if not complete or first>last or last>today:raise ValueError('Confirm complete payout history and specify a valid coverage window')
-            events=[(code,providers.iso(r['ex_date']),providers.number(r['amount']),providers.number(r['reinvestment_nav']),source,db.now()) for r in records]
+            events=[(code,providers.iso(r['ex_date']),providers.number(r['amount']),providers.number(r['reinvestment_nav']),source,db.now(),'User import') for r in records]
             if any(x[2]<0 or x[3]<=0 or not first<=x[1]<=last for x in events):raise ValueError('Invalid distribution value or date outside coverage')
             h=db.archive(content,'text/csv')
             with db.connect() as c:
                 # The source document is versioned; replace the declared window atomically
                 # so an ex-date correction does not leave a duplicate old distribution.
                 c.execute('DELETE FROM distributions WHERE code=? AND ex_date BETWEEN ? AND ?',(code,first,last))
-                c.executemany('INSERT OR REPLACE INTO distributions VALUES(?,?,?,?,?,?)',events)
-                c.execute('INSERT OR REPLACE INTO distribution_coverage VALUES(?,?,?,?,?)',(code,first,last,source,db.now()))
+                c.executemany('''INSERT OR REPLACE INTO distributions(
+                  code,ex_date,amount,reinvestment_nav,source,observed_at,origin)
+                  VALUES(?,?,?,?,?,?,?)''',events)
+                c.execute('''INSERT OR REPLACE INTO distribution_coverage(
+                  code,start,end,source,observed_at,origin) VALUES(?,?,?,?,?,?)''',
+                  (code,first,last,source,db.now(),'User import'))
             did=providers.save_document(s['family'],'Imported IDCW distribution history',source,'disclosure','Fund',origin='User import');providers.doc_version(did,h)
         else:raise ValueError('Unsupported import type')
         with db.connect() as c:c.execute('INSERT INTO fetches(url,fetched_at,status,hash,detail) VALUES(?,?,?,?,?)',(source,db.now(),'imported',h,kind))
