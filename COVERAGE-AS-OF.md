@@ -1,6 +1,6 @@
 # Included data coverage
 
-Prepared: 2026-10-06T00:47:28+00:00
+Prepared: 2026-10-06T03:52:51+00:00
 
 **36 funds, 143 NAV series, 282,294 NAV observations. Latest included NAV: 2026-10-05.**
 
@@ -28,18 +28,18 @@ Coverage counts mean a selected dated record exists. The ranges above are report
 | HSBC Small Cap Fund | ₹ 18,387.41 · 2026-10-01 | 0.77% TER · 2026-10-04 | 115 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 24 |
 | Helios Small Cap Fund | ₹ 1,868.81 · 2026-10-01 | 0.93% TER · 2026-08-31 | 96 positions · 2026-08-31 · complete · current | Nifty Small Cap 250 Total Return Index (TRI) · 2026-09-30 | 173 |
 | ICICI Prudential Small Cap Fund | ₹ 9,688.70 · 2026-10-01 | 1.16% TER · 2026-10-01 | 125 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 6 |
-| Invesco India Small Cap Fund | ₹ 16,037.45 · 2026-10-01 | 0.64% TER · 2026-10-04 | 72 positions · 2026-08-31 · complete · current | BSE 250 Smallcap TRI · 2026-08-31 | 6 |
+| Invesco India Small Cap Fund | ₹ 16,037.45 · 2026-10-01 | 0.64% TER · 2026-10-05 | 72 positions · 2026-08-31 · complete · current | BSE 250 Smallcap TRI · 2026-08-31 | 6 |
 | Iti Small Cap Fund | ₹ 3,625.07 · 2026-10-01 | 0.84% TER · 2026-10-05 | 87 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 11 |
 | Jm Small Cap Fund | ₹ 942.18 · 2026-10-01 | 0.95% TER · 2026-10-05 | 85 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-06-30 | 7 |
 | Kotak Small Cap Fund | ₹ 18,871.76 · 2026-10-01 | 0.6459% TER · 2026-09-30 | 81 positions · 2026-08-31 · complete · current | NIFTY Smallcap 250 TRI · 2026-08-31 | 9 |
 | LIC Mf Small Cap Fund | ₹ 831.73 · 2026-10-01 | 1.28% TER · 2026-10-05 | 57 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 - TRI · 2026-08-31 | 28 |
 | Mahindra Manulife Small Cap Fund | ₹ 5,301.66 · 2026-10-01 | 0.92% TER · 2026-10-05 | 82 positions · 2026-08-31 · complete · current | BSE 250 Small Cap TRI · 2026-08-31 | 13 |
-| Mirae Asset Small Cap Fund | ₹ 5,771.38 · 2026-10-01 | 0.67% TER · 2026-10-04 | 86 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 (TRI) · 2026-07-31 | 9 |
-| Motilal Oswal Small Cap Fund | ₹ 8,224.58 · 2026-10-01 | 0.85% TER · 2026-10-01 | 63 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
+| Mirae Asset Small Cap Fund | ₹ 5,771.38 · 2026-10-01 | 0.67% TER · 2026-10-05 | 86 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 (TRI) · 2026-07-31 | 9 |
+| Motilal Oswal Small Cap Fund | ₹ 8,224.58 · 2026-10-01 | 0.85% TER · 2026-10-05 | 63 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 7 |
 | Nippon India Small Cap Fund | ₹ 79,985.23 · 2026-10-01 | 0.69% TER · 2026-09-30 | 257 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 655 |
 | Pgim India Small Cap Fund | ₹ 1,723.44 · 2026-10-01 | 0.93% TER · 2026-10-05 | 73 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 - TRI · 2026-08-31 | 12 |
 | Quant Small Cap Fund | ₹ 35,576.44 · 2026-10-01 | 0.9% TER · 2026-10-05 | 120 positions · 2026-08-31 · complete · current | NIFTY SMALLCAP 250 TRI · 2026-08-31 | 28 |
-| Quantum Small Cap Fund | ₹ 261.75 · 2026-10-01 | 0.83% TER · 2026-10-04 | 60 positions · 2026-08-31 · complete · current | BSE 250 SmallCap TRI · 2025-08-31 | 76 |
+| Quantum Small Cap Fund | ₹ 261.75 · 2026-10-01 | 0.83% TER · 2026-10-05 | 60 positions · 2026-08-31 · complete · current | BSE 250 SmallCap TRI · 2025-08-31 | 76 |
 | SBI Small Cap Fund | ₹ 40,526.42 · 2026-10-01 | 0.8% TER · 2026-10-04 | 73 positions · 2026-08-31 · complete · current | BSE 250 Small Cap Index TRI · 2026-07-31 | 9 |
 | Samco Small Cap Fund | ₹ 268.75 · 2026-10-01 | 1.97% TER · 2026-09-30 | 78 positions · 2026-08-31 · complete · current | Nifty Smallcap 250 TRI · 2026-08-31 | 633 |
 | Sundaram Small Cap Fund | ₹ 4,049.20 · 2026-10-01 | 0.98% TER · 2026-09-30 | 77 positions · 2026-08-31 · partial · current | Nifty Small Cap 250 TRI · 2026-05-31 | 14 |

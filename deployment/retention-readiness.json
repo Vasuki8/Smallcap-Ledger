@@ -1,63 +1,63 @@
 {
-  "prepared_at": "2026-10-06T00:47:07+00:00",
+  "prepared_at": "2026-10-06T03:52:30+00:00",
   "mode": "apply_classifications_no_binary_change",
   "inventory_file": "docs/SOURCE-RETENTION-INVENTORY.json",
   "reviewed_inventory_hashes": 2519,
   "historical_link_only_candidates": 700,
-  "historical_candidates_strengthened_by_current_scan": 20,
-  "post_audit_hashes_reviewed": 5069,
+  "historical_candidates_strengthened_by_current_scan": 53,
+  "post_audit_hashes_reviewed": 5235,
   "post_audit_delta": {
-    "reviewed_at": "2026-10-06T00:47:07+00:00",
+    "reviewed_at": "2026-10-06T03:52:29+00:00",
     "scope": "post_original_audit_hashes_only",
     "original_reviewed_inventory_hashes": 2519,
-    "new_hashes_reviewed": 5069,
+    "new_hashes_reviewed": 5235,
     "binary_state_policy": "all_retained",
     "files_deleted": 0,
     "bytes_deleted": 0,
     "classifications": {
-      "retain_evidence": 1963,
-      "link_only_candidate": 2299,
-      "retain_latest_or_review": 807
+      "retain_evidence": 2010,
+      "link_only_candidate": 2286,
+      "retain_latest_or_review": 939
     },
     "classification_bytes": {
-      "retain_evidence": 1542146780,
-      "link_only_candidate": 971454264,
-      "retain_latest_or_review": 854596029
+      "retain_evidence": 1558450068,
+      "link_only_candidate": 1000085790,
+      "retain_latest_or_review": 884185578
     },
-    "new_link_only_candidates": 2299,
-    "new_link_only_candidate_raw_bytes": 971454264,
+    "new_link_only_candidates": 2286,
+    "new_link_only_candidate_raw_bytes": 1000085790,
     "migration_set_policy": "delta_not_merged_into_approved_695_hash_proposal"
   },
   "current_dependency_scan_missing_hashes": 0,
-  "current_archive_hashes": 7588,
+  "current_archive_hashes": 7754,
   "new_unclassified_hashes": 0,
   "retention_groups": [
     {
       "classification": "link_only_candidate",
       "binary_state": "retained",
-      "files": 2979,
-      "bytes": 1372806822
+      "files": 2933,
+      "bytes": 1400039236
     },
     {
       "classification": "retain_evidence",
       "binary_state": "retained",
-      "files": 2952,
-      "bytes": 2835997936
+      "files": 2999,
+      "bytes": 2852301224
     },
     {
       "classification": "retain_latest_or_review",
       "binary_state": "retained",
-      "files": 1657,
-      "bytes": 1321911983
+      "files": 1822,
+      "bytes": 1352900644
     }
   ],
   "binary_states": {
-    "retained": 7588
+    "retained": 7754
   },
   "classifications": {
-    "retain_latest_or_review": 1657,
-    "retain_evidence": 2952,
-    "link_only_candidate": 2979
+    "retain_latest_or_review": 1822,
+    "retain_evidence": 2999,
+    "link_only_candidate": 2933
   },
   "protected_archive_metadata_sha256_before": "47b10cbf4ee07427db21adc6d24b1447dcea3747f5d6fad2cea51ce5b3d94f39",
   "protected_archive_metadata_sha256_after": "47b10cbf4ee07427db21adc6d24b1447dcea3747f5d6fad2cea51ce5b3d94f39",
@@ -65,8 +65,8 @@
   "non_retention_table_fingerprints_unchanged": true,
   "non_retention_table_fingerprints": {
     "archives": {
-      "rows": 7588,
-      "sha256": "8aa575dad34e9c46a538c7c8b551bbd098797781fd67a6220752c421c4383052"
+      "rows": 7754,
+      "sha256": "d9ca24d4b8ed464f3578f149746852680737f17c1275a9e4f2b3e4779ff8a15a"
     },
     "benchmark": {
       "rows": 5335,
@@ -93,44 +93,44 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "document_extractions": {
-      "rows": 8255,
-      "sha256": "9d0c11af596f0fb21022ac9b47e780086e6714c1c26240d8c61217c8a2e42dc8"
+      "rows": 8277,
+      "sha256": "731670f67f3e9021ce3acdb916f5e243f4881fe43825649bea58cf0ff1b62a28"
     },
     "document_versions": {
-      "rows": 6387,
-      "sha256": "08f1db2e2852a10b09bc9afdca17c73dd19894c4edf4802ef212832ea6725316"
+      "rows": 6543,
+      "sha256": "3e23015d4fc0ec2121a2a2ee7c8e79fcdaf0d060bde6ccc8c782f66595aaa147"
     },
     "documents": {
       "rows": 2202,
-      "sha256": "cc2f2012fa370cb411c3e4d61d210cc62f767f420fe1ec7b14afeb0075f4d79f"
+      "sha256": "3fe47f016b3385e0bf48f7f6ad7df4d32204971f0c9bd5b53ecab4ea79dac074"
     },
     "fetches": {
-      "rows": 26298,
-      "sha256": "05d46665298de84a4b2d1a5dcf399c43ff0de85a1ae869166de3cee4552fb482"
+      "rows": 27157,
+      "sha256": "24a43dee43ddcfedb428e5559e3a852230a1023a8d6c03c7c8f321e55ecfe31c"
     },
     "holdings": {
-      "rows": 11386,
-      "sha256": "d93221ce5b5a99b14a71674579d75dbcf1719d61d52937147a5a8dd84f1cb6b1"
+      "rows": 12600,
+      "sha256": "4b59acea15ae488ce267e7c71c3ed98db350da8fa8f9d8adae8f76893f48f587"
     },
     "jobs": {
-      "rows": 1708,
-      "sha256": "80cf03967ffe149d2999e9c4e31bb3036b5925055941361a9f12136e84f6be55"
+      "rows": 1741,
+      "sha256": "07c9d5bfa3accaea2be30fe9debb35a4c99c4dabaa0b8ff69e0f755c75766484"
     },
     "metrics": {
-      "rows": 33547,
-      "sha256": "c420950a282cced70f7ad17fcf41b5f68ae01adc2fc06d99f1bbe83c9ff9ba44"
+      "rows": 33627,
+      "sha256": "afb02c9456398ff8a3678a0ee210e66b258e0daf70bae7b810d66b959fe59b48"
     },
     "nav": {
       "rows": 282294,
-      "sha256": "50d4097906b2c33079c2d4f6a4cb2a217539d788ace27915dc613b7f9bd16d8b"
+      "sha256": "b6a637482813b38a4bd22a9491c1ec45a3277dadaff2ea901253db6382e8a7a7"
     },
     "nav_observations": {
       "rows": 283715,
       "sha256": "73637d4fc27fd110ceb3692cadf1607cf783d927ccb13fd4ee6771fed8f94254"
     },
     "portfolios": {
-      "rows": 238,
-      "sha256": "c2f19adcacbe0c5d1cc6d043c16ab6784af50c743601f4a5d81ec8cbdf28af6e"
+      "rows": 245,
+      "sha256": "93c7b6db74c210c0e1d2173e7964954f6331bc0151134ee881acf4a9a7749b39"
     },
     "schemes": {
       "rows": 143,
@@ -142,17 +142,17 @@
     },
     "source_pages": {
       "rows": 363,
-      "sha256": "64ddaf58d51f5473c215ff36ef6e9e7b360a916e7cce19b8aa33d101afbdc66a"
+      "sha256": "55f72a18e3d359e46be0aab0551c8328eeaba2f0a124ed5fd12ac3e3051e4674"
     }
   },
   "files_actually_deleted": 0,
   "bytes_actually_deleted": 0,
   "active_checkpoint_format": 2,
-  "active_checkpoint_created_at": "2026-10-05T23:18:34+00:00",
+  "active_checkpoint_created_at": "2026-10-06T00:47:57+00:00",
   "protected_hashes_covered_by_active_source_manifest": true,
   "link_only_candidates_still_covered_by_active_source_manifest": true,
-  "link_only_candidates_expected_in_active_source_manifest": 2972,
-  "link_only_candidates_newer_than_active_checkpoint": 7,
+  "link_only_candidates_expected_in_active_source_manifest": 2927,
+  "link_only_candidates_newer_than_active_checkpoint": 6,
   "deletion_enabled": false,
   "source_pack_repack_performed": false,
   "legacy_or_rollback_assets_retired": false,

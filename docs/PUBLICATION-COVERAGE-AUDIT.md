@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-10-06T00:48:01+00:00
+Prepared: 2026-10-06T03:53:23+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -8,9 +8,9 @@ Prepared: 2026-10-06T00:48:01+00:00
 
 - Funds with at least one retained AMC communication: **34 / 36**.
 - Funds with no retained AMC communication: **2**.
-- Retained communication documents: **283**; archived originals: **266**.
-- Market/newsletter/CIO/product-view documents: **267**; letters to unitholders: **16**.
-- Communication documents with an explicit published date: **62**.
+- Retained communication documents: **265**; archived originals: **248**.
+- Market/newsletter/CIO/product-view documents: **249**; letters to unitholders: **16**.
+- Communication documents with an explicit published date: **60**.
 - Funds with a registered communication-oriented source page: **29**.
 
 ## Repair priorities
@@ -31,9 +31,9 @@ Prepared: 2026-10-06T00:48:01+00:00
 | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |
 | Abakkus Small Cap Fund | 12 | 12 | 0 | 12 | 10 | 2026-08-11 | 3 | publication_date_missing |
 | Aditya Birla Sun Life Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 1 | publication_date_missing |
-| Axis Small Cap Fund | 3 | 3 | 0 | 3 | 2 | 2026-03-15 | 2 | publication_date_missing |
+| Axis Small Cap Fund | 2 | 2 | 0 | 2 | 1 | 2026-02-11 | 2 | publication_date_missing |
 | Bajaj Finserv Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2026-05-21 | 1 | none |
-| Bandhan Small Cap Fund | 4 | 4 | 0 | 4 | 4 | 2026-09-11 | 3 | none |
+| Bandhan Small Cap Fund | 3 | 3 | 0 | 3 | 3 | 2026-09-11 | 3 | none |
 | Bank Of India Small Cap Fund | 4 | 4 | 0 | 4 | 0 | Gap | 1 | publication_date_missing |
 | Baroda Bnp Paribas Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
 | Canara Robeco Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2025-02-20 | 2 | none |
@@ -42,8 +42,8 @@ Prepared: 2026-10-06T00:48:01+00:00
 | Franklin India Small Cap Fund | 10 | 10 | 0 | 0 | 10 | 2026-10-01 | 1 | communication_document_not_archived, communication_archive_limitation |
 | Groww Small Cap Fund | 3 | 3 | 0 | 3 | 3 | 2026-09-21 | 1 | none |
 | HDFC Small Cap Fund | 19 | 18 | 1 | 19 | 0 | Gap | 2 | publication_date_missing |
-| HSBC Small Cap Fund | 21 | 21 | 0 | 21 | 20 | 2026-08-11 | 1 | publication_date_missing |
-| Helios Small Cap Fund | 10 | 10 | 0 | 10 | 0 | Gap | 0 | publication_date_missing |
+| HSBC Small Cap Fund | 20 | 20 | 0 | 20 | 20 | 2026-08-11 | 1 | none |
+| Helios Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 0 | publication_date_missing |
 | ICICI Prudential Small Cap Fund | 3 | 3 | 0 | 3 | 1 | 2026-08-11 | 1 | publication_date_missing |
 | Invesco India Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Iti Small Cap Fund | 3 | 3 | 0 | 3 | 0 | Gap | 3 | publication_date_missing |
@@ -51,15 +51,15 @@ Prepared: 2026-10-06T00:48:01+00:00
 | Kotak Small Cap Fund | 1 | 1 | 0 | 0 | 1 | 2026-09-09 | 1 | communication_document_not_archived, communication_archive_limitation |
 | LIC Mf Small Cap Fund | 20 | 20 | 0 | 15 | 0 | Gap | 1 | communication_document_not_archived, communication_archive_limitation, publication_date_missing |
 | Mahindra Manulife Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
-| Mirae Asset Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 1 | publication_date_missing |
+| Mirae Asset Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Motilal Oswal Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 3 | publication_date_missing |
 | Nippon India Small Cap Fund | 103 | 103 | 0 | 103 | 0 | Gap | 1 | publication_date_missing |
 | Pgim India Small Cap Fund | 5 | 5 | 0 | 5 | 0 | Gap | 1 | publication_date_missing |
-| Quant Small Cap Fund | 12 | 12 | 0 | 12 | 0 | Gap | 1 | publication_date_missing |
+| Quant Small Cap Fund | 7 | 7 | 0 | 7 | 0 | Gap | 1 | publication_date_missing |
 | Quantum Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
 | SBI Small Cap Fund | 2 | 2 | 0 | 2 | 1 | 2026-01-08 | 1 | publication_date_missing |
 | Samco Small Cap Fund | 1 | 1 | 0 | 0 | 0 | Gap | 0 | communication_document_not_archived, communication_archive_limitation, publication_date_missing |
-| Sundaram Small Cap Fund | 7 | 7 | 0 | 7 | 0 | Gap | 1 | publication_date_missing |
+| Sundaram Small Cap Fund | 6 | 6 | 0 | 6 | 0 | Gap | 1 | publication_date_missing |
 | Tata Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | The Wealth Company Small Cap Fund | 5 | 5 | 0 | 5 | 5 | 2026-04-30 | 1 | none |
 | Trustmf Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected, communication_source_limitation |
