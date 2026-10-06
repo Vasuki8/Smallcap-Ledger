@@ -48,7 +48,7 @@ def validate(root):
             for d in docs:
                 assert urlparse(d['url']).scheme in ('http','https'),'Invalid source URL'
                 assert d['family']==f['family'],'Publication attached to another fund'
-                assert not exclusion_reason(f['amc'],d['url'],d['title']),f'Unrelated AMC publication: {d["url"]}'
+                assert not exclusion_reason(f['amc'],d['url'],d['title'],d['kind']),f'Unrelated AMC publication: {d["url"]}'
     for source,target in read('data/downloads.json').items():
         p=(root/target).resolve()
         assert source.startswith('/api/') and p.is_relative_to(root) and p.is_file(),f'Broken download: {source}'
