@@ -52,6 +52,34 @@ class PublicationHealthGateTests(unittest.TestCase):
             self.assertEqual(result['blockers'],[])
             self.assertIn('metrics_job_partial',result['degraded'])
 
+    def test_fresh_retained_benchmark_allows_degraded_publish_after_refresh_error(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
+            db.init();self.seed(statuses={'benchmark':'error'},latest='2026-10-05')
+            result=evaluate(self.boundary,today=self.today)
+            self.assertEqual(result['status'],'degraded')
+            self.assertEqual(result['blockers'],[])
+            self.assertIn(
+                'benchmark_job_error_using_fresh_retained_data',
+                result['degraded'],
+            )
+
+    def test_stale_retained_benchmark_still_blocks_after_refresh_error(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
+            db.init();self.seed(latest='2026-10-05')
+            with db.connect() as c:
+                c.execute("DELETE FROM benchmark WHERE name=?",(providers.BENCHMARK,))
+                c.execute(
+                    "INSERT INTO benchmark(name,date,value,source,observed_at) VALUES(?,?,?,?,?)",
+                    (providers.BENCHMARK,'2026-09-20',1234,providers.NIFTY_PAGE,db.now()),
+                )
+                c.execute(
+                    "UPDATE jobs SET status='error',detail='read timed out' WHERE kind='benchmark'"
+                )
+            result=evaluate(self.boundary,today=self.today)
+            self.assertEqual(result['status'],'blocked')
+            self.assertIn('benchmark_job_error',result['blockers'])
+            self.assertIn('primary_benchmark_stale_or_invalid',result['blockers'])
+
     def test_error_job_blocks_publication(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
             db.init();self.seed(statuses={'nav':'error'})
