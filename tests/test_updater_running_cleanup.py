@@ -18,6 +18,21 @@ class UpdaterRunningCleanupTests(unittest.TestCase):
             updater.run("benchmark")
         self.assertEqual(updater.status(),{})
 
+    def test_scheduler_survives_one_iteration_failure(self):
+        updater=Updater()
+        class StopAfterTwoTicks:
+            def __init__(self):self.ticks=0
+            def is_set(self):return self.ticks>=2
+            def wait(self,_seconds):self.ticks+=1
+        updater.stop=StopAfterTwoTicks()
+        with patch.object(
+            updater,"schedule_once",
+            side_effect=[sqlite3.OperationalError("database is locked"),None],
+        ) as once, patch("tracker.sync.traceback.print_exc"):
+            updater.schedule()
+        self.assertEqual(once.call_count,2)
+        self.assertEqual(updater.stop.ticks,2)
+
     def test_final_status_write_failure_still_clears_running_state(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,"DATA",Path(tmp)):
             db.init()
