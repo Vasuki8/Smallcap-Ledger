@@ -29,8 +29,10 @@ from .sync import updater
 async def lifespan(app):
     db.init(recover=True);disclosures.seed_sources()
     if os.environ.get("SMALLCAP_NO_SCHEDULER")!="1": updater.start()
-    yield
-    updater.stop.set()
+    try:
+        yield
+    finally:
+        updater.shutdown()
 
 app=FastAPI(title="Smallcap Ledger",lifespan=lifespan,docs_url=None,redoc_url=None)
 
