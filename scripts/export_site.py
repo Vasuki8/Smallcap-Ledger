@@ -187,6 +187,22 @@ def write_discoverability(output,index,repository):
         )+'</urlset>\n'
         (output/'sitemap.xml').write_text(xml,encoding='utf-8')
         (output/'robots.txt').write_text(f"User-agent: *\nAllow: /\nSitemap: {base}sitemap.xml\n",encoding='utf-8')
+        # GitHub project sites cannot place robots.txt at the github.io host
+        # root, so do not rely on the project-path robots file for discovery.
+        # Publish explicit root-page links to the sitemap and static directory.
+        root_page=output/'index.html'
+        if root_page.is_file():
+            page=root_page.read_text(encoding='utf-8')
+            discovery=(
+                f'<link rel="canonical" href="{html.escape(base)}">\n'
+                f'<link rel="sitemap" type="application/xml" href="{html.escape(base+"sitemap.xml")}">\n'
+            )
+            if 'rel="sitemap"' not in page:
+                page=page.replace('</head>',discovery+'</head>')
+            directory_link='<a class="sr-only" href="./funds/">Browse all small-cap fund pages</a>'
+            if directory_link not in page:
+                page=page.replace('</body>',directory_link+'\n</body>')
+            root_page.write_text(page,encoding='utf-8')
     return rows
 
 
