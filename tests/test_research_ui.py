@@ -33,6 +33,26 @@ class ResearchUIAssets(unittest.TestCase):
         self.assertIn('?v=', tags.styles[0]['href'])
         self.assertIn('?v=', tags.scripts[-1]['src'])
 
+    def test_static_root_has_restrictive_csp_meta(self):
+        class Tags(HTMLParser):
+            policies=[]
+            def handle_starttag(self,tag,attrs):
+                if tag!="meta":return
+                attrs=dict(attrs)
+                if attrs.get("http-equiv","").lower()=="content-security-policy":
+                    self.policies.append(attrs.get("content",""))
+        tags=Tags();tags.feed((DIST/"index.html").read_text(encoding="utf-8"))
+        self.assertEqual(len(tags.policies),1)
+        policy=tags.policies[0]
+        self.assertIn("default-src 'self'",policy)
+        self.assertIn("script-src 'self'",policy)
+        self.assertNotIn("script-src 'self' 'unsafe-inline'",policy)
+        self.assertIn("connect-src 'self'",policy)
+        self.assertIn("object-src 'none'",policy)
+        self.assertIn("form-action 'self'",policy)
+        self.assertNotIn("http:",policy)
+        self.assertNotIn("https:",policy)
+
     def test_hosted_coverage_distinguishes_presence_from_record_dates(self):
         app=(DIST/'app.js').read_text(encoding='utf-8')
         research=(DIST/'research.js').read_text(encoding='utf-8')
