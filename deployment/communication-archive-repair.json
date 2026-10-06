@@ -9,56 +9,6 @@
       "repaired_rows": [],
       "failed_rows": [
         {
-          "url": "https://www.licmf.com/assets/pdfs/monthly_market_outlook_jan_2025-985953721.pdf",
-          "request_url": "https://www.licmf.com/assets/pdfs/monthly_market_outlook_jan_2025-985953721.pdf",
-          "error": "response did not validate as an expected document/page",
-          "attempts": [
-            {
-              "media_type": "application/pdf",
-              "bytes": 0,
-              "prefix_hex": "",
-              "text_prefix": "",
-              "headers": {},
-              "error": "response did not validate as an expected document/page"
-            },
-            {
-              "media_type": "application/pdf",
-              "bytes": 0,
-              "prefix_hex": "",
-              "text_prefix": "",
-              "headers": {
-                "Referer": "https://www.licmf.com/insights/market-update"
-              },
-              "error": "response did not validate as an expected document/page"
-            }
-          ]
-        },
-        {
-          "url": "https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook February 2025.pdf",
-          "request_url": "https://www.licmf.com/assets/pdfs/LICMF%20Monthly%20Market%20Outlook%20February%202025.pdf",
-          "error": "response did not validate as an expected document/page",
-          "attempts": [
-            {
-              "media_type": "application/pdf",
-              "bytes": 0,
-              "prefix_hex": "",
-              "text_prefix": "",
-              "headers": {},
-              "error": "response did not validate as an expected document/page"
-            },
-            {
-              "media_type": "application/pdf",
-              "bytes": 0,
-              "prefix_hex": "",
-              "text_prefix": "",
-              "headers": {
-                "Referer": "https://www.licmf.com/insights/market-update"
-              },
-              "error": "response did not validate as an expected document/page"
-            }
-          ]
-        },
-        {
           "url": "https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook March 2025.pdf",
           "request_url": "https://www.licmf.com/assets/pdfs/LICMF%20Monthly%20Market%20Outlook%20March%202025.pdf",
           "error": "response did not validate as an expected document/page",
@@ -132,6 +82,56 @@
               "error": "response did not validate as an expected document/page"
             }
           ]
+        },
+        {
+          "url": "https://www.licmf.com/assets/pdfs/monthly_market_outlook_jan_2025-985953721.pdf",
+          "request_url": "https://www.licmf.com/assets/pdfs/monthly_market_outlook_jan_2025-985953721.pdf",
+          "error": "response did not validate as an expected document/page",
+          "attempts": [
+            {
+              "media_type": "application/pdf",
+              "bytes": 0,
+              "prefix_hex": "",
+              "text_prefix": "",
+              "headers": {},
+              "error": "response did not validate as an expected document/page"
+            },
+            {
+              "media_type": "application/pdf",
+              "bytes": 0,
+              "prefix_hex": "",
+              "text_prefix": "",
+              "headers": {
+                "Referer": "https://www.licmf.com/insights/market-update"
+              },
+              "error": "response did not validate as an expected document/page"
+            }
+          ]
+        },
+        {
+          "url": "https://www.licmf.com/assets/pdfs/LICMF Monthly Market Outlook February 2025.pdf",
+          "request_url": "https://www.licmf.com/assets/pdfs/LICMF%20Monthly%20Market%20Outlook%20February%202025.pdf",
+          "error": "response did not validate as an expected document/page",
+          "attempts": [
+            {
+              "media_type": "application/pdf",
+              "bytes": 0,
+              "prefix_hex": "",
+              "text_prefix": "",
+              "headers": {},
+              "error": "response did not validate as an expected document/page"
+            },
+            {
+              "media_type": "application/pdf",
+              "bytes": 0,
+              "prefix_hex": "",
+              "text_prefix": "",
+              "headers": {
+                "Referer": "https://www.licmf.com/insights/market-update"
+              },
+              "error": "response did not validate as an expected document/page"
+            }
+          ]
         }
       ],
       "skipped_rows": []
@@ -147,13 +147,24 @@
       "skipped_rows": []
     },
     "Samco Small Cap Fund": {
-      "before": 1,
+      "before": 2,
       "repaired": 0,
-      "failed": 1,
+      "failed": 2,
       "skipped": 0,
-      "remaining": 1,
+      "remaining": 2,
       "repaired_rows": [],
       "failed_rows": [
+        {
+          "url": "https://media1.samco.in/scomamc/amc_documents/Lienrequestletterfromunitholder_1790053774.pdf",
+          "request_url": "https://media1.samco.in/scomamc/amc_documents/Lienrequestletterfromunitholder_1790053774.pdf",
+          "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file",
+          "attempts": [
+            {
+              "headers": {},
+              "error": "Automatic access is disallowed by this site's robots policy; open the source or import a downloaded file"
+            }
+          ]
+        },
         {
           "url": "https://media1.samco.in/scomamc/media_uploads/SamcoSmallCapFund-SchemePresentatiom(1)_1760509070.pdf",
           "request_url": "https://media1.samco.in/scomamc/media_uploads/SamcoSmallCapFund-SchemePresentatiom(1)_1760509070.pdf",
@@ -170,9 +181,9 @@
     }
   },
   "repaired": 0,
-  "failed": 6,
+  "failed": 7,
   "skipped": 0,
-  "prepared_at": "2026-10-06T04:17:21+00:00",
+  "prepared_at": "2026-10-06T05:09:45+00:00",
   "mode": "exact_retained_urls_best_effort",
   "scope": [
     "LIC Mf Small Cap Fund",
