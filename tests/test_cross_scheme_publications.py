@@ -122,6 +122,26 @@ class CrossSchemePublicationTests(unittest.TestCase):
             "https://www.assetmanagement.hsbc.co.in/en/mutual-funds/news-and-insights/rbi-monetary-policy-review-august-2026",
             "RBI Monetary Policy Review - August 2026"))
 
+    def test_sundaram_corporate_presentation_is_not_small_cap_communication(self):
+        family="Sundaram Small Cap Fund";amc="Sundaram Mutual Fund";code=9906
+        wrong_title="Corporate Presentation"
+        wrong_url="https://www.sundarammutual.com/Report/AMCP"
+        good_title="Market Outlook / Knowledge Hub"
+        good_url="https://www.sundarammutual.com/knowledge-hub"
+        self.scheme(code,family,amc)
+        self.old_doc(family,wrong_title,wrong_url)
+        good=providers.save_document(
+            family,good_title,good_url,"market view","AMC",origin="AMC")
+        h=db.archive(b"<html>Sundaram market outlook</html>","text/html")
+        providers.doc_version(good,h)
+
+        self.assertEqual([d["url"] for d in documents(code)],[good_url])
+        self.assertIn("corporate presentation",exclusion_reason(amc,wrong_url,wrong_title))
+        with self.assertRaisesRegex(ValueError,"corporate presentation"):
+            providers.save_document(
+                family,wrong_title,wrong_url,"market view","AMC",origin="AMC")
+        self.assertIsNone(exclusion_reason(amc,good_url,good_title))
+
     def test_quant_nfos_and_mirae_directory_are_hidden_and_rejected(self):
         cases=[
             (
