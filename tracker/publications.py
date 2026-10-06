@@ -76,6 +76,11 @@ def exclusion_reason(amc, url, title=''):
             and path.rstrip('/')=='/downloads/product-presentations'):
             return 'Mirae generic product-presentations directory; not an AMC communication document'
 
+    if re.search(r'aditya|birla', str(amc), re.I):
+        filename=path.rsplit('/',1)[-1]
+        if re.search(r'(?:^|[_-])public[_-]?notice(?:[_-]|\.|$)',filename,re.I):
+            return 'AMC public notice; not a market-view communication document'
+
     if re.search(r'\bdsp\b', str(amc), re.I):
         combined=(str(title or '')+' '+path).lower()
         foreign_scheme=re.search(
