@@ -314,7 +314,7 @@ def documents(code:int):
     from .publications import exclusion_reason
     # Apply current ownership rules to previously archived associations as well.
     # No historical document, version, or source file is deleted.
-    docs=[d for d in docs if not exclusion_reason(s['amc'],d['url'],d['title'])]
+    docs=[d for d in docs if not exclusion_reason(s['amc'],d['url'],d['title'],d['kind'])]
     for d in docs:
         d['title']=providers.document_title(d['title'],d['url'])
         d['versions']=db.rows("""SELECT v.*,a.media_type,a.bytes,

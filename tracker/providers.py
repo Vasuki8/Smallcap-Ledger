@@ -349,7 +349,7 @@ def document_title(title,url):
 def save_document_in_connection(c,family,title,url,kind="disclosure",scope="Fund",published=None,origin="AMC"):
     """Save one document using the caller's transaction."""
     from .publications import exclusion_reason
-    reason=exclusion_reason(family,url,title)
+    reason=exclusion_reason(family,url,title,kind)
     if reason:raise ValueError(reason)
     title=document_title(title,url)
     c.execute('''INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
@@ -383,15 +383,20 @@ def classify(title,url):
     title_text=(title or '').lower()
     s=(title_text+" "+url).lower()
     # Notices/press releases can mention a portfolio without containing the
-    # portfolio itself. Keep them out of portfolio coverage and parser queues.
-    if re.search(r'(?:^|[^a-z0-9])(?:press[\s_-]*release|notice|circular)(?:[^a-z0-9]|$)',title_text):return "disclosure"
+    # portfolio itself. Keep them out of portfolio/communication coverage even
+    # when a generic anchor title (for example "a") hides the file's real name.
+    filename=unquote(urlparse(url).path.rsplit('/',1)[-1]).lower()
+    notice_pattern=r'(?:^|[^a-z0-9])(?:press[\s_-]*release|(?:public[\s_-]*)?notice|circular)(?:[^a-z0-9]|$)'
+    if re.search(notice_pattern,title_text) or re.search(notice_pattern,filename):
+        return "disclosure"
     if re.search(r'\brisk[\s_-]*factors?\b',title_text):return "disclosure"
     compact_title=re.sub(r"[^a-z0-9]","",title_text)
-    if (("lien" in title_text or "pledge" in title_text)
-        and any(token in title_text for token in ("request","covering","removal","invocation"))):
+    compact_source=re.sub(r"[^a-z0-9]","",s)
+    if (("lien" in s or "pledge" in s)
+        and any(token in s for token in ("request","covering","removal","invocation"))):
         return "disclosure"
-    if ("lienrequestletterfromunitholder" in compact_title
-        or "requestletterforlien" in compact_title):
+    if ("lienrequestletterfromunitholder" in compact_source
+        or "requestletterforlien" in compact_source):
         return "disclosure"
     # Explicit first-party communication titles outrank generic directory/path
     # words such as "digitalfactsheet". Otherwise "Equity Market Update" pages

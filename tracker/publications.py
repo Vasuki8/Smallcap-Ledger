@@ -3,7 +3,7 @@ import re
 from urllib.parse import unquote, urlparse
 
 
-def exclusion_reason(amc, url, title=''):
+def exclusion_reason(amc, url, title='', kind=None):
     """Exclude reviewed cross-scheme/foreign associations without deleting evidence.
 
     A hosting domain establishes AMC ownership, not that every linked document
@@ -34,6 +34,20 @@ def exclusion_reason(amc, url, title=''):
         combined=(str(title or '')+' '+path).lower()
         if re.search(r'axis[\s_-]*greater[\s_-]*china[\s_-]*(?:equity[\s_-]*)?fund[\s_-]*of[\s_-]*fund',combined):
             return 'Axis Greater China Fund of Fund article; unrelated to Axis Small Cap Fund'
+
+    if re.search(r'\bhdfc\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if (host in ('www.hdfcfund.com','hdfcfund.com')
+            and path.rstrip('/')=='/statutory-disclosure/letter-unitholder'
+            and kind!='source page'):
+            return 'HDFC unitholder-letter directory; not a Small Cap communication document'
+        scheme_letter=bool(re.search(r'letter|unitholder|fundamental|merger',combined))
+        foreign_scheme=bool(
+            re.search(r'\bhdfc\b[^\n]{0,160}\b(?:fund|etf)\b',combined)
+            or re.search(r'\bhdfc[\s_-]*fmp\b',combined)
+        )
+        if scheme_letter and foreign_scheme and not re.search(r'\bsmall[\s_-]*cap\b',combined):
+            return 'HDFC non-Small-Cap scheme unitholder material; unrelated to HDFC Small Cap Fund'
 
     if re.search(r'\bhelios\b', str(amc), re.I):
         combined=(str(title or '')+' '+path).lower()
@@ -75,5 +89,35 @@ def exclusion_reason(amc, url, title=''):
         if (host in ('www.miraeassetmf.co.in','miraeassetmf.co.in')
             and path.rstrip('/')=='/downloads/product-presentations'):
             return 'Mirae generic product-presentations directory; not an AMC communication document'
+
+    if re.search(r'aditya|birla', str(amc), re.I):
+        filename=path.rsplit('/',1)[-1]
+        if re.search(r'(?:^|[_-])public[_-]?notice(?:[_-]|\.|$)',filename,re.I):
+            return 'AMC public notice; not a market-view communication document'
+
+    if re.search(r'\bdsp\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        foreign_scheme=re.search(
+            r'dsp[\s_-]*(?:quant|us[\s_-]*flexible[\s_-]*equity|world[\s_-]*(?:gold|agriculture|mining|energy)|'
+            r'government[\s_-]*securities|floater|equity[\s_-]*savings|equity[\s&_-]*bond|'
+            r'dynamic[\s_-]*asset[\s_-]*allocation|global[\s_-]*allocation)[\s_-]*fund',
+            combined,
+        )
+        if foreign_scheme and re.search(r'unitholder|fundamental|corrigendum|letter',combined):
+            return 'DSP non-Small-Cap scheme unitholder material; unrelated to DSP Small Cap Fund'
+        if (path.rstrip('/')=='/mandatory-disclosures/unitholder-letter-for-change-in-fundamental-attribute'
+            and kind!='source page'):
+            return 'DSP Global Allocation Fund of Fund unitholder-letter directory; unrelated to DSP Small Cap Fund'
+
+    if re.search(r'\bquantum\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if re.search(r'quantum[\s_-]*diversified[\s_-]*equity[\s_-]*all[\s_-]*cap[\s_-]*active[\s_-]*(?:fof|fund[\s_-]*of[\s_-]*fund)',combined):
+            return 'Quantum Diversified Equity All Cap Active FOF letter; unrelated to Quantum Small Cap Fund'
+
+    if re.search(r'\bsamco\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        compact=re.sub(r'[^a-z0-9]','',combined)
+        if 'lienrequestletterfromunitholder' in compact or 'requestletterforlien' in compact:
+            return 'Samco lien-request form; not an AMC communication document'
 
     return None
