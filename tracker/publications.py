@@ -66,6 +66,11 @@ def exclusion_reason(amc, url, title=''):
             and re.search(r'presentation',combined)):
             return 'Quant non-Small-Cap NFO presentation; unrelated to Quant Small Cap Fund'
 
+    if re.search(r'\bsundaram\b', str(amc), re.I):
+        if (host in ('www.sundarammutual.com','sundarammutual.com')
+            and path.rstrip('/')=='/report/amcp'):
+            return 'Sundaram AMC corporate presentation; not a Small Cap fund communication'
+
     if re.search(r'\bmirae\b', str(amc), re.I):
         if (host in ('www.miraeassetmf.co.in','miraeassetmf.co.in')
             and path.rstrip('/')=='/downloads/product-presentations'):
