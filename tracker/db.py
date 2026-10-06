@@ -51,6 +51,17 @@ def connect():
         con.close()
 
 
+def _ensure_structured_origin_columns(connection):
+    """Existing retained rows predate provenance columns and are trusted collector data."""
+    for table in ("benchmark","benchmark_observations","metrics","portfolios",
+                  "distribution_coverage","distributions"):
+        columns={row[1] for row in connection.execute(f"PRAGMA table_info({table})")}
+        if "origin" not in columns:
+            connection.execute(
+                f"ALTER TABLE {table} ADD COLUMN origin TEXT NOT NULL DEFAULT 'Official'"
+            )
+
+
 def init(recover=False):
     with connect() as c:
         c.execute("PRAGMA journal_mode=WAL")
@@ -104,20 +115,24 @@ def init(recover=False):
         CREATE TABLE IF NOT EXISTS benchmark(
           name TEXT NOT NULL, date TEXT NOT NULL, value REAL NOT NULL CHECK(value>0),
           source TEXT NOT NULL, observed_at TEXT NOT NULL,
+          origin TEXT NOT NULL DEFAULT 'Official',
           PRIMARY KEY(name,date)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS benchmark_observations(
           name TEXT NOT NULL,date TEXT NOT NULL,value REAL NOT NULL,source TEXT NOT NULL,
-          observed_at TEXT NOT NULL,PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;
+          observed_at TEXT NOT NULL,origin TEXT NOT NULL DEFAULT 'Official',
+          PRIMARY KEY(name,date,value,source)) WITHOUT ROWID;
         CREATE TABLE IF NOT EXISTS metrics(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, plan TEXT NOT NULL DEFAULT 'All',
           metric TEXT NOT NULL, as_of TEXT NOT NULL, value TEXT NOT NULL, unit TEXT,
           source TEXT NOT NULL, hash TEXT NOT NULL DEFAULT '', observed_at TEXT NOT NULL,
+          origin TEXT NOT NULL DEFAULT 'Official',
           UNIQUE(family,plan,metric,as_of,value,source));
         CREATE INDEX IF NOT EXISTS idx_metrics_family_metric_date ON metrics(family,metric,as_of);
         CREATE TABLE IF NOT EXISTS portfolios(
           id INTEGER PRIMARY KEY, family TEXT NOT NULL, as_of TEXT NOT NULL,
           complete INTEGER NOT NULL DEFAULT 0, source TEXT NOT NULL, hash TEXT NOT NULL,
-          observed_at TEXT NOT NULL, UNIQUE(family,as_of,hash,complete));
+          observed_at TEXT NOT NULL,origin TEXT NOT NULL DEFAULT 'Official',
+          UNIQUE(family,as_of,hash,complete));
         CREATE INDEX IF NOT EXISTS idx_portfolios_family_date ON portfolios(family,as_of);
         CREATE TABLE IF NOT EXISTS holdings(
           id INTEGER PRIMARY KEY, snapshot_id INTEGER NOT NULL REFERENCES portfolios(id),
@@ -141,15 +156,18 @@ def init(recover=False):
           UNIQUE(amc_match,url));
         CREATE TABLE IF NOT EXISTS distribution_coverage(
           code INTEGER PRIMARY KEY REFERENCES schemes(code), start TEXT NOT NULL,
-          end TEXT NOT NULL, source TEXT NOT NULL, observed_at TEXT NOT NULL);
+          end TEXT NOT NULL, source TEXT NOT NULL, observed_at TEXT NOT NULL,
+          origin TEXT NOT NULL DEFAULT 'Official');
         CREATE TABLE IF NOT EXISTS distributions(
           code INTEGER NOT NULL REFERENCES schemes(code), ex_date TEXT NOT NULL,
           amount REAL NOT NULL CHECK(amount>=0), reinvestment_nav REAL NOT NULL CHECK(reinvestment_nav>0),
-          source TEXT NOT NULL, observed_at TEXT NOT NULL, PRIMARY KEY(code,ex_date));
+          source TEXT NOT NULL, observed_at TEXT NOT NULL,
+          origin TEXT NOT NULL DEFAULT 'Official', PRIMARY KEY(code,ex_date));
         CREATE TABLE IF NOT EXISTS jobs(
           id INTEGER PRIMARY KEY, kind TEXT NOT NULL, started_at TEXT NOT NULL,
           finished_at TEXT, status TEXT NOT NULL, detail TEXT);
         ''')
+        _ensure_structured_origin_columns(c)
         defaults = {"nav_interval_minutes": "60", "disclosure_interval_hours": "12", "auto_update": "true"}
         c.executemany("INSERT OR IGNORE INTO settings VALUES (?,?)", defaults.items())
         c.execute("""INSERT OR IGNORE INTO archive_retention(
