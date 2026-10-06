@@ -65,8 +65,10 @@ jobs:
       - name: Load reviewed retention classifications
         run: uv run --frozen python scripts/prepare_retention_metadata.py --apply
       - name: Establish staged audit generation boundary
+        if: github.event_name != 'push'
         run: echo "MIDCAP_AUDIT_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: Preview staged Mid Cap universe
+        if: github.event_name != 'push'
         timeout-minutes: 3
         continue-on-error: true
         run: >-
@@ -74,6 +76,7 @@ jobs:
           --fetch-amfi
           --output deployment/category-expansion-preview.json
       - name: Audit staged Mid Cap identities
+        if: github.event_name != 'push'
         timeout-minutes: 3
         continue-on-error: true
         run: >-
@@ -81,6 +84,7 @@ jobs:
           --preview deployment/category-expansion-preview.json
           --output deployment/midcap-identity-audit.json
       - name: Store audited Mid Cap staging data
+        if: github.event_name != 'push'
         timeout-minutes: 3
         continue-on-error: true
         run: >-
@@ -89,12 +93,14 @@ jobs:
           --preview deployment/category-expansion-preview.json
           --report deployment/midcap-staging-status.json
       - name: Backfill staged Mid Cap NAV history
+        if: github.event_name != 'push'
         timeout-minutes: 12
         continue-on-error: true
         run: >-
           uv run --frozen python scripts/backfill_midcap_history.py
           --report deployment/midcap-history-status.json
       - name: Audit staged Mid Cap source coverage
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -102,6 +108,7 @@ jobs:
           --json docs/MIDCAP-SOURCE-COVERAGE-AUDIT.json
           --markdown docs/MIDCAP-SOURCE-COVERAGE-AUDIT.md
       - name: Classify staged Mid Cap TER gaps
+        if: github.event_name != 'push'
         timeout-minutes: 2
         continue-on-error: true
         run: >-
@@ -110,6 +117,7 @@ jobs:
           --json docs/MIDCAP-TER-GAP-AUDIT.json
           --markdown docs/MIDCAP-TER-GAP-AUDIT.md
       - name: Audit staged Mid Cap first-party TER batch
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -117,6 +125,7 @@ jobs:
           --json docs/MIDCAP-TER-FIRST-PARTY-BATCH1.json
           --markdown docs/MIDCAP-TER-FIRST-PARTY-BATCH1.md
       - name: Audit staged Mid Cap first-party TER batch 2
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -124,6 +133,7 @@ jobs:
           --json docs/MIDCAP-TER-FIRST-PARTY-BATCH2.json
           --markdown docs/MIDCAP-TER-FIRST-PARTY-BATCH2.md
       - name: Reconcile staged Mid Cap TER readiness
+        if: github.event_name != 'push'
         timeout-minutes: 2
         continue-on-error: true
         run: >-
@@ -134,6 +144,7 @@ jobs:
           --json docs/MIDCAP-TER-READINESS.json
           --markdown docs/MIDCAP-TER-READINESS.md
       - name: Audit staged Mid Cap benchmark identities
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -141,6 +152,7 @@ jobs:
           --json docs/MIDCAP-BENCHMARK-BATCH1.json
           --markdown docs/MIDCAP-BENCHMARK-BATCH1.md
       - name: Audit staged Mid Cap benchmark identities batch 2
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -148,6 +160,7 @@ jobs:
           --json docs/MIDCAP-BENCHMARK-BATCH2.json
           --markdown docs/MIDCAP-BENCHMARK-BATCH2.md
       - name: Reconcile staged Mid Cap benchmark readiness
+        if: github.event_name != 'push'
         timeout-minutes: 2
         continue-on-error: true
         run: >-
@@ -157,6 +170,7 @@ jobs:
           --json docs/MIDCAP-BENCHMARK-READINESS.json
           --markdown docs/MIDCAP-BENCHMARK-READINESS.md
       - name: Audit staged Mid Cap current portfolio evidence
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -164,6 +178,7 @@ jobs:
           --json docs/MIDCAP-PORTFOLIO-BATCH1.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH1.md
       - name: Audit staged Mid Cap structured portfolio evidence batch 2
+        if: github.event_name != 'push'
         timeout-minutes: 8
         continue-on-error: true
         run: >-
@@ -171,6 +186,7 @@ jobs:
           --json docs/MIDCAP-PORTFOLIO-BATCH2.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH2.md
       - name: Audit staged Mid Cap structured portfolio evidence batch 3
+        if: github.event_name != 'push'
         timeout-minutes: 12
         continue-on-error: true
         run: >-
@@ -178,6 +194,7 @@ jobs:
           --json docs/MIDCAP-PORTFOLIO-BATCH3.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH3.md
       - name: Audit staged Mid Cap structured portfolio evidence batch 4
+        if: github.event_name != 'push'
         timeout-minutes: 12
         continue-on-error: true
         run: >-
@@ -185,6 +202,7 @@ jobs:
           --json docs/MIDCAP-PORTFOLIO-BATCH4.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH4.md
       - name: Audit staged Mid Cap current portfolio evidence batch 5
+        if: github.event_name != 'push'
         timeout-minutes: 12
         continue-on-error: true
         run: >-
@@ -192,6 +210,7 @@ jobs:
           --json docs/MIDCAP-PORTFOLIO-BATCH5.json
           --markdown docs/MIDCAP-PORTFOLIO-BATCH5.md
       - name: Reconcile staged Mid Cap portfolio readiness
+        if: github.event_name != 'push'
         timeout-minutes: 2
         continue-on-error: true
         run: >-
@@ -204,6 +223,7 @@ jobs:
           --json docs/MIDCAP-PORTFOLIO-READINESS.json
           --markdown docs/MIDCAP-PORTFOLIO-READINESS.md
       - name: Audit staged Mid Cap launch readiness
+        if: github.event_name != 'push'
         timeout-minutes: 2
         run: >-
           uv run --frozen python scripts/audit_midcap_launch_readiness.py
