@@ -54,7 +54,9 @@ async def local_only(request,call_next):
         return Response("This tracker only accepts local requests",status_code=403)
     if request.method not in ("GET","HEAD","OPTIONS"):
         origin=request.headers.get("origin")
-        if request.headers.get("x-smallcap-client")!="local" or (origin and urlparse(origin).netloc!=request.headers.get("host")):
+        same_origin=bool(origin and urlparse(origin).netloc==request.headers.get("host"))
+        native_backup=(request.url.path=="/api/export/backup" and request.method=="POST" and same_origin)
+        if not native_backup and (request.headers.get("x-smallcap-client")!="local" or (origin and not same_origin)):
             return Response("Open the tracker locally to make this change",status_code=403)
     response=await call_next(request)
     response.headers["X-Content-Type-Options"]="nosniff"

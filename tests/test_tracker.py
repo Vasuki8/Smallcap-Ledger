@@ -602,7 +602,17 @@ process.stdout.write(JSON.stringify({
         import zipfile,io
         self.assertEqual(self.client.get('/api/export/backup').status_code,404)
         self.assertEqual(self.client.post('/api/export/backup').status_code,403)
-        r=self.client.post('/api/export/backup',headers={'X-Smallcap-Client':'local'});self.assertEqual(r.status_code,200)
+        self.assertEqual(
+            self.client.post(
+                '/api/export/backup',
+                headers={'Origin':'https://evil.example'},
+            ).status_code,
+            403,
+        )
+        r=self.client.post(
+            '/api/export/backup',
+            headers={'Origin':'http://testserver'},
+        );self.assertEqual(r.status_code,200)
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             self.assertIn('data/ledger.sqlite3',z.namelist());self.assertIn('RESTORE.txt',z.namelist())
 
