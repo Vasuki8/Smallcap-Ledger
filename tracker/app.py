@@ -82,9 +82,10 @@ def option_label(s):
     return 'IDCW'
 
 
-def metrics_for(s):
+def metrics_for(s,official_only=False):
     from .reviewed_reports import annotate
-    records=db.rows("SELECT * FROM metrics WHERE family=? AND plan IN ('All',?) ORDER BY as_of DESC,id DESC",(s['family'],s['plan']))
+    origin=" AND origin='Official'" if official_only else ""
+    records=db.rows(f"SELECT * FROM metrics WHERE family=? AND plan IN ('All',?){origin} ORDER BY as_of DESC,id DESC",(s['family'],s['plan']))
     latest={}
     plan_specific={'ter','ter_observed','base_expense_ratio','expense_ratio',
                    'brokerage','transaction_cost','statutory_levies'}
@@ -100,12 +101,13 @@ def metrics_for(s):
     return latest
 
 
-def available_expenses(s):
+def available_expenses(s,official_only=False):
     """Expose named plan fees without assigning an unidentified NAV series to one."""
     from .reviewed_reports import annotate
     if s['plan']!='Unspecified':return []
     seen=set();out=[]
-    for r in db.rows("SELECT * FROM metrics WHERE family=? AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio') ORDER BY as_of DESC,id DESC",(s['family'],)):
+    origin=" AND origin='Official'" if official_only else ""
+    for r in db.rows(f"SELECT * FROM metrics WHERE family=? AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio'){origin} ORDER BY as_of DESC,id DESC",(s['family'],)):
         key=(r['plan'],r['metric'])
         if key not in seen:out.append(annotate(r));seen.add(key)
     return out
