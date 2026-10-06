@@ -21,16 +21,23 @@ def nav_maintenance_cutoff(today=None):
 
 def update_due(previous,seconds,now=None):
     """Return whether a scheduler job should launch; malformed legacy times retry safely."""
-    if not previous or previous.get('status')=='interrupted':
+    if not previous:
         return True
     try:
-        finished=datetime.fromisoformat(previous['finished_at'])
-    except (KeyError,TypeError,ValueError):
+        status=previous['status']
+        finished_at=previous['finished_at']
+    except (KeyError,IndexError,TypeError):
+        return True
+    if status=='interrupted':
+        return True
+    try:
+        finished=datetime.fromisoformat(finished_at)
+    except (TypeError,ValueError):
         return True
     if finished.tzinfo is None:
         finished=finished.replace(tzinfo=timezone.utc)
     now=now or datetime.now(timezone.utc)
-    return (now-finished).total_seconds()>retry_interval(previous.get('status'),seconds)
+    return (now-finished).total_seconds()>retry_interval(status,seconds)
 
 
 def nav_history_recovery_since(previous_good,now=None):
