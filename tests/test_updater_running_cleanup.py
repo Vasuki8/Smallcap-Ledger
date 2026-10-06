@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tracker import db
-from tracker.sync import Updater
+from tracker.sync import Updater,update_due
 
 
 class UpdaterRunningCleanupTests(unittest.TestCase):
@@ -17,6 +17,25 @@ class UpdaterRunningCleanupTests(unittest.TestCase):
              patch("tracker.sync.traceback.print_exc"):
             updater.run("benchmark")
         self.assertEqual(updater.status(),{})
+
+    def test_malformed_previous_timestamp_is_due_instead_of_blocking_scheduler(self):
+        self.assertTrue(update_due(
+            {"finished_at":"not-a-date","status":"ok"},
+            3600,
+        ))
+
+    def test_naive_legacy_timestamp_is_interpreted_as_utc(self):
+        from datetime import datetime,timezone
+        self.assertFalse(update_due(
+            {"finished_at":"2026-10-06T03:00:00","status":"ok"},
+            3600,
+            now=datetime(2026,10,6,3,30,tzinfo=timezone.utc),
+        ))
+        self.assertTrue(update_due(
+            {"finished_at":"2026-10-06T03:00:00","status":"ok"},
+            3600,
+            now=datetime(2026,10,6,4,1,tzinfo=timezone.utc),
+        ))
 
     def test_scheduler_survives_one_iteration_failure(self):
         updater=Updater()
