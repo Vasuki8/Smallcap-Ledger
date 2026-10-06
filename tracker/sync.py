@@ -19,6 +19,20 @@ def nav_maintenance_cutoff(today=None):
     return ((today or india_today())-timedelta(days=30)).isoformat()
 
 
+def update_due(previous,seconds,now=None):
+    """Return whether a scheduler job should launch; malformed legacy times retry safely."""
+    if not previous or previous.get('status')=='interrupted':
+        return True
+    try:
+        finished=datetime.fromisoformat(previous['finished_at'])
+    except (KeyError,TypeError,ValueError):
+        return True
+    if finished.tzinfo is None:
+        finished=finished.replace(tzinfo=timezone.utc)
+    now=now or datetime.now(timezone.utc)
+    return (now-finished).total_seconds()>retry_interval(previous.get('status'),seconds)
+
+
 def nav_history_recovery_since(previous_good,now=None):
     """Return the last good NAV-run time only when a real scheduler gap exists."""
     if not previous_good:return ''
@@ -138,8 +152,7 @@ class Updater:
                 continue
             previous=db.one("SELECT finished_at,status FROM jobs WHERE kind=? AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1",(kind,))
             # Failed sources retry with bounded backoff, retaining all previous observations.
-            due=not previous or previous['status']=='interrupted' or (datetime.now(timezone.utc)-datetime.fromisoformat(previous['finished_at'])).total_seconds()>retry_interval(previous['status'],seconds)
-            if due:
+            if update_due(previous,seconds):
                 self.launch(kind)
 
     def schedule(self):
