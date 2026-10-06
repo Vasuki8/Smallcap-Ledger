@@ -82,3 +82,19 @@ def test_generated_site_freshness_uses_india_calendar():
     source=(Path(__file__).resolve().parents[1]/"scripts"/"validate_site.py").read_text(encoding="utf-8")
     assert "nav_age=(india_today()-date.fromisoformat(latest_nav)).days" in source
     assert "date.today()" not in source
+
+
+def test_project_site_root_links_static_directory_and_sitemap_without_root_robots_dependency():
+    rows=[row(1,"Alpha Small Cap Fund")]
+    with tempfile.TemporaryDirectory() as tmp:
+        root=Path(tmp)
+        (root/"index.html").write_text(
+            "<!doctype html><html><head><title>Ledger</title></head><body><main>App</main></body></html>",
+            encoding="utf-8",
+        )
+        export_site.write_discoverability(
+            root,{"funds":rows},"Vasuki8/Smallcap-Ledger")
+        page=(root/"index.html").read_text(encoding="utf-8")
+        assert '<link rel="canonical" href="https://vasuki8.github.io/Smallcap-Ledger/">' in page
+        assert '<link rel="sitemap" type="application/xml" href="https://vasuki8.github.io/Smallcap-Ledger/sitemap.xml">' in page
+        assert '<a class="sr-only" href="./funds/">Browse all small-cap fund pages</a>' in page
