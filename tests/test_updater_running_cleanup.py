@@ -18,6 +18,20 @@ class UpdaterRunningCleanupTests(unittest.TestCase):
             updater.run("benchmark")
         self.assertEqual(updater.status(),{})
 
+    def test_due_helper_accepts_real_sqlite_row(self):
+        conn=sqlite3.connect(":memory:")
+        conn.row_factory=sqlite3.Row
+        row=conn.execute(
+            "SELECT ? AS finished_at, ? AS status",
+            ("2026-10-06T03:00:00+00:00","ok"),
+        ).fetchone()
+        from datetime import datetime,timezone
+        try:
+            self.assertFalse(update_due(
+                row,3600,now=datetime(2026,10,6,3,30,tzinfo=timezone.utc)))
+        finally:
+            conn.close()
+
     def test_malformed_previous_timestamp_is_due_instead_of_blocking_scheduler(self):
         self.assertTrue(update_due(
             {"finished_at":"not-a-date","status":"ok"},
