@@ -36,7 +36,7 @@ class PublisherMaintenanceTests(unittest.TestCase):
         self.assertIn("group: smallcap-daily-and-deploy", self.text)
         self.assertIn("cancel-in-progress: true", self.text)
 
-    def test_staged_midcap_audits_do_not_delay_ordinary_code_pushes(self):
+    def test_staged_midcap_audits_run_only_for_schedule_or_manual_refresh(self):
         midcap_steps = (
             "Establish staged audit generation boundary",
             "Preview staged Mid Cap universe",
@@ -59,11 +59,38 @@ class PublisherMaintenanceTests(unittest.TestCase):
             "Reconcile staged Mid Cap portfolio readiness",
             "Audit staged Mid Cap launch readiness",
         )
+        condition = "github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)"
         for name in midcap_steps:
-            marker = f"- name: {name}\n        if: github.event_name != 'push'"
+            marker = f"- name: {name}\n        if: {condition}"
             with self.subTest(name=name):
                 self.assertIn(marker, self.text)
-        self.assertEqual(self.text.count("if: github.event_name != 'push'"), len(midcap_steps))
+        self.assertEqual(self.text.count(f"if: {condition}"), len(midcap_steps))
+
+    def test_manual_diagnostics_require_refresh_opt_in(self):
+        diagnostics = (
+            "Diagnose final six Mid Cap TER sources",
+            "Inspect four concrete Mid Cap TER files",
+            "Diagnose final three Mid Cap TER sources precisely",
+            "Diagnose staged Mid Cap portfolio batch 1",
+            "Diagnose staged Mid Cap portfolio batch 3 contracts",
+        )
+        for name in diagnostics:
+            with self.subTest(name=name):
+                self.assertIn(
+                    f"- name: {name}\n        if: github.event_name == 'workflow_dispatch' && inputs.refresh",
+                    self.text,
+                )
+
+    def test_manual_no_refresh_skips_source_repair_and_uses_retained_health_gate(self):
+        repair = (
+            "- name: Repair retained unarchived AMC communications\n"
+            "        if: github.event_name == 'push' || github.event_name == 'schedule' || "
+            "(github.event_name == 'workflow_dispatch' && inputs.refresh)"
+        )
+        self.assertIn(repair,self.text)
+        self.assertIn("Gate retained publication on data health",self.text)
+        self.assertIn("github.event_name == 'workflow_dispatch' && !inputs.refresh",self.text)
+        self.assertIn("--retained-only",self.text)
 
     def test_daily_collection_runs_for_push_schedule_and_manual_refresh(self):
         self.assertIn(
