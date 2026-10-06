@@ -3,12 +3,14 @@ import hashlib
 import json
 import os
 import sqlite3
+import threading
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = Path(os.environ.get("SMALLCAP_DATA_DIR", ROOT / "data")).resolve()
+_archive_lock=threading.RLock()
 
 
 def now():
@@ -279,30 +281,96 @@ def archive_binary_path(content_hash):
 
 
 def archive(content: bytes, media_type: str = "application/octet-stream"):
-    h = hashlib.sha256(content).hexdigest()
-    target = DATA / "archive" / h[:2] / h
-    target.parent.mkdir(parents=True, exist_ok=True)
-    previous=archive_retention(h)
-    if not target.exists():
-        tmp = target.with_suffix(".tmp")
-        tmp.write_bytes(content)
-        tmp.replace(target)
+    with _archive_lock:
+        h = hashlib.sha256(content).hexdigest()
+        target = DATA / "archive" / h[:2] / h
+        target.parent.mkdir(parents=True, exist_ok=True)
+        previous=archive_retention(h)
+        if not target.exists():
+            tmp = target.with_suffix(".tmp")
+            tmp.write_bytes(content)
+            tmp.replace(target)
+        with connect() as c:
+            c.execute("""INSERT OR IGNORE INTO archives(hash,path,bytes,media_type,first_seen)
+              VALUES(?,?,?,?,?)""", (h, str(target.relative_to(DATA)), len(content), media_type, now()))
+            c.execute("""INSERT OR IGNORE INTO archive_retention(
+              hash,classification,binary_state,updated_at) VALUES(?,?,?,?)""",
+              (h,'unclassified','retained',now()))
+            # If deliberately metadata-only bytes later reappear from a fresh source
+            # fetch/import, they are current again and must be re-reviewed rather than
+            # silently discarded or left as a broken current source.
+            if previous and (previous['binary_state']=='metadata_only'
+                             or previous['classification']=='link_only_candidate'):
+                c.execute("""UPDATE archive_retention SET
+                  classification='retain_latest_or_review',binary_state='retained',
+                  reason='Promoted because identical bytes were fetched/imported again as current source evidence',
+                  updated_at=? WHERE hash=?""",(now(),h))
+        return h
+
+
+def _archive_reference_count(content_hash):
+    """Count retained structured references to an archive hash."""
     with connect() as c:
-        c.execute("""INSERT OR IGNORE INTO archives(hash,path,bytes,media_type,first_seen)
-          VALUES(?,?,?,?,?)""", (h, str(target.relative_to(DATA)), len(content), media_type, now()))
-        c.execute("""INSERT OR IGNORE INTO archive_retention(
-          hash,classification,binary_state,updated_at) VALUES(?,?,?,?)""",
-          (h,'unclassified','retained',now()))
-        # If deliberately metadata-only bytes later reappear from a fresh source
-        # fetch/import, they are current again and must be re-reviewed rather than
-        # silently discarded or left as a broken current source.
-        if previous and (previous['binary_state']=='metadata_only'
-                         or previous['classification']=='link_only_candidate'):
-            c.execute("""UPDATE archive_retention SET
-              classification='retain_latest_or_review',binary_state='retained',
-              reason='Promoted because identical bytes were fetched/imported again as current source evidence',
-              updated_at=? WHERE hash=?""",(now(),h))
-    return h
+        queries=(
+            "SELECT COUNT(*) n FROM fetches WHERE hash=?",
+            "SELECT COUNT(*) n FROM metrics WHERE hash=?",
+            "SELECT COUNT(*) n FROM portfolios WHERE hash=?",
+            "SELECT COUNT(*) n FROM document_versions WHERE hash=?",
+            "SELECT COUNT(*) n FROM category_staged_schemes WHERE source_sha256=?",
+            "SELECT COUNT(*) n FROM category_staged_nav WHERE source_sha256=?",
+        )
+        return sum(c.execute(sql,(content_hash,)).fetchone()["n"] for sql in queries)
+
+
+def discard_archive_if_unreferenced(content_hash):
+    """Remove one archive only when no structured/fetch evidence references it."""
+    with _archive_lock:
+        row=archive_retention(content_hash)
+        if not row or _archive_reference_count(content_hash):
+            return False
+        target=(DATA/row["path"]).resolve()
+        if not target.is_relative_to(DATA.resolve()):
+            raise ValueError("Archive path escaped the data folder")
+        with connect() as c:
+            c.execute("DELETE FROM archive_retention WHERE hash=?",(content_hash,))
+            c.execute("DELETE FROM archives WHERE hash=?",(content_hash,))
+        if target.is_file():
+            target.unlink()
+            try:target.parent.rmdir()
+            except OSError:pass
+        return True
+
+
+@contextmanager
+def reversible_archive(content: bytes, media_type: str = "application/octet-stream"):
+    """Archive bytes, but undo a failed caller write without harming shared evidence."""
+    h=hashlib.sha256(content).hexdigest()
+    with _archive_lock:
+        previous=archive_retention(h)
+        previous_bytes=None
+        if previous and previous["binary_state"]=="metadata_only":
+            existing=(DATA/previous["path"]).resolve()
+            previous_bytes=existing.read_bytes() if existing.is_file() else None
+        archive(content,media_type)
+    try:
+        yield h
+    except Exception:
+        with _archive_lock:
+            if previous is None:
+                discard_archive_if_unreferenced(h)
+            elif _archive_reference_count(h)==0:
+                # Restore the prior retention decision when a failed import merely
+                # reintroduced bytes for an existing metadata-only/link-only record.
+                with connect() as c:
+                    c.execute("""UPDATE archive_retention SET
+                      classification=?,binary_state=?,reason=?,reviewed_at=?,updated_at=?
+                      WHERE hash=?""",
+                      (previous["classification"],previous["binary_state"],
+                       previous["reason"],previous["reviewed_at"],previous["updated_at"],h))
+                target=(DATA/previous["path"]).resolve()
+                if previous["binary_state"]=="metadata_only" and previous_bytes is None and target.is_file():
+                    target.unlink()
+        raise
 
 
 def save_nav(code, points, source):
