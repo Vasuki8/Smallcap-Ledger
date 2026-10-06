@@ -25,6 +25,14 @@ class PublicationGateWorkflowTests(unittest.TestCase):
         self.assertLess(gate,archive)
         self.assertLess(gate,upload)
 
+    def test_manual_no_refresh_still_runs_retained_data_health_gate(self):
+        text=WORKFLOW.read_text(encoding="utf-8")
+        retained=text.index("Gate retained publication on data health")
+        tests=text.index("Check archive and financial calculations")
+        self.assertLess(retained,tests)
+        self.assertIn("github.event_name == 'workflow_dispatch' && !inputs.refresh",text)
+        self.assertIn("--retained-only",text)
+
     def test_gate_uses_current_run_boundary_and_persists_report(self):
         text=WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("SMALLCAP_COLLECTION_STARTED_AT",text)
