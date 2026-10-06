@@ -201,11 +201,12 @@ def _latest_benchmark_metric(family,official_only=True):
 
 
 def _benchmark_cache(official_only=True):
-    origin=" WHERE origin='Official'" if official_only else ""
-    names=[r["name"] for r in db.rows(f"SELECT DISTINCT name FROM benchmark{origin} ORDER BY name")]
+    origin_where=" WHERE origin='Official'" if official_only else ""
+    origin_and=" AND origin='Official'" if official_only else ""
+    names=[r["name"] for r in db.rows(f"SELECT DISTINCT name FROM benchmark{origin_where} ORDER BY name")]
     return {
         name:[[r["date"],float(r["value"])] for r in db.rows(
-            f"SELECT date,value FROM benchmark WHERE name=?{' AND origin=\'Official\'' if official_only else ''} ORDER BY date",(name,))]
+            f"SELECT date,value FROM benchmark WHERE name=?{origin_and} ORDER BY date",(name,))]
         for name in names
     }
 
