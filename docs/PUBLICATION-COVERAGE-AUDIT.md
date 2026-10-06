@@ -1,15 +1,15 @@
 # AMC communication coverage audit
 
-Prepared: 2026-10-06T05:10:59+00:00
+Prepared: 2026-10-06T06:18:51+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
 ## Summary
 
-- Funds with at least one retained AMC communication: **34 / 36**.
-- Funds with no retained AMC communication: **2**.
-- Retained communication documents: **269**; archived originals: **251**.
-- Market/newsletter/CIO/product-view documents: **251**; letters to unitholders: **18**.
+- Funds with at least one retained AMC communication: **32 / 36**.
+- Funds with no retained AMC communication: **4**.
+- Retained communication documents: **251**; archived originals: **234**.
+- Market/newsletter/CIO/product-view documents: **250**; letters to unitholders: **1**.
 - Communication documents with an explicit published date: **60**.
 - Funds with a registered communication-oriented source page: **29**.
 
@@ -17,11 +17,13 @@ Prepared: 2026-10-06T05:10:59+00:00
 
 | Priority | Repair | Actionable | Affected funds | Reason |
 | ---: | --- | --- | ---: | --- |
+| 2 | discover_first_party_communication_sources | yes | 2 | No AMC communication has been retained and no dedicated newsletter/market-view/unitholder-letter source page is registered. |
 | 2 | documented_communication_source_limitation | no | 2 | A qualifying first-party communication source is known, but current collection is limited by an explicit source/transport constraint; retain the visible gap and retry only when that constraint changes. |
 | 3 | documented_communication_archive_limitation | no | 4 | The original AMC communication asset cannot currently be archived under reviewed automated access constraints (for example robots-policy blocking or an empty first-party asset response); keep the metadata/source link and do not treat this as an ordinary repairable fetch failure. |
 
 ### Affected funds
 
+- **discover_first_party_communication_sources:** DSP Small Cap Fund, Quantum Small Cap Fund
 - **documented_communication_source_limitation:** Trustmf Small Cap Fund, Union Small Cap Fund
 - **documented_communication_archive_limitation:** Franklin India Small Cap Fund, Kotak Small Cap Fund, LIC Mf Small Cap Fund, Samco Small Cap Fund
 
@@ -30,18 +32,18 @@ Prepared: 2026-10-06T05:10:59+00:00
 | Fund | Communications | Market views | Unitholder letters | Archived | Published-date docs | Latest published | Registered communication sources | Issues |
 | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |
 | Abakkus Small Cap Fund | 12 | 12 | 0 | 12 | 10 | 2026-08-11 | 3 | publication_date_missing |
-| Aditya Birla Sun Life Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 1 | publication_date_missing |
+| Aditya Birla Sun Life Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | Axis Small Cap Fund | 2 | 2 | 0 | 2 | 1 | 2026-02-11 | 2 | publication_date_missing |
 | Bajaj Finserv Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2026-05-21 | 1 | none |
 | Bandhan Small Cap Fund | 3 | 3 | 0 | 3 | 3 | 2026-09-11 | 3 | none |
 | Bank Of India Small Cap Fund | 4 | 4 | 0 | 4 | 0 | Gap | 1 | publication_date_missing |
 | Baroda Bnp Paribas Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
 | Canara Robeco Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2025-02-20 | 2 | none |
-| DSP Small Cap Fund | 13 | 0 | 13 | 13 | 0 | Gap | 0 | publication_date_missing |
+| DSP Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | Edelweiss Small Cap Fund | 3 | 3 | 0 | 3 | 0 | Gap | 2 | publication_date_missing |
 | Franklin India Small Cap Fund | 10 | 10 | 0 | 0 | 10 | 2026-10-01 | 1 | communication_document_not_archived, communication_archive_limitation |
 | Groww Small Cap Fund | 3 | 3 | 0 | 3 | 3 | 2026-09-21 | 1 | none |
-| HDFC Small Cap Fund | 19 | 18 | 1 | 19 | 0 | Gap | 2 | publication_date_missing |
+| HDFC Small Cap Fund | 18 | 18 | 0 | 18 | 0 | Gap | 2 | publication_date_missing |
 | HSBC Small Cap Fund | 20 | 20 | 0 | 20 | 20 | 2026-08-11 | 1 | none |
 | Helios Small Cap Fund | 2 | 2 | 0 | 2 | 0 | Gap | 0 | publication_date_missing |
 | ICICI Prudential Small Cap Fund | 3 | 3 | 0 | 3 | 1 | 2026-08-11 | 1 | publication_date_missing |
@@ -56,9 +58,9 @@ Prepared: 2026-10-06T05:10:59+00:00
 | Nippon India Small Cap Fund | 103 | 103 | 0 | 103 | 0 | Gap | 1 | publication_date_missing |
 | Pgim India Small Cap Fund | 5 | 5 | 0 | 5 | 0 | Gap | 1 | publication_date_missing |
 | Quant Small Cap Fund | 7 | 7 | 0 | 7 | 0 | Gap | 1 | publication_date_missing |
-| Quantum Small Cap Fund | 1 | 0 | 1 | 1 | 0 | Gap | 0 | publication_date_missing |
+| Quantum Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | SBI Small Cap Fund | 2 | 2 | 0 | 2 | 1 | 2026-01-08 | 1 | publication_date_missing |
-| Samco Small Cap Fund | 3 | 1 | 2 | 1 | 0 | Gap | 0 | communication_document_not_archived, communication_archive_limitation, publication_date_missing |
+| Samco Small Cap Fund | 1 | 1 | 0 | 0 | 0 | Gap | 0 | communication_document_not_archived, communication_archive_limitation, publication_date_missing |
 | Sundaram Small Cap Fund | 6 | 6 | 0 | 6 | 0 | Gap | 1 | publication_date_missing |
 | Tata Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | The Wealth Company Small Cap Fund | 5 | 5 | 0 | 5 | 5 | 2026-04-30 | 1 | none |
