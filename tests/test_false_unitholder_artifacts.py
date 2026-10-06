@@ -41,6 +41,32 @@ class FalseUnitholderArtifactTests(unittest.TestCase):
                 (family,title,kind,"AMC",url,db.now(),db.now(),"AMC"),
             ).lastrowid
 
+    def test_absl_public_notice_filename_is_not_market_view(self):
+        family="Aditya Birla Sun Life Small Cap Fund"
+        amc="Aditya Birla Sun Life Mutual Fund"
+        code=9200
+        wrong_title="a"
+        wrong_url=("https://mutualfund.adityabirlacapital.com/-/media/bsl/files/"
+                   "resources/market-update/public-notice_abslamc-1.pdf")
+        good_title="Equity Market Outlook - September 2026"
+        good_url=("https://mutualfund.adityabirlacapital.com/"
+                  "insights/equity-market-outlook-september-2026")
+        self.scheme(code,family,amc)
+        self.old_doc(family,wrong_title,wrong_url,kind="market view")
+        good=providers.save_document(
+            family,good_title,good_url,"market view","AMC",origin="AMC")
+        h=db.archive(b"<html>ABSL equity market outlook</html>","text/html")
+        providers.doc_version(good,h)
+
+        self.assertEqual(providers.classify(wrong_title,wrong_url),"disclosure")
+        self.assertEqual([d["url"] for d in documents(code)],[good_url])
+        self.assertIn("public notice",exclusion_reason(amc,wrong_url,wrong_title))
+        with self.assertRaisesRegex(ValueError,"public notice"):
+            providers.save_document(
+                family,wrong_title,wrong_url,"market view","AMC",origin="AMC")
+        self.assertEqual(providers.classify(good_title,good_url),"market view")
+        self.assertIsNone(exclusion_reason(amc,good_url,good_title))
+
     def test_dsp_foreign_scheme_letters_and_generic_foreign_page_are_hidden(self):
         family="DSP Small Cap Fund";amc="DSP Mutual Fund";code=9201
         self.scheme(code,family,amc)
