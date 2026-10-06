@@ -16,7 +16,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 os.environ['SMALLCAP_NO_SCHEDULER']='1'
 from tracker import db
-from tracker.app import funds,fund,holdings,documents,status
+from tracker.app import funds_data,fund_data,holdings,documents,status
 from tracker.categories import assert_publication_scope
 from tracker.csv_safe import safe_record
 
@@ -209,15 +209,15 @@ def export(output:Path,repository=''):
         p=data/path;p.parent.mkdir(parents=True,exist_ok=True)
         with p.open('w',encoding='utf-8-sig',newline='') as f:
             w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(safe_record(r) for r in rows)
-    index=funds();write('funds.json',index)
+    index=funds_data(True);write('funds.json',index)
     seo_rows=write_discoverability(output,index,repository)
     from tracker.coverage import report as coverage_report
-    coverage=coverage_report()
+    coverage=coverage_report(True)
     write('coverage.json',coverage)
     done=set();snapshot_ids=set();hashes=set();communication_payloads=[];publication_candidates=[]
     for s in index['funds']:
-        code=s['code'];detail=fund(code);family_id=hashlib.sha256(s['family'].encode()).hexdigest()[:20];detail['family_id']=family_id
-        detail['distributions']=db.rows('SELECT * FROM distributions WHERE code=? ORDER BY ex_date',(code,))
+        code=s['code'];detail=fund_data(code,True);family_id=hashlib.sha256(s['family'].encode()).hexdigest()[:20];detail['family_id']=family_id
+        detail['distributions']=db.rows("SELECT * FROM distributions WHERE code=? AND origin='Official' ORDER BY ex_date",(code,))
         write(Path('funds')/f'{code}.json',detail)
         nav=db.rows('SELECT date,value AS nav,source,observed_at FROM nav WHERE code=? ORDER BY date',(code,))
         write(Path('nav')/f'{code}.json',[[p['date'],p['nav']] for p in nav])
@@ -252,9 +252,9 @@ def export(output:Path,repository=''):
         csv_file(Path('downloads')/f'portfolio-{sid}.csv',p['holdings'],['isin','name','sector','quantity','previous_quantity','share_change','weight','previous_weight','weight_change','asset_type'])
         downloads[f'/api/export/portfolio/{sid}']=f'data/downloads/portfolio-{sid}.csv'
     benchmark={}
-    for b in db.rows('SELECT name,MIN(date) first,MAX(date) last,COUNT(*) points FROM benchmark GROUP BY name'):
-        b['source']=db.one('SELECT source FROM benchmark WHERE name=? ORDER BY date DESC LIMIT 1',(b['name'],))['source']
-        b['data']=[[p['date'],p['value']] for p in db.rows('SELECT date,value FROM benchmark WHERE name=? ORDER BY date',(b['name'],))]
+    for b in db.rows("SELECT name,MIN(date) first,MAX(date) last,COUNT(*) points FROM benchmark WHERE origin='Official' GROUP BY name"):
+        b['source']=db.one("SELECT source FROM benchmark WHERE name=? AND origin='Official' ORDER BY date DESC LIMIT 1",(b['name'],))['source']
+        b['data']=[[p['date'],p['value']] for p in db.rows("SELECT date,value FROM benchmark WHERE name=? AND origin='Official' ORDER BY date",(b['name'],))]
         benchmark[b['name']]=b
     write('benchmarks.json',benchmark)
     # Only AMC publications are exposed as files. Raw NAV responses remain in the
@@ -279,6 +279,10 @@ def export(output:Path,repository=''):
         downloads['/api/archive/'+h]='data/files/'+dest.name
     write('downloads.json',downloads)
     report=status();report['running']={};report['data_location']='Daily GitHub archive';report['jobs']=[j for j in report['jobs'] if j['kind']!='news']
+    report['counts']['benchmark_points']=db.one("SELECT COUNT(*) n FROM benchmark WHERE origin='Official'")['n']
+    report['counts']['portfolios']=db.one("SELECT COUNT(*) n FROM portfolios WHERE origin='Official'")['n']
+    report['counts']['documents']=db.one("""SELECT COUNT(*) n FROM document_versions v
+      JOIN documents d ON d.id=v.document_id WHERE d.origin='AMC'""")['n']
     report['hosting']={'provider':'GitHub Pages','repository':repository,'timezone':'Asia/Kolkata','schedule':'00:00 IST daily','cron':'30 18 * * *','scheduled_time_is_not_guaranteed':True}
     report['counts']['aum_funds']=coverage['counts']['aum']
     report['counts']['fee_funds']=coverage['counts']['fee']
