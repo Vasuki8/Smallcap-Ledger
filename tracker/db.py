@@ -201,8 +201,11 @@ def migrate_portfolio_completeness():
         c.execute('''CREATE TABLE portfolios_expanded(
           id INTEGER PRIMARY KEY,family TEXT NOT NULL,as_of TEXT NOT NULL,
           complete INTEGER NOT NULL DEFAULT 0,source TEXT NOT NULL,hash TEXT NOT NULL,
-          observed_at TEXT NOT NULL,UNIQUE(family,as_of,hash,complete))''')
-        c.execute('INSERT INTO portfolios_expanded SELECT * FROM portfolios')
+          observed_at TEXT NOT NULL,origin TEXT NOT NULL DEFAULT 'Official',
+          UNIQUE(family,as_of,hash,complete))''')
+        c.execute('''INSERT INTO portfolios_expanded(
+          id,family,as_of,complete,source,hash,observed_at,origin)
+          SELECT id,family,as_of,complete,source,hash,observed_at,origin FROM portfolios''')
         c.execute('DROP TABLE portfolios')
         c.execute('ALTER TABLE portfolios_expanded RENAME TO portfolios')
         c.execute('CREATE INDEX idx_portfolios_family_date ON portfolios(family,as_of)')
