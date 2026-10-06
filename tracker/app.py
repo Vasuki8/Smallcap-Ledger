@@ -476,7 +476,11 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             types={'.pdf':'application/pdf','.xlsx':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.xls':'application/vnd.ms-excel','.xml':'application/xml','.csv':'text/csv'}
             if ext not in types or document_kind not in ('factsheet','portfolio','disclosure','scheme document','market view') or scope not in ('Fund','AMC'):
                 raise ValueError('Choose a supported document type and scope')
-            h=db.archive(content,types[ext]);did=providers.save_document(s['family'],title.strip() or file.filename,source,document_kind,scope,origin='User import · unverified source')
+            doc_title=title.strip() or file.filename
+            from .publications import exclusion_reason
+            reason=exclusion_reason(s['family'],source,doc_title)
+            if reason:raise ValueError(reason)
+            h=db.archive(content,types[ext]);did=providers.save_document(s['family'],doc_title,source,document_kind,scope,origin='User import · unverified source')
             providers.doc_version(did,h);parse_note='Original document archived.'
             try:
                 if ext=='.xml':disclosures.summary_xml(content,s['family'],source,h)
