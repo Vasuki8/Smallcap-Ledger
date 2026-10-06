@@ -67,10 +67,23 @@ def evaluate(started_at, *, today=None, max_age_days=7):
     benchmark=db.one("""SELECT MAX(date) last,COUNT(*) points
       FROM benchmark WHERE name=?""",(providers.BENCHMARK,))
     benchmark_age=_age(benchmark["last"],today) if benchmark else None
+    benchmark_fresh=bool(
+        benchmark and benchmark["points"]
+        and benchmark_age is not None
+        and 0<=benchmark_age<=max_age_days
+    )
     if not benchmark or not benchmark["points"]:
         blockers.append("primary_benchmark_missing")
-    elif benchmark_age is None or benchmark_age<0 or benchmark_age>max_age_days:
+    elif not benchmark_fresh:
         blockers.append("primary_benchmark_stale_or_invalid")
+
+    # The benchmark endpoint is a read-only refresh of retained TRI history.
+    # A transient transport error must not block an otherwise safe publication
+    # when the retained primary benchmark already satisfies the freshness gate.
+    # Missing/stale data remains fail-closed.
+    if benchmark_fresh and "benchmark_job_error" in blockers:
+        blockers.remove("benchmark_job_error")
+        degraded.append("benchmark_job_error_using_fresh_retained_data")
 
     coverage=coverage_report()
     funds=coverage["counts"]["funds"]
