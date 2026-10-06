@@ -37,10 +37,17 @@ class SamcoCommunicationClassificationTests(unittest.TestCase):
         )
 
     def test_migration_reclassifies_existing_lien_forms_only(self):
-        lien=providers.save_document(
-            repair.FAMILY,"Lien Request Letter from Unit holder",
-            "https://media1.samco.in/scomamc/amc_documents/Lienrequestletterfromunitholder_1.pdf",
-            "unitholder letter","AMC",origin="AMC")
+        # Simulate the retained pre-fix false association without invoking the
+        # current ingestion guard, which correctly rejects this URL now.
+        with db.connect() as c:
+            lien=c.execute(
+                """INSERT INTO documents(
+                     family,title,kind,scope,url,first_seen,last_seen,origin)
+                   VALUES(?,?,?,?,?,?,?,?)""",
+                (repair.FAMILY,"Lien Request Letter from Unit holder","unitholder letter","AMC",
+                 "https://media1.samco.in/scomamc/amc_documents/Lienrequestletterfromunitholder_1.pdf",
+                 db.now(),db.now(),"AMC"),
+            ).lastrowid
         genuine=providers.save_document(
             repair.FAMILY,"Letter to Unitholders",
             "https://www.samcomf.com/letters/genuine.pdf",
