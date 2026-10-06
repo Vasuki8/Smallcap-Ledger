@@ -286,25 +286,36 @@ def archive(content: bytes, media_type: str = "application/octet-stream"):
         target = DATA / "archive" / h[:2] / h
         target.parent.mkdir(parents=True, exist_ok=True)
         previous=archive_retention(h)
+        created=False
         if not target.exists():
             tmp = target.with_suffix(".tmp")
             tmp.write_bytes(content)
             tmp.replace(target)
-        with connect() as c:
-            c.execute("""INSERT OR IGNORE INTO archives(hash,path,bytes,media_type,first_seen)
-              VALUES(?,?,?,?,?)""", (h, str(target.relative_to(DATA)), len(content), media_type, now()))
-            c.execute("""INSERT OR IGNORE INTO archive_retention(
-              hash,classification,binary_state,updated_at) VALUES(?,?,?,?)""",
-              (h,'unclassified','retained',now()))
-            # If deliberately metadata-only bytes later reappear from a fresh source
-            # fetch/import, they are current again and must be re-reviewed rather than
-            # silently discarded or left as a broken current source.
-            if previous and (previous['binary_state']=='metadata_only'
-                             or previous['classification']=='link_only_candidate'):
-                c.execute("""UPDATE archive_retention SET
-                  classification='retain_latest_or_review',binary_state='retained',
-                  reason='Promoted because identical bytes were fetched/imported again as current source evidence',
-                  updated_at=? WHERE hash=?""",(now(),h))
+            created=True
+        try:
+            with connect() as c:
+                c.execute("""INSERT OR IGNORE INTO archives(hash,path,bytes,media_type,first_seen)
+                  VALUES(?,?,?,?,?)""", (h, str(target.relative_to(DATA)), len(content), media_type, now()))
+                c.execute("""INSERT OR IGNORE INTO archive_retention(
+                  hash,classification,binary_state,updated_at) VALUES(?,?,?,?)""",
+                  (h,'unclassified','retained',now()))
+                # If deliberately metadata-only bytes later reappear from a fresh source
+                # fetch/import, they are current again and must be re-reviewed rather than
+                # silently discarded or left as a broken current source.
+                if previous and (previous['binary_state']=='metadata_only'
+                                 or previous['classification']=='link_only_candidate'):
+                    c.execute("""UPDATE archive_retention SET
+                      classification='retain_latest_or_review',binary_state='retained',
+                      reason='Promoted because identical bytes were fetched/imported again as current source evidence',
+                      updated_at=? WHERE hash=?""",(now(),h))
+        except Exception:
+            # Do not leave an untracked file when SQLite could not record the
+            # archive. Existing/shared bytes are never removed here.
+            if created and not archive_retention(h) and target.is_file():
+                target.unlink()
+                try:target.parent.rmdir()
+                except OSError:pass
+            raise
         return h
 
 
