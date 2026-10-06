@@ -30,6 +30,11 @@ def exclusion_reason(amc, url, title=''):
             if liquid_path or liquid_title:
                 return 'Abakkus Liquid Fund material; unrelated to Abakkus Small Cap Fund'
 
+    if re.search(r'\baxis\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if re.search(r'axis[\s_-]*greater[\s_-]*china[\s_-]*(?:equity[\s_-]*)?fund[\s_-]*of[\s_-]*fund',combined):
+            return 'Axis Greater China Fund of Fund article; unrelated to Axis Small Cap Fund'
+
     if re.search(r'\bhelios\b', str(amc), re.I):
         combined=(str(title or '')+' '+path).lower()
         foreign_scheme=re.search(
