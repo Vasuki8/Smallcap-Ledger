@@ -364,23 +364,40 @@ def benchmark_source_priority(source):
     return 2 if any(host==root or host.endswith('.'+root) for root in official) else 1
 
 
-def save_benchmark(name, points, source, *, authoritative=True):
+def save_benchmark(name, points, source, *, authoritative=True, origin=None):
     """Retain every observation but protect canonical dates from manual replacement."""
-    records = [(name, day, float(value), source, now()) for day, value in points if float(value) > 0]
+    origin=str(origin or current_origin())
+    records = [(name, day, float(value), source, now(), origin)
+               for day, value in points if float(value) > 0]
     with connect() as c:
-        c.executemany("INSERT OR IGNORE INTO benchmark_observations VALUES(?,?,?,?,?)", records)
+        c.executemany("""INSERT INTO benchmark_observations(
+          name,date,value,source,observed_at,origin) VALUES(?,?,?,?,?,?)
+          ON CONFLICT(name,date,value,source) DO UPDATE SET
+            observed_at=excluded.observed_at,
+            origin=CASE WHEN excluded.origin='Official' THEN 'Official'
+                        ELSE benchmark_observations.origin END""", records)
         for record in records:
-            existing=c.execute("SELECT source FROM benchmark WHERE name=? AND date=?",record[:2]).fetchone()
+            existing=c.execute("SELECT source,origin FROM benchmark WHERE name=? AND date=?",record[:2]).fetchone()
             if existing:
                 incoming=benchmark_source_priority(source) if authoritative else 0
                 current=benchmark_source_priority(existing['source'])
                 if incoming<current or (incoming==current==1 and existing['source']!=source):
                     continue
-            c.execute('''INSERT INTO benchmark VALUES(?,?,?,?,?) ON CONFLICT(name,date) DO UPDATE SET
-              value=excluded.value,source=excluded.source,observed_at=excluded.observed_at''',record)
+            c.execute('''INSERT INTO benchmark(
+              name,date,value,source,observed_at,origin) VALUES(?,?,?,?,?,?)
+              ON CONFLICT(name,date) DO UPDATE SET
+              value=excluded.value,source=excluded.source,
+              observed_at=excluded.observed_at,origin=excluded.origin''',record)
 
 
-def metric(family, plan, name, as_of, value, unit, source, content_hash=""):
+def metric(family, plan, name, as_of, value, unit, source, content_hash="", origin=None):
+    origin=str(origin or current_origin())
     with connect() as c:
-        c.execute("INSERT OR IGNORE INTO metrics(family,plan,metric,as_of,value,unit,source,hash,observed_at) VALUES(?,?,?,?,?,?,?,?,?)",
-                  (family, plan, name, as_of, str(value), unit, source, content_hash, now()))
+        c.execute("""INSERT INTO metrics(
+          family,plan,metric,as_of,value,unit,source,hash,observed_at,origin)
+          VALUES(?,?,?,?,?,?,?,?,?,?)
+          ON CONFLICT(family,plan,metric,as_of,value,source) DO UPDATE SET
+            origin=CASE WHEN excluded.origin='Official' THEN 'Official' ELSE metrics.origin END,
+            hash=CASE WHEN excluded.origin='Official' AND excluded.hash!='' THEN excluded.hash ELSE metrics.hash END,
+            observed_at=CASE WHEN excluded.origin='Official' THEN excluded.observed_at ELSE metrics.observed_at END""",
+          (family, plan, name, as_of, str(value), unit, source, content_hash, now(), origin))
