@@ -91,7 +91,7 @@ def _documents(family,amc):
                     GROUP BY d.id
                     ORDER BY COALESCE(d.published_at,d.first_seen) DESC,d.id DESC""",
                  (family,))
-    return [d for d in docs if not exclusion_reason(amc,d["url"],d["title"])]
+    return [d for d in docs if not exclusion_reason(amc,d["url"],d["title"],d["kind"])]
 
 
 def report():
