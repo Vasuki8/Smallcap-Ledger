@@ -65,7 +65,7 @@ def evaluate(started_at, *, today=None, max_age_days=7):
         blockers.append("latest_nav_stale_or_invalid")
 
     benchmark=db.one("""SELECT MAX(date) last,COUNT(*) points
-      FROM benchmark WHERE name=?""",(providers.BENCHMARK,))
+      FROM benchmark WHERE name=? AND origin='Official'""",(providers.BENCHMARK,))
     benchmark_age=_age(benchmark["last"],today) if benchmark else None
     if not benchmark or not benchmark["points"]:
         blockers.append("primary_benchmark_missing")
