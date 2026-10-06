@@ -124,6 +124,26 @@ class PublicationHealthGateTests(unittest.TestCase):
             self.assertEqual(result['data']['aum_earliest_date'],'2026-08-01')
             self.assertEqual(result['data']['aum_oldest_age_days'],66)
 
+    def test_retained_only_mode_uses_data_health_without_current_job_requirement(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
+            db.init();self.seed(statuses={'documents':'error'},latest='2026-10-05')
+            result=evaluate("",today=self.today,require_current_jobs=False)
+            self.assertEqual(result['mode'],'retained_only')
+            self.assertEqual(result['blockers'],[])
+            self.assertEqual(result['status'],'degraded')
+            self.assertIn('retained_only_latest_documents_job_error',result['degraded'])
+
+    def test_retained_only_mode_still_blocks_stale_data(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
+            db.init();self.seed(latest='2026-09-20',include_documents=False)
+            result=evaluate("",today=self.today,require_current_jobs=False)
+            self.assertEqual(result['mode'],'retained_only')
+            self.assertEqual(result['status'],'blocked')
+            self.assertNotIn('documents_job_missing',result['blockers'])
+            self.assertIn('latest_nav_stale_or_invalid',result['blockers'])
+            self.assertIn('primary_benchmark_stale_or_invalid',result['blockers'])
+            self.assertIn('aum_stale_or_invalid',result['blockers'])
+
     def test_stale_nav_and_aum_block_even_when_jobs_are_green(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,'DATA',Path(tmp)):
             db.init();self.seed(latest='2026-09-20')
