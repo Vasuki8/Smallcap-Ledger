@@ -349,7 +349,7 @@ def document_title(title,url):
 def save_document_in_connection(c,family,title,url,kind="disclosure",scope="Fund",published=None,origin="AMC"):
     """Save one document using the caller's transaction."""
     from .publications import exclusion_reason
-    reason=exclusion_reason(family,url,title)
+    reason=exclusion_reason(family,url,title,kind)
     if reason:raise ValueError(reason)
     title=document_title(title,url)
     c.execute('''INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
