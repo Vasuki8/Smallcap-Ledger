@@ -353,7 +353,18 @@ def save_document(family,title,url,kind="disclosure",scope="Fund",published=None
     title=document_title(title,url)
     with db.connect() as c:
         c.execute('''INSERT INTO documents(family,title,kind,scope,url,published_at,first_seen,last_seen,origin)
-          VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(family,url) DO UPDATE SET title=excluded.title,last_seen=excluded.last_seen,
+          VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(family,url) DO UPDATE SET
+          title=CASE
+            WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.title
+            ELSE excluded.title END,
+          kind=CASE
+            WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.kind
+            ELSE excluded.kind END,
+          scope=CASE
+            WHEN documents.origin='AMC' AND excluded.origin!='AMC' THEN documents.scope
+            ELSE excluded.scope END,
+          origin=CASE WHEN documents.origin='AMC' THEN documents.origin ELSE excluded.origin END,
+          last_seen=excluded.last_seen,
           published_at=COALESCE(excluded.published_at,documents.published_at)''',
           (family,title[:500],kind,scope,url,published,db.now(),db.now(),origin))
         return c.execute("SELECT id FROM documents WHERE family=? AND url=?",(family,url)).fetchone()[0]
