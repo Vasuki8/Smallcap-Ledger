@@ -30,4 +30,40 @@ def exclusion_reason(amc, url, title=''):
             if liquid_path or liquid_title:
                 return 'Abakkus Liquid Fund material; unrelated to Abakkus Small Cap Fund'
 
+    if re.search(r'\bhelios\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        foreign_scheme=re.search(
+            r'\bhelios[\s_-]*(?:flexi[\s_-]*cap|overnight|(?:large[\s&_-]*)?mid[\s_-]*cap|'
+            r'financial[\s_-]*services|arbitrage)[\s_-]*fund\b',
+            combined,
+        )
+        product_material=re.search(r'product[\s_-]*note|presentation',combined)
+        if foreign_scheme and product_material:
+            return 'Helios non-Small-Cap fund product material; unrelated to Helios Small Cap Fund'
+
+    if re.search(r'\bbandhan\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if (re.search(r'\bbandhan[\s_-]*nifty[\s_-]*midcap150[\s_-]*index[\s_-]*fund\b',combined)
+            and re.search(r'presentation',combined)):
+            return 'Bandhan Nifty Midcap150 Index Fund presentation; unrelated to Bandhan Small Cap Fund'
+
+    if re.search(r'\bhsbc\b', str(amc), re.I):
+        if (host in ('www.assetmanagement.hsbc.co.in','assetmanagement.hsbc.co.in')
+            and path.rstrip('/')=='/en/mutual-funds/investor-resources'
+            and 'doc=product-note-and-deck' in parsed.query.lower()):
+            return 'HSBC generic product-note/deck directory; not an AMC communication document'
+
+    if re.search(r'\bquant\b', str(amc), re.I):
+        combined=(str(title or '')+' '+path).lower()
+        if path.rstrip('/') in ('/distributorhub/nfopresentation','/distributorhub/nfopresentation.aspx'):
+            return 'Quant generic NFO-presentation directory; not an AMC communication document'
+        if (re.search(r'(?:silver[\s_%+-]*etf|income[\s_%+-]*plus[\s_%+-]*arbitrage[\s_%+-]*active[\s_%+-]*fof)',combined)
+            and re.search(r'presentation',combined)):
+            return 'Quant non-Small-Cap NFO presentation; unrelated to Quant Small Cap Fund'
+
+    if re.search(r'\bmirae\b', str(amc), re.I):
+        if (host in ('www.miraeassetmf.co.in','miraeassetmf.co.in')
+            and path.rstrip('/')=='/downloads/product-presentations'):
+            return 'Mirae generic product-presentations directory; not an AMC communication document'
+
     return None
