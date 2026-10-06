@@ -121,10 +121,11 @@ def dated_return(code,latest,years):
     return ((latest['value']/p['value'])**(365.25/days)-1)*100 if days>0 else None
 
 
-@app.get('/api/funds')
-def funds():
+def funds_data(official_only=False):
     records=db.rows("SELECT * FROM schemes ORDER BY family,plan,option,code")
     expected=expected_portfolio_as_of()
+    metric_origin=" AND origin='Official'" if official_only else ""
+    portfolio_origin=" AND origin='Official'" if official_only else ""
     for s in records:
         s['option_label']=option_label(s)
         latest=db.rows("SELECT date,value,source FROM nav WHERE code=? ORDER BY date DESC LIMIT 2",(s['code'],))
@@ -133,10 +134,13 @@ def funds():
         s['nav_change']=((latest[0]['value']/latest[1]['value']-1)*100) if len(latest)>1 else None
         s['coverage']=coverage
         s['returns']={str(y):dated_return(s['code'],latest[0],y) if latest and s['option']=='Growth' else None for y in (1,3,5)}
-        s['metrics']=metrics_for(s)
-        s['available_expenses']=available_expenses(s)
-        s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
-        s['portfolio']=db.one("""SELECT id,as_of,complete,source FROM portfolios WHERE family=?
+        s['metrics']=metrics_for(s,official_only)
+        s['available_expenses']=available_expenses(s,official_only)
+        if official_only:
+            s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page' AND origin='AMC'",(s['family'],))['n']
+        else:
+            s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
+        s['portfolio']=db.one(f"""SELECT id,as_of,complete,source FROM portfolios WHERE family=?{portfolio_origin}
           ORDER BY CASE WHEN complete=1 AND as_of>=? THEN 0 ELSE 1 END,
                    as_of DESC,complete DESC,id DESC LIMIT 1""",(s['family'],expected))
         s['portfolio_limitation']=portfolio_limitation(s['family'],s['portfolio'])
@@ -145,20 +149,26 @@ def funds():
     return {"funds":records,"as_of":db.now()}
 
 
-@app.get('/api/funds/{code}')
-def fund(code:int):
-    s=scheme(code);s['metrics']=metrics_for(s)
+@app.get('/api/funds')
+def funds():
+    return funds_data(False)
+
+
+def fund_data(code:int,official_only=False):
+    s=scheme(code);s['metrics']=metrics_for(s,official_only)
     expected=expected_portfolio_as_of()
-    s['available_expenses']=available_expenses(s)
+    metric_origin=" AND origin='Official'" if official_only else ""
+    portfolio_origin=" AND p.origin='Official'" if official_only else ""
+    s['available_expenses']=available_expenses(s,official_only)
     s['option_label']=option_label(s)
     s['nav_coverage']=db.one("SELECT MIN(date) first,MAX(date) last,COUNT(*) points FROM nav WHERE code=?",(code,))
     s['plans']=db.rows("SELECT code,name,plan,option,isin,reinvestment_isin,metadata_json FROM schemes WHERE family=? ORDER BY plan,option",(s['family'],))
     for p in s['plans']:p['option_label']=option_label(p)
-    s['metric_history']=db.rows("SELECT * FROM metrics WHERE family=? ORDER BY as_of DESC,id DESC",(s['family'],))
-    s['portfolios']=db.rows("""SELECT p.*,COUNT(h.id) holding_count,SUM(h.weight) disclosed_weight,
+    s['metric_history']=db.rows(f"SELECT * FROM metrics WHERE family=?{metric_origin} ORDER BY as_of DESC,id DESC",(s['family'],))
+    s['portfolios']=db.rows(f"""SELECT p.*,COUNT(h.id) holding_count,SUM(h.weight) disclosed_weight,
       SUM(CASE WHEN h.quantity IS NOT NULL THEN 1 ELSE 0 END) quantity_count
       FROM portfolios p LEFT JOIN holdings h ON p.id=h.snapshot_id
-      WHERE p.family=?
+      WHERE p.family=?{portfolio_origin}
       GROUP BY p.id
       ORDER BY CASE WHEN p.complete=1 AND p.as_of>=? THEN 0 ELSE 1 END,
                p.as_of DESC,p.complete DESC,quantity_count DESC,holding_count DESC,p.id DESC LIMIT 1""",
@@ -166,8 +176,14 @@ def fund(code:int):
     for p in s['portfolios']:p['limitation']=portfolio_limitation(s['family'],p)
     s['portfolio_limitation']=s['portfolios'][0]['limitation'] if s['portfolios'] else portfolio_limitation(s['family'])
     s['sources']=db.rows("SELECT * FROM source_pages WHERE instr(lower(?),lower(amc_match))>0 ORDER BY id",(s['amc'],))
-    s['distribution_coverage']=db.one("SELECT * FROM distribution_coverage WHERE code=?",(code,))
+    coverage_origin=" AND origin='Official'" if official_only else ""
+    s['distribution_coverage']=db.one(f"SELECT * FROM distribution_coverage WHERE code=?{coverage_origin}",(code,))
     return s
+
+
+@app.get('/api/funds/{code}')
+def fund(code:int):
+    return fund_data(code,False)
 
 
 def reported_benchmark_identity(family):
