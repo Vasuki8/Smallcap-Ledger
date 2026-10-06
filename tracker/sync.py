@@ -52,7 +52,7 @@ def nav_history_recovery_since(previous_good,now=None):
 
 class Updater:
     def __init__(self):
-        self.lock=threading.Lock();self.running={};self.stop=threading.Event()
+        self.lock=threading.Lock();self.running={};self.stop=threading.Event();self.schedule_thread=None
 
     def status(self):
         with self.lock: return {k:dict(v) for k,v in self.running.items()}
@@ -173,7 +173,27 @@ class Updater:
             self.stop.wait(15)
 
     def start(self):
-        threading.Thread(target=self.schedule,daemon=True,name="schedule").start()
+        """Start one scheduler thread and allow a clean same-process restart."""
+        with self.lock:
+            if self.schedule_thread is not None and self.schedule_thread.is_alive():
+                return False
+            self.stop.clear()
+            thread=threading.Thread(target=self.schedule,daemon=True,name="schedule")
+            self.schedule_thread=thread
+        thread.start()
+        return True
+
+    def shutdown(self,timeout=5):
+        """Stop and join the scheduler so a later lifespan can start it again."""
+        self.stop.set()
+        with self.lock:
+            thread=self.schedule_thread
+        if thread is not None and thread is not threading.current_thread():
+            thread.join(timeout)
+        with self.lock:
+            if self.schedule_thread is thread and (thread is None or not thread.is_alive()):
+                self.schedule_thread=None
+        return thread is None or not thread.is_alive()
 
 updater=Updater()
 
