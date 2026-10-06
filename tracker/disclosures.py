@@ -257,7 +257,14 @@ def portfolio(family,day,positions,complete,source,h,*,replace_existing_partial=
     if sum(x["weight"] for x in positions)>110: raise ValueError("Portfolio weight total suggests duplicated rows or wrong units")
     if any(x.get("quantity") is not None and x["quantity"]<0 for x in positions): raise ValueError("Portfolio quantity cannot be negative")
     with db.connect() as c:
-        c.execute("INSERT OR IGNORE INTO portfolios(family,as_of,complete,source,hash,observed_at) VALUES(?,?,?,?,?,?)",(family,day,int(complete),source,h,db.now()))
+        origin=db.current_origin()
+        c.execute("""INSERT INTO portfolios(
+          family,as_of,complete,source,hash,observed_at,origin)
+          VALUES(?,?,?,?,?,?,?)
+          ON CONFLICT(family,as_of,hash,complete) DO UPDATE SET
+            origin=CASE WHEN excluded.origin='Official' THEN 'Official' ELSE portfolios.origin END,
+            observed_at=CASE WHEN excluded.origin='Official' THEN excluded.observed_at ELSE portfolios.observed_at END""",
+          (family,day,int(complete),source,h,db.now(),origin))
         sid=c.execute("SELECT id FROM portfolios WHERE family=? AND as_of=? AND hash=? AND complete=?",(family,day,h,int(complete))).fetchone()[0]
         existing=c.execute("SELECT id,isin,name,asset_type,quantity FROM holdings WHERE snapshot_id=?",(sid,)).fetchall()
         if replace_existing_partial and not complete and existing:
