@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-10-05T22:52:19+00:00
+Prepared: 2026-10-06T22:49:49+00:00
 
-Targets: **21** · recovered: **18** · failed: **3**.
+Targets: **21** · recovered: **17** · failed: **4**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -14,7 +14,6 @@ Targets: **21** · recovered: **18** · failed: **3**.
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
 | SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
 | Quant Mid Cap Fund | quant Mutual Fund | Nifty Mid Cap 150 TRI | https://quantmutual.com/equity/opportunities-fund |
-| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Nifty Midcap 150 TRI | https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Nifty Midcap 150 TRI | https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Nifty Midcap 150 TRI | https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund |
@@ -29,5 +28,7 @@ Targets: **21** · recovered: **18** · failed: **3**.
 
 - Aditya Birla Sun Life Midcap Fund: ABSL requires one Fund Snapshot table
 - Samco Mid Cap Fund: The read operation timed out
-- Invesco India Mid Cap Fund: Client error '404 Not Found' for url 'https://159.60.65.210/error.html?aspxerrorpath=/docs/default-source/factsheet/invesco-mf-factsheet-september-2026.pdf'
+- Edelweiss Mid Cap Fund: Client error '403 Forbidden' for url 'https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+- Invesco India Mid Cap Fund: Client error '404 Not Found' for url 'https://www.invescomutualfund.com/error.html?aspxerrorpath=/docs/default-source/factsheet/invesco-mf-factsheet-september-2026.pdf'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404

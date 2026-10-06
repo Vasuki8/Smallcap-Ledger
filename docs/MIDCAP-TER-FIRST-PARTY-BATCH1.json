@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-05T22:49:30+00:00",
+  "built_at": "2026-10-06T22:46:55+00:00",
   "staged_category": "mid-cap",
   "targets": 8,
   "recovered": 8,
@@ -42,7 +42,7 @@
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-05",
+      "as_of": "2026-10-06",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.6,
@@ -59,8 +59,8 @@
           "ter": 0.87
         }
       },
-      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-21&to_date=2026-10-05",
-      "sha256": "3717718be5a0c98f95d6a329479bc40dca4c48b5c76b2648c45918eb92171ec4",
+      "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-09-22&to_date=2026-10-06",
+      "sha256": "0969faf15a9aa8a1c458d13344bfa19514e0045d44e961ff4e1c6e234990e09b",
       "identity": {
         "scheme_name": "Canara Robeco Mid Cap Fund",
         "scheme_code": "MD"
@@ -73,7 +73,7 @@
       "family": "HSBC Midcap Fund",
       "amc": "HSBC Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-04",
+      "as_of": "2026-10-05",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.43,
@@ -91,7 +91,7 @@
         }
       },
       "source": "https://digital.camsonline.com/dnlresult/hsbc_ter_report.xlsx",
-      "sha256": "37b77a527c7ee1a4ce40c02727cd62d415f68fc48e6061bfbea9f41a5439ace2",
+      "sha256": "5d4a5ab1fb4c1e70037e11c7e910d16967bdd43f286e4078494f4c7986163956",
       "identity": {
         "scheme_name": "HSBC Midcap Fund",
         "scheme_code": "HEMCPF",
@@ -105,7 +105,7 @@
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-01",
+      "as_of": "2026-10-05",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.53,
@@ -123,7 +123,7 @@
         }
       },
       "source": "https://app.beta.icicipruamc.com/blob/financials-disclosures-files/Files/Total%20Expense%20Ratio/2026-2027/TotalExpenseRatioOct2026.xlsx",
-      "sha256": "6650e6a43eaf6a57af4dff575ceea21c587aa93cb6bd19a5160a2e067a2ee346",
+      "sha256": "18aed390caa57f65e97f77de5a085fb649abb18780ca9a7e3ebd859b337d270b",
       "identity": {
         "scheme_name": "ICICI Prudential Mid Cap Fund"
       },
@@ -137,7 +137,7 @@
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-04",
+      "as_of": "2026-10-05",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.44,
@@ -155,7 +155,7 @@
         }
       },
       "source": "https://www.invescomutualfund.com/api/TotalExpenseRatioOfMutualFundSchemePolicy/GetTERExpenseData?title=Invesco+India+Mid+Cap+Fund&fincialYear=2026&month=10",
-      "sha256": "b708c6a46ec59fd4b69c5a6fd84dda5d25a7d890eead330366e761115ecb4c55",
+      "sha256": "2f5a0a2692c0ce3992b5e994c135bdae5411589cdf3d1aee47a00b5edb996ebe",
       "identity": {
         "scheme_name": "Invesco India Mid Cap Fund",
         "nsdl_scheme_code": "INVM/O/E/MIF/07/01/0006"
@@ -168,7 +168,7 @@
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-05",
+      "as_of": "2026-10-06",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.85,
@@ -178,29 +178,29 @@
           "ter": 2.44
         },
         "Direct": {
-          "base_expense_ratio": 0.55,
+          "base_expense_ratio": 0.54,
           "brokerage": 0.09,
           "transaction_cost": 0.01,
           "statutory_levies": 0.29,
-          "ter": 0.94
+          "ter": 0.93
         }
       },
       "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest",
-      "sha256": "ba388445531c6cb3001762123ae3e44c33c8670ede133b28bbc7a12806a806c9",
+      "sha256": "256329f8f998e24a1b49430a7a28c02f9755d2b93f755713a67137b041b5f876",
       "identity": {
         "scheme_name": "JM Mid Cap Fund",
         "scheme_code": "MD",
         "nsdl_scheme_code": "JMFI/O/E/MIF/21/09/0014"
       },
       "evidence_type": "official_amc_json",
-      "direct_ter": 0.94,
+      "direct_ter": 0.93,
       "regular_ter": 2.44
     },
     {
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-05",
+      "as_of": "2026-10-06",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.6,
@@ -218,7 +218,7 @@
         }
       },
       "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx",
-      "sha256": "14afba44173c2d984b2727b34b79e3cd796b881780a21959805bec853ac956aa",
+      "sha256": "08df987a94d903d98af98384d9388f23a27aa25e52407b6b7b31dd859da58d7c",
       "identity": {
         "scheme_name": "Mahindra Manulife Mid Cap Fund",
         "nsdl_scheme_code": "MAHM/O/E /MIF/17/11/0006"
@@ -231,7 +231,7 @@
       "family": "Mirae Asset Midcap Fund",
       "amc": "Mirae Asset Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-10-04",
+      "as_of": "2026-10-05",
       "plans": {
         "Regular": {
           "base_expense_ratio": 1.42,
@@ -248,8 +248,8 @@
           "ter": 0.95
         }
       },
-      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_04102026.xls",
-      "sha256": "192b05e69659006007a468bf96aeacc448d287558c9a480329baace3734cf07e",
+      "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_05102026.xls",
+      "sha256": "57ffdf78a4411ef9b3268c49a664d550eb424bcf14d416b476734f84930d4ee2",
       "identity": {
         "scheme_name": "Mirae Asset Midcap Fund",
         "nsdl_scheme_code": "MIRA/O/E/MIF/19/05/0015"

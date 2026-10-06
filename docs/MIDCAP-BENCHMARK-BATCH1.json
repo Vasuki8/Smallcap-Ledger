@@ -1,11 +1,11 @@
 {
-  "built_at": "2026-10-05T22:49:57+00:00",
+  "built_at": "2026-10-06T22:47:25+00:00",
   "staged_category": "mid-cap",
   "families": 34,
   "targets": 12,
-  "recovered": 9,
-  "failed": 3,
-  "benchmark_coverage_after_batch": 9,
+  "recovered": 8,
+  "failed": 4,
+  "benchmark_coverage_after_batch": 8,
   "results": [
     {
       "family": "Kotak Mid Cap Fund",
@@ -17,10 +17,10 @@
         "Nifty Midcap 100 TRI"
       ],
       "source": "https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html",
-      "source_sha256": "9f0b0b876817deab3e38da080eb0160e0ed861c29f79c72ef0079bd24239b7e3",
+      "source_sha256": "a6b0d7c5ec62e774b38f00e70390e8e3a284a16cf88bf15d21603b2d2d92c6fc",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:38+00:00",
+      "observed_at": "2026-10-06T22:47:04+00:00",
       "amc": "Kotak Mahindra Mutual Fund"
     },
     {
@@ -32,10 +32,10 @@
         "NIFTY Midcap 150"
       ],
       "source": "https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/",
-      "source_sha256": "e97bbaa6b317c26e49e5120b938a1cd39d2fd6f41aa6cffd075261eba2776c31",
+      "source_sha256": "f5321e50ef197ec3314eccc2ea4df4aafcec298274ec9139173ba621a07afdaa",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:39+00:00",
+      "observed_at": "2026-10-06T22:47:05+00:00",
       "amc": "The Wealth Company Mutual Fund"
     },
     {
@@ -47,10 +47,10 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund",
-      "source_sha256": "1c4be5f93b7f8f19ad9313e40a5016f831d7179da96171bb918b8758cf99603b",
+      "source_sha256": "aae311ab4f9743b2b8add5b5576f24122e575d8ae355c613cdf5a993b52e80d2",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:40+00:00",
+      "observed_at": "2026-10-06T22:47:07+00:00",
       "amc": "Bank of India Mutual Fund"
     },
     {
@@ -62,26 +62,11 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund",
-      "source_sha256": "abfd4dd5207442c423e18008bdd1b49a9b4781b254e1f8c602b2b0871c06b422",
+      "source_sha256": "d153f8bf5001709674f4543afe2fb52e8b613625c487622f93ff643a1bd5b7c6",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": "2026-08-31",
-      "observed_at": "2026-10-05T22:49:43+00:00",
+      "observed_at": "2026-10-06T22:47:10+00:00",
       "amc": "PGIM India Mutual Fund"
-    },
-    {
-      "family": "HDFC Mid Cap Fund",
-      "status": "recovered",
-      "primary_benchmark": "NIFTY Midcap 150 Index (Total Returns Index)",
-      "reported_benchmarks": [
-        "NIFTY Midcap 150 Index (Total Returns Index)",
-        "NIFTY Midcap 150"
-      ],
-      "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
-      "source_sha256": "b0b2362ad0d0591e2ffa234938abf0f2ec4fea63ee5d9551f65ba09f920b5646",
-      "source_content_type": "text/html; charset=utf-8",
-      "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:46+00:00",
-      "amc": "HDFC Mutual Fund"
     },
     {
       "family": "DSP Midcap Fund",
@@ -92,10 +77,10 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth",
-      "source_sha256": "07c860b82bde238a4b84bc4ea10aaeae576785c84a128ce0062adefc84d53858",
+      "source_sha256": "074fb87ff9996dd131aa432d09a6d98a18b29d0b88f75623b804f3331e85d6db",
       "source_content_type": "text/html",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:49+00:00",
+      "observed_at": "2026-10-06T22:47:15+00:00",
       "amc": "DSP Mutual Fund"
     },
     {
@@ -107,10 +92,10 @@
         "NIFTY Midcap 150"
       ],
       "source": "https://www.heliosmf.in/helios-mid-cap-fund/",
-      "source_sha256": "3ae38e2d781bc8fed1d36c21538e63aecf4f1e8eca6737b0bcafcd536360c444",
+      "source_sha256": "5ee9a0be3430a89e519580c725277ad81eb950b7674279ea80a70d232951c166",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:52+00:00",
+      "observed_at": "2026-10-06T22:47:18+00:00",
       "amc": "Helios Mutual Fund"
     },
     {
@@ -122,10 +107,10 @@
         "Nifty Midcap 150"
       ],
       "source": "https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy",
-      "source_sha256": "4e8fccc642d8517498e22bf729cb09e05f5848bf46d90ee00d77a720b0a495ec",
+      "source_sha256": "146180977160bb9fbcf7cd29f1ba1f9e424fdaf8d9717dc949d0daf7858cea8e",
       "source_content_type": "text/html; charset=utf-8",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:54+00:00",
+      "observed_at": "2026-10-06T22:47:20+00:00",
       "amc": "Nippon India Mutual Fund"
     },
     {
@@ -137,10 +122,10 @@
         "Nifty Midcap 150"
       ],
       "source": "https://www.taurusmutualfund.com/node/557",
-      "source_sha256": "7a931a6bd91d81d36b9894be0840c7d5a55f40eae0713e0863aba8e7d5a2834d",
+      "source_sha256": "0707a020c154c4c09eaa0f01bf3a19d339ce76d2fac910d3157166225710c96f",
       "source_content_type": "text/html; charset=UTF-8",
       "source_data_as_of": null,
-      "observed_at": "2026-10-05T22:49:57+00:00",
+      "observed_at": "2026-10-06T22:47:25+00:00",
       "amc": "Taurus Mutual Fund"
     }
   ],
@@ -149,7 +134,7 @@
       "family": "Canara Robeco Mid Cap Fund",
       "amc": "Canara Robeco Mutual Fund",
       "source": "https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html",
-      "error": "Client error '403 This request is not authorized to perform this operation.' for url 'https://150.171.109.151/digital-factsheet/2026/august/Scheme/MID-CAP.html'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+      "error": "Client error '403 This request is not authorized to perform this operation.' for url 'https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
     },
     {
       "family": "Franklin India Mid Cap Fund",
@@ -162,6 +147,12 @@
       "amc": "UTI Mutual Fund",
       "source": "https://www.utimf.com/mutual-funds/uti-mid-cap-fund",
       "error": "First-party page does not contain the exact staged Mid Cap family identity"
+    },
+    {
+      "family": "HDFC Mid Cap Fund",
+      "amc": "HDFC Mutual Fund",
+      "source": "https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular",
+      "error": "Client error '403 Forbidden' for url 'https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
     }
   ],
   "not_yet_audited": [

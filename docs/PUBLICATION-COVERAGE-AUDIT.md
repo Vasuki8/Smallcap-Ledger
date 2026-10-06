@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-10-06T06:49:56+00:00
+Prepared: 2026-10-06T23:14:26+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -8,8 +8,8 @@ Prepared: 2026-10-06T06:49:56+00:00
 
 - Funds with at least one retained AMC communication: **32 / 36**.
 - Funds with no retained AMC communication: **4**.
-- Retained communication documents: **251**; archived originals: **234**.
-- Market/newsletter/CIO/product-view documents: **250**; letters to unitholders: **1**.
+- Retained communication documents: **252**; archived originals: **235**.
+- Market/newsletter/CIO/product-view documents: **251**; letters to unitholders: **1**.
 - Communication documents with an explicit published date: **60**.
 - Funds with a registered communication-oriented source page: **29**.
 
@@ -65,7 +65,7 @@ Prepared: 2026-10-06T06:49:56+00:00
 | Tata Small Cap Fund | 1 | 1 | 0 | 1 | 0 | Gap | 1 | publication_date_missing |
 | The Wealth Company Small Cap Fund | 5 | 5 | 0 | 5 | 5 | 2026-04-30 | 1 | none |
 | Trustmf Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected, communication_source_limitation |
-| UTI Small Cap Fund | 6 | 6 | 0 | 6 | 3 | 2026-09-10 | 1 | publication_date_missing |
+| UTI Small Cap Fund | 7 | 7 | 0 | 7 | 3 | 2026-09-10 | 1 | publication_date_missing |
 | Union Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 1 | no_amc_communications_collected, communication_source_limitation |
 
 ## Notes

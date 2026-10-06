@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **27 / 34** · remaining: **7**.
+Benchmark identity: **25 / 34** · remaining: **9**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -11,9 +11,9 @@ Benchmark identity: **27 / 34** · remaining: **7**.
 | Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | Nifty Midcap 150 TRI | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
 | Canara Robeco Mid Cap Fund | Canara Robeco Mutual Fund | Gap | Gap |
 | DSP Midcap Fund | DSP Mutual Fund | Nifty Midcap 150 TRI | https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth |
-| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Nifty Midcap 150 TRI | https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf |
+| Edelweiss Mid Cap Fund | Edelweiss Mutual Fund | Gap | Gap |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
-| HDFC Mid Cap Fund | HDFC Mutual Fund | NIFTY Midcap 150 Index (Total Returns Index) | https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular |
+| HDFC Mid Cap Fund | HDFC Mutual Fund | Gap | Gap |
 | HSBC Midcap Fund | HSBC Mutual Fund | NIFTY Midcap 150 TRI | https://www.assetmanagement.hsbc.co.in/assets/documents/mutual-funds/en/f73ce2a0-34a8-4ecc-8740-f9017e53e73e/hsbc-midcap-fund-jan-2026.pdf |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | https://www.heliosmf.in/helios-mid-cap-fund/ |
 | ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | Nifty Midcap 150 TRI | https://www.icicipruamc.com/blob/knowledgecentre/factsheet-abridged/Abridged.pdf |
