@@ -41,6 +41,29 @@ class CrossSchemePublicationTests(unittest.TestCase):
                 (family,title,"market view","AMC",url,db.now(),db.now(),"AMC"),
             ).lastrowid
 
+    def test_axis_greater_china_article_is_not_small_cap_communication(self):
+        family="Axis Small Cap Fund";amc="Axis Mutual Fund";code=9902
+        wrong_title="Axis Greater China Equity Fund of Fund: Making Sense..."
+        wrong_url=("https://www.axismf.com/mutual-fund-knowledge-centre/articles/"
+                   "everything-you-need-to-know-about-axis-greater-china-fund-of-fund")
+        good_title="How Union Budget 2026 Affects Equity, Debt & Hybrid Funds"
+        good_url=("https://www.axismf.com/mutual-fund-knowledge-centre/articles/"
+                  "union-budget-2026-impact-on-mutual-funds")
+        self.scheme(code,family,amc)
+        self.old_doc(family,wrong_title,wrong_url)
+        good=providers.save_document(
+            family,good_title,good_url,"market view","AMC",
+            published="2026-02-11",origin="AMC")
+        h=db.archive(b"<html>Axis budget commentary</html>","text/html")
+        providers.doc_version(good,h)
+
+        self.assertEqual([d["url"] for d in documents(code)],[good_url])
+        self.assertIn("Greater China",exclusion_reason(amc,wrong_url,wrong_title))
+        with self.assertRaisesRegex(ValueError,"Greater China"):
+            providers.save_document(
+                family,wrong_title,wrong_url,"market view","AMC",origin="AMC")
+        self.assertIsNone(exclusion_reason(amc,good_url,good_title))
+
     def test_helios_other_fund_product_material_is_hidden_and_rejected(self):
         family="Helios Small Cap Fund";amc="Helios Mutual Fund";code=9903
         self.scheme(code,family,amc)
