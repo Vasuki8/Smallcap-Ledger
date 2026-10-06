@@ -308,7 +308,15 @@ def fetch_benchmark(progress=lambda _:None):
         progress(f"Archiving benchmark history: {year}")
         payload={"cinfo":json.dumps({"name":"NIFTY SMALLCAP 250","indexName":"NIFTY SMALLCAP 250",
                                      "startDate":start.strftime("%d-%b-%Y"),"endDate":end.strftime("%d-%b-%Y")})}
-        content,_,_=fetch(NIFTY_API,body=payload)
+        # This POST is a read-only historical-data query. Retry one
+        # transient transport failure before declaring the benchmark refresh
+        # failed; never retry HTTP/status or validation errors here.
+        for attempt in range(2):
+            try:
+                content,_,_=fetch(NIFTY_API,body=payload)
+                break
+            except httpx.TransportError:
+                if attempt:raise
         data=json.loads(content)
         if isinstance(data,dict) and 'd' in data: data=data['d']
         if isinstance(data,str): data=json.loads(data)
