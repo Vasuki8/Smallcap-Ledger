@@ -127,18 +127,29 @@ class Updater:
             finally:
                 with self.lock:self.running.pop(kind,None)
 
+    def schedule_once(self):
+        if not db.setting("auto_update",True):
+            return
+        intervals={"nav":db.setting("nav_interval_minutes",60)*60,"benchmark":6*3600,"metrics":12*3600,
+                   "documents":db.setting("disclosure_interval_hours",12)*3600}
+        has_funds=bool(db.one("SELECT code FROM schemes LIMIT 1"))
+        for kind,seconds in intervals.items():
+            if kind in ('documents','metrics') and not has_funds:
+                continue
+            previous=db.one("SELECT finished_at,status FROM jobs WHERE kind=? AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1",(kind,))
+            # Failed sources retry with bounded backoff, retaining all previous observations.
+            due=not previous or previous['status']=='interrupted' or (datetime.now(timezone.utc)-datetime.fromisoformat(previous['finished_at'])).total_seconds()>retry_interval(previous['status'],seconds)
+            if due:
+                self.launch(kind)
+
     def schedule(self):
         while not self.stop.is_set():
-            if db.setting("auto_update",True):
-                intervals={"nav":db.setting("nav_interval_minutes",60)*60,"benchmark":6*3600,"metrics":12*3600,
-                           "documents":db.setting("disclosure_interval_hours",12)*3600}
-                has_funds=bool(db.one("SELECT code FROM schemes LIMIT 1"))
-                for kind,seconds in intervals.items():
-                    if kind in ('documents','metrics') and not has_funds: continue
-                    previous=db.one("SELECT finished_at,status FROM jobs WHERE kind=? AND finished_at IS NOT NULL ORDER BY id DESC LIMIT 1",(kind,))
-                    # Failed sources retry with bounded backoff, retaining all previous observations.
-                    due=not previous or previous['status']=='interrupted' or (datetime.now(timezone.utc)-datetime.fromisoformat(previous['finished_at'])).total_seconds()> retry_interval(previous['status'],seconds)
-                    if due:self.launch(kind)
+            try:
+                self.schedule_once()
+            except Exception:
+                # A transient settings/database read failure must not kill the
+                # daemon scheduler permanently. The next tick retries retained state.
+                traceback.print_exc()
             self.stop.wait(15)
 
     def start(self):
