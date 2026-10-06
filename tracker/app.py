@@ -22,6 +22,7 @@ from .portfolio_limitations import portfolio_limitation
 from .coverage import expected_portfolio_as_of
 from .clock import india_today
 from .csv_safe import safe_record
+from .fees import select_fee
 from .sync import updater
 
 
@@ -136,6 +137,7 @@ def funds():
         s['coverage']=coverage
         s['returns']={str(y):dated_return(s['code'],latest[0],y) if latest and s['option']=='Growth' else None for y in (1,3,5)}
         s['metrics']=metrics_for(s)
+        s['selected_fee']=select_fee(s['metrics'])
         s['available_expenses']=available_expenses(s)
         s['documents']=db.one("SELECT COUNT(*) n FROM documents WHERE family=? AND kind!='source page'",(s['family'],))['n']
         s['portfolio']=db.one("""SELECT id,as_of,complete,source FROM portfolios WHERE family=?
@@ -149,7 +151,7 @@ def funds():
 
 @app.get('/api/funds/{code}')
 def fund(code:int):
-    s=scheme(code);s['metrics']=metrics_for(s)
+    s=scheme(code);s['metrics']=metrics_for(s);s['selected_fee']=select_fee(s['metrics'])
     expected=expected_portfolio_as_of()
     s['available_expenses']=available_expenses(s)
     s['option_label']=option_label(s)
