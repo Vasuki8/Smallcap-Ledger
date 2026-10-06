@@ -61,7 +61,8 @@ class FeeSelectionTests(unittest.TestCase):
         research=(root/"dist"/"research.js").read_text(encoding="utf-8")
         export=(root/"scripts"/"export_site.py").read_text(encoding="utf-8")
         self.assertIn("if(s.selected_fee)return s.selected_fee",app)
-        self.assertIn("key === 'ter' ? feeFor(f)?.value",research)
+        self.assertIn("function currentFee(f)",research)
+        self.assertIn("key === 'ter' ? currentFee(f)?.value",research)
         self.assertIn("fee=row.get('selected_fee')",export)
 
 
