@@ -345,22 +345,22 @@ def discard_archive_if_unreferenced(content_hash):
 def reversible_archive(content: bytes, media_type: str = "application/octet-stream"):
     """Archive bytes, but undo a failed caller write without harming shared evidence."""
     h=hashlib.sha256(content).hexdigest()
+    # Hold the archive lock through the caller's structured write. This prevents
+    # a concurrent updater fetch of identical bytes from being mistaken for the
+    # import attempt when rollback restores prior retention metadata.
     with _archive_lock:
         previous=archive_retention(h)
-        previous_bytes=None
-        if previous and previous["binary_state"]=="metadata_only":
-            existing=(DATA/previous["path"]).resolve()
-            previous_bytes=existing.read_bytes() if existing.is_file() else None
+        previous_target_existed=False
+        if previous:
+            previous_target=(DATA/previous["path"]).resolve()
+            previous_target_existed=previous_target.is_file()
         archive(content,media_type)
-    try:
-        yield h
-    except Exception:
-        with _archive_lock:
+        try:
+            yield h
+        except Exception:
             if previous is None:
                 discard_archive_if_unreferenced(h)
-            elif _archive_reference_count(h)==0:
-                # Restore the prior retention decision when a failed import merely
-                # reintroduced bytes for an existing metadata-only/link-only record.
+            else:
                 with connect() as c:
                     c.execute("""UPDATE archive_retention SET
                       classification=?,binary_state=?,reason=?,reviewed_at=?,updated_at=?
@@ -368,9 +368,10 @@ def reversible_archive(content: bytes, media_type: str = "application/octet-stre
                       (previous["classification"],previous["binary_state"],
                        previous["reason"],previous["reviewed_at"],previous["updated_at"],h))
                 target=(DATA/previous["path"]).resolve()
-                if previous["binary_state"]=="metadata_only" and previous_bytes is None and target.is_file():
+                if (previous["binary_state"]=="metadata_only"
+                    and not previous_target_existed and target.is_file()):
                     target.unlink()
-        raise
+            raise
 
 
 def save_nav(code, points, source):
