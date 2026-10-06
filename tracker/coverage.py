@@ -73,29 +73,31 @@ def _record_date_range(rows,field):
     return {'earliest':dates[0] if dates else None,'latest':dates[-1] if dates else None}
 
 
-def report():
+def report(official_only=True):
     rows=[];expected=expected_portfolio_as_of()
+    metric_origin=" AND origin='Official'" if official_only else ""
+    portfolio_origin=" AND p.origin='Official'" if official_only else ""
     for scheme in db.rows('SELECT DISTINCT family,amc,category FROM schemes ORDER BY category,family'):
         family=scheme['family'];row=dict(scheme)
         for key in ('aum','ter','ter_observed','base_expense_ratio','expense_ratio','benchmark'):
             if key in FEE_METRICS:
-                row[key]=db.one("""SELECT as_of,value,unit,plan,source FROM metrics
-                  WHERE family=? AND metric=?
+                row[key]=db.one(f"""SELECT as_of,value,unit,plan,source FROM metrics
+                  WHERE family=? AND metric=?{metric_origin}
                   ORDER BY as_of DESC,
                            CASE plan WHEN 'Direct' THEN 0 WHEN 'Regular' THEN 1 WHEN 'All' THEN 2 ELSE 3 END,
                            observed_at DESC LIMIT 1""",(family,key))
             else:
-                row[key]=db.one('SELECT as_of,value,unit,plan,source FROM metrics WHERE family=? AND metric=? ORDER BY as_of DESC,observed_at DESC LIMIT 1',(family,key))
-        row['fee']=db.one("""SELECT metric,as_of,value,unit,plan,source FROM metrics
-          WHERE family=? AND plan='Direct' AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio')
+                row[key]=db.one(f"SELECT as_of,value,unit,plan,source FROM metrics WHERE family=? AND metric=?{metric_origin} ORDER BY as_of DESC,observed_at DESC LIMIT 1",(family,key))
+        row['fee']=db.one(f"""SELECT metric,as_of,value,unit,plan,source FROM metrics
+          WHERE family=? AND plan='Direct' AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio'){metric_origin}
           ORDER BY CASE metric WHEN 'ter' THEN 0 WHEN 'ter_observed' THEN 1 WHEN 'base_expense_ratio' THEN 2 ELSE 3 END,
                    as_of DESC,observed_at DESC LIMIT 1""",(family,))
         # Prefer a complete snapshot for the currently expected regulatory
         # month-end over a later intramonth partial view. This keeps coverage
         # completeness tied to the monthly disclosure requirement while the API
         # can still expose newer partial snapshots separately.
-        row['portfolio']=db.one('''SELECT p.as_of,p.source,p.complete,COUNT(h.id) positions FROM portfolios p
-          JOIN holdings h ON h.snapshot_id=p.id WHERE p.family=? GROUP BY p.id
+        row['portfolio']=db.one(f'''SELECT p.as_of,p.source,p.complete,COUNT(h.id) positions FROM portfolios p
+          JOIN holdings h ON h.snapshot_id=p.id WHERE p.family=?{portfolio_origin} GROUP BY p.id
           ORDER BY CASE WHEN p.complete=1 AND p.as_of>=? THEN 0 ELSE 1 END,
                    p.as_of DESC,p.complete DESC,COUNT(h.id) DESC LIMIT 1''',(family,expected))
         row['portfolio_complete']=bool(row['portfolio'] and row['portfolio']['complete'])
@@ -136,7 +138,8 @@ def report():
         'portfolio_fresh_complete':sum(r['portfolio_fresh'] and r['portfolio_complete'] for r in rows),
         'portfolio_partial':sum(bool(r['portfolio']) and not r['portfolio_complete'] for r in rows),
         'benchmark_identity':sum(bool(r['benchmark']) for r in rows)},
-        'notes':['Coverage means at least one dated record, not necessarily the latest reporting month.',
+        'notes':['Coverage counts official collector/reviewed rows only; local user imports remain visible locally but do not satisfy public coverage.',
+                 'Coverage means at least one dated record, not necessarily the latest reporting month.',
                  'Top-line record-date ranges describe the selected reporting/effective dates; they are not source-check timestamps, and an older effective date does not by itself prove the value is stale.',
                  f'Portfolio freshness uses {expected} as the current expected month-end, with a 10-day grace at the start of a new month.',
                  'The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.',
