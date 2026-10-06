@@ -544,6 +544,16 @@ def factsheet_pdf(content,family,url,h):
     return count
 
 
+def _record_preflight_failure(url,error):
+    """Remember a target-level crawl/preflight failure for fair future rotation."""
+    detail=("Preflight: "+(str(error) or type(error).__name__)).splitlines()[0][:400]
+    with db.connect() as c:
+        c.execute(
+            "INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)",
+            (url,db.now(),"error",detail),
+        )
+
+
 def ingest_source(source):
     url=source["url"]
     reason=exclusion_reason(source['amc_match'],url,source['label'])
@@ -670,6 +680,10 @@ def ingest_source(source):
             attempted+=1
             try:
                 can_crawl(target)
+            except Exception as exc:
+                _record_preflight_failure(target,exc);errors+=1
+                continue
+            try:
                 body,ch,typ=fetch(target)
                 doc_version(did,ch);narchive+=1
             except Exception:
@@ -713,6 +727,10 @@ def ingest_source(source):
             attempted+=1
             try:
                 can_crawl(target)
+            except Exception as exc:
+                _record_preflight_failure(target,exc);errors+=1
+                continue
+            try:
                 body,ch,typ=fetch(target)
                 doc_version(did,ch);narchive+=1
                 if link_kind in ('market view','unitholder letter'):
