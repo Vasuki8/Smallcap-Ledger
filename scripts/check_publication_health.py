@@ -25,23 +25,33 @@ def _age(day,today):
     return (today-date.fromisoformat(day)).days
 
 
-def evaluate(started_at, *, today=None, max_age_days=7, max_aum_age_days=35):
-    if not started_at:
+def evaluate(started_at="", *, today=None, max_age_days=7, max_aum_age_days=35,
+             require_current_jobs=True):
+    if require_current_jobs and not started_at:
         raise ValueError("Collection start boundary is required")
     today=today or india_today()
-    boundary=datetime.fromisoformat(started_at.replace("Z","+00:00"))
-    if boundary.tzinfo is None:boundary=boundary.replace(tzinfo=timezone.utc)
+    boundary=None
+    if require_current_jobs:
+        boundary=datetime.fromisoformat(started_at.replace("Z","+00:00"))
+        if boundary.tzinfo is None:boundary=boundary.replace(tzinfo=timezone.utc)
     jobs={}
     blockers=[]
     degraded=[]
     for kind in REQUIRED_JOBS:
         row=db.one("""SELECT kind,started_at,finished_at,status,detail
           FROM jobs WHERE kind=? ORDER BY id DESC LIMIT 1""",(kind,))
-        if row:
+        if require_current_jobs and row:
             stamp=datetime.fromisoformat(row["started_at"])
             if stamp.tzinfo is None:stamp=stamp.replace(tzinfo=timezone.utc)
             if stamp<boundary:row=None
         jobs[kind]=row
+        if not require_current_jobs:
+            # A no-refresh publication deliberately has no current collection
+            # boundary. Retained-data freshness/coverage below remains the hard
+            # publication gate; prior job state is diagnostic only.
+            if row and str(row.get("status") or "") in (HARD_FAILURES|{"partial"}):
+                degraded.append(f"retained_only_latest_{kind}_job_{row['status']}")
+            continue
         if not row:
             blockers.append(f"{kind}_job_missing")
             continue
@@ -103,7 +113,8 @@ def evaluate(started_at, *, today=None, max_age_days=7, max_aum_age_days=35):
     status="blocked" if blockers else ("degraded" if degraded else "ok")
     return {
         "status":status,
-        "collection_started_at":started_at,
+        "mode":"current_collection" if require_current_jobs else "retained_only",
+        "collection_started_at":started_at or None,
         "checked_for_date":today.isoformat(),
         "max_age_days":max_age_days,
         "max_aum_age_days":max_aum_age_days,
@@ -135,11 +146,16 @@ def main(argv=None):
     parser.add_argument("--output",type=Path,default=ROOT/"deployment"/"publication-health.json")
     parser.add_argument("--max-age-days",type=int,default=7)
     parser.add_argument("--max-aum-age-days",type=int,default=35)
+    parser.add_argument(
+        "--retained-only",action="store_true",
+        help="Validate retained data without requiring jobs from a current collection run",
+    )
     args=parser.parse_args(argv)
     report=evaluate(
         args.started_at,
         max_age_days=args.max_age_days,
         max_aum_age_days=args.max_aum_age_days,
+        require_current_jobs=not args.retained_only,
     )
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
