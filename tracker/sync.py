@@ -5,6 +5,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import datetime,timezone,timedelta
 from . import db,providers,disclosures,amfi_metrics,amc_metrics,amc_expenses
+from .clock import india_today
 
 def retry_interval(status, normal_seconds):
     """Retry failed/partial local updates earlier without hammering persistent source gaps."""
@@ -64,7 +65,7 @@ class Updater:
                 # slow. Full recovery is reserved for a real scheduler gap/failed run;
                 # otherwise backfill only new/errors plus a 30-day maintenance refresh.
                 recovery_since=nav_history_recovery_since(previous_nav)
-                maintenance_cutoff=(datetime.now(timezone.utc)-timedelta(days=30)).date().isoformat()
+                maintenance_cutoff=(india_today()-timedelta(days=30)).isoformat()
                 if previous_nav is None:
                     schemes=db.rows("SELECT code,family FROM schemes ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code")
                 elif recovery_since:
