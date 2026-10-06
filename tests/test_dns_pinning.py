@@ -113,6 +113,52 @@ class DnsPinningTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"Private network"):
                 providers.public_url(url)
 
+    def test_https_redirect_cannot_downgrade_to_plain_http(self):
+        class Redirect:
+            is_redirect=True
+            headers={"location":"http://example.com/report.pdf"}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+        class Client:
+            def __init__(self,*args,**kwargs):pass
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def stream(self,*args,**kwargs):return Redirect()
+        with patch("tracker.providers.public_url",side_effect=lambda url:url), \
+             patch("tracker.providers._pinned_request_target",side_effect=lambda url,attempt=0:(url,{},{})), \
+             patch("tracker.providers.httpx.Client",Client):
+            with self.assertRaisesRegex(ValueError,"redirected to insecure HTTP"):
+                providers.fetch("https://example.com/start",archive=False)
+
+    def test_http_redirect_may_upgrade_to_https(self):
+        seen=[]
+        class Redirect:
+            is_redirect=True
+            headers={"location":"https://example.com/report.pdf"}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+        class Success:
+            is_redirect=False
+            headers={"content-type":"application/pdf"}
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def raise_for_status(self):return None
+            def iter_bytes(self):return iter((b"secure bytes",))
+        class Client:
+            def __init__(self,*args,**kwargs):pass
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def stream(self,method,url,**kwargs):
+                seen.append(url)
+                return Redirect() if len(seen)==1 else Success()
+        with patch("tracker.providers.public_url",side_effect=lambda url:url), \
+             patch("tracker.providers._pinned_request_target",side_effect=lambda url,attempt=0:(url,{},{})), \
+             patch("tracker.providers.httpx.Client",Client):
+            body,h,typ=providers.fetch("http://example.com/start",archive=False)
+        self.assertEqual(body,b"secure bytes")
+        self.assertEqual(typ,"application/pdf")
+        self.assertEqual(seen,["http://example.com/start","https://example.com/report.pdf"])
+
     def test_reviewed_host_may_keep_proxy_hostname_routing(self):
         with patch("tracker.providers.socket.getaddrinfo",return_value=addr(PUBLIC_IP)), \
              patch("tracker.providers._proxy_enabled",return_value=True), \
