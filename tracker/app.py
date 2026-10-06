@@ -463,6 +463,19 @@ def backup():
         raise
 
 
+def _record_import_audit(source,content_hash,kind):
+    """Best-effort telemetry: never turn a committed import into a failed request."""
+    try:
+        with db.connect() as conn:
+            conn.execute(
+                'INSERT INTO fetches(url,fetched_at,status,hash,detail) VALUES(?,?,?,?,?)',
+                (source,db.now(),'imported',content_hash,kind),
+            )
+        return None
+    except sqlite3.Error as exc:
+        return 'Import succeeded, but its audit-log row could not be recorded: '+str(exc)
+
+
 @app.post('/api/import')
 async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(0),source:str=Form(...),as_of:str=Form(''),
                      benchmark:str=Form(providers.BENCHMARK),complete:bool=Form(False),coverage_from:str=Form(''),coverage_to:str=Form(''),
@@ -496,7 +509,10 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
                 elif ext in ('.xls','.xlsx'):disclosures.spreadsheet(content,s['family'],source,h)
                 elif ext=='.pdf' and document_kind in ('factsheet','portfolio'):disclosures.factsheet_pdf(content,s['family'],source,h)
             except Exception:parse_note+=' Layout could not be parsed automatically; the original remains available.'
-            return {'ok':True,'rows':1,'kind':kind,'note':parse_note}
+            audit_warning=_record_import_audit(source,h,kind)
+            result={'ok':True,'rows':1,'kind':kind,'note':parse_note}
+            if audit_warning:result['warning']=audit_warning
+            return result
         records=list(csv.DictReader(io.StringIO(content.decode('utf-8-sig'))))
         if not records or len(records)>100000:raise ValueError('CSV must contain 1–100,000 records')
         if kind=='benchmark':
@@ -564,8 +580,10 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
                         "INSERT OR IGNORE INTO document_versions(document_id,hash,observed_at) VALUES(?,?,?)",
                         (did,h,db.now()))
         else:raise ValueError('Unsupported import type')
-        with db.connect() as c:c.execute('INSERT INTO fetches(url,fetched_at,status,hash,detail) VALUES(?,?,?,?,?)',(source,db.now(),'imported',h,kind))
-        return {'ok':True,'rows':len(records),'kind':kind}
+        audit_warning=_record_import_audit(source,h,kind)
+        result={'ok':True,'rows':len(records),'kind':kind}
+        if audit_warning:result['warning']=audit_warning
+        return result
     except (ValueError,KeyError,UnicodeError) as e:raise HTTPException(400,'Import not accepted: '+str(e))
 
 
