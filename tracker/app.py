@@ -482,8 +482,15 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             from .publications import exclusion_reason
             reason=exclusion_reason(s['family'],source,doc_title)
             if reason:raise ValueError(reason)
-            h=db.archive(content,types[ext]);did=providers.save_document(s['family'],doc_title,source,document_kind,scope,origin='User import · unverified source')
-            providers.doc_version(did,h);parse_note='Original document archived.'
+            with db.reversible_archive(content,types[ext]) as h:
+                with db.connect() as conn:
+                    did=providers.save_document_in_connection(
+                        conn,s['family'],doc_title,source,document_kind,scope,
+                        origin='User import · unverified source')
+                    conn.execute(
+                        "INSERT OR IGNORE INTO document_versions(document_id,hash,observed_at) VALUES(?,?,?)",
+                        (did,h,db.now()))
+            parse_note='Original document archived.'
             try:
                 if ext=='.xml':disclosures.summary_xml(content,s['family'],source,h)
                 elif ext in ('.xls','.xlsx'):disclosures.spreadsheet(content,s['family'],source,h)
@@ -496,8 +503,8 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             if not benchmark.strip() or not re.search(r'TRI|total.return',benchmark,re.I):raise ValueError('Benchmark name must identify a total-return index (TRI)')
             points=[(providers.iso(r['date']),providers.number(r['value'])) for r in records]
             if any(v<=0 or d>today for d,v in points):raise ValueError('Benchmark values must be positive and dates cannot be in the future')
-            h=db.archive(content,'text/csv')
-            db.save_benchmark(benchmark.strip(),points,source,authoritative=False)
+            with db.reversible_archive(content,'text/csv') as h:
+                db.save_benchmark(benchmark.strip(),points,source,authoritative=False)
         elif kind=='portfolio':
             s=scheme(code);day=providers.iso(as_of)
             if day>today:raise ValueError('Portfolio date cannot be in the future')
@@ -509,8 +516,8 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             if any(not p['name'] for p in positions):raise ValueError('Each holding needs a name')
             if any(p['quantity'] is not None and p['quantity']<0 for p in positions):raise ValueError('Quantity cannot be negative')
             if complete and not 95<=sum(p['weight'] for p in positions)<=105:raise ValueError('A complete portfolio must total approximately 100%; include cash and other assets, or leave completeness unchecked')
-            h=db.archive(content,'text/csv')
-            disclosures.portfolio(s['family'],day,positions,complete,source,h)
+            with db.reversible_archive(content,'text/csv') as h:
+                disclosures.portfolio(s['family'],day,positions,complete,source,h)
         elif kind=='metrics':
             s=scheme(code);valid=[]
             allowed={'aum','ter','base_expense_ratio','brokerage','transaction_cost','statutory_levies','exit_load','benchmark','managers','fund_launch','objective','risk','minimum_sip','minimum_lumpsum'}
@@ -523,18 +530,18 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
                 unit='INR crore' if name=='aum' else '% p.a.' if name in ('ter','base_expense_ratio','brokerage','transaction_cost','statutory_levies') else 'INR' if name.startswith('minimum_') else 'Reported'
                 if name in ('ter','base_expense_ratio') and value>10:raise ValueError('Fee must be percentage points, e.g. 0.65 for 0.65%')
                 valid.append((plan,name,day,value,unit))
-            h=db.archive(content,'text/csv')
             observed=db.now()
-            with db.connect() as conn:
-                conn.executemany(
-                    """INSERT OR IGNORE INTO metrics(
-                         family,plan,metric,as_of,value,unit,source,hash,observed_at)
-                       VALUES(?,?,?,?,?,?,?,?,?)""",
-                    [
-                        (s['family'],plan,name,day,str(value),unit,source,h,observed)
-                        for plan,name,day,value,unit in valid
-                    ],
-                )
+            with db.reversible_archive(content,'text/csv') as h:
+                with db.connect() as conn:
+                    conn.executemany(
+                        """INSERT OR IGNORE INTO metrics(
+                             family,plan,metric,as_of,value,unit,source,hash,observed_at)
+                           VALUES(?,?,?,?,?,?,?,?,?)""",
+                        [
+                            (s['family'],plan,name,day,str(value),unit,source,h,observed)
+                            for plan,name,day,value,unit in valid
+                        ],
+                    )
         elif kind=='distributions':
             s=scheme(code)
             if s['option']!='IDCW':raise ValueError('Select an IDCW scheme')
@@ -542,14 +549,20 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
             if not complete or first>last or last>today:raise ValueError('Confirm complete payout history and specify a valid coverage window')
             events=[(code,providers.iso(r['ex_date']),providers.number(r['amount']),providers.number(r['reinvestment_nav']),source,db.now()) for r in records]
             if any(x[2]<0 or x[3]<=0 or not first<=x[1]<=last for x in events):raise ValueError('Invalid distribution value or date outside coverage')
-            h=db.archive(content,'text/csv')
-            with db.connect() as c:
-                # The source document is versioned; replace the declared window atomically
-                # so an ex-date correction does not leave a duplicate old distribution.
-                c.execute('DELETE FROM distributions WHERE code=? AND ex_date BETWEEN ? AND ?',(code,first,last))
-                c.executemany('INSERT OR REPLACE INTO distributions VALUES(?,?,?,?,?,?)',events)
-                c.execute('INSERT OR REPLACE INTO distribution_coverage VALUES(?,?,?,?,?)',(code,first,last,source,db.now()))
-            did=providers.save_document(s['family'],'Imported IDCW distribution history',source,'disclosure','Fund',origin='User import');providers.doc_version(did,h)
+            with db.reversible_archive(content,'text/csv') as h:
+                with db.connect() as conn:
+                    # Replace the declared payout window and its evidence document
+                    # in one transaction so a late document failure cannot leave
+                    # structured distributions committed behind a failed request.
+                    conn.execute('DELETE FROM distributions WHERE code=? AND ex_date BETWEEN ? AND ?',(code,first,last))
+                    conn.executemany('INSERT OR REPLACE INTO distributions VALUES(?,?,?,?,?,?)',events)
+                    conn.execute('INSERT OR REPLACE INTO distribution_coverage VALUES(?,?,?,?,?)',(code,first,last,source,db.now()))
+                    did=providers.save_document_in_connection(
+                        conn,s['family'],'Imported IDCW distribution history',source,
+                        'disclosure','Fund',origin='User import')
+                    conn.execute(
+                        "INSERT OR IGNORE INTO document_versions(document_id,hash,observed_at) VALUES(?,?,?)",
+                        (did,h,db.now()))
         else:raise ValueError('Unsupported import type')
         with db.connect() as c:c.execute('INSERT INTO fetches(url,fetched_at,status,hash,detail) VALUES(?,?,?,?,?)',(source,db.now(),'imported',h,kind))
         return {'ok':True,'rows':len(records),'kind':kind}
