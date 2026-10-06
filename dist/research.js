@@ -31,7 +31,7 @@
     catch { return ''; }
   }
   function sortFunds(rows, key, direction = 'desc') {
-    const value = f => key === 'family' ? f.family : key === 'aum' ? f.metrics?.aum?.value : key === 'ter' ? (f.metrics?.ter || f.metrics?.ter_observed || f.metrics?.base_expense_ratio || f.metrics?.expense_ratio)?.value : key === 'nav' ? f.nav?.value : f.returns?.[key];
+    const value = f => key === 'family' ? f.family : key === 'aum' ? f.metrics?.aum?.value : key === 'ter' ? feeFor(f)?.value : key === 'nav' ? f.nav?.value : f.returns?.[key];
     return [...rows].sort((a, b) => {
       let delta;
       if (key === 'family') delta = String(value(a) || '').localeCompare(String(value(b) || ''));
