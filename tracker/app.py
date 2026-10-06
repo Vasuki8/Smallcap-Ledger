@@ -522,7 +522,17 @@ async def import_csv(file:UploadFile=File(...),kind:str=Form(...),code:int=Form(
                 if name in ('ter','base_expense_ratio') and value>10:raise ValueError('Fee must be percentage points, e.g. 0.65 for 0.65%')
                 valid.append((plan,name,day,value,unit))
             h=db.archive(content,'text/csv')
-            for plan,name,day,value,unit in valid:db.metric(s['family'],plan,name,day,value,unit,source,h)
+            observed=db.now()
+            with db.connect() as conn:
+                conn.executemany(
+                    """INSERT OR IGNORE INTO metrics(
+                         family,plan,metric,as_of,value,unit,source,hash,observed_at)
+                       VALUES(?,?,?,?,?,?,?,?,?)""",
+                    [
+                        (s['family'],plan,name,day,str(value),unit,source,h,observed)
+                        for plan,name,day,value,unit in valid
+                    ],
+                )
         elif kind=='distributions':
             s=scheme(code)
             if s['option']!='IDCW':raise ValueError('Select an IDCW scheme')
