@@ -1,5 +1,8 @@
 """Updater lifecycle must never leave a kind stuck as running after DB failures."""
 import sqlite3
+import asyncio
+import os
+import threading
 import tempfile
 import unittest
 from pathlib import Path
@@ -65,6 +68,47 @@ class UpdaterRunningCleanupTests(unittest.TestCase):
             updater.schedule()
         self.assertEqual(once.call_count,2)
         self.assertEqual(updater.stop.ticks,2)
+
+    def test_scheduler_can_restart_cleanly_in_same_process(self):
+        updater=Updater()
+        calls=[]
+        entered=threading.Event()
+
+        def fake_schedule():
+            calls.append("run")
+            entered.set()
+            updater.stop.wait(2)
+
+        with patch.object(updater,"schedule",side_effect=fake_schedule):
+            self.assertTrue(updater.start())
+            self.assertTrue(entered.wait(1))
+            self.assertFalse(updater.start())
+            self.assertTrue(updater.shutdown())
+            self.assertTrue(updater.stop.is_set())
+            entered.clear()
+            self.assertTrue(updater.start())
+            self.assertFalse(updater.stop.is_set())
+            self.assertTrue(entered.wait(1))
+            self.assertTrue(updater.shutdown())
+
+        self.assertEqual(calls,["run","run"])
+        self.assertIsNone(updater.schedule_thread)
+
+    def test_fastapi_lifespan_uses_restartable_scheduler_shutdown(self):
+        from tracker.app import lifespan
+        async def exercise():
+            async with lifespan(None):
+                pass
+
+        with patch.dict(os.environ,{"SMALLCAP_NO_SCHEDULER":"0"}), \
+             patch("tracker.app.db.init"), \
+             patch("tracker.app.disclosures.seed_sources"), \
+             patch("tracker.app.updater.start") as start, \
+             patch("tracker.app.updater.shutdown") as shutdown:
+            asyncio.run(exercise())
+
+        start.assert_called_once_with()
+        shutdown.assert_called_once_with()
 
     def test_final_status_write_failure_still_clears_running_state(self):
         with tempfile.TemporaryDirectory() as tmp, patch.object(db,"DATA",Path(tmp)):
