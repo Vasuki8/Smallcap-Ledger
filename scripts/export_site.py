@@ -87,7 +87,7 @@ def render_fund_landing(row,base_url):
     family=html.escape(row['family']);amc=html.escape(row.get('amc') or '')
     slug=fund_slug(row['family']);canonical=base_url+f"funds/{slug}/" if base_url else ''
     nav=row.get('nav') or {};metrics=row.get('metrics') or {}
-    fee=metrics.get('ter') or metrics.get('ter_observed') or metrics.get('base_expense_ratio') or metrics.get('expense_ratio')
+    fee=row.get('selected_fee') or metrics.get('ter') or metrics.get('ter_observed') or metrics.get('base_expense_ratio') or metrics.get('expense_ratio')
     benchmark=metrics.get('benchmark')
     portfolio=row.get('portfolio')
     description=(
