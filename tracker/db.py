@@ -3,12 +3,32 @@ import hashlib
 import json
 import os
 import sqlite3
+import threading
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = Path(os.environ.get("SMALLCAP_DATA_DIR", ROOT / "data")).resolve()
+_row_origin = threading.local()
+
+
+def current_origin():
+    return getattr(_row_origin,"value","Official")
+
+
+@contextmanager
+def row_origin(origin):
+    previous=getattr(_row_origin,"value",None)
+    _row_origin.value=str(origin or "Official")
+    try:
+        yield
+    finally:
+        if previous is None:
+            try:delattr(_row_origin,"value")
+            except AttributeError:pass
+        else:
+            _row_origin.value=previous
 
 
 def now():
