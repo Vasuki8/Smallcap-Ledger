@@ -82,7 +82,7 @@ class DnsPinningTests(unittest.TestCase):
             def __enter__(self):return self
             def __exit__(self,*args):return False
             def raise_for_status(self):return None
-            def iter_bytes(self):return iter((b"12",))
+            def iter_bytes(self):return iter((b"x"*(1024*1024+1),))
         class Client:
             def __init__(self,*args,**kwargs):pass
             def __enter__(self):return self
