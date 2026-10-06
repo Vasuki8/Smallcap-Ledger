@@ -14,6 +14,11 @@ def retry_interval(status, normal_seconds):
     return normal_seconds
 
 
+def nav_maintenance_cutoff(today=None):
+    """Return the 30-day history-refresh cutoff in the India reporting calendar."""
+    return ((today or india_today())-timedelta(days=30)).isoformat()
+
+
 def nav_history_recovery_since(previous_good,now=None):
     """Return the last good NAV-run time only when a real scheduler gap exists."""
     if not previous_good:return ''
@@ -65,7 +70,7 @@ class Updater:
                 # slow. Full recovery is reserved for a real scheduler gap/failed run;
                 # otherwise backfill only new/errors plus a 30-day maintenance refresh.
                 recovery_since=nav_history_recovery_since(previous_nav)
-                maintenance_cutoff=(india_today()-timedelta(days=30)).isoformat()
+                maintenance_cutoff=nav_maintenance_cutoff()
                 if previous_nav is None:
                     schemes=db.rows("SELECT code,family FROM schemes ORDER BY CASE option WHEN 'Growth' THEN 0 ELSE 1 END,code")
                 elif recovery_since:
