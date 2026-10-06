@@ -30,6 +30,13 @@ def validate(root):
         dates=[p[0] for p in points]
         assert dates==sorted(set(dates)),f'Duplicate/out-of-order NAV dates for {f["code"]}'
         assert all(isinstance(p[1],(int,float)) and p[1]>0 for p in points),'Invalid NAV'
+        assert all(
+            not value or value.get('origin')=='Official'
+            for value in (f.get('metrics') or {}).values()
+        ),f'User-imported metric entered public fund list: {f["code"]}'
+        assert all(m.get('origin')=='Official' for m in detail.get('metric_history',[])),f'User-imported metric history entered public site: {f["code"]}'
+        assert all(p.get('origin')=='Official' for p in detail.get('portfolios',[])),f'User-imported portfolio entered public site: {f["code"]}'
+        assert all(d.get('origin')=='Official' for d in detail.get('distributions',[])),f'User-imported distribution entered public site: {f["code"]}'
         if f['option']=='Growth':
             growth+=1
             if len(set(dates).intersection(p[0] for p in bench.get('Nifty Smallcap 250 TRI',{}).get('data',[])))>=2:compared+=1
