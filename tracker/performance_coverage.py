@@ -190,20 +190,22 @@ def _alternate_comparisons(nav, reported_name, benchmark_points):
     return out
 
 
-def _latest_benchmark_metric(family):
+def _latest_benchmark_metric(family,official_only=True):
     return db.one(
-        """SELECT value,as_of,unit,source,observed_at
+        f"""SELECT value,as_of,unit,source,observed_at
            FROM metrics WHERE family=? AND metric='benchmark'
+           {"AND origin='Official'" if official_only else ""}
            ORDER BY as_of DESC,observed_at DESC,id DESC LIMIT 1""",
         (family,),
     )
 
 
-def _benchmark_cache():
-    names=[r["name"] for r in db.rows("SELECT DISTINCT name FROM benchmark ORDER BY name")]
+def _benchmark_cache(official_only=True):
+    origin=" WHERE origin='Official'" if official_only else ""
+    names=[r["name"] for r in db.rows(f"SELECT DISTINCT name FROM benchmark{origin} ORDER BY name")]
     return {
         name:[[r["date"],float(r["value"])] for r in db.rows(
-            "SELECT date,value FROM benchmark WHERE name=? ORDER BY date",(name,))]
+            f"SELECT date,value FROM benchmark WHERE name=?{' AND origin=\'Official\'' if official_only else ''} ORDER BY date",(name,))]
         for name in names
     }
 
@@ -239,9 +241,9 @@ def _plan_issues(row):
     return issues
 
 
-def report():
+def report(official_only=True):
     """Audit every retained NAV plan against its reported benchmark identity/history."""
-    benchmark_points=_benchmark_cache()
+    benchmark_points=_benchmark_cache(official_only)
     plans=[]
     families={}
 
@@ -252,7 +254,7 @@ def report():
             "SELECT date,value FROM nav WHERE code=? ORDER BY date",(scheme["code"],))]
         nav_stats=_nav_series_stats(nav,scheme["code"])
         nav_stats["horizons"]=_horizons(nav)
-        metric=_latest_benchmark_metric(scheme["family"])
+        metric=_latest_benchmark_metric(scheme["family"],official_only)
         identity=benchmark_identity(metric["value"] if metric else None)
         identity.update({
             "as_of":metric["as_of"] if metric else None,
