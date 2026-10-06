@@ -36,6 +36,35 @@ class PublisherMaintenanceTests(unittest.TestCase):
         self.assertIn("group: smallcap-daily-and-deploy", self.text)
         self.assertIn("cancel-in-progress: true", self.text)
 
+    def test_staged_midcap_audits_do_not_delay_ordinary_code_pushes(self):
+        midcap_steps = (
+            "Establish staged audit generation boundary",
+            "Preview staged Mid Cap universe",
+            "Audit staged Mid Cap identities",
+            "Store audited Mid Cap staging data",
+            "Backfill staged Mid Cap NAV history",
+            "Audit staged Mid Cap source coverage",
+            "Classify staged Mid Cap TER gaps",
+            "Audit staged Mid Cap first-party TER batch",
+            "Audit staged Mid Cap first-party TER batch 2",
+            "Reconcile staged Mid Cap TER readiness",
+            "Audit staged Mid Cap benchmark identities",
+            "Audit staged Mid Cap benchmark identities batch 2",
+            "Reconcile staged Mid Cap benchmark readiness",
+            "Audit staged Mid Cap current portfolio evidence",
+            "Audit staged Mid Cap structured portfolio evidence batch 2",
+            "Audit staged Mid Cap structured portfolio evidence batch 3",
+            "Audit staged Mid Cap structured portfolio evidence batch 4",
+            "Audit staged Mid Cap current portfolio evidence batch 5",
+            "Reconcile staged Mid Cap portfolio readiness",
+            "Audit staged Mid Cap launch readiness",
+        )
+        for name in midcap_steps:
+            marker = f"- name: {name}\n        if: github.event_name != 'push'"
+            with self.subTest(name=name):
+                self.assertIn(marker, self.text)
+        self.assertEqual(self.text.count("if: github.event_name != 'push'"), len(midcap_steps))
+
     def test_daily_collection_runs_for_push_schedule_and_manual_refresh(self):
         self.assertIn(
             "if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh)",
