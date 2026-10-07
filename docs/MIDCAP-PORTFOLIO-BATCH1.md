@@ -1,6 +1,6 @@
 # Mid Cap current portfolio evidence — batch 1
 
-Prepared: 2026-10-06T22:49:56+00:00
+Prepared: 2026-10-07T23:18:47+00:00
 
 Expected month-end: **2026-08-31** · targets: **7** · current evidence: **3** · failed: **4**.
 
@@ -15,7 +15,7 @@ Expected month-end: **2026-08-31** · targets: **7** · current evidence: **3** 
 - Canara Robeco Mid Cap Fund: Client error '403 This request is not authorized to perform this operation.' for url 'https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
 - Kotak Mid Cap Fund: First-party source does not contain the exact staged Mid Cap family identity
-- DSP Midcap Fund: Only 0 named current holdings were visible; need at least 5
+- DSP Midcap Fund: First-party source does not explicitly report current portfolio date 2026-08-31
 - HDFC Mid Cap Fund: Client error '403 Forbidden' for url 'https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
 
