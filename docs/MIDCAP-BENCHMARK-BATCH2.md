@@ -1,8 +1,8 @@
 # Mid Cap benchmark identity audit — batch 2
 
-Prepared: 2026-10-07T23:18:41+00:00
+Prepared: 2026-10-08T23:35:34+00:00
 
-Targets: **21** · recovered: **18** · failed: **3**.
+Targets: **21** · recovered: **17** · failed: **4**.
 
 | Family | AMC | Primary benchmark | Source |
 | --- | --- | --- | --- |
@@ -13,7 +13,6 @@ Targets: **21** · recovered: **18** · failed: **3**.
 | Axis Midcap Fund | Axis Mutual Fund | BSE Midcap 150 TRI | https://www.axismf.com/mutual-funds/equity-funds/axis-mid-cap-fund/mc-gp/regular |
 | Mirae Asset Midcap Fund | Mirae Asset Mutual Fund | NIFTY Midcap 150 (TRI) | https://www.miraeassetmf.co.in/mutual-fund-scheme/equity-fund/mirae-asset-midcap-fund |
 | SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
-| Quant Mid Cap Fund | quant Mutual Fund | Nifty Mid Cap 150 TRI | https://quantmutual.com/equity/opportunities-fund |
 | Samco Mid Cap Fund | Samco Mutual Fund | Nifty Midcap 150 Total Returns Index | https://www.samcomf.com/faqs |
 | LIC MF Mid Cap Fund | LIC Mutual Fund | Nifty Midcap 150 TRI | https://www.licmf.com/assets/downloads/sai_sid_kim/2025-2026/16.%20Scheme%20Information%20Document%20-%20LIC%20MF%20Mid%20Cap%20Fund.pdf |
 | Franklin India Mid Cap Fund | Franklin Templeton Mutual Fund | Nifty Midcap 150 | https://www.franklintempletonindia.com/static/factsheet/Innerpage/Franklin-India-Prima-Fund.html |
@@ -28,6 +27,7 @@ Targets: **21** · recovered: **18** · failed: **3**.
 ## Errors
 
 - Aditya Birla Sun Life Midcap Fund: ABSL requires one Fund Snapshot table
+- Quant Mid Cap Fund: The read operation timed out
 - Edelweiss Mid Cap Fund: Client error '403 Forbidden' for url 'https://www.edelweissmf.com/Files/downloads/Product%20Collateral/Factsheet/2026/May/published/MidcapFund_21052026_114313_AM.pdf'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
 - Invesco India Mid Cap Fund: Client error '404 Not Found' for url 'https://www.invescomutualfund.com/error.html?aspxerrorpath=/docs/default-source/factsheet/invesco-mf-factsheet-september-2026.pdf'

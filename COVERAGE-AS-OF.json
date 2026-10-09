@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-07T23:35:33+00:00",
+  "built_at": "2026-10-09T00:00:07+00:00",
   "portfolio_expected_as_of": "2026-08-31",
   "funds": [
     {
@@ -7,53 +7,53 @@
       "amc": "Abakkus Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "3310.95",
+        "as_of": "2026-10-07",
+        "value": "3326.26",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "1.19",
+        "as_of": "2026-10-08",
+        "value": "1.2",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.48",
+        "as_of": "2026-10-08",
+        "value": "0.49",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "expense_ratio": null,
       "benchmark": {
-        "as_of": "2026-09-30",
+        "as_of": "2026-10-09",
         "value": "NIFTY SmallCap 250 TRI",
         "unit": "Observed · scheme summary",
         "plan": "All",
-        "source": "https://www.abakkusmf.com/uploads/Abakkus_Smallcapfund_969e3a0e14.xml"
+        "source": "https://www.abakkusmf.com/uploads/Abakkus_Small_Cap_Fund_0b4ac41398.xml"
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "1.19",
+        "as_of": "2026-10-08",
+        "value": "1.2",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "portfolio": {
-        "as_of": "2026-08-31",
-        "source": "https://www.abakkusmf.com/uploads/Portfolio_Aug31_Monthly_a00d994a66.xls",
+        "as_of": "2026-09-30",
+        "source": "https://www.abakkusmf.com/uploads/Final_Monthly_Portolio_Sep30_2026_fd59e57829.xlsx",
         "complete": 1,
-        "positions": 68,
+        "positions": 69,
         "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 44,
+      "official_publications": 48,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -62,14 +62,14 @@
       "amc": "Aditya Birla Sun Life Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "6139.7915",
+        "as_of": "2026-10-07",
+        "value": "6154.403",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "1.06",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -77,7 +77,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.76",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -93,7 +93,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "1.06",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -117,36 +117,36 @@
       "amc": "Axis Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "30444.576",
+        "as_of": "2026-10-07",
+        "value": "30812.445",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.69",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-07_23_20_48.xlsx"
+        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-08_23_38_00.xlsx"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.51",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-07_23_20_48.xlsx"
+        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-08_23_38_00.xlsx"
       },
       "expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.69",
         "unit": "% p.a.",
         "plan": "Direct",
         "source": "https://www.axismf.com/mutual-funds/equity-funds/axis-small-cap-fund/sc-dg/direct"
       },
       "benchmark": {
-        "as_of": "2026-10-08",
+        "as_of": "2026-10-09",
         "value": "Nifty Smallcap 250 TRI",
         "unit": "Observed on official fund page",
         "plan": "All",
@@ -154,22 +154,22 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.69",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-07_23_20_48.xlsx"
+        "source": "https://www.axismf.com/1/5/2125/Total_Expense_Ratio_2026-10-08_23_38_00.xlsx"
       },
       "portfolio": {
-        "as_of": "2026-08-31",
-        "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Small_Cap_Fund_31_August_2026_xlsx_4a112f9ef0.xlsx",
+        "as_of": "2026-09-30",
+        "source": "https://www.axismf.com/1/5/464/560/3622/4593/Monthly_Portfolio_Axis_Small_Cap_Fund_30_September_2026_dbfd0326f2.xlsx",
         "complete": 1,
-        "positions": 134,
+        "positions": 131,
         "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 11,
+      "official_publications": 12,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -178,14 +178,14 @@
       "amc": "Bajaj Finserv Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "2782.01",
+        "as_of": "2026-10-07",
+        "value": "2794.41",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.98",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -193,7 +193,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.52",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -209,7 +209,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.98",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -247,14 +247,14 @@
       "amc": "Bandhan Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "35558.09",
+        "as_of": "2026-10-07",
+        "value": "36306.414",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.6",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -262,7 +262,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.36",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -278,7 +278,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.6",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -316,14 +316,14 @@
       "amc": "Bank of India Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "3821.29",
+        "as_of": "2026-10-07",
+        "value": "3827.98",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.78",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -331,7 +331,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.42",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -347,7 +347,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.78",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -371,14 +371,14 @@
       "amc": "Baroda BNP Paribas Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "1282.75",
+        "as_of": "2026-10-07",
+        "value": "1282.16",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.2",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -386,7 +386,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.79",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -402,22 +402,22 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.2",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "portfolio": {
-        "as_of": "2026-08-31",
-        "source": "https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_31-08-2026_19961.xls",
+        "as_of": "2026-09-30",
+        "source": "https://www.barodabnpparibasmf.in/assets/download_documents/BOBBNPMF_Monthly_Portfolio_30-09-2026_20376.xls",
         "complete": 1,
         "positions": 63,
         "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 3,
+      "official_publications": 4,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -426,26 +426,26 @@
       "amc": "Canara Robeco Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "14026.469",
+        "as_of": "2026-10-07",
+        "value": "14042.454",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.71",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-10-02&to_date=2026-10-08"
+        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-10-03&to_date=2026-10-09"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.46",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-10-02&to_date=2026-10-08"
+        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-10-03&to_date=2026-10-09"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -457,11 +457,11 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.71",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-10-02&to_date=2026-10-08"
+        "source": "https://www.canararobeco.com/wp-json/ter/v1/records?from_date=2026-10-03&to_date=2026-10-09"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -481,30 +481,30 @@
       "amc": "DSP Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "21304.158",
+        "as_of": "2026-10-07",
+        "value": "21293.877",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "0.82",
+        "as_of": "2026-10-08",
+        "value": "0.83",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.65",
+        "as_of": "2026-10-08",
+        "value": "0.66",
         "unit": "% p.a.",
         "plan": "Direct",
         "source": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/small-cap-fund/dspmc-direct-growth"
       },
       "expense_ratio": null,
       "benchmark": {
-        "as_of": "2026-10-08",
+        "as_of": "2026-10-09",
         "value": "BSE 250 Small Cap TRI",
         "unit": "Observed on official fund page",
         "plan": "All",
@@ -512,8 +512,8 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "0.82",
+        "as_of": "2026-10-08",
+        "value": "0.83",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
@@ -527,7 +527,7 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 15,
+      "official_publications": 16,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -536,23 +536,23 @@
       "amc": "Edelweiss Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "7035.986",
+        "as_of": "2026-10-07",
+        "value": "7034.3364",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "0.63",
+        "as_of": "2026-10-08",
+        "value": "0.64",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.42",
+        "as_of": "2026-10-08",
+        "value": "0.43",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
@@ -567,8 +567,8 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "0.63",
+        "as_of": "2026-10-08",
+        "value": "0.64",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
@@ -605,14 +605,14 @@
       "amc": "Franklin Templeton Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "14269.61",
+        "as_of": "2026-10-07",
+        "value": "14250.01",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.06",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -620,7 +620,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.76",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -636,7 +636,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.06",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -660,8 +660,8 @@
       "amc": "Groww Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "999.1236",
+        "as_of": "2026-10-07",
+        "value": "1007.4186",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -715,8 +715,8 @@
       "amc": "HDFC Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "40831.18",
+        "as_of": "2026-10-07",
+        "value": "40841.152",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -776,14 +776,14 @@
       "amc": "HSBC Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "18725.86",
+        "as_of": "2026-10-07",
+        "value": "18706.29",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.77",
         "unit": "% p.a. · reported by AMC via AMC-linked CAMS workbook",
         "plan": "Direct",
@@ -791,7 +791,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.56",
         "unit": "% p.a. · reported by AMC via AMC-linked CAMS workbook",
         "plan": "Direct",
@@ -807,7 +807,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.77",
         "unit": "% p.a. · reported by AMC via AMC-linked CAMS workbook",
         "plan": "Direct",
@@ -831,8 +831,8 @@
       "amc": "Helios Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "1909.0787",
+        "as_of": "2026-10-07",
+        "value": "1918.9452",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -886,14 +886,14 @@
       "amc": "ICICI Prudential Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "9808.989",
+        "as_of": "2026-10-07",
+        "value": "9816.923",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "1.16",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
@@ -901,7 +901,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.7",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
@@ -917,7 +917,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "1.16",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
@@ -932,7 +932,7 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 6,
+      "official_publications": 7,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -941,14 +941,14 @@
       "amc": "Invesco Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "16404.23",
+        "as_of": "2026-10-07",
+        "value": "16420.23",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.64",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
@@ -956,7 +956,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.41",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
@@ -972,7 +972,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.64",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
@@ -996,14 +996,14 @@
       "amc": "ITI Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "3701.74",
+        "as_of": "2026-10-07",
+        "value": "3705.98",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.84",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1011,7 +1011,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.45",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1027,7 +1027,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.84",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1051,23 +1051,23 @@
       "amc": "JM Financial Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "935.9156",
+        "as_of": "2026-10-07",
+        "value": "955.06",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "0.95",
+        "as_of": "2026-10-08",
+        "value": "0.96",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
         "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.59",
+        "as_of": "2026-10-08",
+        "value": "0.6",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
         "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest"
@@ -1082,8 +1082,8 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "0.95",
+        "as_of": "2026-10-08",
+        "value": "0.96",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
         "source": "https://jmmfapi.jmfinancialmf.com/api/GetTerPageLatest"
@@ -1097,7 +1097,7 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 7,
+      "official_publications": 8,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -1106,26 +1106,26 @@
       "amc": "Kotak Mahindra Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "18927.352",
+        "as_of": "2026-10-07",
+        "value": "19130.205",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-09-30",
-        "value": "0.6459",
+        "as_of": "2026-10-07",
+        "value": "0.6436",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=4&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-09-30",
+        "as_of": "2026-10-07",
         "value": "0.51",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=4&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -1137,11 +1137,11 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-09-30",
-        "value": "0.6459",
+        "as_of": "2026-10-07",
+        "value": "0.6436",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=09-2026&strCat=18&strType=1&page=4&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -1161,23 +1161,23 @@
       "amc": "LIC Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "846.2561",
+        "as_of": "2026-10-07",
+        "value": "844.7052",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "1.27",
+        "as_of": "2026-10-08",
+        "value": "1.28",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.79",
+        "as_of": "2026-10-08",
+        "value": "0.8",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
@@ -1192,8 +1192,8 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "1.27",
+        "as_of": "2026-10-08",
+        "value": "1.28",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
@@ -1216,23 +1216,23 @@
       "amc": "Mahindra Manulife Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "5388.77",
+        "as_of": "2026-10-07",
+        "value": "5373.09",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "0.92",
+        "as_of": "2026-10-08",
+        "value": "0.93",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
         "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.47",
+        "as_of": "2026-10-08",
+        "value": "0.48",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
         "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx"
@@ -1247,8 +1247,8 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "0.92",
+        "as_of": "2026-10-08",
+        "value": "0.93",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
         "source": "https://www.mahindramanulife.com/uploads/download/6d61db84-f11d-4987-b7a6-929a71d43967.xlsx"
@@ -1271,26 +1271,26 @@
       "amc": "Mirae Asset Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "5874.56",
+        "as_of": "2026-10-07",
+        "value": "5913.4346",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.67",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_06102026.xls"
+        "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_07102026.xls"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.37",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_06102026.xls"
+        "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_07102026.xls"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -1302,11 +1302,11 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.67",
         "unit": "% p.a. · reported by AMC",
         "plan": "Direct",
-        "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_06102026.xls"
+        "source": "https://www.miraeassetmf.co.in/DailyUploads/TotalExpenseRatio/IN_MF_EXPENSE_RATIO_SEBI_V3_07102026.xls"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -1326,14 +1326,14 @@
       "amc": "Motilal Oswal Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "8349.82",
+        "as_of": "2026-10-07",
+        "value": "8396.9",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.85",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1341,7 +1341,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.55",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1357,7 +1357,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.85",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1381,7 +1381,7 @@
       "amc": "Nippon India Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "81773.13",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
@@ -1436,26 +1436,26 @@
       "amc": "PGIM India Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "1742.5906",
+        "as_of": "2026-10-07",
+        "value": "1744.8602",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.93",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.57",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -1467,11 +1467,11 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.93",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -1491,26 +1491,26 @@
       "amc": "quant Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "35560.734",
+        "as_of": "2026-10-07",
+        "value": "36010.9",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.9",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.62",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -1522,11 +1522,11 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.9",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -1546,26 +1546,26 @@
       "amc": "Quantum Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "263.06",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.83",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.59",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "expense_ratio": null,
       "benchmark": {
@@ -1577,11 +1577,11 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.83",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
-        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=1&pageSize=1000"
+        "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "portfolio": {
         "as_of": "2026-08-31",
@@ -1601,14 +1601,14 @@
       "amc": "SBI Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "41121.25",
+        "as_of": "2026-10-07",
+        "value": "41082.355",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.8",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1616,7 +1616,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.61",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1632,22 +1632,22 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.8",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "portfolio": {
-        "as_of": "2026-08-31",
-        "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-small-cap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=9c20b052_2",
+        "as_of": "2026-09-30",
+        "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-small-cap-fund-monthly-portfolio---september-2026.xlsx?sfvrsn=5fd43069_2",
         "complete": 1,
-        "positions": 73,
+        "positions": 68,
         "limitation": null
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 9,
+      "official_publications": 10,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -1656,8 +1656,8 @@
       "amc": "Samco Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "275.77",
+        "as_of": "2026-10-07",
+        "value": "280.96",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -1711,14 +1711,14 @@
       "amc": "Sundaram Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "4097.54",
+        "as_of": "2026-10-07",
+        "value": "4099.0",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.99",
         "unit": "% p.a.",
         "plan": "Direct",
@@ -1726,7 +1726,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.73",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1742,7 +1742,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.99",
         "unit": "% p.a.",
         "plan": "Direct",
@@ -1780,14 +1780,14 @@
       "amc": "Tata Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "13409.12",
+        "as_of": "2026-10-07",
+        "value": "13388.15",
         "unit": "INR crore",
         "plan": "All",
         "source": "https://www.tatamutualfund.com/mutual-funds/tata-small-cap-fund-direct-growth"
       },
       "ter": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.52",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1795,7 +1795,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.41",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1811,7 +1811,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-06",
+        "as_of": "2026-10-07",
         "value": "0.52",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1826,7 +1826,7 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 5,
+      "official_publications": 6,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -1835,14 +1835,14 @@
       "amc": "The Wealth Company Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "147.23392",
+        "as_of": "2026-10-07",
+        "value": "148.03038",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.79",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1850,7 +1850,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.34",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1858,7 +1858,7 @@
       },
       "expense_ratio": null,
       "benchmark": {
-        "as_of": "2026-10-08",
+        "as_of": "2026-10-09",
         "value": "NIFTY SmallCap 250 TRI",
         "unit": "Observed on official fund page",
         "plan": "All",
@@ -1866,7 +1866,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.79",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1890,14 +1890,14 @@
       "amc": "Trust Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "3976.96",
+        "as_of": "2026-10-07",
+        "value": "4012.55",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.5",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1905,7 +1905,7 @@
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "0.45",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1921,7 +1921,7 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
+        "as_of": "2026-10-08",
         "value": "1.5",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
@@ -1936,7 +1936,7 @@
       },
       "portfolio_complete": true,
       "portfolio_fresh": true,
-      "official_publications": 5,
+      "official_publications": 6,
       "portfolio_gap": null,
       "portfolio_limitation": null
     },
@@ -1945,8 +1945,8 @@
       "amc": "UTI Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "5252.634",
+        "as_of": "2026-10-07",
+        "value": "5238.426",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
@@ -1998,7 +1998,7 @@
       },
       "portfolio_complete": false,
       "portfolio_fresh": true,
-      "official_publications": 17,
+      "official_publications": 18,
       "portfolio_gap": null,
       "portfolio_limitation": {
         "code": "partial_reason_unclassified",
@@ -2014,23 +2014,23 @@
       "amc": "Union Mutual Fund",
       "category": "small-cap",
       "aum": {
-        "as_of": "2026-10-06",
-        "value": "2749.7827",
+        "as_of": "2026-10-07",
+        "value": "2768.3872",
         "unit": "₹ crore · daily scheme AUM · AMC-reported via AMFI",
         "plan": "All",
         "source": "https://www.amfiindia.com/otherdata/fund-performance"
       },
       "ter": {
-        "as_of": "2026-10-07",
-        "value": "1.07",
+        "as_of": "2026-10-08",
+        "value": "1.08",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
       },
       "ter_observed": null,
       "base_expense_ratio": {
-        "as_of": "2026-10-07",
-        "value": "0.76",
+        "as_of": "2026-10-08",
+        "value": "0.77",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
@@ -2045,8 +2045,8 @@
       },
       "fee": {
         "metric": "ter",
-        "as_of": "2026-10-07",
-        "value": "1.07",
+        "as_of": "2026-10-08",
+        "value": "1.08",
         "unit": "% p.a. · reported by AMC via AMFI",
         "plan": "Direct",
         "source": "https://www.amfiindia.com/api/populate-te-rdata-revised?MF_ID=All&Month=10-2026&strCat=18&strType=1&page=2&pageSize=1000"
@@ -2070,7 +2070,7 @@
           "amc_match": "Union",
           "url": "https://www.unionmf.com/knowledge-hub/fund-managers-desk/research-notes",
           "label": "Research Notes / Market Outlook",
-          "last_checked": "2026-10-07T23:31:54+00:00",
+          "last_checked": "2026-10-08T23:54:58+00:00",
           "status": "Gap",
           "detail": "[Errno 111] Connection refused"
         }
@@ -2098,16 +2098,16 @@
   },
   "record_dates": {
     "aum": {
-      "earliest": "2026-10-06",
-      "latest": "2026-10-06"
+      "earliest": "2026-10-07",
+      "latest": "2026-10-07"
     },
     "direct_fee": {
       "earliest": "2026-04-30",
-      "latest": "2026-10-07"
+      "latest": "2026-10-08"
     },
     "benchmark_identity": {
       "earliest": "2023-08-31",
-      "latest": "2026-10-08"
+      "latest": "2026-10-09"
     }
   },
   "portfolio_gap_reasons": {

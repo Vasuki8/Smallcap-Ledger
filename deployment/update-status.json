@@ -1,61 +1,61 @@
 {
-  "built_at": "2026-10-07T23:35:58+00:00",
+  "built_at": "2026-10-09T00:00:34+00:00",
   "publication_state": "built_pending_pages_deploy",
-  "source_build_sha": "fd8aaf357fb870bda5eb86c65aec7434eaa8d3ef",
+  "source_build_sha": "9114013a49602958f00c145bf48a98ade9d2ef88",
   "counts": {
     "plans": 143,
     "funds": 36,
-    "nav_points": 282578,
+    "nav_points": 282720,
     "benchmark_points": 5335,
-    "portfolios": 278,
-    "documents": 7573,
-    "archive_bytes": 6102712312,
-    "archive_binary_files": 8828,
+    "portfolios": 289,
+    "documents": 7778,
+    "archive_bytes": 6240639235,
+    "archive_binary_files": 9051,
     "archive_metadata_only_files": 0,
     "archive_metadata_only_bytes": 0,
-    "database_bytes": 156446720,
-    "total_storage_bytes": 6259159032,
+    "database_bytes": 157515776,
+    "total_storage_bytes": 6398155011,
     "aum_funds": 36,
     "fee_funds": 36,
-    "latest_nav_date": "2026-10-07"
+    "latest_nav_date": "2026-10-08"
   },
   "record_dates": {
     "aum": {
-      "earliest": "2026-10-06",
-      "latest": "2026-10-06"
+      "earliest": "2026-10-07",
+      "latest": "2026-10-07"
     },
     "direct_fee": {
       "earliest": "2026-04-30",
-      "latest": "2026-10-07"
+      "latest": "2026-10-08"
     },
     "benchmark_identity": {
       "earliest": "2023-08-31",
-      "latest": "2026-10-08"
+      "latest": "2026-10-09"
     }
   },
   "recent_jobs": [
     {
       "kind": "amc-communication-archive-repair",
-      "started_at": "2026-10-07T23:35:02+00:00",
-      "finished_at": "2026-10-07T23:35:02+00:00",
+      "started_at": "2026-10-08T23:59:33+00:00",
+      "finished_at": "2026-10-08T23:59:33+00:00",
       "status": "partial"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-07T23:24:24+00:00",
-      "finished_at": "2026-10-07T23:24:24+00:00",
+      "started_at": "2026-10-08T23:46:01+00:00",
+      "finished_at": "2026-10-08T23:46:01+00:00",
+      "status": "partial"
+    },
+    {
+      "kind": "amc-reports",
+      "started_at": "2026-10-08T23:41:53+00:00",
+      "finished_at": "2026-10-08T23:41:53+00:00",
       "status": "ok"
     },
     {
       "kind": "amc-reports",
-      "started_at": "2026-10-07T23:24:21+00:00",
-      "finished_at": "2026-10-07T23:24:21+00:00",
-      "status": "ok"
-    },
-    {
-      "kind": "amc-reports",
-      "started_at": "2026-10-07T23:24:19+00:00",
-      "finished_at": "2026-10-07T23:24:19+00:00",
+      "started_at": "2026-10-08T23:41:50+00:00",
+      "finished_at": "2026-10-08T23:41:50+00:00",
       "status": "ok"
     }
   ],
@@ -69,7 +69,7 @@
     "publication_file_budget_bytes": 262144000,
     "publication_file_reserve_bytes": 5242880,
     "publication_selection_limit_bytes": 256901120,
-    "publication_files_included": 167,
-    "publication_bytes_included": 256899969
+    "publication_files_included": 165,
+    "publication_bytes_included": 256900807
   }
 }
