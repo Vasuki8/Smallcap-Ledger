@@ -1,10 +1,10 @@
 {
-  "built_at": "2026-10-08T23:37:05+00:00",
+  "built_at": "2026-10-09T22:54:14+00:00",
   "staged_category": "mid-cap",
   "portfolio_expected_as_of": "2026-08-31",
   "targets": 3,
-  "recovered": 3,
-  "failed": 0,
+  "recovered": 2,
+  "failed": 1,
   "results": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
@@ -25,7 +25,7 @@
       "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
       "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-10-08T23:37:00+00:00"
+      "observed_at": "2026-10-09T22:54:09+00:00"
     },
     {
       "family": "PGIM India Midcap Fund",
@@ -44,27 +44,15 @@
       "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
       "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-08T23:37:02+00:00"
-    },
-    {
-      "family": "Mirae Asset Midcap Fund",
-      "amc": "Mirae Asset Mutual Fund",
-      "status": "recovered",
-      "sheet": "MAMCF",
-      "as_of": "2026-08-31",
-      "positions_observed": 68,
-      "complete": true,
-      "unknown_rows": [],
-      "aum": 20891.685,
-      "scope": "structured_monthly_portfolio",
-      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_aug2026.xlsx",
-      "source_title": "Portfolio Details as on 31st August 2026 for Mirae Asset Midcap Fund",
-      "source_sha256": "f35304f2c9cf880e753ea44811b51fd2a3f06d5251c9a8a7667c76244e21d0bc",
-      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-08T23:37:05+00:00"
+      "observed_at": "2026-10-09T22:54:12+00:00"
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "family": "Mirae Asset Midcap Fund",
+      "error": "Mirae exact Midcap candidates did not prove the current portfolio: No exact current Mid Cap portfolio sheet passed the existing structured parser"
+    }
+  ],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [

@@ -1,6 +1,6 @@
 # Mid Cap benchmark readiness
 
-Benchmark identity: **25 / 34** · remaining: **9**.
+Benchmark identity: **26 / 34** · remaining: **8**.
 
 | Family | AMC | Benchmark | Source |
 | --- | --- | --- | --- |
@@ -27,7 +27,7 @@ Benchmark identity: **25 / 34** · remaining: **9**.
 | Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | Nifty Midcap 150 TRI | https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Nifty Midcap 150 TRI | https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy |
 | PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
-| Quant Mid Cap Fund | quant Mutual Fund | Gap | Gap |
+| Quant Mid Cap Fund | quant Mutual Fund | Nifty Mid Cap 150 TRI | https://quantmutual.com/equity/opportunities-fund |
 | SBI MIDCAP FUND | SBI Mutual Fund | Nifty Midcap 150 Index TRI | https://www.sbimf.com/docs/default-source/sif-forms/kim---sbi-midcap-fund.pdf?sfvrsn=f93cc0ce_0 |
 | Samco Mid Cap Fund | Samco Mutual Fund | Nifty Midcap 150 Total Returns Index | https://www.samcomf.com/faqs |
 | Sundaram Mid Cap Fund | Sundaram Mutual Fund | Nifty Midcap 150 TRI | https://www.sundarammutual.com/Sundaram-Mid-Cap-Fund |

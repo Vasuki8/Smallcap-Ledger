@@ -1,6 +1,6 @@
 # Mid Cap benchmark identity audit — batch 1
 
-Prepared: 2026-10-08T23:33:14+00:00
+Prepared: 2026-10-09T22:51:54+00:00
 
 Targets: **12** · recovered: **8** · failed: **4** · staged families: **34**.
 
@@ -9,7 +9,7 @@ Targets: **12** · recovered: **8** · failed: **4** · staged families: **34**.
 | Kotak Mid Cap Fund | Kotak Mahindra Mutual Fund | NIFTY Midcap 150 TRI | Observed current page | https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html |
 | The Wealth Company Mid Cap Fund | The Wealth Company Mutual Fund | NIFTY Midcap 150 TRI | Observed current page | https://www.wealthcompanyamc.in/our-funds/fund/the-wealth-company-mid-cap-fund/154479/ |
 | BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | Nifty Midcap 150 Total Return Index | Observed current page | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
-| PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | 2026-08-31 | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
+| PGIM India Midcap Fund | PGIM India Mutual Fund | Nifty Midcap 150 TRI | 2026-09-30 | https://www.pgimindia.com/mutual-funds/equity-funds/midcap-fund |
 | DSP Midcap Fund | DSP Mutual Fund | Nifty Midcap 150 TRI | Observed current page | https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth |
 | Helios Mid Cap Fund | Helios Mutual Fund | NIFTY Midcap 150 Total Return Index | Observed current page | https://www.heliosmf.in/helios-mid-cap-fund/ |
 | Nippon India Growth Mid Cap Fund | Nippon India Mutual Fund | Nifty Midcap 150 TRI | Observed current page | https://mf.nipponindiaim.com/FundsAndPerformance/Pages/NipponIndia-Growth-Mid-Cap-Fund.aspx?rmfsource=nimfinvesteasy |
