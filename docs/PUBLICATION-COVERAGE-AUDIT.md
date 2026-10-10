@@ -1,6 +1,6 @@
 # AMC communication coverage audit
 
-Prepared: 2026-10-09T23:10:42+00:00
+Prepared: 2026-10-10T22:23:59+00:00
 
 **Read-only:** AMC-origin communications only; third-party news is excluded. Factsheets and portfolio files do not count as communications.
 
@@ -41,7 +41,7 @@ Prepared: 2026-10-09T23:10:42+00:00
 | Canara Robeco Small Cap Fund | 1 | 1 | 0 | 1 | 1 | 2025-02-20 | 2 | none |
 | DSP Small Cap Fund | 0 | 0 | 0 | 0 | 0 | Gap | 0 | no_amc_communications_collected |
 | Edelweiss Small Cap Fund | 3 | 3 | 0 | 3 | 0 | Gap | 2 | publication_date_missing |
-| Franklin India Small Cap Fund | 10 | 10 | 0 | 0 | 10 | 2026-10-01 | 1 | communication_document_not_archived, communication_archive_limitation |
+| Franklin India Small Cap Fund | 10 | 10 | 0 | 0 | 10 | 2026-10-07 | 1 | communication_document_not_archived, communication_archive_limitation |
 | Groww Small Cap Fund | 3 | 3 | 0 | 3 | 3 | 2026-09-21 | 1 | none |
 | HDFC Small Cap Fund | 18 | 18 | 0 | 18 | 0 | Gap | 2 | publication_date_missing |
 | HSBC Small Cap Fund | 20 | 20 | 0 | 20 | 20 | 2026-08-11 | 1 | none |
