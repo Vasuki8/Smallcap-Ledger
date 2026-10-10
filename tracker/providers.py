@@ -7,6 +7,7 @@ import json
 import os
 import re
 import socket
+import sqlite3
 import threading
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import urlparse, urljoin, urlencode, unquote, parse_qs
@@ -145,7 +146,14 @@ def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, he
                                            data=form if form is not None else None,
                                            headers=request_headers,extensions=extensions) as r:
                             if r.is_redirect:
-                                current=urljoin(current,r.headers.get("location",""))
+                                location=r.headers.get("location","")
+                                if not location:
+                                    raise ValueError("Redirect response did not provide a Location")
+                                next_url=urljoin(current,location)
+                                if (urlparse(current).scheme.lower()=="https"
+                                    and urlparse(next_url).scheme.lower()!="https"):
+                                    raise ValueError("HTTPS source redirected to insecure HTTP")
+                                current=next_url
                                 continue
                             r.raise_for_status()
                             content=bytearray()
@@ -156,17 +164,31 @@ def fetch(url, *, body=None, form=None, archive=True, max_bytes=25*1024*1024, he
                             if archive and not content:
                                 raise ValueError("Source returned an empty response; existing archive was retained")
                             typ=r.headers.get("content-type", "application/octet-stream")
-                            h=db.archive(content,typ) if archive else None
                             if archive:
-                                with db.connect() as c: c.execute("INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",(original,db.now(),"ok",h))
-                            return content,h,typ
+                                with db.reversible_archive(content,typ) as h:
+                                    with db.connect() as conn:
+                                        conn.execute(
+                                            "INSERT INTO fetches(url,fetched_at,status,hash) VALUES(?,?,?,?)",
+                                            (original,db.now(),"ok",h),
+                                        )
+                                return content,h,typ
+                            return content,None,typ
                     raise ValueError("Too many redirects")
             except httpx.TransportError:
                 if attempt+1>=attempts:raise
                 continue
     except Exception as e:
         if archive:
-            with db.connect() as c: c.execute("INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)",(original,db.now(),"error",str(e)[:400]))
+            try:
+                with db.connect() as conn:
+                    conn.execute(
+                        "INSERT INTO fetches(url,fetched_at,status,detail) VALUES(?,?,?,?)",
+                        (original,db.now(),"error",str(e)[:400]),
+                    )
+            except sqlite3.Error:
+                # Operational telemetry must never hide the source/network error
+                # that the caller needs for diagnosis and retry decisions.
+                pass
         raise
 
 
