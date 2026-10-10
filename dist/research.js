@@ -30,8 +30,15 @@
     try { const u = new URL(String(url)); return ['https:', 'http:'].includes(u.protocol) ? u.href : ''; }
     catch { return ''; }
   }
+  function currentFee(f) {
+    if (f?.selected_fee) return f.selected_fee;
+    const metrics=f?.metrics||{},rank={ter:0,ter_observed:1,base_expense_ratio:2,expense_ratio:3};
+    const all=Object.entries(metrics).filter(([k,v])=>rank[k]!=null&&v).map(([k,v])=>({...v,metric:v.metric||k}));
+    const dated=all.filter(v=>v.as_of);
+    return (dated.length?dated.sort((a,b)=>String(b.as_of).localeCompare(String(a.as_of))||(rank[a.metric]-rank[b.metric])):all.sort((a,b)=>rank[a.metric]-rank[b.metric]))[0]||null;
+  }
   function sortFunds(rows, key, direction = 'desc') {
-    const value = f => key === 'family' ? f.family : key === 'aum' ? f.metrics?.aum?.value : key === 'ter' ? (f.metrics?.ter || f.metrics?.ter_observed || f.metrics?.base_expense_ratio || f.metrics?.expense_ratio)?.value : key === 'nav' ? f.nav?.value : f.returns?.[key];
+    const value = f => key === 'family' ? f.family : key === 'aum' ? f.metrics?.aum?.value : key === 'ter' ? currentFee(f)?.value : key === 'nav' ? f.nav?.value : f.returns?.[key];
     return [...rows].sort((a, b) => {
       let delta;
       if (key === 'family') delta = String(value(a) || '').localeCompare(String(value(b) || ''));

@@ -3,6 +3,7 @@ from datetime import date,timedelta
 from . import db
 from .clock import india_today
 from .portfolio_limitations import portfolio_limitation
+from .fees import select_fee
 
 FEE_METRICS=('ter','ter_observed','base_expense_ratio','expense_ratio')
 
@@ -86,10 +87,12 @@ def report():
                            observed_at DESC LIMIT 1""",(family,key))
             else:
                 row[key]=db.one('SELECT as_of,value,unit,plan,source FROM metrics WHERE family=? AND metric=? ORDER BY as_of DESC,observed_at DESC LIMIT 1',(family,key))
-        row['fee']=db.one("""SELECT metric,as_of,value,unit,plan,source FROM metrics
-          WHERE family=? AND plan='Direct' AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio')
-          ORDER BY CASE metric WHEN 'ter' THEN 0 WHEN 'ter_observed' THEN 1 WHEN 'base_expense_ratio' THEN 2 ELSE 3 END,
-                   as_of DESC,observed_at DESC LIMIT 1""",(family,))
+        fee=select_fee(db.rows("""SELECT id,metric,as_of,value,unit,plan,source,observed_at FROM metrics
+          WHERE family=? AND plan='Direct'
+            AND metric IN ('ter','ter_observed','base_expense_ratio','expense_ratio')
+          ORDER BY as_of DESC,observed_at DESC,id DESC""",(family,)))
+        row['fee']=({k:fee[k] for k in ('metric','as_of','value','unit','plan','source')}
+                    if fee else None)
         # Prefer a complete snapshot for the currently expected regulatory
         # month-end over a later intramonth partial view. This keeps coverage
         # completeness tied to the monthly disclosure requirement while the API
@@ -139,7 +142,7 @@ def report():
         'notes':['Coverage means at least one dated record, not necessarily the latest reporting month.',
                  'Top-line record-date ranges describe the selected reporting/effective dates; they are not source-check timestamps, and an older effective date does not by itself prove the value is stale.',
                  f'Portfolio freshness uses {expected} as the current expected month-end, with a 10-day grace at the start of a new month.',
-                 'The Direct fee column prefers reported TER, then observed TER, BER, then an explicitly unqualified expense-ratio observation; labels remain distinct.',
+                 'The Direct fee column uses the newest reporting/effective date; TER, observed TER, BER and unqualified expense ratio are only precedence tie-breakers on the same date, and labels remain distinct.',
                  'Base expense ratio and total expense ratio are distinct.',
                  'A benchmark name does not establish availability of its historical TRI series.',
                  'Coverage prefers a complete snapshot for the expected regulatory month-end over a later intramonth partial view.',
