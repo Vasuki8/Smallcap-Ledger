@@ -1,34 +1,34 @@
 {
   "schema_version": 2,
   "staged_category": "mid-cap",
-  "built_at": "2026-10-10T22:02:18.120147+00:00",
-  "evaluated_at": "2026-10-10T22:02:18.120147+00:00",
-  "portfolio_expected_as_of": "2026-08-31",
+  "built_at": "2026-10-11T22:26:20.306260+00:00",
+  "evaluated_at": "2026-10-11T22:26:20.306260+00:00",
+  "portfolio_expected_as_of": "2026-09-30",
   "families": 34,
-  "current_portfolio_evidence": 16,
-  "current_complete_portfolios": 3,
-  "remaining": 18,
+  "current_portfolio_evidence": 13,
+  "current_complete_portfolios": 2,
+  "remaining": 21,
   "families_detail": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
       "amc": "Aditya Birla Sun Life Mutual Fund",
       "status": "recovered",
       "sheet": "MIDCAP",
-      "as_of": "2026-08-31",
+      "as_of": "2026-09-30",
       "positions_observed": 78,
       "complete": false,
       "unknown_rows": [
         "Margin amount for Derivative positions"
       ],
-      "aum": 6966.2854,
+      "aum": 6550.0054,
       "scope": "structured_monthly_portfolio",
-      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip",
-      "source_title": "Monthly Portfolios as on August 31, 2026",
-      "zip_entry": "31082026_ABSLMF_MonthlyDisclosure.xls",
-      "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
-      "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
+      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/30092026_abslmf_monthlydisclosure.zip",
+      "source_title": "Monthly Portfolios as on September 30, 2026",
+      "zip_entry": "30092026_ABSLMF_MonthlyDisclosure.xls",
+      "source_sha256": "529d07916e835e3d97fab4c039cdff704008e68b7c9846e886975f6460611596",
+      "workbook_sha256": "8eb8ef4f1a34084f1ed8b29080a563f11e8c5780e8e935598d7d2dde045faac7",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-10-10T22:01:46+00:00",
+      "observed_at": "2026-10-11T22:25:52+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -37,109 +37,26 @@
       "amc": "Axis Mutual Fund",
       "status": "recovered",
       "sheet": "AXISMCF",
-      "as_of": "2026-08-31",
-      "positions_observed": 90,
+      "as_of": "2026-09-30",
+      "positions_observed": 86,
       "complete": false,
       "unknown_rows": [
         "Clearing Corporation of India Ltd",
         "Clearing Corporation of India Ltd"
       ],
-      "aum": 35425.0678,
+      "aum": 33527.8039,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx",
-      "source_title": "Monthly Portfolio - Axis Midcap Fund - 31 August 2026",
-      "source_sha256": "6653320924d5f9c64d8aea5c713044c3ce517b72ec63aaba3b151e799a1db91c",
+      "source": "https://www.axismf.com/1/5/464/560/3622/4593/Monthly_Portfolio_Axis_Midcap_Fund_30_September_2026_d1c126adc4.xlsx",
+      "source_title": "Monthly Portfolio - Axis Midcap Fund - 30 September 2026",
+      "source_sha256": "d49493849dfedeb42f75690b983c53b8c711d1aa11c16165a54d542196b18ba8",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:01:28+00:00",
+      "observed_at": "2026-10-11T22:25:33+00:00",
       "current": true,
       "freshness_status": "current"
     },
     {
       "family": "BANDHAN MID CAP FUND",
       "amc": "Bandhan Mutual Fund",
-      "status": "recovered",
-      "sheet": "IDF281",
-      "as_of": "2026-08-31",
-      "positions_observed": 88,
-      "complete": false,
-      "unknown_rows": [
-        "Triparty Repo TRP_010926",
-        "Cash Margin - Derivatives",
-        "Cash / Bank Balance"
-      ],
-      "aum": 2581.285528,
-      "scope": "structured_monthly_portfolio",
-      "source": "https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/31f832d6-bandhan-mid-cap-fund_64601504-9a02-4098-a032-61e6fceefec9_31-august-2026.xlsx",
-      "source_title": "Bandhan Mid cap Fund 31 August 2026",
-      "source_sha256": "d0c6d885d00c77599cdb8e97d9f4cf94e8613b785911a6cf101e23bbf2212bd5",
-      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "discovery_page": "https://cmsnew.bandhanmutual.com/monthly-and-half-yearly-bandhan-mid-cap-fund-31-august-2026/",
-      "disclosure_post_id": 158812,
-      "parser_version": "bandhan-midcap-monthly-portfolio-v1",
-      "observed_at": "2026-10-10T22:02:17+00:00",
-      "current": true,
-      "freshness_status": "current"
-    },
-    {
-      "family": "BANK OF INDIA MID CAP FUND",
-      "status": "recovered",
-      "as_of": "2026-08-31",
-      "positions_observed": 10,
-      "positions": [
-        {
-          "name": "Aurobindo Pharma Limited",
-          "weight": 5.6
-        },
-        {
-          "name": "Multi Commodity Exchange of India Limited",
-          "weight": 4.9
-        },
-        {
-          "name": "Abbott India Limited",
-          "weight": 4.4
-        },
-        {
-          "name": "Bharti Hexacom Limited",
-          "weight": 4.0
-        },
-        {
-          "name": "One 97 Communications Limited",
-          "weight": 3.4
-        },
-        {
-          "name": "Quality Power Electrical Eqp Ltd",
-          "weight": 3.1
-        },
-        {
-          "name": "UNO Minda Limited",
-          "weight": 2.9
-        },
-        {
-          "name": "Nippon Life India Asset Management Limited",
-          "weight": 2.9
-        },
-        {
-          "name": "Bank of Maharashtra",
-          "weight": 2.7
-        },
-        {
-          "name": "Mankind Pharma Limited",
-          "weight": 2.7
-        }
-      ],
-      "scope": "top_10",
-      "complete": false,
-      "source": "https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund",
-      "source_sha256": "cda1ed411363893ae97d2b84fa1c30f057ebed0aa10008c9004a4825653f615e",
-      "source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-10-10T22:00:28+00:00",
-      "amc": "Bank of India Mutual Fund",
-      "current": true,
-      "freshness_status": "current"
-    },
-    {
-      "family": "Baroda BNP Paribas Mid Cap Fund",
-      "amc": "Baroda BNP Paribas Mutual Fund",
       "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
@@ -148,6 +65,55 @@
       "source": null,
       "current": false,
       "freshness_status": "unavailable"
+    },
+    {
+      "family": "BANK OF INDIA MID CAP FUND",
+      "amc": "Bank of India Mutual Fund",
+      "status": "unavailable",
+      "as_of": null,
+      "positions_observed": 0,
+      "scope": null,
+      "complete": false,
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
+    },
+    {
+      "family": "Baroda BNP Paribas Mid Cap Fund",
+      "status": "recovered",
+      "as_of": "2026-09-30",
+      "positions_observed": 5,
+      "positions": [
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 3.32
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 2.25
+        },
+        {
+          "name": "IPCA Laboratories Limited",
+          "weight": 2.23
+        },
+        {
+          "name": "Acutaas Chemicals Limited",
+          "weight": 2.14
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 2.1
+        }
+      ],
+      "scope": "top_5",
+      "complete": false,
+      "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
+      "source_sha256": "859ce972cc5580e2e64825f296b7e3b527e84851c07b2730f2546d8f60cfd66c",
+      "source_content_type": "text/html; charset=UTF-8",
+      "observed_at": "2026-10-11T22:24:32+00:00",
+      "amc": "Baroda BNP Paribas Mutual Fund",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Canara Robeco Mid Cap Fund",
@@ -166,20 +132,20 @@
       "amc": "DSP Mutual Fund",
       "status": "recovered",
       "sheet": "MIDCAP",
-      "as_of": "2026-08-31",
+      "as_of": "2026-09-30",
       "positions_observed": 65,
       "complete": false,
       "unknown_rows": [
         "TREPS / Reverse Repo Investments"
       ],
-      "aum": 21018.5385,
+      "aum": 19487.694,
       "scope": "structured_monthly_portfolio",
-      "zip_entry": "DSP EquityFOF ISIN Portfolio as on 31 Aug 2026.xlsx",
-      "source": "https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/8a6dbe504f-1791453357/dsp-monthend-portfolio-as-on-31-aug-2026.zip",
-      "source_sha256": "33cf25defa3364589d8b3c1f0d81e342b9b6b556ca24218c1a6973f19f7ac3e0",
-      "workbook_sha256": "11d4492f5be1798bc6bb583d94a3286c7c990542b3abe1118b7a9c9f3e7c36ce",
+      "zip_entry": "DSP Equity FOF ISIN Portfolio as on 30 Sep 2026.xlsx",
+      "source": "https://www.dspim.com/media/pages/mandatory-disclosures/portfolio-disclosures/7737577fda-1791551248/dsp-monthend-portfolio-as-on-30-september-2026.zip",
+      "source_sha256": "06acc4ced7c29e359e40b01ff6514b437b9a46ba7ea61d470c2c53e5bb0a3a86",
+      "workbook_sha256": "7cbbf16bc1a71812f8c2c1e5a9ccf05d2992474d7dd2610924caf3e03bf09c4e",
       "source_content_type": "application/zip",
-      "observed_at": "2026-10-10T22:00:30+00:00",
+      "observed_at": "2026-10-11T22:24:35+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -234,455 +200,69 @@
     {
       "family": "Helios Mid Cap Fund",
       "amc": "Helios Mutual Fund",
-      "status": "recovered",
-      "sheet": "HMCF",
-      "as_of": "2026-08-31",
-      "positions_observed": 74,
-      "complete": true,
-      "unknown_rows": [],
-      "aum": 2228.7088,
-      "scope": "structured_monthly_portfolio",
-      "source": "https://www.heliosmf.in/wp-content/uploads/2026/09/helios-mid-cap-fund-monthly-portfolio-as-on-31st-august-2026.xlsx",
-      "source_sha256": "375e9f39754882d43677cfd45f95a57572a89b8eb4de04895cf88780a432f181",
-      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "discovery_source": "https://www.heliosmf.in/portfolio-disclosure",
-      "discovery_source_sha256": "808b9b6a39c426f3a97bf97e62912a3f8d1142ea42851cf5d5d09886e5dcd5d3",
-      "discovery_source_content_type": "text/html; charset=utf-8",
-      "source_locator": "Monthly Portfolio / Helios Mid Cap Fund / August 2026",
-      "parser_version": "helios-midcap-monthly-workbook-v1",
-      "observed_at": "2026-10-10T22:00:33+00:00",
-      "current": true,
-      "freshness_status": "current"
+      "status": "unavailable",
+      "as_of": null,
+      "positions_observed": 0,
+      "scope": null,
+      "complete": false,
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "ICICI Prudential Mid Cap Fund",
       "amc": "ICICI Prudential Mutual Fund",
       "status": "recovered",
       "sheet": "MIDCAP",
-      "as_of": "2026-08-31",
-      "positions_observed": 81,
+      "as_of": "2026-09-30",
+      "positions_observed": 82,
       "complete": false,
       "unknown_rows": [
         "Equity & Equity Related Instruments",
         "Listed / Awaiting Listing On Stock Exchanges",
         "CRISIL Ltd.",
-        "GSPL India Transco Ltd",
-        "Others",
-        "Cash Margin - Derivatives"
+        "GSPL India Transco Ltd"
       ],
-      "aum": 8403.29876,
+      "aum": 7960.869983,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip",
-      "source_title": "Monthly Portfolio Disclosure August 2026",
+      "source": "https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Sep/Monthly-Portfolio-Disclosure-September-2026.zip",
+      "source_title": "Monthly Portfolio Disclosure September 2026",
       "zip_entry": "ICICI Prudential Mid Cap Fund.xlsx",
-      "source_sha256": "345db37f8c8e38b497091f3a9a3580bb77e7803944cad03098a1605938c3c9eb",
-      "workbook_sha256": "ddca3ad518ecde64bd5380d8c4827d2eacf28313e156a7a41611d44012a84126",
+      "source_sha256": "84d4beb5d29a26d52ee30dc5ef9c30abeda25e4820f1a66fc3e5b42e3538281c",
+      "workbook_sha256": "72811a8d1766f64572ac812318f42830f88e03fc2715f53f5f9754727540a3e4",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-10-10T22:01:22+00:00",
+      "observed_at": "2026-10-11T22:25:28+00:00",
       "current": true,
       "freshness_status": "current"
     },
     {
       "family": "ITI Mid Cap Fund",
-      "status": "recovered",
-      "as_of": "2026-08-31",
-      "positions_observed": 92,
-      "positions": [
-        {
-          "name": "Ather Energy Limited",
-          "weight": 1.86
-        },
-        {
-          "name": "TVS Motor Company Limited",
-          "weight": 1.65
-        },
-        {
-          "name": "Tube Investments of India Limited",
-          "weight": 1.48
-        },
-        {
-          "name": "Sona BLW Precision Forgings Limited",
-          "weight": 1.44
-        },
-        {
-          "name": "Bharat Forge Limited",
-          "weight": 1.29
-        },
-        {
-          "name": "ZF Commercial Vehicle Control Systems India Limited",
-          "weight": 1.15
-        },
-        {
-          "name": "Schaeffler India Limited",
-          "weight": 0.79
-        },
-        {
-          "name": "Bharat Heavy Electricals Limited",
-          "weight": 1.53
-        },
-        {
-          "name": "Cummins India Limited",
-          "weight": 1.45
-        },
-        {
-          "name": "Apar Industries Limited",
-          "weight": 1.38
-        },
-        {
-          "name": "Ashok Leyland Limited",
-          "weight": 1.36
-        },
-        {
-          "name": "PTC Industries Limited",
-          "weight": 1.13
-        },
-        {
-          "name": "GE Vernova T&D India Limited",
-          "weight": 1.05
-        },
-        {
-          "name": "Polycab India Limited",
-          "weight": 0.96
-        },
-        {
-          "name": "Mazagon Dock Shipbuilders Limited",
-          "weight": 0.9
-        },
-        {
-          "name": "Jyoti CNC Automation Ltd",
-          "weight": 0.9
-        },
-        {
-          "name": "Supreme Industries Limited",
-          "weight": 0.81
-        },
-        {
-          "name": "Bharat Electronics Limited",
-          "weight": 0.8
-        },
-        {
-          "name": "Thermax Limited",
-          "weight": 0.75
-        },
-        {
-          "name": "Hitachi Energy India Limited",
-          "weight": 0.67
-        },
-        {
-          "name": "Shakti Pumps (India) Limited",
-          "weight": 0.6
-        },
-        {
-          "name": "KEI Industries Limited",
-          "weight": 0.51
-        },
-        {
-          "name": "Solar Industries India Limited",
-          "weight": 2.56
-        },
-        {
-          "name": "Anupam Rasayan India Limited",
-          "weight": 1.25
-        },
-        {
-          "name": "SRF Limited",
-          "weight": 0.48
-        },
-        {
-          "name": "Navin Fluorine International Limited",
-          "weight": 0.34
-        },
-        {
-          "name": "JK Cement Limited",
-          "weight": 1.08
-        },
-        {
-          "name": "Dixon Technologies (India) Limited",
-          "weight": 1.23
-        },
-        {
-          "name": "LG Electronics India Ltd",
-          "weight": 1.16
-        },
-        {
-          "name": "Blue Star Limited",
-          "weight": 1.06
-        },
-        {
-          "name": "Midwest Limited",
-          "weight": 1.04
-        },
-        {
-          "name": "Info Edge (India) Limited",
-          "weight": 1.17
-        },
-        {
-          "name": "Swiggy Limited",
-          "weight": 0.69
-        },
-        {
-          "name": "Radico Khaitan Limited",
-          "weight": 1.76
-        },
-        {
-          "name": "Marico Limited",
-          "weight": 1.53
-        },
-        {
-          "name": "Godfrey Phillips India Limited",
-          "weight": 0.63
-        },
-        {
-          "name": "The Federal Bank Limited",
-          "weight": 3.05
-        },
-        {
-          "name": "One 97 Communications Limited",
-          "weight": 2.33
-        },
-        {
-          "name": "IDFC First Bank Limited",
-          "weight": 1.61
-        },
-        {
-          "name": "AU Small Finance Bank Limited",
-          "weight": 1.59
-        },
-        {
-          "name": "IndusInd Bank Limited",
-          "weight": 1.59
-        },
-        {
-          "name": "PB Fintech Limited",
-          "weight": 1.57
-        },
-        {
-          "name": "BSE Limited",
-          "weight": 1.47
-        },
-        {
-          "name": "Motilal Oswal Financial Services Limited",
-          "weight": 1.38
-        },
-        {
-          "name": "Sundaram Finance Limited",
-          "weight": 1.36
-        },
-        {
-          "name": "Indian Bank",
-          "weight": 1.26
-        },
-        {
-          "name": "Yes Bank Limited",
-          "weight": 1.16
-        },
-        {
-          "name": "Housing & Urban Development Corporation Limited",
-          "weight": 1.12
-        },
-        {
-          "name": "Multi Commodity Exchange of India Limited",
-          "weight": 1.1
-        },
-        {
-          "name": "State Bank of India",
-          "weight": 1.06
-        },
-        {
-          "name": "Shriram Finance Limited",
-          "weight": 1.01
-        },
-        {
-          "name": "Max Financial Services Limited",
-          "weight": 0.98
-        },
-        {
-          "name": "Karur Vysya Bank Limited",
-          "weight": 0.93
-        },
-        {
-          "name": "Bank of Maharashtra",
-          "weight": 0.84
-        },
-        {
-          "name": "Five Star Business Finance Limited",
-          "weight": 0.74
-        },
-        {
-          "name": "L&T Finance Limited",
-          "weight": 0.68
-        },
-        {
-          "name": "Mahindra & Mahindra Financial Services Limited",
-          "weight": 0.67
-        },
-        {
-          "name": "Poonawalla Fincorp Limited",
-          "weight": 0.65
-        },
-        {
-          "name": "Union Bank of India",
-          "weight": 0.64
-        },
-        {
-          "name": "Aptus Value Housing Finance India Limited",
-          "weight": 0.63
-        },
-        {
-          "name": "Fortis Healthcare Limited",
-          "weight": 1.98
-        },
-        {
-          "name": "Neuland Laboratories Limited",
-          "weight": 1.38
-        },
-        {
-          "name": "Abbott India Limited",
-          "weight": 1.18
-        },
-        {
-          "name": "Aurobindo Pharma Limited",
-          "weight": 1.09
-        },
-        {
-          "name": "Max Healthcare Institute Limited",
-          "weight": 1.08
-        },
-        {
-          "name": "Sun Pharmaceutical Industries Limited",
-          "weight": 0.97
-        },
-        {
-          "name": "Lupin Limited",
-          "weight": 0.94
-        },
-        {
-          "name": "Park Medi World Limited",
-          "weight": 0.9
-        },
-        {
-          "name": "Biocon Limited",
-          "weight": 0.89
-        },
-        {
-          "name": "GlaxoSmithKline Pharmaceuticals Limited",
-          "weight": 0.89
-        },
-        {
-          "name": "Acutaas Chemicals Limited",
-          "weight": 0.59
-        },
-        {
-          "name": "Zydus Lifesciences Limited",
-          "weight": 0.52
-        },
-        {
-          "name": "IPCA Laboratories Limited",
-          "weight": 0.47
-        },
-        {
-          "name": "Oracle Financial Services Software Limited",
-          "weight": 1.59
-        },
-        {
-          "name": "Coforge Limited",
-          "weight": 0.69
-        },
-        {
-          "name": "Persistent Systems Limited",
-          "weight": 0.61
-        },
-        {
-          "name": "Lloyds Metals And Energy Limited",
-          "weight": 1.36
-        },
-        {
-          "name": "National Aluminium Company Limited",
-          "weight": 1.08
-        },
-        {
-          "name": "Hindustan Copper Limited",
-          "weight": 0.75
-        },
-        {
-          "name": "Vedanta Aluminium Metal Limited",
-          "weight": 0.58
-        },
-        {
-          "name": "Steel Authority of India Limited",
-          "weight": 0.33
-        },
-        {
-          "name": "JSW Energy Limited",
-          "weight": 1.17
-        },
-        {
-          "name": "NTPC Green Energy Limited",
-          "weight": 0.85
-        },
-        {
-          "name": "Adani Power Limited",
-          "weight": 0.57
-        },
-        {
-          "name": "NTPC Limited",
-          "weight": 0.52
-        },
-        {
-          "name": "Oberoi Realty Limited",
-          "weight": 1.03
-        },
-        {
-          "name": "GMR Airports Limited",
-          "weight": 0.7
-        },
-        {
-          "name": "Smartworks Coworking Spaces Ltd",
-          "weight": 0.64
-        },
-        {
-          "name": "Shiprocket Limited",
-          "weight": 0.52
-        },
-        {
-          "name": "Shadowfax Technologies Limited",
-          "weight": 0.39
-        },
-        {
-          "name": "Bharti Hexacom Limited",
-          "weight": 1.06
-        },
-        {
-          "name": "Page Industries Limited",
-          "weight": 0.83
-        }
-      ],
-      "scope": "digital_factsheet_named_holdings",
-      "complete": false,
-      "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
-      "source_sha256": "f11c2bd4b4bff70ac732275bff83d24aeb351893f94951cbfda852a097b809e5",
-      "source_content_type": "text/html; charset=UTF-8",
-      "observed_at": "2026-10-10T22:00:26+00:00",
       "amc": "ITI Mutual Fund",
-      "current": true,
-      "freshness_status": "current"
+      "status": "unavailable",
+      "as_of": null,
+      "positions_observed": 0,
+      "scope": null,
+      "complete": false,
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Invesco India Mid Cap Fund",
       "amc": "Invesco Mutual Fund",
       "status": "recovered",
-      "sheet": "Mid cap  Fund",
-      "as_of": "2026-08-31",
-      "positions_observed": 43,
+      "sheet": "Midcap  Fund",
+      "as_of": "2026-09-30",
+      "positions_observed": 45,
       "complete": true,
       "unknown_rows": [],
-      "aum": 15905.311,
+      "aum": 15748.8276,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0",
-      "source_title": "Complete monthly holdings 08/26",
-      "source_sha256": "7940a64e15b08842147fe16320c143a02fec6033617c305a64c92113d0649bbe",
+      "source": "https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/invesco-india-midcap-fund_sep_2026_equity.xlsx?sfvrsn=91a49ec2_0",
+      "source_title": "Complete monthly holdings 09/26",
+      "source_sha256": "d88950de44a8935f4a07f8922c39b62b5d5c3951981dbbb53bcb23080e2cc804",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:02:03+00:00",
+      "observed_at": "2026-10-11T22:26:08+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -690,20 +270,20 @@
       "family": "JM Mid Cap Fund",
       "amc": "JM Financial Mutual Fund",
       "status": "recovered",
-      "sheet": "JM Mid cap Fund",
-      "as_of": "2026-08-31",
-      "positions_observed": 72,
+      "sheet": "JM Midcap Fund",
+      "as_of": "2026-09-30",
+      "positions_observed": 73,
       "complete": false,
       "unknown_rows": [
-        "CCIL"
+        "The Clearing Corporation of India Ltd. 01-OCT-2026"
       ],
-      "aum": 1360.291815,
+      "aum": 1303.387867,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Aug%2031,%202026.xlsx",
-      "source_title": "Monthly Portfolio - JM Mid cap Fund - Aug 31, 2026",
-      "source_sha256": "62ed2137ffc60765256abaffff76179aae95af5007e1ef3d00932998eee6e38d",
+      "source": "https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Sep%2030,%202026.xlsx",
+      "source_title": "Monthly Portfolio - JM Mid cap Fund - Sep 30, 2026",
+      "source_sha256": "5419ba89b2666921cacf356f113decbb64c97c357ea3a57794f651838006185a",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:01:58+00:00",
+      "observed_at": "2026-10-11T22:26:05+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -734,382 +314,6 @@
     {
       "family": "Mahindra Manulife Mid Cap Fund",
       "amc": "Mahindra Manulife Mutual Fund",
-      "status": "recovered",
-      "as_of": "2026-08-31",
-      "positions_observed": 59,
-      "positions": [
-        {
-          "name": "UNO Minda Limited",
-          "weight": 2.03,
-          "sector": "Automobile And Auto Components",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Tube Investments of India Limited",
-          "weight": 1.84,
-          "sector": "Automobile And Auto Components",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Belrise Industries Ltd.",
-          "weight": 1.75,
-          "sector": "Automobile And Auto Components",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Minda Corporation Limited",
-          "weight": 1.4,
-          "sector": "Automobile And Auto Components",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "CEAT Limited",
-          "weight": 1.36,
-          "sector": "Automobile And Auto Components",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Schaeffler India Limited",
-          "weight": 1.0,
-          "sector": "Automobile And Auto Components",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "KEI Industries Limited",
-          "weight": 2.56,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "AIA Engineering Limited",
-          "weight": 2.04,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Cochin Shipyard Limited",
-          "weight": 2.0,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "APL Apollo Tubes Limited",
-          "weight": 1.93,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "GE Vernova T&D India Limited",
-          "weight": 1.76,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Astral Limited",
-          "weight": 1.71,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Triveni Turbine Limited",
-          "weight": 1.36,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Elecon Engineering Company Limited",
-          "weight": 1.06,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Kirloskar Brothers Limited",
-          "weight": 0.94,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Garden Reach Shipbuilders & Engineers Limited",
-          "weight": 0.87,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Carborundum Universal Limited",
-          "weight": 0.66,
-          "sector": "Capital Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "SRF Limited",
-          "weight": 1.63,
-          "sector": "Chemicals",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Solar Industries India Limited",
-          "weight": 1.47,
-          "sector": "Chemicals",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Larsen & Toubro Limited",
-          "weight": 1.48,
-          "sector": "Construction",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "KEC International Limited",
-          "weight": 0.96,
-          "sector": "Construction",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "JK Cement Limited",
-          "weight": 1.74,
-          "sector": "Construction Materials",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Dalmia Bharat Limited",
-          "weight": 0.81,
-          "sector": "Construction Materials",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Blue Star Limited",
-          "weight": 1.59,
-          "sector": "Consumer Durables",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Kajaria Ceramics Limited",
-          "weight": 0.88,
-          "sector": "Consumer Durables",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "LG Electronics India Ltd",
-          "weight": 0.81,
-          "sector": "Consumer Durables",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "ITC Hotels Limited",
-          "weight": 0.85,
-          "sector": "Consumer Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Radico Khaitan Limited",
-          "weight": 1.93,
-          "sector": "Fast Moving Consumer Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Marico Limited",
-          "weight": 1.9,
-          "sector": "Fast Moving Consumer Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Varun Beverages Limited",
-          "weight": 1.19,
-          "sector": "Fast Moving Consumer Goods",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "The Federal Bank Limited",
-          "weight": 3.6,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "IndusInd Bank Limited",
-          "weight": 3.37,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Aditya Birla Capital Limited",
-          "weight": 2.81,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "L&T Finance Limited",
-          "weight": 2.79,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Nippon Life India Asset Management Limited",
-          "weight": 2.53,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "PB Fintech Limited",
-          "weight": 2.52,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "IDFC First Bank Limited",
-          "weight": 2.13,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Max Financial Services Limited",
-          "weight": 2.05,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Bank of Maharashtra",
-          "weight": 2.0,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Karur Vysya Bank Limited",
-          "weight": 1.64,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "360 One WAM Limited",
-          "weight": 1.54,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Shriram Finance Limited",
-          "weight": 1.45,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Equitas Small Finance Bank Limited",
-          "weight": 1.37,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "SBI Cards and Payment Services Limited",
-          "weight": 0.99,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Piramal Finance Limited",
-          "weight": 0.27,
-          "sector": "Financial Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Glenmark Pharmaceuticals Limited",
-          "weight": 2.59,
-          "sector": "Healthcare",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Anthem Biosciences Limited",
-          "weight": 2.1,
-          "sector": "Healthcare",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Fortis Healthcare Limited",
-          "weight": 2.09,
-          "sector": "Healthcare",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Biocon Limited",
-          "weight": 1.71,
-          "sector": "Healthcare",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Aster DM Quality Care Limited",
-          "weight": 1.21,
-          "sector": "Healthcare",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Coforge Limited",
-          "weight": 2.81,
-          "sector": "Information Technology",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Mphasis Limited",
-          "weight": 1.69,
-          "sector": "Information Technology",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "NMDC Limited",
-          "weight": 1.32,
-          "sector": "Metals & Mining",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Vedanta Aluminium Metal Limited",
-          "weight": 0.46,
-          "sector": "Metals & Mining",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "JSW Energy Limited",
-          "weight": 1.9,
-          "sector": "Power",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Godrej Properties Limited",
-          "weight": 1.4,
-          "sector": "Realty",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "JSW Infrastructure Ltd",
-          "weight": 1.68,
-          "sector": "Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Container Corporation of India Limited",
-          "weight": 0.99,
-          "sector": "Services",
-          "asset_type": "Equity"
-        },
-        {
-          "name": "Bharti Hexacom Limited",
-          "weight": 1.19,
-          "sector": "Telecommunication",
-          "asset_type": "Equity"
-        }
-      ],
-      "complete": false,
-      "scope": "factsheet_equity_only",
-      "completeness_note": "Sector and equity subtotals reconcile; non-equity assets are excluded.",
-      "equity_weight_sum": 97.71,
-      "sectors_checked": 16,
-      "source": "https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html",
-      "source_sha256": "53374413ff5f8e68e1a009cf3ce80517707d232348dd3d6c36a80bc8a58ab640",
-      "source_content_type": "text/html",
-      "parser_version": "mahindra-midcap-issuer-rows-v2",
-      "validation_version": "sector-equity-reconciliation-v1",
-      "observed_at": "2026-10-10T22:01:59+00:00",
-      "current": true,
-      "freshness_status": "current"
-    },
-    {
-      "family": "Mirae Asset Midcap Fund",
-      "amc": "Mirae Asset Mutual Fund",
       "status": "unavailable",
       "as_of": null,
       "positions_observed": 0,
@@ -1120,25 +324,35 @@
       "freshness_status": "unavailable"
     },
     {
-      "family": "Motilal Oswal Midcap Fund",
-      "amc": "Motilal Oswal Mutual Fund",
+      "family": "Mirae Asset Midcap Fund",
+      "amc": "Mirae Asset Mutual Fund",
       "status": "recovered",
-      "sheet": "YO07",
-      "as_of": "2026-08-31",
-      "positions_observed": 32,
+      "sheet": "MAMCF",
+      "as_of": "2026-09-30",
+      "positions_observed": 67,
       "complete": true,
       "unknown_rows": [],
-      "aum": 42851.5937,
+      "aum": 19538.5029,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.motilaloswalmf.com/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO07.xlsx",
-      "source_sha256": "349eadc5955f05b53a483f55677f9f018640ab14724ca7727a7322995d45a36a",
+      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_sept2026.xlsx",
+      "source_title": "Portfolio Details as on 30th September 2026 for Mirae Asset Midcap Fund",
+      "source_sha256": "d3b5e255c06d20654facf373dc387c50cf4a18e8d32bfe874cc64845bdf01c3d",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "discovery_source": "https://www.motilaloswalmf.com/mutual-funds/motilal-oswal-midcap-fund",
-      "discovery_source_sha256": "1cb05fc655e08f54a5af20bb4dd2542ffe49a61792782662885813bfd0912f90",
-      "discovery_source_content_type": "text/html; charset=utf-8",
-      "observed_at": "2026-10-10T22:02:12+00:00",
+      "observed_at": "2026-10-11T22:25:58+00:00",
       "current": true,
       "freshness_status": "current"
+    },
+    {
+      "family": "Motilal Oswal Midcap Fund",
+      "amc": "Motilal Oswal Mutual Fund",
+      "status": "unavailable",
+      "as_of": null,
+      "positions_observed": 0,
+      "scope": null,
+      "complete": false,
+      "source": null,
+      "current": false,
+      "freshness_status": "unavailable"
     },
     {
       "family": "Nippon India Growth Mid Cap Fund",
@@ -1157,19 +371,19 @@
       "amc": "PGIM India Mutual Fund",
       "status": "recovered",
       "sheet": "Mid Cap",
-      "as_of": "2026-08-31",
-      "positions_observed": 109,
+      "as_of": "2026-09-30",
+      "positions_observed": 105,
       "complete": false,
       "unknown_rows": [
         "Clearing Corporation of India Ltd."
       ],
-      "aum": 11217.6728,
+      "aum": 10537.3091,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx",
-      "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
-      "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
+      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Sep 2026.xlsx",
+      "source_title": "PGIM INDIA MIDCAP FUND Sep 2026",
+      "source_sha256": "f55d89942a15f65c2b99549332c7ebf6c2ef9b00d0c56fd454f71f256c73af47",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:01:49+00:00",
+      "observed_at": "2026-10-11T22:25:55+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1190,35 +404,161 @@
       "amc": "SBI Mutual Fund",
       "status": "recovered",
       "sheet": "SMIDCAP",
-      "as_of": "2026-08-31",
-      "positions_observed": 61,
+      "as_of": "2026-09-30",
+      "positions_observed": 59,
       "complete": false,
       "unknown_rows": [
-        "Allied Blenders And Distillers Ltd.",
         "Manpasand Beverages Ltd.",
         "Margin amount for Derivative positions"
       ],
-      "aum": 24518.3185,
+      "aum": 23282.2038,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2",
+      "source": "https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---september-2026.xlsx?sfvrsn=411c2cc4_2",
       "source_title": "Download",
-      "source_sha256": "aeb18f5ac6dc36050f65c0d2fa1aee534c0d756f0a2f30004b322d34dfea9d19",
+      "source_sha256": "4a16f50a694178f9470eb2391c1e40cf57a42a991547a8d06188e5e4db119585",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:01:30+00:00",
+      "observed_at": "2026-10-11T22:25:35+00:00",
       "current": true,
       "freshness_status": "current"
     },
     {
       "family": "Samco Mid Cap Fund",
       "amc": "Samco Mutual Fund",
-      "status": "unavailable",
-      "as_of": null,
-      "positions_observed": 0,
-      "scope": null,
+      "status": "recovered",
+      "as_of": "2026-09-30",
+      "positions_observed": 30,
+      "positions": [
+        {
+          "name": "National Aluminium Company Limited",
+          "weight": 4.52
+        },
+        {
+          "name": "Laurus Labs Limited",
+          "weight": 4.48
+        },
+        {
+          "name": "Apar Industries Limited",
+          "weight": 3.94
+        },
+        {
+          "name": "Bank of Maharashtra",
+          "weight": 3.55
+        },
+        {
+          "name": "Aditya Birla Capital Limited",
+          "weight": 3.53
+        },
+        {
+          "name": "The Federal Bank Limited",
+          "weight": 3.52
+        },
+        {
+          "name": "L&T Finance Limited",
+          "weight": 3.29
+        },
+        {
+          "name": "Multi Commodity Exchange of India Limited",
+          "weight": 3.16
+        },
+        {
+          "name": "GE Vernova T&D India Limited",
+          "weight": 3.13
+        },
+        {
+          "name": "AU Small Finance Bank Limited",
+          "weight": 3.11
+        },
+        {
+          "name": "Indian Bank",
+          "weight": 3.08
+        },
+        {
+          "name": "FSN E-Commerce Ventures Limited",
+          "weight": 2.88
+        },
+        {
+          "name": "Aurobindo Pharma Limited",
+          "weight": 2.71
+        },
+        {
+          "name": "Bank of India",
+          "weight": 2.66
+        },
+        {
+          "name": "BSE Limited",
+          "weight": 2.63
+        },
+        {
+          "name": "Bharat Heavy Electricals Limited",
+          "weight": 2.56
+        },
+        {
+          "name": "Lloyds Metals And Energy Limited",
+          "weight": 2.52
+        },
+        {
+          "name": "Hitachi Energy India Limited",
+          "weight": 2.49
+        },
+        {
+          "name": "One 97 Communications Limited",
+          "weight": 2.39
+        },
+        {
+          "name": "NMDC Limited",
+          "weight": 2.34
+        },
+        {
+          "name": "Vodafone Idea Limited",
+          "weight": 2.29
+        },
+        {
+          "name": "Hindustan Petroleum Corporation Limited",
+          "weight": 2.23
+        },
+        {
+          "name": "Bharat Forge Limited",
+          "weight": 2.09
+        },
+        {
+          "name": "Oracle Financial Services Software Limited",
+          "weight": 2.07
+        },
+        {
+          "name": "General Insurance Corporation of India",
+          "weight": 2.06
+        },
+        {
+          "name": "NLC India Limited",
+          "weight": 1.78
+        },
+        {
+          "name": "Thermax Limited",
+          "weight": 1.62
+        },
+        {
+          "name": "Radico Khaitan Limited",
+          "weight": 1.48
+        },
+        {
+          "name": "LIC Housing Finance Limited",
+          "weight": 1.4
+        },
+        {
+          "name": "National Stock Exchange Of India Ltd",
+          "weight": 0.51
+        }
+      ],
       "complete": false,
-      "source": null,
-      "current": false,
-      "freshness_status": "unavailable"
+      "scope": "publisher_all_holdings_html",
+      "completeness_note": "Publisher labels the table All Holdings; retained as partial until structured 100% reconciliation is independently proven.",
+      "equity_weight_sum": 80.02,
+      "source": "https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg",
+      "source_sha256": "8a941272370dc2087dadac50485578b23629ac00cbe8a35783c301941491d830",
+      "source_content_type": "text/html; charset=UTF-8",
+      "observed_at": "2026-10-11T22:26:14+00:00",
+      "current": true,
+      "freshness_status": "current"
     },
     {
       "family": "Sundaram Mid Cap Fund",
@@ -1249,21 +589,21 @@
       "amc": "Tata Mutual Fund",
       "status": "recovered",
       "sheet": "TINR",
-      "as_of": "2026-08-31",
-      "positions_observed": 61,
+      "as_of": "2026-09-30",
+      "positions_observed": 58,
       "complete": false,
       "unknown_rows": [
         "I) REPO",
-        "NET CURRENT LIABILITIES",
+        "CASH / NET CURRENT ASSET",
         "NET ASSETS"
       ],
       "aum": null,
       "scope": "structured_monthly_portfolio",
-      "source": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx",
-      "source_title": "Portfolio as on 31st August, 2026",
-      "source_sha256": "40de15ff002fbfa93a7bbc9e54bbb4f0c547e643cd1b6779dd3bf33011457f37",
+      "source": "https://betacms.tatamutualfund.com/system/files/2026-10/Monthly%20Portfolio%20as%20on%2030th%20September%202026.xlsx",
+      "source_title": "Portfolio as on 30th September, 2026",
+      "source_sha256": "cccd23b5e9c787fda08c8cbeeaa8a0bf8823e4f467632d94c5bdf9b9d73e7ef2",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:01:32+00:00",
+      "observed_at": "2026-10-11T22:25:40+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1295,84 +635,63 @@
       "family": "UTI - Mid Cap Fund",
       "amc": "UTI Mutual Fund",
       "status": "recovered",
-      "as_of": "2026-08-31",
-      "positions_observed": 80,
+      "as_of": "2026-09-30",
+      "positions_observed": 81,
       "positions": [
         {
           "isin": "INE591G01025",
           "name": "COFORGE LTD",
           "sector": "IT - Software",
-          "weight": 3.26,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE417T01026",
-          "name": "PB FINTECH LTD",
-          "sector": "Financial Technology (Fintech)",
-          "weight": 3.08,
+          "weight": 3.01,
           "asset_type": "Equity"
         },
         {
           "isin": "INE949L01017",
           "name": "AU SMALL FINANCE BANK LTD",
           "sector": "Banks",
-          "weight": 2.76,
+          "weight": 2.75,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE702C01027",
-          "name": "APL APOLLO TUBES LTD",
-          "sector": "Industrial Products",
-          "weight": 2.43,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE158A01026",
-          "name": "HERO MOTOCORP LTD.",
-          "sector": "Automobiles",
-          "weight": 2.17,
+          "isin": "INE472A01039",
+          "name": "BLUE STAR LIMITED",
+          "sector": "Consumer Durables",
+          "weight": 2.55,
           "asset_type": "Equity"
         },
         {
           "isin": "INE406A01037",
           "name": "AUROBINDO PHARMA LTD.",
           "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 2.15,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE171A01029",
-          "name": "FEDERAL BANK LTD.",
-          "sector": "Banks",
-          "weight": 2.08,
+          "weight": 2.24,
           "asset_type": "Equity"
         },
         {
           "isin": "INE031B01049",
           "name": "AJANTA PHARMA LTD.",
           "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 2.07,
+          "weight": 2.15,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE455K01017",
-          "name": "POLYCAB INDIA LTD",
+          "isin": "INE702C01027",
+          "name": "APL APOLLO TUBES LTD",
           "sector": "Industrial Products",
-          "weight": 2.07,
+          "weight": 2.11,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE721A01047",
-          "name": "SHRIRAM FINANCE LTD",
-          "sector": "Finance",
-          "weight": 2.0,
+          "isin": "INE171A01029",
+          "name": "FEDERAL BANK LTD.",
+          "sector": "Banks",
+          "weight": 1.98,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE180A01020",
-          "name": "MAX FINANCIAL SERVICES LTD.",
-          "sector": "Insurance",
-          "weight": 1.97,
+          "isin": "INE211B01039",
+          "name": "PHOENIX MILLS LTD",
+          "sector": "Realty",
+          "weight": 1.95,
           "asset_type": "Equity"
         },
         {
@@ -1383,199 +702,213 @@
           "asset_type": "Equity"
         },
         {
-          "isin": "INE040H01021",
-          "name": "SUZLON ENERGY LTD.",
-          "sector": "Electrical Equipment",
-          "weight": 1.89,
+          "isin": "INE721A01047",
+          "name": "SHRIRAM FINANCE LTD",
+          "sector": "Finance",
+          "weight": 1.92,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE211B01039",
-          "name": "PHOENIX MILLS LTD",
-          "sector": "Realty",
-          "weight": 1.78,
+          "isin": "INE180A01020",
+          "name": "MAX FINANCIAL SERVICES LTD.",
+          "sector": "Insurance",
+          "weight": 1.9,
           "asset_type": "Equity"
         },
         {
           "isin": "INE257A01026",
           "name": "BHARAT HEAVY ELECTRICALS LTD.",
           "sector": "Electrical Equipment",
+          "weight": 1.78,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE158A01026",
+          "name": "HERO MOTOCORP LTD.",
+          "sector": "Automobiles",
           "weight": 1.76,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE040H01021",
+          "name": "SUZLON ENERGY LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.69,
           "asset_type": "Equity"
         },
         {
           "isin": "INE823G01014",
           "name": "J.K.CEMENT LTD",
           "sector": "Cement & Cement Products",
-          "weight": 1.56,
+          "weight": 1.66,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE00H001014",
-          "name": "SWIGGY LTD",
-          "sector": "Retailing",
-          "weight": 1.54,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE114A01011",
-          "name": "STEEL AUTHORITY OF INDIA LTD.",
-          "sector": "Ferrous Metals",
-          "weight": 1.48,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE466L01038",
-          "name": "360 ONE WAM LIMITED",
-          "sector": "Capital Markets",
-          "weight": 1.47,
+          "isin": "INE417T01026",
+          "name": "PB FINTECH LTD",
+          "sector": "Financial Technology (Fintech)",
+          "weight": 1.61,
           "asset_type": "Equity"
         },
         {
           "isin": "INE513A01022",
           "name": "SCHAEFFLER INDIA LTD",
           "sector": "Auto Components",
-          "weight": 1.44,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE262H01021",
-          "name": "PERSISTENT SYSTEMS LTD.",
-          "sector": "IT - Software",
-          "weight": 1.42,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE343G01021",
-          "name": "BHARTI HEXACOM LTD",
-          "sector": "Telecom - Services",
-          "weight": 1.41,
+          "weight": 1.5,
           "asset_type": "Equity"
         },
         {
           "isin": "INE092T01019",
           "name": "IDFC FIRST BANK LTD",
           "sector": "Banks",
-          "weight": 1.41,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE540H01012",
-          "name": "VOLTAMP TRANSFORMERS LTD.",
-          "sector": "Electrical Equipment",
-          "weight": 1.41,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE562A01011",
-          "name": "INDIAN BANK",
-          "sector": "Banks",
-          "weight": 1.4,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE0CZ201020",
-          "name": "ANTHEM BIOSCIENCES LTD",
-          "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 1.4,
+          "weight": 1.49,
           "asset_type": "Equity"
         },
         {
           "isin": "INE813H01021",
           "name": "TORRENT POWER LTD.",
           "sector": "Power",
-          "weight": 1.33,
+          "weight": 1.46,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE472A01039",
-          "name": "BLUE STAR LIMITED",
-          "sector": "Consumer Durables",
-          "weight": 1.32,
+          "isin": "INE540H01012",
+          "name": "VOLTAMP TRANSFORMERS LTD.",
+          "sector": "Electrical Equipment",
+          "weight": 1.45,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE343G01021",
+          "name": "BHARTI HEXACOM LTD",
+          "sector": "Telecom - Services",
+          "weight": 1.45,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE262H01021",
+          "name": "PERSISTENT SYSTEMS LTD.",
+          "sector": "IT - Software",
+          "weight": 1.44,
           "asset_type": "Equity"
         },
         {
           "isin": "INE956O01016",
           "name": "LENSKART SOLUTIONS LTD",
           "sector": "Retailing",
-          "weight": 1.29,
+          "weight": 1.44,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE466L01038",
+          "name": "360 ONE WAM LIMITED",
+          "sector": "Capital Markets",
+          "weight": 1.43,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE562A01011",
+          "name": "INDIAN BANK",
+          "sector": "Banks",
+          "weight": 1.35,
           "asset_type": "Equity"
         },
         {
           "isin": "INE745G01043",
           "name": "MULTI COMMODITY EXCHANGE OF IN",
           "sector": "Capital Markets",
-          "weight": 1.29,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE118H01025",
-          "name": "BSE LTD",
-          "sector": "Capital Markets",
-          "weight": 1.28,
+          "weight": 1.34,
           "asset_type": "Equity"
         },
         {
           "isin": "INE674K01013",
           "name": "ADITYA BIRLA CAPITAL LTD",
           "sector": "Finance",
-          "weight": 1.28,
+          "weight": 1.31,
           "asset_type": "Equity"
         },
         {
           "isin": "INE913H01037",
           "name": "ENDURANCE TECHNOLOGIES LTD",
           "sector": "Auto Components",
-          "weight": 1.27,
+          "weight": 1.26,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE791I01019",
-          "name": "BRIGADE ENTERPRISES LTD.",
-          "sector": "Realty",
-          "weight": 1.2,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE647A01010",
-          "name": "SRF LTD.",
-          "sector": "Chemicals & Petrochemicals",
-          "weight": 1.2,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE176B01034",
-          "name": "HAVELLS INDIA LTD.",
-          "sector": "Consumer Durables",
-          "weight": 1.19,
+          "isin": "INE00H001014",
+          "name": "SWIGGY LTD",
+          "sector": "Retailing",
+          "weight": 1.26,
           "asset_type": "Equity"
         },
         {
           "isin": "INE536A01023",
           "name": "GRINDWELL NORTON LTD.",
           "sector": "Industrial Products",
+          "weight": 1.25,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE647A01010",
+          "name": "SRF LTD.",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 1.25,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE326A01037",
+          "name": "LUPIN LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.23,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE114A01011",
+          "name": "STEEL AUTHORITY OF INDIA LTD.",
+          "sector": "Ferrous Metals",
+          "weight": 1.22,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE982J01020",
+          "name": "ONE 97 COMMUNICATIONS LTD",
+          "sector": "Financial Technology (Fintech)",
+          "weight": 1.2,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE068V01023",
+          "name": "GLAND PHARMA LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
           "weight": 1.19,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE208A01029",
-          "name": "ASHOK LEYLAND LTD",
-          "sector": "Agricultural, Commercial & Construction Vehicles",
-          "weight": 1.17,
+          "isin": "INE571A01038",
+          "name": "IPCA LABORATORIES LTD.",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.16,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE0CZ201020",
+          "name": "ANTHEM BIOSCIENCES LTD",
+          "sector": "Pharmaceuticals & Biotechnology",
+          "weight": 1.15,
           "asset_type": "Equity"
         },
         {
           "isin": "INE474Q01031",
           "name": "GLOBAL HEALTH LTD.",
           "sector": "Healthcare Services",
-          "weight": 1.16,
+          "weight": 1.15,
           "asset_type": "Unclassified"
         },
         {
-          "isin": "INE356A01018",
-          "name": "MPHASIS LTD",
-          "sector": "IT - Software",
-          "weight": 1.14,
+          "isin": "INE791I01019",
+          "name": "BRIGADE ENTERPRISES LTD.",
+          "sector": "Realty",
+          "weight": 1.13,
           "asset_type": "Equity"
         },
         {
@@ -1586,185 +919,199 @@
           "asset_type": "Equity"
         },
         {
-          "isin": "INE068V01023",
-          "name": "GLAND PHARMA LTD.",
-          "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 1.11,
+          "isin": "INE220G01021",
+          "name": "JINDAL STAINLESS LTD.",
+          "sector": "Ferrous Metals",
+          "weight": 1.13,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE343H01029",
-          "name": "SOLAR INDUSTRIES INDIA LTD.",
-          "sector": "Chemicals & Petrochemicals",
-          "weight": 1.02,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE121A01024",
-          "name": "CHOLAMANDALAM INVESTMENT & FIN",
-          "sector": "Finance",
-          "weight": 1.02,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE600L01024",
-          "name": "DR LAL PATHLABS LTD.",
-          "sector": "Healthcare Services",
-          "weight": 1.01,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE325A01013",
-          "name": "TIMKEN INDIA LTD.",
-          "sector": "Industrial Products",
-          "weight": 1.01,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE572E01012",
-          "name": "PNB HOUSING FINANCE LTD.",
-          "sector": "Finance",
-          "weight": 1.0,
+          "isin": "INE208A01029",
+          "name": "ASHOK LEYLAND LTD",
+          "sector": "Agricultural, Commercial & Construction Vehicles",
+          "weight": 1.13,
           "asset_type": "Equity"
         },
         {
           "isin": "INE01EA01019",
           "name": "VISHAL MEGA MART LTD",
           "sector": "Retailing",
-          "weight": 0.99,
+          "weight": 1.12,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE220G01021",
-          "name": "JINDAL STAINLESS LTD.",
-          "sector": "Ferrous Metals",
-          "weight": 0.99,
+          "isin": "INE600L01024",
+          "name": "DR LAL PATHLABS LTD.",
+          "sector": "Healthcare Services",
+          "weight": 1.12,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE006I01046",
-          "name": "ASTRAL LTD.",
+          "isin": "INE325A01013",
+          "name": "TIMKEN INDIA LTD.",
           "sector": "Industrial Products",
-          "weight": 0.99,
+          "weight": 1.08,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE347G01014",
-          "name": "PETRONET LNG LTD.",
-          "sector": "Gas",
-          "weight": 0.99,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE048G01026",
-          "name": "NAVIN FLUORINE INTERNATIONAL L",
-          "sector": "Chemicals & Petrochemicals",
-          "weight": 0.98,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE463A01038",
-          "name": "BERGER PAINTS INDIA LTD.",
-          "sector": "Consumer Durables",
-          "weight": 0.97,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE263A01024",
-          "name": "BHARAT ELECTRONICS LTD.",
-          "sector": "Aerospace & Defense",
-          "weight": 0.97,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE036D01028",
-          "name": "KARUR VYSYA BANK LTD.",
-          "sector": "Banks",
-          "weight": 0.96,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE741K01010",
-          "name": "CREDITACCESS GRAMEEN LTD",
+          "isin": "INE572E01012",
+          "name": "PNB HOUSING FINANCE LTD.",
           "sector": "Finance",
-          "weight": 0.96,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE324D01010",
-          "name": "LG ELECTRONICS INDIA LTD",
-          "sector": "Consumer Durables",
-          "weight": 0.93,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE169A01031",
-          "name": "COROMANDEL INTERNATIONAL LTD.",
-          "sector": "Fertilizers & Agrochemicals",
-          "weight": 0.93,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE148O01028",
-          "name": "DELHIVERY LTD.",
-          "sector": "Transport Services",
-          "weight": 0.93,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE217B01036",
-          "name": "KAJARIA CERAMICS LTD.",
-          "sector": "Consumer Durables",
-          "weight": 0.92,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE326A01037",
-          "name": "LUPIN LTD.",
-          "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 0.92,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE379A01028",
-          "name": "ITC HOTELS LTD.",
-          "sector": "Leisure Services",
-          "weight": 0.88,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE935A01035",
-          "name": "GLENMARK PHARMACEUTICALS LTD.",
-          "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 0.87,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE182A01018",
-          "name": "PFIZER LIMITED",
-          "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 0.86,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE974X01010",
-          "name": "TUBE INVESTMENTS OF INDIA LTD",
-          "sector": "Auto Components",
-          "weight": 0.71,
+          "weight": 1.04,
           "asset_type": "Equity"
         },
         {
           "isin": "INE127D01025",
           "name": "HDFC ASSET MANAGEMENT COMPANY",
           "sector": "Capital Markets",
-          "weight": 0.69,
+          "weight": 1.03,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE455K01017",
+          "name": "POLYCAB INDIA LTD",
+          "sector": "Industrial Products",
+          "weight": 1.02,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE324D01010",
+          "name": "LG ELECTRONICS INDIA LTD",
+          "sector": "Consumer Durables",
+          "weight": 1.02,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE347G01014",
+          "name": "PETRONET LNG LTD.",
+          "sector": "Gas",
+          "weight": 1.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE048G01026",
+          "name": "NAVIN FLUORINE INTERNATIONAL L",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 1.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE151A01013",
+          "name": "TATA COMMUNICATIONS LTD.",
+          "sector": "Telecom - Services",
+          "weight": 1.0,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE379A01028",
+          "name": "ITC HOTELS LTD.",
+          "sector": "Leisure Services",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE741K01010",
+          "name": "CREDITACCESS GRAMEEN LTD",
+          "sector": "Finance",
+          "weight": 0.99,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE217B01036",
+          "name": "KAJARIA CERAMICS LTD.",
+          "sector": "Consumer Durables",
+          "weight": 0.98,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE263A01024",
+          "name": "BHARAT ELECTRONICS LTD.",
+          "sector": "Aerospace & Defense",
+          "weight": 0.98,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE036D01028",
+          "name": "KARUR VYSYA BANK LTD.",
+          "sector": "Banks",
+          "weight": 0.97,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE463A01038",
+          "name": "BERGER PAINTS INDIA LTD.",
+          "sector": "Consumer Durables",
+          "weight": 0.96,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE006I01046",
+          "name": "ASTRAL LTD.",
+          "sector": "Industrial Products",
+          "weight": 0.95,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE121A01024",
+          "name": "CHOLAMANDALAM INVESTMENT & FIN",
+          "sector": "Finance",
+          "weight": 0.95,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE169A01031",
+          "name": "COROMANDEL INTERNATIONAL LTD.",
+          "sector": "Fertilizers & Agrochemicals",
+          "weight": 0.95,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE148O01028",
+          "name": "DELHIVERY LTD.",
+          "sector": "Transport Services",
+          "weight": 0.89,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE787D01026",
+          "name": "BALKRISHNA INDUSTRIES LTD.",
+          "sector": "Auto Components",
+          "weight": 0.89,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE356A01018",
+          "name": "MPHASIS LTD",
+          "sector": "IT - Software",
+          "weight": 0.89,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE192A01025",
+          "name": "TATA CONSUMER PRODUCTS LTD",
+          "sector": "Agricultural Food & other Products",
+          "weight": 0.8,
           "asset_type": "Equity"
         },
         {
           "isin": "INE0VDM01015",
           "name": "MEESHO LTD",
           "sector": "Retailing",
-          "weight": 0.68,
+          "weight": 0.76,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE343H01029",
+          "name": "SOLAR INDUSTRIES INDIA LTD.",
+          "sector": "Chemicals & Petrochemicals",
+          "weight": 0.74,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE342J01019",
+          "name": "ZF COMMERCIAL VEHICLE CONTROL SYSTEMS INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.69,
           "asset_type": "Equity"
         },
         {
@@ -1775,6 +1122,13 @@
           "asset_type": "Equity"
         },
         {
+          "isin": "INE0HOQ01053",
+          "name": "BILLIONBRAINS GARAGE VENTURES LTD",
+          "sector": "Capital Markets",
+          "weight": 0.65,
+          "asset_type": "Equity"
+        },
+        {
           "isin": "INE152M01016",
           "name": "TRIVENI TURBINE LTD",
           "sector": "Electrical Equipment",
@@ -1782,96 +1136,89 @@
           "asset_type": "Equity"
         },
         {
-          "isin": "INE342J01019",
-          "name": "ZF COMMERCIAL VEHICLE CONTROL SYSTEMS INDIA LTD",
-          "sector": "Auto Components",
-          "weight": 0.63,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE787D01026",
-          "name": "BALKRISHNA INDUSTRIES LTD.",
-          "sector": "Auto Components",
-          "weight": 0.63,
-          "asset_type": "Equity"
-        },
-        {
           "isin": "INE317I01021",
           "name": "METRO BRANDS LTD",
           "sector": "Consumer Durables",
-          "weight": 0.63,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE00E101023",
-          "name": "BIKAJI FOODS INTERNATIONAL LTD.",
-          "sector": "Food Products",
-          "weight": 0.59,
-          "asset_type": "Equity"
-        },
-        {
-          "isin": "INE459N01021",
-          "name": "MANIPAL HEALTH ENTERPRISES LIMITED",
-          "sector": "Healthcare Services",
-          "weight": 0.53,
+          "weight": 0.64,
           "asset_type": "Equity"
         },
         {
           "isin": "INE146L01010",
           "name": "KIRLOSKAR OIL ENGINES LTD",
           "sector": "Industrial Products",
-          "weight": 0.51,
+          "weight": 0.6,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE0HOQ01053",
-          "name": "BILLIONBRAINS GARAGE VENTURES LTD",
-          "sector": "Capital Markets",
-          "weight": 0.45,
+          "isin": "INE00E101023",
+          "name": "BIKAJI FOODS INTERNATIONAL LTD.",
+          "sector": "Food Products",
+          "weight": 0.53,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE571A01038",
-          "name": "IPCA LABORATORIES LTD.",
+          "isin": "INE459N01021",
+          "name": "MANIPAL HEALTH ENTERPRISES LIMITED",
+          "sector": "Healthcare Services",
+          "weight": 0.52,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE974X01010",
+          "name": "TUBE INVESTMENTS OF INDIA LTD",
+          "sector": "Auto Components",
+          "weight": 0.5,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE089A01031",
+          "name": "DR REDDYS LABORATORIES LTD.",
           "sector": "Pharmaceuticals & Biotechnology",
-          "weight": 0.32,
+          "weight": 0.48,
           "asset_type": "Equity"
         },
         {
-          "isin": "INE151A01013",
-          "name": "TATA COMMUNICATIONS LTD.",
-          "sector": "Telecom - Services",
-          "weight": 0.06,
+          "isin": "INE118H01025",
+          "name": "BSE LTD",
+          "sector": "Capital Markets",
+          "weight": 0.1,
+          "asset_type": "Equity"
+        },
+        {
+          "isin": "INE1TUG01013",
+          "name": "GSPL Transmission Limited",
+          "sector": "Gas",
+          "weight": 0.1,
           "asset_type": "Equity"
         },
         {
           "isin": "INE041025011",
           "name": "REIT- EMBASSY OFFICE PARKS",
           "sector": "-",
-          "weight": 0.51,
+          "weight": 0.79,
           "asset_type": "Unclassified"
         },
         {
           "isin": "INE2OVN25015",
           "name": "REIT - BAGMANE PRIME OFFICE",
           "sector": "-",
-          "weight": 0.5,
+          "weight": 0.55,
           "asset_type": "Unclassified"
         }
       ],
       "complete": false,
       "unknown_rows": [],
-      "aum": 12795.441,
+      "aum": 11919.6936,
       "published_scheme_name": "UTI - Mid Cap Fund",
       "sheet": "EXPOSURE",
       "scope": "structured_monthly_portfolio",
-      "source": "https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9",
-      "source_title": "Consolidated Portfolio August 2026",
-      "zip_entry": "Sebi Exposure as on 31 Aug 2026_final_REVISED.xlsx",
-      "source_sha256": "8e938ad0ab0fd14f315dc8f8657e718e13170039cdb36aec9864c5c5d8ee90b4",
-      "workbook_sha256": "bc3e8ed96a0fdf477387da8efbacc29820c265c699e864d7bfaef0a9c5838555",
+      "source": "https://d3ce1o48hc5oli.cloudfront.net/static/generic-zip/Oct-26/FW__UTI_MF_SCHEME_PORTFOLIOS_-_30.09.2026_.zip",
+      "source_title": "Consolidated Portfolio September 2026",
+      "zip_entry": "Sebi Exposure as on 30 Sep 2026_FINAL.xlsx",
+      "source_sha256": "7ecacf6ffcd9d75005860cc1758ecb53a39022eefb49a53bf0d1d9eee3cf8db7",
+      "workbook_sha256": "5c7943a39f0565ef2a726502a66ba723e6cb1e08f11573805014c682fd12ebc1",
       "source_content_type": "application/zip",
-      "observed_at": "2026-10-10T22:01:36+00:00",
+      "observed_at": "2026-10-11T22:25:42+00:00",
       "current": true,
       "freshness_status": "current"
     },
@@ -1901,18 +1248,21 @@
     }
   ],
   "remaining_families": [
-    "Baroda BNP Paribas Mid Cap Fund",
+    "BANDHAN MID CAP FUND",
+    "BANK OF INDIA MID CAP FUND",
     "Canara Robeco Mid Cap Fund",
     "Edelweiss Mid Cap Fund",
     "Franklin India Mid Cap Fund",
     "HDFC Mid Cap Fund",
     "HSBC Midcap Fund",
+    "Helios Mid Cap Fund",
+    "ITI Mid Cap Fund",
     "Kotak Mid Cap Fund",
     "LIC MF Mid Cap Fund",
-    "Mirae Asset Midcap Fund",
+    "Mahindra Manulife Mid Cap Fund",
+    "Motilal Oswal Midcap Fund",
     "Nippon India Growth Mid Cap Fund",
     "Quant Mid Cap Fund",
-    "Samco Mid Cap Fund",
     "Sundaram Mid Cap Fund",
     "TRUSTMF MID CAP FUND",
     "Taurus Mid Cap Fund",
@@ -1932,26 +1282,20 @@
       "amc": "Kotak Mahindra Mutual Fund",
       "source": "https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html",
       "error": "First-party source does not contain the exact staged Mid Cap family identity",
-      "source_sha256": "fb4e5250c5453c0341c1526f393183ab4aae94d50ad5da2c71d46a8323b3169b",
-      "source_bytes": 15091,
+      "source_sha256": "bc1dc2f04185c9f477e8b3c2786ffbec89b58373a308c25febb69bda347fdb08",
+      "source_bytes": 15090,
       "source_content_type": "text/html; charset=UTF-8",
-      "source_observed_at": "2026-10-10T22:00:23+00:00",
+      "source_observed_at": "2026-10-11T22:24:29+00:00",
       "source_validation_stage": "family_identity",
       "source_body_retained": true,
       "source_body_encoding": "base64",
-      "source_body_base64": "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8dGl0bGU+UmFkd2FyZSBDYXB0Y2hhIFBhZ2U8L3RpdGxlPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEiPgo8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vY2FwdGNoYS5wZXJmZHJpdmUuY29tL2NhcHRjaGEtcHVibGljL2Nzcy9zaGllbGRzcXVhcmVfc3R5bGVzLm1pbi5jc3MiPgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgoJd2luZG93LlNTSlNJbnRlcm5hbCA9IDc5NDAzOwoKCXZhciBfX3V6ZGJtXzEgPSAiNWM5ZjYwODQtZTNiMi00NWQ2LWIxN2MtZmU3ZTViYzg5OGQ5IjsKCXZhciBfX3V6ZGJtXzIgPSAiTTJFeE5EVmtPVEV0WTNOc1ppMDBaR016TFdFNVpqZ3RPRGxtWm1NM01Ea3dZMkZtSkRZNExqSXlNQzQyTVM0eU1Eaz0iOwoJCgkoZnVuY3Rpb24odywgZCwgZSwgdSwgYywgZywgYSwgYil7CgkJd1siU1NKU0Nvbm5lY3Rvck9iaiJdID0gd1siU1NKU0Nvbm5lY3Rvck9iaiJdIHx8IHtzc19jaWQgOiBjLCBkb21haW5faW5mbzogZ307CgkJYSA9IGQuY3JlYXRlRWxlbWVudChlKTsKCQlhLmFzeW5jID0gdHJ1ZTsKCQlhLnNyYyA9IHU7CgkJYiA9IGQuZ2V0RWxlbWVudHNCeVRhZ05hbWUoZSlbMF07CgkJYi5wYXJlbnROb2RlLmluc2VydEJlZm9yZShhLCBiKTsKCX0pKHdpbmRvdyxkb2N1bWVudCwic2NyaXB0IiwiaHR0cHM6Ly9jZG4ucGVyZmRyaXZlLmNvbS9hcGVydHVyZS9hcGVydHVyZS5qcyIsImI4YzMiLCJhdXRvIik7Cjwvc2NyaXB0PgoKPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgpmdW5jdGlvbiBfMHgxNDdhKCl7dmFyIF8weDJlYzk3OT1bJ2VjYjVlMTAwZTVhOWEzZTdmNmQxZmQ5NzUxMjIxNTI4MicsJ21vdXNlbW92ZScsJ3RvR01UU3RyaW5nJywnMHhjdmQnLCcxOTc2NTcyaWdwV0JhJywndG91Y2hlcycsJzE5OTMyOTBhbU10YVknLCdibG9jaycsJzIxMjg0OTdyWHZ4RnUnLCdVZHI5SHZoWVV3JywnZ2V0VGltZScsJ3N0eWxlJywncGFyZW50RWxlbWVudCcsJzU4NzY5Mjhpa3RwWXYnLCc7XHgyMHBhdGg9LycsJzhRVlFvQ1InLCdoZWlnaHQnLCc2bUxjS1ZLJywnbW91c2V1cCcsJ2Nzc2wnLCdkaXYnLCdjbGFzc05hbWUnLCdFbnlmN01UY0JLJywnMjdMcXpzeFMnLCdjYmZjbCcsJ0RPTUNvbnRlbnRMb2FkZWQnLCdpbmRleE9mJywndGFnTmFtZScsJ2NoYXJDb2RlQXQnLCdkaXNwbGF5JywnOHRxd2lmVycsJ2NvbXBsZXRlJywnc3Vic3RyaW5nJywnaHNvbCcsJ3NzaScsJzExMTQzOTV0VUFQVWonLCdmbG9vcicsJ2NmX2lucHV0JywnY2JmbScsJ2xlbmd0aCcsJ2hpZGRlbicsJ291dGVySFRNTCcsJ2NiZmVyJywnbW91c2Vkb3duJywnc3BsaXQnLCdvcGFjaXR5JywnODM2MDRxdHJ3aUQnLCdpbnRlcmFjdGl2ZScsJzAwMDAwJywnY3NpbCcsJ3Zpc2libGUnLCd2YWx1ZScsJ3JhbmRvbScsJ3RvdWNobW92ZScsJ3RvU3RyaW5nJywndmJlJywndHJpbScsJ2NiZnQnLCdibGsnLCdsb2NhdGlvbicsJ2Nzb2wnLCdpaWQnLCdjbGllbnRZJywnam9pbicsJ2NoYW5nZWRUb3VjaGVzJywndmlzaWJpbGl0eScsJ0JkcjlIdmhZVXcnLCdVbnlmN01UY0JLJywnaGNhcHRjaGEnLCc7XHgyMGV4cGlyZXM9JywnMjY0Vk5KWlNTJywnMTg2ODM4U2doVWlOJywncXVlcnlTZWxlY3RvcicsJ3NwbGljZScsJ3JlcGxhY2UnLCdjYmYnLCdub3cnLCdnZXRFbGVtZW50c0J5VGFnTmFtZScsJ2hyZWYnLCdwdXNoJywnbWNsJywna2V5cycsJ2lmcmFtZScsJ2JvZHknLCdzcmMnLCdnZXRSZXNwb25zZScsJ2Nvb2tpZScsJ2hkbicsJ2dldEVsZW1lbnRCeUlkJywnYWRkRXZlbnRMaXN0ZW5lcicsJ3dpZHRoJ107XzB4MTQ3YT1mdW5jdGlvbigpe3JldHVybiBfMHgyZWM5Nzk7fTtyZXR1cm4gXzB4MTQ3YSgpO31mdW5jdGlvbiBfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpe3ZhciBfMHgxNDdhNmU9XzB4MTQ3YSgpO3JldHVybiBfMHgzMGQ4PWZ1bmN0aW9uKF8weDMwZDhkYSxfMHg1Mjg5MzYpe18weDMwZDhkYT1fMHgzMGQ4ZGEtMHhhNjt2YXIgXzB4NGU1ZDVjPV8weDE0N2E2ZVtfMHgzMGQ4ZGFdO3JldHVybiBfMHg0ZTVkNWM7fSxfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpO312YXIgXzB4MWYyNTVhPV8weDMwZDg7KGZ1bmN0aW9uKF8weGM1ZDU5MCxfMHgxZjM4YzEpe3ZhciBfMHg0OTRmNmY9XzB4MzBkOCxfMHg0MzNjZTE9XzB4YzVkNTkwKCk7d2hpbGUoISFbXSl7dHJ5e3ZhciBfMHg1NzJlNjk9cGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZGMpKS8weDEqKC1wYXJzZUludChfMHg0OTRmNmYoMHhiMykpLzB4MikrLXBhcnNlSW50KF8weDQ5NGY2ZigweGE2KSkvMHgzKigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjQpKS8weDQpK3BhcnNlSW50KF8weDQ5NGY2ZigweGI4KSkvMHg1K3BhcnNlSW50KF8weDQ5NGY2ZigweGZkKSkvMHg2Ky1wYXJzZUludChfMHg0OTRmNmYoMHhmOCkpLzB4NyoocGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZmYpKS8weDgpK3BhcnNlSW50KF8weDQ5NGY2ZigweGFjKSkvMHg5KigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjYpKS8weGEpKy1wYXJzZUludChfMHg0OTRmNmYoMHhkYikpLzB4YiooLXBhcnNlSW50KF8weDQ5NGY2ZigweGMzKSkvMHhjKTtpZihfMHg1NzJlNjk9PT1fMHgxZjM4YzEpYnJlYWs7ZWxzZSBfMHg0MzNjZTFbJ3B1c2gnXShfMHg0MzNjZTFbJ3NoaWZ0J10oKSk7fWNhdGNoKF8weDEyNjQxZSl7XzB4NDMzY2UxWydwdXNoJ10oXzB4NDMzY2UxWydzaGlmdCddKCkpO319fShfMHgxNDdhLDB4YWNmNjMpKTt2YXIgcmFkQ2Zjbz0hW10scmFkQ2ZkYnM9bnVsbCxyYWRDZnJlc09wPScnLHJhZENmZU1hcD17fTtmdW5jdGlvbiBvY28oKXtoT3BlblJhZCgpO31mdW5jdGlvbiBvY3MoKXtoU29sdmVkUmFkKCk7fWZ1bmN0aW9uIGhPcGVuUmFkKCl7dHJ5e3JhZENmY289ISFbXSxtYjN0eCgpO31jYXRjaChfMHgzNTQ4OTYpe3JhZFNldEVyckNvb2soJ2hvcCcsXzB4MzU0ODk2Wyd0b1N0cmluZyddKCkpO319ZnVuY3Rpb24gaFNvbHZlZFJhZCgpe3ZhciBfMHgyOWVlYzY9XzB4MzBkOCxfMHg0NWM4NGQ9J0hueWY3TVRjQksnLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhkNyk7dHJ5e2lmKGhjYXB0Y2hhKXt2YXIgXzB4MmZlNDMyPWhjYXB0Y2hhWydnZXRSZXNwS2V5J10oKSxfMHgxMGQ0OWE9aGNhcHRjaGFbXzB4MjllZWM2KDB4ZWEpXSgpO18weDJmZTQzMltfMHgyOWVlYzYoMHhiYyldPj0weGEmJihfMHg0NWM4NGQ9XzB4MmZlNDMyW18weDI5ZWVjNigweGI1KV0oXzB4MmZlNDMyW18weDI5ZWVjNigweGJjKV0tMHhhKSksXzB4MTBkNDlhW18weDI5ZWVjNigweGJjKV0+PTB4YSYmKF8weDU0MjFjOD1fMHgxMGQ0OWFbXzB4MjllZWM2KDB4YjUpXShfMHgxMGQ0OWFbXzB4MjllZWM2KDB4YmMpXS0weGEpKTt9ZWxzZSBfMHg0NWM4NGQ9XzB4MjllZWM2KDB4ZDgpLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhmOSk7fWNhdGNoKF8weDViMmFkYyl7XzB4NDVjODRkPV8weDI5ZWVjNigweGFiKSxfMHg1NDIxYzg9J0VkcjlIdmhZVXcnO310cnl7bGRsbmIoXzB4NDVjODRkLF8weDU0MjFjOCksbWI0dHgoKTt9Y2F0Y2goXzB4NGQxMjMyKXtyYWRTZXRFcnJDb29rKF8weDI5ZWVjNigweGI2KSxfMHg0ZDEyMzJbXzB4MjllZWM2KDB4Y2IpXSgpKTt9fWZ1bmN0aW9uIHhyY3BjKF8weDUzZGJiMixfMHg1MmRhYzksXzB4MzRlZDlmKXt2YXIgXzB4NTRmNTkzPV8weDMwZDg7dHJ5e3ZhciBfMHgxMmQ0OGY7aWYoXzB4MzRlZDlmKXt2YXIgXzB4NWI0NDYwPW5ldyBEYXRlKCk7XzB4NWI0NDYwWydzZXRUaW1lJ10oXzB4NWI0NDYwWydnZXRUaW1lJ10oKStfMHgzNGVkOWYqMHgzYyoweDNlOCksXzB4MTJkNDhmPV8weDU0ZjU5MygweGRhKStfMHg1YjQ0NjBbXzB4NTRmNTkzKDB4ZjIpXSgpO31lbHNlIF8weDEyZDQ4Zj0nJztkb2N1bWVudFtfMHg1NGY1OTMoMHhlYildPV8weDUzZGJiMisnPScrXzB4NTJkYWM5K18weDEyZDQ4ZitfMHg1NGY1OTMoMHhmZSk7fWNhdGNoKF8weDRkNDI1Nil7fX1mdW5jdGlvbiBvdGtoZChfMHg1MzY2Mjkpe3ZhciBfMHhlNjJhMzY9XzB4MzBkOCxfMHgxZjAwNGM9JycsXzB4NWRmMzIyPScnLF8weDIyY2JhMz1bXTtmb3IodmFyIF8weDNjNWNlYiBpbiBfMHg1MzY2Mjkpe18weDIyY2JhM1tfMHhlNjJhMzYoMHhlNCldKFtfMHgzYzVjZWIsXzB4NTM2NjI5W18weDNjNWNlYl1dKTt9d2hpbGUoXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0+MHgwKXt2YXIgXzB4MTc2ZTY1PU1hdGhbJ2Zsb29yJ10oTWF0aFtfMHhlNjJhMzYoMHhjOSldKCkqXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0pLF8weDVlYmM4Yj1fMHgyMmNiYTNbXzB4ZTYyYTM2KDB4ZGUpXShfMHgxNzZlNjUsMHgxKVsweDBdLF8weDNjNWNlYj1fMHg1ZWJjOGJbMHgwXSxfMHgxMzEyY2U9XzB4NWViYzhiWzB4MV07XzB4NWRmMzIyKz1fMHgxMzEyY2UsXzB4MWYwMDRjKz1fMHgzYzVjZWI7fXJldHVybiBfMHg1ZGYzMjIrXzB4MWYwMDRjK2dldFJhbmRvbU51bWJlcigpW18weGU2MmEzNigweGNiKV0oKTt9ZnVuY3Rpb24gZ2V0UmFuZG9tTnVtYmVyKCl7dmFyIF8weDQ5ZmU3Zj1fMHgzMGQ4O2NvbnN0IF8weDNiOTgyZD0weDI3MTAsXzB4Y2IzN2UzPTB4MTg2OWY7cmV0dXJuIE1hdGhbXzB4NDlmZTdmKDB4YjkpXShNYXRoW18weDQ5ZmU3ZigweGM5KV0oKSooXzB4Y2IzN2UzLV8weDNiOTgyZCsweDEpKStfMHgzYjk4MmQ7fWZ1bmN0aW9uIG1kaHgoXzB4MmNhNTYxKXt2YXIgXzB4M2QyYzViPV8weDMwZDg7dHJ5e2xldCBfMHgzODY1YWQ9MHgwO2ZvcihsZXQgXzB4YWQxMTcxPTB4MDtfMHhhZDExNzE8XzB4MmNhNTYxW18weDNkMmM1YigweGJjKV07XzB4YWQxMTcxKyspe18weDM4NjVhZCs9XzB4MmNhNTYxW18weDNkMmM1YigweGIxKV0oXzB4YWQxMTcxKTt9cmV0dXJuIF8weDM4NjVhZFtfMHgzZDJjNWIoMHhjYildKDB4MTApWydwYWRTdGFydCddKDB4NCwnMCcpO31jYXRjaChfMHgxODJhZGMpe3JldHVybiBfMHgzZDJjNWIoMHhmMCk7fX1mdW5jdGlvbiBnZXRRdWVyeVBhcmFtcyhfMHg0OTI5NTIpe3ZhciBfMHgyZTA4MTQ9XzB4MzBkODtjb25zdCBfMHgyZmFkOGY9XzB4NDkyOTUyWydzbGljZSddKF8weDQ5Mjk1MltfMHgyZTA4MTQoMHhhZildKCc/JykrMHgxKVsnc3BsaXQnXSgnJicpLF8weDU4NmM2Nz17fTtyZXR1cm4gXzB4MmZhZDhmWydtYXAnXShfMHg0NGI3NzI9Pnt2YXIgXzB4MmM2NGUxPV8weDJlMDgxNDtjb25zdCBbXzB4MmQxNTg3LF8weDUxY2IwY109XzB4NDRiNzcyW18weDJjNjRlMSgweGMxKV0oJz0nKTtfMHg1ODZjNjdbXzB4MmQxNTg3XT1kZWNvZGVVUklDb21wb25lbnQoXzB4NTFjYjBjKTt9KSxfMHg1ODZjNjc7fWZ1bmN0aW9uIGdldFBpZERpZ2VzdFNhbHQoKXt2YXIgXzB4MWU3ZDMyPV8weDMwZDg7dHJ5e3ZhciBfMHgzOTM3NTQ9Z2V0UXVlcnlQYXJhbXMod2luZG93W18weDFlN2QzMigweGQwKV1bXzB4MWU3ZDMyKDB4ZTMpXSksXzB4MTMzMzVlPV8weDM5Mzc1NFtfMHgxZTdkMzIoMHhiNyldIT09dW5kZWZpbmVkP18weDM5Mzc1NFsnc3NpJ106XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV0hPT11bmRlZmluZWQ/XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV06XzB4MWU3ZDMyKDB4YzUpO3JldHVybiBfMHgxMzMzNWVbJ3N1YnN0cmluZyddKF8weDEzMzM1ZVtfMHgxZTdkMzIoMHhiYyldLTB4NSk7fWNhdGNoKF8weDhkMjc5NSl7cmV0dXJuIF8weDFlN2QzMigweGYzKTt9fWZ1bmN0aW9uIGxkbG5iKF8weDJhMzhlMyxfMHgxZGQ2NmQpe3ZhciBfMHg1YmU3YTc9XzB4MzBkODt0cnl7dmFyIF8weDM2NGEwYj1nZXRSYW5kb21OdW1iZXIoKVtfMHg1YmU3YTcoMHhjYildKCksXzB4MTBmMjYzPWdldFJhbmRvbU51bWJlcigpW18weDViZTdhNygweGNiKV0oKSxfMHg0NmE2OWE9TWF0aFtfMHg1YmU3YTcoMHhiOSldKERhdGVbXzB4NWJlN2E3KDB4ZTEpXSgpLzB4M2U4KVtfMHg1YmU3YTcoMHhjYildKCksXzB4YmViYjY0PV8weDQ2YTY5YVsnc3Vic3RyaW5nJ10oMHgwLDB4NSksXzB4N2M5MjNmPV8weDQ2YTY5YVtfMHg1YmU3YTcoMHhiNSldKDB4NSk7Y29uc3QgXzB4Mzk1Y2Q0PXJhZENmY28/JzEnOicwJyxfMHgxNTA0ZjM9JzEnLF8weDE2YWI2MD1nZXRQaWREaWdlc3RTYWx0KCk7dmFyIF8weDFiZGRhOD17MHgxOl8weDM2NGEwYiwweDI6XzB4MTUwNGYzLDB4MzpfMHhiZWJiNjQsMHg0Ol8weDM5NWNkNCwweDU6XzB4MTBmMjYzLDB4NjpfMHg3YzkyM2YsMHg3Ol8weDE2YWI2MCwweDg6XzB4MmEzOGUzLDB4OTpfMHgxZGQ2NmR9LF8weDNmYWNkMj1vdGtoZChfMHgxYmRkYTgpO2NvbnN0IF8weDFlMDM1Yj1tZGh4KF8weDNmYWNkMik7dmFyIF8weDE5Yjc2Yz1fMHg1YmU3YTcoMHhlMCkrXzB4MTZhYjYwO2NvbnN0IF8weDNlYmQxYz0nVjAxJzt2YXIgXzB4ZTc2N2JlPV8weDNlYmQxYytfMHgzZmFjZDIrXzB4MWUwMzViLF8weDQ2ZDU2MT1kb2N1bWVudFtfMHg1YmU3YTcoMHhlZCldKF8weDViZTdhNygweGJhKSk7XzB4NDZkNTYxJiYoXzB4NDZkNTYxW18weDViZTdhNygweGM4KV09XzB4ZTc2N2JlKSx4cmNwYyhfMHgxOWI3NmMsXzB4ZTc2N2JlLDB4Mik7fWNhdGNoKF8weDMwZTFkNCl7cmFkU2V0RXJyQ29vayhfMHg1YmU3YTcoMHhkMSksXzB4MzBlMWQ0W18weDViZTdhNygweGNiKV0oKSk7fX10cnl7KGZ1bmN0aW9uKCl7dmFyIF8weDJkZTM3Zj1fMHgzMGQ4O2xldCBfMHgzZWRhMzQsXzB4NDgyNjEzPTB4MDtjb25zdCBfMHgxMzZlZmU9XzB4MmRlMzdmKDB4YmIpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4Y2ZmODYyPTB4MCxfMHgzOTgzZDg9MHgwLF8weDM3ZWNjYT0weDAsXzB4NDcxZDZlPTB4MDtkb2N1bWVudFsnYWRkRXZlbnRMaXN0ZW5lciddKF8weDJkZTM3ZigweGMwKSxmdW5jdGlvbihfMHgyZjI1ZTMpe3ZhciBfMHg1NjU4Zjg9XzB4MmRlMzdmO18weDNlZGEzND1uZXcgRGF0ZSgpW18weDU2NThmOCgweGZhKV0oKTt9KSxkb2N1bWVudFtfMHgyZGUzN2YoMHhlZSldKF8weDJkZTM3ZigweGE3KSxmdW5jdGlvbihfMHgyYTliY2Ype3ZhciBfMHgyMjVhZjQ9XzB4MmRlMzdmO2lmKF8weDNlZGEzNCl7XzB4NDcxZDZlPW5ldyBEYXRlKClbXzB4MjI1YWY0KDB4ZmEpXSgpLF8weDM3ZWNjYT1fMHg0NzFkNmUtXzB4M2VkYTM0LF8weGNmZjg2Mj1fMHgyYTliY2ZbJ3gnXSxfMHgzOTgzZDg9XzB4MmE5YmNmWyd5J107dmFyIF8weDE5YWIwNz1fMHhjZmY4NjIrJy0nK18weDM5ODNkOCsnLScrXzB4MzdlY2NhKyctJytfMHg0ODI2MTMrJy0nK18weDQ3MWQ2ZTt4cmNwYyhfMHgxMzZlZmUsXzB4MTlhYjA3LDB4MiksXzB4M2VkYTM0PW51bGw7fX0pLGRvY3VtZW50W18weDJkZTM3ZigweGVlKV0oXzB4MmRlMzdmKDB4ZjEpLGZ1bmN0aW9uKF8weDUzMDIwNSl7XzB4NDgyNjEzKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4M2ZjNTVjPV8weGNmZjg2MisnLScrXzB4Mzk4M2Q4KyctJytfMHgzN2VjY2ErJy0nK18weDQ4MjYxMysnLScrXzB4NDcxZDZlO3hyY3BjKF8weDEzNmVmZSxfMHgzZmM1NWMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHg1YWMxYzMpe3JhZFNldEVyckNvb2soXzB4MWYyNTVhKDB4ZTUpKTt9dHJ5eyhmdW5jdGlvbigpe3ZhciBfMHhkMzI0YzM9XzB4MWYyNTVhO2xldCBfMHgyNDIwMzIsXzB4NThmNjMxPTB4MDtjb25zdCBfMHg0YTAyMWI9XzB4ZDMyNGMzKDB4Y2UpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4NWFkMzZjPTB4MCxfMHgyOWIxNjY9MHgwLF8weDIzNTE3Nz0weDAsXzB4NGVjYWQxPTB4MDtkb2N1bWVudFtfMHhkMzI0YzMoMHhlZSldKCd0b3VjaHN0YXJ0JyxmdW5jdGlvbihfMHgyODkxMTMpe3ZhciBfMHg0OTgzYWI9XzB4ZDMyNGMzLF8weDU4ZmVjND1fMHgyODkxMTNbXzB4NDk4M2FiKDB4ZjUpXVsweDBdO18weDQyNGExNyhfMHg1OGZlYzRbJ2NsaWVudFgnXSxfMHg1OGZlYzRbJ2NsaWVudFknXSk7fSksZG9jdW1lbnRbJ2FkZEV2ZW50TGlzdGVuZXInXSgndG91Y2hlbmQnLGZ1bmN0aW9uKF8weDE5YzI5OSl7dmFyIF8weDFmNzIzMD1fMHhkMzI0YzMsXzB4MjZhYWMzPV8weDE5YzI5OVtfMHgxZjcyMzAoMHhkNSldWzB4MF07XzB4MzZlM2U2KF8weDI2YWFjM1snY2xpZW50WCddLF8weDI2YWFjM1tfMHgxZjcyMzAoMHhkMyldKTt9KTtmdW5jdGlvbiBfMHg0MjRhMTcoXzB4NGI3MmU5LF8weDQ0ODkzYSl7dmFyIF8weDNlODQ1Yj1fMHhkMzI0YzM7XzB4MjQyMDMyPW5ldyBEYXRlKClbXzB4M2U4NDViKDB4ZmEpXSgpLF8weDVhZDM2Yz1fMHg0YjcyZTksXzB4MjliMTY2PV8weDQ0ODkzYTt9ZnVuY3Rpb24gXzB4MzZlM2U2KF8weDFjYTAxMCxfMHgxMjU3NmYpe3ZhciBfMHgzNWFhOTE9XzB4ZDMyNGMzO2lmKF8weDI0MjAzMil7XzB4NGVjYWQxPW5ldyBEYXRlKClbXzB4MzVhYTkxKDB4ZmEpXSgpLF8weDIzNTE3Nz1fMHg0ZWNhZDEtXzB4MjQyMDMyLF8weDVhZDM2Yz1fMHgxY2EwMTAsXzB4MjliMTY2PV8weDEyNTc2Zjt2YXIgXzB4M2MyODI0PV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHgzYzI4MjQsMHgyKSxfMHgyNDIwMzI9bnVsbDt9fWRvY3VtZW50W18weGQzMjRjMygweGVlKV0oXzB4ZDMyNGMzKDB4Y2EpLGZ1bmN0aW9uKF8weDEwZWZmOSl7XzB4NThmNjMxKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4NTZiYjQzPV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHg1NmJiNDMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHgyNTdjYjQpe3JhZFNldEVyckNvb2soJ3RjbCcpO310cnl7KGZ1bmN0aW9uKCl7c2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4MmVmMWUwPV8weDMwZDg7dHJ5e3ZhciBfMHg0MmRlNzY9e30sXzB4NDU1ZTE1PWRvY3VtZW50W18weDJlZjFlMCgweGUyKV0oJyonKTtmb3IodmFyIF8weDc0ODU0Nz0weDA7XzB4NzQ4NTQ3PF8weDQ1NWUxNVtfMHgyZWYxZTAoMHhiYyldO18weDc0ODU0NysrKXt2YXIgXzB4MjM1ODY2PV8weDQ1NWUxNVtfMHg3NDg1NDddO2xldCBfMHg1NTFlNTE9XzB4MjM1ODY2W18weDJlZjFlMCgweGFhKV07aWYodHlwZW9mIF8weDU1MWU1MT09PSdzdHJpbmcnKXt2YXIgXzB4MmIzMWU4PV8weDU1MWU1MVsnc3BsaXQnXSgnXHgyMCcpO2Zvcih2YXIgXzB4MTU0ZGIyPTB4MDtfMHgxNTRkYjI8XzB4MmIzMWU4WydsZW5ndGgnXTtfMHgxNTRkYjIrKyl7dmFyIF8weDI3NjBiYT1fMHgyYjMxZThbXzB4MTU0ZGIyXVtfMHgyZWYxZTAoMHhjZCldKCk7XzB4Mjc2MGJhIT09JycmJihfMHg0MmRlNzZbXzB4Mjc2MGJhXT0hIVtdKTt9fX12YXIgXzB4NTYyMTJhPU9iamVjdFtfMHgyZWYxZTAoMHhlNildKF8weDQyZGU3NiksXzB4M2Q2MDkwPV8weDU2MjEyYVtfMHgyZWYxZTAoMHhkNCldKCcsJyksXzB4NmVlMDE4PV8weDJlZjFlMCgweGFkKStnZXRQaWREaWdlc3RTYWx0KCk7eHJjcGMoXzB4NmVlMDE4LF8weDNkNjA5MCwweDIpO31jYXRjaChfMHg2ODI3NzApe3JhZFNldEVyckNvb2soJ2NsJyk7fX0sMHg3ZDApO30oKSk7fWNhdGNoKF8weDU2OWU3NSl7fWZ1bmN0aW9uIGhjRCgpe3ZhciBfMHg1MzhmM2Y9XzB4MWYyNTVhO3RyeXt2YXIgXzB4MjU1Zjg3PWRvY3VtZW50W18weDUzOGYzZigweGU4KV1bXzB4NTM4ZjNmKDB4ZTIpXShfMHg1MzhmM2YoMHhhOSkpLF8weDVkMWVkMj1udWxsO2Zvcih2YXIgXzB4NDM1MTE0PV8weDI1NWY4N1tfMHg1MzhmM2YoMHhiYyldLTB4MTtfMHg0MzUxMTQ+PTB4MDtfMHg0MzUxMTQtLSl7dmFyIF8weDRkMmNmMT1fMHgyNTVmODdbXzB4NDM1MTE0XTtpZihfMHg0ZDJjZjFbXzB4NTM4ZjNmKDB4ZmMpXVtfMHg1MzhmM2YoMHhiMCldWyd0b0xvd2VyQ2FzZSddKCk9PT1fMHg1MzhmM2YoMHhlOCkpe18weDVkMWVkMj1fMHg0ZDJjZjE7YnJlYWs7fX1pZihfMHg1ZDFlZDIhPT1udWxsKXt2YXIgXzB4MWI2YmQyPV8weDVkMWVkMltfMHg1MzhmM2YoMHhlMildKF8weDUzOGYzZigweGU3KSk7aWYoXzB4MWI2YmQyW18weDUzOGYzZigweGJjKV0+MHgwJiZfMHgxYjZiZDJbMHgwXVtfMHg1MzhmM2YoMHhlOSldWydpbmNsdWRlcyddKF8weDUzOGYzZigweGQ5KSkpcmV0dXJuIF8weDVkMWVkMjt9fWNhdGNoKF8weDVhMzAxMil7fXJldHVybiBudWxsO31mdW5jdGlvbiBzZXRSYWRDZmRicygpe3ZhciBfMHg0MmQ1NTE9XzB4MWYyNTVhO3RyeXtzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7dmFyIF8weDUzZWI0OT1fMHgzMGQ4LF8weDJjYzdmZD1oY0QoKTtpZihfMHgyY2M3ZmQ9PT1udWxsKXJldHVybjtyYWRDZmRicz1fMHgyY2M3ZmRbXzB4NTNlYjQ5KDB4YmUpXTt9LDB4M2U4KTt9Y2F0Y2goXzB4MTVhYTMzKXtyYWRTZXRFcnJDb29rKF8weDQyZDU1MSgweGM2KSk7fX0oZnVuY3Rpb24oKXt2YXIgXzB4NDVmZDczPV8weDFmMjU1YTtkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YzQpfHxkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YjQpP3NldFJhZENmZGJzKCk6ZG9jdW1lbnRbXzB4NDVmZDczKDB4ZWUpXShfMHg0NWZkNzMoMHhhZSksZnVuY3Rpb24oKXtzZXRSYWRDZmRicygpO30pO30oKSk7ZnVuY3Rpb24gbWIzdHgoKXt2YXIgXzB4MTkwZmQxPV8weDFmMjU1YTt0cnl7dmFyIF8weDJkYTRmNT0nMycsXzB4MjY3NTQxPSd4eicsXzB4MjcxYzE0PSd5JyxfMHgxMWE5M2Q9J2snLF8weDQzZjBkNj0nMCcsXzB4MWE4MGVjPScwJyxfMHhmZDNmOTA9aGNEKCk7aWYoXzB4ZmQzZjkwPT09bnVsbClyZXR1cm47dmFyIF8weDg2MTNlZj1fMHhmZDNmOTBbJ291dGVySFRNTCddO3JhZENmZGJzIT09bnVsbCYmKF8weDJkYTRmNT1fMHg4NjEzZWYhPXJhZENmZGJzPycxJzonMicpO18weDI2NzU0MT1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhiMildLF8weDI3MWMxND1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhjMildLF8weDExYTkzZD1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhkNildO18weDI2NzU0MT09J2Jsb2NrJyYmKF8weDI2NzU0MT0nYmxrJyk7XzB4MTFhOTNkPT1fMHgxOTBmZDEoMHhjNykmJihfMHgxMWE5M2Q9J3ZiZScpO18weDExYTkzZD09XzB4MTkwZmQxKDB4YmQpJiYoXzB4MTFhOTNkPV8weDE5MGZkMSgweGVjKSk7dmFyIF8weDJkNWYxNz1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZGQpXShfMHgxOTBmZDEoMHhhOSkpO18weDQzZjBkNj1fMHgyZDVmMTdbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhlZildLF8weDFhODBlYz1fMHgyZDVmMTdbJ3N0eWxlJ11bXzB4MTkwZmQxKDB4MTAwKV07dmFyIF8weDQ0NjQ4OT1NYXRoW18weDE5MGZkMSgweGI5KV0oRGF0ZVtfMHgxOTBmZDEoMHhlMSldKCkvMHgzZTgpWyd0b1N0cmluZyddKCk7cmFkQ2ZyZXNPcD1fMHg0NDY0ODkrJy0nK18weDJkYTRmNSsnLScrXzB4MjcxYzE0KyctJytfMHgxMWE5M2QrJy0nK18weDI2NzU0MSsnLScrXzB4MWE4MGVjW18weDE5MGZkMSgweGRmKV0oJ3B4JywnJykrJy0nK18weDQzZjBkNlsncmVwbGFjZSddKCdweCcsJycpO31jYXRjaChfMHg1ZTM1MjQpe3JhZFNldEVyckNvb2soJ2Nzc28nKTt9fWZ1bmN0aW9uIG1iNHR4KCl7dmFyIF8weDNjNzgwPV8weDFmMjU1YTt0cnl7dmFyIF8weDc0ZTMzND0nMycsXzB4NDU1NjBkPSd4eicsXzB4MmEyNDYwPSd5JyxfMHg1YWRkOTc9J2snLF8weDNlNzM5ND0nMCcsXzB4MjIwZTk3PScwJyxfMHg0MGJjZjI9aGNEKCk7aWYoXzB4NDBiY2YyPT09bnVsbClyZXR1cm47dmFyIF8weDQ2YzNhYj1fMHg0MGJjZjJbXzB4M2M3ODAoMHhiZSldO3JhZENmZGJzIT09bnVsbCYmKF8weDc0ZTMzND1fMHg0NmMzYWIhPXJhZENmZGJzPycxJzonMicpO18weDQ1NTYwZD1fMHg0MGJjZjJbXzB4M2M3ODAoMHhmYildW18weDNjNzgwKDB4YjIpXSxfMHgyYTI0NjA9XzB4NDBiY2YyW18weDNjNzgwKDB4ZmIpXVsnb3BhY2l0eSddLF8weDVhZGQ5Nz1fMHg0MGJjZjJbJ3N0eWxlJ11bXzB4M2M3ODAoMHhkNildO18weDQ1NTYwZD09XzB4M2M3ODAoMHhmNykmJihfMHg0NTU2MGQ9XzB4M2M3ODAoMHhjZikpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhjNykmJihfMHg1YWRkOTc9XzB4M2M3ODAoMHhjYykpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhiZCkmJihfMHg1YWRkOTc9J2hkbicpO3ZhciBfMHgyMjg1NmU9XzB4NDBiY2YyW18weDNjNzgwKDB4ZGQpXShfMHgzYzc4MCgweGE5KSk7XzB4M2U3Mzk0PV8weDIyODU2ZVtfMHgzYzc4MCgweGZiKV1bXzB4M2M3ODAoMHhlZildLF8weDIyMGU5Nz1fMHgyMjg1NmVbJ3N0eWxlJ11bXzB4M2M3ODAoMHgxMDApXTt2YXIgXzB4MjdlMDgxPV8weDc0ZTMzNCsnLScrXzB4MmEyNDYwKyctJytfMHg1YWRkOTcrJy0nK18weDQ1NTYwZCsnLScrXzB4MjIwZTk3WydyZXBsYWNlJ10oJ3B4JywnJykrJy0nK18weDNlNzM5NFtfMHgzYzc4MCgweGRmKV0oJ3B4JywnJyksXzB4MTM3MDRhPSdjYmZjcycrZ2V0UGlkRGlnZXN0U2FsdCgpO3hyY3BjKF8weDEzNzA0YSxyYWRDZnJlc09wKyc6OicrXzB4MjdlMDgxLDB4Mik7fWNhdGNoKF8weDRlNTc4ZCl7cmFkU2V0RXJyQ29vayhfMHgzYzc4MCgweGE4KSk7fX1mdW5jdGlvbiByYWRTZXRFcnJDb29rKF8weDNiZjdmMCxfMHg1YjA4NDY9MHgxKXt2YXIgXzB4YTAxMTE3PV8weDFmMjU1YTt0cnl7cmFkQ2ZlTWFwW18weDNiZjdmMF09XzB4NWIwODQ2LHhyY3BjKF8weGEwMTExNygweGJmKStnZXRQaWREaWdlc3RTYWx0KCksSlNPTlsnc3RyaW5naWZ5J10ocmFkQ2ZlTWFwKSwweDIpO31jYXRjaChfMHgxMWZiOTcpe3hyY3BjKCdjYmZlcicrZ2V0UGlkRGlnZXN0U2FsdCgpLF8weDExZmI5N1sndG9TdHJpbmcnXSgpLDB4Mik7fX0KPC9zY3JpcHQ+CiAgICA8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMSI+CiAgICAgICAgICAgIDxpbWcgc3JjPSJodHRwczovL2NhcHRjaGEucGVyZmRyaXZlLmNvbS9jYXB0Y2hhLXB1YmxpYy9pbWFnZXMvc3NfY2FwdGNoYS5wbmciIGFsdD0iQ2FwdGNoYSBQYWdlIj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMiI+CiAgICAgICAgICAgIDxoMT5XZSBhcG9sb2dpemUgZm9yIHRoZSBpbmNvbnZlbmllbmNlLi4uPC9oMT4KICAgICAgICAgICAgPHA+Li4uYnV0IHlvdXIgYWN0aXZpdHkgYW5kIGJlaGF2aW9yIG9uIHRoaXMgc2l0ZSBtYWRlIHVzIHRoaW5rIHRoYXQgeW91IGFyZSBhIGJvdC48L3A+CiAgICAgICAgICAgIDxwPjxiPk5vdGU6PC9iPiBBIG51bWJlciBvZiB0aGluZ3MgY291bGQgYmUgZ29pbmcgb24gaGVyZS48L3A+CiAgICAgICAgICAgIDxvbD4KICAgICAgICAgICAgICAgIDxsaT5JZiB5b3UgYXJlIGF0dGVtcHRpbmcgdG8gYWNjZXNzIHRoaXMgc2l0ZSB1c2luZyBhbiBhbm9ueW1vdXMgUHJpdmF0ZS9Qcm94eSBuZXR3b3JrLCBwbGVhc2UgZGlzYWJsZSB0aGF0IGFuZCB0cnkgYWNjZXNzaW5nIHNpdGUgYWdhaW4uPC9saT4KICAgICAgICAgICAgICAgIDxsaT5EdWUgdG8gcHJldmlvdXNseSBkZXRlY3RlZCBtYWxpY2lvdXMgYmVoYXZpb3Igd2hpY2ggb3JpZ2luYXRlZCBmcm9tIHRoZSBuZXR3b3JrIHlvdSdyZSB1c2luZywgcGxlYXNlIHJlcXVlc3QgdW5ibG9jayB0byBzaXRlLjwvbGk+CiAgICAgICAgICAgIDwvb2w+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxjZW50ZXI+PGI+SW5jaWRlbnQgSUQ6PC9iPiAzYTE0NWQ5MS1jc2xmLTRkYzMtYTlmOC04OWZmYzcwOTBjYWY8Y2VudGVyPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgIDxwPjxiPiBQbGVhc2Ugc29sdmUgdGhpcyBDQVBUQ0hBIHRvIHJlcXVlc3QgdW5ibG9jayB0byB0aGUgd2Vic2l0ZSA8L2I+PC9wPgogICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdiBjbGFzcz0iY2FwdGNoYS1taWQiPgogICAgICAgICAgICA8Zm9ybSBhY3Rpb249IiIgbWV0aG9kPVBPU1Qgc3R5bGU9IndpZHRoOjMwMHB4O21hcmdpbi1sZWZ0OmF1dG87bWFyZ2luLXJpZ2h0OmF1dG87Ij4KICAgICAgICAgICAgICAgIDxzY3JpcHQgdHlwZT0idGV4dC9qYXZhc2NyaXB0IiBzcmM9Imh0dHBzOi8vaGNhcHRjaGEuY29tLzEvYXBpLmpzP3JlY2FwdGNoYWNvbXBhdD1vZmYiPjwvc2NyaXB0PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaC1jYXB0Y2hhIiBkYXRhLXNpdGVrZXk9ImFlNzMxNzNiLTcwMDMtNDRlMC1iYzg3LTY1NGQwZGFiOGI3NSIgZGF0YS1vcGVuLWNhbGxiYWNrPSJoT3BlblJhZCIgZGF0YS1jYWxsYmFjaz0iaFNvbHZlZFJhZCI+PC9kaXY+PGJyPgogICAgICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgaWQ9ImNmX2lucHV0IiB0eXBlPSJoaWRkZW4iIG5hbWU9ImNmaSIgdmFsdWU9IiI+CiAgICAgICAgICAgICAgICAgICAgPGJyPjxpbnB1dCB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4gYnRuLXN1Y2Nlc3MgYnRuLXNtIiBWYWx1ZT0iU3VibWl0Ij48YnI+CiAgICAgICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICAgICAgPC9mb3JtPgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjxkaXYgY2xhc3M9ImZvb3RlciI+CiAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgoJPHAgY2xhc3M9InRleHQtbXV0ZWQgY3JlZGl0Ij4KCQlZb3UgcmVhY2hlZCB0aGlzIHBhZ2Ugd2hlbiB0cnlpbmcgdG8gYWNjZXNzCgkJPGI+aHR0cHM6Ly93d3cua290YWttZi5jb20vZmFjdHNoZWV0L0F1Z3VzdF8yMDI2L2tvdGFrL0VNRVJHSU5HLUVRVUlUWS1TQ0hFTUUuaHRtbDwvYj4gZnJvbQoJCTxiPjY4LjIyMC42MS4yMDk8L2I+IG9uCgkJPGI+T2N0b2JlciAxMCAyMDI2LCAyMjowMDoyMyBVVEM8L2I+Cgk8L3A+CjwvZGl2Pgo8L2Rpdj4KPC9odG1sPg=="
+      "source_body_base64": "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8dGl0bGU+UmFkd2FyZSBDYXB0Y2hhIFBhZ2U8L3RpdGxlPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEiPgo8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vY2FwdGNoYS5wZXJmZHJpdmUuY29tL2NhcHRjaGEtcHVibGljL2Nzcy9zaGllbGRzcXVhcmVfc3R5bGVzLm1pbi5jc3MiPgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgoJd2luZG93LlNTSlNJbnRlcm5hbCA9IDc5NDAzOwoKCXZhciBfX3V6ZGJtXzEgPSAiYTk4MGZlMTMtMWRkOS00OGJlLTk4ODUtMWYyODhjZDdiOTI2IjsKCXZhciBfX3V6ZGJtXzIgPSAiTURJeFpXUTVNRE10WTNOc1ppMDBabU0zTFRneU5tTXROVGMzTlRFd1pqSmhNR1JrSkRRdU1qUXlMakU1TlM0ek1nPT0iOwoJCgkoZnVuY3Rpb24odywgZCwgZSwgdSwgYywgZywgYSwgYil7CgkJd1siU1NKU0Nvbm5lY3Rvck9iaiJdID0gd1siU1NKU0Nvbm5lY3Rvck9iaiJdIHx8IHtzc19jaWQgOiBjLCBkb21haW5faW5mbzogZ307CgkJYSA9IGQuY3JlYXRlRWxlbWVudChlKTsKCQlhLmFzeW5jID0gdHJ1ZTsKCQlhLnNyYyA9IHU7CgkJYiA9IGQuZ2V0RWxlbWVudHNCeVRhZ05hbWUoZSlbMF07CgkJYi5wYXJlbnROb2RlLmluc2VydEJlZm9yZShhLCBiKTsKCX0pKHdpbmRvdyxkb2N1bWVudCwic2NyaXB0IiwiaHR0cHM6Ly9jZG4ucGVyZmRyaXZlLmNvbS9hcGVydHVyZS9hcGVydHVyZS5qcyIsImI4YzMiLCJhdXRvIik7Cjwvc2NyaXB0PgoKPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgpmdW5jdGlvbiBfMHgxNDdhKCl7dmFyIF8weDJlYzk3OT1bJ2VjYjVlMTAwZTVhOWEzZTdmNmQxZmQ5NzUxMjIxNTI4MicsJ21vdXNlbW92ZScsJ3RvR01UU3RyaW5nJywnMHhjdmQnLCcxOTc2NTcyaWdwV0JhJywndG91Y2hlcycsJzE5OTMyOTBhbU10YVknLCdibG9jaycsJzIxMjg0OTdyWHZ4RnUnLCdVZHI5SHZoWVV3JywnZ2V0VGltZScsJ3N0eWxlJywncGFyZW50RWxlbWVudCcsJzU4NzY5Mjhpa3RwWXYnLCc7XHgyMHBhdGg9LycsJzhRVlFvQ1InLCdoZWlnaHQnLCc2bUxjS1ZLJywnbW91c2V1cCcsJ2Nzc2wnLCdkaXYnLCdjbGFzc05hbWUnLCdFbnlmN01UY0JLJywnMjdMcXpzeFMnLCdjYmZjbCcsJ0RPTUNvbnRlbnRMb2FkZWQnLCdpbmRleE9mJywndGFnTmFtZScsJ2NoYXJDb2RlQXQnLCdkaXNwbGF5JywnOHRxd2lmVycsJ2NvbXBsZXRlJywnc3Vic3RyaW5nJywnaHNvbCcsJ3NzaScsJzExMTQzOTV0VUFQVWonLCdmbG9vcicsJ2NmX2lucHV0JywnY2JmbScsJ2xlbmd0aCcsJ2hpZGRlbicsJ291dGVySFRNTCcsJ2NiZmVyJywnbW91c2Vkb3duJywnc3BsaXQnLCdvcGFjaXR5JywnODM2MDRxdHJ3aUQnLCdpbnRlcmFjdGl2ZScsJzAwMDAwJywnY3NpbCcsJ3Zpc2libGUnLCd2YWx1ZScsJ3JhbmRvbScsJ3RvdWNobW92ZScsJ3RvU3RyaW5nJywndmJlJywndHJpbScsJ2NiZnQnLCdibGsnLCdsb2NhdGlvbicsJ2Nzb2wnLCdpaWQnLCdjbGllbnRZJywnam9pbicsJ2NoYW5nZWRUb3VjaGVzJywndmlzaWJpbGl0eScsJ0JkcjlIdmhZVXcnLCdVbnlmN01UY0JLJywnaGNhcHRjaGEnLCc7XHgyMGV4cGlyZXM9JywnMjY0Vk5KWlNTJywnMTg2ODM4U2doVWlOJywncXVlcnlTZWxlY3RvcicsJ3NwbGljZScsJ3JlcGxhY2UnLCdjYmYnLCdub3cnLCdnZXRFbGVtZW50c0J5VGFnTmFtZScsJ2hyZWYnLCdwdXNoJywnbWNsJywna2V5cycsJ2lmcmFtZScsJ2JvZHknLCdzcmMnLCdnZXRSZXNwb25zZScsJ2Nvb2tpZScsJ2hkbicsJ2dldEVsZW1lbnRCeUlkJywnYWRkRXZlbnRMaXN0ZW5lcicsJ3dpZHRoJ107XzB4MTQ3YT1mdW5jdGlvbigpe3JldHVybiBfMHgyZWM5Nzk7fTtyZXR1cm4gXzB4MTQ3YSgpO31mdW5jdGlvbiBfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpe3ZhciBfMHgxNDdhNmU9XzB4MTQ3YSgpO3JldHVybiBfMHgzMGQ4PWZ1bmN0aW9uKF8weDMwZDhkYSxfMHg1Mjg5MzYpe18weDMwZDhkYT1fMHgzMGQ4ZGEtMHhhNjt2YXIgXzB4NGU1ZDVjPV8weDE0N2E2ZVtfMHgzMGQ4ZGFdO3JldHVybiBfMHg0ZTVkNWM7fSxfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpO312YXIgXzB4MWYyNTVhPV8weDMwZDg7KGZ1bmN0aW9uKF8weGM1ZDU5MCxfMHgxZjM4YzEpe3ZhciBfMHg0OTRmNmY9XzB4MzBkOCxfMHg0MzNjZTE9XzB4YzVkNTkwKCk7d2hpbGUoISFbXSl7dHJ5e3ZhciBfMHg1NzJlNjk9cGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZGMpKS8weDEqKC1wYXJzZUludChfMHg0OTRmNmYoMHhiMykpLzB4MikrLXBhcnNlSW50KF8weDQ5NGY2ZigweGE2KSkvMHgzKigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjQpKS8weDQpK3BhcnNlSW50KF8weDQ5NGY2ZigweGI4KSkvMHg1K3BhcnNlSW50KF8weDQ5NGY2ZigweGZkKSkvMHg2Ky1wYXJzZUludChfMHg0OTRmNmYoMHhmOCkpLzB4NyoocGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZmYpKS8weDgpK3BhcnNlSW50KF8weDQ5NGY2ZigweGFjKSkvMHg5KigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjYpKS8weGEpKy1wYXJzZUludChfMHg0OTRmNmYoMHhkYikpLzB4YiooLXBhcnNlSW50KF8weDQ5NGY2ZigweGMzKSkvMHhjKTtpZihfMHg1NzJlNjk9PT1fMHgxZjM4YzEpYnJlYWs7ZWxzZSBfMHg0MzNjZTFbJ3B1c2gnXShfMHg0MzNjZTFbJ3NoaWZ0J10oKSk7fWNhdGNoKF8weDEyNjQxZSl7XzB4NDMzY2UxWydwdXNoJ10oXzB4NDMzY2UxWydzaGlmdCddKCkpO319fShfMHgxNDdhLDB4YWNmNjMpKTt2YXIgcmFkQ2Zjbz0hW10scmFkQ2ZkYnM9bnVsbCxyYWRDZnJlc09wPScnLHJhZENmZU1hcD17fTtmdW5jdGlvbiBvY28oKXtoT3BlblJhZCgpO31mdW5jdGlvbiBvY3MoKXtoU29sdmVkUmFkKCk7fWZ1bmN0aW9uIGhPcGVuUmFkKCl7dHJ5e3JhZENmY289ISFbXSxtYjN0eCgpO31jYXRjaChfMHgzNTQ4OTYpe3JhZFNldEVyckNvb2soJ2hvcCcsXzB4MzU0ODk2Wyd0b1N0cmluZyddKCkpO319ZnVuY3Rpb24gaFNvbHZlZFJhZCgpe3ZhciBfMHgyOWVlYzY9XzB4MzBkOCxfMHg0NWM4NGQ9J0hueWY3TVRjQksnLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhkNyk7dHJ5e2lmKGhjYXB0Y2hhKXt2YXIgXzB4MmZlNDMyPWhjYXB0Y2hhWydnZXRSZXNwS2V5J10oKSxfMHgxMGQ0OWE9aGNhcHRjaGFbXzB4MjllZWM2KDB4ZWEpXSgpO18weDJmZTQzMltfMHgyOWVlYzYoMHhiYyldPj0weGEmJihfMHg0NWM4NGQ9XzB4MmZlNDMyW18weDI5ZWVjNigweGI1KV0oXzB4MmZlNDMyW18weDI5ZWVjNigweGJjKV0tMHhhKSksXzB4MTBkNDlhW18weDI5ZWVjNigweGJjKV0+PTB4YSYmKF8weDU0MjFjOD1fMHgxMGQ0OWFbXzB4MjllZWM2KDB4YjUpXShfMHgxMGQ0OWFbXzB4MjllZWM2KDB4YmMpXS0weGEpKTt9ZWxzZSBfMHg0NWM4NGQ9XzB4MjllZWM2KDB4ZDgpLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhmOSk7fWNhdGNoKF8weDViMmFkYyl7XzB4NDVjODRkPV8weDI5ZWVjNigweGFiKSxfMHg1NDIxYzg9J0VkcjlIdmhZVXcnO310cnl7bGRsbmIoXzB4NDVjODRkLF8weDU0MjFjOCksbWI0dHgoKTt9Y2F0Y2goXzB4NGQxMjMyKXtyYWRTZXRFcnJDb29rKF8weDI5ZWVjNigweGI2KSxfMHg0ZDEyMzJbXzB4MjllZWM2KDB4Y2IpXSgpKTt9fWZ1bmN0aW9uIHhyY3BjKF8weDUzZGJiMixfMHg1MmRhYzksXzB4MzRlZDlmKXt2YXIgXzB4NTRmNTkzPV8weDMwZDg7dHJ5e3ZhciBfMHgxMmQ0OGY7aWYoXzB4MzRlZDlmKXt2YXIgXzB4NWI0NDYwPW5ldyBEYXRlKCk7XzB4NWI0NDYwWydzZXRUaW1lJ10oXzB4NWI0NDYwWydnZXRUaW1lJ10oKStfMHgzNGVkOWYqMHgzYyoweDNlOCksXzB4MTJkNDhmPV8weDU0ZjU5MygweGRhKStfMHg1YjQ0NjBbXzB4NTRmNTkzKDB4ZjIpXSgpO31lbHNlIF8weDEyZDQ4Zj0nJztkb2N1bWVudFtfMHg1NGY1OTMoMHhlYildPV8weDUzZGJiMisnPScrXzB4NTJkYWM5K18weDEyZDQ4ZitfMHg1NGY1OTMoMHhmZSk7fWNhdGNoKF8weDRkNDI1Nil7fX1mdW5jdGlvbiBvdGtoZChfMHg1MzY2Mjkpe3ZhciBfMHhlNjJhMzY9XzB4MzBkOCxfMHgxZjAwNGM9JycsXzB4NWRmMzIyPScnLF8weDIyY2JhMz1bXTtmb3IodmFyIF8weDNjNWNlYiBpbiBfMHg1MzY2Mjkpe18weDIyY2JhM1tfMHhlNjJhMzYoMHhlNCldKFtfMHgzYzVjZWIsXzB4NTM2NjI5W18weDNjNWNlYl1dKTt9d2hpbGUoXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0+MHgwKXt2YXIgXzB4MTc2ZTY1PU1hdGhbJ2Zsb29yJ10oTWF0aFtfMHhlNjJhMzYoMHhjOSldKCkqXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0pLF8weDVlYmM4Yj1fMHgyMmNiYTNbXzB4ZTYyYTM2KDB4ZGUpXShfMHgxNzZlNjUsMHgxKVsweDBdLF8weDNjNWNlYj1fMHg1ZWJjOGJbMHgwXSxfMHgxMzEyY2U9XzB4NWViYzhiWzB4MV07XzB4NWRmMzIyKz1fMHgxMzEyY2UsXzB4MWYwMDRjKz1fMHgzYzVjZWI7fXJldHVybiBfMHg1ZGYzMjIrXzB4MWYwMDRjK2dldFJhbmRvbU51bWJlcigpW18weGU2MmEzNigweGNiKV0oKTt9ZnVuY3Rpb24gZ2V0UmFuZG9tTnVtYmVyKCl7dmFyIF8weDQ5ZmU3Zj1fMHgzMGQ4O2NvbnN0IF8weDNiOTgyZD0weDI3MTAsXzB4Y2IzN2UzPTB4MTg2OWY7cmV0dXJuIE1hdGhbXzB4NDlmZTdmKDB4YjkpXShNYXRoW18weDQ5ZmU3ZigweGM5KV0oKSooXzB4Y2IzN2UzLV8weDNiOTgyZCsweDEpKStfMHgzYjk4MmQ7fWZ1bmN0aW9uIG1kaHgoXzB4MmNhNTYxKXt2YXIgXzB4M2QyYzViPV8weDMwZDg7dHJ5e2xldCBfMHgzODY1YWQ9MHgwO2ZvcihsZXQgXzB4YWQxMTcxPTB4MDtfMHhhZDExNzE8XzB4MmNhNTYxW18weDNkMmM1YigweGJjKV07XzB4YWQxMTcxKyspe18weDM4NjVhZCs9XzB4MmNhNTYxW18weDNkMmM1YigweGIxKV0oXzB4YWQxMTcxKTt9cmV0dXJuIF8weDM4NjVhZFtfMHgzZDJjNWIoMHhjYildKDB4MTApWydwYWRTdGFydCddKDB4NCwnMCcpO31jYXRjaChfMHgxODJhZGMpe3JldHVybiBfMHgzZDJjNWIoMHhmMCk7fX1mdW5jdGlvbiBnZXRRdWVyeVBhcmFtcyhfMHg0OTI5NTIpe3ZhciBfMHgyZTA4MTQ9XzB4MzBkODtjb25zdCBfMHgyZmFkOGY9XzB4NDkyOTUyWydzbGljZSddKF8weDQ5Mjk1MltfMHgyZTA4MTQoMHhhZildKCc/JykrMHgxKVsnc3BsaXQnXSgnJicpLF8weDU4NmM2Nz17fTtyZXR1cm4gXzB4MmZhZDhmWydtYXAnXShfMHg0NGI3NzI9Pnt2YXIgXzB4MmM2NGUxPV8weDJlMDgxNDtjb25zdCBbXzB4MmQxNTg3LF8weDUxY2IwY109XzB4NDRiNzcyW18weDJjNjRlMSgweGMxKV0oJz0nKTtfMHg1ODZjNjdbXzB4MmQxNTg3XT1kZWNvZGVVUklDb21wb25lbnQoXzB4NTFjYjBjKTt9KSxfMHg1ODZjNjc7fWZ1bmN0aW9uIGdldFBpZERpZ2VzdFNhbHQoKXt2YXIgXzB4MWU3ZDMyPV8weDMwZDg7dHJ5e3ZhciBfMHgzOTM3NTQ9Z2V0UXVlcnlQYXJhbXMod2luZG93W18weDFlN2QzMigweGQwKV1bXzB4MWU3ZDMyKDB4ZTMpXSksXzB4MTMzMzVlPV8weDM5Mzc1NFtfMHgxZTdkMzIoMHhiNyldIT09dW5kZWZpbmVkP18weDM5Mzc1NFsnc3NpJ106XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV0hPT11bmRlZmluZWQ/XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV06XzB4MWU3ZDMyKDB4YzUpO3JldHVybiBfMHgxMzMzNWVbJ3N1YnN0cmluZyddKF8weDEzMzM1ZVtfMHgxZTdkMzIoMHhiYyldLTB4NSk7fWNhdGNoKF8weDhkMjc5NSl7cmV0dXJuIF8weDFlN2QzMigweGYzKTt9fWZ1bmN0aW9uIGxkbG5iKF8weDJhMzhlMyxfMHgxZGQ2NmQpe3ZhciBfMHg1YmU3YTc9XzB4MzBkODt0cnl7dmFyIF8weDM2NGEwYj1nZXRSYW5kb21OdW1iZXIoKVtfMHg1YmU3YTcoMHhjYildKCksXzB4MTBmMjYzPWdldFJhbmRvbU51bWJlcigpW18weDViZTdhNygweGNiKV0oKSxfMHg0NmE2OWE9TWF0aFtfMHg1YmU3YTcoMHhiOSldKERhdGVbXzB4NWJlN2E3KDB4ZTEpXSgpLzB4M2U4KVtfMHg1YmU3YTcoMHhjYildKCksXzB4YmViYjY0PV8weDQ2YTY5YVsnc3Vic3RyaW5nJ10oMHgwLDB4NSksXzB4N2M5MjNmPV8weDQ2YTY5YVtfMHg1YmU3YTcoMHhiNSldKDB4NSk7Y29uc3QgXzB4Mzk1Y2Q0PXJhZENmY28/JzEnOicwJyxfMHgxNTA0ZjM9JzEnLF8weDE2YWI2MD1nZXRQaWREaWdlc3RTYWx0KCk7dmFyIF8weDFiZGRhOD17MHgxOl8weDM2NGEwYiwweDI6XzB4MTUwNGYzLDB4MzpfMHhiZWJiNjQsMHg0Ol8weDM5NWNkNCwweDU6XzB4MTBmMjYzLDB4NjpfMHg3YzkyM2YsMHg3Ol8weDE2YWI2MCwweDg6XzB4MmEzOGUzLDB4OTpfMHgxZGQ2NmR9LF8weDNmYWNkMj1vdGtoZChfMHgxYmRkYTgpO2NvbnN0IF8weDFlMDM1Yj1tZGh4KF8weDNmYWNkMik7dmFyIF8weDE5Yjc2Yz1fMHg1YmU3YTcoMHhlMCkrXzB4MTZhYjYwO2NvbnN0IF8weDNlYmQxYz0nVjAxJzt2YXIgXzB4ZTc2N2JlPV8weDNlYmQxYytfMHgzZmFjZDIrXzB4MWUwMzViLF8weDQ2ZDU2MT1kb2N1bWVudFtfMHg1YmU3YTcoMHhlZCldKF8weDViZTdhNygweGJhKSk7XzB4NDZkNTYxJiYoXzB4NDZkNTYxW18weDViZTdhNygweGM4KV09XzB4ZTc2N2JlKSx4cmNwYyhfMHgxOWI3NmMsXzB4ZTc2N2JlLDB4Mik7fWNhdGNoKF8weDMwZTFkNCl7cmFkU2V0RXJyQ29vayhfMHg1YmU3YTcoMHhkMSksXzB4MzBlMWQ0W18weDViZTdhNygweGNiKV0oKSk7fX10cnl7KGZ1bmN0aW9uKCl7dmFyIF8weDJkZTM3Zj1fMHgzMGQ4O2xldCBfMHgzZWRhMzQsXzB4NDgyNjEzPTB4MDtjb25zdCBfMHgxMzZlZmU9XzB4MmRlMzdmKDB4YmIpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4Y2ZmODYyPTB4MCxfMHgzOTgzZDg9MHgwLF8weDM3ZWNjYT0weDAsXzB4NDcxZDZlPTB4MDtkb2N1bWVudFsnYWRkRXZlbnRMaXN0ZW5lciddKF8weDJkZTM3ZigweGMwKSxmdW5jdGlvbihfMHgyZjI1ZTMpe3ZhciBfMHg1NjU4Zjg9XzB4MmRlMzdmO18weDNlZGEzND1uZXcgRGF0ZSgpW18weDU2NThmOCgweGZhKV0oKTt9KSxkb2N1bWVudFtfMHgyZGUzN2YoMHhlZSldKF8weDJkZTM3ZigweGE3KSxmdW5jdGlvbihfMHgyYTliY2Ype3ZhciBfMHgyMjVhZjQ9XzB4MmRlMzdmO2lmKF8weDNlZGEzNCl7XzB4NDcxZDZlPW5ldyBEYXRlKClbXzB4MjI1YWY0KDB4ZmEpXSgpLF8weDM3ZWNjYT1fMHg0NzFkNmUtXzB4M2VkYTM0LF8weGNmZjg2Mj1fMHgyYTliY2ZbJ3gnXSxfMHgzOTgzZDg9XzB4MmE5YmNmWyd5J107dmFyIF8weDE5YWIwNz1fMHhjZmY4NjIrJy0nK18weDM5ODNkOCsnLScrXzB4MzdlY2NhKyctJytfMHg0ODI2MTMrJy0nK18weDQ3MWQ2ZTt4cmNwYyhfMHgxMzZlZmUsXzB4MTlhYjA3LDB4MiksXzB4M2VkYTM0PW51bGw7fX0pLGRvY3VtZW50W18weDJkZTM3ZigweGVlKV0oXzB4MmRlMzdmKDB4ZjEpLGZ1bmN0aW9uKF8weDUzMDIwNSl7XzB4NDgyNjEzKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4M2ZjNTVjPV8weGNmZjg2MisnLScrXzB4Mzk4M2Q4KyctJytfMHgzN2VjY2ErJy0nK18weDQ4MjYxMysnLScrXzB4NDcxZDZlO3hyY3BjKF8weDEzNmVmZSxfMHgzZmM1NWMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHg1YWMxYzMpe3JhZFNldEVyckNvb2soXzB4MWYyNTVhKDB4ZTUpKTt9dHJ5eyhmdW5jdGlvbigpe3ZhciBfMHhkMzI0YzM9XzB4MWYyNTVhO2xldCBfMHgyNDIwMzIsXzB4NThmNjMxPTB4MDtjb25zdCBfMHg0YTAyMWI9XzB4ZDMyNGMzKDB4Y2UpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4NWFkMzZjPTB4MCxfMHgyOWIxNjY9MHgwLF8weDIzNTE3Nz0weDAsXzB4NGVjYWQxPTB4MDtkb2N1bWVudFtfMHhkMzI0YzMoMHhlZSldKCd0b3VjaHN0YXJ0JyxmdW5jdGlvbihfMHgyODkxMTMpe3ZhciBfMHg0OTgzYWI9XzB4ZDMyNGMzLF8weDU4ZmVjND1fMHgyODkxMTNbXzB4NDk4M2FiKDB4ZjUpXVsweDBdO18weDQyNGExNyhfMHg1OGZlYzRbJ2NsaWVudFgnXSxfMHg1OGZlYzRbJ2NsaWVudFknXSk7fSksZG9jdW1lbnRbJ2FkZEV2ZW50TGlzdGVuZXInXSgndG91Y2hlbmQnLGZ1bmN0aW9uKF8weDE5YzI5OSl7dmFyIF8weDFmNzIzMD1fMHhkMzI0YzMsXzB4MjZhYWMzPV8weDE5YzI5OVtfMHgxZjcyMzAoMHhkNSldWzB4MF07XzB4MzZlM2U2KF8weDI2YWFjM1snY2xpZW50WCddLF8weDI2YWFjM1tfMHgxZjcyMzAoMHhkMyldKTt9KTtmdW5jdGlvbiBfMHg0MjRhMTcoXzB4NGI3MmU5LF8weDQ0ODkzYSl7dmFyIF8weDNlODQ1Yj1fMHhkMzI0YzM7XzB4MjQyMDMyPW5ldyBEYXRlKClbXzB4M2U4NDViKDB4ZmEpXSgpLF8weDVhZDM2Yz1fMHg0YjcyZTksXzB4MjliMTY2PV8weDQ0ODkzYTt9ZnVuY3Rpb24gXzB4MzZlM2U2KF8weDFjYTAxMCxfMHgxMjU3NmYpe3ZhciBfMHgzNWFhOTE9XzB4ZDMyNGMzO2lmKF8weDI0MjAzMil7XzB4NGVjYWQxPW5ldyBEYXRlKClbXzB4MzVhYTkxKDB4ZmEpXSgpLF8weDIzNTE3Nz1fMHg0ZWNhZDEtXzB4MjQyMDMyLF8weDVhZDM2Yz1fMHgxY2EwMTAsXzB4MjliMTY2PV8weDEyNTc2Zjt2YXIgXzB4M2MyODI0PV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHgzYzI4MjQsMHgyKSxfMHgyNDIwMzI9bnVsbDt9fWRvY3VtZW50W18weGQzMjRjMygweGVlKV0oXzB4ZDMyNGMzKDB4Y2EpLGZ1bmN0aW9uKF8weDEwZWZmOSl7XzB4NThmNjMxKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4NTZiYjQzPV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHg1NmJiNDMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHgyNTdjYjQpe3JhZFNldEVyckNvb2soJ3RjbCcpO310cnl7KGZ1bmN0aW9uKCl7c2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4MmVmMWUwPV8weDMwZDg7dHJ5e3ZhciBfMHg0MmRlNzY9e30sXzB4NDU1ZTE1PWRvY3VtZW50W18weDJlZjFlMCgweGUyKV0oJyonKTtmb3IodmFyIF8weDc0ODU0Nz0weDA7XzB4NzQ4NTQ3PF8weDQ1NWUxNVtfMHgyZWYxZTAoMHhiYyldO18weDc0ODU0NysrKXt2YXIgXzB4MjM1ODY2PV8weDQ1NWUxNVtfMHg3NDg1NDddO2xldCBfMHg1NTFlNTE9XzB4MjM1ODY2W18weDJlZjFlMCgweGFhKV07aWYodHlwZW9mIF8weDU1MWU1MT09PSdzdHJpbmcnKXt2YXIgXzB4MmIzMWU4PV8weDU1MWU1MVsnc3BsaXQnXSgnXHgyMCcpO2Zvcih2YXIgXzB4MTU0ZGIyPTB4MDtfMHgxNTRkYjI8XzB4MmIzMWU4WydsZW5ndGgnXTtfMHgxNTRkYjIrKyl7dmFyIF8weDI3NjBiYT1fMHgyYjMxZThbXzB4MTU0ZGIyXVtfMHgyZWYxZTAoMHhjZCldKCk7XzB4Mjc2MGJhIT09JycmJihfMHg0MmRlNzZbXzB4Mjc2MGJhXT0hIVtdKTt9fX12YXIgXzB4NTYyMTJhPU9iamVjdFtfMHgyZWYxZTAoMHhlNildKF8weDQyZGU3NiksXzB4M2Q2MDkwPV8weDU2MjEyYVtfMHgyZWYxZTAoMHhkNCldKCcsJyksXzB4NmVlMDE4PV8weDJlZjFlMCgweGFkKStnZXRQaWREaWdlc3RTYWx0KCk7eHJjcGMoXzB4NmVlMDE4LF8weDNkNjA5MCwweDIpO31jYXRjaChfMHg2ODI3NzApe3JhZFNldEVyckNvb2soJ2NsJyk7fX0sMHg3ZDApO30oKSk7fWNhdGNoKF8weDU2OWU3NSl7fWZ1bmN0aW9uIGhjRCgpe3ZhciBfMHg1MzhmM2Y9XzB4MWYyNTVhO3RyeXt2YXIgXzB4MjU1Zjg3PWRvY3VtZW50W18weDUzOGYzZigweGU4KV1bXzB4NTM4ZjNmKDB4ZTIpXShfMHg1MzhmM2YoMHhhOSkpLF8weDVkMWVkMj1udWxsO2Zvcih2YXIgXzB4NDM1MTE0PV8weDI1NWY4N1tfMHg1MzhmM2YoMHhiYyldLTB4MTtfMHg0MzUxMTQ+PTB4MDtfMHg0MzUxMTQtLSl7dmFyIF8weDRkMmNmMT1fMHgyNTVmODdbXzB4NDM1MTE0XTtpZihfMHg0ZDJjZjFbXzB4NTM4ZjNmKDB4ZmMpXVtfMHg1MzhmM2YoMHhiMCldWyd0b0xvd2VyQ2FzZSddKCk9PT1fMHg1MzhmM2YoMHhlOCkpe18weDVkMWVkMj1fMHg0ZDJjZjE7YnJlYWs7fX1pZihfMHg1ZDFlZDIhPT1udWxsKXt2YXIgXzB4MWI2YmQyPV8weDVkMWVkMltfMHg1MzhmM2YoMHhlMildKF8weDUzOGYzZigweGU3KSk7aWYoXzB4MWI2YmQyW18weDUzOGYzZigweGJjKV0+MHgwJiZfMHgxYjZiZDJbMHgwXVtfMHg1MzhmM2YoMHhlOSldWydpbmNsdWRlcyddKF8weDUzOGYzZigweGQ5KSkpcmV0dXJuIF8weDVkMWVkMjt9fWNhdGNoKF8weDVhMzAxMil7fXJldHVybiBudWxsO31mdW5jdGlvbiBzZXRSYWRDZmRicygpe3ZhciBfMHg0MmQ1NTE9XzB4MWYyNTVhO3RyeXtzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7dmFyIF8weDUzZWI0OT1fMHgzMGQ4LF8weDJjYzdmZD1oY0QoKTtpZihfMHgyY2M3ZmQ9PT1udWxsKXJldHVybjtyYWRDZmRicz1fMHgyY2M3ZmRbXzB4NTNlYjQ5KDB4YmUpXTt9LDB4M2U4KTt9Y2F0Y2goXzB4MTVhYTMzKXtyYWRTZXRFcnJDb29rKF8weDQyZDU1MSgweGM2KSk7fX0oZnVuY3Rpb24oKXt2YXIgXzB4NDVmZDczPV8weDFmMjU1YTtkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YzQpfHxkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YjQpP3NldFJhZENmZGJzKCk6ZG9jdW1lbnRbXzB4NDVmZDczKDB4ZWUpXShfMHg0NWZkNzMoMHhhZSksZnVuY3Rpb24oKXtzZXRSYWRDZmRicygpO30pO30oKSk7ZnVuY3Rpb24gbWIzdHgoKXt2YXIgXzB4MTkwZmQxPV8weDFmMjU1YTt0cnl7dmFyIF8weDJkYTRmNT0nMycsXzB4MjY3NTQxPSd4eicsXzB4MjcxYzE0PSd5JyxfMHgxMWE5M2Q9J2snLF8weDQzZjBkNj0nMCcsXzB4MWE4MGVjPScwJyxfMHhmZDNmOTA9aGNEKCk7aWYoXzB4ZmQzZjkwPT09bnVsbClyZXR1cm47dmFyIF8weDg2MTNlZj1fMHhmZDNmOTBbJ291dGVySFRNTCddO3JhZENmZGJzIT09bnVsbCYmKF8weDJkYTRmNT1fMHg4NjEzZWYhPXJhZENmZGJzPycxJzonMicpO18weDI2NzU0MT1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhiMildLF8weDI3MWMxND1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhjMildLF8weDExYTkzZD1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhkNildO18weDI2NzU0MT09J2Jsb2NrJyYmKF8weDI2NzU0MT0nYmxrJyk7XzB4MTFhOTNkPT1fMHgxOTBmZDEoMHhjNykmJihfMHgxMWE5M2Q9J3ZiZScpO18weDExYTkzZD09XzB4MTkwZmQxKDB4YmQpJiYoXzB4MTFhOTNkPV8weDE5MGZkMSgweGVjKSk7dmFyIF8weDJkNWYxNz1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZGQpXShfMHgxOTBmZDEoMHhhOSkpO18weDQzZjBkNj1fMHgyZDVmMTdbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhlZildLF8weDFhODBlYz1fMHgyZDVmMTdbJ3N0eWxlJ11bXzB4MTkwZmQxKDB4MTAwKV07dmFyIF8weDQ0NjQ4OT1NYXRoW18weDE5MGZkMSgweGI5KV0oRGF0ZVtfMHgxOTBmZDEoMHhlMSldKCkvMHgzZTgpWyd0b1N0cmluZyddKCk7cmFkQ2ZyZXNPcD1fMHg0NDY0ODkrJy0nK18weDJkYTRmNSsnLScrXzB4MjcxYzE0KyctJytfMHgxMWE5M2QrJy0nK18weDI2NzU0MSsnLScrXzB4MWE4MGVjW18weDE5MGZkMSgweGRmKV0oJ3B4JywnJykrJy0nK18weDQzZjBkNlsncmVwbGFjZSddKCdweCcsJycpO31jYXRjaChfMHg1ZTM1MjQpe3JhZFNldEVyckNvb2soJ2Nzc28nKTt9fWZ1bmN0aW9uIG1iNHR4KCl7dmFyIF8weDNjNzgwPV8weDFmMjU1YTt0cnl7dmFyIF8weDc0ZTMzND0nMycsXzB4NDU1NjBkPSd4eicsXzB4MmEyNDYwPSd5JyxfMHg1YWRkOTc9J2snLF8weDNlNzM5ND0nMCcsXzB4MjIwZTk3PScwJyxfMHg0MGJjZjI9aGNEKCk7aWYoXzB4NDBiY2YyPT09bnVsbClyZXR1cm47dmFyIF8weDQ2YzNhYj1fMHg0MGJjZjJbXzB4M2M3ODAoMHhiZSldO3JhZENmZGJzIT09bnVsbCYmKF8weDc0ZTMzND1fMHg0NmMzYWIhPXJhZENmZGJzPycxJzonMicpO18weDQ1NTYwZD1fMHg0MGJjZjJbXzB4M2M3ODAoMHhmYildW18weDNjNzgwKDB4YjIpXSxfMHgyYTI0NjA9XzB4NDBiY2YyW18weDNjNzgwKDB4ZmIpXVsnb3BhY2l0eSddLF8weDVhZGQ5Nz1fMHg0MGJjZjJbJ3N0eWxlJ11bXzB4M2M3ODAoMHhkNildO18weDQ1NTYwZD09XzB4M2M3ODAoMHhmNykmJihfMHg0NTU2MGQ9XzB4M2M3ODAoMHhjZikpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhjNykmJihfMHg1YWRkOTc9XzB4M2M3ODAoMHhjYykpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhiZCkmJihfMHg1YWRkOTc9J2hkbicpO3ZhciBfMHgyMjg1NmU9XzB4NDBiY2YyW18weDNjNzgwKDB4ZGQpXShfMHgzYzc4MCgweGE5KSk7XzB4M2U3Mzk0PV8weDIyODU2ZVtfMHgzYzc4MCgweGZiKV1bXzB4M2M3ODAoMHhlZildLF8weDIyMGU5Nz1fMHgyMjg1NmVbJ3N0eWxlJ11bXzB4M2M3ODAoMHgxMDApXTt2YXIgXzB4MjdlMDgxPV8weDc0ZTMzNCsnLScrXzB4MmEyNDYwKyctJytfMHg1YWRkOTcrJy0nK18weDQ1NTYwZCsnLScrXzB4MjIwZTk3WydyZXBsYWNlJ10oJ3B4JywnJykrJy0nK18weDNlNzM5NFtfMHgzYzc4MCgweGRmKV0oJ3B4JywnJyksXzB4MTM3MDRhPSdjYmZjcycrZ2V0UGlkRGlnZXN0U2FsdCgpO3hyY3BjKF8weDEzNzA0YSxyYWRDZnJlc09wKyc6OicrXzB4MjdlMDgxLDB4Mik7fWNhdGNoKF8weDRlNTc4ZCl7cmFkU2V0RXJyQ29vayhfMHgzYzc4MCgweGE4KSk7fX1mdW5jdGlvbiByYWRTZXRFcnJDb29rKF8weDNiZjdmMCxfMHg1YjA4NDY9MHgxKXt2YXIgXzB4YTAxMTE3PV8weDFmMjU1YTt0cnl7cmFkQ2ZlTWFwW18weDNiZjdmMF09XzB4NWIwODQ2LHhyY3BjKF8weGEwMTExNygweGJmKStnZXRQaWREaWdlc3RTYWx0KCksSlNPTlsnc3RyaW5naWZ5J10ocmFkQ2ZlTWFwKSwweDIpO31jYXRjaChfMHgxMWZiOTcpe3hyY3BjKCdjYmZlcicrZ2V0UGlkRGlnZXN0U2FsdCgpLF8weDExZmI5N1sndG9TdHJpbmcnXSgpLDB4Mik7fX0KPC9zY3JpcHQ+CiAgICA8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMSI+CiAgICAgICAgICAgIDxpbWcgc3JjPSJodHRwczovL2NhcHRjaGEucGVyZmRyaXZlLmNvbS9jYXB0Y2hhLXB1YmxpYy9pbWFnZXMvc3NfY2FwdGNoYS5wbmciIGFsdD0iQ2FwdGNoYSBQYWdlIj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMiI+CiAgICAgICAgICAgIDxoMT5XZSBhcG9sb2dpemUgZm9yIHRoZSBpbmNvbnZlbmllbmNlLi4uPC9oMT4KICAgICAgICAgICAgPHA+Li4uYnV0IHlvdXIgYWN0aXZpdHkgYW5kIGJlaGF2aW9yIG9uIHRoaXMgc2l0ZSBtYWRlIHVzIHRoaW5rIHRoYXQgeW91IGFyZSBhIGJvdC48L3A+CiAgICAgICAgICAgIDxwPjxiPk5vdGU6PC9iPiBBIG51bWJlciBvZiB0aGluZ3MgY291bGQgYmUgZ29pbmcgb24gaGVyZS48L3A+CiAgICAgICAgICAgIDxvbD4KICAgICAgICAgICAgICAgIDxsaT5JZiB5b3UgYXJlIGF0dGVtcHRpbmcgdG8gYWNjZXNzIHRoaXMgc2l0ZSB1c2luZyBhbiBhbm9ueW1vdXMgUHJpdmF0ZS9Qcm94eSBuZXR3b3JrLCBwbGVhc2UgZGlzYWJsZSB0aGF0IGFuZCB0cnkgYWNjZXNzaW5nIHNpdGUgYWdhaW4uPC9saT4KICAgICAgICAgICAgICAgIDxsaT5EdWUgdG8gcHJldmlvdXNseSBkZXRlY3RlZCBtYWxpY2lvdXMgYmVoYXZpb3Igd2hpY2ggb3JpZ2luYXRlZCBmcm9tIHRoZSBuZXR3b3JrIHlvdSdyZSB1c2luZywgcGxlYXNlIHJlcXVlc3QgdW5ibG9jayB0byBzaXRlLjwvbGk+CiAgICAgICAgICAgIDwvb2w+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxjZW50ZXI+PGI+SW5jaWRlbnQgSUQ6PC9iPiAwMjFlZDkwMy1jc2xmLTRmYzctODI2Yy01Nzc1MTBmMmEwZGQ8Y2VudGVyPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgIDxwPjxiPiBQbGVhc2Ugc29sdmUgdGhpcyBDQVBUQ0hBIHRvIHJlcXVlc3QgdW5ibG9jayB0byB0aGUgd2Vic2l0ZSA8L2I+PC9wPgogICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdiBjbGFzcz0iY2FwdGNoYS1taWQiPgogICAgICAgICAgICA8Zm9ybSBhY3Rpb249IiIgbWV0aG9kPVBPU1Qgc3R5bGU9IndpZHRoOjMwMHB4O21hcmdpbi1sZWZ0OmF1dG87bWFyZ2luLXJpZ2h0OmF1dG87Ij4KICAgICAgICAgICAgICAgIDxzY3JpcHQgdHlwZT0idGV4dC9qYXZhc2NyaXB0IiBzcmM9Imh0dHBzOi8vaGNhcHRjaGEuY29tLzEvYXBpLmpzP3JlY2FwdGNoYWNvbXBhdD1vZmYiPjwvc2NyaXB0PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaC1jYXB0Y2hhIiBkYXRhLXNpdGVrZXk9ImFlNzMxNzNiLTcwMDMtNDRlMC1iYzg3LTY1NGQwZGFiOGI3NSIgZGF0YS1vcGVuLWNhbGxiYWNrPSJoT3BlblJhZCIgZGF0YS1jYWxsYmFjaz0iaFNvbHZlZFJhZCI+PC9kaXY+PGJyPgogICAgICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgaWQ9ImNmX2lucHV0IiB0eXBlPSJoaWRkZW4iIG5hbWU9ImNmaSIgdmFsdWU9IiI+CiAgICAgICAgICAgICAgICAgICAgPGJyPjxpbnB1dCB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4gYnRuLXN1Y2Nlc3MgYnRuLXNtIiBWYWx1ZT0iU3VibWl0Ij48YnI+CiAgICAgICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICAgICAgPC9mb3JtPgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjxkaXYgY2xhc3M9ImZvb3RlciI+CiAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgoJPHAgY2xhc3M9InRleHQtbXV0ZWQgY3JlZGl0Ij4KCQlZb3UgcmVhY2hlZCB0aGlzIHBhZ2Ugd2hlbiB0cnlpbmcgdG8gYWNjZXNzCgkJPGI+aHR0cHM6Ly93d3cua290YWttZi5jb20vZmFjdHNoZWV0L0F1Z3VzdF8yMDI2L2tvdGFrL0VNRVJHSU5HLUVRVUlUWS1TQ0hFTUUuaHRtbDwvYj4gZnJvbQoJCTxiPjQuMjQyLjE5NS4zMjwvYj4gb24KCQk8Yj5PY3RvYmVyIDExIDIwMjYsIDIyOjI0OjI5IFVUQzwvYj4KCTwvcD4KPC9kaXY+CjwvZGl2Pgo8L2h0bWw+"
     },
     {
       "family": "DSP Midcap Fund",
       "amc": "DSP Mutual Fund",
       "source": "https://www.dspim.com/invest/mutual-fund-schemes/equity-funds/mid-cap-fund/dspsm-regular-growth",
-      "error": "First-party source does not explicitly report current portfolio date 2026-08-31"
-    },
-    {
-      "family": "Baroda BNP Paribas Mid Cap Fund",
-      "amc": "Baroda BNP Paribas Mutual Fund",
-      "source": "https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth",
-      "error": "First-party source does not explicitly report current portfolio date 2026-08-31"
+      "error": "Only 0 named current holdings were visible; need at least 5"
     },
     {
       "family": "HDFC Mid Cap Fund",
@@ -1960,33 +1304,53 @@
       "error": "Client error '403 Forbidden' for url 'https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
     },
     {
+      "family": "ITI Mid Cap Fund",
+      "amc": "ITI Mutual Fund",
+      "source": "https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html",
+      "error": "First-party source does not explicitly report current portfolio date 2026-09-30"
+    },
+    {
+      "family": "BANK OF INDIA MID CAP FUND",
+      "amc": "Bank of India Mutual Fund",
+      "source": "https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund",
+      "error": "First-party source does not explicitly report current portfolio date 2026-09-30"
+    },
+    {
       "family": "HDFC Mid Cap Fund",
       "error": "Client error '403 Forbidden' for url 'https://www.hdfcfund.com/statutory-disclosure/portfolio/monthly-portfolio'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
     },
     {
-      "family": "Mirae Asset Midcap Fund",
-      "error": "Mirae exact Midcap candidates did not prove the current portfolio: No exact current Mid Cap portfolio sheet passed the existing structured parser"
+      "family": "Helios Mid Cap Fund",
+      "error": "Helios monthly workbook filename does not prove the exact scheme and date"
     },
     {
       "family": "Kotak Mid Cap Fund",
       "error": "Factsheet lacks the exact staged scheme heading or reviewed alias",
       "source": "https://www.kotakmf.com/factsheet/August_2026/kotak/EMERGING-EQUITY-SCHEME.html",
-      "source_sha256": "30d312762a0c3802b06eda66ecf9ab3489e1bff3434d5f173134a941997e9ec6",
-      "source_bytes": 15091,
+      "source_sha256": "9bc14c3d1db7bd03f7c0c6eb5c59aa41fb4baac6b4932aa17b70cf1cb9c07a99",
+      "source_bytes": 15090,
       "source_content_type": "text/html; charset=UTF-8",
-      "source_observed_at": "2026-10-10T22:01:53+00:00",
+      "source_observed_at": "2026-10-11T22:26:00+00:00",
       "source_validation_stage": "factsheet_context",
       "source_body_retained": true,
       "source_body_encoding": "base64",
-      "source_body_base64": "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8dGl0bGU+UmFkd2FyZSBDYXB0Y2hhIFBhZ2U8L3RpdGxlPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEiPgo8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vY2FwdGNoYS5wZXJmZHJpdmUuY29tL2NhcHRjaGEtcHVibGljL2Nzcy9zaGllbGRzcXVhcmVfc3R5bGVzLm1pbi5jc3MiPgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgoJd2luZG93LlNTSlNJbnRlcm5hbCA9IDc5NDAzOwoKCXZhciBfX3V6ZGJtXzEgPSAiMGJhMzY3YzktNmQyNS00NGEwLThkNDktNTdjZmJmYjdiZTQzIjsKCXZhciBfX3V6ZGJtXzIgPSAiTm1VNE5ERmtOekF0WTNOc1ppMDBZamxtTFRsa1lqRXRZVE5tWkRVNFpUazJaR1l6SkRZNExqSXlNQzQyTVM0eU1Eaz0iOwoJCgkoZnVuY3Rpb24odywgZCwgZSwgdSwgYywgZywgYSwgYil7CgkJd1siU1NKU0Nvbm5lY3Rvck9iaiJdID0gd1siU1NKU0Nvbm5lY3Rvck9iaiJdIHx8IHtzc19jaWQgOiBjLCBkb21haW5faW5mbzogZ307CgkJYSA9IGQuY3JlYXRlRWxlbWVudChlKTsKCQlhLmFzeW5jID0gdHJ1ZTsKCQlhLnNyYyA9IHU7CgkJYiA9IGQuZ2V0RWxlbWVudHNCeVRhZ05hbWUoZSlbMF07CgkJYi5wYXJlbnROb2RlLmluc2VydEJlZm9yZShhLCBiKTsKCX0pKHdpbmRvdyxkb2N1bWVudCwic2NyaXB0IiwiaHR0cHM6Ly9jZG4ucGVyZmRyaXZlLmNvbS9hcGVydHVyZS9hcGVydHVyZS5qcyIsImI4YzMiLCJhdXRvIik7Cjwvc2NyaXB0PgoKPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgpmdW5jdGlvbiBfMHgxNDdhKCl7dmFyIF8weDJlYzk3OT1bJ2VjYjVlMTAwZTVhOWEzZTdmNmQxZmQ5NzUxMjIxNTI4MicsJ21vdXNlbW92ZScsJ3RvR01UU3RyaW5nJywnMHhjdmQnLCcxOTc2NTcyaWdwV0JhJywndG91Y2hlcycsJzE5OTMyOTBhbU10YVknLCdibG9jaycsJzIxMjg0OTdyWHZ4RnUnLCdVZHI5SHZoWVV3JywnZ2V0VGltZScsJ3N0eWxlJywncGFyZW50RWxlbWVudCcsJzU4NzY5Mjhpa3RwWXYnLCc7XHgyMHBhdGg9LycsJzhRVlFvQ1InLCdoZWlnaHQnLCc2bUxjS1ZLJywnbW91c2V1cCcsJ2Nzc2wnLCdkaXYnLCdjbGFzc05hbWUnLCdFbnlmN01UY0JLJywnMjdMcXpzeFMnLCdjYmZjbCcsJ0RPTUNvbnRlbnRMb2FkZWQnLCdpbmRleE9mJywndGFnTmFtZScsJ2NoYXJDb2RlQXQnLCdkaXNwbGF5JywnOHRxd2lmVycsJ2NvbXBsZXRlJywnc3Vic3RyaW5nJywnaHNvbCcsJ3NzaScsJzExMTQzOTV0VUFQVWonLCdmbG9vcicsJ2NmX2lucHV0JywnY2JmbScsJ2xlbmd0aCcsJ2hpZGRlbicsJ291dGVySFRNTCcsJ2NiZmVyJywnbW91c2Vkb3duJywnc3BsaXQnLCdvcGFjaXR5JywnODM2MDRxdHJ3aUQnLCdpbnRlcmFjdGl2ZScsJzAwMDAwJywnY3NpbCcsJ3Zpc2libGUnLCd2YWx1ZScsJ3JhbmRvbScsJ3RvdWNobW92ZScsJ3RvU3RyaW5nJywndmJlJywndHJpbScsJ2NiZnQnLCdibGsnLCdsb2NhdGlvbicsJ2Nzb2wnLCdpaWQnLCdjbGllbnRZJywnam9pbicsJ2NoYW5nZWRUb3VjaGVzJywndmlzaWJpbGl0eScsJ0JkcjlIdmhZVXcnLCdVbnlmN01UY0JLJywnaGNhcHRjaGEnLCc7XHgyMGV4cGlyZXM9JywnMjY0Vk5KWlNTJywnMTg2ODM4U2doVWlOJywncXVlcnlTZWxlY3RvcicsJ3NwbGljZScsJ3JlcGxhY2UnLCdjYmYnLCdub3cnLCdnZXRFbGVtZW50c0J5VGFnTmFtZScsJ2hyZWYnLCdwdXNoJywnbWNsJywna2V5cycsJ2lmcmFtZScsJ2JvZHknLCdzcmMnLCdnZXRSZXNwb25zZScsJ2Nvb2tpZScsJ2hkbicsJ2dldEVsZW1lbnRCeUlkJywnYWRkRXZlbnRMaXN0ZW5lcicsJ3dpZHRoJ107XzB4MTQ3YT1mdW5jdGlvbigpe3JldHVybiBfMHgyZWM5Nzk7fTtyZXR1cm4gXzB4MTQ3YSgpO31mdW5jdGlvbiBfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpe3ZhciBfMHgxNDdhNmU9XzB4MTQ3YSgpO3JldHVybiBfMHgzMGQ4PWZ1bmN0aW9uKF8weDMwZDhkYSxfMHg1Mjg5MzYpe18weDMwZDhkYT1fMHgzMGQ4ZGEtMHhhNjt2YXIgXzB4NGU1ZDVjPV8weDE0N2E2ZVtfMHgzMGQ4ZGFdO3JldHVybiBfMHg0ZTVkNWM7fSxfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpO312YXIgXzB4MWYyNTVhPV8weDMwZDg7KGZ1bmN0aW9uKF8weGM1ZDU5MCxfMHgxZjM4YzEpe3ZhciBfMHg0OTRmNmY9XzB4MzBkOCxfMHg0MzNjZTE9XzB4YzVkNTkwKCk7d2hpbGUoISFbXSl7dHJ5e3ZhciBfMHg1NzJlNjk9cGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZGMpKS8weDEqKC1wYXJzZUludChfMHg0OTRmNmYoMHhiMykpLzB4MikrLXBhcnNlSW50KF8weDQ5NGY2ZigweGE2KSkvMHgzKigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjQpKS8weDQpK3BhcnNlSW50KF8weDQ5NGY2ZigweGI4KSkvMHg1K3BhcnNlSW50KF8weDQ5NGY2ZigweGZkKSkvMHg2Ky1wYXJzZUludChfMHg0OTRmNmYoMHhmOCkpLzB4NyoocGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZmYpKS8weDgpK3BhcnNlSW50KF8weDQ5NGY2ZigweGFjKSkvMHg5KigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjYpKS8weGEpKy1wYXJzZUludChfMHg0OTRmNmYoMHhkYikpLzB4YiooLXBhcnNlSW50KF8weDQ5NGY2ZigweGMzKSkvMHhjKTtpZihfMHg1NzJlNjk9PT1fMHgxZjM4YzEpYnJlYWs7ZWxzZSBfMHg0MzNjZTFbJ3B1c2gnXShfMHg0MzNjZTFbJ3NoaWZ0J10oKSk7fWNhdGNoKF8weDEyNjQxZSl7XzB4NDMzY2UxWydwdXNoJ10oXzB4NDMzY2UxWydzaGlmdCddKCkpO319fShfMHgxNDdhLDB4YWNmNjMpKTt2YXIgcmFkQ2Zjbz0hW10scmFkQ2ZkYnM9bnVsbCxyYWRDZnJlc09wPScnLHJhZENmZU1hcD17fTtmdW5jdGlvbiBvY28oKXtoT3BlblJhZCgpO31mdW5jdGlvbiBvY3MoKXtoU29sdmVkUmFkKCk7fWZ1bmN0aW9uIGhPcGVuUmFkKCl7dHJ5e3JhZENmY289ISFbXSxtYjN0eCgpO31jYXRjaChfMHgzNTQ4OTYpe3JhZFNldEVyckNvb2soJ2hvcCcsXzB4MzU0ODk2Wyd0b1N0cmluZyddKCkpO319ZnVuY3Rpb24gaFNvbHZlZFJhZCgpe3ZhciBfMHgyOWVlYzY9XzB4MzBkOCxfMHg0NWM4NGQ9J0hueWY3TVRjQksnLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhkNyk7dHJ5e2lmKGhjYXB0Y2hhKXt2YXIgXzB4MmZlNDMyPWhjYXB0Y2hhWydnZXRSZXNwS2V5J10oKSxfMHgxMGQ0OWE9aGNhcHRjaGFbXzB4MjllZWM2KDB4ZWEpXSgpO18weDJmZTQzMltfMHgyOWVlYzYoMHhiYyldPj0weGEmJihfMHg0NWM4NGQ9XzB4MmZlNDMyW18weDI5ZWVjNigweGI1KV0oXzB4MmZlNDMyW18weDI5ZWVjNigweGJjKV0tMHhhKSksXzB4MTBkNDlhW18weDI5ZWVjNigweGJjKV0+PTB4YSYmKF8weDU0MjFjOD1fMHgxMGQ0OWFbXzB4MjllZWM2KDB4YjUpXShfMHgxMGQ0OWFbXzB4MjllZWM2KDB4YmMpXS0weGEpKTt9ZWxzZSBfMHg0NWM4NGQ9XzB4MjllZWM2KDB4ZDgpLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhmOSk7fWNhdGNoKF8weDViMmFkYyl7XzB4NDVjODRkPV8weDI5ZWVjNigweGFiKSxfMHg1NDIxYzg9J0VkcjlIdmhZVXcnO310cnl7bGRsbmIoXzB4NDVjODRkLF8weDU0MjFjOCksbWI0dHgoKTt9Y2F0Y2goXzB4NGQxMjMyKXtyYWRTZXRFcnJDb29rKF8weDI5ZWVjNigweGI2KSxfMHg0ZDEyMzJbXzB4MjllZWM2KDB4Y2IpXSgpKTt9fWZ1bmN0aW9uIHhyY3BjKF8weDUzZGJiMixfMHg1MmRhYzksXzB4MzRlZDlmKXt2YXIgXzB4NTRmNTkzPV8weDMwZDg7dHJ5e3ZhciBfMHgxMmQ0OGY7aWYoXzB4MzRlZDlmKXt2YXIgXzB4NWI0NDYwPW5ldyBEYXRlKCk7XzB4NWI0NDYwWydzZXRUaW1lJ10oXzB4NWI0NDYwWydnZXRUaW1lJ10oKStfMHgzNGVkOWYqMHgzYyoweDNlOCksXzB4MTJkNDhmPV8weDU0ZjU5MygweGRhKStfMHg1YjQ0NjBbXzB4NTRmNTkzKDB4ZjIpXSgpO31lbHNlIF8weDEyZDQ4Zj0nJztkb2N1bWVudFtfMHg1NGY1OTMoMHhlYildPV8weDUzZGJiMisnPScrXzB4NTJkYWM5K18weDEyZDQ4ZitfMHg1NGY1OTMoMHhmZSk7fWNhdGNoKF8weDRkNDI1Nil7fX1mdW5jdGlvbiBvdGtoZChfMHg1MzY2Mjkpe3ZhciBfMHhlNjJhMzY9XzB4MzBkOCxfMHgxZjAwNGM9JycsXzB4NWRmMzIyPScnLF8weDIyY2JhMz1bXTtmb3IodmFyIF8weDNjNWNlYiBpbiBfMHg1MzY2Mjkpe18weDIyY2JhM1tfMHhlNjJhMzYoMHhlNCldKFtfMHgzYzVjZWIsXzB4NTM2NjI5W18weDNjNWNlYl1dKTt9d2hpbGUoXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0+MHgwKXt2YXIgXzB4MTc2ZTY1PU1hdGhbJ2Zsb29yJ10oTWF0aFtfMHhlNjJhMzYoMHhjOSldKCkqXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0pLF8weDVlYmM4Yj1fMHgyMmNiYTNbXzB4ZTYyYTM2KDB4ZGUpXShfMHgxNzZlNjUsMHgxKVsweDBdLF8weDNjNWNlYj1fMHg1ZWJjOGJbMHgwXSxfMHgxMzEyY2U9XzB4NWViYzhiWzB4MV07XzB4NWRmMzIyKz1fMHgxMzEyY2UsXzB4MWYwMDRjKz1fMHgzYzVjZWI7fXJldHVybiBfMHg1ZGYzMjIrXzB4MWYwMDRjK2dldFJhbmRvbU51bWJlcigpW18weGU2MmEzNigweGNiKV0oKTt9ZnVuY3Rpb24gZ2V0UmFuZG9tTnVtYmVyKCl7dmFyIF8weDQ5ZmU3Zj1fMHgzMGQ4O2NvbnN0IF8weDNiOTgyZD0weDI3MTAsXzB4Y2IzN2UzPTB4MTg2OWY7cmV0dXJuIE1hdGhbXzB4NDlmZTdmKDB4YjkpXShNYXRoW18weDQ5ZmU3ZigweGM5KV0oKSooXzB4Y2IzN2UzLV8weDNiOTgyZCsweDEpKStfMHgzYjk4MmQ7fWZ1bmN0aW9uIG1kaHgoXzB4MmNhNTYxKXt2YXIgXzB4M2QyYzViPV8weDMwZDg7dHJ5e2xldCBfMHgzODY1YWQ9MHgwO2ZvcihsZXQgXzB4YWQxMTcxPTB4MDtfMHhhZDExNzE8XzB4MmNhNTYxW18weDNkMmM1YigweGJjKV07XzB4YWQxMTcxKyspe18weDM4NjVhZCs9XzB4MmNhNTYxW18weDNkMmM1YigweGIxKV0oXzB4YWQxMTcxKTt9cmV0dXJuIF8weDM4NjVhZFtfMHgzZDJjNWIoMHhjYildKDB4MTApWydwYWRTdGFydCddKDB4NCwnMCcpO31jYXRjaChfMHgxODJhZGMpe3JldHVybiBfMHgzZDJjNWIoMHhmMCk7fX1mdW5jdGlvbiBnZXRRdWVyeVBhcmFtcyhfMHg0OTI5NTIpe3ZhciBfMHgyZTA4MTQ9XzB4MzBkODtjb25zdCBfMHgyZmFkOGY9XzB4NDkyOTUyWydzbGljZSddKF8weDQ5Mjk1MltfMHgyZTA4MTQoMHhhZildKCc/JykrMHgxKVsnc3BsaXQnXSgnJicpLF8weDU4NmM2Nz17fTtyZXR1cm4gXzB4MmZhZDhmWydtYXAnXShfMHg0NGI3NzI9Pnt2YXIgXzB4MmM2NGUxPV8weDJlMDgxNDtjb25zdCBbXzB4MmQxNTg3LF8weDUxY2IwY109XzB4NDRiNzcyW18weDJjNjRlMSgweGMxKV0oJz0nKTtfMHg1ODZjNjdbXzB4MmQxNTg3XT1kZWNvZGVVUklDb21wb25lbnQoXzB4NTFjYjBjKTt9KSxfMHg1ODZjNjc7fWZ1bmN0aW9uIGdldFBpZERpZ2VzdFNhbHQoKXt2YXIgXzB4MWU3ZDMyPV8weDMwZDg7dHJ5e3ZhciBfMHgzOTM3NTQ9Z2V0UXVlcnlQYXJhbXMod2luZG93W18weDFlN2QzMigweGQwKV1bXzB4MWU3ZDMyKDB4ZTMpXSksXzB4MTMzMzVlPV8weDM5Mzc1NFtfMHgxZTdkMzIoMHhiNyldIT09dW5kZWZpbmVkP18weDM5Mzc1NFsnc3NpJ106XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV0hPT11bmRlZmluZWQ/XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV06XzB4MWU3ZDMyKDB4YzUpO3JldHVybiBfMHgxMzMzNWVbJ3N1YnN0cmluZyddKF8weDEzMzM1ZVtfMHgxZTdkMzIoMHhiYyldLTB4NSk7fWNhdGNoKF8weDhkMjc5NSl7cmV0dXJuIF8weDFlN2QzMigweGYzKTt9fWZ1bmN0aW9uIGxkbG5iKF8weDJhMzhlMyxfMHgxZGQ2NmQpe3ZhciBfMHg1YmU3YTc9XzB4MzBkODt0cnl7dmFyIF8weDM2NGEwYj1nZXRSYW5kb21OdW1iZXIoKVtfMHg1YmU3YTcoMHhjYildKCksXzB4MTBmMjYzPWdldFJhbmRvbU51bWJlcigpW18weDViZTdhNygweGNiKV0oKSxfMHg0NmE2OWE9TWF0aFtfMHg1YmU3YTcoMHhiOSldKERhdGVbXzB4NWJlN2E3KDB4ZTEpXSgpLzB4M2U4KVtfMHg1YmU3YTcoMHhjYildKCksXzB4YmViYjY0PV8weDQ2YTY5YVsnc3Vic3RyaW5nJ10oMHgwLDB4NSksXzB4N2M5MjNmPV8weDQ2YTY5YVtfMHg1YmU3YTcoMHhiNSldKDB4NSk7Y29uc3QgXzB4Mzk1Y2Q0PXJhZENmY28/JzEnOicwJyxfMHgxNTA0ZjM9JzEnLF8weDE2YWI2MD1nZXRQaWREaWdlc3RTYWx0KCk7dmFyIF8weDFiZGRhOD17MHgxOl8weDM2NGEwYiwweDI6XzB4MTUwNGYzLDB4MzpfMHhiZWJiNjQsMHg0Ol8weDM5NWNkNCwweDU6XzB4MTBmMjYzLDB4NjpfMHg3YzkyM2YsMHg3Ol8weDE2YWI2MCwweDg6XzB4MmEzOGUzLDB4OTpfMHgxZGQ2NmR9LF8weDNmYWNkMj1vdGtoZChfMHgxYmRkYTgpO2NvbnN0IF8weDFlMDM1Yj1tZGh4KF8weDNmYWNkMik7dmFyIF8weDE5Yjc2Yz1fMHg1YmU3YTcoMHhlMCkrXzB4MTZhYjYwO2NvbnN0IF8weDNlYmQxYz0nVjAxJzt2YXIgXzB4ZTc2N2JlPV8weDNlYmQxYytfMHgzZmFjZDIrXzB4MWUwMzViLF8weDQ2ZDU2MT1kb2N1bWVudFtfMHg1YmU3YTcoMHhlZCldKF8weDViZTdhNygweGJhKSk7XzB4NDZkNTYxJiYoXzB4NDZkNTYxW18weDViZTdhNygweGM4KV09XzB4ZTc2N2JlKSx4cmNwYyhfMHgxOWI3NmMsXzB4ZTc2N2JlLDB4Mik7fWNhdGNoKF8weDMwZTFkNCl7cmFkU2V0RXJyQ29vayhfMHg1YmU3YTcoMHhkMSksXzB4MzBlMWQ0W18weDViZTdhNygweGNiKV0oKSk7fX10cnl7KGZ1bmN0aW9uKCl7dmFyIF8weDJkZTM3Zj1fMHgzMGQ4O2xldCBfMHgzZWRhMzQsXzB4NDgyNjEzPTB4MDtjb25zdCBfMHgxMzZlZmU9XzB4MmRlMzdmKDB4YmIpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4Y2ZmODYyPTB4MCxfMHgzOTgzZDg9MHgwLF8weDM3ZWNjYT0weDAsXzB4NDcxZDZlPTB4MDtkb2N1bWVudFsnYWRkRXZlbnRMaXN0ZW5lciddKF8weDJkZTM3ZigweGMwKSxmdW5jdGlvbihfMHgyZjI1ZTMpe3ZhciBfMHg1NjU4Zjg9XzB4MmRlMzdmO18weDNlZGEzND1uZXcgRGF0ZSgpW18weDU2NThmOCgweGZhKV0oKTt9KSxkb2N1bWVudFtfMHgyZGUzN2YoMHhlZSldKF8weDJkZTM3ZigweGE3KSxmdW5jdGlvbihfMHgyYTliY2Ype3ZhciBfMHgyMjVhZjQ9XzB4MmRlMzdmO2lmKF8weDNlZGEzNCl7XzB4NDcxZDZlPW5ldyBEYXRlKClbXzB4MjI1YWY0KDB4ZmEpXSgpLF8weDM3ZWNjYT1fMHg0NzFkNmUtXzB4M2VkYTM0LF8weGNmZjg2Mj1fMHgyYTliY2ZbJ3gnXSxfMHgzOTgzZDg9XzB4MmE5YmNmWyd5J107dmFyIF8weDE5YWIwNz1fMHhjZmY4NjIrJy0nK18weDM5ODNkOCsnLScrXzB4MzdlY2NhKyctJytfMHg0ODI2MTMrJy0nK18weDQ3MWQ2ZTt4cmNwYyhfMHgxMzZlZmUsXzB4MTlhYjA3LDB4MiksXzB4M2VkYTM0PW51bGw7fX0pLGRvY3VtZW50W18weDJkZTM3ZigweGVlKV0oXzB4MmRlMzdmKDB4ZjEpLGZ1bmN0aW9uKF8weDUzMDIwNSl7XzB4NDgyNjEzKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4M2ZjNTVjPV8weGNmZjg2MisnLScrXzB4Mzk4M2Q4KyctJytfMHgzN2VjY2ErJy0nK18weDQ4MjYxMysnLScrXzB4NDcxZDZlO3hyY3BjKF8weDEzNmVmZSxfMHgzZmM1NWMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHg1YWMxYzMpe3JhZFNldEVyckNvb2soXzB4MWYyNTVhKDB4ZTUpKTt9dHJ5eyhmdW5jdGlvbigpe3ZhciBfMHhkMzI0YzM9XzB4MWYyNTVhO2xldCBfMHgyNDIwMzIsXzB4NThmNjMxPTB4MDtjb25zdCBfMHg0YTAyMWI9XzB4ZDMyNGMzKDB4Y2UpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4NWFkMzZjPTB4MCxfMHgyOWIxNjY9MHgwLF8weDIzNTE3Nz0weDAsXzB4NGVjYWQxPTB4MDtkb2N1bWVudFtfMHhkMzI0YzMoMHhlZSldKCd0b3VjaHN0YXJ0JyxmdW5jdGlvbihfMHgyODkxMTMpe3ZhciBfMHg0OTgzYWI9XzB4ZDMyNGMzLF8weDU4ZmVjND1fMHgyODkxMTNbXzB4NDk4M2FiKDB4ZjUpXVsweDBdO18weDQyNGExNyhfMHg1OGZlYzRbJ2NsaWVudFgnXSxfMHg1OGZlYzRbJ2NsaWVudFknXSk7fSksZG9jdW1lbnRbJ2FkZEV2ZW50TGlzdGVuZXInXSgndG91Y2hlbmQnLGZ1bmN0aW9uKF8weDE5YzI5OSl7dmFyIF8weDFmNzIzMD1fMHhkMzI0YzMsXzB4MjZhYWMzPV8weDE5YzI5OVtfMHgxZjcyMzAoMHhkNSldWzB4MF07XzB4MzZlM2U2KF8weDI2YWFjM1snY2xpZW50WCddLF8weDI2YWFjM1tfMHgxZjcyMzAoMHhkMyldKTt9KTtmdW5jdGlvbiBfMHg0MjRhMTcoXzB4NGI3MmU5LF8weDQ0ODkzYSl7dmFyIF8weDNlODQ1Yj1fMHhkMzI0YzM7XzB4MjQyMDMyPW5ldyBEYXRlKClbXzB4M2U4NDViKDB4ZmEpXSgpLF8weDVhZDM2Yz1fMHg0YjcyZTksXzB4MjliMTY2PV8weDQ0ODkzYTt9ZnVuY3Rpb24gXzB4MzZlM2U2KF8weDFjYTAxMCxfMHgxMjU3NmYpe3ZhciBfMHgzNWFhOTE9XzB4ZDMyNGMzO2lmKF8weDI0MjAzMil7XzB4NGVjYWQxPW5ldyBEYXRlKClbXzB4MzVhYTkxKDB4ZmEpXSgpLF8weDIzNTE3Nz1fMHg0ZWNhZDEtXzB4MjQyMDMyLF8weDVhZDM2Yz1fMHgxY2EwMTAsXzB4MjliMTY2PV8weDEyNTc2Zjt2YXIgXzB4M2MyODI0PV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHgzYzI4MjQsMHgyKSxfMHgyNDIwMzI9bnVsbDt9fWRvY3VtZW50W18weGQzMjRjMygweGVlKV0oXzB4ZDMyNGMzKDB4Y2EpLGZ1bmN0aW9uKF8weDEwZWZmOSl7XzB4NThmNjMxKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4NTZiYjQzPV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHg1NmJiNDMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHgyNTdjYjQpe3JhZFNldEVyckNvb2soJ3RjbCcpO310cnl7KGZ1bmN0aW9uKCl7c2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4MmVmMWUwPV8weDMwZDg7dHJ5e3ZhciBfMHg0MmRlNzY9e30sXzB4NDU1ZTE1PWRvY3VtZW50W18weDJlZjFlMCgweGUyKV0oJyonKTtmb3IodmFyIF8weDc0ODU0Nz0weDA7XzB4NzQ4NTQ3PF8weDQ1NWUxNVtfMHgyZWYxZTAoMHhiYyldO18weDc0ODU0NysrKXt2YXIgXzB4MjM1ODY2PV8weDQ1NWUxNVtfMHg3NDg1NDddO2xldCBfMHg1NTFlNTE9XzB4MjM1ODY2W18weDJlZjFlMCgweGFhKV07aWYodHlwZW9mIF8weDU1MWU1MT09PSdzdHJpbmcnKXt2YXIgXzB4MmIzMWU4PV8weDU1MWU1MVsnc3BsaXQnXSgnXHgyMCcpO2Zvcih2YXIgXzB4MTU0ZGIyPTB4MDtfMHgxNTRkYjI8XzB4MmIzMWU4WydsZW5ndGgnXTtfMHgxNTRkYjIrKyl7dmFyIF8weDI3NjBiYT1fMHgyYjMxZThbXzB4MTU0ZGIyXVtfMHgyZWYxZTAoMHhjZCldKCk7XzB4Mjc2MGJhIT09JycmJihfMHg0MmRlNzZbXzB4Mjc2MGJhXT0hIVtdKTt9fX12YXIgXzB4NTYyMTJhPU9iamVjdFtfMHgyZWYxZTAoMHhlNildKF8weDQyZGU3NiksXzB4M2Q2MDkwPV8weDU2MjEyYVtfMHgyZWYxZTAoMHhkNCldKCcsJyksXzB4NmVlMDE4PV8weDJlZjFlMCgweGFkKStnZXRQaWREaWdlc3RTYWx0KCk7eHJjcGMoXzB4NmVlMDE4LF8weDNkNjA5MCwweDIpO31jYXRjaChfMHg2ODI3NzApe3JhZFNldEVyckNvb2soJ2NsJyk7fX0sMHg3ZDApO30oKSk7fWNhdGNoKF8weDU2OWU3NSl7fWZ1bmN0aW9uIGhjRCgpe3ZhciBfMHg1MzhmM2Y9XzB4MWYyNTVhO3RyeXt2YXIgXzB4MjU1Zjg3PWRvY3VtZW50W18weDUzOGYzZigweGU4KV1bXzB4NTM4ZjNmKDB4ZTIpXShfMHg1MzhmM2YoMHhhOSkpLF8weDVkMWVkMj1udWxsO2Zvcih2YXIgXzB4NDM1MTE0PV8weDI1NWY4N1tfMHg1MzhmM2YoMHhiYyldLTB4MTtfMHg0MzUxMTQ+PTB4MDtfMHg0MzUxMTQtLSl7dmFyIF8weDRkMmNmMT1fMHgyNTVmODdbXzB4NDM1MTE0XTtpZihfMHg0ZDJjZjFbXzB4NTM4ZjNmKDB4ZmMpXVtfMHg1MzhmM2YoMHhiMCldWyd0b0xvd2VyQ2FzZSddKCk9PT1fMHg1MzhmM2YoMHhlOCkpe18weDVkMWVkMj1fMHg0ZDJjZjE7YnJlYWs7fX1pZihfMHg1ZDFlZDIhPT1udWxsKXt2YXIgXzB4MWI2YmQyPV8weDVkMWVkMltfMHg1MzhmM2YoMHhlMildKF8weDUzOGYzZigweGU3KSk7aWYoXzB4MWI2YmQyW18weDUzOGYzZigweGJjKV0+MHgwJiZfMHgxYjZiZDJbMHgwXVtfMHg1MzhmM2YoMHhlOSldWydpbmNsdWRlcyddKF8weDUzOGYzZigweGQ5KSkpcmV0dXJuIF8weDVkMWVkMjt9fWNhdGNoKF8weDVhMzAxMil7fXJldHVybiBudWxsO31mdW5jdGlvbiBzZXRSYWRDZmRicygpe3ZhciBfMHg0MmQ1NTE9XzB4MWYyNTVhO3RyeXtzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7dmFyIF8weDUzZWI0OT1fMHgzMGQ4LF8weDJjYzdmZD1oY0QoKTtpZihfMHgyY2M3ZmQ9PT1udWxsKXJldHVybjtyYWRDZmRicz1fMHgyY2M3ZmRbXzB4NTNlYjQ5KDB4YmUpXTt9LDB4M2U4KTt9Y2F0Y2goXzB4MTVhYTMzKXtyYWRTZXRFcnJDb29rKF8weDQyZDU1MSgweGM2KSk7fX0oZnVuY3Rpb24oKXt2YXIgXzB4NDVmZDczPV8weDFmMjU1YTtkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YzQpfHxkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YjQpP3NldFJhZENmZGJzKCk6ZG9jdW1lbnRbXzB4NDVmZDczKDB4ZWUpXShfMHg0NWZkNzMoMHhhZSksZnVuY3Rpb24oKXtzZXRSYWRDZmRicygpO30pO30oKSk7ZnVuY3Rpb24gbWIzdHgoKXt2YXIgXzB4MTkwZmQxPV8weDFmMjU1YTt0cnl7dmFyIF8weDJkYTRmNT0nMycsXzB4MjY3NTQxPSd4eicsXzB4MjcxYzE0PSd5JyxfMHgxMWE5M2Q9J2snLF8weDQzZjBkNj0nMCcsXzB4MWE4MGVjPScwJyxfMHhmZDNmOTA9aGNEKCk7aWYoXzB4ZmQzZjkwPT09bnVsbClyZXR1cm47dmFyIF8weDg2MTNlZj1fMHhmZDNmOTBbJ291dGVySFRNTCddO3JhZENmZGJzIT09bnVsbCYmKF8weDJkYTRmNT1fMHg4NjEzZWYhPXJhZENmZGJzPycxJzonMicpO18weDI2NzU0MT1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhiMildLF8weDI3MWMxND1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhjMildLF8weDExYTkzZD1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhkNildO18weDI2NzU0MT09J2Jsb2NrJyYmKF8weDI2NzU0MT0nYmxrJyk7XzB4MTFhOTNkPT1fMHgxOTBmZDEoMHhjNykmJihfMHgxMWE5M2Q9J3ZiZScpO18weDExYTkzZD09XzB4MTkwZmQxKDB4YmQpJiYoXzB4MTFhOTNkPV8weDE5MGZkMSgweGVjKSk7dmFyIF8weDJkNWYxNz1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZGQpXShfMHgxOTBmZDEoMHhhOSkpO18weDQzZjBkNj1fMHgyZDVmMTdbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhlZildLF8weDFhODBlYz1fMHgyZDVmMTdbJ3N0eWxlJ11bXzB4MTkwZmQxKDB4MTAwKV07dmFyIF8weDQ0NjQ4OT1NYXRoW18weDE5MGZkMSgweGI5KV0oRGF0ZVtfMHgxOTBmZDEoMHhlMSldKCkvMHgzZTgpWyd0b1N0cmluZyddKCk7cmFkQ2ZyZXNPcD1fMHg0NDY0ODkrJy0nK18weDJkYTRmNSsnLScrXzB4MjcxYzE0KyctJytfMHgxMWE5M2QrJy0nK18weDI2NzU0MSsnLScrXzB4MWE4MGVjW18weDE5MGZkMSgweGRmKV0oJ3B4JywnJykrJy0nK18weDQzZjBkNlsncmVwbGFjZSddKCdweCcsJycpO31jYXRjaChfMHg1ZTM1MjQpe3JhZFNldEVyckNvb2soJ2Nzc28nKTt9fWZ1bmN0aW9uIG1iNHR4KCl7dmFyIF8weDNjNzgwPV8weDFmMjU1YTt0cnl7dmFyIF8weDc0ZTMzND0nMycsXzB4NDU1NjBkPSd4eicsXzB4MmEyNDYwPSd5JyxfMHg1YWRkOTc9J2snLF8weDNlNzM5ND0nMCcsXzB4MjIwZTk3PScwJyxfMHg0MGJjZjI9aGNEKCk7aWYoXzB4NDBiY2YyPT09bnVsbClyZXR1cm47dmFyIF8weDQ2YzNhYj1fMHg0MGJjZjJbXzB4M2M3ODAoMHhiZSldO3JhZENmZGJzIT09bnVsbCYmKF8weDc0ZTMzND1fMHg0NmMzYWIhPXJhZENmZGJzPycxJzonMicpO18weDQ1NTYwZD1fMHg0MGJjZjJbXzB4M2M3ODAoMHhmYildW18weDNjNzgwKDB4YjIpXSxfMHgyYTI0NjA9XzB4NDBiY2YyW18weDNjNzgwKDB4ZmIpXVsnb3BhY2l0eSddLF8weDVhZGQ5Nz1fMHg0MGJjZjJbJ3N0eWxlJ11bXzB4M2M3ODAoMHhkNildO18weDQ1NTYwZD09XzB4M2M3ODAoMHhmNykmJihfMHg0NTU2MGQ9XzB4M2M3ODAoMHhjZikpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhjNykmJihfMHg1YWRkOTc9XzB4M2M3ODAoMHhjYykpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhiZCkmJihfMHg1YWRkOTc9J2hkbicpO3ZhciBfMHgyMjg1NmU9XzB4NDBiY2YyW18weDNjNzgwKDB4ZGQpXShfMHgzYzc4MCgweGE5KSk7XzB4M2U3Mzk0PV8weDIyODU2ZVtfMHgzYzc4MCgweGZiKV1bXzB4M2M3ODAoMHhlZildLF8weDIyMGU5Nz1fMHgyMjg1NmVbJ3N0eWxlJ11bXzB4M2M3ODAoMHgxMDApXTt2YXIgXzB4MjdlMDgxPV8weDc0ZTMzNCsnLScrXzB4MmEyNDYwKyctJytfMHg1YWRkOTcrJy0nK18weDQ1NTYwZCsnLScrXzB4MjIwZTk3WydyZXBsYWNlJ10oJ3B4JywnJykrJy0nK18weDNlNzM5NFtfMHgzYzc4MCgweGRmKV0oJ3B4JywnJyksXzB4MTM3MDRhPSdjYmZjcycrZ2V0UGlkRGlnZXN0U2FsdCgpO3hyY3BjKF8weDEzNzA0YSxyYWRDZnJlc09wKyc6OicrXzB4MjdlMDgxLDB4Mik7fWNhdGNoKF8weDRlNTc4ZCl7cmFkU2V0RXJyQ29vayhfMHgzYzc4MCgweGE4KSk7fX1mdW5jdGlvbiByYWRTZXRFcnJDb29rKF8weDNiZjdmMCxfMHg1YjA4NDY9MHgxKXt2YXIgXzB4YTAxMTE3PV8weDFmMjU1YTt0cnl7cmFkQ2ZlTWFwW18weDNiZjdmMF09XzB4NWIwODQ2LHhyY3BjKF8weGEwMTExNygweGJmKStnZXRQaWREaWdlc3RTYWx0KCksSlNPTlsnc3RyaW5naWZ5J10ocmFkQ2ZlTWFwKSwweDIpO31jYXRjaChfMHgxMWZiOTcpe3hyY3BjKCdjYmZlcicrZ2V0UGlkRGlnZXN0U2FsdCgpLF8weDExZmI5N1sndG9TdHJpbmcnXSgpLDB4Mik7fX0KPC9zY3JpcHQ+CiAgICA8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMSI+CiAgICAgICAgICAgIDxpbWcgc3JjPSJodHRwczovL2NhcHRjaGEucGVyZmRyaXZlLmNvbS9jYXB0Y2hhLXB1YmxpYy9pbWFnZXMvc3NfY2FwdGNoYS5wbmciIGFsdD0iQ2FwdGNoYSBQYWdlIj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMiI+CiAgICAgICAgICAgIDxoMT5XZSBhcG9sb2dpemUgZm9yIHRoZSBpbmNvbnZlbmllbmNlLi4uPC9oMT4KICAgICAgICAgICAgPHA+Li4uYnV0IHlvdXIgYWN0aXZpdHkgYW5kIGJlaGF2aW9yIG9uIHRoaXMgc2l0ZSBtYWRlIHVzIHRoaW5rIHRoYXQgeW91IGFyZSBhIGJvdC48L3A+CiAgICAgICAgICAgIDxwPjxiPk5vdGU6PC9iPiBBIG51bWJlciBvZiB0aGluZ3MgY291bGQgYmUgZ29pbmcgb24gaGVyZS48L3A+CiAgICAgICAgICAgIDxvbD4KICAgICAgICAgICAgICAgIDxsaT5JZiB5b3UgYXJlIGF0dGVtcHRpbmcgdG8gYWNjZXNzIHRoaXMgc2l0ZSB1c2luZyBhbiBhbm9ueW1vdXMgUHJpdmF0ZS9Qcm94eSBuZXR3b3JrLCBwbGVhc2UgZGlzYWJsZSB0aGF0IGFuZCB0cnkgYWNjZXNzaW5nIHNpdGUgYWdhaW4uPC9saT4KICAgICAgICAgICAgICAgIDxsaT5EdWUgdG8gcHJldmlvdXNseSBkZXRlY3RlZCBtYWxpY2lvdXMgYmVoYXZpb3Igd2hpY2ggb3JpZ2luYXRlZCBmcm9tIHRoZSBuZXR3b3JrIHlvdSdyZSB1c2luZywgcGxlYXNlIHJlcXVlc3QgdW5ibG9jayB0byBzaXRlLjwvbGk+CiAgICAgICAgICAgIDwvb2w+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxjZW50ZXI+PGI+SW5jaWRlbnQgSUQ6PC9iPiA2ZTg0MWQ3MC1jc2xmLTRiOWYtOWRiMS1hM2ZkNThlOTZkZjM8Y2VudGVyPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgIDxwPjxiPiBQbGVhc2Ugc29sdmUgdGhpcyBDQVBUQ0hBIHRvIHJlcXVlc3QgdW5ibG9jayB0byB0aGUgd2Vic2l0ZSA8L2I+PC9wPgogICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdiBjbGFzcz0iY2FwdGNoYS1taWQiPgogICAgICAgICAgICA8Zm9ybSBhY3Rpb249IiIgbWV0aG9kPVBPU1Qgc3R5bGU9IndpZHRoOjMwMHB4O21hcmdpbi1sZWZ0OmF1dG87bWFyZ2luLXJpZ2h0OmF1dG87Ij4KICAgICAgICAgICAgICAgIDxzY3JpcHQgdHlwZT0idGV4dC9qYXZhc2NyaXB0IiBzcmM9Imh0dHBzOi8vaGNhcHRjaGEuY29tLzEvYXBpLmpzP3JlY2FwdGNoYWNvbXBhdD1vZmYiPjwvc2NyaXB0PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaC1jYXB0Y2hhIiBkYXRhLXNpdGVrZXk9ImFlNzMxNzNiLTcwMDMtNDRlMC1iYzg3LTY1NGQwZGFiOGI3NSIgZGF0YS1vcGVuLWNhbGxiYWNrPSJoT3BlblJhZCIgZGF0YS1jYWxsYmFjaz0iaFNvbHZlZFJhZCI+PC9kaXY+PGJyPgogICAgICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgaWQ9ImNmX2lucHV0IiB0eXBlPSJoaWRkZW4iIG5hbWU9ImNmaSIgdmFsdWU9IiI+CiAgICAgICAgICAgICAgICAgICAgPGJyPjxpbnB1dCB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4gYnRuLXN1Y2Nlc3MgYnRuLXNtIiBWYWx1ZT0iU3VibWl0Ij48YnI+CiAgICAgICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICAgICAgPC9mb3JtPgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjxkaXYgY2xhc3M9ImZvb3RlciI+CiAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgoJPHAgY2xhc3M9InRleHQtbXV0ZWQgY3JlZGl0Ij4KCQlZb3UgcmVhY2hlZCB0aGlzIHBhZ2Ugd2hlbiB0cnlpbmcgdG8gYWNjZXNzCgkJPGI+aHR0cHM6Ly93d3cua290YWttZi5jb20vZmFjdHNoZWV0L0F1Z3VzdF8yMDI2L2tvdGFrL0VNRVJHSU5HLUVRVUlUWS1TQ0hFTUUuaHRtbDwvYj4gZnJvbQoJCTxiPjY4LjIyMC42MS4yMDk8L2I+IG9uCgkJPGI+T2N0b2JlciAxMCAyMDI2LCAyMjowMTo1MyBVVEM8L2I+Cgk8L3A+CjwvZGl2Pgo8L2Rpdj4KPC9odG1sPg=="
+      "source_body_base64": "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8dGl0bGU+UmFkd2FyZSBDYXB0Y2hhIFBhZ2U8L3RpdGxlPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEiPgo8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vY2FwdGNoYS5wZXJmZHJpdmUuY29tL2NhcHRjaGEtcHVibGljL2Nzcy9zaGllbGRzcXVhcmVfc3R5bGVzLm1pbi5jc3MiPgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgoJd2luZG93LlNTSlNJbnRlcm5hbCA9IDc5NDAzOwoKCXZhciBfX3V6ZGJtXzEgPSAiM2Q0MmJiNTYtMjdmOC00NjU0LTkxODAtZTQyMjI0OWI1OTkwIjsKCXZhciBfX3V6ZGJtXzIgPSAiWkdWaVpUY3pNemN0WTNOc1ppMDBNbUl3TFdKaU1ESXRNVGc0TUdGbU5EZzBOalpsSkRRdU1qUXlMakU1TlM0ek1nPT0iOwoJCgkoZnVuY3Rpb24odywgZCwgZSwgdSwgYywgZywgYSwgYil7CgkJd1siU1NKU0Nvbm5lY3Rvck9iaiJdID0gd1siU1NKU0Nvbm5lY3Rvck9iaiJdIHx8IHtzc19jaWQgOiBjLCBkb21haW5faW5mbzogZ307CgkJYSA9IGQuY3JlYXRlRWxlbWVudChlKTsKCQlhLmFzeW5jID0gdHJ1ZTsKCQlhLnNyYyA9IHU7CgkJYiA9IGQuZ2V0RWxlbWVudHNCeVRhZ05hbWUoZSlbMF07CgkJYi5wYXJlbnROb2RlLmluc2VydEJlZm9yZShhLCBiKTsKCX0pKHdpbmRvdyxkb2N1bWVudCwic2NyaXB0IiwiaHR0cHM6Ly9jZG4ucGVyZmRyaXZlLmNvbS9hcGVydHVyZS9hcGVydHVyZS5qcyIsImI4YzMiLCJhdXRvIik7Cjwvc2NyaXB0PgoKPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPgpmdW5jdGlvbiBfMHgxNDdhKCl7dmFyIF8weDJlYzk3OT1bJ2VjYjVlMTAwZTVhOWEzZTdmNmQxZmQ5NzUxMjIxNTI4MicsJ21vdXNlbW92ZScsJ3RvR01UU3RyaW5nJywnMHhjdmQnLCcxOTc2NTcyaWdwV0JhJywndG91Y2hlcycsJzE5OTMyOTBhbU10YVknLCdibG9jaycsJzIxMjg0OTdyWHZ4RnUnLCdVZHI5SHZoWVV3JywnZ2V0VGltZScsJ3N0eWxlJywncGFyZW50RWxlbWVudCcsJzU4NzY5Mjhpa3RwWXYnLCc7XHgyMHBhdGg9LycsJzhRVlFvQ1InLCdoZWlnaHQnLCc2bUxjS1ZLJywnbW91c2V1cCcsJ2Nzc2wnLCdkaXYnLCdjbGFzc05hbWUnLCdFbnlmN01UY0JLJywnMjdMcXpzeFMnLCdjYmZjbCcsJ0RPTUNvbnRlbnRMb2FkZWQnLCdpbmRleE9mJywndGFnTmFtZScsJ2NoYXJDb2RlQXQnLCdkaXNwbGF5JywnOHRxd2lmVycsJ2NvbXBsZXRlJywnc3Vic3RyaW5nJywnaHNvbCcsJ3NzaScsJzExMTQzOTV0VUFQVWonLCdmbG9vcicsJ2NmX2lucHV0JywnY2JmbScsJ2xlbmd0aCcsJ2hpZGRlbicsJ291dGVySFRNTCcsJ2NiZmVyJywnbW91c2Vkb3duJywnc3BsaXQnLCdvcGFjaXR5JywnODM2MDRxdHJ3aUQnLCdpbnRlcmFjdGl2ZScsJzAwMDAwJywnY3NpbCcsJ3Zpc2libGUnLCd2YWx1ZScsJ3JhbmRvbScsJ3RvdWNobW92ZScsJ3RvU3RyaW5nJywndmJlJywndHJpbScsJ2NiZnQnLCdibGsnLCdsb2NhdGlvbicsJ2Nzb2wnLCdpaWQnLCdjbGllbnRZJywnam9pbicsJ2NoYW5nZWRUb3VjaGVzJywndmlzaWJpbGl0eScsJ0JkcjlIdmhZVXcnLCdVbnlmN01UY0JLJywnaGNhcHRjaGEnLCc7XHgyMGV4cGlyZXM9JywnMjY0Vk5KWlNTJywnMTg2ODM4U2doVWlOJywncXVlcnlTZWxlY3RvcicsJ3NwbGljZScsJ3JlcGxhY2UnLCdjYmYnLCdub3cnLCdnZXRFbGVtZW50c0J5VGFnTmFtZScsJ2hyZWYnLCdwdXNoJywnbWNsJywna2V5cycsJ2lmcmFtZScsJ2JvZHknLCdzcmMnLCdnZXRSZXNwb25zZScsJ2Nvb2tpZScsJ2hkbicsJ2dldEVsZW1lbnRCeUlkJywnYWRkRXZlbnRMaXN0ZW5lcicsJ3dpZHRoJ107XzB4MTQ3YT1mdW5jdGlvbigpe3JldHVybiBfMHgyZWM5Nzk7fTtyZXR1cm4gXzB4MTQ3YSgpO31mdW5jdGlvbiBfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpe3ZhciBfMHgxNDdhNmU9XzB4MTQ3YSgpO3JldHVybiBfMHgzMGQ4PWZ1bmN0aW9uKF8weDMwZDhkYSxfMHg1Mjg5MzYpe18weDMwZDhkYT1fMHgzMGQ4ZGEtMHhhNjt2YXIgXzB4NGU1ZDVjPV8weDE0N2E2ZVtfMHgzMGQ4ZGFdO3JldHVybiBfMHg0ZTVkNWM7fSxfMHgzMGQ4KF8weDI0N2I4NixfMHg1M2RlMjgpO312YXIgXzB4MWYyNTVhPV8weDMwZDg7KGZ1bmN0aW9uKF8weGM1ZDU5MCxfMHgxZjM4YzEpe3ZhciBfMHg0OTRmNmY9XzB4MzBkOCxfMHg0MzNjZTE9XzB4YzVkNTkwKCk7d2hpbGUoISFbXSl7dHJ5e3ZhciBfMHg1NzJlNjk9cGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZGMpKS8weDEqKC1wYXJzZUludChfMHg0OTRmNmYoMHhiMykpLzB4MikrLXBhcnNlSW50KF8weDQ5NGY2ZigweGE2KSkvMHgzKigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjQpKS8weDQpK3BhcnNlSW50KF8weDQ5NGY2ZigweGI4KSkvMHg1K3BhcnNlSW50KF8weDQ5NGY2ZigweGZkKSkvMHg2Ky1wYXJzZUludChfMHg0OTRmNmYoMHhmOCkpLzB4NyoocGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZmYpKS8weDgpK3BhcnNlSW50KF8weDQ5NGY2ZigweGFjKSkvMHg5KigtcGFyc2VJbnQoXzB4NDk0ZjZmKDB4ZjYpKS8weGEpKy1wYXJzZUludChfMHg0OTRmNmYoMHhkYikpLzB4YiooLXBhcnNlSW50KF8weDQ5NGY2ZigweGMzKSkvMHhjKTtpZihfMHg1NzJlNjk9PT1fMHgxZjM4YzEpYnJlYWs7ZWxzZSBfMHg0MzNjZTFbJ3B1c2gnXShfMHg0MzNjZTFbJ3NoaWZ0J10oKSk7fWNhdGNoKF8weDEyNjQxZSl7XzB4NDMzY2UxWydwdXNoJ10oXzB4NDMzY2UxWydzaGlmdCddKCkpO319fShfMHgxNDdhLDB4YWNmNjMpKTt2YXIgcmFkQ2Zjbz0hW10scmFkQ2ZkYnM9bnVsbCxyYWRDZnJlc09wPScnLHJhZENmZU1hcD17fTtmdW5jdGlvbiBvY28oKXtoT3BlblJhZCgpO31mdW5jdGlvbiBvY3MoKXtoU29sdmVkUmFkKCk7fWZ1bmN0aW9uIGhPcGVuUmFkKCl7dHJ5e3JhZENmY289ISFbXSxtYjN0eCgpO31jYXRjaChfMHgzNTQ4OTYpe3JhZFNldEVyckNvb2soJ2hvcCcsXzB4MzU0ODk2Wyd0b1N0cmluZyddKCkpO319ZnVuY3Rpb24gaFNvbHZlZFJhZCgpe3ZhciBfMHgyOWVlYzY9XzB4MzBkOCxfMHg0NWM4NGQ9J0hueWY3TVRjQksnLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhkNyk7dHJ5e2lmKGhjYXB0Y2hhKXt2YXIgXzB4MmZlNDMyPWhjYXB0Y2hhWydnZXRSZXNwS2V5J10oKSxfMHgxMGQ0OWE9aGNhcHRjaGFbXzB4MjllZWM2KDB4ZWEpXSgpO18weDJmZTQzMltfMHgyOWVlYzYoMHhiYyldPj0weGEmJihfMHg0NWM4NGQ9XzB4MmZlNDMyW18weDI5ZWVjNigweGI1KV0oXzB4MmZlNDMyW18weDI5ZWVjNigweGJjKV0tMHhhKSksXzB4MTBkNDlhW18weDI5ZWVjNigweGJjKV0+PTB4YSYmKF8weDU0MjFjOD1fMHgxMGQ0OWFbXzB4MjllZWM2KDB4YjUpXShfMHgxMGQ0OWFbXzB4MjllZWM2KDB4YmMpXS0weGEpKTt9ZWxzZSBfMHg0NWM4NGQ9XzB4MjllZWM2KDB4ZDgpLF8weDU0MjFjOD1fMHgyOWVlYzYoMHhmOSk7fWNhdGNoKF8weDViMmFkYyl7XzB4NDVjODRkPV8weDI5ZWVjNigweGFiKSxfMHg1NDIxYzg9J0VkcjlIdmhZVXcnO310cnl7bGRsbmIoXzB4NDVjODRkLF8weDU0MjFjOCksbWI0dHgoKTt9Y2F0Y2goXzB4NGQxMjMyKXtyYWRTZXRFcnJDb29rKF8weDI5ZWVjNigweGI2KSxfMHg0ZDEyMzJbXzB4MjllZWM2KDB4Y2IpXSgpKTt9fWZ1bmN0aW9uIHhyY3BjKF8weDUzZGJiMixfMHg1MmRhYzksXzB4MzRlZDlmKXt2YXIgXzB4NTRmNTkzPV8weDMwZDg7dHJ5e3ZhciBfMHgxMmQ0OGY7aWYoXzB4MzRlZDlmKXt2YXIgXzB4NWI0NDYwPW5ldyBEYXRlKCk7XzB4NWI0NDYwWydzZXRUaW1lJ10oXzB4NWI0NDYwWydnZXRUaW1lJ10oKStfMHgzNGVkOWYqMHgzYyoweDNlOCksXzB4MTJkNDhmPV8weDU0ZjU5MygweGRhKStfMHg1YjQ0NjBbXzB4NTRmNTkzKDB4ZjIpXSgpO31lbHNlIF8weDEyZDQ4Zj0nJztkb2N1bWVudFtfMHg1NGY1OTMoMHhlYildPV8weDUzZGJiMisnPScrXzB4NTJkYWM5K18weDEyZDQ4ZitfMHg1NGY1OTMoMHhmZSk7fWNhdGNoKF8weDRkNDI1Nil7fX1mdW5jdGlvbiBvdGtoZChfMHg1MzY2Mjkpe3ZhciBfMHhlNjJhMzY9XzB4MzBkOCxfMHgxZjAwNGM9JycsXzB4NWRmMzIyPScnLF8weDIyY2JhMz1bXTtmb3IodmFyIF8weDNjNWNlYiBpbiBfMHg1MzY2Mjkpe18weDIyY2JhM1tfMHhlNjJhMzYoMHhlNCldKFtfMHgzYzVjZWIsXzB4NTM2NjI5W18weDNjNWNlYl1dKTt9d2hpbGUoXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0+MHgwKXt2YXIgXzB4MTc2ZTY1PU1hdGhbJ2Zsb29yJ10oTWF0aFtfMHhlNjJhMzYoMHhjOSldKCkqXzB4MjJjYmEzW18weGU2MmEzNigweGJjKV0pLF8weDVlYmM4Yj1fMHgyMmNiYTNbXzB4ZTYyYTM2KDB4ZGUpXShfMHgxNzZlNjUsMHgxKVsweDBdLF8weDNjNWNlYj1fMHg1ZWJjOGJbMHgwXSxfMHgxMzEyY2U9XzB4NWViYzhiWzB4MV07XzB4NWRmMzIyKz1fMHgxMzEyY2UsXzB4MWYwMDRjKz1fMHgzYzVjZWI7fXJldHVybiBfMHg1ZGYzMjIrXzB4MWYwMDRjK2dldFJhbmRvbU51bWJlcigpW18weGU2MmEzNigweGNiKV0oKTt9ZnVuY3Rpb24gZ2V0UmFuZG9tTnVtYmVyKCl7dmFyIF8weDQ5ZmU3Zj1fMHgzMGQ4O2NvbnN0IF8weDNiOTgyZD0weDI3MTAsXzB4Y2IzN2UzPTB4MTg2OWY7cmV0dXJuIE1hdGhbXzB4NDlmZTdmKDB4YjkpXShNYXRoW18weDQ5ZmU3ZigweGM5KV0oKSooXzB4Y2IzN2UzLV8weDNiOTgyZCsweDEpKStfMHgzYjk4MmQ7fWZ1bmN0aW9uIG1kaHgoXzB4MmNhNTYxKXt2YXIgXzB4M2QyYzViPV8weDMwZDg7dHJ5e2xldCBfMHgzODY1YWQ9MHgwO2ZvcihsZXQgXzB4YWQxMTcxPTB4MDtfMHhhZDExNzE8XzB4MmNhNTYxW18weDNkMmM1YigweGJjKV07XzB4YWQxMTcxKyspe18weDM4NjVhZCs9XzB4MmNhNTYxW18weDNkMmM1YigweGIxKV0oXzB4YWQxMTcxKTt9cmV0dXJuIF8weDM4NjVhZFtfMHgzZDJjNWIoMHhjYildKDB4MTApWydwYWRTdGFydCddKDB4NCwnMCcpO31jYXRjaChfMHgxODJhZGMpe3JldHVybiBfMHgzZDJjNWIoMHhmMCk7fX1mdW5jdGlvbiBnZXRRdWVyeVBhcmFtcyhfMHg0OTI5NTIpe3ZhciBfMHgyZTA4MTQ9XzB4MzBkODtjb25zdCBfMHgyZmFkOGY9XzB4NDkyOTUyWydzbGljZSddKF8weDQ5Mjk1MltfMHgyZTA4MTQoMHhhZildKCc/JykrMHgxKVsnc3BsaXQnXSgnJicpLF8weDU4NmM2Nz17fTtyZXR1cm4gXzB4MmZhZDhmWydtYXAnXShfMHg0NGI3NzI9Pnt2YXIgXzB4MmM2NGUxPV8weDJlMDgxNDtjb25zdCBbXzB4MmQxNTg3LF8weDUxY2IwY109XzB4NDRiNzcyW18weDJjNjRlMSgweGMxKV0oJz0nKTtfMHg1ODZjNjdbXzB4MmQxNTg3XT1kZWNvZGVVUklDb21wb25lbnQoXzB4NTFjYjBjKTt9KSxfMHg1ODZjNjc7fWZ1bmN0aW9uIGdldFBpZERpZ2VzdFNhbHQoKXt2YXIgXzB4MWU3ZDMyPV8weDMwZDg7dHJ5e3ZhciBfMHgzOTM3NTQ9Z2V0UXVlcnlQYXJhbXMod2luZG93W18weDFlN2QzMigweGQwKV1bXzB4MWU3ZDMyKDB4ZTMpXSksXzB4MTMzMzVlPV8weDM5Mzc1NFtfMHgxZTdkMzIoMHhiNyldIT09dW5kZWZpbmVkP18weDM5Mzc1NFsnc3NpJ106XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV0hPT11bmRlZmluZWQ/XzB4MzkzNzU0W18weDFlN2QzMigweGQyKV06XzB4MWU3ZDMyKDB4YzUpO3JldHVybiBfMHgxMzMzNWVbJ3N1YnN0cmluZyddKF8weDEzMzM1ZVtfMHgxZTdkMzIoMHhiYyldLTB4NSk7fWNhdGNoKF8weDhkMjc5NSl7cmV0dXJuIF8weDFlN2QzMigweGYzKTt9fWZ1bmN0aW9uIGxkbG5iKF8weDJhMzhlMyxfMHgxZGQ2NmQpe3ZhciBfMHg1YmU3YTc9XzB4MzBkODt0cnl7dmFyIF8weDM2NGEwYj1nZXRSYW5kb21OdW1iZXIoKVtfMHg1YmU3YTcoMHhjYildKCksXzB4MTBmMjYzPWdldFJhbmRvbU51bWJlcigpW18weDViZTdhNygweGNiKV0oKSxfMHg0NmE2OWE9TWF0aFtfMHg1YmU3YTcoMHhiOSldKERhdGVbXzB4NWJlN2E3KDB4ZTEpXSgpLzB4M2U4KVtfMHg1YmU3YTcoMHhjYildKCksXzB4YmViYjY0PV8weDQ2YTY5YVsnc3Vic3RyaW5nJ10oMHgwLDB4NSksXzB4N2M5MjNmPV8weDQ2YTY5YVtfMHg1YmU3YTcoMHhiNSldKDB4NSk7Y29uc3QgXzB4Mzk1Y2Q0PXJhZENmY28/JzEnOicwJyxfMHgxNTA0ZjM9JzEnLF8weDE2YWI2MD1nZXRQaWREaWdlc3RTYWx0KCk7dmFyIF8weDFiZGRhOD17MHgxOl8weDM2NGEwYiwweDI6XzB4MTUwNGYzLDB4MzpfMHhiZWJiNjQsMHg0Ol8weDM5NWNkNCwweDU6XzB4MTBmMjYzLDB4NjpfMHg3YzkyM2YsMHg3Ol8weDE2YWI2MCwweDg6XzB4MmEzOGUzLDB4OTpfMHgxZGQ2NmR9LF8weDNmYWNkMj1vdGtoZChfMHgxYmRkYTgpO2NvbnN0IF8weDFlMDM1Yj1tZGh4KF8weDNmYWNkMik7dmFyIF8weDE5Yjc2Yz1fMHg1YmU3YTcoMHhlMCkrXzB4MTZhYjYwO2NvbnN0IF8weDNlYmQxYz0nVjAxJzt2YXIgXzB4ZTc2N2JlPV8weDNlYmQxYytfMHgzZmFjZDIrXzB4MWUwMzViLF8weDQ2ZDU2MT1kb2N1bWVudFtfMHg1YmU3YTcoMHhlZCldKF8weDViZTdhNygweGJhKSk7XzB4NDZkNTYxJiYoXzB4NDZkNTYxW18weDViZTdhNygweGM4KV09XzB4ZTc2N2JlKSx4cmNwYyhfMHgxOWI3NmMsXzB4ZTc2N2JlLDB4Mik7fWNhdGNoKF8weDMwZTFkNCl7cmFkU2V0RXJyQ29vayhfMHg1YmU3YTcoMHhkMSksXzB4MzBlMWQ0W18weDViZTdhNygweGNiKV0oKSk7fX10cnl7KGZ1bmN0aW9uKCl7dmFyIF8weDJkZTM3Zj1fMHgzMGQ4O2xldCBfMHgzZWRhMzQsXzB4NDgyNjEzPTB4MDtjb25zdCBfMHgxMzZlZmU9XzB4MmRlMzdmKDB4YmIpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4Y2ZmODYyPTB4MCxfMHgzOTgzZDg9MHgwLF8weDM3ZWNjYT0weDAsXzB4NDcxZDZlPTB4MDtkb2N1bWVudFsnYWRkRXZlbnRMaXN0ZW5lciddKF8weDJkZTM3ZigweGMwKSxmdW5jdGlvbihfMHgyZjI1ZTMpe3ZhciBfMHg1NjU4Zjg9XzB4MmRlMzdmO18weDNlZGEzND1uZXcgRGF0ZSgpW18weDU2NThmOCgweGZhKV0oKTt9KSxkb2N1bWVudFtfMHgyZGUzN2YoMHhlZSldKF8weDJkZTM3ZigweGE3KSxmdW5jdGlvbihfMHgyYTliY2Ype3ZhciBfMHgyMjVhZjQ9XzB4MmRlMzdmO2lmKF8weDNlZGEzNCl7XzB4NDcxZDZlPW5ldyBEYXRlKClbXzB4MjI1YWY0KDB4ZmEpXSgpLF8weDM3ZWNjYT1fMHg0NzFkNmUtXzB4M2VkYTM0LF8weGNmZjg2Mj1fMHgyYTliY2ZbJ3gnXSxfMHgzOTgzZDg9XzB4MmE5YmNmWyd5J107dmFyIF8weDE5YWIwNz1fMHhjZmY4NjIrJy0nK18weDM5ODNkOCsnLScrXzB4MzdlY2NhKyctJytfMHg0ODI2MTMrJy0nK18weDQ3MWQ2ZTt4cmNwYyhfMHgxMzZlZmUsXzB4MTlhYjA3LDB4MiksXzB4M2VkYTM0PW51bGw7fX0pLGRvY3VtZW50W18weDJkZTM3ZigweGVlKV0oXzB4MmRlMzdmKDB4ZjEpLGZ1bmN0aW9uKF8weDUzMDIwNSl7XzB4NDgyNjEzKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4M2ZjNTVjPV8weGNmZjg2MisnLScrXzB4Mzk4M2Q4KyctJytfMHgzN2VjY2ErJy0nK18weDQ4MjYxMysnLScrXzB4NDcxZDZlO3hyY3BjKF8weDEzNmVmZSxfMHgzZmM1NWMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHg1YWMxYzMpe3JhZFNldEVyckNvb2soXzB4MWYyNTVhKDB4ZTUpKTt9dHJ5eyhmdW5jdGlvbigpe3ZhciBfMHhkMzI0YzM9XzB4MWYyNTVhO2xldCBfMHgyNDIwMzIsXzB4NThmNjMxPTB4MDtjb25zdCBfMHg0YTAyMWI9XzB4ZDMyNGMzKDB4Y2UpK2dldFBpZERpZ2VzdFNhbHQoKTtsZXQgXzB4NWFkMzZjPTB4MCxfMHgyOWIxNjY9MHgwLF8weDIzNTE3Nz0weDAsXzB4NGVjYWQxPTB4MDtkb2N1bWVudFtfMHhkMzI0YzMoMHhlZSldKCd0b3VjaHN0YXJ0JyxmdW5jdGlvbihfMHgyODkxMTMpe3ZhciBfMHg0OTgzYWI9XzB4ZDMyNGMzLF8weDU4ZmVjND1fMHgyODkxMTNbXzB4NDk4M2FiKDB4ZjUpXVsweDBdO18weDQyNGExNyhfMHg1OGZlYzRbJ2NsaWVudFgnXSxfMHg1OGZlYzRbJ2NsaWVudFknXSk7fSksZG9jdW1lbnRbJ2FkZEV2ZW50TGlzdGVuZXInXSgndG91Y2hlbmQnLGZ1bmN0aW9uKF8weDE5YzI5OSl7dmFyIF8weDFmNzIzMD1fMHhkMzI0YzMsXzB4MjZhYWMzPV8weDE5YzI5OVtfMHgxZjcyMzAoMHhkNSldWzB4MF07XzB4MzZlM2U2KF8weDI2YWFjM1snY2xpZW50WCddLF8weDI2YWFjM1tfMHgxZjcyMzAoMHhkMyldKTt9KTtmdW5jdGlvbiBfMHg0MjRhMTcoXzB4NGI3MmU5LF8weDQ0ODkzYSl7dmFyIF8weDNlODQ1Yj1fMHhkMzI0YzM7XzB4MjQyMDMyPW5ldyBEYXRlKClbXzB4M2U4NDViKDB4ZmEpXSgpLF8weDVhZDM2Yz1fMHg0YjcyZTksXzB4MjliMTY2PV8weDQ0ODkzYTt9ZnVuY3Rpb24gXzB4MzZlM2U2KF8weDFjYTAxMCxfMHgxMjU3NmYpe3ZhciBfMHgzNWFhOTE9XzB4ZDMyNGMzO2lmKF8weDI0MjAzMil7XzB4NGVjYWQxPW5ldyBEYXRlKClbXzB4MzVhYTkxKDB4ZmEpXSgpLF8weDIzNTE3Nz1fMHg0ZWNhZDEtXzB4MjQyMDMyLF8weDVhZDM2Yz1fMHgxY2EwMTAsXzB4MjliMTY2PV8weDEyNTc2Zjt2YXIgXzB4M2MyODI0PV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHgzYzI4MjQsMHgyKSxfMHgyNDIwMzI9bnVsbDt9fWRvY3VtZW50W18weGQzMjRjMygweGVlKV0oXzB4ZDMyNGMzKDB4Y2EpLGZ1bmN0aW9uKF8weDEwZWZmOSl7XzB4NThmNjMxKz0weDE7fSksc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4NTZiYjQzPV8weDVhZDM2YysnLScrXzB4MjliMTY2KyctJytfMHgyMzUxNzcrJy0nK18weDU4ZjYzMSsnLScrXzB4NGVjYWQxO3hyY3BjKF8weDRhMDIxYixfMHg1NmJiNDMsMHgyKTt9LDB4N2QwKTt9KCkpO31jYXRjaChfMHgyNTdjYjQpe3JhZFNldEVyckNvb2soJ3RjbCcpO310cnl7KGZ1bmN0aW9uKCl7c2V0SW50ZXJ2YWwoZnVuY3Rpb24oKXt2YXIgXzB4MmVmMWUwPV8weDMwZDg7dHJ5e3ZhciBfMHg0MmRlNzY9e30sXzB4NDU1ZTE1PWRvY3VtZW50W18weDJlZjFlMCgweGUyKV0oJyonKTtmb3IodmFyIF8weDc0ODU0Nz0weDA7XzB4NzQ4NTQ3PF8weDQ1NWUxNVtfMHgyZWYxZTAoMHhiYyldO18weDc0ODU0NysrKXt2YXIgXzB4MjM1ODY2PV8weDQ1NWUxNVtfMHg3NDg1NDddO2xldCBfMHg1NTFlNTE9XzB4MjM1ODY2W18weDJlZjFlMCgweGFhKV07aWYodHlwZW9mIF8weDU1MWU1MT09PSdzdHJpbmcnKXt2YXIgXzB4MmIzMWU4PV8weDU1MWU1MVsnc3BsaXQnXSgnXHgyMCcpO2Zvcih2YXIgXzB4MTU0ZGIyPTB4MDtfMHgxNTRkYjI8XzB4MmIzMWU4WydsZW5ndGgnXTtfMHgxNTRkYjIrKyl7dmFyIF8weDI3NjBiYT1fMHgyYjMxZThbXzB4MTU0ZGIyXVtfMHgyZWYxZTAoMHhjZCldKCk7XzB4Mjc2MGJhIT09JycmJihfMHg0MmRlNzZbXzB4Mjc2MGJhXT0hIVtdKTt9fX12YXIgXzB4NTYyMTJhPU9iamVjdFtfMHgyZWYxZTAoMHhlNildKF8weDQyZGU3NiksXzB4M2Q2MDkwPV8weDU2MjEyYVtfMHgyZWYxZTAoMHhkNCldKCcsJyksXzB4NmVlMDE4PV8weDJlZjFlMCgweGFkKStnZXRQaWREaWdlc3RTYWx0KCk7eHJjcGMoXzB4NmVlMDE4LF8weDNkNjA5MCwweDIpO31jYXRjaChfMHg2ODI3NzApe3JhZFNldEVyckNvb2soJ2NsJyk7fX0sMHg3ZDApO30oKSk7fWNhdGNoKF8weDU2OWU3NSl7fWZ1bmN0aW9uIGhjRCgpe3ZhciBfMHg1MzhmM2Y9XzB4MWYyNTVhO3RyeXt2YXIgXzB4MjU1Zjg3PWRvY3VtZW50W18weDUzOGYzZigweGU4KV1bXzB4NTM4ZjNmKDB4ZTIpXShfMHg1MzhmM2YoMHhhOSkpLF8weDVkMWVkMj1udWxsO2Zvcih2YXIgXzB4NDM1MTE0PV8weDI1NWY4N1tfMHg1MzhmM2YoMHhiYyldLTB4MTtfMHg0MzUxMTQ+PTB4MDtfMHg0MzUxMTQtLSl7dmFyIF8weDRkMmNmMT1fMHgyNTVmODdbXzB4NDM1MTE0XTtpZihfMHg0ZDJjZjFbXzB4NTM4ZjNmKDB4ZmMpXVtfMHg1MzhmM2YoMHhiMCldWyd0b0xvd2VyQ2FzZSddKCk9PT1fMHg1MzhmM2YoMHhlOCkpe18weDVkMWVkMj1fMHg0ZDJjZjE7YnJlYWs7fX1pZihfMHg1ZDFlZDIhPT1udWxsKXt2YXIgXzB4MWI2YmQyPV8weDVkMWVkMltfMHg1MzhmM2YoMHhlMildKF8weDUzOGYzZigweGU3KSk7aWYoXzB4MWI2YmQyW18weDUzOGYzZigweGJjKV0+MHgwJiZfMHgxYjZiZDJbMHgwXVtfMHg1MzhmM2YoMHhlOSldWydpbmNsdWRlcyddKF8weDUzOGYzZigweGQ5KSkpcmV0dXJuIF8weDVkMWVkMjt9fWNhdGNoKF8weDVhMzAxMil7fXJldHVybiBudWxsO31mdW5jdGlvbiBzZXRSYWRDZmRicygpe3ZhciBfMHg0MmQ1NTE9XzB4MWYyNTVhO3RyeXtzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7dmFyIF8weDUzZWI0OT1fMHgzMGQ4LF8weDJjYzdmZD1oY0QoKTtpZihfMHgyY2M3ZmQ9PT1udWxsKXJldHVybjtyYWRDZmRicz1fMHgyY2M3ZmRbXzB4NTNlYjQ5KDB4YmUpXTt9LDB4M2U4KTt9Y2F0Y2goXzB4MTVhYTMzKXtyYWRTZXRFcnJDb29rKF8weDQyZDU1MSgweGM2KSk7fX0oZnVuY3Rpb24oKXt2YXIgXzB4NDVmZDczPV8weDFmMjU1YTtkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YzQpfHxkb2N1bWVudFsncmVhZHlTdGF0ZSddPT09XzB4NDVmZDczKDB4YjQpP3NldFJhZENmZGJzKCk6ZG9jdW1lbnRbXzB4NDVmZDczKDB4ZWUpXShfMHg0NWZkNzMoMHhhZSksZnVuY3Rpb24oKXtzZXRSYWRDZmRicygpO30pO30oKSk7ZnVuY3Rpb24gbWIzdHgoKXt2YXIgXzB4MTkwZmQxPV8weDFmMjU1YTt0cnl7dmFyIF8weDJkYTRmNT0nMycsXzB4MjY3NTQxPSd4eicsXzB4MjcxYzE0PSd5JyxfMHgxMWE5M2Q9J2snLF8weDQzZjBkNj0nMCcsXzB4MWE4MGVjPScwJyxfMHhmZDNmOTA9aGNEKCk7aWYoXzB4ZmQzZjkwPT09bnVsbClyZXR1cm47dmFyIF8weDg2MTNlZj1fMHhmZDNmOTBbJ291dGVySFRNTCddO3JhZENmZGJzIT09bnVsbCYmKF8weDJkYTRmNT1fMHg4NjEzZWYhPXJhZENmZGJzPycxJzonMicpO18weDI2NzU0MT1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhiMildLF8weDI3MWMxND1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhjMildLF8weDExYTkzZD1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhkNildO18weDI2NzU0MT09J2Jsb2NrJyYmKF8weDI2NzU0MT0nYmxrJyk7XzB4MTFhOTNkPT1fMHgxOTBmZDEoMHhjNykmJihfMHgxMWE5M2Q9J3ZiZScpO18weDExYTkzZD09XzB4MTkwZmQxKDB4YmQpJiYoXzB4MTFhOTNkPV8weDE5MGZkMSgweGVjKSk7dmFyIF8weDJkNWYxNz1fMHhmZDNmOTBbXzB4MTkwZmQxKDB4ZGQpXShfMHgxOTBmZDEoMHhhOSkpO18weDQzZjBkNj1fMHgyZDVmMTdbXzB4MTkwZmQxKDB4ZmIpXVtfMHgxOTBmZDEoMHhlZildLF8weDFhODBlYz1fMHgyZDVmMTdbJ3N0eWxlJ11bXzB4MTkwZmQxKDB4MTAwKV07dmFyIF8weDQ0NjQ4OT1NYXRoW18weDE5MGZkMSgweGI5KV0oRGF0ZVtfMHgxOTBmZDEoMHhlMSldKCkvMHgzZTgpWyd0b1N0cmluZyddKCk7cmFkQ2ZyZXNPcD1fMHg0NDY0ODkrJy0nK18weDJkYTRmNSsnLScrXzB4MjcxYzE0KyctJytfMHgxMWE5M2QrJy0nK18weDI2NzU0MSsnLScrXzB4MWE4MGVjW18weDE5MGZkMSgweGRmKV0oJ3B4JywnJykrJy0nK18weDQzZjBkNlsncmVwbGFjZSddKCdweCcsJycpO31jYXRjaChfMHg1ZTM1MjQpe3JhZFNldEVyckNvb2soJ2Nzc28nKTt9fWZ1bmN0aW9uIG1iNHR4KCl7dmFyIF8weDNjNzgwPV8weDFmMjU1YTt0cnl7dmFyIF8weDc0ZTMzND0nMycsXzB4NDU1NjBkPSd4eicsXzB4MmEyNDYwPSd5JyxfMHg1YWRkOTc9J2snLF8weDNlNzM5ND0nMCcsXzB4MjIwZTk3PScwJyxfMHg0MGJjZjI9aGNEKCk7aWYoXzB4NDBiY2YyPT09bnVsbClyZXR1cm47dmFyIF8weDQ2YzNhYj1fMHg0MGJjZjJbXzB4M2M3ODAoMHhiZSldO3JhZENmZGJzIT09bnVsbCYmKF8weDc0ZTMzND1fMHg0NmMzYWIhPXJhZENmZGJzPycxJzonMicpO18weDQ1NTYwZD1fMHg0MGJjZjJbXzB4M2M3ODAoMHhmYildW18weDNjNzgwKDB4YjIpXSxfMHgyYTI0NjA9XzB4NDBiY2YyW18weDNjNzgwKDB4ZmIpXVsnb3BhY2l0eSddLF8weDVhZGQ5Nz1fMHg0MGJjZjJbJ3N0eWxlJ11bXzB4M2M3ODAoMHhkNildO18weDQ1NTYwZD09XzB4M2M3ODAoMHhmNykmJihfMHg0NTU2MGQ9XzB4M2M3ODAoMHhjZikpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhjNykmJihfMHg1YWRkOTc9XzB4M2M3ODAoMHhjYykpO18weDVhZGQ5Nz09XzB4M2M3ODAoMHhiZCkmJihfMHg1YWRkOTc9J2hkbicpO3ZhciBfMHgyMjg1NmU9XzB4NDBiY2YyW18weDNjNzgwKDB4ZGQpXShfMHgzYzc4MCgweGE5KSk7XzB4M2U3Mzk0PV8weDIyODU2ZVtfMHgzYzc4MCgweGZiKV1bXzB4M2M3ODAoMHhlZildLF8weDIyMGU5Nz1fMHgyMjg1NmVbJ3N0eWxlJ11bXzB4M2M3ODAoMHgxMDApXTt2YXIgXzB4MjdlMDgxPV8weDc0ZTMzNCsnLScrXzB4MmEyNDYwKyctJytfMHg1YWRkOTcrJy0nK18weDQ1NTYwZCsnLScrXzB4MjIwZTk3WydyZXBsYWNlJ10oJ3B4JywnJykrJy0nK18weDNlNzM5NFtfMHgzYzc4MCgweGRmKV0oJ3B4JywnJyksXzB4MTM3MDRhPSdjYmZjcycrZ2V0UGlkRGlnZXN0U2FsdCgpO3hyY3BjKF8weDEzNzA0YSxyYWRDZnJlc09wKyc6OicrXzB4MjdlMDgxLDB4Mik7fWNhdGNoKF8weDRlNTc4ZCl7cmFkU2V0RXJyQ29vayhfMHgzYzc4MCgweGE4KSk7fX1mdW5jdGlvbiByYWRTZXRFcnJDb29rKF8weDNiZjdmMCxfMHg1YjA4NDY9MHgxKXt2YXIgXzB4YTAxMTE3PV8weDFmMjU1YTt0cnl7cmFkQ2ZlTWFwW18weDNiZjdmMF09XzB4NWIwODQ2LHhyY3BjKF8weGEwMTExNygweGJmKStnZXRQaWREaWdlc3RTYWx0KCksSlNPTlsnc3RyaW5naWZ5J10ocmFkQ2ZlTWFwKSwweDIpO31jYXRjaChfMHgxMWZiOTcpe3hyY3BjKCdjYmZlcicrZ2V0UGlkRGlnZXN0U2FsdCgpLF8weDExZmI5N1sndG9TdHJpbmcnXSgpLDB4Mik7fX0KPC9zY3JpcHQ+CiAgICA8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMSI+CiAgICAgICAgICAgIDxpbWcgc3JjPSJodHRwczovL2NhcHRjaGEucGVyZmRyaXZlLmNvbS9jYXB0Y2hhLXB1YmxpYy9pbWFnZXMvc3NfY2FwdGNoYS5wbmciIGFsdD0iQ2FwdGNoYSBQYWdlIj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtMiI+CiAgICAgICAgICAgIDxoMT5XZSBhcG9sb2dpemUgZm9yIHRoZSBpbmNvbnZlbmllbmNlLi4uPC9oMT4KICAgICAgICAgICAgPHA+Li4uYnV0IHlvdXIgYWN0aXZpdHkgYW5kIGJlaGF2aW9yIG9uIHRoaXMgc2l0ZSBtYWRlIHVzIHRoaW5rIHRoYXQgeW91IGFyZSBhIGJvdC48L3A+CiAgICAgICAgICAgIDxwPjxiPk5vdGU6PC9iPiBBIG51bWJlciBvZiB0aGluZ3MgY291bGQgYmUgZ29pbmcgb24gaGVyZS48L3A+CiAgICAgICAgICAgIDxvbD4KICAgICAgICAgICAgICAgIDxsaT5JZiB5b3UgYXJlIGF0dGVtcHRpbmcgdG8gYWNjZXNzIHRoaXMgc2l0ZSB1c2luZyBhbiBhbm9ueW1vdXMgUHJpdmF0ZS9Qcm94eSBuZXR3b3JrLCBwbGVhc2UgZGlzYWJsZSB0aGF0IGFuZCB0cnkgYWNjZXNzaW5nIHNpdGUgYWdhaW4uPC9saT4KICAgICAgICAgICAgICAgIDxsaT5EdWUgdG8gcHJldmlvdXNseSBkZXRlY3RlZCBtYWxpY2lvdXMgYmVoYXZpb3Igd2hpY2ggb3JpZ2luYXRlZCBmcm9tIHRoZSBuZXR3b3JrIHlvdSdyZSB1c2luZywgcGxlYXNlIHJlcXVlc3QgdW5ibG9jayB0byBzaXRlLjwvbGk+CiAgICAgICAgICAgIDwvb2w+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxjZW50ZXI+PGI+SW5jaWRlbnQgSUQ6PC9iPiBkZWJlNzMzNy1jc2xmLTQyYjAtYmIwMi0xODgwYWY0ODQ2NmU8Y2VudGVyPgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgIDxwPjxiPiBQbGVhc2Ugc29sdmUgdGhpcyBDQVBUQ0hBIHRvIHJlcXVlc3QgdW5ibG9jayB0byB0aGUgd2Vic2l0ZSA8L2I+PC9wPgogICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8YnI+CiAgICAgICAgPGRpdiBjbGFzcz0iY2FwdGNoYS1taWQiPgogICAgICAgICAgICA8Zm9ybSBhY3Rpb249IiIgbWV0aG9kPVBPU1Qgc3R5bGU9IndpZHRoOjMwMHB4O21hcmdpbi1sZWZ0OmF1dG87bWFyZ2luLXJpZ2h0OmF1dG87Ij4KICAgICAgICAgICAgICAgIDxzY3JpcHQgdHlwZT0idGV4dC9qYXZhc2NyaXB0IiBzcmM9Imh0dHBzOi8vaGNhcHRjaGEuY29tLzEvYXBpLmpzP3JlY2FwdGNoYWNvbXBhdD1vZmYiPjwvc2NyaXB0PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaC1jYXB0Y2hhIiBkYXRhLXNpdGVrZXk9ImFlNzMxNzNiLTcwMDMtNDRlMC1iYzg3LTY1NGQwZGFiOGI3NSIgZGF0YS1vcGVuLWNhbGxiYWNrPSJoT3BlblJhZCIgZGF0YS1jYWxsYmFjaz0iaFNvbHZlZFJhZCI+PC9kaXY+PGJyPgogICAgICAgICAgICAgICAgPGNlbnRlcj4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgaWQ9ImNmX2lucHV0IiB0eXBlPSJoaWRkZW4iIG5hbWU9ImNmaSIgdmFsdWU9IiI+CiAgICAgICAgICAgICAgICAgICAgPGJyPjxpbnB1dCB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4gYnRuLXN1Y2Nlc3MgYnRuLXNtIiBWYWx1ZT0iU3VibWl0Ij48YnI+CiAgICAgICAgICAgICAgICA8L2NlbnRlcj4KICAgICAgICAgICAgPC9mb3JtPgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjxkaXYgY2xhc3M9ImZvb3RlciI+CiAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgoJPHAgY2xhc3M9InRleHQtbXV0ZWQgY3JlZGl0Ij4KCQlZb3UgcmVhY2hlZCB0aGlzIHBhZ2Ugd2hlbiB0cnlpbmcgdG8gYWNjZXNzCgkJPGI+aHR0cHM6Ly93d3cua290YWttZi5jb20vZmFjdHNoZWV0L0F1Z3VzdF8yMDI2L2tvdGFrL0VNRVJHSU5HLUVRVUlUWS1TQ0hFTUUuaHRtbDwvYj4gZnJvbQoJCTxiPjQuMjQyLjE5NS4zMjwvYj4gb24KCQk8Yj5PY3RvYmVyIDExIDIwMjYsIDIyOjI2OjAwIFVUQzwvYj4KCTwvcD4KPC9kaXY+CjwvZGl2Pgo8L2h0bWw+"
+    },
+    {
+      "family": "Mahindra Manulife Mid Cap Fund",
+      "error": "Factsheet data date does not uniquely prove current portfolio date 2026-09-30"
     },
     {
       "family": "Sundaram Mid Cap Fund",
       "error": "No exact current Mid Cap portfolio sheet passed the existing structured parser"
     },
     {
-      "family": "Samco Mid Cap Fund",
-      "error": "Samco page does not prove current all-holdings date 2026-08-31"
+      "family": "Motilal Oswal Midcap Fund",
+      "error": "No exact current Mid Cap portfolio sheet passed the existing structured parser"
+    },
+    {
+      "family": "BANDHAN MID CAP FUND",
+      "error": "Bandhan Mid Cap disclosure API exposed no single exact current workbook"
     }
   ],
   "input_issues": [],
@@ -1994,36 +1358,36 @@
   "input_reports": [
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH1.json",
-      "sha256": "fed6d4a57ce2af8858f000a51e9ad564acb127ab57561f4fe11ecf88116560bc",
-      "built_at": "2026-10-10T22:00:28+00:00",
+      "sha256": "51752c2d14686ad6db0345792cf71ea865b5559b3af256a8bf690f40fa970b3d",
+      "built_at": "2026-10-11T22:24:33+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH2.json",
-      "sha256": "250f32c7b539e750899477ded1f4df83eea1437effa4acb1d7cc216043b91c05",
-      "built_at": "2026-10-10T22:00:33+00:00",
+      "sha256": "9e82a8ba076ecc836b4c9961ed933d2cc4a0f5237dcaffd8836a420fa6adc40a",
+      "built_at": "2026-10-11T22:24:37+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH3.json",
-      "sha256": "d99ee362feeab828be48f21ea5707750bff4b8968a9a00d89e3d9f1939b9f398",
-      "built_at": "2026-10-10T22:01:36+00:00",
+      "sha256": "a9ed11bd439fb5c397223ac5fd953a7b3f54d2734671e145323918930835d5c5",
+      "built_at": "2026-10-11T22:25:42+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH4.json",
-      "sha256": "b35a68411bdd4062d5a939cb76a5c1362148293955af94e9be65f2ec78582120",
-      "built_at": "2026-10-10T22:01:52+00:00",
+      "sha256": "73717ea36ad6036cf0a99da76e52cfc7ea70426c85e37cc597e0b4f5f815846e",
+      "built_at": "2026-10-11T22:25:58+00:00",
       "ok": true,
       "error": null
     },
     {
       "path": "docs/MIDCAP-PORTFOLIO-BATCH5.json",
-      "sha256": "f9626cd9af8c2e3228e03a2987313bc971226c05299fb484dd0e9273264e6e6e",
-      "built_at": "2026-10-10T22:02:17+00:00",
+      "sha256": "df306520fc13a4a46e93e53ff19d35f4a13f18362baa2660014ec6d1c91a14f7",
+      "built_at": "2026-10-11T22:26:19+00:00",
       "ok": true,
       "error": null
     }

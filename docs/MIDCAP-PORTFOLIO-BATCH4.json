@@ -1,58 +1,70 @@
 {
-  "built_at": "2026-10-10T22:01:52+00:00",
+  "built_at": "2026-10-11T22:25:58+00:00",
   "staged_category": "mid-cap",
-  "portfolio_expected_as_of": "2026-08-31",
+  "portfolio_expected_as_of": "2026-09-30",
   "targets": 3,
-  "recovered": 2,
-  "failed": 1,
+  "recovered": 3,
+  "failed": 0,
   "results": [
     {
       "family": "Aditya Birla Sun Life Midcap Fund",
       "amc": "Aditya Birla Sun Life Mutual Fund",
       "status": "recovered",
       "sheet": "MIDCAP",
-      "as_of": "2026-08-31",
+      "as_of": "2026-09-30",
       "positions_observed": 78,
       "complete": false,
       "unknown_rows": [
         "Margin amount for Derivative positions"
       ],
-      "aum": 6966.2854,
+      "aum": 6550.0054,
       "scope": "structured_monthly_portfolio",
-      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/monthly-portfolio-31082026_abslmf.zip",
-      "source_title": "Monthly Portfolios as on August 31, 2026",
-      "zip_entry": "31082026_ABSLMF_MonthlyDisclosure.xls",
-      "source_sha256": "30a2b953a6d518b3653ff7b5f08f8ffa48591c0841d9abc5572b784b91f5f47e",
-      "workbook_sha256": "68a8279d8c7c2f1d259784664827837eba260983d69fbc06646e860c45206dc8",
+      "source": "https://mutualfund.adityabirlacapital.com/-/media/bsl/files/resources/monthly-portfolio/2026/30092026_abslmf_monthlydisclosure.zip",
+      "source_title": "Monthly Portfolios as on September 30, 2026",
+      "zip_entry": "30092026_ABSLMF_MonthlyDisclosure.xls",
+      "source_sha256": "529d07916e835e3d97fab4c039cdff704008e68b7c9846e886975f6460611596",
+      "workbook_sha256": "8eb8ef4f1a34084f1ed8b29080a563f11e8c5780e8e935598d7d2dde045faac7",
       "source_content_type": "application/x-zip-compressed",
-      "observed_at": "2026-10-10T22:01:46+00:00"
+      "observed_at": "2026-10-11T22:25:52+00:00"
     },
     {
       "family": "PGIM India Midcap Fund",
       "amc": "PGIM India Mutual Fund",
       "status": "recovered",
       "sheet": "Mid Cap",
-      "as_of": "2026-08-31",
-      "positions_observed": 109,
+      "as_of": "2026-09-30",
+      "positions_observed": 105,
       "complete": false,
       "unknown_rows": [
         "Clearing Corporation of India Ltd."
       ],
-      "aum": 11217.6728,
+      "aum": 10537.3091,
       "scope": "structured_monthly_portfolio",
-      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Aug 2026.xlsx",
-      "source_title": "PGIM INDIA MIDCAP FUND Aug 2026",
-      "source_sha256": "f50a4afb3c4cc96b0c092f6dde0f30040e00d7716b574f8c54c25bbe21062210",
+      "source": "https://www.pgimindia.com/api/v1/brochure/about-us/image/PGIM INDIA MIDCAP FUND Sep 2026.xlsx",
+      "source_title": "PGIM INDIA MIDCAP FUND Sep 2026",
+      "source_sha256": "f55d89942a15f65c2b99549332c7ebf6c2ef9b00d0c56fd454f71f256c73af47",
       "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "observed_at": "2026-10-10T22:01:49+00:00"
-    }
-  ],
-  "errors": [
+      "observed_at": "2026-10-11T22:25:55+00:00"
+    },
     {
       "family": "Mirae Asset Midcap Fund",
-      "error": "Mirae exact Midcap candidates did not prove the current portfolio: No exact current Mid Cap portfolio sheet passed the existing structured parser"
+      "amc": "Mirae Asset Mutual Fund",
+      "status": "recovered",
+      "sheet": "MAMCF",
+      "as_of": "2026-09-30",
+      "positions_observed": 67,
+      "complete": true,
+      "unknown_rows": [],
+      "aum": 19538.5029,
+      "scope": "structured_monthly_portfolio",
+      "source": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mamcf_sept2026.xlsx",
+      "source_title": "Portfolio Details as on 30th September 2026 for Mirae Asset Midcap Fund",
+      "source_sha256": "d3b5e255c06d20654facf373dc387c50cf4a18e8d32bfe874cc64845bdf01c3d",
+      "source_content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "observed_at": "2026-10-11T22:25:58+00:00"
     }
   ],
+  "errors": [],
   "production_writes": 0,
   "public_export_enabled": false,
   "notes": [

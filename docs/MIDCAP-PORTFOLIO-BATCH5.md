@@ -1,22 +1,22 @@
 # Mid Cap current portfolio evidence — batch 5
 
-Prepared: 2026-10-10T22:02:17+00:00
+Prepared: 2026-10-11T22:26:19+00:00
 
-Expected month-end: **2026-08-31** · targets: **8** · recovered: **5** · failed: **3**.
+Expected month-end: **2026-09-30** · targets: **8** · recovered: **3** · failed: **5**.
 
 | Family | AMC | As of | Positions | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
-| JM Mid Cap Fund | JM Financial Mutual Fund | 2026-08-31 | 72 | structured_monthly_portfolio | false | https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Aug%2031,%202026.xlsx |
-| Mahindra Manulife Mid Cap Fund | Mahindra Manulife Mutual Fund | 2026-08-31 | 59 | factsheet_equity_only | false | https://www.mahindramanulife.com/digital-factsheet/August-2026/Equity-funds/Mid-Cap-Fund.html |
-| Invesco India Mid Cap Fund | Invesco Mutual Fund | 2026-08-31 | 43 | structured_monthly_portfolio | true | https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/mid-cap-fund00cbfe07eee8616aaa28ff00007d74af.xlsx?sfvrsn=eb229fc2_0 |
-| Motilal Oswal Midcap Fund | Motilal Oswal Mutual Fund | 2026-08-31 | 32 | structured_monthly_portfolio | true | https://www.motilaloswalmf.com/content/dam/motilal-mf/sheets/fund-csvs/Month_End_Portfolio_August_2026/YO07.xlsx |
-| BANDHAN MID CAP FUND | Bandhan Mutual Fund | 2026-08-31 | 88 | structured_monthly_portfolio | false | https://storage.googleapis.com/nonprod-static-assets-121to59kaawfgfi7bol/2026/09/31f832d6-bandhan-mid-cap-fund_64601504-9a02-4098-a032-61e6fceefec9_31-august-2026.xlsx |
+| JM Mid Cap Fund | JM Financial Mutual Fund | 2026-09-30 | 73 | structured_monthly_portfolio | false | https://www.jmfinancialmf.com/CMS/downloads/Portfolio%20Disclosure/Monthly%20Portfolio%20of%20Schemes/Monthly%20Portfolio%20-%20JM%20Mid%20cap%20Fund%20-%20Sep%2030,%202026.xlsx |
+| Invesco India Mid Cap Fund | Invesco Mutual Fund | 2026-09-30 | 45 | structured_monthly_portfolio | true | https://www.invescomutualfund.com/docs/default-source/completes-monthly-holding/invesco-india-midcap-fund_sep_2026_equity.xlsx?sfvrsn=91a49ec2_0 |
+| Samco Mid Cap Fund | Samco Mutual Fund | 2026-09-30 | 30 | publisher_all_holdings_html | false | https://www.samcomf.com/mutual-funds/samco-mid-cap-fund-direct-growth/midgg |
 
 ## Errors
 
 - Kotak Mid Cap Fund: Factsheet lacks the exact staged scheme heading or reviewed alias
+- Mahindra Manulife Mid Cap Fund: Factsheet data date does not uniquely prove current portfolio date 2026-09-30
 - Sundaram Mid Cap Fund: No exact current Mid Cap portfolio sheet passed the existing structured parser
-- Samco Mid Cap Fund: Samco page does not prove current all-holdings date 2026-08-31
+- Motilal Oswal Midcap Fund: No exact current Mid Cap portfolio sheet passed the existing structured parser
+- BANDHAN MID CAP FUND: Bandhan Mid Cap disclosure API exposed no single exact current workbook
 
 ## Notes
 

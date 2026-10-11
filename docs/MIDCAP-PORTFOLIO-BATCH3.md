@@ -1,16 +1,16 @@
 # Mid Cap structured current portfolio evidence — batch 3
 
-Prepared: 2026-10-10T22:01:36+00:00
+Prepared: 2026-10-11T22:25:42+00:00
 
-Expected month-end: **2026-08-31** · targets: **5** · recovered: **5** · failed: **0**.
+Expected month-end: **2026-09-30** · targets: **5** · recovered: **5** · failed: **0**.
 
 | Family | AMC | As of | Positions | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- |
-| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 2026-08-31 | 81 | false | https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Aug/Monthly-Portfolio-Disclosure-August-2026.zip |
-| Axis Midcap Fund | Axis Mutual Fund | 2026-08-31 | 90 | false | https://www.axismf.com/1/5/464/560/3622/4549/Monthly_Portfolio_Axis_Midcap_Fund_31_August_2026_bd1b93ff63.xlsx |
-| SBI MIDCAP FUND | SBI Mutual Fund | 2026-08-31 | 61 | false | https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---august-2026.xlsx?sfvrsn=b24400f5_2 |
-| Tata Mid Cap Fund | Tata Mutual Fund | 2026-08-31 | 61 | false | https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx |
-| UTI - Mid Cap Fund | UTI Mutual Fund | 2026-08-31 | 80 | false | https://d3ce1o48hc5oli.cloudfront.net/s3fs-public/2026-09/fw_uti_mf_scheme_portfolios_31.08.2026_revised_final.zip?VersionId=EhSzHSoKCBkh0BsN76FmUi65sUKxPLs9 |
+| ICICI Prudential Mid Cap Fund | ICICI Prudential Mutual Fund | 2026-09-30 | 82 | false | https://www.icicipruamc.com/blob/downloads/Files/Monthly%20Portfolio%20Disclosures/2026/Sep/Monthly-Portfolio-Disclosure-September-2026.zip |
+| Axis Midcap Fund | Axis Mutual Fund | 2026-09-30 | 86 | false | https://www.axismf.com/1/5/464/560/3622/4593/Monthly_Portfolio_Axis_Midcap_Fund_30_September_2026_d1c126adc4.xlsx |
+| SBI MIDCAP FUND | SBI Mutual Fund | 2026-09-30 | 59 | false | https://www.sbimf.com/docs/default-source/scheme-portfolios/sbi-midcap-fund-monthly-portfolio---september-2026.xlsx?sfvrsn=411c2cc4_2 |
+| Tata Mid Cap Fund | Tata Mutual Fund | 2026-09-30 | 58 | false | https://betacms.tatamutualfund.com/system/files/2026-10/Monthly%20Portfolio%20as%20on%2030th%20September%202026.xlsx |
+| UTI - Mid Cap Fund | UTI Mutual Fund | 2026-09-30 | 81 | false | https://d3ce1o48hc5oli.cloudfront.net/static/generic-zip/Oct-26/FW__UTI_MF_SCHEME_PORTFOLIOS_-_30.09.2026_.zip |
 
 ## Notes
 

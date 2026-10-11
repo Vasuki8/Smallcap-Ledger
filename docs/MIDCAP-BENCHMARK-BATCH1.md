@@ -1,6 +1,6 @@
 # Mid Cap benchmark identity audit — batch 1
 
-Prepared: 2026-10-10T21:59:28+00:00
+Prepared: 2026-10-11T22:23:34+00:00
 
 Targets: **12** · recovered: **8** · failed: **4** · staged families: **34**.
 

@@ -1,23 +1,23 @@
 # Mid Cap current portfolio evidence — batch 1
 
-Prepared: 2026-10-10T22:00:28+00:00
+Prepared: 2026-10-11T22:24:33+00:00
 
-Expected month-end: **2026-08-31** · targets: **7** · current evidence: **2** · failed: **5**.
+Expected month-end: **2026-09-30** · targets: **7** · current evidence: **1** · failed: **6**.
 
 | Family | AMC | As of | Positions observed | Scope | Complete? | Source |
 | --- | --- | --- | ---: | --- | --- | --- |
-| ITI Mid Cap Fund | ITI Mutual Fund | 2026-08-31 | 92 | digital_factsheet_named_holdings | false | https://www.itiamc.com/digitalfactsheet/August2026/innerpages/Mid-Cap.html |
-| BANK OF INDIA MID CAP FUND | Bank of India Mutual Fund | 2026-08-31 | 10 | top_10 | false | https://www.boimf.in/products/equity-funds/bank-of-india-mid-cap-fund |
+| Baroda BNP Paribas Mid Cap Fund | Baroda BNP Paribas Mutual Fund | 2026-09-30 | 5 | top_5 | false | https://www.barodabnpparibasmf.in/mutual-fund-schemes/equity-funds/baroda-bnp-paribas-mid-cap-fund/direct-growth |
 
 ## Errors
 
 - Canara Robeco Mid Cap Fund: Client error '403 This request is not authorized to perform this operation.' for url 'https://digitalassets.canararobeco.com/digital-factsheet/2026/august/Scheme/MID-CAP.html'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
 - Kotak Mid Cap Fund: First-party source does not contain the exact staged Mid Cap family identity
-- DSP Midcap Fund: First-party source does not explicitly report current portfolio date 2026-08-31
-- Baroda BNP Paribas Mid Cap Fund: First-party source does not explicitly report current portfolio date 2026-08-31
+- DSP Midcap Fund: Only 0 named current holdings were visible; need at least 5
 - HDFC Mid Cap Fund: Client error '403 Forbidden' for url 'https://www.hdfcfund.com/explore/mutual-funds/hdfc-mid-cap-fund/regular'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+- ITI Mid Cap Fund: First-party source does not explicitly report current portfolio date 2026-09-30
+- BANK OF INDIA MID CAP FUND: First-party source does not explicitly report current portfolio date 2026-09-30
 
 ## Notes
 
